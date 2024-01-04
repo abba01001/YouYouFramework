@@ -1,0 +1,12 @@
+{
+  "ForceGameUpdate": false,
+  "LatestGameVersion": "0.1.0",
+  "InternalGameVersion": 0,
+  "InternalResourceVersion": 26,
+  "UpdatePrefixUri": "https://abab01001-1318826377.cos.ap-guangzhou.myqcloud.com/Unity/AssetBundle/",
+  "VersionListLength": 10584,
+  "VersionListHashCode": -206057777,
+  "VersionListCompressedLength": 3898,
+  "VersionListCompressedHashCode": -51732086,
+  "END_OF_JSON": ""
+}

@@ -34,10 +34,11 @@ namespace Main
                     LoadMetadataForAOTAssemblies();
                     System.Reflection.Assembly.Load(hotfixAb.LoadAsset<TextAsset>("Assembly-CSharp.dll.bytes").bytes);
                     MainEntry.Log(MainEntry.LogCategory.Assets, "Assembly-CSharp.dll加载完毕");
+#else
+                    hotfixAb = AssetBundle.LoadFromFile(string.Format("{0}/{1}", Application.persistentDataPath, fileUrl));
 #endif
-
-                    AssetBundle prefabAb = AssetBundle.LoadFromFile(string.Format("{0}/{1}", Application.persistentDataPath, fileUrl));
-                    UnityEngine.Object.Instantiate(prefabAb.LoadAsset<GameObject>("gameentry.prefab"));
+                    UnityEngine.Object.Instantiate(hotfixAb.LoadAsset<GameObject>("formcheckversion.prefab"));
+                    UnityEngine.Object.Instantiate(hotfixAb.LoadAsset<GameObject>("gameentry.prefab"));
                 });
             });
 
@@ -69,6 +70,7 @@ namespace Main
                 "mscorlib.dll",
                 "System.dll",
                 "System.Core.dll",
+                "UniTask.dll",
             };
             /// 注意，补充元数据是给AOT dll补充元数据，而不是给热更新dll补充元数据。
             /// 热更新dll不缺元数据，不需要补充，如果调用LoadMetadataForAOTAssembly会返回错误

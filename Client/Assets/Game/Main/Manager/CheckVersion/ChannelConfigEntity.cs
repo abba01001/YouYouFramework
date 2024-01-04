@@ -25,7 +25,7 @@ public class ChannelConfigEntity
     /// <summary>
     /// 资源地址
     /// </summary>
-    public string SourceUrl = "http://127.0.0.1:8082/";
+    public string SourceUrl = "https://abab01001-1318826377.cos.ap-guangzhou.myqcloud.com/Unity/AssetBundle/";
 
     #region RealSourceUrl 真正的资源地址
     private string m_RealSourceUrl;
