@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using YouYou;
 using System;
 
-public class RedDotServerSend : MonoBehaviour
+public class RedDotUIByServer : MonoBehaviour
 {
     [Serializable]
     public class RedDotData
