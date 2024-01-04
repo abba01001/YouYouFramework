@@ -13,7 +13,7 @@ public partial class MyGameTools
     public const string LinkFile = "Assets/HybridCLRData/Generated/link.xml";
     public const string STRIP_GENERATE_TAG = "<!--GENERATE_TAG-->";
     private const string MatchPattern = "<assembly[\\s]+fullname[\\s]*=[\\s]*\"([^\"]+)\"";
-    [MenuItem("Game Framework/GameTools/Strip Config Window", false, 1)]
+    [MenuItem("YouYouTools/Link.xml¹ÜÀí")]
     public static void ShowStripConfigEditor()
     {
         EditorWindow.GetWindow<StripLinkConfigWindow>("Strip LinkConfig Editor").Show();
