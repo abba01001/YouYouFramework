@@ -187,6 +187,31 @@ public class YouYouEditor : OdinMenuEditorWindow
     }
     #endregion
 
+    #region Fbx生成预制体
+    [MenuItem("Assets/工具/Fbx生成预制体")]
+    public static void GeneratePrefab()
+    {
+        GameObject go = Selection.activeGameObject;
+        if (go == null)
+        {
+            return;
+        }
+        string prefab_name = go.name + "_pb";
+        GameObject pb_go = new GameObject();
+        pb_go.name = prefab_name;
+
+        GameObject mesh_go = GameObject.Instantiate(go);
+        mesh_go.transform.SetParent(pb_go.transform);
+
+        string path = AssetDatabase.GetAssetPath(go);
+        int i = path.LastIndexOf("/");
+        path = path.Substring(0, i + 1) + prefab_name + ".prefab";
+
+        PrefabUtility.SaveAsPrefabAsset(pb_go, path);
+        GameObject.DestroyImmediate(pb_go);
+        AssetDatabase.SaveAssets();
+    }
+    #endregion
 
     #region 优化动画片段
     [MenuItem("Assets/工具/优化动画片段")]
@@ -307,7 +332,6 @@ public class YouYouEditor : OdinMenuEditorWindow
         AssetDatabase.SaveAssets();
     }
     #endregion
-
 
     #region 生成图集
     [MenuItem("Assets/工具/生成图集")]
