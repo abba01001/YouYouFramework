@@ -145,7 +145,7 @@ public class YouYouEditor : OdinMenuEditorWindow
 
 
     #region 提取动画片段
-    [MenuItem("YouYouTools/提取动画片段")]
+    [MenuItem("Assets/工具/提取动画片段")]
     public static void PickNPCClip()
     {
         UnityEngine.Object[] objs = Selection.GetFiltered<UnityEngine.Object>(SelectionMode.Assets);
@@ -189,7 +189,7 @@ public class YouYouEditor : OdinMenuEditorWindow
 
 
     #region 优化动画片段
-    [MenuItem("YouYouTools/优化动画片段")]
+    [MenuItem("Assets/工具/优化动画片段")]
     static void CompressAnimClip()
     {
         var objs = Selection.objects;
@@ -310,7 +310,7 @@ public class YouYouEditor : OdinMenuEditorWindow
 
 
     #region 生成图集
-    [MenuItem("YouYouTools/生成图集")]
+    [MenuItem("Assets/工具/生成图集")]
     public static void GenerateSprites()
     {
         Texture2D tex = Selection.activeObject as Texture2D;
