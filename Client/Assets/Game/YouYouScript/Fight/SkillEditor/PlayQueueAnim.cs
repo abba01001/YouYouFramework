@@ -43,14 +43,7 @@ public class PlayableQueue : PlayableBehaviour
         }
         else if(Input.GetKeyDown(KeyCode.LeftControl))
         {
-            if (timeToNext <= 0f && currentClip < mixer.GetInputCount() - 1)
-            {
-                mixer.SetInputWeight(currentClip, 0f);
-                mixer.SetInputWeight(currentClip, 1f);
-                //currentClip += 1;
-                //mixer.GetInput(currentClip).SetTime(0f);
-                timeToNext = ((AnimationClipPlayable)mixer.GetInput(currentClip)).GetAnimationClip().length;
-            }
+            mixer.GetInput(currentClip).SetTime(0f);
         }
     }
 }
