@@ -150,7 +150,6 @@ namespace YouYou
         {
             m_SceneLoaderList.Clear();
             CurrSceneEntityGroup = GameEntry.DataTable.Sys_SceneDBModel.GetListByGroupName(m_CurrSceneGroupName.ToString(), SceneLoadMaxCount);
-
             for (int i = 0; i < CurrSceneEntityGroup.Count; i++)
             {
                 SceneLoaderRoutine routine = new SceneLoaderRoutine();
