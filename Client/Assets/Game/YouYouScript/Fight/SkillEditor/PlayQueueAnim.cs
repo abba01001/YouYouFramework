@@ -58,7 +58,7 @@ public class PlayableQueue : PlayableBehaviour
 
 [RequireComponent(typeof(Animator))]
 
-public class PlayQueueSample : MonoBehaviour
+public class PlayQueueAnim : MonoBehaviour
 
 {
     public AnimationClip[] animationClips;
