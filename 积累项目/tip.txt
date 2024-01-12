@@ -1,0 +1,295 @@
+UI优化 https://wenku.baidu.com/view/0aedf646081c59eef8c75fbfc77da26925c596b4.html
+
+
+toggle组件问题
+
+当时在做一个ui，这个ui里面有几个主按钮对应着不同的界面。
+就采用了toggle组件来进行按钮切换。
+
+做完之后测试正常，就正常去点击切换那几个按钮没问题，但是不通过点击按钮去切换就出问题了。
+
+我是根据toggle里面的ison属性来判断这个界面是否需要打开吗，就是通过代码去改变toggle的ison值。
+然后就出问题了，它会无限的调用按钮监听的方法。
+
+不是很理解为什么我鼠标去点击那个按钮，它就会只执行一次方法，但是如果我代码去改变那个toggle的ison值，然后就会无限的执行方法。
+
+后来研究了一段时间，也没搞懂。不过换了个思路，就是用button组件一样实现了。
+
+
+canvas画布
+做一些ui交互的效果时候，比如图片旋转移动放大缩小，有时候图片会晃动，晃动的很厉害。
+刚开始是以为美术那边给的资源图裁剪的时候，像素没有对齐，导致的，后面让美术重新裁剪了一次，发现晃动减小了
+后面就发现canvas里面有个参数 pixel perfect
+
+强制画布中的元素与像素对齐。仅适用于 renderMode 是屏幕空间。
+启用 pixelPerfect 可以使元素看起来更清晰并防止模糊。但是，如果许多元素被缩放或旋转，或者使用微妙的动画位置或缩放，禁用 pixelPerfect 可能是有利的，因为没有它的移动会更平滑。
+
+
+lua里面的table，其实就是一个数组吗。当时在做一个功能，就是往格子里面插入物品，其实就是往对应的表位置插入信息。
+就定义了一个表，然后只要往哪个格子位置插入物品信息，当时有3个格子，往格子2里面插入一个物品，然后再往格子1里插入物品，UI上显示就错误了，就变成格子1和格子3上有物品，
+反复检查了好几遍逻辑上是没错，到最后是发现table.insert这里有问题，好像和数组一样，插入的时候，数组整体会往右挪一步，所以后面我直接用替换而不用插入方法，就解决了。
+后面验证了这个bug，确实是这样导致的。但是我又发现，如果我在格子3插入物品，然后再往格子1插入物品，然后又是正确的，按道理来说格子1插入物品，
+那么格子3的物品应该会跑到第4个格子里去了。挺不理解的
+
+还有一次表的问题。服务端发过来的数据表，有时候我直接复制到临时定义的一个表，然后直接修改那个临时定义的一个表，然后就把服务端发来的那个表数据给修改了...所以就会有奇怪的bug出现。
+后面才突然想起，lua里面直接复制表是复制的引用，会修改原来的表。所以后面凡是碰到要修改表的地方，都会考虑到要不要深克隆下这个表，不影响原来那个表的数据。
+
+
+将C#方法注册到Lua里面使用
+1.在ToolUtil.cs里写C#方法。
+    public static UnityEngine.GameObject[] GetActiveSceneObjects()
+    {
+        UnityEngine.SceneManagement.Scene scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+        return scene.GetRootGameObjects();
+    }
+
+2.在ToolUtilWrap里将方法封装到Lua里面
+     new LuaMethod("GetActiveSceneObjects", GetActiveSceneObjects),
+
+     [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+     static int GetActiveSceneObjects(IntPtr L)
+      {
+          LuaScriptMgr.CheckArgsCount(L, 0);
+          GameObject[] o = ToolUtil.GetActiveSceneObjects();
+          LuaScriptMgr.PushArray(L, o);
+          return 1;
+       }
+
+
+lua 异常方法的处理
+    local function Test()
+        go:SetActive(false)
+    end
+    local function DealError()
+        PrintError(go)
+        PrintError(go.name)
+    end
+    xpcall(Test,DealError)
+
+
+性能优化问题：
+（1）打开全屏UI，把场景对象隐藏,（把场景相机给关闭了）
+
+打包之前记得给安卓包加上签名
+
+
+安卓包签名
+keystore
+在Android应用程序开发中，Keystore是一个非常重要的文件，具有以下用途：
+对应用程序进行签名：Keystore中的私钥用于对应用程序进行签名，以确保应用程序的完整性和真实性，同时防止应用程序被篡改或恶意攻击。
+在应用程序更新时使用：如果您需要发布应用程序的更新版本，需要使用Keystore中的相同私钥重新签名应用程序，来验证您发布的应用程序确实是之前版本的合法更新版本，
+从而保证用户可以安全地更新应用程序。
+在Google Play Store发布应用程序时使用：上传应用程序到Google Play Store时需要将应用程序签名，只有通过Keystore签名的应用程序才能在Google Play Store上发布。
+在Unity中创建并使用Keystore，可以让您可以轻松地构建和发布Android应用程序，同时保证应用程序被签名并获得认证。
+
+
+怎么上架到商店
+
+
+热更是怎么比较资源的，打包的时候会生成资源的md5校验码，通过匹配md5校验码来判断资源是否需要更新
+
+--SDK 是什么，安卓开发工具包
+接入sdk(要接哪个第三方sdk，就去对应官网下载jar包，然后放在gradle工程里libs文件夹。)
+将 SDK 的 jar 或 aar 文件复制到您的工程中的 libs 文件夹中。
+在您的应用级 build.gradle 文件中，添加需要的依赖。例如：
+dependencies {
+    implementation files('libs/xxx.jar')
+    implementation files('libs/yyy.aar')
+}
+将需要的权限添加到您的工程 AndroidManifest.xml 文件中。
+在您的代码中，按照 SDK 的使用方式，调用相应的 API。
+
+
+
+unity UI多少顶点手机上会卡
+一般而言，当 UI 的顶点数量过多时，会导致 GPU 的负荷增加，从而降低帧率和应用程序性能。具体来说，如果你的应用在移动设备上运行，那么以下是一些通用的经验法则：
+对于低端设备：应尽量减少顶点数，通常不超过5K-10K顶点为宜。
+对于中端设备：可适当增加顶点数，可以在100K以下的范围内进行设计。
+对于高端设备：可以使用更多的顶点来提高图像的细节和复杂性，但仍需谨慎，常规范围为100K-500K之间。
+
+unity UI多少三角面手机上会卡
+对于低端设备：多边形数量通常不超过2K左右。
+对于中端设备：多边形数量可以在5K-10K的范围内设计。
+对于高端设备：多边形数量可以超过10K, 但需要根据具体情况进行优化。
+通常情况下，三角面（或称为 Polygons）数量约为顶点数量的3-4倍，即多边形数量越多，渲染压力就越大，性能就越易受到影响。
+
+Text
+Text：一个字符4个顶点
+Text是UGUI产生顶点数量的重灾区，一个字符产生4个顶点，如果再加上Shadow则相当于又把Text复制了一遍产生8个，Outline则会将Text复制4遍产生20个顶点。
+所以Shadow、Outline不但会产生额外的OverDraw外还会产生过多的顶点数，一定慎用，确实需要请选择用图片背景替代，其次选择相对较省的Shadow。
+
+
+静态合批指的是在游戏启动时或者资源加载时将多个小图合成一个大图，形成一个纹理图集（Texture Atlas），从而在渲染时一次性渲染多个小图，
+减少 draw call 的次数。因此将多个图片打包到一个图集中，就是将多个小图合成一个大图的过程，即静态合批。
+
+
+overdraw超绘
+
+drawcall是什么，cpu向gpu每发出一条渲染指令，这个过程就可以称做一个drawcall
+
+
+
+
+
+算法篇
+二分查找（折半查找）
+--二分法查找某个值
+function UIFuncs.BinarySearchTarget(left,right,target,multiply_value)
+    local has_find = false
+    if not multiply_value then
+        multiply_value = 1
+    end
+    local new_target = math.modf(target)
+    while (left <= right) do
+        local mid = math.modf((left + right) / 2);
+        local val = mid * multiply_value
+        if val > new_target then
+            right = mid - 1
+        elseif val < new_target then
+            left = mid + 1
+        else
+            has_find = true
+            return has_find,mid
+        end
+    end
+    return has_find,left
+end
+二分法，也称为折半查找，是一种常见的查找算法。它的主要优点如下：
+
+1. 高效性：二分法是一种时间复杂度为 O(log n) 的算法，比线性查找的 O(n) 时间复杂度更加高效。
+2. 精度：对于有序的数据集合，二分法可以快速找到目标值，而且精度很高，可以精确定位最接近目标值的位置。
+3. 易于实现：二分法的实现较为简单，只需要用数值的大小来判断查找的方向和范围即可。
+4. 适用范围广：二分法不仅适用于数组和有序列表，还适用于其他数据结构，如二叉搜索树等。
+
+综上所述，二分法是一种高效、精确、易于实现、适用范围广的查找算法，可以大大提高程序的性能。
+
+
+C#
+值类型包括以下几种类型：
+
+基本类型（如整型int、浮点型float、布尔型bool、字符型char等）
+枚举类型（enum）
+结构体（struct）
+可空类型（Nullable types）
+
+引用类型包括以下几种类型：
+类（class）
+接口（interface）
+委托（delegate）
+字符串（string）
+数组（array）
+以及其他自定义的引用类型
+
+区分值类型和引用类型的关键区别在于它们在内存中的存储方式和行为特性。
+值类型的实例直接存储在分配给它们的内存空间中。当将值类型赋值给另一个变量或作为参数传递时，会复制该值的副本。对副本的修改不会影响原始值。
+
+引用类型的实例存储在堆上，而变量本身只是引用对象的地址。当将引用类型赋值给另一个变量或作为参数传递时，复制的是引用，不会复制整个对象。
+因此，两个变量最终指向同一个对象，对其中一个变量所做的修改会影响到另一个变量。
+
+需要注意的是，字符串（string）虽然是引用类型，但它有一些特殊的行为，使得它更类似于值类型。
+例如，字符串是不可变的，对字符串的修改实际上会创建一个新的字符串对象。
+
+
+
+结构体和类的区别：
+
+Shader.Find(“Mobile/Particles/Additive”)
+
+会遇到找不到shader的情况。虽然Find的shader是unity内置的shader
+
+因为在导出工程文件时，Unity默认情况下不会把工程里没有使用过的shader导出（unity不会分析你代码里使用了哪个内置shader）。
+
+所以Shader.Find会找不到，怎么办？
+
+方法一
+Edit->ProjectSettings->GraphicsSettings
+Always Included Shaders 加入你的shader
+
+方法二
+resource目录里建立个材质，材质引用你的shader。
+
+
+
+
+
+unity text组件里的字体会打破图集合批，所以可以采用美术资源字来解决
+注意只有同一个图集的资源才会合批（可能会被打断合批 TODO  要想一下打断合批有哪些原因）
+打断合批
+
+
+--动态加载面板，避免一瞬间加载所有面板爆发式卡顿
+
+--UI分辨率适配  TODO  
+
+--lua UIBase基类实现。（关键词元表，原方法__index。设置了元表之后，元方法一定要设置）
+利用setmetatable  元表
+创建UIBase类。UIBase类的__index原方法指向自己。
+setmetatable(cls, super)
+
+
+lua里的表是由数组和哈希表组成的。
+pair 就是遍历哈希表部分，随机遍历
+ipair 就是遍历数组部分，顺序遍历
+
+
+function class(class_name, super)
+    local superType = type(super)
+    local cls
+
+    if super and superType ~= "table" then
+        PrintError("Can't declare super type:", superType, "class_name", class_name)
+        return
+    end
+    if class_name == "UI.UIBase" then
+        PrintError("11111")
+    end
+    cls = package.loaded[class_name]
+    if type(cls) == "userdata" or not cls then
+        cls = {}
+        if super then
+            cls.super = super
+            setmetatable(cls, super)
+        end
+        cls.__cname = class_name
+        cls.__ctype = 2 -- lua
+        cls.__index = cls
+        cls.__RELOAD_FLAG = true
+        cls.__RELOAD_RUNNING_ATTR_NAMES = {}
+        cls.__RELOADING = nil
+        cls.__RELOAD_AFTER = nil
+        cls.__RELOAD_MOD_NAME  = class_name
+
+        function cls.New()
+            local instance = setmetatable({}, cls)
+            instance.class = cls
+            return instance
+        end
+    end
+
+    return cls
+end
+
+
+
+
+
+
+换装实现 TODO（三个最重要的东西，网格，骨骼，材质）
+Time学习 TODO 
+https://zhuanlan.zhihu.com/p/121747398 TODO
+IOS包  TODO
+
+
+资源加载优化问题。
+异步加载。
+分帧加载。
+角色范围剔除
+.
+
+timeline组件在打包后不起作用。解决：在Resource里新建一个timeline资源。
+sdk30打包问题。碰到bad light userdata pointer  需要重新编译libtolua.so解决
+（https://blog.csdn.net/gqj108/article/details/121607955）
+
+tolua和ulua有些写法不一样的
+
+unity打包需要配置3件东西。sdk jdk ndk  unity2018需要手动配置。2019及以后可以自动配置

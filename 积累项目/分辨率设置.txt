@@ -1,0 +1,52 @@
+两个方法：Screen.SetResolution（）和 Screen.fullScreen = true;
+Screen.fullScreen = true;是设置为全屏的代码。
+
+
+
+//  640*480 全屏  
+Screen.SetResolution (640, 480, true);  
+  
+//  640*480 全屏 60hz速度  
+Screen.SetResolution (640, 480, true，60);  
+  
+//  800*480 非全屏   
+Screen.SetResolution (800, 480, false);  
+第一个例子就是640*480分辨率下的全屏，
+第二个例子是以60hz的速率转化为640*480的全屏（默认情况这个preferredRefreshRate=0）；
+第三个例子是800*480分辨率但不全屏。
+
+
+
+创建六个按钮分别控制以下分辨率
+public void ResolutionChange(int type)  
+  
+    {  
+        if (type == 1) {  
+            Screen.SetResolution (800, 480, false);//屏幕.设置分辨率（800，480，非全屏）  
+        }  
+        if (type == 2) {  
+            Screen.SetResolution (800, 480, true);  
+        }  
+        if (type == 3) {  
+            Screen.SetResolution (1024, 768, false);  
+        }  
+        if (type == 4) {  
+            Screen.SetResolution (1280, 768, false);  
+        }    
+        if (type ==5)    
+        {    
+            //获取设置当前屏幕分辩率    
+            Resolution[] resolutions = Screen.resolutions;    
+            //设置当前分辨率    
+            Screen.SetResolution(resolutions[resolutions.Length - 1].width, resolutions[resolutions.Length - 1].height, true);    
+  
+  
+            //Screen.fullScreen = true;  //这句是unity全屏代码  
+        }      
+        if(type ==6)    
+        {    
+            Screen.fullScreen = false;  //退出全屏             
+  
+  
+        }    
+    } 

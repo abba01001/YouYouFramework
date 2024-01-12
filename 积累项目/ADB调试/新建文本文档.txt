@@ -1,0 +1,13 @@
+按键windows+r打开运行，输入sysdm.cpl，回车。
+高级》环境变量》系统变量》path
+path路径例如：D:\adb\platform-tools
+
+adb --version 测试安装成功
+
+adb devices 设备信息
+
+adb install apk拖进来
+
+--抓unity 日志
+adb shell
+logcat | grep -i unity

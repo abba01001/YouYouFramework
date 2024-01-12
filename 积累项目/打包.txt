@@ -1,0 +1,13 @@
+UGF打包安卓流程。
+Builtin里取消勾选Editor Resource Mode 模式
+Resource里选择（Resource Mode）Package模式
+
+然后打AB包资源。
+把AB包里的Package（注意是Package文件夹）文件夹里的文件移动到项目里\Assets\StreamingAssets
+
+然后发布安卓包
+（数据表里的二进制文件没用，可以全删掉）
+
+
+
+编辑器模式（勾选Editor Resource Mode 模式）
