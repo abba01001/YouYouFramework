@@ -380,8 +380,45 @@ TCP粘包问题是在网络通信中常见的一种问题
 
 做过哪些性能优化？
 1:代码优化：
-2:资源优化：(动画片段优化、贴图资源优化、模型优化)
+2:资源优化：(动画优化、贴图优化、模型优化)
 3:UI优化：
 4:性能监控和分析：
 
 贴图资源优化：1、降低最大分辨率 2、纹理压缩格式 3、取消勾选Read/Write Enabled 4、禁用多余的Mip Map（有点类似LOD技术，根据渲染距离使用不同精度的图片） 5、打包图集
+模型优化：（尽量避免模型留有多余的面数）1、禁用掉Reader/Write Enables:2、尽量不要勾选不需要的功能选项3、设置一些关于质量与性能的选项
+动画优化：（总结两点1.删除不需要的序列帧 2.降低帧信息的精度）
+（1）.降低帧信息的精度 
+unityEditor存储的动画文件是text文件,所以缩短浮点数精度，会导致文件表面上有所减少，裁剪动画文件的精度，会让动画的点变的更加稀疏（会将一些曲线上相近的数值，变为一致），Dense Curve是减少了，Constant Curve是增多了，总的内存是减小了。
+（2）. 去除没有变化的帧动画
+去除没有变化的Position，Rotation序列帧，只留头尾两帧。
+（3）. 去除冗余Scale曲线数据
+fbx中很少用到Scale曲线做动画，所以在跟美术的小伙伴确定之后，这部分是可以去除的。PS（如果有需要的话可以在用到Scale变化的骨骼节点加上关键字区分）
+
+Unity中的Mesh压缩：
+即Player Setting中的：Vertex Compression   Optimize Mesh Data
+以及Model importer中的：Mesh Compression 
+Vertex Compression的实现是将顶点channel的数据格式format设置为16bit，因此可以节约运行时的内存使用（float->half)
+Optimize Mesh Data则主要用来剔除不需要的channel，即剔除额外的数据。与压缩无关
+Mesh Compression是使用压缩算法，将mesh数据进行压缩，结果是会减少占用硬盘的空间，但是在runtime的时候会被解压为原始精度的数据。
+
+和Runtime时内存关系较大的是Vertex Compression的实现
+是否可以进行Vertex Compression，则和模型的导入设置以及是否可以进行dynamic batching（在build 阶段，主要判断mesh的顶点数是否符合条件）有关。
+简单可以归纳为以下几点：
+1. 是否适合进行dynamic batching
+2. 在Model Importer中是否开启了Read/Write Enabled
+3. 在Model Importer中是否开启了Mesh Compression（是的，很吃惊是吧）
+
+Mesh Compression（网格压缩）:
+目的是减小模型在硬盘上的存储空间，以减小应用的包体大小。
+
+Vertex Compression（顶点压缩）:
+目的是在运行时减小模型在内存中的占用，提高运行时性能。
+
+Optimize Mesh Data（优化网格数据）:
+包括一系列优化步骤，旨在在运行时减小内存占用。
+
+开启动态合批时，对一些小模型（vertex count<300）Vertex Compression是无效的
+
+总结（开启读写会使内存翻倍。
+为了优化Mesh的内存开销，不要开启Mesh Compression，以避免Vertex Compression的失效）
+
