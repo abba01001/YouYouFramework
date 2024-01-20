@@ -436,4 +436,4 @@ Optimize Mesh Data（优化网格数据）:
 
 总结（开启读写会使内存翻倍。为了优化Mesh的内存开销，不要开启Mesh Compression，以避免Vertex Compression的失效）
 
-Unity音频优化
+Unity音频优化：
