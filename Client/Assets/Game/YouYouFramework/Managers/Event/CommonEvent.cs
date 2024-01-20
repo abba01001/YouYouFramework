@@ -58,9 +58,12 @@ namespace Main
 
             if (lstHandler != null && lstHandler.Count > 0)
             {
-                foreach (var item in lstHandler)
+                for (LinkedListNode<OnActionHandler> curr = lstHandler.First; curr != null; curr = curr.Next)
                 {
-                    item?.Invoke(userData);
+                    if (curr.Value.Target != null)
+                    {
+                        curr.Value?.Invoke(userData);
+                    }
                 }
             }
         }
