@@ -12,7 +12,6 @@ namespace Main
     {
         public delegate void OnActionHandler(object userData);
         private Dictionary<string, LinkedList<OnActionHandler>> dic = new Dictionary<string, LinkedList<OnActionHandler>>();
-
         #region AddEventListener 观察者监听事件
         /// <summary>
         /// 观察者监听事件
@@ -59,12 +58,9 @@ namespace Main
 
             if (lstHandler != null && lstHandler.Count > 0)
             {
-                for (LinkedListNode<OnActionHandler> curr = lstHandler.First; curr != null; curr = curr.Next)
+                foreach (var item in lstHandler)
                 {
-                    if (curr.Value.Target != null)
-                    {
-                        curr.Value?.Invoke(userData);
-                    }
+                    item?.Invoke(userData);
                 }
             }
         }

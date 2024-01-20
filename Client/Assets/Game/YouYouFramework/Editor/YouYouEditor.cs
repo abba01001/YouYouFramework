@@ -42,21 +42,6 @@ public class YouYouEditor : OdinMenuEditorWindow
         return tree;
     }
 
-    #region AssetBundleOpenPersistentDataPath 打开persistentDataPath
-    [MenuItem("YouYouTools/打开persistentDataPath")]
-    public static void AssetBundleOpenPersistentDataPath()
-    {
-        string output = Application.persistentDataPath;
-        if (!Directory.Exists(output))
-        {
-            Directory.CreateDirectory(output);
-        }
-        output = output.Replace("/", "\\");
-        System.Diagnostics.Process.Start("explorer.exe", output);
-    }
-    #endregion
-
-
     #region SetFBXAnimationMode 设置文件动画循环为true
     [MenuItem("YouYouTools/设置文件动画循环为true")]
     public static void SetFBXAnimationMode()

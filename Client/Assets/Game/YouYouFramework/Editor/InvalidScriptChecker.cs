@@ -50,7 +50,6 @@ public class InvalidScriptChecker : EditorWindow
             if (assetPath.EndsWith(".prefab"))
             {
                 GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
-
                 if (prefab != null && GameObjectUtility.GetMonoBehavioursWithMissingScriptCount(prefab) > 0)
                 {
                     objectsWithMissingScripts.Add(prefab);
