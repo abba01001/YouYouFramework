@@ -221,7 +221,44 @@ ref传参前参数要有初始值。可以改变参数值
 out传参前不用初始化参数。方法内部必须给参数赋值，可以改变参数值
 in只读。不能改变参数值
 
-c#中，委托是个什么样的概念？
+Unity委托是个什么样的概念？
+单播委托（只添加一个方法）
+多播委托（可以添加多个方法，不安全，其中一个方法报错，后面都不会执行）
+
+delegate是基础，Action委托和Func委托是对delegate再一次封装得来的，（都可以直接赋值，或者+=  -=操作）
+
+Unity 事件是特殊的委托，通过 UnityEvent 封装了委托，提供了一种更直观的方式来处理事件
+使用 AddListener/RemoveListener 添加/移除，而不使用直接的 += 和 -= 操作符。
+
+事件与委托的区别：
+
+委托创建时会定义方法的类型（是否有无参数、有无返回值）
+事件的创建需要一个委托才能声明（因为事件就是委托的实例）
+委托可以在任何类中或类外声明，但是事件只能在类中声明（类型跟实例，实例要运行所以要在类里面咯）
+事件只能在当前声明的类中调用，但是可以在其他类中为其添加/删除函数，无论将事件设置成public还是static其他类都无法调用
+
+
+
+1）Action委托——返回值必须为空，参数可有可无
+Action action;
+Action<string,float> action1;
+action = new Action(同参数的方法1)
+action1 = new Action<string ,float> (sayhello);
+ 
+public void SayHello(string name,float num)
+{
+    Debug.log(sting.Fromat("{0} has {1} ChampionShips .",name,num));
+}
+
+2) Func委托——返回值必须有，但是参数可有可无
+Func<double,double,double> func1;
+func1 = new Func<double,double,double>(Add);
+public double Add(doublea ,double b)
+{
+    return a+b;
+}
+
+
 委托就相当于一个容器，可以把所有的方法丢进去，一起执行。可以动态的去添加/移除方法
 委托的缺点？耦合度强
 

@@ -152,7 +152,7 @@ public class ReferenceFinderWindow : EditorWindow
     {
         EditorGUILayout.BeginHorizontal(toolbarGUIStyle);
         //刷新数据
-        if (GUILayout.Button("Refresh Data", toolbarButtonGUIStyle))
+        if (GUILayout.Button("更新项目资源数据", toolbarButtonGUIStyle))
         {
             data.CollectDependenciesInfo();
             needUpdateAssetTree = true;
@@ -160,13 +160,13 @@ public class ReferenceFinderWindow : EditorWindow
         }
         //修改模式
         bool PreIsDepend = isDepend;
-        isDepend = GUILayout.Toggle(isDepend, isDepend ? "Model(Depend)" : "Model(Reference)", toolbarButtonGUIStyle,GUILayout.Width(100));
+        isDepend = GUILayout.Toggle(isDepend, isDepend ? "查找依赖(当前模式)" : "查找引用(当前模式)", toolbarButtonGUIStyle,GUILayout.Width(150));
         if(PreIsDepend != isDepend){
             OnModelSelect();
         }
         //是否需要更新状态
         bool PreNeedUpdateState = needUpdateState;
-        needUpdateState = GUILayout.Toggle(needUpdateState, "Need Update State", toolbarButtonGUIStyle);
+        needUpdateState = GUILayout.Toggle(needUpdateState, "是否更新状态", toolbarButtonGUIStyle);
         if (PreNeedUpdateState != needUpdateState)
         {
             PlayerPrefs.SetInt(needUpdateStatePrefKey, needUpdateState ? 1 : 0);
