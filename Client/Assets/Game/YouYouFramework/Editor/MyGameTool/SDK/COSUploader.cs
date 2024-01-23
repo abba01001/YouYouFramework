@@ -17,55 +17,6 @@ namespace StarForce.Editor
     public class COSUploader
     {
         private static CosConfig cosConfig;
-        //[MenuItem("YouYouTools/将打包生成的Version.txt上传到云端", false, 50)]
-        //static void UploadVersionInfo ()
-        //{
-        //    // 通过Resources.Load加载CosConfig实例
-        //    cosConfig = Resources.Load<CosConfig>("CosConfig");
-        //    // 确保实例非空
-        //    if (cosConfig == null)
-        //    {
-        //        Debug.LogError("CosConfig not found! Make sure it's placed in a Resources folder.");
-        //        return;
-        //    }
-        //    CosXml cosXml = CreateCosXml();
-        //    try
-        //    {
-        //        // 构建 txtFilePath，相对于项目的路径
-        //        string txtFileName = "Assets/PackageTool/Version.txt";
-        //        string srcPath = System.IO.Path.Combine(Application.dataPath, "..", txtFileName);
-
-        //        if (!File.Exists(srcPath))
-        //        {
-        //            Debug.Log("Version.txt不存在");
-        //            return;
-        //        }
-
-        //        PutObjectRequest request = new PutObjectRequest(cosConfig.bucket, cosConfig.cosVersionPath, srcPath);
-        //        //设置签名有效时长
-        //        request.SetSign(TimeUtils.GetCurrentTime(TimeUnit.Seconds), 600);
-        //        //设置进度回调
-        //        request.SetCosProgressCallback(delegate (long completed, long total)
-        //        {
-        //            Debug.Log(String.Format("progress = {0:##.##}%", completed * 100.0 / total));
-        //        });
-        //        //执行请求
-        //        PutObjectResult result = cosXml.PutObject(request);
-        //        //对象的 eTag
-        //        string eTag = result.eTag;
-
-        //    }
-        //    catch (COSXML.CosException.CosClientException clientEx)
-        //    {
-        //        Debug.LogError("CosClientException: " + clientEx);
-        //    }
-        //    catch (COSXML.CosException.CosServerException serverEx)
-        //    {
-        //        //请求失败
-        //        Debug.LogError("CosServerException: " + serverEx.GetInfo());
-        //    }
-        //}
-
         [MenuItem("YouYouTools/将AB包资源上传到云端", false, 53)]
         static void UploadAB()
         {
@@ -120,14 +71,18 @@ namespace StarForce.Editor
             foreach (string filePath in files)
             {
                 string relativePath = filePath.Substring(localFolderPath.Length + 1);
-                PutObjectRequest request = new PutObjectRequest(bucket, cosPath + "/" + relativePath, filePath);
-                request.SetSign(TimeUtils.GetCurrentTime(TimeUnit.Seconds), 600);
-                request.SetCosProgressCallback(delegate (long completed, long total)
+
+                using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
                 {
-                    Debug.Log(String.Format("progress = {0:##.##}%", completed * 100.0 / total));
-                });
-                PutObjectResult result = cosXml.PutObject(request);
-                string eTag = result.eTag;
+                    PutObjectRequest request = new PutObjectRequest(bucket, cosPath + "/" + relativePath, fileStream);
+                    request.SetSign(TimeUtils.GetCurrentTime(TimeUnit.Seconds), 600);
+                    request.SetCosProgressCallback(delegate (long completed, long total)
+                    {
+                        Debug.Log(String.Format("progress = {0:##.##}%", completed * 100.0 / total));
+                    });
+                    PutObjectResult result = cosXml.PutObject(request);
+                    string eTag = result.eTag;
+                }
             }
 
             // 递归上传子文件夹
