@@ -488,3 +488,5 @@ AB包资源释放涉及到的类（AssetBundlePool、AssetBundleReferenceEntity�
 
 当某个AB包引用为0，则释放这个AB包
 
+包体优化（清理无用资源，根据依赖关系GUID）
+
