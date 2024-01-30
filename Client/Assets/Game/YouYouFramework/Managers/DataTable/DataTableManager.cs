@@ -19,7 +19,7 @@ namespace YouYou
         public Sys_BGMDBModel Sys_BGMDBModel { get; private set; }
         public Sys_AudioDBModel Sys_AudioDBModel { get; private set; }
         public Sys_SceneDBModel Sys_SceneDBModel { get; private set; }
-
+        public Sys_GuideDBModel Sys_GuideDBModel { get; private set; }
 
         /// <summary>
         /// 加载表格
@@ -44,6 +44,9 @@ namespace YouYou
 
             Sys_SceneDBModel = new Sys_SceneDBModel();
             Sys_SceneDBModel.LoadData(m_TaskGroup);
+
+            Sys_GuideDBModel = new Sys_GuideDBModel();
+            Sys_GuideDBModel.LoadData(m_TaskGroup);
 
             m_TaskGroup.OnComplete = OnLoadDataTableComplete;
             m_TaskGroup.Run(true);
