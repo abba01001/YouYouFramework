@@ -11,3 +11,5 @@ adb install apk拖进来
 --抓unity 日志
 adb shell
 logcat | grep -i unity
+
+            T obj = await AddressableUtils.LoadAsync<ScriptableObject>("111")
