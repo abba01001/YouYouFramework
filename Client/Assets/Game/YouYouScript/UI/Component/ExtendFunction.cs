@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
+using YouYou;
 
 public static class ExtendFunction
     {
@@ -10,7 +11,7 @@ public static class ExtendFunction
             Transform result = ts.Find(path);
             if (result == null)
             {
-                GameUtil.LogError($"该路径未找到对应的组件{path}");
+                GameEntry.LogError($"该路径未找到对应的组件{path}");
                 return null;
             }
             return result.GetComponent<T>();

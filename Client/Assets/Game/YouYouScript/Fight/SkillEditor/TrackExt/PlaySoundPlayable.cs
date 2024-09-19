@@ -9,15 +9,15 @@ namespace YouYou
     public class PlaySoundEventArgs
     {
         /// <summary>
-        /// Ä¿±êµã
+        /// Ä¿ï¿½ï¿½ï¿½
         /// </summary>
-        [Header("Ä¿±êµã")]
+        [Header("Ä¿ï¿½ï¿½ï¿½")]
         public DynamicTarget Target;
 
         /// <summary>
-        /// ÉùÒôÎÄ¼þ
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½
         /// </summary>
-        [Header("ÉùÒôÎÄ¼þ")]
+        [Header("ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½")]
         public AudioClip AudioClip;
     }
     public class PlaySoundPlayable : BasePlayableAsset<PlaySoundPlayableBehaviour, PlaySoundEventArgs>
