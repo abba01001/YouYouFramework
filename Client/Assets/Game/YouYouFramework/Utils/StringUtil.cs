@@ -2,10 +2,13 @@ using UnityEngine;
 using System.Collections;
 using System;
 using System.Text.RegularExpressions;
+using System.Text;
 
 
 public static class StringUtil
 {
+    private static StringBuilder stringBuilder = new StringBuilder();
+
     #region IsNullOrEmpty 验证值是否为null
     /// <summary>
     /// 判断对象是否为Null、DBNull、Empty或空白字符串
@@ -70,5 +73,16 @@ public static class StringUtil
         float temp = 0;
         float.TryParse(str, out temp);
         return temp;
+    }
+
+    //拼接字符串
+    public static string JointString(params object[] values)
+    {
+        stringBuilder.Clear();
+        foreach (object value in values)
+        {
+            stringBuilder.Append(value);
+        }
+        return stringBuilder.ToString();
     }
 }
