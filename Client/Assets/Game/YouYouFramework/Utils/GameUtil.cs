@@ -67,11 +67,4 @@ public class GameUtil
         }
         return null;
     }
-    
-    public static void LogError(params object[] messages)
-    {
-        string combinedMessage = StringUtil.JointString(messages);
-        Debug.LogError(combinedMessage);
-    }
-
 }
