@@ -35,6 +35,10 @@ public class PlayerMove : MonoBehaviour
     private NavMeshPath path;
     
     
+    private float verticalVelocity = 0f;      // 垂直速度
+    private float slopeForce = 2f;            // 控制下坡时的力度
+    private float slopeForceRayLength = 1.5f; // 射线检测的长度
+    
     void Start()
     {
         Agent = GetComponent<NavMeshAgent>();
@@ -117,7 +121,18 @@ public class PlayerMove : MonoBehaviour
     {
         CheckJump();
         CheckMove();
-        mCharCtrl.Move(velocity * Time.deltaTime);
+        CollisionFlags flags = mCharCtrl.Move(velocity * Time.deltaTime);
+        HandleInWall(flags);
+
+    }
+
+    // 让角色滑过碰撞的表面，避免卡住
+    private void HandleInWall(CollisionFlags flags)
+    {
+        if ((flags & CollisionFlags.Sides) != 0)
+        {
+            velocity += Physics.gravity * Time.deltaTime; // 遇到侧面碰撞时增加重力的影响
+        }
     }
 
     public void OperateJump()
@@ -165,6 +180,34 @@ public class PlayerMove : MonoBehaviour
             velocity.z = realdir.z * Constants.MainRoleMoveSpeed; // 设置水平速度
             mAnimator.SetBool("run", true);
         }
+        if (isGrounded)
+        {
+            verticalVelocity = 0f; // 如果角色在地面上，垂直速度重置
+
+            // 检查下坡并添加额外的力
+            if (OnSlope())
+            {
+                velocity += Vector3.down * mCharCtrl.height / 2 * slopeForce;
+                velocity.y = verticalVelocity;
+            }
+        }else
+        {
+            verticalVelocity += Constants.GRAVITY * Time.deltaTime; // 角色不在地面时，应用重力
+        }
+    }
+    
+    private bool OnSlope()
+    {
+        if (IsMove) // 只有在移动时才检查
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, Vector3.down, out hit, slopeForceRayLength))
+            {
+                float angle = Vector3.Angle(hit.normal, Vector3.up);
+                return angle > mCharCtrl.slopeLimit; // 返回是否超过斜坡限制的角度
+            }
+        }
+        return false;
     }
 
     private void StartMove(Vector2 delta)
