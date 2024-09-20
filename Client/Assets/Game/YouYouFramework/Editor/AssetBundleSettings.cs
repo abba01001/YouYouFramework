@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using StarForce.Editor;
 using UnityEditor;
 using UnityEngine;
 using YouYou;
@@ -110,6 +111,14 @@ public class AssetBundleSettings : ScriptableObject
         Debug.Log("VersionFile生成版本文件完毕");
     }
 
+    [VerticalGroup("Common/Right")]
+    [Button(ButtonSizes.Medium)]
+    [LabelText("上传资源到云端")]
+    public void UpdateLoadAssetBundle()
+    {
+        COSUploader.UploadAB();
+    }
+    
     #region TempPath OutPath
     /// <summary>
     /// 临时目录

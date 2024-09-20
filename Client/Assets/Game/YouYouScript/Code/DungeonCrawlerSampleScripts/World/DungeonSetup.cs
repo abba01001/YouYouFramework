@@ -53,10 +53,34 @@ namespace DunGen.DungeonCrawler
 			player.transform.rotation = Quaternion.identity;
 			spawnedPlayerInstance = player;
 			playerUI.SetPlayer(spawnedPlayerInstance);
-
+			CombineWithoutSpecificObjects();
 			// All hideable objects are spawned by now,
 			// we can cache some information for later use
 			HideableObject.RefreshHierarchies();
+		}
+		
+		void CombineWithoutSpecificObjects()
+		{
+			// 找到主物体
+			GameObject dungeon = GameObject.Find("Dungeon");
+			List<GameObject> list = new List<GameObject>();
+			// 遍历所有子物体
+			foreach (Transform child in dungeon.GetComponentsInChildren<Transform>())
+			{
+				// 如果子物体的名字中包含 "door"（不区分大小写），则设置其 Static 属性为 false
+				if (child.gameObject.CompareTag("Door"))
+				{
+					child.gameObject.SetActive(false);
+					list.Add(child.gameObject);
+				}
+			}
+			// 合并剩余的静态物体
+			StaticBatchingUtility.Combine(dungeon);
+
+			foreach (var go in list)
+			{
+				go.SetActive(true);
+			}
 		}
 	}
 }

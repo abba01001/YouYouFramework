@@ -26,7 +26,6 @@ namespace YouYou
         private void Awake()
         {
             backGroundOriginLocalPostion = backGround.GetComponent<RectTransform>().anchoredPosition;
-            EasyTouch.On_Pinch += OnWidgetPinch;
         }
         void OnDisable()
         {
@@ -78,9 +77,10 @@ namespace YouYou
         
         public void OnWidgetPinch(Gesture gesture)
         {
+            GameEntry.LogError(gesture.pickedObject == null,"----",gameObject.name);
+
             if (gesture.pickedObject != gameObject)
                 return;
-
             float delta = gesture.deltaPinch * Time.deltaTime;
 
             if (OnPinch != null)

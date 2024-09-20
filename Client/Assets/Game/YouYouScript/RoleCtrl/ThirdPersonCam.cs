@@ -72,12 +72,12 @@ public class ThirdPersonCam : MonoBehaviour
     /// <summary>
     /// 基础摄像机偏移的倍率的最大值
     /// </summary>
-    public float mMaxDistance = 2.0f;
+    public float mMaxDistance = 10f;
 
     /// <summary>
     /// 基础摄像机偏移的倍率的最小值
     /// </summary>
-    public float mMinDistance = 1.0f;
+    public float mMinDistance = 1.5f;
 
     /// <summary>
     /// 镜头推进的速度
@@ -98,11 +98,6 @@ public class ThirdPersonCam : MonoBehaviour
     /// 基础摄像机偏移的倍率
     /// </summary>
     private float mDistance = 0.0f;
-
-    /// <summary>
-    /// 控制摄像机的ui
-    /// </summary>
-    public JoystickCamUI mJoystickCamUI;
 
     #endregion
 
@@ -132,8 +127,6 @@ public class ThirdPersonCam : MonoBehaviour
         Joystick.OnPinch += OnJoystickCamPinch;
         mAngleH = initialAngleH;
         mAngleV = initialAngleV;
-        // mJoystickCamUI.OnDrag += OnJoystickCamDragDown;
-        // mJoystickCamUI.OnPinch += OnJoystickCamPinch;
     }
 	
 	// Update is called once per frame
@@ -162,11 +155,10 @@ public class ThirdPersonCam : MonoBehaviour
 
     void OnDestroy()
     {
-        if (mJoystickCamUI != null)
-        {
-            mJoystickCamUI.OnDrag -= OnJoystickCamDragDown;
-            mJoystickCamUI.OnPinch -= OnJoystickCamPinch;
-        }
+        EasyTouch.On_Pinch -= Joystick.OnWidgetPinch;
+        Joystick.OnChanged -= OnJoystickCamDragDown;
+        Joystick.OnUp -= OnJoystickCamDragUp;
+        Joystick.OnPinch -= OnJoystickCamPinch;
     }
 
     void LateUpdate()

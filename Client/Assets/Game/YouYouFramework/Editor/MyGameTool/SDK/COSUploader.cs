@@ -16,15 +16,14 @@ using YouYou;
 
 namespace StarForce.Editor
 {
-    public class COSUploader
+    public static class COSUploader
     {
         private static CosConfig cosConfig;
         private static StringBuilder successLog = new StringBuilder(); // 用于记录成功的上传状态
         private static StringBuilder failureLog = new StringBuilder(); // 用于记录失败的上传状态
         private static UploadResultWindow uploadWindow;
         private static Stopwatch stopwatch;
-        [MenuItem("YouYouTools/将AB包资源上传到云端", false, 53)]
-        static async void UploadAB()
+        public static async void UploadAB()
         {
             cosConfig = Resources.Load<CosConfig>("CosConfig");
             CosXml cosXml = CreateCosXml();

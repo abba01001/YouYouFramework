@@ -99,12 +99,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mPlayer: {fileID: 0}
   mPivotOffset: {x: 0, y: 1, z: 0}
-  mHorizontalAimingSpeed: 1500
+  mHorizontalAimingSpeed: 1000
+  scaleFactor: 1
   mVerticalAimingSpeed: 1000
   mMaxVerticalAngle: 30
   mMinVerticalAngle: -60
   mMaxDistance: 10
-  mMinDistance: 1
+  mMinDistance: 1.5
   mZoomSpeed: 1
   mJoystickCamUI: {fileID: 0}
   Joystick: {fileID: 0}
