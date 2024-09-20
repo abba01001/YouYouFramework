@@ -8,7 +8,7 @@
 
     // 全局可变变量
     public static float MainRoleJumpHeight = 1.0f;//主角跳跃高度
-    public static float MainRoleMoveSpeed = 1.5f;
+    public static float MainRoleMoveSpeed = 2f;
     
     // 定义全局常量，常量值不可修改
     public const float GRAVITY = -9.81f;

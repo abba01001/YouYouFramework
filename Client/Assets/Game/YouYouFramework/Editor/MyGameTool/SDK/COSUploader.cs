@@ -141,6 +141,7 @@ namespace StarForce.Editor
         private static string successLog;
         private static string failureLog;
         private static string totalTime;
+        private Vector2 scrollPosition; // 用于记录滚动位置
 
         public static void ShowWindow(string successes, string failures, string time)
         {
@@ -153,13 +154,21 @@ namespace StarForce.Editor
 
         private void OnGUI()
         {
+            // 添加一个滚动视图
+            scrollPosition = GUILayout.BeginScrollView(scrollPosition, false, true);
+
+            // 显示成功上传的文件
             GUILayout.Label("成功上传的文件:", EditorStyles.boldLabel);
-            GUILayout.TextArea(successLog, GUILayout.Height(200));
+            GUILayout.TextArea(successLog, GUILayout.ExpandHeight(false)); // 可以用 ExpandHeight 来适应
 
+            // 显示失败上传的文件
             GUILayout.Label("失败上传的文件:", EditorStyles.boldLabel);
-            GUILayout.TextArea(failureLog, GUILayout.Height(200));
+            GUILayout.TextArea(failureLog, GUILayout.ExpandHeight(false));
 
+            // 显示总耗时
             GUILayout.Label(totalTime, EditorStyles.miniLabel);
+
+            GUILayout.EndScrollView(); // 结束滚动视图
         }
     }
 }

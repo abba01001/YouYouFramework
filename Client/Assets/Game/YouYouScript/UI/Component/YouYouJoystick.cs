@@ -25,8 +25,7 @@ namespace YouYou
 
         private void Awake()
         {
-            backGround.GetComponent<RectTransform>().anchoredPosition = Vector3.zero;
-            backGroundOriginLocalPostion = backGround.localPosition;
+            backGroundOriginLocalPostion = backGround.GetComponent<RectTransform>().anchoredPosition;
             EasyTouch.On_Pinch += OnWidgetPinch;
         }
         void OnDisable()
@@ -90,13 +89,13 @@ namespace YouYou
 
         public void RestJoystick()
         {
-            backGround.localPosition = backGroundOriginLocalPostion;
+            backGround.GetComponent<RectTransform>().anchoredPosition = backGroundOriginLocalPostion;
             handle.localPosition = Vector3.zero;
             fingerId = int.MinValue;
             UpdateVirtualAxes();
         }
 
-        private Vector3 backGroundOriginLocalPostion, pointerDownPosition;
+        private Vector2 backGroundOriginLocalPostion, pointerDownPosition;
         private int fingerId = int.MinValue; //当前触发摇杆的 pointerId ，预设一个永远无法企及的值
         [Flags]
         public enum Direction

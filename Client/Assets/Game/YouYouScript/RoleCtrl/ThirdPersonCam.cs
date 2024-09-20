@@ -101,10 +101,16 @@ public class ThirdPersonCam : MonoBehaviour
     #endregion
 
     public YouYouJoystick Joystick;
-    private bool IsRotate;
+    private bool RotateIng;
+    private bool ResetRotateIng;
     private Vector2 RotateDelta = Vector2.zero;
     #region 内置函数
 
+    public float initialAngleH = 0f;
+    public float initialAngleV = -30f;
+    
+    private float speedFactor = 4f; // 初始速度因子
+    private float acceleration = 0.5f; // 加速因子
     void Awake()
     {
         mCamera = GetComponent<Camera>().transform;
@@ -115,26 +121,46 @@ public class ThirdPersonCam : MonoBehaviour
 	void Start ()
     {
         EasyTouch.On_Pinch += Joystick.OnWidgetPinch;
-        Joystick.OnChanged += OnJoystickCamDrag;
+        Joystick.OnChanged += OnJoystickCamDragDown;
+        Joystick.OnUp += OnJoystickCamDragUp;
         Joystick.OnPinch += OnJoystickCamPinch;
-        // mJoystickCamUI.OnDrag += OnJoystickCamDrag;
+        mAngleH = initialAngleH;
+        mAngleV = initialAngleV;
+        // mJoystickCamUI.OnDrag += OnJoystickCamDragDown;
         // mJoystickCamUI.OnPinch += OnJoystickCamPinch;
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        if (IsRotate)
+        if (RotateIng)
         {
             mAngleH += Mathf.Clamp(RotateDelta.x / Screen.width, -1.0f, 1.0f) * mHorizontalAimingSpeed;
             mAngleV += Mathf.Clamp(RotateDelta.y / Screen.height, -1.0f, 1.0f) * mVerticalAimingSpeed;
+        }
+
+        if (ResetRotateIng)
+        {
+            speedFactor += acceleration * Time.deltaTime;
+            mAngleH = Mathf.Lerp(mAngleH, initialAngleH, Time.deltaTime * speedFactor);
+            mAngleV = Mathf.Lerp(mAngleV, initialAngleV, Time.deltaTime  * speedFactor);
+            if (Mathf.Abs(mAngleH - initialAngleH) <= 0.2f && Mathf.Abs(mAngleV - initialAngleV) <= 0.2f)
+            {
+                mAngleH = initialAngleH;
+                mAngleV = initialAngleV;
+                ResetRotateIng = false;
+                speedFactor = 4f;
+            }
         }
     }
 
     void OnDestroy()
     {
-        mJoystickCamUI.OnDrag -= OnJoystickCamDrag;
-        mJoystickCamUI.OnPinch -= OnJoystickCamPinch;
+        if (mJoystickCamUI != null)
+        {
+            mJoystickCamUI.OnDrag -= OnJoystickCamDragDown;
+            mJoystickCamUI.OnPinch -= OnJoystickCamPinch;
+        }
     }
 
     void LateUpdate()
@@ -186,18 +212,19 @@ public class ThirdPersonCam : MonoBehaviour
 
     #region 回调函数
 
-    private void OnJoystickCamDrag(Vector2 delta)
+    private void OnJoystickCamDragDown(Vector2 delta)
     {
-        // mAngleH += Mathf.Clamp(delta.x / Screen.width, -1.0f, 1.0f) * mHorizontalAimingSpeed;
-        // mAngleV += Mathf.Clamp(delta.y / Screen.height, -1.0f, 1.0f) * mVerticalAimingSpeed;
-
-        StartRotate(delta);
+        if(ResetRotateIng) return;
+        RotateIng = true;
+        RotateDelta = delta;
     }
 
-    private void StartRotate(Vector2 delta)
+    public void OnJoystickCamDragUp(Vector2 delta)
     {
-        IsRotate = true;
-        RotateDelta = delta;
+        return;
+        RotateIng = false;
+        ResetRotateIng = true;
+        RotateDelta = new Vector2(initialAngleH, initialAngleV);
     }
     
     private void OnJoystickCamPinch(float delta)

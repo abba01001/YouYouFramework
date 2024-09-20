@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using DunGen.DungeonCrawler;
+using UnityEngine;
+using UnityEngine.AI;
 using YouYou;
 
 public class PlayerMove : MonoBehaviour
@@ -18,8 +20,24 @@ public class PlayerMove : MonoBehaviour
     private bool IsMove = false;
     private Vector2 MoveDelta = Vector2.zero;
 
+
+    public bool EnableOperateMove = false;
+    public bool EnableNavMove = false;
+    
+    
+
+    public NavMeshAgent Agent { get; private set; }
+    
+    [SerializeField]
+    private GameObject pingPrefab = null;
+    private Vector3 manualMovementDirection;
+    private NavMeshPath path;
+    
+    
     void Start()
     {
+        Agent = GetComponent<NavMeshAgent>();
+        path = new NavMeshPath();
         mJoystick.OnChanged = StartMove;
         mJoystick.OnDown = null;
         mJoystick.OnUp = StopMove;
@@ -29,11 +47,78 @@ public class PlayerMove : MonoBehaviour
 
     void Update()
     {
+        if (EnableOperateMove)
+        {
+            CheckOperateMove();
+        }
+
+        if (EnableNavMove)
+        {
+            if (Agent.remainingDistance <= Agent.stoppingDistance)
+            {
+                mAnimator.SetBool("run", false);
+                EnableNavMove = false;
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            EnableNavMove = true;
+            NavMoveTo(new Vector3(11.72f, 0.05211985f, -9.18f), true, true);
+        }
+
+    }
+
+    public void NavMoveTo(Vector3 destination,bool forceCalculatePath,bool pingLocation)
+    {
+        mAnimator.SetBool("isGround", true);
+        mAnimator.SetBool("run", true);
+        NavMeshHit hit;
+        Agent.enabled = true;
+        Agent.speed = Constants.MainRoleMoveSpeed;
+        if (NavMesh.SamplePosition(destination, out hit, 2f, -1)) destination = hit.position;
+            
+        bool requiresPath;
+
+        if (forceCalculatePath)
+            requiresPath = true;
+        else
+        {
+            const float manualMoveDistanceThreshold = 1.5f;
+            float distanceToDestination = (transform.position - destination).magnitude;
+
+            if (distanceToDestination > manualMoveDistanceThreshold)
+                requiresPath = true;
+            else
+                requiresPath = NavMesh.Raycast(transform.position, destination, out hit, -1);
+        }
+
+        if (!requiresPath)
+        {
+            manualMovementDirection = (destination - transform.position);
+            manualMovementDirection.y = 0f;
+            manualMovementDirection.Normalize();
+        }
+        else
+        {
+            manualMovementDirection = Vector3.zero;
+            if (Agent.CalculatePath(destination, path))
+            {
+                Agent.path = path;
+            }
+        }
+        
+        if (pingLocation)
+            Instantiate(pingPrefab, destination, Quaternion.identity);
+    }
+
+    private void CheckOperateMove()
+    {
         CheckJump();
         CheckMove();
         mCharCtrl.Move(velocity * Time.deltaTime);
     }
-
+    
     private void CheckJump()
     {
         isGrounded = Physics.Raycast(transform.position, Vector3.down, Constants.GroundCheckDistance, groundMask);
