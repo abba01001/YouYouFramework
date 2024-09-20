@@ -34,11 +34,11 @@ public class CosConfigInspector : Editor
         // 根据构建平台设置 cosABRoot 字段
         CosConfig targetCosConfig = (CosConfig)target;
         targetCosConfig.platformOption = GetPlatformOption(activeBuildTarget);
+        EditorUtility.SetDirty(targetCosConfig);
 
         EditorGUILayout.LabelField("cosABRoot", targetCosConfig.cosABRoot);
 
         EditorGUILayout.PropertyField(appidProp);
-
         serializedObject.ApplyModifiedProperties();
     }
 

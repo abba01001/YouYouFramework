@@ -17,5 +17,4 @@ MonoBehaviour:
   region: ap-guangzhou
   bucket: abab01001-1318826377
   cosVersionPath: /Unity/AssetBundle/Version.txt
-  platformOption: 0
   appid: 1318826377
