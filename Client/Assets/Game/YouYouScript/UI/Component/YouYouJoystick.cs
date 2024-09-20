@@ -5,6 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System;
+using HedgehogTeam.EasyTouch;
 
 namespace YouYou
 {
@@ -18,6 +19,7 @@ namespace YouYou
         public Action<Vector2> OnChanged; //事件 ： 摇杆被 拖拽时
         public Action<Vector2> OnDown; // 事件： 摇杆被按下时
         public Action<Vector2> OnUp; //事件 ： 摇杆上抬起时
+        public Action<float> OnPinch;//时间 : 捏屏幕 
         public bool IsDraging { get { return fingerId != int.MinValue; } } //摇杆拖拽状态
 
 
@@ -25,6 +27,7 @@ namespace YouYou
         {
             backGround.GetComponent<RectTransform>().anchoredPosition = Vector3.zero;
             backGroundOriginLocalPostion = backGround.localPosition;
+            EasyTouch.On_Pinch += OnWidgetPinch;
         }
         void OnDisable()
         {
@@ -72,6 +75,17 @@ namespace YouYou
                 GameEntry.Input.SetAxis(InputName.Vertical, delta.y);
             }
             OnChanged?.Invoke(delta);
+        }
+        
+        public void OnWidgetPinch(Gesture gesture)
+        {
+            if (gesture.pickedObject != gameObject)
+                return;
+
+            float delta = gesture.deltaPinch * Time.deltaTime;
+
+            if (OnPinch != null)
+                OnPinch(delta);
         }
 
         public void RestJoystick()

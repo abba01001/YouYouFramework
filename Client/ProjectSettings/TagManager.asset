@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Box
   - Road
+  - soldier
   layers:
   - Default
   - TransparentFX
@@ -29,7 +30,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - Joystick
   - 
   - 
   - 

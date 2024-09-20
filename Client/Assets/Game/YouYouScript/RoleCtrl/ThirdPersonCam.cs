@@ -1,8 +1,10 @@
 ﻿
 using System.Collections;
 using System.Collections.Generic;
+using HedgehogTeam.EasyTouch;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using YouYou;
 
 public class ThirdPersonCam : MonoBehaviour
 {
@@ -44,12 +46,12 @@ public class ThirdPersonCam : MonoBehaviour
     /// <summary>
     /// 水平瞄准速度
     /// </summary>
-    public float mHorizontalAimingSpeed = 400.0f;
+    public float mHorizontalAimingSpeed = 300.0f;
 
     /// <summary>
     /// 垂直瞄准速度
     /// </summary>
-    public float mVerticalAimingSpeed = 400.0f;
+    public float mVerticalAimingSpeed = 300.0f;
 
     /// <summary>
     /// 最大的垂直角度
@@ -74,7 +76,7 @@ public class ThirdPersonCam : MonoBehaviour
     /// <summary>
     /// 镜头推进的速度
     /// </summary>
-    public float mZoomSpeed = 1.0f;
+    public float mZoomSpeed = 0.5f;
 
     /// <summary>
     /// 水平旋转的角度
@@ -98,6 +100,9 @@ public class ThirdPersonCam : MonoBehaviour
 
     #endregion
 
+    public YouYouJoystick Joystick;
+    private bool IsRotate;
+    private Vector2 RotateDelta = Vector2.zero;
     #region 内置函数
 
     void Awake()
@@ -109,14 +114,21 @@ public class ThirdPersonCam : MonoBehaviour
     // Use this for initialization
 	void Start ()
     {
-        mJoystickCamUI.OnDrag += OnJoystickCamDrag;
-        mJoystickCamUI.OnPinch += OnJoystickCamPinch;
+        EasyTouch.On_Pinch += Joystick.OnWidgetPinch;
+        Joystick.OnChanged += OnJoystickCamDrag;
+        Joystick.OnPinch += OnJoystickCamPinch;
+        // mJoystickCamUI.OnDrag += OnJoystickCamDrag;
+        // mJoystickCamUI.OnPinch += OnJoystickCamPinch;
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-
+        if (IsRotate)
+        {
+            mAngleH += Mathf.Clamp(RotateDelta.x / Screen.width, -1.0f, 1.0f) * mHorizontalAimingSpeed;
+            mAngleV += Mathf.Clamp(RotateDelta.y / Screen.height, -1.0f, 1.0f) * mVerticalAimingSpeed;
+        }
     }
 
     void OnDestroy()
@@ -176,10 +188,18 @@ public class ThirdPersonCam : MonoBehaviour
 
     private void OnJoystickCamDrag(Vector2 delta)
     {
-        mAngleH += Mathf.Clamp(delta.x / Screen.width, -1.0f, 1.0f) * mHorizontalAimingSpeed;
-        mAngleV += Mathf.Clamp(delta.y / Screen.height, -1.0f, 1.0f) * mVerticalAimingSpeed;
+        // mAngleH += Mathf.Clamp(delta.x / Screen.width, -1.0f, 1.0f) * mHorizontalAimingSpeed;
+        // mAngleV += Mathf.Clamp(delta.y / Screen.height, -1.0f, 1.0f) * mVerticalAimingSpeed;
+
+        StartRotate(delta);
     }
 
+    private void StartRotate(Vector2 delta)
+    {
+        IsRotate = true;
+        RotateDelta = delta;
+    }
+    
     private void OnJoystickCamPinch(float delta)
     {
         mDistance -= delta * mZoomSpeed;
