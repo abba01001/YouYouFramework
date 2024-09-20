@@ -18,6 +18,7 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private Animator mAnimator;
 
     private bool IsMove = false;
+    private bool IsJump = false;
     private Vector2 MoveDelta = Vector2.zero;
 
 
@@ -42,7 +43,7 @@ public class PlayerMove : MonoBehaviour
         mJoystick.OnDown = null;
         mJoystick.OnUp = StopMove;
 
-        groundMask = LayerMask.GetMask("Ground");
+        groundMask = LayerMask.GetMask("Default");
     }
 
     void Update()
@@ -118,15 +119,22 @@ public class PlayerMove : MonoBehaviour
         CheckMove();
         mCharCtrl.Move(velocity * Time.deltaTime);
     }
+
+    public void OperateJump()
+    {
+        if(!isGrounded) return;
+        IsJump = true;
+    }
     
     private void CheckJump()
     {
         isGrounded = Physics.Raycast(transform.position, Vector3.down, Constants.GroundCheckDistance, groundMask);
-        if (isGrounded && Input.GetKeyDown(KeyCode.Space))
+        if (isGrounded && IsJump)
         {
             mAnimator.SetBool("isGround", false);
             mAnimator.SetTrigger("jump");
             velocity.y = Mathf.Sqrt(Constants.MainRoleJumpHeight * -2f * Constants.GRAVITY);
+            IsJump = false;
         }
 
         if (!isGrounded)

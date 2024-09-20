@@ -46,12 +46,18 @@ public class ThirdPersonCam : MonoBehaviour
     /// <summary>
     /// 水平瞄准速度
     /// </summary>
-    public float mHorizontalAimingSpeed = 300.0f;
+    public float mHorizontalAimingSpeed = 1000.0f;
+    
+#if UNITY_EDITOR
+    public float scaleFactor = 1f;
+#else
+    public float scaleFactor = 10f;
+#endif
 
     /// <summary>
     /// 垂直瞄准速度
     /// </summary>
-    public float mVerticalAimingSpeed = 300.0f;
+    public float mVerticalAimingSpeed = 1000.0f;
 
     /// <summary>
     /// 最大的垂直角度
@@ -135,15 +141,15 @@ public class ThirdPersonCam : MonoBehaviour
     {
         if (RotateIng)
         {
-            mAngleH += Mathf.Clamp(RotateDelta.x / Screen.width, -1.0f, 1.0f) * mHorizontalAimingSpeed;
-            mAngleV += Mathf.Clamp(RotateDelta.y / Screen.height, -1.0f, 1.0f) * mVerticalAimingSpeed;
+            mAngleH += Mathf.Clamp(RotateDelta.x / Screen.width, -1.0f, 1.0f) * mHorizontalAimingSpeed * scaleFactor;
+            mAngleV += Mathf.Clamp(RotateDelta.y / Screen.height, -1.0f, 1.0f) * mVerticalAimingSpeed * scaleFactor;
         }
 
         if (ResetRotateIng)
         {
             speedFactor += acceleration * Time.deltaTime;
-            mAngleH = Mathf.Lerp(mAngleH, initialAngleH, Time.deltaTime * speedFactor);
-            mAngleV = Mathf.Lerp(mAngleV, initialAngleV, Time.deltaTime  * speedFactor);
+            mAngleH = Mathf.Lerp(mAngleH, initialAngleH, Time.deltaTime * speedFactor * scaleFactor);
+            mAngleV = Mathf.Lerp(mAngleV, initialAngleV, Time.deltaTime  * speedFactor * scaleFactor);
             if (Mathf.Abs(mAngleH - initialAngleH) <= 0.2f && Mathf.Abs(mAngleV - initialAngleV) <= 0.2f)
             {
                 mAngleH = initialAngleH;

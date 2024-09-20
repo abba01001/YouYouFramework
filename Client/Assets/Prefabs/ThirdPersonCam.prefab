@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4246258109383598}
   - component: {fileID: 20091021731180194}
   - component: {fileID: 124426230934836330}
-  - component: {fileID: 81528121353014978}
   - component: {fileID: 114465614740580710}
   m_Layer: 0
   m_Name: ThirdPersonCam
@@ -27,14 +26,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1724870185363918}
-  m_LocalRotation: {x: 0.0008882607, y: 0.87157214, z: -0.0015787072, w: 0.49026397}
+  m_LocalRotation: {x: 0.00088990026, y: 0.8715719, z: -0.0015820285, w: 0.49026433}
   m_LocalPosition: {x: -44.77468, y: 120.67482, z: 41.799107}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0.208, y: 121.284, z: 0}
 --- !u!20 &20091021731180194
 Camera:
   m_ObjectHideFlags: 0
@@ -45,7 +44,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -59,14 +58,14 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 100
   field of view: 60
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967039
+    m_Bits: 4294967263
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -80,14 +79,6 @@ Camera:
   m_StereoSeparation: 0.022
 --- !u!124 &124426230934836330
 Behaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1724870185363918}
-  m_Enabled: 1
---- !u!81 &81528121353014978
-AudioListener:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -108,11 +99,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mPlayer: {fileID: 0}
   mPivotOffset: {x: 0, y: 1, z: 0}
-  mHorizontalAimingSpeed: 400
-  mVerticalAimingSpeed: 400
+  mHorizontalAimingSpeed: 1500
+  mVerticalAimingSpeed: 1000
   mMaxVerticalAngle: 30
   mMinVerticalAngle: -60
   mMaxDistance: 10
   mMinDistance: 1
   mZoomSpeed: 1
   mJoystickCamUI: {fileID: 0}
+  Joystick: {fileID: 0}
+  initialAngleH: 0
+  initialAngleV: -30

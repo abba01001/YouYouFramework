@@ -10,10 +10,9 @@ using System.Threading.Tasks;
 using COSXML.Utils;
 using HybridCLR.Editor;
 using Main;
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 using YouYou;
-using Debug = UnityEngine.Debug;
 
 namespace StarForce.Editor
 {
@@ -22,12 +21,17 @@ namespace StarForce.Editor
         private static CosConfig cosConfig;
         private static StringBuilder successLog = new StringBuilder(); // 用于记录成功的上传状态
         private static StringBuilder failureLog = new StringBuilder(); // 用于记录失败的上传状态
+        private static UploadResultWindow uploadWindow;
+        private static Stopwatch stopwatch;
         [MenuItem("YouYouTools/将AB包资源上传到云端", false, 53)]
         static async void UploadAB()
         {
             cosConfig = Resources.Load<CosConfig>("CosConfig");
             CosXml cosXml = CreateCosXml();
-            Stopwatch stopwatch = new Stopwatch(); // 用于记录耗时
+            stopwatch = new Stopwatch(); // 用于记录耗时
+            uploadWindow = new UploadResultWindow(); // 创建上传结果窗口
+            uploadWindow.Show(); // 显示窗口
+            
             try
             {
                 stopwatch.Start(); // 开始计时
@@ -38,22 +42,24 @@ namespace StarForce.Editor
                 string baseFolder = Path.Combine(SettingsUtil.ProjectDir, "AssetBundles", PlayerPrefs.GetString(YFConstDefine.AssetVersion), GetPlatformOption(activeBuildTarget));
 
                 // 递归上传整个文件夹
-                Debug.LogError(cosConfig.cosABRoot);
-                Debug.LogError(baseFolder);
                 await UploadFolderAsync(cosXml, cosConfig.bucket, cosConfig.cosABRoot, baseFolder);
                 
                 string totalTime = $"所有文件上传完成，总耗时: {stopwatch.Elapsed.TotalSeconds:0.00} 秒";
-                UploadResultWindow.ShowWindow(successLog.ToString(), failureLog.ToString(), totalTime);
-                // resultLog.AppendLine($"所有文件上传完成，总耗时: {stopwatch.Elapsed.TotalSeconds:0.00} 秒");
-                // Debug.LogError(resultLog.ToString());
+                uploadWindow.UpdateLog(successLog.ToString(), failureLog.ToString(), totalTime);
             }
             catch (COSXML.CosException.CosClientException clientEx)
             {
-                Debug.LogError("CosClientException: " + clientEx);
+                GameEntry.LogError("CosClientException: " + clientEx);
             }
             catch (COSXML.CosException.CosServerException serverEx)
             {
-                Debug.LogError("CosServerException: " + serverEx.GetInfo());
+                GameEntry.LogError("CosServerException: " + serverEx.GetInfo());
+            }
+            finally
+            {
+                // 上传完成后关闭窗口并显示结果提示
+                uploadWindow.Close();
+                ShowUploadResult(successLog.Length, failureLog.Length);
             }
         }
 
@@ -80,30 +86,40 @@ namespace StarForce.Editor
             foreach (string filePath in files)
             {
                 string relativePath = filePath.Substring(localFolderPath.Length + 1);
-                string uploadStatus;
 
-                using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
+                using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
                     PutObjectRequest request = new PutObjectRequest(bucket, cosPath + "/" + relativePath, fileStream);
                     request.SetSign(TimeUtils.GetCurrentTime(TimeUnit.Seconds), 600);
                     request.SetCosProgressCallback(delegate (long completed, long total)
                     {
-                        Debug.Log($"Progress uploading {relativePath}: {completed * 100.0 / total:0.00}%");
+                        GameEntry.LogError($"Progress uploading {relativePath}: {completed * 100.0 / total:0.00}%");
                     });
 
-                    // 使用 Task.Run 来异步执行上传
-                    await Task.Run(() =>
+                    try
                     {
-                        PutObjectResult result = cosXml.PutObject(request);
-                        if (result.IsSuccessful())
+                        await Task.Run(() =>
                         {
-                            successLog.AppendLine($"{Path.GetFileName(filePath)}      上传状态：成功");
-                        }
-                        else
-                        {
-                            failureLog.AppendLine($"{Path.GetFileName(filePath)}      上传状态：<color=red>失败</color>");
-                        }
-                    });
+                            PutObjectResult result = cosXml.PutObject(request);
+                            if (result.IsSuccessful())
+                            {
+                                successLog.AppendLine($"{Path.GetFileName(filePath)}      上传成功");
+                            }
+                            else
+                            {
+                                failureLog.AppendLine($"{Path.GetFileName(filePath)}      上传失败");
+                            }
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        failureLog.AppendLine($"{Path.GetFileName(filePath)}      上传状态：<color=red>失败</color>，错误：{ex.Message}");
+                    }
+
+                    // 实时更新窗口
+                    string totalTime = $"当前耗时: {stopwatch.Elapsed.TotalSeconds:0.00} 秒";
+                    uploadWindow.UpdateLog(successLog.ToString(), failureLog.ToString(), totalTime);
+                    uploadWindow.Repaint();  // 实时刷新窗口
                 }
             }
 
@@ -119,51 +135,58 @@ namespace StarForce.Editor
         static CosXml CreateCosXml()
         {
             CosXmlConfig config = new CosXmlConfig.Builder()
-            .SetConnectionTimeoutMs(60000)  //设置连接超时时间，单位毫秒，默认45000ms
-            .SetReadWriteTimeoutMs(40000)  //设置读写超时时间，单位毫秒，默认45000ms
-            .IsHttps(true)  //设置默认 HTTPS 请求
-            .SetAppid(cosConfig.appid)
-            .SetRegion(cosConfig.region)
-            .Build();
+                .SetConnectionTimeoutMs(60000)  //设置连接超时时间，单位毫秒，默认45000ms
+                .SetReadWriteTimeoutMs(40000)  //设置读写超时时间，单位毫秒，默认45000ms
+                .IsHttps(true)  //设置默认 HTTPS 请求
+                .SetAppid(cosConfig.appid)
+                .SetRegion(cosConfig.region)
+                .Build();
 
             long durationSecond = 600; //每次请求签名有效时长，单位为秒
-            QCloudCredentialProvider qCloudCredentialProvider = new DefaultQCloudCredentialProvider(cosConfig.secretId,
-              cosConfig.secretKey, durationSecond);
+            QCloudCredentialProvider qCloudCredentialProvider = new DefaultQCloudCredentialProvider(cosConfig.secretId, cosConfig.secretKey, durationSecond);
 
-            CosXml cosXml = new CosXmlServer(config, qCloudCredentialProvider);
-            return cosXml;
+            return new CosXmlServer(config, qCloudCredentialProvider);
+        }
+
+        // 显示上传结果提示窗口
+        static void ShowUploadResult(int successCount, int failureCount)
+        {
+            string message = $"成功上传: {successCount}\n失败上传: {failureCount}";
+            EditorUtility.DisplayDialog("上传结果", message, "确定");
         }
     }
     
     // 自定义上传结果窗口
     public class UploadResultWindow : EditorWindow
     {
-        private static string successLog;
-        private static string failureLog;
-        private static string totalTime;
         private Vector2 scrollPosition; // 用于记录滚动位置
+        private string successLog;
+        private string failureLog;
+        private string totalTime;
 
-        public static void ShowWindow(string successes, string failures, string time)
+        public void UpdateLog(string successes, string failures, string time)
         {
             successLog = successes;
             failureLog = failures;
             totalTime = time;
-            UploadResultWindow window = GetWindow<UploadResultWindow>("上传结果");
-            window.Show();
+
+            // 强制滚动到底部
+            scrollPosition = new Vector2(0, Mathf.Infinity);
+
+            Repaint(); // 更新窗口
         }
 
         private void OnGUI()
         {
-            // 添加一个滚动视图
             scrollPosition = GUILayout.BeginScrollView(scrollPosition, false, true);
 
             // 显示成功上传的文件
             GUILayout.Label("成功上传的文件:", EditorStyles.boldLabel);
-            GUILayout.TextArea(successLog, GUILayout.ExpandHeight(false)); // 可以用 ExpandHeight 来适应
+            GUILayout.TextArea(successLog, GUILayout.ExpandHeight(false)); // 显示成功日志
 
             // 显示失败上传的文件
             GUILayout.Label("失败上传的文件:", EditorStyles.boldLabel);
-            GUILayout.TextArea(failureLog, GUILayout.ExpandHeight(false));
+            GUILayout.TextArea(failureLog, GUILayout.ExpandHeight(false)); // 显示失败日志
 
             // 显示总耗时
             GUILayout.Label(totalTime, EditorStyles.miniLabel);
@@ -171,4 +194,5 @@ namespace StarForce.Editor
             GUILayout.EndScrollView(); // 结束滚动视图
         }
     }
+
 }
