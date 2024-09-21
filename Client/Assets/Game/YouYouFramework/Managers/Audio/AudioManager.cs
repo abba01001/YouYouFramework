@@ -239,15 +239,15 @@ namespace YouYou
 
         private void RefreshMasterVolume(object userData)
         {
-            SetMasterVolume(GameEntry.PlayerPrefs.GetFloat(PlayerPrefsDataMgr.EventName.MasterVolume));
+            SetMasterVolume(GameEntry.PlayerPrefs.GetFloat(Constants.StorgeKey.MasterVolume));
         }
         private void RefreshAudio(object userData)
         {
-            SetAudioVolume(GameEntry.PlayerPrefs.GetFloat(PlayerPrefsDataMgr.EventName.AudioVolume));
+            SetAudioVolume(GameEntry.PlayerPrefs.GetFloat(Constants.StorgeKey.AudioVolume));
         }
         private void RefreshBGM(object userData)
         {
-            SetBGMVolume(GameEntry.PlayerPrefs.GetFloat(PlayerPrefsDataMgr.EventName.BGMVolume));
+            SetBGMVolume(GameEntry.PlayerPrefs.GetFloat(Constants.StorgeKey.BGMVolume));
         }
         private void OnGamePause(object userData)
         {

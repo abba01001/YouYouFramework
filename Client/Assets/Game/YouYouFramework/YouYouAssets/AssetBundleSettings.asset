@@ -61,10 +61,17 @@ MonoBehaviour:
     IsEncrypt: 0
     Path:
     - Game/Download/Sound
-  - Name: "\u65E0\u7EBF\u5730\u56FE\u8D44\u6E90"
+  - Name: "\u65E0\u9650\u5730\u56FE\u8D44\u6E90"
     IsBuild: 1
     Overall: 1
     IsFirstData: 1
     IsEncrypt: 0
     Path:
     - Game/Download/DunGenMap
+  - Name: "\u56FE\u96C6"
+    IsBuild: 1
+    Overall: 0
+    IsFirstData: 1
+    IsEncrypt: 0
+    Path:
+    - Game/Download/Atlas

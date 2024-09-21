@@ -24,6 +24,11 @@ namespace Main
         {
             CommonEvent.Dispatch(key.ToString(), userData);
         }
+        
+        public void Dispatch(string key, object userData)
+        {
+            CommonEvent.Dispatch(key, userData);
+        }
 
         public void AddEventListener(K key, CommonEvent.OnActionHandler handler)
         {

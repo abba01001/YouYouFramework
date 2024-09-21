@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 88814b42a3d8c4f49b96c3419c4ebb9b, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.1627109, g: 0.2399191, b: 0.340554, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: 3d288b9eddac78242acac4d7d287976d,
+  m_LightingDataAsset: {fileID: 112000000, guid: 2199794e285e9564790aa2b2cb4cb3ca,
     type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: 0269ebc482239b74a85711349d83365e,
     type: 2}
@@ -125,101 +125,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &612835650
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1953805253540728, guid: cd9dfa572c412c44fa5d606ca42a3289, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4257171912898382, guid: cd9dfa572c412c44fa5d606ca42a3289, type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4257171912898382, guid: cd9dfa572c412c44fa5d606ca42a3289, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4257171912898382, guid: cd9dfa572c412c44fa5d606ca42a3289, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4257171912898382, guid: cd9dfa572c412c44fa5d606ca42a3289, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4257171912898382, guid: cd9dfa572c412c44fa5d606ca42a3289, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4257171912898382, guid: cd9dfa572c412c44fa5d606ca42a3289, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4257171912898382, guid: cd9dfa572c412c44fa5d606ca42a3289, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4257171912898382, guid: cd9dfa572c412c44fa5d606ca42a3289, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114439300167944872, guid: cd9dfa572c412c44fa5d606ca42a3289,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114439300167944872, guid: cd9dfa572c412c44fa5d606ca42a3289,
-        type: 3}
-      propertyPath: enableRemote
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114439300167944872, guid: cd9dfa572c412c44fa5d606ca42a3289,
-        type: 3}
-      propertyPath: enabledNGuiMode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114439300167944872, guid: cd9dfa572c412c44fa5d606ca42a3289,
-        type: 3}
-      propertyPath: allowUIDetection
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114439300167944872, guid: cd9dfa572c412c44fa5d606ca42a3289,
-        type: 3}
-      propertyPath: showGuiInspector
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114439300167944872, guid: cd9dfa572c412c44fa5d606ca42a3289,
-        type: 3}
-      propertyPath: showSelectInspector
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114439300167944872, guid: cd9dfa572c412c44fa5d606ca42a3289,
-        type: 3}
-      propertyPath: showGestureInspector
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114439300167944872, guid: cd9dfa572c412c44fa5d606ca42a3289,
-        type: 3}
-      propertyPath: showTwoFingerInspector
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114439300167944872, guid: cd9dfa572c412c44fa5d606ca42a3289,
-        type: 3}
-      propertyPath: nGUICameras.Array.data[0]
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114439300167944872, guid: cd9dfa572c412c44fa5d606ca42a3289,
-        type: 3}
-      propertyPath: showSecondFingerInspector
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: cd9dfa572c412c44fa5d606ca42a3289, type: 3}
 --- !u!1 &878774244
 GameObject:
   m_ObjectHideFlags: 0
@@ -264,5 +169,5 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

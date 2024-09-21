@@ -1,143 +1,183 @@
 using Main;
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using Newtonsoft.Json;
 using UnityEngine;
 using YouYou;
 
 
 public class PlayerPrefsDataMgr : Observable<PlayerPrefsDataMgr, PlayerPrefsDataMgr.EventName>
 {
+    [Serializable]
+    public class GameData
+    {
+        public Dictionary<string, int> intDic = new Dictionary<string, int>();
+        public Dictionary<string, float> floatDic = new Dictionary<string, float>();
+        public Dictionary<string, string> stringDic = new Dictionary<string, string>();
+    }
+    
     public enum EventName : uint
     {
-        //������
+        //主音量
         MasterVolume,
-        //������������
+        //背景音乐音量
         BGMVolume,
-        //��Ч����
+        //音效音量
         AudioVolume,
-        //��Ϸ��ͣ
+        //游戏暂停
         GamePause,
-        //���֡��
+        //最大帧率
         FrameRate,
-        //��Ļ�ֱ���
+        //屏幕分辨率
         Screen,
-        //���ʵȼ�
+        //画质等级
         QualityLevel,
 
-        //�����¼�
+        //测试事件
         TestEvent,
     }
 
     public void Init()
     {
-        dicInt = GetObject<Dictionary<EventName, int>>("dicInt");
-        dicFloat = GetObject<Dictionary<EventName, float>>("dicFloat");
-        dicString = GetObject<Dictionary<EventName, string>>("dicString");
-
-        GameEntry.PlayerPrefs.SetFloatHas(EventName.MasterVolume, 1);
-        GameEntry.PlayerPrefs.SetFloatHas(EventName.AudioVolume, 1);
-        GameEntry.PlayerPrefs.SetFloatHas(EventName.BGMVolume, 1);
-        GameEntry.PlayerPrefs.SetIntHas(EventName.FrameRate, 2);
-    }
-    public void SaveDataAll()
-    {
-        SetObject("dicInt", dicInt);
-        SetObject("dicFloat", dicFloat);
-        SetObject("dicString", dicString);
-
-        PlayerPrefs.Save();
+        //一定要等拉取存档完成才进入场景
+        //第一次拉取存档，如果没有，则新建一个
+        //云端拉GameData
+        // GameEntry.PlayerPrefs.SetFloatHas(EventName.MasterVolume, 1);
+        // GameEntry.PlayerPrefs.SetFloatHas(EventName.AudioVolume, 1);
+        // GameEntry.PlayerPrefs.SetFloatHas(EventName.BGMVolume, 1);
+        // GameEntry.PlayerPrefs.SetIntHas(EventName.FrameRate, 2);
     }
     public void DeleteAll()
     {
         PlayerPrefs.DeleteAll();
     }
 
-
-    private Dictionary<EventName, int> dicInt = new Dictionary<EventName, int>();
-    public int GetInt(EventName key, int defaultValue = 0)
+    public GameData GetNewGameData()
     {
-        if (dicInt.TryGetValue(key, out int retValue))
+        var data = new GameData
+        {
+            intDic = IntDic,
+            floatDic = FloatDic,
+            stringDic = StringDic
+        };
+        return data;
+    }
+    
+    public void SaveDataAll(bool upload = false)
+    {
+        IntDic.Add("你好", 1);
+        string jsonData = JsonConvert.SerializeObject(GetNewGameData());
+        string filePath = Path.Combine(Application.persistentDataPath, "gamedata.json");
+        try
+        {
+            if (File.Exists(filePath)) File.Delete(filePath);
+            File.WriteAllText(filePath, SecurityUtil.Encrypt(jsonData));
+            GameEntry.LogError("数据已成功保存到文件中：" + filePath);
+        }
+        catch (Exception ex)
+        {
+            GameEntry.LogError("保存数据到文件时发生错误: " + ex.Message);
+        }
+        if (upload)
+        {
+            
+        }
+    }
+
+    private Dictionary<string, int> IntDic = new Dictionary<string, int>();
+    private Dictionary<string, float> FloatDic = new Dictionary<string, float>();
+    private Dictionary<string, string> StringDic = new Dictionary<string, string>();
+
+    #region int字典
+
+    public int GetInt(string key, int defaultValue = 0)
+    {
+        if (IntDic.TryGetValue(key, out int retValue))
             return retValue;
         else
             return defaultValue;
     }
-    public void SetInt(EventName key, int value, object param = null)
+    public void SetInt(string key, int value, object param = null)
     {
-        dicInt[key] = value;
+        IntDic[key] = value;
         Dispatch(key, param);
     }
-    public void SetIntAdd(EventName key, int value)
+    public void SetIntAdd(string key, int value)
     {
         SetInt(key, GetInt(key) + value);
     }
-    public void SetIntHas(EventName key, int value)
+    public void SetIntHas(string key, int value)
     {
         if (PlayerPrefs.HasKey(key.ToString())) return;
         SetInt(key, value);
     }
-    public bool GetBool(EventName key, bool defaultValue)
+    
+    public bool GetBool(string key, bool defaultValue)
     {
         return GetInt(key, defaultValue ? 1 : 0) == 1;
     }
-    public bool GetBool(EventName key)
+    public bool GetBool(string key)
     {
         return GetInt(key) == 1;
     }
-    public void SetBool(EventName key, bool value, object param = null)
+    public void SetBool(string key, bool value, object param = null)
     {
         SetInt(key, value ? 1 : 0);
         Dispatch(key, param);
     }
-    public void SetBoolHas(EventName key, bool value)
+    public void SetBoolHas(string key, bool value)
     {
         if (PlayerPrefs.HasKey(key.ToString())) return;
         SetBool(key, value);
     }
 
+    #endregion
 
-    private Dictionary<EventName, float> dicFloat = new Dictionary<EventName, float>();
-    public float GetFloat(EventName key, float defaultValue = 0)
+    #region float字典
+
+    public float GetFloat(string key, float defaultValue = 0)
     {
-        if (dicFloat.TryGetValue(key, out float retValue))
+        if (FloatDic.TryGetValue(key, out float retValue))
             return retValue;
         else
             return defaultValue;
     }
-    public void SetFloat(EventName key, float value, object param = null)
+    public void SetFloat(string key, float value, object param = null)
     {
-        dicFloat[key] = value;
+        FloatDic[key] = value;
         Dispatch(key, param);
     }
-    public void SetFloatAdd(EventName key, float value)
+    public void SetFloatAdd(string key, float value)
     {
         SetFloat(key, GetFloat(key) + value);
     }
-    public void SetFloatHas(EventName key, float value)
+    public void SetFloatHas(string key, float value)
     {
         if (PlayerPrefs.HasKey(key.ToString())) return;
         SetFloat(key, value);
     }
+    #endregion
 
-    private Dictionary<EventName, string> dicString = new Dictionary<EventName, string>();
-    public string GetString(EventName key, string defaultValue = null)
+    #region string字典
+    public string GetString(string key, string defaultValue = null)
     {
-        if (dicString.TryGetValue(key, out string retValue))
+        if (StringDic.TryGetValue(key, out string retValue))
             return retValue;
         else
             return defaultValue;
     }
-    public void SetString(EventName key, string value, object param = null)
+    public void SetString(string key, string value, object param = null)
     {
-        dicString[key] = value;
+        StringDic[key] = value;
         Dispatch(key, param);
     }
-    public void SetStringHas(EventName key, string value)
+    public void SetStringHas(string key, string value)
     {
-        if (dicString.ContainsKey(key)) return;
+        if (StringDic.ContainsKey(key)) return;
         SetString(key, value);
     }
-
+    #endregion
 
     public T GetObject<T>(string key) where T : new()
     {
@@ -154,5 +194,28 @@ public class PlayerPrefsDataMgr : Observable<PlayerPrefsDataMgr, PlayerPrefsData
     public void SetObject<T>(string key, T data)
     {
         PlayerPrefs.SetString(key, data.ToJson());
+    }
+
+    public void SaveDataAllToFile()
+    {
+        IntDic.Add("你好", 1);
+        var data = new GameData
+        {
+            intDic = IntDic,
+        };
+
+        string jsonData = JsonConvert.SerializeObject(data);
+        GameEntry.LogError(jsonData);
+        string filePath = Path.Combine(Application.persistentDataPath, "gamedata.json");
+        try
+        {
+            if (File.Exists(filePath)) File.Delete(filePath);
+            File.WriteAllText(filePath, SecurityUtil.Encrypt(jsonData));
+            GameEntry.LogError("数据已成功保存到文件中：" + filePath);
+        }
+        catch (Exception ex)
+        {
+            GameEntry.LogError("保存数据到文件时发生错误: " + ex.Message);
+        }
     }
 }

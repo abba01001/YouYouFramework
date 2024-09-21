@@ -21,6 +21,9 @@ namespace StarForce.Editor
         private static CosConfig cosConfig;
         private static StringBuilder successLog = new StringBuilder(); // 用于记录成功的上传状态
         private static StringBuilder failureLog = new StringBuilder(); // 用于记录失败的上传状态
+        private static int totalFileCount = 0;
+        private static int successCount = 0;
+        private static int failCount = 0;
         private static UploadResultWindow uploadWindow;
         private static Stopwatch stopwatch;
         public static async void UploadAB()
@@ -58,7 +61,7 @@ namespace StarForce.Editor
             {
                 // 上传完成后关闭窗口并显示结果提示
                 uploadWindow.Close();
-                ShowUploadResult(successLog.Length, failureLog.Length);
+                ShowUploadResult();
             }
         }
 
@@ -102,12 +105,16 @@ namespace StarForce.Editor
                             PutObjectResult result = cosXml.PutObject(request);
                             if (result.IsSuccessful())
                             {
+                                successCount += 1;
                                 successLog.AppendLine($"{Path.GetFileName(filePath)}      上传成功");
                             }
                             else
                             {
+                                failCount += 1;
                                 failureLog.AppendLine($"{Path.GetFileName(filePath)}      上传失败");
                             }
+
+                            totalFileCount += 1;
                         });
                     }
                     catch (Exception ex)
@@ -148,9 +155,9 @@ namespace StarForce.Editor
         }
 
         // 显示上传结果提示窗口
-        static void ShowUploadResult(int successCount, int failureCount)
+        static void ShowUploadResult()
         {
-            string message = $"成功上传: {successCount}\n失败上传: {failureCount}";
+            string message = $"需上传文件数: {totalFileCount}\n成功上传: {successCount}\n失败上传: {failCount}";
             EditorUtility.DisplayDialog("上传结果", message, "确定");
         }
     }

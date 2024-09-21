@@ -10,7 +10,7 @@ public class GuideCtrl : Singleton<GuideCtrl>
 }
 public class GuideModel : Singleton<GuideModel>
 {
-    //µ¥»ú»òÍøÂç´æµµ
+    //å•æœºæˆ–ç½‘ç»œå­˜æ¡£
     private bool b_native = true;
 
     private GuideEntity GuideEntity;
@@ -26,7 +26,7 @@ public class GuideModel : Singleton<GuideModel>
         }
         else
         {
-            //ÕâÀï¿ÉÒÔ¸Ä³ÉÍøÂç´æµµ
+            //è¿™é‡Œå¯ä»¥æ”¹æˆç½‘ç»œå­˜æ¡£
         }
     }
 
@@ -38,7 +38,7 @@ public class GuideModel : Singleton<GuideModel>
         }
         else
         {
-            //ÕâÀï¿ÉÒÔ¸Ä³ÉÍøÂç´æµµ
+            //è¿™é‡Œå¯ä»¥æ”¹æˆç½‘ç»œå­˜æ¡£
         }
     }
 
@@ -46,11 +46,11 @@ public class GuideModel : Singleton<GuideModel>
 
 
     /// <summary>
-    /// ĞÂÊÖÒıµ¼ Íê³É1¸öÄ£¿é ´æµµ
+    /// æ–°æ‰‹å¼•å¯¼ å®Œæˆ1ä¸ªæ¨¡å— å­˜æ¡£
     /// </summary>
     public void GuideCompleteOne(GuideState guideState)
     {
-        //Ö»ÄÜ±£´æºóÃæµÄÒıµ¼
+        //åªèƒ½ä¿å­˜åé¢çš„å¼•å¯¼
         if (guideState >= GuideEntity.CurrGuide + 1)
         {
             GuideEntity.CurrGuide = guideState;
@@ -61,6 +61,6 @@ public class GuideModel : Singleton<GuideModel>
 
 public class GuideEntity
 {
-    //µ±Ç°ÒÑÍê³ÉµÄĞÂÊÖÒıµ¼
+    //å½“å‰å·²å®Œæˆçš„æ–°æ‰‹å¼•å¯¼
     public GuideState CurrGuide;
 }

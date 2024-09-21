@@ -9,12 +9,12 @@ public class RedDotCtrl : Singleton<RedDotCtrl>
 {
     public RedDotCtrl()
     {
-        //ÕâÀï¸Ä³ÉÄã×Ô¼º¼àÌıºó¶Ë»Øµ÷µÄ´úÂë
+        //è¿™é‡Œæ”¹æˆä½ è‡ªå·±ç›‘å¬åç«¯å›è°ƒçš„ä»£ç 
         GameEntry.Event.Common.AddEventListener("E_SVR_MSG_ID_GET_GLOBAL_RED", (x) => ParseTGetGlobalRedRsp(null));
         GameEntry.Event.Common.AddEventListener("E_SVR_MSG_ID_CLEAR_GLOBAL_RED", (x) => ParseTClearGlobalRedRsp(null));
     }
 
-    //ÇëÇóĞ¡ºìµã
+    //è¯·æ±‚å°çº¢ç‚¹
     private List<int> sVecRedModelsGet = new List<int>();
     private Dictionary<int, string> redModelsGetParams = new Dictionary<int, string>();
     private object sGetRedScheduler = null;
@@ -22,11 +22,11 @@ public class RedDotCtrl : Singleton<RedDotCtrl>
     {
         if (vecRedModels == null || vecRedModels.Count == 0)
         {
-            GameEntry.LogError(LogCategory.NetWork, "ÇëÇóµÄºìµãÁĞ±íÎª¿Õ");
+            GameEntry.LogError(LogCategory.NetWork, "è¯·æ±‚çš„çº¢ç‚¹åˆ—è¡¨ä¸ºç©º");
             return;
         }
 
-        //È¥ÖØ
+        //å»é‡
         for (int i = 0; i < vecRedModels.Count; i++)
         {
             bool bFound = false;
@@ -54,7 +54,7 @@ public class RedDotCtrl : Singleton<RedDotCtrl>
                 req.vectRedModels = sVecRedModelsGet;
                 req.mapExtraData = redModelsGetParams;
 
-                //ÕâÀï¸Ä³ÉÄã×Ô¼ºÇëÇóºó¶ËµÄ´úÂë
+                //è¿™é‡Œæ”¹æˆä½ è‡ªå·±è¯·æ±‚åç«¯çš„ä»£ç 
                 //MsgManager.sendData(E_SVR_MSG_ID.E_SVR_MSG_ID_GET_GLOBAL_RED, req);
 
                 sVecRedModelsGet.Clear();
@@ -74,13 +74,13 @@ public class RedDotCtrl : Singleton<RedDotCtrl>
     {
         if (rsp.iRet != 0)
         {
-            GameEntry.LogError(LogCategory.NetWork, "À­È¡Ğ¡ºìµãĞÅÏ¢³ö´í");
+            GameEntry.LogError(LogCategory.NetWork, "æ‹‰å–å°çº¢ç‚¹ä¿¡æ¯å‡ºé”™");
             return;
         }
         RedDotModel.Instance.SetTGetGlobalRedRsp(rsp);
     }
 
-    //Çå³ıĞ¡ºìµã
+    //æ¸…é™¤å°çº¢ç‚¹
     private List<int> sVecRedModelsCleared = new List<int>();
     private object sClearRedScheduler = null;
     public void SendTClearGlobalRedReq(List<int> vecRedModels)
@@ -90,7 +90,7 @@ public class RedDotCtrl : Singleton<RedDotCtrl>
             return;
         }
 
-        //È¥ÖØ
+        //å»é‡
         for (int i = 0; i < vecRedModels.Count; i++)
         {
             bool bFound = false;
@@ -117,7 +117,7 @@ public class RedDotCtrl : Singleton<RedDotCtrl>
                 TClearGlobalRedReq req = new TClearGlobalRedReq();
                 req.vecRedModel = sVecRedModelsCleared;
 
-                //ÕâÀï¸Ä³ÉÄã×Ô¼ºÇëÇóºó¶ËµÄ´úÂë
+                //è¿™é‡Œæ”¹æˆä½ è‡ªå·±è¯·æ±‚åç«¯çš„ä»£ç 
                 //MsgManager.sendData(E_SVR_MSG_ID.E_SVR_MSG_ID_CLEAR_GLOBAL_RED, req);
 
                 sVecRedModelsCleared.Clear();
@@ -129,7 +129,7 @@ public class RedDotCtrl : Singleton<RedDotCtrl>
     {
         if (rsp.iRet != 0)
         {
-            GameEntry.LogError(LogCategory.NetWork, "Çå³ıĞ¡ºìµãĞÅÏ¢³ö´í");
+            GameEntry.LogError(LogCategory.NetWork, "æ¸…é™¤å°çº¢ç‚¹ä¿¡æ¯å‡ºé”™");
             return;
         }
         RedDotModel.Instance.SetTClearGlobalRedRsp(rsp);
@@ -145,14 +145,14 @@ public class RedDotModel : Observable<RedDotModel, RedDotModel.EventName>
 {
     public enum EventName : uint
     {
-        //ºìµã»ñÈ¡»Øµ÷
+        //çº¢ç‚¹è·å–å›è°ƒ
         E_SVR_MSG_ID_GET_GLOBAL_RED,
-        //ºìµãÇå³ı»Øµ÷
+        //çº¢ç‚¹æ¸…é™¤å›è°ƒ
         E_SVR_MSG_ID_CLEAR_GLOBAL_RED,
     }
 
     /// <summary>
-    /// ºóÌ¨ÏÂ·¢µÄºìµãÊı¾İ
+    /// åå°ä¸‹å‘çš„çº¢ç‚¹æ•°æ®
     /// </summary>
     private Dictionary<int, int> mMapGlobalRedInfo = new Dictionary<int, int>();
 

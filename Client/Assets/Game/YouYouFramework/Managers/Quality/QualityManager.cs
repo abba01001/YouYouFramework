@@ -46,12 +46,12 @@ namespace YouYou
         {
             CurrQuality = quality;
             QualitySettings.SetQualityLevel(CurrQuality.ToInt(), true);
-            GameEntry.PlayerPrefs.SetInt(PlayerPrefsDataMgr.EventName.QualityLevel, (int)quality);
+            GameEntry.PlayerPrefs.SetInt(Constants.StorgeKey.QualityLevel, (int)quality);
         }
         public void SetScreen(ScreenLevel value)
         {
             CurrScreen = value;
-            GameEntry.PlayerPrefs.SetInt(PlayerPrefsDataMgr.EventName.Screen, (int)CurrScreen);
+            GameEntry.PlayerPrefs.SetInt(Constants.StorgeKey.Screen, (int)CurrScreen);
             RefreshScreen();
         }
 
@@ -90,7 +90,7 @@ namespace YouYou
                     Application.targetFrameRate = 60; // 120;
                     break;
             }
-            GameEntry.PlayerPrefs.SetInt(PlayerPrefsDataMgr.EventName.FrameRate, (int)CurrFrameRate);
+            GameEntry.PlayerPrefs.SetInt(Constants.StorgeKey.FrameRate, (int)CurrFrameRate);
 //#if UNITY_EDITOR
 //            Application.targetFrameRate = -1;
 //#endif

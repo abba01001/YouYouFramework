@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DunGen.DungeonCrawler;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -25,9 +26,6 @@ namespace YouYou
             SceneManager.SetActiveScene(targetScene);
             InitFormBattle();
             InitPlayer();
-            InitMap();
-            //初始化玩家
-            //初始地图
         }
 
         private void InitFormBattle()
@@ -42,17 +40,19 @@ namespace YouYou
             PoolObj playerCtrl = await GameEntry.Pool.GameObjectPool.SpawnAsync(PrefabName.PlayerCtrl,parent.transform);
             PoolObj playerModel = await GameEntry.Pool.GameObjectPool.SpawnAsync(PrefabName.Archer,playerCtrl.transform);
             PoolObj playerCamera = await GameEntry.Pool.GameObjectPool.SpawnAsync(PrefabName.PlayerCamera,parent.transform);
+            
+            
+            
             YouYouJoystick rotateJoy = GameEntry.UI.GetUIForm<FormBattle>("FormBattle").GetRotateJoystick();
             YouYouJoystick moveJoy = GameEntry.UI.GetUIForm<FormBattle>("FormBattle").GetMoveJoystick();
             Animator animator = playerModel.GetComponentInChildren<Animator>(true);
             playerCtrl.GetComponent<PlayerCtrl>().InitParams(new object[] { animator,moveJoy, playerCamera.GetComponent<Camera>() });
+            playerCtrl.GetComponent<ClickableObjectHandler>().InitParams(new object[] { playerCamera.GetComponent<Camera>() });
             playerCamera.GetComponent<PlayerCamera>().InitParams(new object[] { playerCtrl.transform, rotateJoy });
-        }
-
-        private async void InitMap()
-        {
-            var parent = new GameObject("Map");
-            PoolObj poolObj = await GameEntry.Pool.GameObjectPool.SpawnAsync(PrefabName.DungeonGenerator,parent.transform);
+            
+            var parent1 = new GameObject("Map");
+            PoolObj dungeonGenerator = await GameEntry.Pool.GameObjectPool.SpawnAsync(PrefabName.DungeonGenerator,parent1.transform);
+            dungeonGenerator.GetComponent<DungeonSetup>().InitParams(new object[] {playerCtrl.transform, rotateJoy});
         }
         
         internal override void OnUpdate()

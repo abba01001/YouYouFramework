@@ -2,5 +2,6 @@
 <project version="4">
   <component name="Encoding" addBOMForNewFiles="with BOM under Windows, with no BOM otherwise">
     <file url="file://$PROJECT_DIR$/Assets/Game/YouYouScript/Data/DataTable/ExtCus/Sys_PrefabDBModelExt.cs" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/Assets/框架运行指南.txt" charset="GBK" />
   </component>
 </project>

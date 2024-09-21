@@ -12,19 +12,18 @@ namespace DunGen.DungeonCrawler
 	[RequireComponent(typeof(RuntimeDungeon))]
 	sealed class DungeonSetup : MonoBehaviour
 	{
-		[SerializeField]
-		[Tooltip("The player prefab to spawn once the dungeon is complete")]
-		private GameObject playerPrefab = null;
-
-		[SerializeField] private GameObject player;
+		private GameObject player;
 		private PlayerUI playerUI;
 		private RuntimeDungeon runtimeDungeon;
 		private GameObject spawnedPlayerInstance;
-
+		public void InitParams(object[] param)
+		{
+			player = param[0] as GameObject;
+		}
+		
 		private void OnEnable()
 		{
 			//playerUI = FindObjectOfType<PlayerUI>();
-
 			runtimeDungeon = GetComponent<RuntimeDungeon>();
 			runtimeDungeon.Generator.OnGenerationStatusChanged += OnDungeonGenerationStatusChanged;
 		}
@@ -39,7 +38,6 @@ namespace DunGen.DungeonCrawler
 			// We're only interested in completion events
 			if (status != GenerationStatus.Complete)
 				return;
-
 			// If there's already a player instance, destroy it. We'll spawn a new one
 			if (spawnedPlayerInstance != null)
 				Destroy(spawnedPlayerInstance);
@@ -48,12 +46,13 @@ namespace DunGen.DungeonCrawler
 			var playerSpawn = generator.CurrentDungeon.MainPathTiles[0].GetComponentInChildren<PlayerSpawn>();
 
 			Vector3 spawnPosition = playerSpawn.transform.position;
-			//spawnedPlayerInstance = Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
 
-			player = FindObjectOfType<PlayerCtrl>().gameObject;
-			player.transform.position = spawnPosition;
-			player.transform.rotation = Quaternion.identity;
-			spawnedPlayerInstance = player;
+			// player = FindObjectOfType<PlayerCtrl>().gameObject;
+			// player.transform.position = spawnPosition;
+			// player.transform.rotation = Quaternion.identity;
+			// spawnedPlayerInstance = player;
+			GameEntry.Event.Dispatch(EventName.UpdatePlayerPos,spawnPosition);
+			
 			//playerUI.SetPlayer(spawnedPlayerInstance);
 			HandleBatchObjects();
 			HideableObject.RefreshHierarchies();

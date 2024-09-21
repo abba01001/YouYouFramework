@@ -9,25 +9,30 @@ public class TestPlayerPrefs : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.A))
         {
-            //ĞÔÄÜºÃ, ²¢Ö§³ÖÊÂ¼ş
-            GameEntry.PlayerPrefs.SetFloat(PlayerPrefsDataMgr.EventName.MasterVolume, 1);
-            GameEntry.PlayerPrefs.SetFloat(PlayerPrefsDataMgr.EventName.AudioVolume, 1);
-            GameEntry.PlayerPrefs.SetFloat(PlayerPrefsDataMgr.EventName.BGMVolume, 1);
-            GameEntry.PlayerPrefs.SetInt(PlayerPrefsDataMgr.EventName.FrameRate, 2);
+            //æ€§èƒ½å¥½, å¹¶æ”¯æŒäº‹ä»¶
+            GameEntry.PlayerPrefs.SetFloat(Constants.StorgeKey.MasterVolume, 1);
+            GameEntry.PlayerPrefs.SetFloat(Constants.StorgeKey.AudioVolume, 1);
+            GameEntry.PlayerPrefs.SetFloat(Constants.StorgeKey.BGMVolume, 1);
+            GameEntry.PlayerPrefs.SetInt(Constants.StorgeKey.FrameRate, 2);
         }
 
         if (Input.GetKeyUp(KeyCode.S))
         {
-            //ĞÔÄÜ²î
+            //æ€§èƒ½å·®
             PlayerPrefs.SetFloat("TestKey", 0.5f);
         }
 
         if (Input.GetKeyUp(KeyCode.D))
         {
-            //ĞÔÄÜºÃ(Ê¹ÓÃÔ­Àí)
+            //æ€§èƒ½å¥½(ä½¿ç”¨åŸç†)
             Dictionary<string, float> dic = new Dictionary<string, float>();
             dic["TestKey"] = 0.5f;
             PlayerPrefs.SetFloat("TestKey", dic["TestKey"]);
+        }
+
+        if (Input.GetKeyDown(KeyCode.F5))
+        {
+            GameEntry.PlayerPrefs.SaveDataAllToFile();
         }
     }
 }

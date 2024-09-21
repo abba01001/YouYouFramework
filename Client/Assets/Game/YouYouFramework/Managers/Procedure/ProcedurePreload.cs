@@ -55,8 +55,9 @@ namespace YouYou
             {
                 MainEntry.Instance.PreloadComplete();
 
+                //这里先拉存档 TODO
                 //进入到业务流程
-                GameEntry.Procedure.ChangeState(ProcedureState.Game);
+                //GameEntry.Procedure.ChangeState(ProcedureState.Game);
             }
         }
 

@@ -32,7 +32,11 @@ namespace DunGen.DungeonCrawler
 
 		private RaycastHit[] hitBuffer = new RaycastHit[8];
 
-
+		public void InitParams(object[] param)
+		{
+			raycastCamera = param[0] as Camera;
+		}
+		
 		private void Update()
 		{
 			var previousHoverObject = HoverClickable;
@@ -52,7 +56,7 @@ namespace DunGen.DungeonCrawler
 
 		private IClickableObject GetClickableUnderCursor()
 		{
-			if (raycastCamera == null) raycastCamera = FindObjectOfType<PlayerCamera>().GetComponent<Camera>();
+			if (raycastCamera == null) return null;
 			var ray = raycastCamera.ScreenPointToRay(Input.mousePosition);
 			int hitCount = Physics.RaycastNonAlloc(ray, hitBuffer, maxRayDistance, raycastLayer, QueryTriggerInteraction.Ignore);
 

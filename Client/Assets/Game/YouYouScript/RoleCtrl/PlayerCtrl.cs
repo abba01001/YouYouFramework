@@ -173,6 +173,22 @@ public class PlayerCtrl : MonoBehaviour
         }
     }
 
+    private void UpdatePos(object param)
+    {
+        transform.position = (Vector3)param;
+        transform.rotation = Quaternion.identity;
+    }
+    
+    private void OnEnable()
+    {
+        GameEntry.Event.AddEventListener(EventName.UpdatePlayerPos, UpdatePos);
+    }
+
+    private void OnDisable()
+    {
+        GameEntry.Event.AddEventListener(EventName.UpdatePlayerPos, UpdatePos);
+    }
+
     private void CheckMove()
     {
         if (IsMove)
