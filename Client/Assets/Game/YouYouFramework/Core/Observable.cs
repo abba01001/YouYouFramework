@@ -6,9 +6,8 @@ using YouYou;
 
 namespace Main
 {
-    public class Observable<T, K> : Singleton<T>
+    public class Observable<T> : Singleton<T>
         where T : new()
-        where K : Enum
     {
         private CommonEvent CommonEvent;
         public Observable()
@@ -16,31 +15,27 @@ namespace Main
             CommonEvent = new CommonEvent();
         }
 
-        public void Dispatch(K key)
+        public void Dispatch(string key)
         {
             CommonEvent.Dispatch(key.ToString());
         }
-        public void Dispatch(K key, object userData)
-        {
-            CommonEvent.Dispatch(key.ToString(), userData);
-        }
-        
+    
         public void Dispatch(string key, object userData)
         {
             CommonEvent.Dispatch(key, userData);
         }
 
-        public void AddEventListener(K key, CommonEvent.OnActionHandler handler)
+        public void AddEventListener(string key, CommonEvent.OnActionHandler handler)
         {
-            CommonEvent.AddEventListener(key.ToString(), handler);
+            CommonEvent.AddEventListener(key, handler);
         }
-        public void RemoveEventListener(K key, CommonEvent.OnActionHandler handler)
+        public void RemoveEventListener(string key, CommonEvent.OnActionHandler handler)
         {
-            CommonEvent.RemoveEventListener(key.ToString(), handler);
+            CommonEvent.RemoveEventListener(key, handler);
         }
-        public void RemoveEventListenerAll(K key)
+        public void RemoveEventListenerAll(string key)
         {
-            CommonEvent.RemoveEventListenerAll(key.ToString());
+            CommonEvent.RemoveEventListenerAll(key);
         }
     }
 }

@@ -22,7 +22,7 @@ public class GuideModel : Singleton<GuideModel>
 
         if (b_native)
         {
-            GuideEntity = GameEntry.PlayerPrefs.GetObject<GuideEntity>("GuideEntity");
+            GuideEntity = GameEntry.Player.GetObject<GuideEntity>("GuideEntity");
         }
         else
         {
@@ -34,7 +34,7 @@ public class GuideModel : Singleton<GuideModel>
     {
         if (b_native)
         {
-            GameEntry.PlayerPrefs.SetObject("GuideEntity", GuideEntity);
+            GameEntry.Player.SetObject("GuideEntity", GuideEntity);
         }
         else
         {

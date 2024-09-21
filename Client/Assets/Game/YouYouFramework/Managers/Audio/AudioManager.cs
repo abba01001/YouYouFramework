@@ -43,10 +43,10 @@ namespace YouYou
             BGMSource.name = "BGMSource";
             BGMSource.outputAudioMixerGroup = GameEntry.Instance.MonsterMixer.FindMatchingGroups("BGM")[0];
 
-            GameEntry.PlayerPrefs.AddEventListener(PlayerPrefsDataMgr.EventName.MasterVolume, RefreshMasterVolume);
-            GameEntry.PlayerPrefs.AddEventListener(PlayerPrefsDataMgr.EventName.BGMVolume, RefreshBGM);
-            GameEntry.PlayerPrefs.AddEventListener(PlayerPrefsDataMgr.EventName.AudioVolume, RefreshAudio);
-            GameEntry.PlayerPrefs.AddEventListener(PlayerPrefsDataMgr.EventName.GamePause, OnGamePause);
+            GameEntry.Player.AddEventListener(Constants.StorgeKey.MasterVolume, RefreshMasterVolume);
+            GameEntry.Player.AddEventListener(Constants.StorgeKey.BGMVolume, RefreshBGM);
+            GameEntry.Player.AddEventListener(Constants.StorgeKey.AudioVolume, RefreshAudio);
+            GameEntry.Player.AddEventListener(Constants.StorgeKey.GamePause, OnGamePause);
 
             RefreshMasterVolume(null);
             RefreshBGM(null);
@@ -239,15 +239,15 @@ namespace YouYou
 
         private void RefreshMasterVolume(object userData)
         {
-            SetMasterVolume(GameEntry.PlayerPrefs.GetFloat(Constants.StorgeKey.MasterVolume));
+            SetMasterVolume(GameEntry.Player.GetFloat(Constants.StorgeKey.MasterVolume));
         }
         private void RefreshAudio(object userData)
         {
-            SetAudioVolume(GameEntry.PlayerPrefs.GetFloat(Constants.StorgeKey.AudioVolume));
+            SetAudioVolume(GameEntry.Player.GetFloat(Constants.StorgeKey.AudioVolume));
         }
         private void RefreshBGM(object userData)
         {
-            SetBGMVolume(GameEntry.PlayerPrefs.GetFloat(Constants.StorgeKey.BGMVolume));
+            SetBGMVolume(GameEntry.Player.GetFloat(Constants.StorgeKey.BGMVolume));
         }
         private void OnGamePause(object userData)
         {
@@ -261,17 +261,17 @@ namespace YouYou
         public void SetMasterVolume(float volume)
         {
             MasterVolume = volume;
-            SetMixerVolume(PlayerPrefsDataMgr.EventName.MasterVolume.ToString(), MasterVolume);
+            SetMixerVolume(Constants.StorgeKey.MasterVolume, MasterVolume);
         }
         public void SetAudioVolume(float volume)
         {
             AudioVolume = volume;
-            SetMixerVolume(PlayerPrefsDataMgr.EventName.AudioVolume.ToString(), AudioVolume);
+            SetMixerVolume(Constants.StorgeKey.AudioVolume, AudioVolume);
         }
         public void SetBGMVolume(float volume)
         {
             BGMVolume = volume;
-            SetMixerVolume(PlayerPrefsDataMgr.EventName.BGMVolume.ToString(), BGMVolume * interimBGMVolume);
+            SetMixerVolume(Constants.StorgeKey.BGMVolume, BGMVolume * interimBGMVolume);
         }
         private void SetMixerVolume(string key, float volume)
         {

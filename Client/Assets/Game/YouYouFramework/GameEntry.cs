@@ -48,7 +48,7 @@ namespace YouYou
         public static ProcedureManager Procedure { get; private set; }
         public static DataTableManager DataTable { get; private set; }
         public static HttpManager Http { get; private set; }
-        public static PlayerPrefsDataMgr PlayerPrefs { get; private set; }
+        public static PlayerDataMgr Player { get; private set; }
         public static LocalizationManager Localization { get; private set; }
         public static PoolManager Pool { get; private set; }
         public static YouYouSceneManager Scene { get; private set; }
@@ -88,7 +88,7 @@ namespace YouYou
             Procedure = new ProcedureManager();
             DataTable = new DataTableManager();
             Http = new HttpManager();
-            PlayerPrefs = new PlayerPrefsDataMgr();
+            Player = new PlayerDataMgr();
             Localization = new LocalizationManager();
             Pool = new PoolManager();
             Scene = new YouYouSceneManager();
@@ -106,7 +106,7 @@ namespace YouYou
             Procedure.Init();
             DataTable.Init();
             Http.Init();
-            PlayerPrefs.Init();
+            Player.Init();
             Localization.Init();
             Pool.Init();
             Scene.Init();
@@ -126,7 +126,7 @@ namespace YouYou
 
         void InitGameData()
         {
-            PlayerPrefs.InitGameData();
+            Player.InitGameData();
         }
 
         void InitNetTime()
@@ -152,7 +152,7 @@ namespace YouYou
         }
         private void OnApplicationQuit()
         {
-            PlayerPrefs.SaveDataAll(true,true);
+            Player.SaveDataAll(true,true);
             Logger.SyncLog();
             Logger.Dispose();
             Fsm.Dispose();
@@ -163,7 +163,7 @@ namespace YouYou
         {
             if (pause)
             {
-                PlayerPrefs.SaveDataAll(true,true);
+                Player.SaveDataAll(true,true);
                 GameEntry.Event.Dispatch(EventName.GameEntryOnApplicationPause);
             }
         }

@@ -23,7 +23,8 @@
     public const string SecurityKey = "3ZkPqF9hDjW8q2Z7";//钥匙
     public const string EmptyGameData = "EmptyGameData";
     public const string RequestFail = "RequestFail";
-    
+    public const string GetRedPoint = "GetRedPoint";
+    public const string ClearRedPoint = "ClearRedPoint";
     
     // 定义全局的 readonly 变量，可以在运行时初始化，但之后不能修改
 

@@ -10,8 +10,8 @@ public class RedDotCtrl : Singleton<RedDotCtrl>
     public RedDotCtrl()
     {
         //这里改成你自己监听后端回调的代码
-        GameEntry.Event.Common.AddEventListener("E_SVR_MSG_ID_GET_GLOBAL_RED", (x) => ParseTGetGlobalRedRsp(null));
-        GameEntry.Event.Common.AddEventListener("E_SVR_MSG_ID_CLEAR_GLOBAL_RED", (x) => ParseTClearGlobalRedRsp(null));
+        GameEntry.Event.Common.AddEventListener(Constants.GetRedPoint, (x) => ParseTGetGlobalRedRsp(null));
+        GameEntry.Event.Common.AddEventListener(Constants.ClearRedPoint, (x) => ParseTClearGlobalRedRsp(null));
     }
 
     //请求小红点
@@ -141,16 +141,8 @@ public class RedDotCtrl : Singleton<RedDotCtrl>
 /// <summary>
 /// 
 /// </summary>
-public class RedDotModel : Observable<RedDotModel, RedDotModel.EventName>
+public class RedDotModel : Observable<RedDotModel>
 {
-    public enum EventName : uint
-    {
-        //红点获取回调
-        E_SVR_MSG_ID_GET_GLOBAL_RED,
-        //红点清除回调
-        E_SVR_MSG_ID_CLEAR_GLOBAL_RED,
-    }
-
     /// <summary>
     /// 后台下发的红点数据
     /// </summary>
@@ -178,7 +170,7 @@ public class RedDotModel : Observable<RedDotModel, RedDotModel.EventName>
             mMapGlobalRedInfo[key] = rsp.mapRedModelResults[key];
             GameEntry.Reddot.ChangeValue(GameEntry.Reddot.GetServerIdOfPath(key), rsp.mapRedModelResults[key]);
         }
-        Dispatch(EventName.E_SVR_MSG_ID_GET_GLOBAL_RED, rsp.mapRedModelResults);
+        Dispatch(Constants.GetRedPoint, rsp.mapRedModelResults);
     }
 
     public void SetTClearGlobalRedRsp(TClearGlobalRedRsp rsp)
@@ -192,6 +184,6 @@ public class RedDotModel : Observable<RedDotModel, RedDotModel.EventName>
                 GameEntry.Reddot.ChangeValue(GameEntry.Reddot.GetServerIdOfPath(tGlobalRedInfo), 0);
             }
         }
-        Dispatch(EventName.E_SVR_MSG_ID_CLEAR_GLOBAL_RED, rsp.vecRedModel);
+        Dispatch(Constants.ClearRedPoint, rsp.vecRedModel);
     }
 }
