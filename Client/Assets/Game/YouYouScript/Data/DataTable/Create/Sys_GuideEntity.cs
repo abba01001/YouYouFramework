@@ -3,7 +3,7 @@ using System.Collections;
 namespace YouYou
 {
     /// <summary>
-      /// Sys_UIForm实体
+      /// Sys_Guide实体
     /// </summary>
     public partial class Sys_GuideEntity : DataTableEntityBase
     {
@@ -35,6 +35,12 @@ namespace YouYou
         /// <summary>
         /// 下一个任务ID
         /// </summary>
-        public int NextId;
+        public int NextTaskId;
+
+        /// <summary>
+        /// 策划备注全部任务流程
+        /// </summary>
+        public string Progress;
+
     }
 }

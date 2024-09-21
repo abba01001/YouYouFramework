@@ -10,6 +10,7 @@ public class TestPool : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.A))
         {
             await GameEntry.Pool.GameObjectPool.SpawnAsync(PrefabName.Player);
+            PoolObj poolObj = await GameEntry.Pool.GameObjectPool.SpawnAsync(PrefabName.Player);
         }
     }
 }

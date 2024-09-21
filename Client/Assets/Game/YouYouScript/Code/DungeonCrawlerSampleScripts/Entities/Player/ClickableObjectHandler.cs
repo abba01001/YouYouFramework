@@ -27,7 +27,6 @@ namespace DunGen.DungeonCrawler
 		[Tooltip("How far the raycast travels when checking for hover/click")]
 		private float maxRayDistance = 100f;
 
-		[SerializeField]
 		[Tooltip("Which camera to cast the cursor rays from")]
 		private Camera raycastCamera = null;
 
@@ -53,6 +52,7 @@ namespace DunGen.DungeonCrawler
 
 		private IClickableObject GetClickableUnderCursor()
 		{
+			if (raycastCamera == null) raycastCamera = FindObjectOfType<PlayerCamera>().GetComponent<Camera>();
 			var ray = raycastCamera.ScreenPointToRay(Input.mousePosition);
 			int hitCount = Physics.RaycastNonAlloc(ray, hitBuffer, maxRayDistance, raycastLayer, QueryTriggerInteraction.Ignore);
 

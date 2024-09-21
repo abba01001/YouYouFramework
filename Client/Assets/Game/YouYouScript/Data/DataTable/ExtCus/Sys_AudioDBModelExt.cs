@@ -21,7 +21,7 @@ namespace YouYou
                     string str = strs[strs.Length - 1];
                     if (NameByDic.ContainsKey(str))
                     {
-                        GameEntry.LogError(LogCategory.Framework, "Ãû³ÆÓĞÖØ¸´! ==" + str);
+                        GameEntry.LogError(LogCategory.Framework, "åç§°æœ‰é‡å¤! ==" + str);
                     }
                     else
                     {
@@ -37,7 +37,7 @@ namespace YouYou
             {
                 return NameByDic[name];
             }
-            YouYou.GameEntry.LogError(LogCategory.Framework, "Ã»ÓĞÕÒµ½×ÊÔ´, Name==" + name);
+            YouYou.GameEntry.LogError(LogCategory.Framework, "æ²¡æœ‰æ‰¾åˆ°èµ„æº, Name==" + name);
             return null;
         }
     }

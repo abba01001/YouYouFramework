@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using YouYou;
 
 namespace DunGen.DungeonCrawler
 {
@@ -20,10 +21,9 @@ namespace DunGen.DungeonCrawler
 		private RuntimeDungeon runtimeDungeon;
 		private GameObject spawnedPlayerInstance;
 
-
 		private void OnEnable()
 		{
-			playerUI = FindObjectOfType<PlayerUI>();
+			//playerUI = FindObjectOfType<PlayerUI>();
 
 			runtimeDungeon = GetComponent<RuntimeDungeon>();
 			runtimeDungeon.Generator.OnGenerationStatusChanged += OnDungeonGenerationStatusChanged;
@@ -49,25 +49,22 @@ namespace DunGen.DungeonCrawler
 
 			Vector3 spawnPosition = playerSpawn.transform.position;
 			//spawnedPlayerInstance = Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
+
+			player = FindObjectOfType<PlayerCtrl>().gameObject;
 			player.transform.position = spawnPosition;
 			player.transform.rotation = Quaternion.identity;
 			spawnedPlayerInstance = player;
-			playerUI.SetPlayer(spawnedPlayerInstance);
-			CombineWithoutSpecificObjects();
-			// All hideable objects are spawned by now,
-			// we can cache some information for later use
+			//playerUI.SetPlayer(spawnedPlayerInstance);
+			HandleBatchObjects();
 			HideableObject.RefreshHierarchies();
 		}
 		
-		void CombineWithoutSpecificObjects()
+		void HandleBatchObjects()
 		{
-			// 找到主物体
 			GameObject dungeon = GameObject.Find("Dungeon");
 			List<GameObject> list = new List<GameObject>();
-			// 遍历所有子物体
 			foreach (Transform child in dungeon.GetComponentsInChildren<Transform>())
 			{
-				// 如果子物体的名字中包含 "door"（不区分大小写），则设置其 Static 属性为 false
 				if (child.gameObject.CompareTag("Door"))
 				{
 					child.gameObject.SetActive(false);
@@ -76,7 +73,6 @@ namespace DunGen.DungeonCrawler
 			}
 			// 合并剩余的静态物体
 			StaticBatchingUtility.Combine(dungeon);
-
 			foreach (var go in list)
 			{
 				go.SetActive(true);

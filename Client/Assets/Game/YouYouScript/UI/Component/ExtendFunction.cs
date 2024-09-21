@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.U2D;
 using UnityEngine.UI;
 using YouYou;
 
@@ -52,5 +53,34 @@ public static class ExtendFunction
             {
                 redDot.gameObject.MSetActive(show);
             }
+        }
+        
+        public static void SetSpriteByAtlas(this Component component, string key, string name, bool needSetNative = true, Action action = null)
+        {
+            
+            SetSpriteAsyncDetail(GameEntry.Atlas.GetAtlas(key), component, name, needSetNative, action);
+        }
+        
+        private static void SetSpriteAsyncDetail(SpriteAtlas atlas, Component component, string name, bool needSetNative = true, Action action = null)
+        {
+            switch (component)
+            {
+                case Image image:
+                    image.sprite = atlas.GetSprite(name);
+                    image.enabled = true;
+                    if (needSetNative) image.SetNativeSize();
+                    break;
+                case SpriteRenderer spriteRenderer:
+                    spriteRenderer.sprite = atlas.GetSprite(name);
+                    spriteRenderer.enabled = true;
+                    break;
+                case RawImage rawImage:
+                    rawImage.texture = atlas.GetSprite(name).texture;
+                    rawImage.enabled = true;
+                    break;
+                default:
+                    break;
+            }
+            action?.Invoke();
         }
     }

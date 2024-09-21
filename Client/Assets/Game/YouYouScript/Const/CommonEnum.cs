@@ -2,11 +2,22 @@
 public enum PrefabName : uint
 {
     Player,
+    Archer,
+    PlayerCtrl,
+    PlayerCamera,
     Monster,
     UIGlobal_HUD,
     UIGlobal_HeaderBar,
     Buff_xuanyun,
+    DungeonGenerator,
 }
+
+public enum AtlasName : uint
+{
+    Common,
+    FormBattle
+}
+
 public enum BGMName : uint
 {
     None,

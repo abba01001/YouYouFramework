@@ -55,6 +55,7 @@ namespace YouYou
         public static LoaderManager Loader { get; private set; }
         public static UIManager UI { get; private set; }
         public static AudioManager Audio { get; private set; }
+        public static AtlasManager Atlas { get; private set; }
         public static CrossPlatformInputManager Input { get; private set; }
         public static TaskManager Task { get; private set; }
         public static QualityManager Quality { get; private set; }
@@ -94,6 +95,7 @@ namespace YouYou
             Loader = new LoaderManager();
             UI = new UIManager();
             Audio = new AudioManager();
+            Atlas = new AtlasManager();
             Input = new CrossPlatformInputManager();
             Task = new TaskManager();
             Quality = new QualityManager();
@@ -111,6 +113,7 @@ namespace YouYou
             Loader.Init();
             UI.Init();
             Audio.Init();
+            Atlas.Init();
             Task.Init();
 
             //进入第一个流程
@@ -126,6 +129,7 @@ namespace YouYou
             Loader.OnUpdate();
             UI.OnUpdate();
             Audio.OnUpdate();
+            Atlas.OnUpdate();
             Input.OnUpdate();
             Task.OnUpdate();
             Reddot.OnUpdate();

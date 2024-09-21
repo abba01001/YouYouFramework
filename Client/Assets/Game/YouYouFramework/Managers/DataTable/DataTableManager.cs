@@ -20,6 +20,7 @@ namespace YouYou
         public Sys_AudioDBModel Sys_AudioDBModel { get; private set; }
         public Sys_SceneDBModel Sys_SceneDBModel { get; private set; }
         public Sys_GuideDBModel Sys_GuideDBModel { get; private set; }
+        public Sys_AtlasDBModel Sys_AtlasDBModel { get; private set; }
 
         /// <summary>
         /// 加载表格
@@ -48,6 +49,9 @@ namespace YouYou
             Sys_GuideDBModel = new Sys_GuideDBModel();
             Sys_GuideDBModel.LoadData(m_TaskGroup);
 
+            Sys_AtlasDBModel = new Sys_AtlasDBModel();
+            Sys_AtlasDBModel.LoadData(m_TaskGroup);
+            
             m_TaskGroup.OnComplete = OnLoadDataTableComplete;
             m_TaskGroup.Run(true);
         }
