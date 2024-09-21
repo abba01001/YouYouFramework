@@ -33,7 +33,16 @@ namespace YouYou
             m_WebAccountUrl = MainEntry.ParamsSettings.WebAccountUrl;
             m_TestWebAccountUrl = MainEntry.ParamsSettings.TestWebAccountUrl;
             m_IsTest = Main.MainEntry.ParamsSettings.IsTest;
-
+        }
+        
+        public void InitNetTime()
+        {
+            string url = "https://www.baidu.com";
+            MainEntry.Download.GetServerTime(url, null, (serverTime) =>
+            {
+                long time = GameEntry.Time.DateTimeToUnixTimestamp(serverTime);
+                GameEntry.Time.SetNetTime(time);
+            });
         }
 
         #region Get

@@ -98,6 +98,25 @@ namespace Main
             m_DownloadSingleRoutineList.AddLast(routine);
         }
 
+        public void DownloadGameData(string url, Action onUpdate = null, Action<string> onComplete = null)
+        {
+            DownloadRoutine routine = DownloadRoutine.Create();
+            routine.DownloadGameData(url, 10,onUpdate, onComplete: (string fileUrl) =>
+            {
+                onComplete(fileUrl);
+            });
+        }
+        
+        public void GetServerTime(string url, Action onUpdate = null, Action<DateTime> onComplete = null)
+        {
+            DownloadRoutine routine = DownloadRoutine.Create();
+            routine.GetServerTime(url, 10,onUpdate, onComplete: (DateTime serverTime) =>
+            {
+                onComplete(serverTime);
+            });
+        }
+        
+
         /// <summary>
         /// 下载多个文件
         /// </summary>

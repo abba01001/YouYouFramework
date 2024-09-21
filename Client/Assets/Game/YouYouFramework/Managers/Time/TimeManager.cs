@@ -19,11 +19,55 @@ namespace YouYou
         // 记录最近的TimeAction的临时目标时间点
         private float minTime;
         private float unscaledMinTime;
+        private long? netTime;
+        private TimeAction netTimeAction;
+        public void SetNetTime(long time)
+        {
+            netTime = time;
+            RefreshNetTime();
+        }
 
+        public long GetNetTime()
+        {
+            if (netTime.HasValue) return netTime.Value;
+            return DateTimeToUnixTimestamp(DateTime.Now);
+        }
+
+        public DateTime GetNetDate()
+        {
+            if (netTime.HasValue) return UnixTimestampToDateTime(netTime.Value);
+            return DateTime.Now;
+        }
+        
+        public long DateTimeToUnixTimestamp(DateTime dateTime)
+        {
+            DateTimeOffset dateTimeOffset = new DateTimeOffset(dateTime.ToLocalTime());
+            return dateTimeOffset.ToUnixTimeSeconds();
+        }
+        
+        public DateTime UnixTimestampToDateTime(long unixTimestamp)
+        {
+            DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(unixTimestamp);
+            return dateTimeOffset.UtcDateTime.ToLocalTime();
+        }
+        
         internal TimeManager()
         {
             m_SortedDictionary = new SortedDictionary<float, List<TimeAction>>();
             m_UnscaledSortedDictionary = new SortedDictionary<float, List<TimeAction>>();
+        }
+
+        private void RefreshNetTime()
+        {
+            netTimeAction?.Stop();
+            netTimeAction = CreateTimerLoop(this, 1f, -1, (int loop) =>
+            {
+                if (netTime.HasValue)
+                {
+                    long newTime = netTime.Value + 1;
+                    netTime = newTime;
+                }
+            });
         }
 
         /// <summary>
@@ -128,6 +172,7 @@ namespace YouYou
                 }
                 timeOutTime.Clear();
             }
+            
         }
 
         /// <summary>

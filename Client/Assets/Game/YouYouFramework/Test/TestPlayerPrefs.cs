@@ -30,9 +30,9 @@ public class TestPlayerPrefs : MonoBehaviour
             PlayerPrefs.SetFloat("TestKey", dic["TestKey"]);
         }
 
-        if (Input.GetKeyDown(KeyCode.F5))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            GameEntry.PlayerPrefs.SaveDataAllToFile();
+            GameEntry.LogError(GameEntry.Time.GetNetDate());
         }
     }
 }

@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -116,10 +116,24 @@ namespace YouYou
             Atlas.Init();
             Task.Init();
 
+            InitNetTime();
+            InitGameData();
             //进入第一个流程
             Procedure.ChangeState(ProcedureState.Launch);
         }
 
+
+
+        void InitGameData()
+        {
+            PlayerPrefs.InitGameData();
+        }
+
+        void InitNetTime()
+        {
+            Http.InitNetTime();
+        }
+        
         void Update()
         {
             Time.OnUpdate();
@@ -138,7 +152,7 @@ namespace YouYou
         }
         private void OnApplicationQuit()
         {
-            PlayerPrefs.SaveDataAll();
+            PlayerPrefs.SaveDataAll(true,true);
             Logger.SyncLog();
             Logger.Dispose();
             Fsm.Dispose();
@@ -149,7 +163,7 @@ namespace YouYou
         {
             if (pause)
             {
-                PlayerPrefs.SaveDataAll();
+                PlayerPrefs.SaveDataAll(true,true);
                 GameEntry.Event.Dispatch(EventName.GameEntryOnApplicationPause);
             }
         }

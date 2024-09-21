@@ -46,18 +46,24 @@ public sealed class SecurityUtil
     {
         byte[] keyArray = Encoding.UTF8.GetBytes(Constants.SecurityKey);
         byte[] toEncryptArray = Encoding.UTF8.GetBytes(plainText);
+
         using (Aes aesAlg = Aes.Create())
         {
             aesAlg.Key = keyArray;
             aesAlg.Mode = CipherMode.CBC;
             aesAlg.Padding = PaddingMode.PKCS7;
+
+            aesAlg.GenerateIV(); // 每次加密生成一个新的 IV
             ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
             using (MemoryStream msEncrypt = new MemoryStream())
             {
+                // 在加密数据之前先写入 IV
+                msEncrypt.Write(aesAlg.IV, 0, aesAlg.IV.Length);
+
                 using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
                 {
                     csEncrypt.Write(toEncryptArray, 0, toEncryptArray.Length);
-                    csEncrypt.Close();
+                    csEncrypt.FlushFinalBlock();
                 }
 
                 byte[] encrypted = msEncrypt.ToArray();
@@ -66,17 +72,29 @@ public sealed class SecurityUtil
         }
     }
 
+
     public static string Decrypt(string cipherText)
     {
         byte[] cipherTextArray = Convert.FromBase64String(cipherText);
         byte[] keyArray = Encoding.UTF8.GetBytes(Constants.SecurityKey);
+
         using (Aes aesAlg = Aes.Create())
         {
             aesAlg.Key = keyArray;
             aesAlg.Mode = CipherMode.CBC;
             aesAlg.Padding = PaddingMode.PKCS7;
+
+            // 从密文中提取 IV
+            byte[] iv = new byte[aesAlg.BlockSize / 8];
+            byte[] actualCipherText = new byte[cipherTextArray.Length - iv.Length];
+
+            Array.Copy(cipherTextArray, 0, iv, 0, iv.Length); // 提取 IV
+            Array.Copy(cipherTextArray, iv.Length, actualCipherText, 0, actualCipherText.Length); // 提取真正的密文
+
+            aesAlg.IV = iv;
             ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
-            using (MemoryStream msDecrypt = new MemoryStream(cipherTextArray))
+
+            using (MemoryStream msDecrypt = new MemoryStream(actualCipherText))
             {
                 using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
                 {
@@ -88,4 +106,5 @@ public sealed class SecurityUtil
             }
         }
     }
+
 }

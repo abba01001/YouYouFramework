@@ -28,7 +28,11 @@ namespace Main
             /// <summary>
             /// 网络消息
             /// </summary>
-            NetWork
+            NetWork,
+            /// <summary>
+            /// 玩家游戏数据
+            /// </summary>
+            GameData,
         }
 
         //全局参数设置

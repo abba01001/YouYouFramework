@@ -26,7 +26,7 @@ public class ChannelConfigEntity
     /// 资源地址
     /// </summary>
     public string SourceUrl = "https://abab01001-1318826377.cos.ap-guangzhou.myqcloud.com/Unity/AssetBundle/";
-
+    public string GameDataUrl = "https://abab01001-1318826377.cos.ap-guangzhou.myqcloud.com/Unity/GameData/";
     #region RealSourceUrl 真正的资源地址
     private string m_RealSourceUrl;
     /// <summary>

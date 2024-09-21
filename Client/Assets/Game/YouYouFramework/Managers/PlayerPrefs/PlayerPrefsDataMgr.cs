@@ -5,7 +5,7 @@ using System.IO;
 using Newtonsoft.Json;
 using UnityEngine;
 using YouYou;
-
+using Random = System.Random;
 
 public class PlayerPrefsDataMgr : Observable<PlayerPrefsDataMgr, PlayerPrefsDataMgr.EventName>
 {
@@ -15,6 +15,8 @@ public class PlayerPrefsDataMgr : Observable<PlayerPrefsDataMgr, PlayerPrefsData
         public Dictionary<string, int> intDic = new Dictionary<string, int>();
         public Dictionary<string, float> floatDic = new Dictionary<string, float>();
         public Dictionary<string, string> stringDic = new Dictionary<string, string>();
+        public string uuid = GenerateUniqueID();
+        public string saveTime = GameEntry.Time.GetNetTime().ToString();
     }
     
     public enum EventName : uint
@@ -38,8 +40,32 @@ public class PlayerPrefsDataMgr : Observable<PlayerPrefsDataMgr, PlayerPrefsData
         TestEvent,
     }
 
+    public void InitGameData()
+    {
+        string url = string.Format("{0}{1}", SystemModel.Instance.CurrChannelConfig.GameDataUrl, "gamedata.json");
+        MainEntry.Download.DownloadGameData(url,null, (string fileUrl) =>
+        {
+            if (fileUrl == Constants.EmptyGameData)
+            {
+                SaveDataAll(true, true);
+                //没有文件，则new出一个并上传
+            }
+            else if (fileUrl == Constants.RequestFail)
+            {
+                //弹窗，网路不好？
+            }
+            else
+            {
+                LoadGameData();
+                //加载GameData
+            }
+            Constants.IsLoadCouldData = true;
+        });
+    }
+
     public void Init()
     {
+
         //一定要等拉取存档完成才进入场景
         //第一次拉取存档，如果没有，则新建一个
         //云端拉GameData
@@ -53,38 +79,72 @@ public class PlayerPrefsDataMgr : Observable<PlayerPrefsDataMgr, PlayerPrefsData
         PlayerPrefs.DeleteAll();
     }
 
-    public GameData GetNewGameData()
+    private GameData GenerateGameData()
     {
         var data = new GameData
         {
             intDic = IntDic,
             floatDic = FloatDic,
-            stringDic = StringDic
+            stringDic = StringDic,
+            uuid = Constants.UserID,
+            saveTime = GameEntry.Time.GetNetTime().ToString()
         };
         return data;
     }
     
-    public void SaveDataAll(bool upload = false)
+    private void HandleLoadData(GameData gameData)
     {
-        IntDic.Add("你好", 1);
-        string jsonData = JsonConvert.SerializeObject(GetNewGameData());
+        IntDic = gameData.intDic;
+        FloatDic = gameData.floatDic;
+        StringDic = gameData.stringDic;
+        if (gameData.uuid == String.Empty) gameData.uuid = GenerateUniqueID();
+        Constants.UserID = gameData.uuid;
+    }
+    
+    public void SaveDataAll(bool writeToLocal = true,bool writeToCloud = false)
+    {
+        IntDic.TryAdd("你好", 1);
+        string jsonData = JsonConvert.SerializeObject(GenerateGameData());
+        GameEntry.LogError($"上传json文件:{jsonData}");
         string filePath = Path.Combine(Application.persistentDataPath, "gamedata.json");
         try
         {
             if (File.Exists(filePath)) File.Delete(filePath);
             File.WriteAllText(filePath, SecurityUtil.Encrypt(jsonData));
-            GameEntry.LogError("数据已成功保存到文件中：" + filePath);
         }
         catch (Exception ex)
         {
             GameEntry.LogError("保存数据到文件时发生错误: " + ex.Message);
         }
-        if (upload)
+        if (writeToCloud)
         {
-            
+            COSUploader.UploadGameData(filePath);
         }
     }
-
+    
+    public void LoadGameData()
+    {
+        string filePath = Path.Combine(Application.persistentDataPath, "gamedata.json");
+        try
+        {
+            if (File.Exists(filePath))
+            {
+                string encryptedData = File.ReadAllText(filePath);
+                string jsonData = SecurityUtil.Decrypt(encryptedData);
+                MainEntry.Log(MainEntry.LogCategory.Assets, $"当前GameData文件---{jsonData}");
+                HandleLoadData(JsonConvert.DeserializeObject<GameData>(jsonData));
+            }
+            else
+            {
+                GameEntry.LogError("文件不存在：" + filePath);
+            }
+        }
+        catch (Exception ex)
+        {
+            GameEntry.LogError("加载数据时发生错误: " + ex.Message);
+        }
+    }
+    
     private Dictionary<string, int> IntDic = new Dictionary<string, int>();
     private Dictionary<string, float> FloatDic = new Dictionary<string, float>();
     private Dictionary<string, string> StringDic = new Dictionary<string, string>();
@@ -195,27 +255,12 @@ public class PlayerPrefsDataMgr : Observable<PlayerPrefsDataMgr, PlayerPrefsData
     {
         PlayerPrefs.SetString(key, data.ToJson());
     }
-
-    public void SaveDataAllToFile()
+    
+    public static string GenerateUniqueID()
     {
-        IntDic.Add("你好", 1);
-        var data = new GameData
-        {
-            intDic = IntDic,
-        };
-
-        string jsonData = JsonConvert.SerializeObject(data);
-        GameEntry.LogError(jsonData);
-        string filePath = Path.Combine(Application.persistentDataPath, "gamedata.json");
-        try
-        {
-            if (File.Exists(filePath)) File.Delete(filePath);
-            File.WriteAllText(filePath, SecurityUtil.Encrypt(jsonData));
-            GameEntry.LogError("数据已成功保存到文件中：" + filePath);
-        }
-        catch (Exception ex)
-        {
-            GameEntry.LogError("保存数据到文件时发生错误: " + ex.Message);
-        }
+        long timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        Random random = new Random();
+        int randomValue = random.Next(100000, 999999);  // 生成6位随机数
+        return timestamp.ToString() + randomValue.ToString();
     }
 }
