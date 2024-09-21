@@ -54,10 +54,13 @@ namespace YouYou
             if (m_CurrProgress == 1)
             {
                 MainEntry.Instance.PreloadComplete();
-
+                
                 //这里先拉存档 TODO
+                if (Constants.IsLoadCouldData)
+                {
+                    GameEntry.Procedure.ChangeState(ProcedureState.Game);
+                }
                 //进入到业务流程
-                //GameEntry.Procedure.ChangeState(ProcedureState.Game);
             }
         }
 
