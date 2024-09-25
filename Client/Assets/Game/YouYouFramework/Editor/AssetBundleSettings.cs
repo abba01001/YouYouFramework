@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEditor;
+using UnityEditor.Build.Reporting;
 using UnityEngine;
 using YouYou;
 
@@ -19,12 +20,20 @@ public class AssetBundleSettings : ScriptableObject
         IOS
     }
 
+    #region 打包签名
+    string keystoreRelativePath = "Assets/PackageTool/user.keystore";
+    string keystorePassword = "FrameWork";
+    string keyAlias = "key";
+    string keyPassword = "FrameWork";
+    #endregion
+
+
     [HorizontalGroup("Common", LabelWidth = 75)]
     [VerticalGroup("Common/Left")]
     [LabelText("资源版本号")]
     public string AssetVersion = "1.0.0";
 
-    [PropertySpace(10)]
+    [PropertySpace(5)]
     [VerticalGroup("Common/Left")]
     [LabelText("目标平台")]
     public CusBuildTarget CurrBuildTarget;
@@ -43,11 +52,16 @@ public class AssetBundleSettings : ScriptableObject
         }
     }
 
-    [PropertySpace(10)]
+    [PropertySpace(3)]
     [VerticalGroup("Common/Left")]
     [LabelText("参数")]
     public BuildAssetBundleOptions Options;
 
+    [PropertySpace(6)]
+    [VerticalGroup("Common/Left")]
+    [LabelText("出包路径")]
+    public string PublishPath;
+    
     [VerticalGroup("Common/Right")]
     [Button(ButtonSizes.Medium)]
     [LabelText("清空本地CDN资源包")]
@@ -60,6 +74,14 @@ public class AssetBundleSettings : ScriptableObject
         EditorUtility.DisplayDialog("", "清空完毕", "确定");
     }
 
+    private void SetKeystoreInfo()
+    {
+        PlayerSettings.Android.keystoreName = keystoreRelativePath;
+        PlayerSettings.Android.keystorePass = keystorePassword;
+        PlayerSettings.Android.keyaliasName = keyAlias;
+        PlayerSettings.Android.keyaliasPass = keyPassword;
+    }
+    
     /// <summary>
     /// 要收集的资源包
     /// </summary>
@@ -117,7 +139,61 @@ public class AssetBundleSettings : ScriptableObject
     {
         COSUploader.UploadAB();
     }
+
+
+    [VerticalGroup("Common/Right")]
+    [Button(ButtonSizes.Medium)]
+    [LabelText("出包")]
+    public void PublishAPK()
+    {
+        SetKeystoreInfo();
+        if (PublishPath == String.Empty)
+        {
+            // 弹出提示窗口并调用选择路径方法
+            if (EditorUtility.DisplayDialog("出包路径未设置", "请先设置出包路径！", "确定"))
+            {
+                SelectPublishPath(); // 用户点击“确定”后选择路径
+            }
+            return; // 路径未设置，不执行打包
+        }
+        
+        //这里能不能弹出一个窗口，然后选择添加场景？
+        string[] scenes = { "Assets/Game/Scene_Launch.unity" };
+        string buildPath = "Builds/Android/GameBuild.apk";
+        BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions
+        {
+            scenes = scenes,
+            locationPathName = PublishPath,
+            target = BuildTarget.Android,
+            options = BuildOptions.CompressWithLz4
+        };
+        BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
+        BuildSummary summary = report.summary;
+        if (summary.result == BuildResult.Succeeded)
+        {
+            EditorUtility.DisplayDialog("打包成功", "APK 已成功生成！", "确定");
+            string directoryPath = Path.GetDirectoryName(PublishPath); // 获取文件夹路径
+            System.Diagnostics.Process.Start("explorer.exe", directoryPath);
+        }
+        if (summary.result == BuildResult.Failed)
+        {
+            string errorMessage = "打包失败！\n错误信息: " + summary.totalErrors;
+            GameEntry.LogError(errorMessage);
+            EditorUtility.DisplayDialog("打包失败", errorMessage, "确定");
+        }
+    }
     
+    // 添加选择输出路径的方法
+    public void SelectPublishPath()
+    {
+        string path = EditorUtility.OpenFolderPanel("选择输出文件夹", "", "");
+        if (!string.IsNullOrEmpty(path))
+        {
+            PublishPath = path + "/GameBuild.apk"; // 生成 APK 的完整路径
+            Debug.Log("已选择输出路径: " + PublishPath);
+        }
+    }
+
     #region TempPath OutPath
     /// <summary>
     /// 临时目录

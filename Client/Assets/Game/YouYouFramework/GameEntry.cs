@@ -59,6 +59,7 @@ namespace YouYou
         public static CrossPlatformInputManager Input { get; private set; }
         public static TaskManager Task { get; private set; }
         public static QualityManager Quality { get; private set; }
+        public static SDKManager SDK { get; private set; }
         public static GuideManager Guide { get; private set; }
         public static ReddotMananger Reddot { get; private set; }
 
@@ -99,6 +100,7 @@ namespace YouYou
             Input = new CrossPlatformInputManager();
             Task = new TaskManager();
             Quality = new QualityManager();
+            SDK = new SDKManager();
             Guide = new GuideManager();
             Reddot = new ReddotMananger();
 
@@ -114,6 +116,7 @@ namespace YouYou
             UI.Init();
             Audio.Init();
             Atlas.Init();
+            SDK.Init();
             Task.Init();
 
             InitNetTime();
@@ -144,6 +147,7 @@ namespace YouYou
             UI.OnUpdate();
             Audio.OnUpdate();
             Atlas.OnUpdate();
+            SDK.OnUpdate();
             Input.OnUpdate();
             Task.OnUpdate();
             Reddot.OnUpdate();

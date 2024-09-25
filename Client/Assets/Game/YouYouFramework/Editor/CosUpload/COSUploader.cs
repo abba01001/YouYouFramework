@@ -25,28 +25,7 @@ namespace YouYou
         private static int failCount = 0;
         private static UploadResultWindow uploadWindow;
         private static Stopwatch stopwatch;
-
         
-        public static async Task UploadGameData(string localFilePath)
-        {
-            cosConfig = Resources.Load<CosConfig>("CosConfig");
-            CosXml cosXml = CreateCosXml();
-
-            string relativePath = Path.GetFileName(localFilePath); // 获取文件名
-            using (FileStream fileStream = new FileStream(localFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                PutObjectRequest request = new PutObjectRequest(cosConfig.bucket, "Unity/GameData" + "/" + relativePath, fileStream);
-                request.SetSign(TimeUtils.GetCurrentTime(TimeUnit.Seconds), 600);
-                try
-                {
-                    PutObjectResult result = await Task.Run(() => cosXml.PutObject(request));
-                }
-                catch (Exception ex)
-                {
-                    failureLog.AppendLine($"{relativePath}      上传状态：<color=red>失败</color>，错误：{ex.Message}");
-                }
-            }
-        }
         
         public static async void UploadAB()
         {

@@ -23,6 +23,7 @@ public class CosConfig : ScriptableObject
     {
         get
         {
+#if TestMode
             BuildTarget activeBuildTarget = EditorUserBuildSettings.activeBuildTarget;
             switch (activeBuildTarget)
             {
@@ -34,6 +35,9 @@ public class CosConfig : ScriptableObject
                 default:
                     return PlatformOption.Windows;  // 默认返回Windows
             }
+#else
+            return PlatformOption.Android;
+#endif
         }
         set{}
     } // 使用枚举类型表示平台选项

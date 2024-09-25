@@ -97,7 +97,7 @@ public class PlayerDataMgr : Observable<PlayerDataMgr>
         }
         if (writeToCloud)
         {
-            COSUploader.UploadGameData(filePath);
+            GameEntry.SDK.UploadGameData(filePath);
         }
     }
     
