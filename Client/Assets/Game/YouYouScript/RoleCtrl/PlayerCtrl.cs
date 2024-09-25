@@ -59,6 +59,7 @@ public class PlayerCtrl : MonoBehaviour
 
     void Update()
     {
+        if(mAnimator == null) return;
         if (EnableOperateMove)
         {
             CheckOperateMove();
@@ -73,12 +74,33 @@ public class PlayerCtrl : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            EnableNavMove = true;
-            NavMoveTo(new Vector3(11.72f, 0.05211985f, -9.18f), true, true);
-        }
+        // if (Input.GetKeyDown(KeyCode.A))
+        // {
+        //     EnableNavMove = true;
+        //     NavMoveTo(new Vector3(11.72f, 0.05211985f, -9.18f), true, true);
+        // }
 
+        CheckKeyBoardMove();
+    }
+
+    private Vector2 deltaVelocity = Vector2.zero; // 用于 SmoothDamp
+    public float smoothTime = 0.1f; // 控制平滑时间
+    public void CheckKeyBoardMove()
+    {
+#if UNITY_EDITOR
+        float x = Input.GetAxisRaw("Horizontal");
+        float y = Input.GetAxisRaw("Vertical");
+        Vector2 targetDelta = new Vector2(x, y);
+        MoveDelta = Vector2.SmoothDamp(MoveDelta, targetDelta, ref deltaVelocity, smoothTime);
+        if (x != 0f || y != 0f)
+        {
+            StartMove(MoveDelta);
+        }
+        else
+        {
+            StopMove(MoveDelta);
+        }
+#endif
     }
 
     public void NavMoveTo(Vector3 destination,bool forceCalculatePath,bool pingLocation)

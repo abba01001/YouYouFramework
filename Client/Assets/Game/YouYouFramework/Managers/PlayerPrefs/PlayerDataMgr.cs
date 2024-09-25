@@ -110,7 +110,7 @@ public class PlayerDataMgr : Observable<PlayerDataMgr>
             {
                 string encryptedData = File.ReadAllText(filePath);
                 string jsonData = SecurityUtil.Decrypt(encryptedData);
-                MainEntry.Log(MainEntry.LogCategory.Assets, $"当前GameData文件---{jsonData}");
+                MainEntry.LogError(MainEntry.LogCategory.Assets, $"当前GameData文件---{jsonData}");
                 HandleLoadData(JsonConvert.DeserializeObject<GameData>(jsonData));
             }
             else

@@ -47,12 +47,6 @@ public class PlayerCamera : MonoBehaviour
     /// 水平瞄准速度
     /// </summary>
     public float mHorizontalAimingSpeed = 1000.0f;
-    
-#if UNITY_EDITOR
-    public float scaleFactor = 1f;
-#else
-    public float scaleFactor = 10f;
-#endif
 
     /// <summary>
     /// 垂直瞄准速度
@@ -136,15 +130,16 @@ public class PlayerCamera : MonoBehaviour
     {
         if (RotateIng)
         {
-            mAngleH += Mathf.Clamp(RotateDelta.x / Screen.width, -1.0f, 1.0f) * mHorizontalAimingSpeed * scaleFactor;
-            mAngleV += Mathf.Clamp(RotateDelta.y / Screen.height, -1.0f, 1.0f) * mVerticalAimingSpeed * scaleFactor;
+            float deltaMultiplier = Time.deltaTime * 30;  // 标准化到 60 FPS
+            mAngleH += Mathf.Clamp(RotateDelta.x / 120, -1.0f, 1.0f) * mHorizontalAimingSpeed * deltaMultiplier;
+            mAngleV += Mathf.Clamp(RotateDelta.y / 120, -1.0f, 1.0f) * mVerticalAimingSpeed * deltaMultiplier;
         }
 
         if (ResetRotateIng)
         {
             speedFactor += acceleration * Time.deltaTime;
-            mAngleH = Mathf.Lerp(mAngleH, initialAngleH, Time.deltaTime * speedFactor * scaleFactor);
-            mAngleV = Mathf.Lerp(mAngleV, initialAngleV, Time.deltaTime  * speedFactor * scaleFactor);
+            mAngleH = Mathf.Lerp(mAngleH, initialAngleH, Time.deltaTime * speedFactor);
+            mAngleV = Mathf.Lerp(mAngleV, initialAngleV, Time.deltaTime  * speedFactor);
             if (Mathf.Abs(mAngleH - initialAngleH) <= 0.2f && Mathf.Abs(mAngleV - initialAngleV) <= 0.2f)
             {
                 mAngleH = initialAngleH;

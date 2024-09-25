@@ -22,7 +22,7 @@ namespace YouYou
             //初始画质设置
             GameEntry.Quality.SetQuality((QualityManager.Quality)GameEntry.Player.GetInt(Constants.StorgeKey.QualityLevel));
             GameEntry.Quality.SetScreen((QualityManager.ScreenLevel)GameEntry.Player.GetInt(Constants.StorgeKey.Screen));
-            GameEntry.Quality.SetFrameRate((QualityManager.FrameRate)GameEntry.Player.GetInt(Constants.StorgeKey.FrameRate));
+            GameEntry.Quality.SetFrameRate((QualityManager.FrameRate)4);//GameEntry.Player.GetInt(Constants.StorgeKey.FrameRate));
 
             //获取安卓权限
             permissions.ToList().ForEach(s =>

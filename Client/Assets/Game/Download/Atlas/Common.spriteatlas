@@ -21,7 +21,19 @@ SpriteAtlas:
       readable: 0
       crunchedCompression: 0
       sRGB: 1
-    platformSettings: []
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: Android
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 50
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
     packingSettings:
       serializedVersion: 2
       padding: 4
@@ -39,10 +51,14 @@ SpriteAtlas:
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: 21300000, guid: 676e443955b722541aae85703c83b840, type: 3}
   - {fileID: 21300000, guid: ffdd62fcf7b878546a1e67e640321cf2, type: 3}
+  - {fileID: 21300000, guid: 23e4191de5c7f05469112ecfeb162ea1, type: 3}
   - {fileID: 21300000, guid: 35643edf58fa8ac44b0b04619bae21ab, type: 3}
   m_PackedSpriteNamesToIndex:
+  - Play_Joystick_handle
   - JoyKnob
+  - Play_Joystick_bg
   - JoyBg
   m_RenderDataMap: {}
   m_Tag: Common

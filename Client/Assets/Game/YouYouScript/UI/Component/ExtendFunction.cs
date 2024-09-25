@@ -59,10 +59,17 @@ public static class ExtendFunction
         }
     }
 
-    public static void SetSpriteByAtlas(this Component component, string key, string name, bool needSetNative = true,
+    public static void SetImage(this Image image, string key, string name, bool needSetNative = true,
         Action action = null)
     {
-        SetSpriteAsyncDetail(GameEntry.Atlas.GetAtlas(key), component, name, needSetNative, action);
+        AssetReferenceEntity referenceEntity = GameEntry.Loader.LoadMainAsset($"{key}/{name}");
+        if (referenceEntity != null)
+        {
+            referenceEntity.ReferenceAdd();
+        }
+        image.sprite = referenceEntity.Target as Sprite;
+        image.enabled = true;
+        if (needSetNative) image.SetNativeSize();
     }
 
     private static void SetSpriteAsyncDetail(SpriteAtlas atlas, Component component, string name,

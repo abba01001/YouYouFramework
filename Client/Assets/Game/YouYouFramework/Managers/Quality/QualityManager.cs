@@ -20,6 +20,8 @@ namespace YouYou
             Low,
             Medium,
             High,
+            Higher,
+            Highest,
         }
         public enum ScreenLevel
         {
@@ -88,6 +90,12 @@ namespace YouYou
                     break;
                 case FrameRate.High:
                     Application.targetFrameRate = 60; // 120;
+                    break;
+                case FrameRate.Higher:
+                    Application.targetFrameRate = 90; // 120;
+                    break;
+                case FrameRate.Highest:
+                    Application.targetFrameRate = 120; // 120;
                     break;
             }
             GameEntry.Player.SetInt(Constants.StorgeKey.FrameRate, (int)CurrFrameRate);

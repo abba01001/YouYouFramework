@@ -14,7 +14,7 @@ public class AutoReleaseHandle : MonoBehaviour
         {
             GameObject SceneRoot = GameEntry.Pool.GameObjectPool.YouYouObjPool;
             target = SceneRoot;
-            GameEntry.Log(LogCategory.Loader, "ÒòÎª{0}Ã»ÓĞ¿É°ó¶¨µÄtarget£¬ ËùÒÔ°ó¶¨µ½ÁË{1}ÉÏ£¬ Ëæµ±Ç°³¡¾°Ïú»Ù¶ø¼õÉÙÒıÓÃ¼ÆÊı", referenceEntity.AssetFullPath, SceneRoot);
+            GameEntry.Log(LogCategory.Loader, "å› ä¸º{0}æ²¡æœ‰å¯ç»‘å®šçš„targetï¼Œ æ‰€ä»¥ç»‘å®šåˆ°äº†{1}ä¸Šï¼Œ éšå½“å‰åœºæ™¯é”€æ¯è€Œå‡å°‘å¼•ç”¨è®¡æ•°", referenceEntity.AssetFullPath, SceneRoot);
         }
 
         if (target != null)

@@ -58,7 +58,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 30
+  far clip plane: 50
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -99,7 +99,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mPivotOffset: {x: 0, y: 1, z: 0}
   mHorizontalAimingSpeed: 1000
-  scaleFactor: 1
   mVerticalAimingSpeed: 1000
   mMaxVerticalAngle: 30
   mMinVerticalAngle: -60

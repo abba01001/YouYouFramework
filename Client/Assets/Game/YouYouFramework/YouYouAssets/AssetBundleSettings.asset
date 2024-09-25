@@ -69,10 +69,10 @@ MonoBehaviour:
     IsEncrypt: 0
     Path:
     - Game/Download/DunGenMap
-  - Name: "\u56FE\u96C6"
+  - Name: "\u56FE\u96C6\u8D44\u6E90"
     IsBuild: 1
-    Overall: 0
+    Overall: 1
     IsFirstData: 1
     IsEncrypt: 0
     Path:
-    - Game/Download/Atlas
+    - Game/Download/Atlas/Textures

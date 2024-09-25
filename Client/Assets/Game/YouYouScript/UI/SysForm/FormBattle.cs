@@ -30,13 +30,13 @@ public class FormBattle : UIFormBase
         base.OnEnable();
         jumpBtn.GetComponent<Button>().SetButtonClick(() =>
         {
-            jumpBtn.SetSpriteByAtlas("Common","JoyBg",true);
+            jumpBtn.SetImage("Assets/Game/Download/Atlas/Textures/Common","JoyBg.png",true);
         });
         //GameEntry.Event.AddEventListener(EventName.LoadingSceneUpdate, OnLoadingProgressChange);
 
         //txtTip.text = string.Empty;
         //m_Scrollbar.size = 0;
-        jumpBtn.SetSpriteByAtlas("Common","JoyKnob",true);
+        //jumpBtn.SetSpriteByAtlas("Common","JoyKnob",true);
     }
     protected override void OnDisable()
     {
