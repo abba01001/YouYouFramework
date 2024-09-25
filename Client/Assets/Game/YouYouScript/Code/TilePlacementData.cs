@@ -1,6 +1,7 @@
 using DunGen.Graph;
 using System;
 using UnityEngine;
+using YouYou;
 
 namespace DunGen
 {
@@ -194,7 +195,6 @@ namespace DunGen
 			size.x = Mathf.Abs(size.x);
 			size.y = Mathf.Abs(size.y);
 			size.z = Mathf.Abs(size.z);
-
 			Bounds = new Bounds(center, size);
 		}
 	}

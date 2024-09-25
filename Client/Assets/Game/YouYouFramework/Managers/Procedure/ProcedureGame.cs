@@ -24,6 +24,15 @@ namespace YouYou
         {
             Scene targetScene = SceneManager.GetSceneByName("Main_3");
             SceneManager.SetActiveScene(targetScene);
+
+            Material main3Skybox = Resources.Load<Material>("CloudyNight"); // 确保路径正确
+            // 更新渲染设置中的天空盒
+            if (main3Skybox != null)
+            {
+                RenderSettings.skybox = main3Skybox;
+                DynamicGI.UpdateEnvironment(); // 更新全局光照（如果需要）
+            }
+            
             InitFormBattle();
             InitPlayer();
         }
@@ -52,7 +61,7 @@ namespace YouYou
             
             var parent1 = new GameObject("Map");
             PoolObj dungeonGenerator = await GameEntry.Pool.GameObjectPool.SpawnAsync(PrefabName.DungeonGenerator,parent1.transform);
-            dungeonGenerator.GetComponent<DungeonSetup>().InitParams(new object[] {playerCtrl.transform, rotateJoy});
+            //dungeonGenerator.GetComponent<DungeonSetup>().InitParams(new object[] {playerCtrl.transform, rotateJoy});
         }
         
         internal override void OnUpdate()

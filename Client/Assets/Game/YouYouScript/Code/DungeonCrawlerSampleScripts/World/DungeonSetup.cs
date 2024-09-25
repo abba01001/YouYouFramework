@@ -12,15 +12,10 @@ namespace DunGen.DungeonCrawler
 	[RequireComponent(typeof(RuntimeDungeon))]
 	sealed class DungeonSetup : MonoBehaviour
 	{
-		private GameObject player;
 		private PlayerUI playerUI;
 		private RuntimeDungeon runtimeDungeon;
 		private GameObject spawnedPlayerInstance;
-		public void InitParams(object[] param)
-		{
-			player = param[0] as GameObject;
-		}
-		
+
 		private void OnEnable()
 		{
 			//playerUI = FindObjectOfType<PlayerUI>();
@@ -35,22 +30,11 @@ namespace DunGen.DungeonCrawler
 
 		private void OnDungeonGenerationStatusChanged(DungeonGenerator generator, GenerationStatus status)
 		{
-			// We're only interested in completion events
-			if (status != GenerationStatus.Complete)
-				return;
-			// If there's already a player instance, destroy it. We'll spawn a new one
-			if (spawnedPlayerInstance != null)
-				Destroy(spawnedPlayerInstance);
+			if (status != GenerationStatus.Complete) return;
+			if (spawnedPlayerInstance != null) Destroy(spawnedPlayerInstance);
 
-			// Find an object inside the start tile that's marked with the PlayerSpawn component
 			var playerSpawn = generator.CurrentDungeon.MainPathTiles[0].GetComponentInChildren<PlayerSpawn>();
-
 			Vector3 spawnPosition = playerSpawn.transform.position;
-
-			// player = FindObjectOfType<PlayerCtrl>().gameObject;
-			// player.transform.position = spawnPosition;
-			// player.transform.rotation = Quaternion.identity;
-			// spawnedPlayerInstance = player;
 			GameEntry.Event.Dispatch(EventName.UpdatePlayerPos,spawnPosition);
 			
 			//playerUI.SetPlayer(spawnedPlayerInstance);

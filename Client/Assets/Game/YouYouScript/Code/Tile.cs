@@ -1,8 +1,11 @@
 ﻿using DunGen.Tags;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Serialization;
+using YouYou;
 
 namespace DunGen
 {
@@ -98,12 +101,15 @@ namespace DunGen
 		private int fileVersion;
 
 
-		internal void AddTriggerVolume()
+		internal async Task AddTriggerVolume()
 		{
 			BoxCollider triggerVolume = gameObject.AddComponent<BoxCollider>();
-			triggerVolume.center = Placement.LocalBounds.center;
-			triggerVolume.size = Placement.LocalBounds.size;
+			triggerVolume.center = Placement.LocalBounds.center / Constants.TileScale;
+			triggerVolume.size = Placement.LocalBounds.size / Constants.TileScale;
 			triggerVolume.isTrigger = true;
+			Bounds tempBound = Placement.LocalBounds;
+			tempBound.center = triggerVolume.center;
+			Placement.LocalBounds = tempBound;
 		}
 
 		private void OnTriggerEnter(Collider other)

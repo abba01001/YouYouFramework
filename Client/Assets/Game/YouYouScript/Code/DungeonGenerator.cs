@@ -209,7 +209,6 @@ namespace DunGen
 			if (Root == null)
 				Root = new GameObject(Constants.DefaultDungeonRootName);
 
-
 			yield return Wait(InnerGenerate(false));
 
 			IsGenerating = false;

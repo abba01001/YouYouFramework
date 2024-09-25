@@ -58,7 +58,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 100
+  far clip plane: 30
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -74,7 +74,7 @@ Camera:
   m_AllowMSAA: 1
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
-  m_OcclusionCulling: 1
+  m_OcclusionCulling: 0
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
 --- !u!124 &124426230934836330
@@ -97,7 +97,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4326e5927738ccb4da706b0c0b54fda4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mPlayer: {fileID: 0}
   mPivotOffset: {x: 0, y: 1, z: 0}
   mHorizontalAimingSpeed: 1000
   scaleFactor: 1
@@ -107,6 +106,5 @@ MonoBehaviour:
   mMaxDistance: 10
   mMinDistance: 1.5
   mZoomSpeed: 1
-  Joystick: {fileID: 0}
   initialAngleH: 0
   initialAngleV: -30
