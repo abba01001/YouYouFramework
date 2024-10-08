@@ -10,8 +10,8 @@ public class RedDotCtrl : Singleton<RedDotCtrl>
     public RedDotCtrl()
     {
         //这里改成你自己监听后端回调的代码
-        GameEntry.Event.Common.AddEventListener(Constants.GetRedPoint, (x) => ParseTGetGlobalRedRsp(null));
-        GameEntry.Event.Common.AddEventListener(Constants.ClearRedPoint, (x) => ParseTClearGlobalRedRsp(null));
+        GameEntry.Event.Common.AddEventListener(Constants.GETREDPOINT, (x) => ParseTGetGlobalRedRsp(null));
+        GameEntry.Event.Common.AddEventListener(Constants.CLEARREDPOINT, (x) => ParseTClearGlobalRedRsp(null));
     }
 
     //请求小红点
@@ -170,7 +170,7 @@ public class RedDotModel : Observable<RedDotModel>
             mMapGlobalRedInfo[key] = rsp.mapRedModelResults[key];
             GameEntry.Reddot.ChangeValue(GameEntry.Reddot.GetServerIdOfPath(key), rsp.mapRedModelResults[key]);
         }
-        Dispatch(Constants.GetRedPoint, rsp.mapRedModelResults);
+        Dispatch(Constants.GETREDPOINT, rsp.mapRedModelResults);
     }
 
     public void SetTClearGlobalRedRsp(TClearGlobalRedRsp rsp)
@@ -184,6 +184,6 @@ public class RedDotModel : Observable<RedDotModel>
                 GameEntry.Reddot.ChangeValue(GameEntry.Reddot.GetServerIdOfPath(tGlobalRedInfo), 0);
             }
         }
-        Dispatch(Constants.ClearRedPoint, rsp.vecRedModel);
+        Dispatch(Constants.CLEARREDPOINT, rsp.vecRedModel);
     }
 }

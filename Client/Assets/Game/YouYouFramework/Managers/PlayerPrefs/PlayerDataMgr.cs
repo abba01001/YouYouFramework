@@ -48,12 +48,12 @@ public class PlayerDataMgr : Observable<PlayerDataMgr>
         string url = string.Format("{0}{1}", SystemModel.Instance.CurrChannelConfig.GameDataUrl, "gamedata.json");
         MainEntry.Download.DownloadGameData(url,null, (string fileUrl) =>
         {
-            if (fileUrl == Constants.EmptyGameData)
+            if (fileUrl == Constants.EMPTYGAMEDATA)
             {
                 SaveDataAll(true, true);
                 //没有文件，则new出一个并上传
             }
-            else if (fileUrl == Constants.RequestFail)
+            else if (fileUrl == Constants.REQUESTFAIL)
             {
                 //弹窗，网路不好？
             }

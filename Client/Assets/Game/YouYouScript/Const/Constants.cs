@@ -19,13 +19,16 @@
     
     // 定义全局常量，常量值不可修改
     public const float GRAVITY = -9.81f;//重力
+    public const string CASTLEPATH = "Assets/Game/Download/DunGenMap/Dungeon/Castle/Tiles/";
+    public const string GRAVEYARDPATH = "Assets/Game/Download/DunGenMap/Dungeon/Graveyard/Tiles/";
+    public const string ENCRYPTEDKEY = "ENCRYPTED:";
+
     public const float GroundCheckDistance = 0.1f; // 地面检测距离
-    public const string SecurityKey = "3ZkPqF9hDjW8q2Z7";//钥匙
-    public const string EmptyGameData = "EmptyGameData";
-    public const string RequestFail = "RequestFail";
-    public const string GetRedPoint = "GetRedPoint";
-    public const string ClearRedPoint = "ClearRedPoint";
-    
+    public const string SECURITYKEY = "3ZkPqF9hDjW8q2Z7";//钥匙
+    public const string EMPTYGAMEDATA = "EmptyGameData";
+    public const string REQUESTFAIL = "RequestFail";
+    public const string GETREDPOINT = "GetRedPoint";
+    public const string CLEARREDPOINT = "ClearRedPoint";
     // 定义全局的 readonly 变量，可以在运行时初始化，但之后不能修改
 
     

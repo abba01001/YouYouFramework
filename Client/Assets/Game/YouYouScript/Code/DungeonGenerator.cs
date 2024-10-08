@@ -437,6 +437,7 @@ namespace DunGen
 			}
 		}
 
+		//获取所有的瓦片预制体
 		protected virtual void PreProcess()
 		{
 			if (preProcessData.Count > 0)

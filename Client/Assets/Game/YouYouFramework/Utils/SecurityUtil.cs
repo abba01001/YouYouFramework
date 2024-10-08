@@ -44,7 +44,7 @@ public sealed class SecurityUtil
     
     public static string Encrypt(string plainText)
     {
-        byte[] keyArray = Encoding.UTF8.GetBytes(Constants.SecurityKey);
+        byte[] keyArray = Encoding.UTF8.GetBytes(Constants.SECURITYKEY);
         byte[] toEncryptArray = Encoding.UTF8.GetBytes(plainText);
 
         using (Aes aesAlg = Aes.Create())
@@ -76,7 +76,7 @@ public sealed class SecurityUtil
     public static string Decrypt(string cipherText)
     {
         byte[] cipherTextArray = Convert.FromBase64String(cipherText);
-        byte[] keyArray = Encoding.UTF8.GetBytes(Constants.SecurityKey);
+        byte[] keyArray = Encoding.UTF8.GetBytes(Constants.SECURITYKEY);
 
         using (Aes aesAlg = Aes.Create())
         {

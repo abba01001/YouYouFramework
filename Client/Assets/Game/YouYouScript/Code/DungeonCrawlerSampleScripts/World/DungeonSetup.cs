@@ -35,7 +35,7 @@ namespace DunGen.DungeonCrawler
 
 			var playerSpawn = generator.CurrentDungeon.MainPathTiles[0].GetComponentInChildren<PlayerSpawn>();
 			Vector3 spawnPosition = playerSpawn.transform.position;
-			GameEntry.Event.Dispatch(EventName.UpdatePlayerPos,spawnPosition);
+			GameEntry.Event?.Dispatch(EventName.UpdatePlayerPos,spawnPosition);
 			
 			//playerUI.SetPlayer(spawnedPlayerInstance);
 			HandleBatchObjects();

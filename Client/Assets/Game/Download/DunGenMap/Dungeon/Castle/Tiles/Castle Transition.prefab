@@ -392,7 +392,7 @@ GameObject:
   - component: {fileID: 1417826763723635604}
   - component: {fileID: -3041470797916241225}
   m_Layer: 0
-  m_Name: Transition
+  m_Name: Castle Transition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -201,7 +201,7 @@ GameObject:
   - component: {fileID: 4517860329868026815}
   - component: {fileID: 2760965173174726965}
   m_Layer: 0
-  m_Name: Obelisk Room
+  m_Name: Castle Obelisk Room
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

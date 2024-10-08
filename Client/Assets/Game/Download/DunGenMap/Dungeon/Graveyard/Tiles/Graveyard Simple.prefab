@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 942892055897354775}
   - component: {fileID: 3072041090714840668}
   m_Layer: 0
-  m_Name: Simple
+  m_Name: Graveyard Simple
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
