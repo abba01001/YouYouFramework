@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using DunGen.DungeonCrawler;
 using UnityEngine;
 using UnityEngine.AI;
@@ -37,6 +38,8 @@ public class PlayerCtrl : MonoBehaviour
     private float verticalVelocity = 0f;      // 垂直速度
     private float slopeForce = 2f;            // 控制下坡时的力度
     private float slopeForceRayLength = 1.5f; // 射线检测的长度
+    private Vector3? lastPlayerPos;
+    private Vector3? lastPlayerRotate;
     
     public void InitParams(object[] param)
     {
@@ -81,6 +84,8 @@ public class PlayerCtrl : MonoBehaviour
         // }
 
         CheckKeyBoardMove();
+        RecordPlayerPos();
+        RecordPlayerRotate();
     }
 
     private Vector2 deltaVelocity = Vector2.zero; // 用于 SmoothDamp
@@ -103,6 +108,38 @@ public class PlayerCtrl : MonoBehaviour
 #endif
     }
 
+    private void RecordPlayerPos()
+    {
+        if (!lastPlayerPos.HasValue)
+        {
+            lastPlayerPos = transform.position;
+        }
+        else
+        {
+            if (lastPlayerPos.Value != transform.position)
+            {
+                lastPlayerPos = transform.position;
+                GameEntry.Player.SetPlayerPos(lastPlayerPos.Value);
+            }
+        }
+    }
+    
+    private void RecordPlayerRotate()
+    {
+        if (!lastPlayerRotate.HasValue)
+        {
+            lastPlayerRotate = transform.rotation.eulerAngles;
+        }
+        else
+        {
+            if (lastPlayerRotate.Value != transform.rotation.eulerAngles)
+            {
+                lastPlayerRotate = transform.rotation.eulerAngles;
+                GameEntry.Player.SetPlayerRotate(lastPlayerRotate.Value);
+            }
+        }
+    }
+    
     public void NavMoveTo(Vector3 destination,bool forceCalculatePath,bool pingLocation)
     {
         mAnimator.SetBool("isGround", true);
@@ -199,6 +236,15 @@ public class PlayerCtrl : MonoBehaviour
     {
         transform.position = (Vector3)param;
         transform.rotation = Quaternion.identity;
+        PlayerRoleData playerRoleData = GameEntry.Player.GetPlayerRoleData();
+        if (playerRoleData.firstEntryLevel)
+        {
+            GameEntry.Player.SetPlayerBornPos((Vector3)param);
+        }
+        else
+        {
+            transform.position = new Vector3(playerRoleData.playerPos[0],playerRoleData.playerPos[1],playerRoleData.playerPos[2]);
+        }
     }
     
     private void OnEnable()

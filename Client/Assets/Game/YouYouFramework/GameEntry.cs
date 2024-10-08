@@ -151,7 +151,7 @@ namespace YouYou
             Input.OnUpdate();
             Task.OnUpdate();
             Reddot.OnUpdate();
-
+            Player.OnUpdate();
             GameEntry.Event.Dispatch(EventName.GameEntryOnUpdate);
         }
         private void OnApplicationQuit()

@@ -20,7 +20,7 @@ namespace YouYou
         {
             base.OnEnter();
             //初始画质设置
-            GameEntry.Quality.SetQuality((QualityManager.Quality)GameEntry.Player.GetInt(Constants.StorgeKey.QualityLevel));
+            GameEntry.Quality.SetQuality((QualityManager.Quality) 2);//GameEntry.Player.GetInt(Constants.StorgeKey.QualityLevel));
             GameEntry.Quality.SetScreen((QualityManager.ScreenLevel)GameEntry.Player.GetInt(Constants.StorgeKey.Screen));
             GameEntry.Quality.SetFrameRate((QualityManager.FrameRate)4);//GameEntry.Player.GetInt(Constants.StorgeKey.FrameRate));
 

@@ -54,10 +54,10 @@ public class LevelEditorWindow : OdinEditorWindow
     public bool isRandomGeneratedDisplayed;
 
     [BoxGroup("关卡编辑器")] [LabelText("保存为随机生成地图")] [ToggleLeft]
-    public bool isRandomGenerated;
+    public static bool isRandomGenerated;
 
-    private bool hasLoadedPrefab = false;
-
+    private static bool hasLoadedPrefab = false;
+    private static List<float> BornPos = new List<float>(3) {0, 0, 0};
     // 窗口启用时初始化
     private void OnEnable()
     {
@@ -72,6 +72,7 @@ public class LevelEditorWindow : OdinEditorWindow
     private void OnDisable()
     {
         CleanUpDungeon();
+        hasLoadedPrefab = false;
     }
 
     // 加载地图生成器
@@ -156,12 +157,13 @@ public class LevelEditorWindow : OdinEditorWindow
     }
 
     // 收集关卡数据
-    private LevelData GatherLevelData()
+    private static LevelData GatherLevelData()
     {
         LevelData levelData = new LevelData
         {
             isRandomGenerated = isRandomGenerated,
-            models = new List<LevelModelData>()
+            models = new List<LevelModelData>(),
+            bornPos = BornPos
         };
 
         GameObject dungeon = GameObject.Find("Dungeon");
@@ -225,6 +227,7 @@ public class LevelEditorWindow : OdinEditorWindow
         {
             json = SecurityUtil.Decrypt(json.Substring(Constants.ENCRYPTEDKEY.Length));
         }
+
         LoadLevelDataFromJson(json);
     }
 
@@ -274,6 +277,11 @@ public class LevelEditorWindow : OdinEditorWindow
         }
     }
 
+    public static void SaveBornPos(Vector3 pos)
+    {
+        BornPos = new List<float>() {pos.x, pos.y, pos.z};
+    }
+    
     // 获取预制体路径
     private string GetPrefabPath(LevelModelData modelData)
     {

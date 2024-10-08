@@ -15,7 +15,6 @@ namespace DunGen.DungeonCrawler
 		private PlayerUI playerUI;
 		private RuntimeDungeon runtimeDungeon;
 		private GameObject spawnedPlayerInstance;
-
 		private void OnEnable()
 		{
 			//playerUI = FindObjectOfType<PlayerUI>();
@@ -36,12 +35,12 @@ namespace DunGen.DungeonCrawler
 			var playerSpawn = generator.CurrentDungeon.MainPathTiles[0].GetComponentInChildren<PlayerSpawn>();
 			Vector3 spawnPosition = playerSpawn.transform.position;
 			GameEntry.Event?.Dispatch(EventName.UpdatePlayerPos,spawnPosition);
-			
+			LevelEditorWindow.SaveBornPos(spawnPosition);
 			//playerUI.SetPlayer(spawnedPlayerInstance);
 			HandleBatchObjects();
 			HideableObject.RefreshHierarchies();
 		}
-		
+
 		void HandleBatchObjects()
 		{
 			GameObject dungeon = GameObject.Find("Dungeon");

@@ -1,5 +1,4 @@
-﻿
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using HedgehogTeam.EasyTouch;
 using UnityEngine;
@@ -99,19 +98,21 @@ public class PlayerCamera : MonoBehaviour
     private bool RotateIng;
     private bool ResetRotateIng;
     private Vector2 RotateDelta = Vector2.zero;
+
     #region 内置函数
 
     public float initialAngleH = 0f;
     public float initialAngleV = -30f;
-    
+
     private float speedFactor = 4f; // 初始速度因子
     private float acceleration = 0.5f; // 加速因子
+    private Vector3? lastCameraRotate;
 
     public void InitParams(object[] param)
     {
         mPlayer = param[0] as Transform;
         joystick = param[1] as YouYouJoystick;
-        
+
         EasyTouch.On_Pinch += joystick.OnWidgetPinch;
         joystick.OnChanged += OnJoystickCamDragDown;
         joystick.OnUp += OnJoystickCamDragUp;
@@ -119,18 +120,18 @@ public class PlayerCamera : MonoBehaviour
         mAngleH = initialAngleH;
         mAngleV = initialAngleV;
     }
-    
+
     void Awake()
     {
         mCamera = GetComponent<Camera>().transform;
         mDistance = (mMinDistance + mMaxDistance) * 0.5f;
     }
-    
-	void Update ()
+
+    void Update()
     {
         if (RotateIng)
         {
-            float deltaMultiplier = Time.deltaTime * 30;  // 标准化到 60 FPS
+            float deltaMultiplier = Time.deltaTime * 30; // 标准化到 60 FPS
             mAngleH += Mathf.Clamp(RotateDelta.x / 120, -1.0f, 1.0f) * mHorizontalAimingSpeed * deltaMultiplier;
             mAngleV += Mathf.Clamp(RotateDelta.y / 120, -1.0f, 1.0f) * mVerticalAimingSpeed * deltaMultiplier;
         }
@@ -139,7 +140,7 @@ public class PlayerCamera : MonoBehaviour
         {
             speedFactor += acceleration * Time.deltaTime;
             mAngleH = Mathf.Lerp(mAngleH, initialAngleH, Time.deltaTime * speedFactor);
-            mAngleV = Mathf.Lerp(mAngleV, initialAngleV, Time.deltaTime  * speedFactor);
+            mAngleV = Mathf.Lerp(mAngleV, initialAngleV, Time.deltaTime * speedFactor);
             if (Mathf.Abs(mAngleH - initialAngleH) <= 0.2f && Mathf.Abs(mAngleV - initialAngleV) <= 0.2f)
             {
                 mAngleH = initialAngleH;
@@ -201,15 +202,34 @@ public class PlayerCamera : MonoBehaviour
                 mCamera.position = lookatpos + camdir * distance;
             }
         }
+
+        RecordPlayerRotate();
     }
 
-#endregion
+    private void RecordPlayerRotate()
+    {
+        if (!lastCameraRotate.HasValue)
+        {
+            lastCameraRotate = transform.rotation.eulerAngles;
+        }
+        else
+        {
+            if (lastCameraRotate.Value != transform.rotation.eulerAngles)
+            {
+                lastCameraRotate = transform.rotation.eulerAngles;
+                GameEntry.Player.SetCameraRotate(lastCameraRotate.Value);
+            }
+        }
+    }
+
+    #endregion
+
 
     #region 回调函数
 
     private void OnJoystickCamDragDown(Vector2 delta)
     {
-        if(ResetRotateIng) return;
+        if (ResetRotateIng) return;
         RotateIng = true;
         RotateDelta = delta;
     }
@@ -221,7 +241,7 @@ public class PlayerCamera : MonoBehaviour
         ResetRotateIng = true;
         RotateDelta = new Vector2(initialAngleH, initialAngleV);
     }
-    
+
     private void OnJoystickCamPinch(float delta)
     {
         mDistance -= delta * mZoomSpeed;
@@ -230,8 +250,6 @@ public class PlayerCamera : MonoBehaviour
     #endregion
 
     #region 函数
-
-
 
     #endregion
 }
