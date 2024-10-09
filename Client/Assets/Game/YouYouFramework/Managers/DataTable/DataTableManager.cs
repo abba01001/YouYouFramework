@@ -21,7 +21,8 @@ namespace YouYou
         public Sys_SceneDBModel Sys_SceneDBModel { get; private set; }
         public Sys_GuideDBModel Sys_GuideDBModel { get; private set; }
         public Sys_AtlasDBModel Sys_AtlasDBModel { get; private set; }
-
+        public Sys_DialogueDBModel Sys_DialogueDBModel { get; private set; }
+        public Sys_RoleAttrDBModel Sys_RoleAttrDBModel { get; private set; }
         /// <summary>
         /// 加载表格
         /// </summary>
@@ -51,8 +52,19 @@ namespace YouYou
 
             Sys_AtlasDBModel = new Sys_AtlasDBModel();
             Sys_AtlasDBModel.LoadData(m_TaskGroup);
+
+            Sys_DialogueDBModel = new Sys_DialogueDBModel();
+            Sys_DialogueDBModel.LoadData(m_TaskGroup);
+
+            Sys_RoleAttrDBModel = new Sys_RoleAttrDBModel();
+            Sys_RoleAttrDBModel.LoadData(m_TaskGroup);
             
-            m_TaskGroup.OnComplete = OnLoadDataTableComplete;
+            m_TaskGroup.OnComplete += OnLoadDataTableComplete;
+            m_TaskGroup.OnComplete += () =>
+            {
+                Constants.IsLoadDataTable = true;
+                GameEntry.Event.Dispatch(EventName.FinishLoadDataTable);
+            };
             m_TaskGroup.Run(true);
         }
 
@@ -66,7 +78,7 @@ namespace YouYou
         /// </summary>
         internal void LoadDataAllTable(Action onComplete = null)
         {
-            OnLoadDataTableComplete = onComplete;
+            OnLoadDataTableComplete += onComplete;
 #if ASSETBUNDLE
             GameEntry.Loader.LoadAssetBundleAction(YFConstDefine.DataTableAssetBundlePath, onComplete: (AssetBundle bundle) =>
             {

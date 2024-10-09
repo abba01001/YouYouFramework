@@ -10,6 +10,7 @@
     public static float MainRoleJumpHeight = 1.5f;//主角跳跃高度
     public static float MainRoleMoveSpeed = 4f;//玩家移动速度
     public static string UserID = string.Empty;
+    public static bool IsLoadDataTable = false; 
 #if UNITY_EDITOR
     public static bool IsLoadCouldData = true;
 #else
@@ -29,8 +30,11 @@
     public const string REQUESTFAIL = "RequestFail";
     public const string GETREDPOINT = "GetRedPoint";
     public const string CLEARREDPOINT = "ClearRedPoint";
+    
     // 定义全局的 readonly 变量，可以在运行时初始化，但之后不能修改
-
+    public static readonly char[] FirstSeparator = ",".ToCharArray();
+    public static readonly char[] SecondSeparator = ";".ToCharArray();
+    public static readonly char[] ThirdSeparator = "#".ToCharArray();
     
     public struct StorgeKey
     {

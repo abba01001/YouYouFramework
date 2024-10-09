@@ -60,6 +60,7 @@ namespace YouYou
         public static TaskManager Task { get; private set; }
         public static QualityManager Quality { get; private set; }
         public static SDKManager SDK { get; private set; }
+        public static DialogueManager Dialogue { get; private set; }
         public static GuideManager Guide { get; private set; }
         public static ReddotMananger Reddot { get; private set; }
 
@@ -101,6 +102,7 @@ namespace YouYou
             Task = new TaskManager();
             Quality = new QualityManager();
             SDK = new SDKManager();
+            Dialogue = new DialogueManager();
             Guide = new GuideManager();
             Reddot = new ReddotMananger();
 
@@ -117,6 +119,7 @@ namespace YouYou
             Audio.Init();
             Atlas.Init();
             SDK.Init();
+            Dialogue.Init();
             Task.Init();
 
             InitNetTime();
@@ -148,6 +151,7 @@ namespace YouYou
             Audio.OnUpdate();
             Atlas.OnUpdate();
             SDK.OnUpdate();
+            Dialogue.OnUpdate();
             Input.OnUpdate();
             Task.OnUpdate();
             Reddot.OnUpdate();

@@ -71,7 +71,8 @@ namespace Fungus
         public bool SuppressNextAutoSelection { get; set; }
 
         [SerializeField] bool suppressAllAutoSelections = false;
-        
+        public Action OnBlockComplete; // 回调
+
 
         protected virtual void Awake()
         {
@@ -382,6 +383,10 @@ namespace Fungus
 
             //force idle here so other commands that rely on block not executing are informed this frame rather than next
             ReturnToIdle();
+            if (activeCommand == null)
+            {
+                OnBlockComplete?.Invoke();
+            }
         }
 
         /// <summary>
@@ -515,6 +520,13 @@ namespace Fungus
                 flowchart.ClearSelectedCommands();
                 flowchart.AddSelectedCommand(command); //select the new command.
             }
+            Update();
+        }
+
+        public void RemoveAllCommands()
+        {
+            CommandList.Clear();
+            PrefabUtility.RecordPrefabInstancePropertyModifications(this);
             Update();
         }
 

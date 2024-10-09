@@ -80,16 +80,15 @@ public class PlayerDataMgr : Observable<PlayerDataMgr>
 
     public void Init()
     {
-        // GameEntry.PlayerPrefs.SetFloatHas(EventName.MasterVolume, 1);
-        // GameEntry.PlayerPrefs.SetFloatHas(EventName.AudioVolume, 1);
-        // GameEntry.PlayerPrefs.SetFloatHas(EventName.BGMVolume, 1);
-        // GameEntry.PlayerPrefs.SetIntHas(EventName.FrameRate, 2);
-
+        GameEntry.Time.CreateTimerLoop(this, 1f, -1, (int loop) =>
+        {
+            UpdateOnlineTime();
+        });
         GameEntry.Time.CreateTimerLoop(this, 10f, -1, (int loop) =>
         {
             if (Constants.IsLoadCouldData)
             {
-                SaveDataAll(true, true);
+                //SaveDataAll(true, true);
             }
         });
     }
@@ -161,6 +160,24 @@ public class PlayerDataMgr : Observable<PlayerDataMgr>
         return PlayerRoleData;
     }
 
+    public void UpdateOnlineTime()
+    {
+        PlayerRoleData.todayOnlineDuration += 1;
+        PlayerRoleData.totalOnlineDuration += 1;
+    }
+    
+    public void SaveDialogueId(int type,int id)
+    {
+        if (PlayerRoleData.dialogueIds.ContainsKey(type))
+        {
+            PlayerRoleData.dialogueIds[type] = id;
+        }
+        else
+        {
+            PlayerRoleData.dialogueIds.Add(type,id);
+        }
+    }
+    
     public void SetPlayerBornPos(Vector3 pos)
     {
         playerBornPosCache[0] = pos.x;

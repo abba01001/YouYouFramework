@@ -42,6 +42,7 @@ public enum EventName : uint
     GameEntryOnApplicationPause,
     LoadingSceneUpdate,
     UpdatePlayerPos,
+    FinishLoadDataTable,
 }
 
 public enum InputName

@@ -37,6 +37,15 @@ public class PlayerRoleData
     public List<float> cameraRotate;
     public bool firstEntryLevel;
     public int levelId;
+    public int curExp;
+    public int totalExp;
+    public int curHp;
+    public int maxHp;
+    public int curMp;
+    public int maxMp;
+    public int totalOnlineDuration;
+    public int todayOnlineDuration;
+    public Dictionary<int,int> dialogueIds;
     public PlayerRoleData()
     {
         playerBornPos = new List<float>();
@@ -45,7 +54,22 @@ public class PlayerRoleData
         cameraRotate = new List<float>();
         firstEntryLevel = true;
         levelId = 1;
+        dialogueIds = new Dictionary<int, int>();
+        totalOnlineDuration = 0;
+        todayOnlineDuration = 0;
     }
+}
+
+public class DialogueCommand
+{
+    public string type { get; set; }        // 命令类型 (如 say, wait, jump)
+    public string block { get; set; }       // 区块名称 (适用于 say, wait)
+    public string text { get; set; }        // 对话文本 (适用于 say)
+    public int characterId { get; set; }    // 角色 ID (适用于 say)
+    public string sprite { get; set; }      // 角色精灵路径 (适用于 say)
+    public float duration { get; set; }     // 等待时间 (适用于 wait)
+    public string fromBlock { get; set; }   // 源区块 (适用于 jump)
+    public string toBlock { get; set; }     // 目标区块 (适用于 jump)
 }
 
 [Serializable]
