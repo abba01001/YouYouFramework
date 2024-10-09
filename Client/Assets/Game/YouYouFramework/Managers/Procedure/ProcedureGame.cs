@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using DunGen;
 using DunGen.DungeonCrawler;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -17,6 +18,7 @@ namespace YouYou
     /// </summary>
     public class ProcedureGame : ProcedureBase
     {
+        private GameObject MapParent = null;
         internal override void OnEnter()
         {
             base.OnEnter();
@@ -37,6 +39,13 @@ namespace YouYou
                 DynamicGI.UpdateEnvironment(); // 更新全局光照（如果需要）
             }
             
+            var mapParent = GameObject.Find("Map");
+            if (mapParent != null)
+            {
+                GameObject.Destroy(mapParent);
+            }
+            MapParent = new GameObject("Map");
+            
             InitFormBattle();
             InitPlayer();
         }
@@ -54,8 +63,6 @@ namespace YouYou
             PoolObj playerModel = await GameEntry.Pool.GameObjectPool.SpawnAsync(PrefabName.Archer,playerCtrl.transform);
             PoolObj playerCamera = await GameEntry.Pool.GameObjectPool.SpawnAsync(PrefabName.PlayerCamera,parent.transform);
             
-            
-            
             YouYouJoystick rotateJoy = GameEntry.UI.GetUIForm<FormBattle>("FormBattle").GetRotateJoystick();
             YouYouJoystick moveJoy = GameEntry.UI.GetUIForm<FormBattle>("FormBattle").GetMoveJoystick();
             Animator animator = playerModel.GetComponentInChildren<Animator>(true);
@@ -63,10 +70,9 @@ namespace YouYou
             playerCtrl.GetComponent<ClickableObjectHandler>().InitParams(new object[] { playerCamera.GetComponent<Camera>() });
             playerCamera.GetComponent<PlayerCamera>().InitParams(new object[] { playerCtrl.transform, rotateJoy });
             
-            var parent1 = new GameObject("Map");
-            PoolObj dungeonGenerator = await GameEntry.Pool.GameObjectPool.SpawnAsync(PrefabName.DungeonGenerator,parent1.transform);
-            RuntimeDungeon runtimeDungeon = dungeonGenerator.GetComponent<RuntimeDungeon>();
-            runtimeDungeon.GenerateOnStart = false;
+            // PoolObj dungeonGenerator = await GameEntry.Pool.GameObjectPool.SpawnAsync(PrefabName.DungeonGenerator,parent1.transform);
+            // RuntimeDungeon runtimeDungeon = dungeonGenerator.GetComponent<RuntimeDungeon>();
+            // runtimeDungeon.GenerateOnStart = false;
             LoadCurrentLevel(GameEntry.Player.GetPlayerRoleData().levelId.ToString());
             //dungeonGenerator.GetComponent<DungeonSetup>().InitParams(new object[] {playerCtrl.transform, rotateJoy});
         }
@@ -80,33 +86,34 @@ namespace YouYou
                 return;
             }
 
-            string path = "Assets/Game/Download/DunGenMap/Level/";
-            string fullSavePath = path + levelName + ".json";
+            string fullSavePath = "Assets/Game/Download/DunGenMap/Level/" + levelName + ".json";
+            AssetReferenceEntity referenceEntity = GameEntry.Loader.LoadMainAsset(fullSavePath);
+            if (referenceEntity != null)
+            {
+                TextAsset obj = UnityEngine.Object.Instantiate(referenceEntity.Target as TextAsset);
+                AutoReleaseHandle.Add(referenceEntity, MapParent);
 
-            if (!File.Exists(fullSavePath))
+                string json = obj.text;
+                if (json.StartsWith(Constants.ENCRYPTEDKEY))
+                {
+                    json = SecurityUtil.Decrypt(json.Substring(Constants.ENCRYPTEDKEY.Length));
+                }
+                LoadLevelDataFromJson(json);
+            }
+            else
             {
                 Debug.LogWarning($"未找到文件: {fullSavePath}");
-                return;
             }
-
-            string json = File.ReadAllText(fullSavePath);
-            if (json.StartsWith(Constants.ENCRYPTEDKEY))
-            {
-                json = SecurityUtil.Decrypt(json.Substring(Constants.ENCRYPTEDKEY.Length));
-            }
-
-            LoadLevelDataFromJson(json);
         }
         
         private void LoadLevelDataFromJson(string json)
         {
             LevelData levelData = JsonUtility.FromJson<LevelData>(json);
-            GameObject dungeon = GameObject.Find("Map");
+            Transform parent = MapParent.transform;
             foreach (LevelModelData modelData in levelData.models)
             {
-                InstantiatePrefab(modelData, dungeon.transform);
+                InstantiatePrefab(modelData, parent);
             }
-            GameEntry.LogError(levelData.bornPos[0],"---",levelData.bornPos[1],"---",levelData.bornPos[2]);
             GameEntry.Event?.Dispatch(EventName.UpdatePlayerPos,new Vector3(levelData.bornPos[0],levelData.bornPos[1],levelData.bornPos[2]));
         }
         
@@ -115,15 +122,11 @@ namespace YouYou
         {
             string prefabPath = GetPrefabPath(modelData);
             GameObject prefab = GameUtil.LoadPrefabClone(prefabPath);
-            if (prefab != null)
-            {
-                GameObject instance = GameObject.Instantiate(prefab, modelData.position, modelData.rotation, parent);
-                instance.transform.localScale = modelData.scale;
-            }
-            else
-            {
-                Debug.LogWarning($"未找到预制体: {modelData.modelPrefabName}");
-            }
+            prefab.transform.localScale = modelData.scale;
+            prefab.transform.position = modelData.position;
+            prefab.transform.rotation = modelData.rotation;
+            prefab.transform.SetParent(parent);
+            prefab.transform.localScale = modelData.scale;
         }
         
         // 获取预制体路径

@@ -11,7 +11,7 @@ namespace DunGen
 	public class RuntimeDungeon : MonoBehaviour
 	{
         public DungeonGenerator Generator = new DungeonGenerator();
-        public bool GenerateOnStart = true;
+        public bool GenerateOnStart = false;
 		public GameObject Root;
 
 
