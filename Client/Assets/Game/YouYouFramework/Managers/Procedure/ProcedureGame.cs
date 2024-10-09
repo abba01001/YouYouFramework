@@ -114,7 +114,7 @@ namespace YouYou
         private void InstantiatePrefab(LevelModelData modelData, Transform parent)
         {
             string prefabPath = GetPrefabPath(modelData);
-            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
+            GameObject prefab = GameUtil.LoadPrefabClone(prefabPath);
             if (prefab != null)
             {
                 GameObject instance = GameObject.Instantiate(prefab, modelData.position, modelData.rotation, parent);
@@ -140,7 +140,9 @@ namespace YouYou
             }
             else
             {
+#if UNITY_EDITOR
                 EditorUtility.DisplayDialog("加载预制体错误", $"类型{modelData.modelPrefabName}", "确定");
+#endif
                 return "";
             }
             return prefabPath; // 自定义路径

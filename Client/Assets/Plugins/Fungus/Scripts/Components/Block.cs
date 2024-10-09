@@ -124,7 +124,10 @@ namespace Fungus
                 command.CommandIndex = index++;
             }
         }
-
+#else
+        protected virtual void Update()
+        {
+        }
 #endif
         //editor only state for speeding up flowchart window drawing
         public bool IsSelected { get; set; }    //local cache of selectedness
@@ -509,9 +512,11 @@ namespace Fungus
             // Let command know it has just been added to the block
             command.OnCommandAdded(this);
 
+#if UNITY_EDITOR
             Undo.RecordObject(this, "Set command type");
-            CommandList.Add(command);
             PrefabUtility.RecordPrefabInstancePropertyModifications(this);
+#endif
+            CommandList.Add(command);
 
             //clear commands just in case there was a selection made prior, 
             // this way, only one command is selected at the end; the new one.
@@ -526,7 +531,9 @@ namespace Fungus
         public void RemoveAllCommands()
         {
             CommandList.Clear();
+#if UNITY_EDITOR
             PrefabUtility.RecordPrefabInstancePropertyModifications(this);
+#endif
             Update();
         }
 
