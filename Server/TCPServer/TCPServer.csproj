@@ -4,8 +4,12 @@
 		<OutputType>Exe</OutputType>
 		<TargetFramework>netcoreapp5.0</TargetFramework>
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
-		<!-- 或者其他根据你的需求的运行时 -->
 		<SelfContained>true</SelfContained>
+		<!-- 包含所有必要的运行时 -->
+		<PublishSingleFile>true</PublishSingleFile>
+		<!-- 将应用程序打包为单个文件 -->
+		<PublishTrimmed>true</PublishTrimmed>
+		<!-- 剔除未使用的代码以减少文件大小 -->
 	</PropertyGroup>
 
 </Project>
