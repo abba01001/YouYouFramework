@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>netcoreapp5.0</TargetFramework>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<!-- 或者其他根据你的需求的运行时 -->
+		<SelfContained>true</SelfContained>
+	</PropertyGroup>
+
+</Project>

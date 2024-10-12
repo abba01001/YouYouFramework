@@ -10,7 +10,7 @@ public class SQLManager:MonoBehaviour
 
     public SQLManager()
     {
-        Initialize();
+
     }
 
     private InputField accountField;
@@ -18,13 +18,20 @@ public class SQLManager:MonoBehaviour
 
     void Awake()
     {
-        accountField = transform.Find("Account").gameObject.GetComponent<InputField>();
-        passwordField = transform.Find("Password").gameObject.GetComponent<InputField>();
+        if (transform.Find("Account"))
+        {
+            accountField = transform.Find("Account").gameObject.GetComponent<InputField>();
+        }
+        if (transform.Find("Password"))
+        {
+            passwordField = transform.Find("Password").gameObject.GetComponent<InputField>();
+        }
     }
 
     void Start()
     {
         CreateDataTable();
+        Initialize();
     }
 
     public void RegisterAccount()
@@ -103,16 +110,17 @@ public class SQLManager:MonoBehaviour
         }
     }
 
-
+    private string connectionString = "Server=YOUR_SERVER_IP;Database=YOUR_DATABASE_NAME;User ID=YOUR_USER_NAME;Password=YOUR_PASSWORD;Pooling=true;Charset=utf8";
     //初始化连接login库
     private void Initialize()
     {
-        string sqlSer = "server = gz-cynosdbmysql-grp-qbnq8bv5.sql.tencentcdb.com;" +
-                        "port = 28311;" +
-                        "database = login;" +
-                        "user = root;" +
-                        "password = Ww6221905;";
+        string sqlSer = "server = 43.134.133.178:13333/database;" +
+                        "port = 13333;" +
+                        "database = unitygamedata;" +
+                        "user = UnityGameData;" +
+                        "password = De3EijD522Y5JKWL;";
         connection = new MySqlConnection(sqlSer);
+        OpenConnection();
     }
 
     //打开Sql
