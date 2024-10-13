@@ -1,0 +1,12 @@
+// 指定版本
+syntax = "proto3";
+// C#中的命名空间（namespace）
+package ProtoTest;
+ 
+// 消息类
+message MsgResult {
+    // 消息码
+    int32 code = 1;
+    // repeated 相当于一个数组
+    repeated int32 positions = 2;
+}

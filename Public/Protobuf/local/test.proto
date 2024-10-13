@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package ProtoTest;
+
+// 消息类：表示消息结果
+message MsgResult {
+    int32 code = 1;                   // 消息码
+    repeated int32 positions = 2;     // 位置数组
+}
+
+// 消息类：表示用户信息
+message User {
+    int32 id = 1;                     // 用户ID
+    string name = 2;                  // 用户名
+    string email = 3;                 // 用户邮箱
+    repeated string roles = 4;        // 用户角色
+}
+
+// 消息类：表示产品信息
+message Product {
+    int32 id = 1;                     // 产品ID
+    string name = 2;                  // 产品名称
+    float price = 3;                  // 产品价格
+    string description = 4;           // 产品描述
+}
+
+// 消息类：表示通用响应
+message Response {
+    bool success = 1;                 // 是否成功
+    string message = 2;               // 反馈信息
+    repeated User users = 3;          // 用户列表（可选）
+    repeated Product products = 4;    // 产品列表（可选）
+}
+
+// 消息类：表示坐标
+message Position {
+    int32 x = 1;                      // X坐标
+    int32 y = 2;                      // Y坐标
+    int32 z = 3;                      // Z坐标
+}
+
+// 消息类：表示游戏数据
+message GameData {
+    int32 playerId = 1;               // 玩家ID
+    repeated Position positions = 2;   // 玩家位置列表
+}
+
+// 消息类：表示错误信息
+message Error {
+    int32 code = 1;                   // 错误码
+    string message = 2;               // 错误描述
+}
+
+// 消息类：表示请求消息
+message Request {
+    int32 requestId = 1;              // 请求ID
+    string action = 2;                 // 请求动作
+    bytes data = 3;                    // 附加数据
+}
