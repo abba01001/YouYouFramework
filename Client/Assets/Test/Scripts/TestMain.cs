@@ -14,20 +14,7 @@ public class TestMain : MonoBehaviour
             GameObject netGameObj = new GameObject("Net");
             netGameObj.AddComponent<NetManager>();
         }
-
-        
-        // 序列化
-        NetworkMessage serializeMsg = new Protocols.NetworkMessage();
-        serializeMsg.Content = "你好";
-        var json = serializeMsg.ToString();              // 转 json
-        var byteStr = serializeMsg.ToByteString();       // 转 byte String
-        var byteArr = serializeMsg.ToByteArray();        // 转 byte Array
-
-        GameUtil.LogError(json);
-        GameUtil.LogError(byteStr);
-        GameUtil.LogError(byteArr);
-        
-        NetManager.Instance.ConnectServer("127.0.0.1", 8080);
+        NetManager.Instance.ConnectServer();
     }
 
     // Update is called once per frame

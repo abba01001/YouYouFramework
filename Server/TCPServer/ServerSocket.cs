@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using Google.Protobuf;
+using Protocols;
 
 namespace TCPServer
 {
@@ -10,8 +12,8 @@ namespace TCPServer
     {
         private Socket socket;
         private bool isClose;
-        //private Dictionary<int, ClientSocket> clientDic = new Dictionary<int, ClientSocket>();
         private List<ClientSocket> clientList = new List<ClientSocket>();
+        private object lockObj = new object(); // 用于线程安全的锁
 
         public void Start(string ip, int port, int clientNum)
         {
@@ -24,82 +26,95 @@ namespace TCPServer
             socket.Listen(clientNum);
 
             ThreadPool.QueueUserWorkItem(AcceptClientConnect);
-            ThreadPool.QueueUserWorkItem(ReceiveMsg);
+            ThreadPool.QueueUserWorkItem(ReceiveClientMsg);
         }
 
-        //等待客户端连接
         private void AcceptClientConnect(object obj)
         {
             Console.WriteLine("等待客户端连入...");
             while (!isClose)
             {
-                Socket clientSocket = socket.Accept();
-                ClientSocket client = new ClientSocket(clientSocket, this);
-                Console.WriteLine("客户端{0}连入...", clientSocket.RemoteEndPoint.ToString());
-                //client.SendMsg("欢迎连入服务端...");
-                //clientDic.Add(client.clientID, client);
-                clientList.Add(client);
+                try
+                {
+                    Socket clientSocket = socket.Accept();
+                    ClientSocket client = new ClientSocket(clientSocket, this);
+                    Console.WriteLine("IP:{0}连入...已连接IP数{1}", clientSocket.RemoteEndPoint.ToString(), ClientSocket.CLIENT_COUNT);
+                    lock (lockObj) // 确保线程安全
+                    {
+                        clientList.Add(client);
+                    }
+                }
+                catch (SocketException e)
+                {
+                    Console.WriteLine($"SocketException: {e.Message}");
+                }
             }
         }
 
-        //接收消息
-        private void ReceiveMsg(object obj)
+        private void ReceiveClientMsg(object obj)
         {
-            int i;
             while (!isClose)
             {
-                //if(clientDic.Count > 0)
-                if (clientList.Count > 0)
+                lock (lockObj)
                 {
-                    //foreach(ClientSocket client in clientDic.Values)
-                    for(i = 0; i < clientList.Count; i++)
+                    for (int i = 0; i < clientList.Count; i++)
                     {
                         try
                         {
-                            //client.ReceiveClientMsg();
-                            if (clientList[i] != null)
-                            {
-                                clientList[i].ReceiveClientMsg();
-                            }
+                            clientList[i]?.ReceiveClientMsg();
+                        }
+                        catch (SocketException e)
+                        {
+                            Console.WriteLine($"SocketException: {e.Message}");
+                            clientList[i].Close();
+                            clientList.RemoveAt(i);
+                            i--;
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine(e.Message);
+                            Console.WriteLine($"Exception: {e.Message}");
                         }
                     }
                 }
             }
         }
 
-        //广播消息
-        public void BroadcastMsg(byte[] msg, int clientID)
+        private void RemoveClient(int index)
+        {
+            clientList[index].Close();
+            clientList.RemoveAt(index);
+        }
+
+        //广播信息
+        public void BroadcastMsg(BaseMessage message)
         {
             if (isClose)
                 return;
-            //foreach(ClientSocket client in clientDic.Values)
-            for(int i = 0; i < clientList.Count; i++)
+
+            byte[] msgBytes = message.ToByteArray(); // 使用 Protobuf 序列化消息
+            lock (lockObj) // 确保线程安全
             {
-                //client.SendMsg(msg);
-                if(clientList[i].clientID != clientID)
+                for (int i = 0; i < clientList.Count; i++)
                 {
-                    clientList[i].SendMsg(msg);
+                    if (clientList[i].clientID != int.Parse(message.SenderId))
+                    {
+                        clientList[i].SendMsg(msgBytes);
+                    }
                 }
             }
         }
 
-        //释放连接
         public void Close()
         {
             isClose = true;
-            //foreach (ClientSocket client in clientDic.Values)
-            for(int i = 0; i < clientList.Count; i++)
+            lock (lockObj) // 确保线程安全
             {
-                //client.Close();
-                clientList[i].Close();
+                foreach (var client in clientList)
+                {
+                    client.Close();
+                }
+                clientList.Clear();
             }
-
-            //clientDic.Clear();
-            clientList.Clear();
 
             socket.Shutdown(SocketShutdown.Both);
             socket.Close();

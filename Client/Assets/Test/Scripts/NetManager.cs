@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 using System;
+using System.Linq;
+using Google.Protobuf;
+using Protocols;
 
 public class NetManager : MonoBehaviour
 {
@@ -13,19 +16,28 @@ public class NetManager : MonoBehaviour
     private static NetManager instance;
 
     private Socket socket;
-
-    private bool isConnect;
-
     private Queue<byte[]> sendQueue = new Queue<byte[]>();
     private Queue<byte[]> receiveQueue = new Queue<byte[]>();
-
     private byte[] receiveBytes = new byte[1024 * 1024];
 
-    private ChatPanel chatPanel;
+
+    private Coroutine heartbeatCoroutine;
+    private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
+    private const float HeartbeatInterval = 5f; // 心跳包发送间隔
+    private const float HeartbeatTimeout = 3f; // 心跳包确认超时
+    private const int HeartbeatMsgId = 2001; // 心跳包消息ID
+
+    private enum ConnectionStatus { Connected, Disconnected, Unknown }
+    private ConnectionStatus connectionStatus = ConnectionStatus.Unknown;
+
+    private int reconnectCount = 0; // 当前重连次数
+    private const int maxReconnectAttempts = 3; // 最大重连次数
+    private int currentMessageId = 1; // 消息ID计数器
 
     private void Awake()
     {
-        if(instance == null)
+        if (instance == null)
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
@@ -34,129 +46,168 @@ public class NetManager : MonoBehaviour
 
     private void Start()
     {
-        GameObject chatPanelObj = GameObject.Find("ChatPanel");
-        if (chatPanel != null)
-        {
-            chatPanel = chatPanelObj.GetComponent<ChatPanel>();
-        }
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if(receiveQueue.Count > 0)
+        ProcessReceivedMessages();
+
+        // 检查连接状态
+        if (connectionStatus == ConnectionStatus.Disconnected)
         {
-            ReadingMsgType(receiveQueue.Dequeue());
+            Debug.LogWarning("连接已断开，请尝试重新连接。");
         }
     }
 
-    /// <summary>
-    /// 连接服务器
-    /// </summary>
-    /// <param name="ip">服务器IP地址</param>
-    /// <param name="port">服务器程序端口号</param>
-    public void ConnectServer(string ip, int port)
+    public void ConnectServer()
     {
-        //如果在连接状态，就不执行连接逻辑了
-        if (isConnect)
-            return;
+        const string ip = "127.0.0.1"; // 使用本地测试
+        const int port = 8080;
 
-        //避免重复创建socket
-        if(socket == null)
-            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        if (connectionStatus == ConnectionStatus.Connected) return;
 
-        //连接服务器
-        IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
+        socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
         try
         {
-            socket.Connect(ipEndPoint);
+            socket.Connect(new IPEndPoint(IPAddress.Parse(ip), port));
+            connectionStatus = ConnectionStatus.Connected;
+            reconnectCount = 0;
+
+            Task.Run(SendMessagesAsync);
+            Task.Run(ReceiveMessagesAsync);
+
+            heartbeatCoroutine = StartCoroutine(SendHeartbeat());
         }
         catch (SocketException e)
         {
-            print(e.ErrorCode + e.Message);
-            return;
+            HandleConnectionError(e);
         }
-        
-        isConnect = true;
-
-        //开启发送消息线程
-        ThreadPool.QueueUserWorkItem(SendMsg_Thread);
-        //开启接收消息线程
-        ThreadPool.QueueUserWorkItem(ReceiveMsg_Thread);
     }
 
-    //发送消息
-    public void Send<T>(T msg) where T : BaseMsg
+    // 发送消息
+    public void SendMessage(MsgType messageType, byte[] data, string senderId)
     {
-        //将消息放入到消息队列中
-        sendQueue.Enqueue(msg.SerializeData());
-    }
-
-    private void SendMsg_Thread(object obj)
-    {
-        while (isConnect)
+        var message = new BaseMessage
         {
-            //如果消息队列中有消息，则发送消息
-            if(sendQueue.Count > 0)
+            MessageId = currentMessageId++, // 获取唯一消息ID并递增
+            Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds(), // 获取当前时间戳
+            SenderId = senderId, // 设置发送者ID
+            Type = messageType,
+            Data = ByteString.CopyFrom(data)
+        };
+
+        byte[] messageBytes = message.ToByteArray();
+
+        lock (sendQueue)
+        {
+            sendQueue.Enqueue(messageBytes);
+        }
+    }
+
+    private async Task SendMessagesAsync()
+    {
+        while (connectionStatus == ConnectionStatus.Connected)
+        {
+            byte[] messageToSend = null;
+            lock (sendQueue)
             {
-                socket.Send(sendQueue.Dequeue());
+                if (sendQueue.Count > 0)
+                    messageToSend = sendQueue.Dequeue();
+            }
+
+            if (messageToSend != null)
+                await socket.SendAsync(new ArraySegment<byte>(messageToSend), SocketFlags.None);
+        }
+    }
+
+    private async Task ReceiveMessagesAsync()
+    {
+        while (connectionStatus == ConnectionStatus.Connected)
+        {
+            int msgLength = await socket.ReceiveAsync(new ArraySegment<byte>(receiveBytes), SocketFlags.None);
+            if (msgLength > 0)
+            {
+                lock (receiveQueue)
+                {
+                    receiveQueue.Enqueue(receiveBytes.Take(msgLength).ToArray());
+                }
+            }
+            else
+            {
+                HandleDisconnected();
             }
         }
     }
 
-    //接收消息
-    private void ReceiveMsg_Thread(object obj)
+    private void ProcessReceivedMessages()
     {
-        print("持续监听是否收到消息");
-        int msgLength;
-        while (isConnect)
+        lock (receiveQueue)
         {
-            if(socket.Available > 0)
+            while (receiveQueue.Count > 0)
             {
-                msgLength = socket.Receive(receiveBytes);
-                print("接收到消息，长度为" + msgLength);
-                receiveQueue.Enqueue(receiveBytes);
+                ReadingMsgType(receiveQueue.Dequeue());
             }
         }
     }
 
     private void ReadingMsgType(byte[] msg)
     {
+        // 这里假设消息ID在前4个字节
         int msgId = BitConverter.ToInt32(msg, 0);
         Debug.Log("msgId = " + msgId);
         switch (msgId)
         {
-            case 1001:
-                ReadingChatMsg(msg);
+            case HeartbeatMsgId:
+                Debug.Log("收到心跳包确认响应");
+                connectionStatus = ConnectionStatus.Connected; // 更新连接状态
                 break;
+            // 添加其他消息类型处理
         }
     }
 
-    private void ReadingChatMsg(byte[] msg)
+    private IEnumerator SendHeartbeat()
     {
-        ChatMsg chatMsg = new ChatMsg();
-        chatMsg.ReadingData(msg, 4);
-        chatPanel.UpdateChatInfo(chatMsg);
+        while (connectionStatus == ConnectionStatus.Connected)
+        {
+            sendQueue.Enqueue(BitConverter.GetBytes(HeartbeatMsgId));
+            Debug.Log("发送心跳包");
+
+            cancellationTokenSource.CancelAfter(TimeSpan.FromSeconds(HeartbeatTimeout));
+            yield return new WaitForSeconds(HeartbeatInterval);
+        }
+    }
+
+    private void HandleConnectionError(SocketException e)
+    {
+        Debug.LogError($"连接错误: {e.ErrorCode} {e.Message}");
+        connectionStatus = ConnectionStatus.Disconnected;
+    }
+
+    private void HandleDisconnected()
+    {
+        connectionStatus = ConnectionStatus.Disconnected;
+        Debug.LogWarning("连接已断开");
     }
 
     public void Close()
     {
-        if (socket != null && isConnect)
+        if (socket == null || connectionStatus != ConnectionStatus.Connected) return;
+
+        socket.Shutdown(SocketShutdown.Both);
+        socket.Close();
+        connectionStatus = ConnectionStatus.Disconnected;
+
+        if (heartbeatCoroutine != null)
         {
-
-            string disconnectMsg = "客户端断开连接";
-            byte[] buffer = Encoding.UTF8.GetBytes(disconnectMsg);
-            socket.Send(buffer);
-
-            socket.Shutdown(SocketShutdown.Both);
-            socket.Close();
-            isConnect = false;
+            StopCoroutine(heartbeatCoroutine);
+            heartbeatCoroutine = null;
         }
     }
 
     private void OnDestroy()
     {
         Close();
+        cancellationTokenSource.Cancel();
     }
 }

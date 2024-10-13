@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Protocols;
+using System;
 using System.Text;
 
 namespace TCPServer
@@ -9,7 +10,7 @@ namespace TCPServer
         static void Main(string[] args)
         {
             serverSocket = new ServerSocket();
-            serverSocket.Start("127.0.0.1", 8080, 1024);//10.0.28.15
+            serverSocket.Start("0.0.0.0", 8080, 1024);//10.0.28.15
 
             while (true)
             {
@@ -21,7 +22,9 @@ namespace TCPServer
                 }
                 else if (inputStr.Substring(0, 2) == "B:")
                 {
-                    serverSocket.BroadcastMsg(Encoding.UTF8.GetBytes(inputStr.Substring(2)), -1);
+                    BaseMessage msg = new BaseMessage();
+                    msg.SenderId = "-1";
+                    serverSocket.BroadcastMsg(msg);
                 }
             }
         }
