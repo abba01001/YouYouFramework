@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package Protocols.Player;
+
+// 玩家动作结构
+message PlayerAction {
+    string player_id = 1;         // 玩家ID
+    ActionType action_type = 2;   // 动作类型
+    int32 target_id = 3;          // 目标ID
+
+    enum ActionType {
+        UNKNOWN = 0;              // 未知动作
+        MOVE = 1;                 // 移动
+        ATTACK = 2;               // 攻击
+        INTERACT = 3;             // 互动
+    }
+}

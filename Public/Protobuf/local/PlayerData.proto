@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package Protocols.Player;
+
+// 玩家数据结构
+message PlayerData {
+    string player_id = 1;     // 玩家ID
+    string player_name = 2;   // 玩家名称
+    int32 level = 3;          // 玩家等级
+    int32 experience = 4;     // 玩家经验值
+    repeated string inventory = 5; // 背包物品列表
+}
