@@ -14,13 +14,15 @@ namespace TCPServer
         private bool isClose;
         private List<ClientSocket> clientList = new List<ClientSocket>();
         private object lockObj = new object(); // 用于线程安全的锁
-
+        public NetLogger logger;
         public void Start(string ip, int port, int clientNum)
         {
             isClose = false;
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            logger = new NetLogger(TimeSpan.FromSeconds(10));
             IPEndPoint iPEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
             socket.Bind(iPEndPoint);
+            logger.LogMessage(socket,$"服务器启动成功...IP:{ip},端口:{port}");
             Console.WriteLine("服务器启动成功...IP:{0},端口:{1}", ip, port);
             Console.WriteLine("开始监听客户端连接...");
             socket.Listen(clientNum);
@@ -61,7 +63,7 @@ namespace TCPServer
                     {
                         try
                         {
-                            clientList[i]?.ReceiveClientMsg();
+                            clientList[i]?.ReceiveMsg();
                         }
                         catch (SocketException e)
                         {
@@ -90,7 +92,6 @@ namespace TCPServer
         {
             if (isClose)
                 return;
-
             byte[] msgBytes = message.ToByteArray(); // 使用 Protobuf 序列化消息
             lock (lockObj) // 确保线程安全
             {
