@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using Protocols;
 using Protocols.Item;
-using UnityEngine;
+using TCPServer;
 
 public class ResponseHandler
 {
@@ -45,7 +45,7 @@ public class ResponseHandler
     {
         ProtocolHelper.UnpackData<ItemData>(message, (itemData) =>
         {
-            NetManager.Instance.Logger.LogMessage(socket,$"解包成功: Item ID: {itemData.ItemId}, Item Name: {itemData.ItemName}");
+            ServerSocket.Logger.LogMessage(socket,$"解包成功: Item ID: {itemData.ItemId}, Item Name: {itemData.ItemName}");
         });
         Console.WriteLine("处理心跳请求...");
     }

@@ -18,7 +18,6 @@ public class NetManager : MonoBehaviour
 {
     public static NetManager Instance => instance;
     private static NetManager instance;
-    public NetLogger logger;
 
     private Socket socket;
     private Queue<byte[]> sendQueue = new Queue<byte[]>();
@@ -39,12 +38,18 @@ public class NetManager : MonoBehaviour
     private int reconnectCount = 0; // 当前重连次数
     private const int maxReconnectAttempts = 3; // 最大重连次数
     private int currentMessageId = 1; // 消息ID计数器
+
+    public NetLogger Logger;
+    public RequestHandler Requset;
+    public ResponseHandler Response;
     private void Awake()
     {
         if (instance == null)
         {
             instance = this;
-            logger = new NetLogger(TimeSpan.FromSeconds(10));
+            Logger = new NetLogger(TimeSpan.FromSeconds(5));
+            Requset = new RequestHandler(socket);
+            Response = new ResponseHandler(socket);
             DontDestroyOnLoad(gameObject);
         }
     }
@@ -65,16 +70,7 @@ public class NetManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            string senderId = "User123"; // 设置发送者ID
-            ItemData data = new ItemData()
-            {
-                ItemId = "1",
-                ItemDescription = "物品B",
-                ItemName = "物品名字",
-                ItemType = 3,
-                Quantity = 5
-            };
-            SendMessage(MsgType.Hello,data);
+            Requset.c2s_request_item_info();
         }
     }
 
@@ -100,28 +96,6 @@ public class NetManager : MonoBehaviour
         catch (SocketException e)
         {
             HandleConnectionError(e);
-        }
-    }
-
-    // 发送消息
-    public void SendMessage<T>(MsgType messageType, T data) where T : IMessage<T>
-    {
-        // 处理非空数据
-        string json = data.ToJson();
-        byte[] byteArrayData = data.ToByteArray();
-        var message = new BaseMessage
-        {
-            MessageId = currentMessageId++, // 获取唯一消息ID并递增
-            Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds(), // 获取当前时间戳
-            SenderId = socket.RemoteEndPoint.ToString(), // 设置发送者ID
-            Type = messageType,
-            Data = ByteString.CopyFrom(byteArrayData) // 直接将序列化后的字节数组放入 Data
-        };
-        logger.LogMessage(socket,$"发送消息类型:{messageType}内容:{json}");
-        byte[] messageBytes = message.ToByteArray();
-        lock (sendQueue)
-        {
-            sendQueue.Enqueue(messageBytes);
         }
     }
 
@@ -170,6 +144,14 @@ public class NetManager : MonoBehaviour
             }
         }
     }
+
+    public void EnqueueMsg(byte[] messageBytes)
+    {
+        lock (sendQueue)
+        {
+            sendQueue.Enqueue(messageBytes);
+        }
+    }
     
     public void ReceiveMsg(byte[] msg)
     {
@@ -181,29 +163,31 @@ public class NetManager : MonoBehaviour
             {
                 BaseMessage receivedMsg = BaseMessage.Parser.ParseFrom(msg);
                 HandleMessage(receivedMsg);
+                Response.HandleResponse(receivedMsg);
             }
             else
             {
                 // 如果 msg 为空或长度为0，可以选择记录日志或处理连接关闭
-                logger.LogMessage(socket,"收到空消息，关闭连接。");
+                Logger.LogMessage(socket,"收到空消息，关闭连接。");
                 Close();
             }
         }
         catch (SocketException e)
         {
-            logger.LogMessage(socket,$"ReceiveMsg SocketException: {e.Message}");
+            Logger.LogMessage(socket,$"ReceiveMsg SocketException: {e.Message}");
             Close();
         }
         catch (Exception e)
         {
-            logger.LogMessage(socket,$"ReceiveMsg Exception: {e.Message}");
+            Logger.LogMessage(socket,$"ReceiveMsg Exception: {e.Message}");
         }
     }
 
     
     private void HandleMessage(BaseMessage message)
     {
-        logger.LogMessage(socket,$"收到的消息类型: {message.Type}");
+
+        Logger.LogMessage(socket,$"收到的消息类型: {message.Type}");
         // 根据消息类型解包成不同的数据结构
         switch (message.Type)
         {
@@ -211,14 +195,14 @@ public class NetManager : MonoBehaviour
                 // 假设 Hello 消息是 ItemData 类型
                 ProtocolHelper.UnpackData<ItemData>(message, (itemData) =>
                 {
-                    logger.LogMessage(socket,$"解包成功: Item ID: {itemData.ItemId}, Item Name: {itemData.ItemName}");
+                    Logger.LogMessage(socket,$"解包成功: Item ID: {itemData.ItemId}, Item Name: {itemData.ItemName}");
                 });
                 break;
             case MsgType.Exit:
-                logger.LogMessage(socket,$"收到EXIT消息: {message.MessageId}");
+                Logger.LogMessage(socket,$"收到EXIT消息: {message.MessageId}");
                 break;
             default:
-                logger.LogMessage(socket,$"收到未知消息类型: {message.Type}");
+                Logger.LogMessage(socket,$"收到未知消息类型: {message.Type}");
                 break;
         }
     }
@@ -227,7 +211,7 @@ public class NetManager : MonoBehaviour
     {
         while (connectionStatus == ConnectionStatus.Connected)
         {
-            SendMessage(MsgType.HeartBeat, new HeartBeatMsg()); // 直接调用带参数的方法
+            Requset.c2s_request_heart_beat();
             cancellationTokenSource.CancelAfter(TimeSpan.FromSeconds(HeartbeatTimeout));
             yield return new WaitForSeconds(HeartbeatInterval);
         }
@@ -235,14 +219,14 @@ public class NetManager : MonoBehaviour
 
     private void HandleConnectionError(SocketException e)
     {
-        logger.LogMessage(socket,$"连接错误: {e.ErrorCode} {e.Message}");
+        Logger.LogMessage(socket,$"连接错误: {e.ErrorCode} {e.Message}");
         connectionStatus = ConnectionStatus.Disconnected;
     }
 
     private void HandleDisconnected()
     {
         connectionStatus = ConnectionStatus.Disconnected;
-        logger.LogMessage(socket,"连接已断开");
+        Logger.LogMessage(socket,"连接已断开");
     }
 
     private void Close()

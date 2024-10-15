@@ -15,12 +15,15 @@ namespace TCPServer
         public static int CLIENT_COUNT = 0;
         public int clientID;
         private Socket socket;
-        private ServerSocket serverSocket;
 
-        public ClientSocket(Socket clientSocket, ServerSocket serverSocket)
+        public RequestHandler Request;
+        public ResponseHandler Response;
+
+        public ClientSocket(Socket clientSocket)
         {
             socket = clientSocket;
-            this.serverSocket = serverSocket;
+            Request = new RequestHandler(socket);
+            Response = new ResponseHandler(socket);
             clientID = CLIENT_BEGIN_ID++;
             CLIENT_COUNT++;
         }
@@ -48,7 +51,7 @@ namespace TCPServer
         // 发送消息
         public void SendMessage<T>(MsgType messageType, T data) where T : IMessage<T>
         {
-            serverSocket.logger.LogMessage(this.socket, $"{data.ToString()}");
+            ServerSocket.Logger.LogMessage(this.socket, $"{data.ToString()}");
             // 将数据对象序列化为字节数组
             byte[] byteArrayData = data.ToByteArray();
             var message = new BaseMessage
@@ -96,8 +99,7 @@ namespace TCPServer
                     Console.WriteLine($"收到信息: {BitConverter.ToString(tempMsg)}");
                     BaseMessage receivedMsg = BaseMessage.Parser.ParseFrom(tempMsg);
                     Console.WriteLine($"收到的消息类型: {receivedMsg.Type}");
-                    //HandleMessage(receivedMsg);
-                    HandleMessage(receivedMsg);
+                    Response.HandleResponse(receivedMsg);
                 }
                 else
                 {
@@ -112,40 +114,6 @@ namespace TCPServer
             catch (Exception e)
             {
                 Console.WriteLine($"ReceiveClientMsg Exception: {e.Message}");
-            }
-        }
-
-        private void HandleMessage(BaseMessage message)
-        {
-            Console.WriteLine($"收到的消息类型: {message.Type}");
-            // 根据消息类型解包成不同的数据结构
-            switch (message.Type)
-            {
-                case MsgType.Hello:
-                    // 假设 Hello 消息是 ItemData 类型
-                    ProtocolHelper.UnpackData<ItemData>(message, (itemData) =>
-                    {
-                        Console.WriteLine($"解包成功: Item ID: {itemData.ItemId}, Item Name: {itemData.ItemName}");
-
-
-                        ItemData data = new ItemData()
-                        {
-                            ItemId = "55",
-                            ItemDescription = "物品D",
-                            ItemName = "物品名字",
-                            ItemType = 1,
-                            Quantity = 5
-                        };
-                        SendMessage(MsgType.Hello, data);
-
-                    });
-                    break;
-                case MsgType.Exit:
-                    Console.WriteLine($"收到EXIT消息: {message.MessageId}");
-                    break;
-                default:
-                    Console.WriteLine($"收到未知消息类型: {message.Type}");
-                    break;
             }
         }
     }

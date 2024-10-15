@@ -3,6 +3,7 @@ using System.Net.Sockets;
 using Google.Protobuf;
 using Protocols;
 using Protocols.Item;
+using TCPServer;
 
 
 public class RequestHandler
@@ -15,7 +16,6 @@ public class RequestHandler
     private void SendMessage<T>(T data) where T : IMessage<T>
     {
         // 处理非空数据
-        string json = data.ToJson();
         byte[] byteArrayData = data.ToByteArray();
         var message = new BaseMessage
         {
@@ -23,9 +23,9 @@ public class RequestHandler
             SenderId = socket.RemoteEndPoint.ToString(), // 设置发送者ID
             Data = ByteString.CopyFrom(byteArrayData) // 直接将序列化后的字节数组放入 Data
         };
-        NetManager.Instance.Logger.LogMessage(socket,$"发送内容:{json}");
+        ServerSocket.Logger.LogMessage(socket,$"发送内容:{data.ToString()}");
         byte[] messageBytes = message.ToByteArray();
-        NetManager.Instance.EnqueueMsg(messageBytes);
+        socket.Send(messageBytes);
     }
 
     #region 发送协议

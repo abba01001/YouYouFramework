@@ -8,21 +8,27 @@ using Protocols;
 
 namespace TCPServer
 {
-    public class ServerSocket
+    public static class ServerSocket
     {
-        private Socket socket;
-        private bool isClose;
-        private List<ClientSocket> clientList = new List<ClientSocket>();
-        private object lockObj = new object(); // 用于线程安全的锁
-        public NetLogger logger;
-        public void Start(string ip, int port, int clientNum)
+        private static Socket socket;
+        private static bool isClose;
+        private static List<ClientSocket> clientList = new List<ClientSocket>();
+        private static object lockObj = new object(); // 用于线程安全的锁
+        public static NetLogger Logger;
+        public static RequestHandler Request;
+        public static ResponseHandler Response;
+
+        public static void Start(string ip, int port, int clientNum)
         {
+
             isClose = false;
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            logger = new NetLogger(TimeSpan.FromSeconds(10));
+            Request = new RequestHandler(socket);
+            Response = new ResponseHandler(socket);
+            Logger = new NetLogger(TimeSpan.FromSeconds(10));
             IPEndPoint iPEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
             socket.Bind(iPEndPoint);
-            logger.LogMessage(socket,$"服务器启动成功...IP:{ip},端口:{port}");
+            Logger.LogMessage(socket,$"服务器启动成功...IP:{ip},端口:{port}");
             Console.WriteLine("服务器启动成功...IP:{0},端口:{1}", ip, port);
             Console.WriteLine("开始监听客户端连接...");
             socket.Listen(clientNum);
@@ -31,7 +37,7 @@ namespace TCPServer
             ThreadPool.QueueUserWorkItem(ReceiveClientMsg);
         }
 
-        private void AcceptClientConnect(object obj)
+        private static void AcceptClientConnect(object obj)
         {
             Console.WriteLine("等待客户端连入...");
             while (!isClose)
@@ -39,7 +45,7 @@ namespace TCPServer
                 try
                 {
                     Socket clientSocket = socket.Accept();
-                    ClientSocket client = new ClientSocket(clientSocket, this);
+                    ClientSocket client = new ClientSocket(clientSocket);
                     Console.WriteLine("IP:{0}连入...已连接IP数{1}", clientSocket.RemoteEndPoint.ToString(), ClientSocket.CLIENT_COUNT);
                     lock (lockObj) // 确保线程安全
                     {
@@ -53,7 +59,7 @@ namespace TCPServer
             }
         }
 
-        private void ReceiveClientMsg(object obj)
+        private static void ReceiveClientMsg(object obj)
         {
             while (!isClose)
             {
@@ -81,14 +87,14 @@ namespace TCPServer
             }
         }
 
-        private void RemoveClient(int index)
+        private static void RemoveClient(int index)
         {
             clientList[index].Close();
             clientList.RemoveAt(index);
         }
 
         //广播信息
-        public void BroadcastMsg(BaseMessage message)
+        public static void BroadcastMsg(BaseMessage message)
         {
             if (isClose)
                 return;
@@ -105,7 +111,7 @@ namespace TCPServer
             }
         }
 
-        public void Close()
+        public static void Close()
         {
             isClose = true;
             lock (lockObj) // 确保线程安全
