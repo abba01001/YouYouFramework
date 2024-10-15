@@ -21,10 +21,10 @@ namespace TCPServer
 
         public ClientSocket(Socket clientSocket)
         {
-            socket = clientSocket;
-            Request = new RequestHandler(socket);
-            Response = new ResponseHandler(socket);
-            clientID = CLIENT_BEGIN_ID++;
+            this.socket = clientSocket;
+            this.Request = new RequestHandler(socket);
+            this.Response = new ResponseHandler(socket,this.Request);
+            this.clientID = CLIENT_BEGIN_ID++;
             CLIENT_COUNT++;
         }
 
@@ -86,34 +86,24 @@ namespace TCPServer
         // 接收消息
         public void ReceiveMsg()
         {
-            if (socket == null) return;
-            try
+            if (socket == null || !socket.Connected) return;
+            byte[] msgBytes = new byte[1024];
+            int msgLength = socket.Receive(msgBytes);
+
+            if (msgLength > 0)
             {
-                byte[] msgBytes = new byte[1024];
-                int msgLength = socket.Receive(msgBytes);
-                Console.WriteLine($"收到信息: {msgBytes}");
-                if (msgLength > 0)
+                byte[] tempMsg = new byte[msgLength];
+                Array.Copy(msgBytes, tempMsg, msgLength); // 将接收到的数据复制到tempMsg
+                Console.WriteLine($"收到信息{socket.RemoteEndPoint}: {BitConverter.ToString(tempMsg)}");
+                try
                 {
-                    byte[] tempMsg = new byte[msgLength];
-                    Buffer.BlockCopy(msgBytes, 0, tempMsg, 0, msgLength);
-                    Console.WriteLine($"收到信息: {BitConverter.ToString(tempMsg)}");
-                    BaseMessage receivedMsg = BaseMessage.Parser.ParseFrom(tempMsg);
-                    Console.WriteLine($"收到的消息类型: {receivedMsg.Type}");
+                    BaseMessage receivedMsg = BaseMessage.Parser.ParseFrom(tempMsg); // 解析收到的消息
                     Response.HandleResponse(receivedMsg);
                 }
-                else
+                catch (Exception e)
                 {
-                    Close();
+                    Console.WriteLine($"ReceiveClientMsg Exception: {e.Message}");
                 }
-            }
-            catch (SocketException e)
-            {
-                Console.WriteLine($"ReceiveClientMsg SocketException: {e.Message}");
-                Close();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"ReceiveClientMsg Exception: {e.Message}");
             }
         }
     }

@@ -8,11 +8,13 @@ using UnityEngine;
 public class ResponseHandler
 {
     private Socket socket;
+    private RequestHandler request;
     private readonly Dictionary<int, Action<BaseMessage>> _handlers = new Dictionary<int, Action<BaseMessage>>();
 
-    public ResponseHandler(Socket socket)
+    public ResponseHandler(Socket socket, RequestHandler request)
     {
         this.socket = socket;
+        this.request = request;
         InitializeHandlers();
     }
 
@@ -47,7 +49,7 @@ public class ResponseHandler
         {
             NetManager.Instance.Logger.LogMessage(socket,$"解包成功: Item ID: {itemData.ItemId}, Item Name: {itemData.ItemName}");
         });
-        Console.WriteLine("处理心跳请求...");
+        request.c2s_request_heart_beat();
     }
 
     private void s2c_handle_other(BaseMessage message)

@@ -3,7 +3,6 @@ using System.Net.Sockets;
 using Google.Protobuf;
 using Protocols;
 using Protocols.Item;
-using TCPServer;
 
 
 public class RequestHandler
@@ -15,15 +14,16 @@ public class RequestHandler
     }
     private void SendMessage<T>(T data) where T : IMessage<T>
     {
-        // 处理非空数据
         byte[] byteArrayData = data.ToByteArray();
-        var message = new BaseMessage
+        BaseMessage message = new BaseMessage();
+        string typeName = typeof(T).Name;
+        if (Enum.TryParse(typeName, true, out MsgType msgType))
         {
-            Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds(), // 获取当前时间戳
-            SenderId = socket.RemoteEndPoint.ToString(), // 设置发送者ID
-            Data = ByteString.CopyFrom(byteArrayData) // 直接将序列化后的字节数组放入 Data
-        };
-        ServerSocket.Logger.LogMessage(socket,$"发送内容:{data.ToString()}");
+            message.Type = msgType;
+        }
+        message.Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();// 获取当前时间戳
+        message.SenderId = socket.RemoteEndPoint.ToString(); // 设置发送者ID
+        message.Data = ByteString.CopyFrom(byteArrayData); // 直接将序列化后的字节数组放入 Data
         byte[] messageBytes = message.ToByteArray();
         socket.Send(messageBytes);
     }
@@ -49,7 +49,7 @@ public class RequestHandler
             ItemDescription = "物品B",
             ItemName = "物品名字",
             ItemType = 3,
-            Quantity = 5
+            Quantity = 5,
         };
         SendMessage(data);
     }

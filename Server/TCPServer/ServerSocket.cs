@@ -15,16 +15,12 @@ namespace TCPServer
         private static List<ClientSocket> clientList = new List<ClientSocket>();
         private static object lockObj = new object(); // 用于线程安全的锁
         public static NetLogger Logger;
-        public static RequestHandler Request;
-        public static ResponseHandler Response;
 
         public static void Start(string ip, int port, int clientNum)
         {
 
             isClose = false;
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            Request = new RequestHandler(socket);
-            Response = new ResponseHandler(socket);
             Logger = new NetLogger(TimeSpan.FromSeconds(10));
             IPEndPoint iPEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
             socket.Bind(iPEndPoint);

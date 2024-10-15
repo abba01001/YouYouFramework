@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
@@ -5,14 +6,8 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
-using System;
-using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
-using Google.Protobuf;
-using Google.Protobuf.WellKnownTypes;
 using Protocols;
-using Protocols.Item;
 
 public class NetManager : MonoBehaviour
 {
@@ -24,13 +19,11 @@ public class NetManager : MonoBehaviour
     private Queue<byte[]> receiveQueue = new Queue<byte[]>();
     private byte[] receiveBytes = new byte[1024 * 1024];
 
-
     private Coroutine heartbeatCoroutine;
     private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
-    private const float HeartbeatInterval = 10f; // 心跳包发送间隔
-    private const float HeartbeatTimeout = 3f; // 心跳包确认超时
-    private const int HeartbeatMsgId = 2001; // 心跳包消息ID
+    private const float heartbeatInterval = 10f; // 心跳包发送间隔
+    private const float heartbeatTimeout = 3f; // 心跳包确认超时
 
     private enum ConnectionStatus { Connected, Disconnected, Unknown }
     private ConnectionStatus connectionStatus = ConnectionStatus.Unknown;
@@ -42,26 +35,20 @@ public class NetManager : MonoBehaviour
     public NetLogger Logger;
     public RequestHandler Requset;
     public ResponseHandler Response;
+
     private void Awake()
     {
         if (instance == null)
         {
             instance = this;
             Logger = new NetLogger(TimeSpan.FromSeconds(5));
-            Requset = new RequestHandler(socket);
-            Response = new ResponseHandler(socket);
             DontDestroyOnLoad(gameObject);
         }
     }
 
-    private void Start()
-    {
-    }
-
-    void Update()
+    private void Update()
     {
         ProcessReceivedMessages();
-
         // 检查连接状态
         if (connectionStatus == ConnectionStatus.Disconnected)
         {
@@ -80,8 +67,10 @@ public class NetManager : MonoBehaviour
         const int port = 8080;
 
         if (connectionStatus == ConnectionStatus.Connected) return;
-
+        reconnectCount = 0; // 重置重连次数
         socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        Requset = new RequestHandler(socket);
+        Response = new ResponseHandler(socket,this.Requset);
 
         try
         {
@@ -104,6 +93,7 @@ public class NetManager : MonoBehaviour
         while (connectionStatus == ConnectionStatus.Connected)
         {
             byte[] messageToSend = null;
+
             lock (sendQueue)
             {
                 if (sendQueue.Count > 0)
@@ -152,82 +142,65 @@ public class NetManager : MonoBehaviour
             sendQueue.Enqueue(messageBytes);
         }
     }
-    
-    public void ReceiveMsg(byte[] msg)
-    {
-        if (socket == null) return;
 
-        try
+// 接收消息
+    public void ReceiveMsg(byte[] msgBytes)
+    {
+        if (socket == null || msgBytes == null || msgBytes.Length == 0) return;
+        int msgLength = msgBytes.Length;
+
+        if (msgLength > 0)
         {
-            if (msg.Length > 0)
+            byte[] tempMsg = new byte[msgLength];
+            Array.Copy(msgBytes, tempMsg, msgLength); // 将接收到的数据复制到 tempMsg
+            try
             {
-                BaseMessage receivedMsg = BaseMessage.Parser.ParseFrom(msg);
-                HandleMessage(receivedMsg);
+                BaseMessage receivedMsg = BaseMessage.Parser.ParseFrom(tempMsg); // 解析收到的消息
                 Response.HandleResponse(receivedMsg);
             }
-            else
+            catch (Exception e)
             {
-                // 如果 msg 为空或长度为0，可以选择记录日志或处理连接关闭
-                Logger.LogMessage(socket,"收到空消息，关闭连接。");
-                Close();
+                GameUtil.LogError($"ReceiveClientMsg Exception: {e.Message}");
             }
         }
-        catch (SocketException e)
-        {
-            Logger.LogMessage(socket,$"ReceiveMsg SocketException: {e.Message}");
-            Close();
-        }
-        catch (Exception e)
-        {
-            Logger.LogMessage(socket,$"ReceiveMsg Exception: {e.Message}");
-        }
     }
 
-    
-    private void HandleMessage(BaseMessage message)
-    {
 
-        Logger.LogMessage(socket,$"收到的消息类型: {message.Type}");
-        // 根据消息类型解包成不同的数据结构
-        switch (message.Type)
-        {
-            case MsgType.Hello:
-                // 假设 Hello 消息是 ItemData 类型
-                ProtocolHelper.UnpackData<ItemData>(message, (itemData) =>
-                {
-                    Logger.LogMessage(socket,$"解包成功: Item ID: {itemData.ItemId}, Item Name: {itemData.ItemName}");
-                });
-                break;
-            case MsgType.Exit:
-                Logger.LogMessage(socket,$"收到EXIT消息: {message.MessageId}");
-                break;
-            default:
-                Logger.LogMessage(socket,$"收到未知消息类型: {message.Type}");
-                break;
-        }
-    }
-    
     private IEnumerator SendHeartbeat()
     {
         while (connectionStatus == ConnectionStatus.Connected)
         {
             Requset.c2s_request_heart_beat();
-            cancellationTokenSource.CancelAfter(TimeSpan.FromSeconds(HeartbeatTimeout));
-            yield return new WaitForSeconds(HeartbeatInterval);
+            cancellationTokenSource.CancelAfter(TimeSpan.FromSeconds(heartbeatTimeout));
+            yield return new WaitForSeconds(heartbeatInterval);
         }
     }
 
     private void HandleConnectionError(SocketException e)
     {
-        Logger.LogMessage(socket,$"连接错误: {e.ErrorCode} {e.Message}");
+        Logger.LogMessage(socket, $"连接错误: {e.ErrorCode} {e.Message}");
         connectionStatus = ConnectionStatus.Disconnected;
     }
 
-    private void HandleDisconnected()
+    private async void HandleDisconnected()
     {
         connectionStatus = ConnectionStatus.Disconnected;
-        Logger.LogMessage(socket,"连接已断开");
+        Logger.LogMessage(socket, "连接已断开");
+
+        if (reconnectCount < maxReconnectAttempts)
+        {
+            reconnectCount++;
+            Debug.Log($"尝试重连... 第 {reconnectCount} 次");
+        
+            await Task.Delay(2000); // 等待 2 秒后重连
+            ConnectServer();
+        }
+        else
+        {
+            Debug.LogWarning("已达到最大重连次数。");
+        }
     }
+
 
     private void Close()
     {
