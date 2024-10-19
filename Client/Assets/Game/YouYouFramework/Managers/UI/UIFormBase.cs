@@ -15,12 +15,13 @@ namespace YouYou
         public Canvas CurrCanvas { get; private set; }
 
         public float CloseTime { get; private set; }
-
+        public string Name { get; private set; }
         //打开时调用
         public static Action ActionOpen;
 
         //反切时调用
         public Action OnBack;
+        public Action OnClose;
 
         //是否活跃
         internal bool IsActive = true;
@@ -28,6 +29,7 @@ namespace YouYou
 
         protected virtual void Awake()
         {
+            Name = transform.name;
             if (GetComponent<GraphicRaycaster>() == null) gameObject.AddComponent<GraphicRaycaster>();
             CurrCanvas = GetComponent<Canvas>();
         }
@@ -83,7 +85,7 @@ namespace YouYou
         {
             //进行层级管理 减少层级
             if (SysUIForm.DisableUILayer != 1) GameEntry.UI.UILayer.SetSortingOrder(this, false);
-
+            OnClose?.Invoke();
             CloseTime = Time.time;
             GameEntry.UI.HideUI(this);
             GameEntry.UI.UIPool.EnQueue(this);

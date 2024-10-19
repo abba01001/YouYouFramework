@@ -62,8 +62,6 @@ namespace YouYou
         public static SDKManager SDK { get; private set; }
         public static DialogueManager Dialogue { get; private set; }
         public static GuideManager Guide { get; private set; }
-        public static ReddotMananger Reddot { get; private set; }
-
 
         /// <summary>
         /// 单例
@@ -104,7 +102,6 @@ namespace YouYou
             SDK = new SDKManager();
             Dialogue = new DialogueManager();
             Guide = new GuideManager();
-            Reddot = new ReddotMananger();
 
             Logger.Init();
             Procedure.Init();
@@ -154,7 +151,6 @@ namespace YouYou
             Dialogue.OnUpdate();
             Input.OnUpdate();
             Task.OnUpdate();
-            Reddot.OnUpdate();
             Player.OnUpdate();
             GameEntry.Event.Dispatch(EventName.GameEntryOnUpdate);
         }

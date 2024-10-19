@@ -4,7 +4,20 @@ using UnityEngine;
 
 public class ActivityManager : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public ActivityManager()
+    {
+        RedDotMgr.Instance.Register(RedDotId.SubscribeGuide, GetRedDotNodes);
+    }
+
+    public List<RedDotNode> GetRedDotNodes()
+    {
+        List<RedDotNode> list = new List<RedDotNode>();
+        
+        RedDotNode rootNode = RedDotMgr.Instance.GetModuleRootNode(RedDotId.SubscribeGuide);
+        list.Add(rootNode);
+        return list;
+    }
+    
     void Start()
     {
         

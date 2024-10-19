@@ -33,7 +33,6 @@ namespace YouYou
         /// 当前分辨率比值
         /// </summary>
         public float CurrScreen { get; private set; }
-
         internal UIManager()
         {
             m_OpenUIFormList = new LinkedList<UIFormBase>();
