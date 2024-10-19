@@ -31,7 +31,8 @@ public class SDKManager : MonoBehaviour
         string relativePath = Path.GetFileName(localFilePath); // 获取文件名
         using (FileStream fileStream = new FileStream(localFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
         {
-            PutObjectRequest request = new PutObjectRequest(cosConfig.bucket, "Unity/GameData" + "/" + relativePath, fileStream);
+            var dic = SecurityUtil.GetSecretKeyDic("editor");
+            PutObjectRequest request = new PutObjectRequest(dic["bucket"], "Unity/GameData" + "/" + relativePath, fileStream);
             request.SetSign(TimeUtils.GetCurrentTime(TimeUnit.Seconds), 600);
             try
             {
@@ -46,17 +47,19 @@ public class SDKManager : MonoBehaviour
     
     static CosXml CreateCosXml()
     {
+        var dic = SecurityUtil.GetSecretKeyDic("editor");
         CosXmlConfig config = new CosXmlConfig.Builder()
             .SetConnectionTimeoutMs(60000)  //设置连接超时时间，单位毫秒，默认45000ms
             .SetReadWriteTimeoutMs(40000)  //设置读写超时时间，单位毫秒，默认45000ms
             .IsHttps(true)  //设置默认 HTTPS 请求
             .SetAppid(cosConfig.appid)
-            .SetRegion(cosConfig.region)
+            .SetRegion(dic["region"])
             .Build();
 
         long durationSecond = 600; //每次请求签名有效时长，单位为秒
-        QCloudCredentialProvider qCloudCredentialProvider = new DefaultQCloudCredentialProvider(cosConfig.secretId, cosConfig.secretKey, durationSecond);
+        QCloudCredentialProvider qCloudCredentialProvider = new DefaultQCloudCredentialProvider(dic["SecretId"], dic["SecretKey"], durationSecond);
 
         return new CosXmlServer(config, qCloudCredentialProvider);
     }
+
 }

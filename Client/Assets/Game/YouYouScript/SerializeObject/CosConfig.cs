@@ -13,10 +13,6 @@ public enum PlatformOption
 [CreateAssetMenu(fileName = "CosConfig", menuName = "ScriptableObjects/CosConfig", order = 1)]
 public class CosConfig : ScriptableObject
 {
-    public string secretId = "";
-    public string secretKey = "";
-    public string region = "";
-    public string bucket = "";
     public string cosVersionPath = "";
 
     public PlatformOption platformOption

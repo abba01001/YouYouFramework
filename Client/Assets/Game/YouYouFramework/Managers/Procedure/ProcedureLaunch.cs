@@ -29,7 +29,6 @@ namespace YouYou
             {
                 //if (!Permission.HasUserAuthorizedPermission(s)) Permission.RequestUserPermission(s);
             });
-
 #if EDITORLOAD
             GameEntry.Procedure.ChangeState(ProcedureState.Preload);
 #elif ASSETBUNDLE

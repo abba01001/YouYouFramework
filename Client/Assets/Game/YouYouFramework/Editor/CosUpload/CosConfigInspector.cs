@@ -4,29 +4,14 @@ using UnityEngine;
 [CustomEditor(typeof(CosConfig))]
 public class CosConfigInspector : Editor
 {
-    SerializedProperty secretIdProp;
-    SerializedProperty secretKeyProp;
-    SerializedProperty regionProp;
-    SerializedProperty bucketProp;
-    SerializedProperty appidProp;
 
     private void OnEnable()
     {
-        secretIdProp = serializedObject.FindProperty("secretId");
-        secretKeyProp = serializedObject.FindProperty("secretKey");
-        regionProp = serializedObject.FindProperty("region");
-        bucketProp = serializedObject.FindProperty("bucket");
-        appidProp = serializedObject.FindProperty("appid");
     }
 
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
-
-        EditorGUILayout.PropertyField(secretIdProp);
-        EditorGUILayout.PropertyField(secretKeyProp);
-        EditorGUILayout.PropertyField(regionProp);
-        EditorGUILayout.PropertyField(bucketProp);
 
         // 获取当前的构建平台
         BuildTarget activeBuildTarget = EditorUserBuildSettings.activeBuildTarget;
@@ -38,7 +23,6 @@ public class CosConfigInspector : Editor
 
         EditorGUILayout.LabelField("cosABRoot", targetCosConfig.cosABRoot);
 
-        EditorGUILayout.PropertyField(appidProp);
         serializedObject.ApplyModifiedProperties();
     }
 

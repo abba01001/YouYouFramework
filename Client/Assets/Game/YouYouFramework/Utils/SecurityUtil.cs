@@ -1,9 +1,12 @@
 using System;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using Newtonsoft.Json;
+using YouYou;
 
 public sealed class SecurityUtil
 {
@@ -107,4 +110,87 @@ public sealed class SecurityUtil
         }
     }
 
+    public static Dictionary<string, string> GetSecretKeyDic(string type)
+    {
+        Dictionary<string, string> dic = new Dictionary<string, string>();
+        string decryptedData = null;
+        if (type == "editor")
+        {
+            string fullSavePath = Path.Combine(Application.dataPath, "PackageTool/SecretKey.bytes");
+            if (File.Exists(fullSavePath))
+            {
+                // 读取 .bytes 文件的内容
+                byte[] bytes = File.ReadAllBytes(fullSavePath);
+                decryptedData = DecryptSecretKey(bytes);
+            }
+        }
+        else
+        {
+            string fullSavePath = "Assets/PackageTool/TencentCloudKey.bytes";
+            AssetReferenceEntity referenceEntity = GameEntry.Loader.LoadMainAsset(fullSavePath);
+            if (referenceEntity != null)
+            {
+                TextAsset obj = UnityEngine.Object.Instantiate(referenceEntity.Target as TextAsset);
+                AutoReleaseHandle.Add(referenceEntity, null);
+                decryptedData = DecryptSecretKey(obj.bytes);
+            }
+        }
+        if (decryptedData != null)
+        {
+            dic = JsonConvert.DeserializeObject<Dictionary<string, string>>(decryptedData);
+            // foreach (var pair in dic)
+            // {
+            //     GameUtil.LogError($"{pair.Key}---{pair.Value}");
+            // }
+        }
+        return dic;
+    }
+
+    // 解密 AES 加密的数据
+    public static string DecryptSecretKey(byte[] cipherText)
+    {
+        using (Aes aesAlg = Aes.Create())
+        {
+            byte[] keyArray = Encoding.UTF8.GetBytes(Constants.SECURITYKEY);
+            byte[] iv = new byte[Constants.BLOCK_SIZE];
+
+            // 提取 IV
+            Array.Copy(cipherText, 0, iv, 0, Constants.BLOCK_SIZE);
+
+            aesAlg.Key = keyArray;
+            aesAlg.IV = iv;
+            aesAlg.Mode = CipherMode.CBC;
+            aesAlg.Padding = PaddingMode.PKCS7;
+
+            ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+
+            using (MemoryStream msDecrypt = new MemoryStream(cipherText, Constants.BLOCK_SIZE, cipherText.Length - Constants.BLOCK_SIZE))
+            using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+            using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+            {
+                return srDecrypt.ReadToEnd();
+            }
+        }
+    }
+
+    // 从字节数组解析和解密数据
+    public static (string secretId, string secretKey) ParseTencentCloudKeyFile(byte[] fileData)
+    {
+        using (MemoryStream ms = new MemoryStream(fileData))
+        using (BinaryReader reader = new BinaryReader(ms))
+        {
+            // 读取 SecretId
+            int secretIdLength = reader.ReadInt32();
+            byte[] encryptedSecretId = reader.ReadBytes(secretIdLength);
+            string secretId = DecryptSecretKey(encryptedSecretId);
+
+            // 读取 SecretKey
+            int secretKeyLength = reader.ReadInt32();
+            byte[] encryptedSecretKey = reader.ReadBytes(secretKeyLength);
+            string secretKey = DecryptSecretKey(encryptedSecretKey);
+
+            return (secretId, secretKey);
+        }
+    }
+    
 }

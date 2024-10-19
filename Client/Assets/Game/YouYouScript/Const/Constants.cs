@@ -26,6 +26,7 @@
 
     public const float GroundCheckDistance = 0.1f; // 地面检测距离
     public const string SECURITYKEY = "3ZkPqF9hDjW8q2Z7";//钥匙
+    public const int BLOCK_SIZE = 16; // AES块大小
     public const string EMPTYGAMEDATA = "EmptyGameData";
     public const string REQUESTFAIL = "RequestFail";
     public const string GETREDPOINT = "GetRedPoint";

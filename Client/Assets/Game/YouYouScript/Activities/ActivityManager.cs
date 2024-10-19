@@ -14,6 +14,7 @@ public class ActivityManager : MonoBehaviour
         List<RedDotNode> list = new List<RedDotNode>();
         
         RedDotNode rootNode = RedDotMgr.Instance.GetModuleRootNode(RedDotId.SubscribeGuide);
+        //rootNode.AddChildNode(1); 有子节点
         list.Add(rootNode);
         return list;
     }
