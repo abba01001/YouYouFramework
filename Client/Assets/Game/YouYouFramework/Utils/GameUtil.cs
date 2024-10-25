@@ -115,15 +115,22 @@ public class GameUtil
         LogError($"{tag} --- 消耗时间: {seconds:F3} 秒");
     }
     
-    public static System.Collections.IEnumerator CheckKeys(params Action[] actions)
+    public static IEnumerator CheckKeys(Dictionary<(KeyCode, KeyCode?), Action> keyMappings)
     {
         while (true)
         {
-            for (int i = 0; i < Mathf.Min(actions.Length, 12); i++)
+            foreach (var keyMapping in keyMappings)
             {
-                if (Input.GetKeyDown(KeyCode.F1 + i))
+                KeyCode mainKey = keyMapping.Key.Item1;
+                KeyCode? modifierKey = keyMapping.Key.Item2; // 可选修饰键
+                Action action = keyMapping.Value;
+                if (modifierKey.HasValue)
                 {
-                    actions[i]?.Invoke();
+                    // 检查修饰键和功能键是否同时按下
+                    if (Input.GetKey(modifierKey.Value) && Input.GetKeyDown(mainKey))
+                    {
+                        action?.Invoke();
+                    }
                 }
             }
 

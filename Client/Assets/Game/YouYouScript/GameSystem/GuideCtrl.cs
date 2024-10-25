@@ -17,8 +17,8 @@ public class GuideModel : Singleton<GuideModel>
 
     public GuideModel()
     {
-        GameEntry.Event.AddEventListener(EventName.GameEntryOnApplicationQuit, SaveDataAll);
-        GameEntry.Event.AddEventListener(EventName.GameEntryOnApplicationPause, SaveDataAll);
+        GameEntry.Event.AddEventListener(Constants.EventName.GameEntryOnApplicationQuit, SaveDataAll);
+        GameEntry.Event.AddEventListener(Constants.EventName.GameEntryOnApplicationPause, SaveDataAll);
 
         if (b_native)
         {

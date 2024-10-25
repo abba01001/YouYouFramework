@@ -23,26 +23,26 @@ namespace YouYou
 			Common = new CommonEvent();
 		}
 
-        public void Dispatch(EventName key)
+        public void Dispatch(string key)
         {
-            Common.Dispatch(key.ToString());
+            Common.Dispatch(key);
         }
-        public void Dispatch(EventName key, object userData)
+        public void Dispatch(string key, object userData)
         {
-            Common.Dispatch(key.ToString(), userData);
+            Common.Dispatch(key, userData);
         }
 
-        public void AddEventListener(EventName key, CommonEvent.OnActionHandler handler)
+        public void AddEventListener(string key, CommonEvent.OnActionHandler handler)
         {
-            Common.AddEventListener(key.ToString(), handler);
+            Common.AddEventListener(key, handler);
         }
-        public void RemoveEventListener(EventName key, CommonEvent.OnActionHandler handler)
+        public void RemoveEventListener(string key, CommonEvent.OnActionHandler handler)
         {
-            Common.RemoveEventListener(key.ToString(), handler);
+            Common.RemoveEventListener(key, handler);
         }
-        public void RemoveEventListenerAll(EventName key)
+        public void RemoveEventListenerAll(string key)
         {
-            Common.RemoveEventListenerAll(key.ToString());
+            Common.RemoveEventListenerAll(key);
         }
     }
 }

@@ -193,7 +193,7 @@ namespace YouYou
 
                     VarFloat varFloat = new VarFloat();
                     varFloat.Value = m_CurrProgress;
-                    GameEntry.Event.Dispatch(EventName.LoadingSceneUpdate, varFloat);
+                    GameEntry.Event.Dispatch(Constants.EventName.LoadingSceneUpdate, varFloat);
                 }
 
                 if (m_CurrProgress == 1)

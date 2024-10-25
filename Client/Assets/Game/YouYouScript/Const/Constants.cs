@@ -48,4 +48,19 @@
         public const string QualityLevel = "QualityLevel";
     }
     
+    public struct EventName
+    {
+        public const string TestEvent = "TestEvent";
+        public const string GameEntryOnUpdate = "GameEntryOnUpdate";
+        public const string GameEntryOnApplicationQuit = "GameEntryOnApplicationQuit";
+        public const string GameEntryOnApplicationPause = "GameEntryOnApplicationPause";
+        public const string LoadingSceneUpdate = "LoadingSceneUpdate";
+        public const string PopupAction = "PopupAction";
+        public const string ViewAction = "ViewAction";
+        public const string EventMessage = "EventMessage";
+        public const string UpdatePlayerPos = "UpdatePlayerPos";
+        public const string FinishLoadDataTable = "FinishLoadDataTable";
+
+    }
+    
 }

@@ -24,17 +24,17 @@ namespace Protocols {
     static MessagesReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg5NZXNzYWdlcy5wcm90bxIJUHJvdG9jb2xzIncKC0Jhc2VNZXNzYWdlEhIK",
-            "Cm1lc3NhZ2VfaWQYASABKAUSEQoJdGltZXN0YW1wGAIgASgDEhEKCXNlbmRl",
-            "cl9pZBgDIAEoCRIgCgR0eXBlGAQgASgOMhIuUHJvdG9jb2xzLk1zZ1R5cGUS",
-            "DAoEZGF0YRgFIAEoDCJICgxIZWFydEJlYXRNc2cSEgoKbWVzc2FnZV9pZBgB",
-            "IAEoBRIRCgl0aW1lc3RhbXAYAiABKAMSEQoJc2VuZGVyX2lkGAMgASgJKi0K",
-            "B01zZ1R5cGUSCQoFSEVMTE8QABINCglIZWFydEJlYXQQARIICgRFWElUEAJi",
-            "BnByb3RvMw=="));
+            "Cg5NZXNzYWdlcy5wcm90bxIJUHJvdG9jb2xzIogBCgtCYXNlTWVzc2FnZRIS",
+            "CgptZXNzYWdlX2lkGAEgASgFEhEKCXRpbWVzdGFtcBgCIAEoAxIRCglzZW5k",
+            "ZXJfaWQYAyABKAkSIwoHbXNnVHlwZRgEIAEoDjISLlByb3RvY29scy5Nc2dU",
+            "eXBlEgwKBHR5cGUYBSABKAkSDAoEZGF0YRgGIAEoDCJICgxIZWFydEJlYXRN",
+            "c2cSEgoKbWVzc2FnZV9pZBgBIAEoBRIRCgl0aW1lc3RhbXAYAiABKAMSEQoJ",
+            "c2VuZGVyX2lkGAMgASgJKiIKB01zZ1R5cGUSDQoJSGVhcnRCZWF0EAASCAoE",
+            "RVhJVBABYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Protocols.MsgType), }, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.BaseMessage), global::Protocols.BaseMessage.Parser, new[]{ "MessageId", "Timestamp", "SenderId", "Type", "Data" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.BaseMessage), global::Protocols.BaseMessage.Parser, new[]{ "MessageId", "Timestamp", "SenderId", "MsgType", "Type", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.HeartBeatMsg), global::Protocols.HeartBeatMsg.Parser, new[]{ "MessageId", "Timestamp", "SenderId" }, null, null, null, null)
           }));
     }
@@ -46,12 +46,11 @@ namespace Protocols {
   /// 消息类型的枚举
   /// </summary>
   public enum MsgType {
-    [pbr::OriginalName("HELLO")] Hello = 0,
-    [pbr::OriginalName("HeartBeat")] HeartBeat = 1,
+    [pbr::OriginalName("HeartBeat")] HeartBeat = 0,
     /// <summary>
     /// 添加其他消息类型
     /// </summary>
-    [pbr::OriginalName("EXIT")] Exit = 2,
+    [pbr::OriginalName("EXIT")] Exit = 1,
   }
 
   #endregion
@@ -98,6 +97,7 @@ namespace Protocols {
       messageId_ = other.messageId_;
       timestamp_ = other.timestamp_;
       senderId_ = other.senderId_;
+      msgType_ = other.msgType_;
       type_ = other.type_;
       data_ = other.data_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -154,23 +154,35 @@ namespace Protocols {
       }
     }
 
-    /// <summary>Field number for the "type" field.</summary>
-    public const int TypeFieldNumber = 4;
-    private global::Protocols.MsgType type_ = global::Protocols.MsgType.Hello;
+    /// <summary>Field number for the "msgType" field.</summary>
+    public const int MsgTypeFieldNumber = 4;
+    private global::Protocols.MsgType msgType_ = global::Protocols.MsgType.HeartBeat;
     /// <summary>
     /// 消息类型
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Protocols.MsgType Type {
+    public global::Protocols.MsgType MsgType {
+      get { return msgType_; }
+      set {
+        msgType_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "type" field.</summary>
+    public const int TypeFieldNumber = 5;
+    private string type_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Type {
       get { return type_; }
       set {
-        type_ = value;
+        type_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
     /// <summary>Field number for the "data" field.</summary>
-    public const int DataFieldNumber = 5;
+    public const int DataFieldNumber = 6;
     private pb::ByteString data_ = pb::ByteString.Empty;
     /// <summary>
     /// 消息内容
@@ -202,6 +214,7 @@ namespace Protocols {
       if (MessageId != other.MessageId) return false;
       if (Timestamp != other.Timestamp) return false;
       if (SenderId != other.SenderId) return false;
+      if (MsgType != other.MsgType) return false;
       if (Type != other.Type) return false;
       if (Data != other.Data) return false;
       return Equals(_unknownFields, other._unknownFields);
@@ -214,7 +227,8 @@ namespace Protocols {
       if (MessageId != 0) hash ^= MessageId.GetHashCode();
       if (Timestamp != 0L) hash ^= Timestamp.GetHashCode();
       if (SenderId.Length != 0) hash ^= SenderId.GetHashCode();
-      if (Type != global::Protocols.MsgType.Hello) hash ^= Type.GetHashCode();
+      if (MsgType != global::Protocols.MsgType.HeartBeat) hash ^= MsgType.GetHashCode();
+      if (Type.Length != 0) hash ^= Type.GetHashCode();
       if (Data.Length != 0) hash ^= Data.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -246,12 +260,16 @@ namespace Protocols {
         output.WriteRawTag(26);
         output.WriteString(SenderId);
       }
-      if (Type != global::Protocols.MsgType.Hello) {
+      if (MsgType != global::Protocols.MsgType.HeartBeat) {
         output.WriteRawTag(32);
-        output.WriteEnum((int) Type);
+        output.WriteEnum((int) MsgType);
+      }
+      if (Type.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(Type);
       }
       if (Data.Length != 0) {
-        output.WriteRawTag(42);
+        output.WriteRawTag(50);
         output.WriteBytes(Data);
       }
       if (_unknownFields != null) {
@@ -276,12 +294,16 @@ namespace Protocols {
         output.WriteRawTag(26);
         output.WriteString(SenderId);
       }
-      if (Type != global::Protocols.MsgType.Hello) {
+      if (MsgType != global::Protocols.MsgType.HeartBeat) {
         output.WriteRawTag(32);
-        output.WriteEnum((int) Type);
+        output.WriteEnum((int) MsgType);
+      }
+      if (Type.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(Type);
       }
       if (Data.Length != 0) {
-        output.WriteRawTag(42);
+        output.WriteRawTag(50);
         output.WriteBytes(Data);
       }
       if (_unknownFields != null) {
@@ -303,8 +325,11 @@ namespace Protocols {
       if (SenderId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(SenderId);
       }
-      if (Type != global::Protocols.MsgType.Hello) {
-        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Type);
+      if (MsgType != global::Protocols.MsgType.HeartBeat) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) MsgType);
+      }
+      if (Type.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Type);
       }
       if (Data.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeBytesSize(Data);
@@ -330,7 +355,10 @@ namespace Protocols {
       if (other.SenderId.Length != 0) {
         SenderId = other.SenderId;
       }
-      if (other.Type != global::Protocols.MsgType.Hello) {
+      if (other.MsgType != global::Protocols.MsgType.HeartBeat) {
+        MsgType = other.MsgType;
+      }
+      if (other.Type.Length != 0) {
         Type = other.Type;
       }
       if (other.Data.Length != 0) {
@@ -368,10 +396,14 @@ namespace Protocols {
             break;
           }
           case 32: {
-            Type = (global::Protocols.MsgType) input.ReadEnum();
+            MsgType = (global::Protocols.MsgType) input.ReadEnum();
             break;
           }
           case 42: {
+            Type = input.ReadString();
+            break;
+          }
+          case 50: {
             Data = input.ReadBytes();
             break;
           }
@@ -407,10 +439,14 @@ namespace Protocols {
             break;
           }
           case 32: {
-            Type = (global::Protocols.MsgType) input.ReadEnum();
+            MsgType = (global::Protocols.MsgType) input.ReadEnum();
             break;
           }
           case 42: {
+            Type = input.ReadString();
+            break;
+          }
+          case 50: {
             Data = input.ReadBytes();
             break;
           }

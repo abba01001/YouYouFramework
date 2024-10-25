@@ -8,7 +8,7 @@ public class ResponseHandler
 {
     private Socket socket;
     private RequestHandler request;
-    private readonly Dictionary<int, Action<BaseMessage>> _handlers = new Dictionary<int, Action<BaseMessage>>();
+    private readonly Dictionary<string, Action<BaseMessage>> _handlers = new Dictionary<string, Action<BaseMessage>>();
 
     public ResponseHandler(Socket socket, RequestHandler request)
     {
@@ -20,11 +20,10 @@ public class ResponseHandler
     public void InitializeHandlers()
     {
         // 注册心跳包处理器
-        RegisterHandler((int)MsgType.HeartBeat, s2c_handle_request_heart_beat);
-        RegisterHandler(2, s2c_handle_other);
+        RegisterHandler(nameof(HeartBeatMsg), s2c_handle_request_heart_beat);
     }
     
-    public void RegisterHandler(int messageType, Action<BaseMessage> handler)
+    public void RegisterHandler(string messageType, Action<BaseMessage> handler)
     {
         if (!_handlers.ContainsKey(messageType))
         {
@@ -35,7 +34,7 @@ public class ResponseHandler
     // 处理响应的分发逻辑
     public void HandleResponse(BaseMessage message)
     {
-        if (_handlers.TryGetValue((int) message.Type, out var handler)) handler(message);
+        if (_handlers.TryGetValue(message.Type, out var handler)) handler(message);
     }
 
 
@@ -48,6 +47,12 @@ public class ResponseHandler
         {
             //NetManager.Instance.Logger.LogMessage(socket,$"解包成功: Item ID: {itemData.ItemId}, Item Name: {itemData.ItemName}");
         });
+        // 如果当前 socketA 的 ID 和消息的发送者 ID 相同，说明是自己发出的消息，不处理
+        if (message.SenderId == socket.LocalEndPoint.ToString())
+        {
+            Console.WriteLine("收到自己发送的消息，忽略处理。");
+            return;
+        }
         request.c2s_request_heart_beat();
     }
 

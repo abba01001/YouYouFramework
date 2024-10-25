@@ -63,7 +63,7 @@ namespace YouYou
             m_TaskGroup.OnComplete += () =>
             {
                 Constants.IsLoadDataTable = true;
-                GameEntry.Event.Dispatch(EventName.FinishLoadDataTable);
+                GameEntry.Event.Dispatch(Constants.EventName.FinishLoadDataTable);
             };
             m_TaskGroup.Run(true);
         }

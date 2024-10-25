@@ -80,6 +80,7 @@ namespace YouYou
                 ActionOpen = null;
                 onOpenBegin();
             }
+            GameEntry.Event.Dispatch(Constants.EventName.PopupAction,new PopupActionEvent(Name,UIActionType.ShowUI));
         }
         internal void ToClose()
         {
@@ -89,6 +90,7 @@ namespace YouYou
             CloseTime = Time.time;
             GameEntry.UI.HideUI(this);
             GameEntry.UI.UIPool.EnQueue(this);
+            GameEntry.Event.Dispatch(Constants.EventName.PopupAction,new PopupActionEvent(Name,UIActionType.HideUI));
         }
 
     }

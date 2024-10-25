@@ -249,12 +249,12 @@ public class PlayerCtrl : MonoBehaviour
     
     private void OnEnable()
     {
-        GameEntry.Event.AddEventListener(EventName.UpdatePlayerPos, UpdatePos);
+        GameEntry.Event.AddEventListener(Constants.EventName.UpdatePlayerPos, UpdatePos);
     }
 
     private void OnDisable()
     {
-        GameEntry.Event.AddEventListener(EventName.UpdatePlayerPos, UpdatePos);
+        GameEntry.Event.AddEventListener(Constants.EventName.UpdatePlayerPos, UpdatePos);
     }
 
     private void CheckMove()

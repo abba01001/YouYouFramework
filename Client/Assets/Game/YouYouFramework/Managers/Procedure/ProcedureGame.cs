@@ -114,7 +114,7 @@ namespace YouYou
             {
                 InstantiatePrefab(modelData, parent);
             }
-            GameEntry.Event?.Dispatch(EventName.UpdatePlayerPos,new Vector3(levelData.bornPos[0],levelData.bornPos[1],levelData.bornPos[2]));
+            GameEntry.Event?.Dispatch(Constants.EventName.UpdatePlayerPos,new Vector3(levelData.bornPos[0],levelData.bornPos[1],levelData.bornPos[2]));
         }
         
         // 实例化预制体

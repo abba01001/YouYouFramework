@@ -17,11 +17,7 @@ public class RequestHandler
         string json = data.ToJson();
         byte[] byteArrayData = data.ToByteArray();
         BaseMessage message = new BaseMessage();
-        string typeName = typeof(T).Name;
-        if (Enum.TryParse(typeName, true, out MsgType msgType))
-        {
-            message.Type = msgType;
-        }
+        message.Type = typeof(T).Name;
         message.Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();// 获取当前时间戳
         message.SenderId = socket.RemoteEndPoint.ToString(); // 设置发送者ID
         message.Data = ByteString.CopyFrom(byteArrayData); // 直接将序列化后的字节数组放入 Data

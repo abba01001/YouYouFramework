@@ -152,7 +152,7 @@ namespace YouYou
             Input.OnUpdate();
             Task.OnUpdate();
             Player.OnUpdate();
-            GameEntry.Event.Dispatch(EventName.GameEntryOnUpdate);
+            GameEntry.Event.Dispatch(Constants.EventName.GameEntryOnUpdate);
         }
         private void OnApplicationQuit()
         {
@@ -161,14 +161,14 @@ namespace YouYou
             Logger.Dispose();
             Fsm.Dispose();
 
-            GameEntry.Event.Dispatch(EventName.GameEntryOnApplicationQuit);
+            GameEntry.Event.Dispatch(Constants.EventName.GameEntryOnApplicationQuit);
         }
         private void OnApplicationPause(bool pause)
         {
             if (pause)
             {
                 Player.SaveDataAll(true,true);
-                GameEntry.Event.Dispatch(EventName.GameEntryOnApplicationPause);
+                GameEntry.Event.Dispatch(Constants.EventName.GameEntryOnApplicationPause);
             }
         }
 

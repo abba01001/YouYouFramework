@@ -59,7 +59,8 @@ namespace TCPServer
                 //MessageId = currentMessageId++, // 获取唯一消息ID并递增
                 Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds(), // 获取当前时间戳
                 SenderId = socket.RemoteEndPoint.ToString(), // 设置发送者ID
-                Type = messageType,
+                MsgType = messageType,
+                Type = typeof(T).Name,
                 Data = ByteString.CopyFrom(byteArrayData) // 直接将序列化后的字节数组放入 Data
             };
             byte[] messageBytes = message.ToByteArray();

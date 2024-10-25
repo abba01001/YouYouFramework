@@ -41,8 +41,17 @@ public enum EventName : uint
     GameEntryOnApplicationQuit,
     GameEntryOnApplicationPause,
     LoadingSceneUpdate,
+    PopupAction,
+    ViewAction,
+    EventMessage,
     UpdatePlayerPos,
     FinishLoadDataTable,
+}
+
+public enum UIActionType
+{
+    ShowUI,
+    HideUI,
 }
 
 public enum InputName
