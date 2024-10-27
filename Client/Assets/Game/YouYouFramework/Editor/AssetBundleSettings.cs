@@ -606,6 +606,8 @@ public class AssetBundleSettings : ScriptableObject
             "mscorlib.dll",
             "System.dll",
             "System.Core.dll",
+            "UniTask.dll",
+            "UnityEngine.AndroidJNIModule.dll"
         };
         string aotMetaAssemblyDir = Application.dataPath + "/../" + "HybridCLRData/AssembliesPostIl2CppStrip/" + GetBuildTarget().ToString() + "/";
         foreach (var aotDllName in aotMetaAssemblyFiles)

@@ -334,7 +334,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6da24bac46108f34ca945aa02649e4e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  apkFileName: 
 --- !u!1001 &1867182076
 PrefabInstance:
   m_ObjectHideFlags: 0
