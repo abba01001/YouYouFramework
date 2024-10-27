@@ -28,10 +28,10 @@ public class FormBattle : UIFormBase
     protected override void OnEnable()
     {
         base.OnEnable();
-        jumpBtn.GetComponent<Button>().SetButtonClick(() =>
-        {
-            jumpBtn.SetImage("Assets/Game/Download/Atlas/Textures/Common","JoyBg.png",true);
-        });
+        // jumpBtn.GetComponent<Button>().SetButtonClick(() =>
+        // {
+        //     jumpBtn.SetImage("Assets/Game/Download/Atlas/Textures/Common","JoyBg.png",true);
+        // });
         //GameEntry.Event.AddEventListener(EventName.LoadingSceneUpdate, OnLoadingProgressChange);
 
         //txtTip.text = string.Empty;

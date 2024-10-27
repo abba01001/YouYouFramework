@@ -22,6 +22,7 @@ namespace YouYou
         /// </summary>
         private float m_CurrProgress;
 
+        private bool ShowLoginPanel = false;
         internal override void OnEnter()
         {
             base.OnEnter();
@@ -51,15 +52,23 @@ namespace YouYou
                 MainEntry.Instance.PreloadUpdate(m_CurrProgress);
             }
 
+            
             if (m_CurrProgress == 1)
             {
                 MainEntry.Instance.PreloadComplete();
-                
-                //这里先拉存档 TODO
-                if (Constants.IsLoadCouldData)
+                if (!ShowLoginPanel)
                 {
+                    ShowLoginPanel = true;
+                    GameEntry.UI.OpenUIForm<FormLogin>();
+                }
+
+                //先走登录
+                if (Constants.IsLoginGame)
+                {
+                    GameEntry.UI.CloseUIForm<FormLogin>();
                     GameEntry.Procedure.ChangeState(ProcedureState.Game);
                 }
+                
                 //进入到业务流程
             }
         }

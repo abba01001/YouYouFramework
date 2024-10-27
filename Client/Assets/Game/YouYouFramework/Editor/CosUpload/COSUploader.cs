@@ -43,7 +43,7 @@ namespace YouYou
 
                 // 设置基础文件夹
                 string baseFolder = Path.Combine(SettingsUtil.ProjectDir, "AssetBundles", PlayerPrefs.GetString(YFConstDefine.AssetVersion), GetPlatformOption(activeBuildTarget));
-                var dic = SecurityUtil.GetSecretKeyDic("editor");
+                var dic = SecurityUtil.GetSecretKeyDic();
                 // 递归上传整个文件夹
                 await UploadFolderAsync(cosXml, dic["bucket"], cosConfig.cosABRoot, baseFolder);
                 
@@ -141,7 +141,7 @@ namespace YouYou
 
         static CosXml CreateCosXml()
         {
-            var dic = SecurityUtil.GetSecretKeyDic("editor");
+            var dic = SecurityUtil.GetSecretKeyDic();
             CosXmlConfig config = new CosXmlConfig.Builder()
                 .SetConnectionTimeoutMs(60000)  //设置连接超时时间，单位毫秒，默认45000ms
                 .SetReadWriteTimeoutMs(40000)  //设置读写超时时间，单位毫秒，默认45000ms
@@ -151,7 +151,7 @@ namespace YouYou
                 .Build();
 
             long durationSecond = 600; //每次请求签名有效时长，单位为秒
-            QCloudCredentialProvider qCloudCredentialProvider = new DefaultQCloudCredentialProvider(dic["SecretId"], dic["SecretKey"], durationSecond);
+            QCloudCredentialProvider qCloudCredentialProvider = new DefaultQCloudCredentialProvider(dic["secretId"], dic["secretKey"], durationSecond);
             return new CosXmlServer(config, qCloudCredentialProvider);
         }
 

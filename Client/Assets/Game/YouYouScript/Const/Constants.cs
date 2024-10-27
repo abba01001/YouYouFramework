@@ -9,14 +9,10 @@
     // 全局可变变量
     public static float MainRoleJumpHeight = 1.5f;//主角跳跃高度
     public static float MainRoleMoveSpeed = 4f;//玩家移动速度
-    public static string UserID = string.Empty;
     public static bool IsLoadDataTable = false; 
-#if UNITY_EDITOR
-    public static bool IsLoadCouldData = true;
-#else
-    public static bool IsLoadCouldData = false;
-#endif
-    
+    public static string UserUUID = string.Empty;
+    public static string GameDataFileName = "";
+    public static bool IsLoginGame = false;
     
     // 定义全局常量，常量值不可修改
     public const float GRAVITY = -9.81f;//重力

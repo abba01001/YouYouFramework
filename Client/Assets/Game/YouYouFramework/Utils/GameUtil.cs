@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System;
+using System.Reflection;
 using YouYou;
 using Cysharp.Threading.Tasks;
 using Unity.VisualScripting;
@@ -135,6 +136,34 @@ public class GameUtil
             }
 
             yield return null;
+        }
+    }
+    
+    public static void CopyComponents(GameObject original, GameObject clone)
+    {
+        // 获取原物体上的所有组件
+        Component[] components = original.GetComponents<Component>();
+        foreach (Component component in components)
+        {
+            // 在克隆物体上添加相同类型的组件
+            Component clonedComponent = clone.AddComponent(component.GetType());
+
+            // 复制所有公共字段
+            FieldInfo[] fields = component.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
+            foreach (FieldInfo field in fields)
+            {
+                field.SetValue(clonedComponent, field.GetValue(component));
+            }
+
+            // 复制所有公共属性
+            PropertyInfo[] properties = component.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            foreach (PropertyInfo property in properties)
+            {
+                if (property.CanWrite) // 确保属性可写
+                {
+                    property.SetValue(clonedComponent, property.GetValue(component));
+                }
+            }
         }
     }
     

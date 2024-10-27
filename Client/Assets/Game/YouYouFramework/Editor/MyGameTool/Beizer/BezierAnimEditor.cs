@@ -1,0 +1,163 @@
+using UnityEditor;
+using UnityEditorInternal;
+using UnityEngine;
+
+namespace BezierAnimation
+{
+    public abstract class BezierAnimEditor : Editor
+    {
+        protected BezierAnim animation;
+
+        protected SerializedProperty m_Target;
+        protected SerializedProperty m_LoopMode;
+        protected SerializedProperty m_PlayOnAwake;
+        protected SerializedProperty m_RestartOnEnable;
+        protected SerializedProperty m_UpdateMode;
+        protected SerializedProperty m_SegmentIndex;
+
+        protected SerializedProperty m_Segments;
+        protected ReorderableList segments;
+
+        protected float horizontalSpace = 5;
+        protected float headerIndent = 15;
+        protected float singleLineHeight = EditorGUIUtility.singleLineHeight;
+        protected float verticalSpace;
+
+        protected void OnEnable()
+        {
+            animation = target as BezierAnim;
+            verticalSpace = EditorGUIUtility.standardVerticalSpacing;
+            m_Target = serializedObject.FindProperty("m_Target");
+            m_LoopMode = serializedObject.FindProperty(nameof(m_LoopMode));
+            m_PlayOnAwake = serializedObject.FindProperty("m_PlayOnAwake");
+            m_RestartOnEnable = serializedObject.FindProperty("m_RestartOnEnable");
+            m_UpdateMode = serializedObject.FindProperty("m_UpdateMode");
+            m_SegmentIndex = serializedObject.FindProperty(nameof(m_SegmentIndex));
+
+            m_Segments = serializedObject.FindProperty("m_Segments");
+            segments = new ReorderableList(serializedObject, m_Segments, true, true, true, true)
+            {
+                drawHeaderCallback = DrawSegmentListHeader,
+                elementHeightCallback = GetSegmentListElementHeight,
+                drawElementCallback = DrawSegmentListElement,
+            };
+            GetOtherProperties();
+        }
+        protected virtual void GetOtherProperties()
+        {
+
+        }
+
+        protected virtual void DrawSegmentListHeader(Rect rect)
+        {
+            EditorGUI.LabelField(rect, "Segments");
+        }
+        protected virtual float GetSegmentListElementHeight(int index)
+        {
+            return singleLineHeight + verticalSpace;
+        }
+        protected virtual void DrawSegmentListElement(Rect rect, int index, bool isActive, bool isFocused)
+        {
+            SerializedProperty segment = segments.serializedProperty.GetArrayElementAtIndex(index);
+            OnSegmentProperty(rect, segment);
+
+            float originalLabelWidth = EditorGUIUtility.labelWidth;
+            EditorGUIUtility.labelWidth = 75f;
+            SerializedProperty duration = segment.FindPropertyRelative("m_Duration");
+            SerializedProperty curve = segment.FindPropertyRelative("m_Curve");
+            rect.y += rect.height - singleLineHeight - verticalSpace;
+            rect.height = singleLineHeight;
+            float margin = 5f;
+            float width = (rect.width - margin) / 2;
+            rect.width = width;
+            EditorGUI.PropertyField(rect, duration);
+            rect.x += width + margin;
+            Color curveColor = animation.segmentIndex == index ? Color.red : Color.green;
+            Rect curveRect = new Rect(0, 0, 1, 1);
+            curve.animationCurveValue = EditorGUI.CurveField(rect, curve.animationCurveValue, curveColor, curveRect);
+            EditorGUIUtility.labelWidth = originalLabelWidth;
+        }
+        protected virtual Rect OnSegmentProperty(Rect rect, SerializedProperty segment)
+        {
+            return rect;
+        }
+
+        public sealed override void OnInspectorGUI()
+        {
+            serializedObject.Update();
+            GUI.enabled = false;
+            EditorGUILayout.ObjectField("Script", MonoScript.FromMonoBehaviour(target as MonoBehaviour), typeof(MonoScript), false);
+            GUI.enabled = true;
+
+            DrawController();
+
+            EditorGUILayout.PropertyField(m_Target);
+            DrawPropertiesUnderTarget();
+
+            EditorGUILayout.PropertyField(m_LoopMode);
+            EditorGUILayout.PropertyField(m_PlayOnAwake);
+            EditorGUILayout.PropertyField(m_RestartOnEnable);
+            EditorGUILayout.PropertyField(m_UpdateMode);
+            EditorGUILayout.PropertyField(m_SegmentIndex);
+
+            EditorGUILayout.FloatField("Time", animation.time);
+
+            DrawPropertiesAboveSegments();
+            segments.DoLayoutList();
+
+            serializedObject.ApplyModifiedProperties();
+        }
+        protected virtual void DrawController()
+        {
+            GUI.enabled = Application.isPlaying;
+            {
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("Play"))
+                {
+                    if (animation.status == Status.Idle || animation.status == Status.Stopped)
+                        animation.Play();
+                    else if (animation.status == Status.Paused)
+                        animation.Resume();
+                }
+                if (GUILayout.Button("Pause"))
+                {
+                    animation.Pause();
+                }
+                if (GUILayout.Button("Stop"))
+                {
+                    animation.Stop();
+                }
+                GUILayout.EndHorizontal();
+            }
+            GUI.enabled = false;
+            EditorGUILayout.EnumPopup("Status", animation.status);
+            GUI.enabled = true;
+        }
+        protected virtual void DrawPropertiesUnderTarget()
+        {
+
+        }
+        protected virtual void DrawPropertiesAboveSegments()
+        {
+
+        }
+
+        public override bool RequiresConstantRepaint()
+        {
+            return true;
+        }
+    }
+    
+    
+    public class MyComponent : MonoBehaviour
+    {
+        public int someValue;
+
+        public void MyButtonAction()
+        {
+            Debug.Log("Button clicked! Performing action...");
+            // 在这里添加你的功能逻辑
+        }
+    }
+
+}

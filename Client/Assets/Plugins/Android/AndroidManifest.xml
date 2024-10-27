@@ -4,7 +4,9 @@
     package="com.DefaultCompany.YFYouYou" >
 
     <uses-permission android:name="android.permission.INTERNET" />
-  <queries>
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+    <queries>
     <package android:name="com.eg.android.AlipayGphone" />
     <package android:name="hk.alipay.wallet" />
     <package android:name="com.tencent.mm" />

@@ -2,6 +2,7 @@ using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -60,6 +61,7 @@ namespace YouYou
         public static TaskManager Task { get; private set; }
         public static QualityManager Quality { get; private set; }
         public static SDKManager SDK { get; private set; }
+        public static SQLManager SQL { get; private set; }
         public static DialogueManager Dialogue { get; private set; }
         public static GuideManager Guide { get; private set; }
 
@@ -100,6 +102,7 @@ namespace YouYou
             Task = new TaskManager();
             Quality = new QualityManager();
             SDK = new SDKManager();
+            SQL = new SQLManager();
             Dialogue = new DialogueManager();
             Guide = new GuideManager();
 
@@ -116,20 +119,51 @@ namespace YouYou
             Audio.Init();
             Atlas.Init();
             SDK.Init();
+            SQL.Init();
             Dialogue.Init();
             Task.Init();
 
             InitNetTime();
-            InitGameData();
             //进入第一个流程
             Procedure.ChangeState(ProcedureState.Launch);
+            
+            Dictionary<(KeyCode, KeyCode?), Action> keyMappings = new Dictionary<(KeyCode, KeyCode?), Action>
+            {
+                {(KeyCode.Keypad1, KeyCode.LeftControl), Test1},
+                {(KeyCode.Keypad2, KeyCode.LeftControl), Test2},
+                {(KeyCode.Keypad3, KeyCode.LeftControl), Test3},
+                {(KeyCode.Keypad4, KeyCode.LeftControl), Test4}
+            };
+            StopCoroutine(GameUtil.CheckKeys(keyMappings));
+            StartCoroutine(GameUtil.CheckKeys(keyMappings));
+
+            ViewQueueManager.Instance.RegisterEvents();
         }
 
-
-
-        void InitGameData()
+        private void Test1()
         {
-            Player.InitGameData();
+            QueueManager.Instance.AddEventTask("Hello","CloseHello");
+        }
+        
+        private void Test2()
+        {
+            QueueManager.Instance.AddTimeTask(1f, () =>
+            {
+                GameUtil.LogError("你好");
+            }, () =>
+            {
+                GameUtil.LogError("结束，跳转下一个队列");
+            });
+        }
+        
+        private void Test3()
+        {
+            GameEntry.Event.Dispatch(Constants.EventName.EventMessage,new EventMessage("CloseHello"));
+        }
+        
+        private void Test4()
+        {
+            
         }
 
         void InitNetTime()

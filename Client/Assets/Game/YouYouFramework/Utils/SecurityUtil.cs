@@ -110,23 +110,20 @@ public sealed class SecurityUtil
         }
     }
 
-    public static Dictionary<string, string> GetSecretKeyDic(string type)
+    public static Dictionary<string, string> GetSecretKeyDic()
     {
         Dictionary<string, string> dic = new Dictionary<string, string>();
         string decryptedData = null;
-        if (type == "editor")
+#if UNITY_EDITOR
+        string fullSavePath = Path.Combine(Application.dataPath, "PackageTool/SecretKey.bytes");
+        if (File.Exists(fullSavePath))
         {
-            string fullSavePath = Path.Combine(Application.dataPath, "PackageTool/SecretKey.bytes");
-            if (File.Exists(fullSavePath))
-            {
-                // 读取 .bytes 文件的内容
-                byte[] bytes = File.ReadAllBytes(fullSavePath);
-                decryptedData = DecryptSecretKey(bytes);
-            }
+            // 读取 .bytes 文件的内容
+            byte[] bytes = File.ReadAllBytes(fullSavePath);
+            decryptedData = DecryptSecretKey(bytes);
         }
-        else
-        {
-            string fullSavePath = "Assets/PackageTool/TencentCloudKey.bytes";
+#else
+            string fullSavePath = "Assets/PackageTool/SecretKey.bytes";
             AssetReferenceEntity referenceEntity = GameEntry.Loader.LoadMainAsset(fullSavePath);
             if (referenceEntity != null)
             {
@@ -134,18 +131,44 @@ public sealed class SecurityUtil
                 AutoReleaseHandle.Add(referenceEntity, null);
                 decryptedData = DecryptSecretKey(obj.bytes);
             }
-        }
+#endif
+
         if (decryptedData != null)
         {
             dic = JsonConvert.DeserializeObject<Dictionary<string, string>>(decryptedData);
-            // foreach (var pair in dic)
-            // {
-            //     GameUtil.LogError($"{pair.Key}---{pair.Value}");
-            // }
         }
         return dic;
     }
 
+    public static Dictionary<string, string> GetSqlKeyDic()
+    {
+        Dictionary<string, string> dic = new Dictionary<string, string>();
+        string decryptedData = null;
+#if UNITY_EDITOR
+        string fullSavePath = Path.Combine(Application.dataPath, "PackageTool/SqlKey.bytes");
+        if (File.Exists(fullSavePath))
+        {
+            // 读取 .bytes 文件的内容
+            byte[] bytes = File.ReadAllBytes(fullSavePath);
+            decryptedData = DecryptSecretKey(bytes);
+        }
+#else
+            string fullSavePath = "Assets/PackageTool/SqlKey.bytes";
+            AssetReferenceEntity referenceEntity = GameEntry.Loader.LoadMainAsset(fullSavePath);
+            if (referenceEntity != null)
+            {
+                TextAsset obj = UnityEngine.Object.Instantiate(referenceEntity.Target as TextAsset);
+                AutoReleaseHandle.Add(referenceEntity, null);
+                decryptedData = DecryptSecretKey(obj.bytes);
+            }
+#endif
+        if (decryptedData != null)
+        {
+            dic = JsonConvert.DeserializeObject<Dictionary<string, string>>(decryptedData);
+        }
+        return dic;
+    }
+    
     // 解密 AES 加密的数据
     public static string DecryptSecretKey(byte[] cipherText)
     {
@@ -173,24 +196,22 @@ public sealed class SecurityUtil
         }
     }
 
-    // 从字节数组解析和解密数据
-    public static (string secretId, string secretKey) ParseTencentCloudKeyFile(byte[] fileData)
+    
+    // 使用 SHA256 哈希密码并返回 Base64 编码的字符串。
+    public static string GetBase64Key(string password)
     {
-        using (MemoryStream ms = new MemoryStream(fileData))
-        using (BinaryReader reader = new BinaryReader(ms))
+        using (var sha256 = SHA256.Create())
         {
-            // 读取 SecretId
-            int secretIdLength = reader.ReadInt32();
-            byte[] encryptedSecretId = reader.ReadBytes(secretIdLength);
-            string secretId = DecryptSecretKey(encryptedSecretId);
-
-            // 读取 SecretKey
-            int secretKeyLength = reader.ReadInt32();
-            byte[] encryptedSecretKey = reader.ReadBytes(secretKeyLength);
-            string secretKey = DecryptSecretKey(encryptedSecretKey);
-
-            return (secretId, secretKey);
+            byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
+            byte[] hashedBytes = sha256.ComputeHash(passwordBytes);
+            return Convert.ToBase64String(hashedBytes);
         }
+    }
+
+    // 将输入的明文密码转换为 Base64 编码的哈希密码。
+    public static string ConvertBase64Key(string plainPassword)
+    {
+        return GetBase64Key(plainPassword);
     }
     
 }
