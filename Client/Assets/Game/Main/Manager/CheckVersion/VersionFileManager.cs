@@ -69,7 +69,7 @@ namespace Main
         /// <summary>
         /// 初始化CDN的版本文件信息
         /// </summary>
-        public void InitCDNVersionFile(Action onInitComplete)
+        public void InitCDNVersionFile(Action<string> onInitComplete)
         {
             StringBuilder sbr = StringHelper.PoolNew();
             string url = sbr.AppendFormatNoGC("{0}{1}", SystemModel.Instance.CurrChannelConfig.RealSourceUrl, YFConstDefine.VersionFileName).ToString();
@@ -95,7 +95,7 @@ namespace Main
                         m_LocalAssetsVersionDic = GetAssetBundleVersionList(ref m_LocalAssetsVersion);
                         MainEntry.Log(MainEntry.LogCategory.Assets, "OnInitLocalVersionFile");
                     }
-                    onInitComplete?.Invoke();
+                    onInitComplete?.Invoke(m_CDNVersion);
                 }
                 else
                 {

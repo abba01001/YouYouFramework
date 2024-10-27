@@ -2,7 +2,10 @@ using HybridCLR;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Main
 {
@@ -16,7 +19,7 @@ namespace Main
             System.Data.AcceptRejectRule acceptRejectRule = System.Data.AcceptRejectRule.None;
             System.Net.WebSockets.WebSocketReceiveResult webSocketReceiveResult = null;
         }
-        public void Init()
+        public async Task Init()
         {
 #if EDITORLOAD
             GameObject gameEntry = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Game/Download/Hotfix/GameEntry.prefab");
@@ -24,8 +27,31 @@ namespace Main
             return;
 #endif
             //初始化CDN的VersionFile信息
-            MainEntry.Assets.VersionFile.InitCDNVersionFile(() =>
+            while (SystemModel.Instance.CurrChannelConfig.SourceVersion == "")
             {
+                await Task.Delay(100);
+            }
+            if (string.IsNullOrEmpty(PlayerPrefs.GetString("apkVersion")))
+            {
+                PlayerPrefs.SetString("apkVersion","0.0.0"); // 替换为实际版本号
+            }
+            MainEntry.Assets.VersionFile.InitCDNVersionFile((string cloudVersion) =>
+            {
+                MainEntry.LogError(MainEntry.LogCategory.Assets,$"======本地版本{PlayerPrefs.GetString("apkVersion")}======云端版本{cloudVersion}");
+                //先校验游戏版本
+                
+                
+#if UNITY_EDITOR
+                PlayerPrefs.SetString("apkVersion", cloudVersion); // 替换为实际版本号
+                PlayerPrefs.Save();
+#else
+                DownLoadApk dl = new DownLoadApk();
+                if (dl.CheckDownLoadApk(cloudVersion))
+                {
+                    return;
+                }
+#endif
+
                 //下载并加载热更程序集
                 CheckAndDownload(YFConstDefine.HotfixAssetBundlePath, (string fileUrl) =>
                 {
@@ -85,6 +111,80 @@ namespace Main
                 LoadImageErrorCode err = RuntimeApi.LoadMetadataForAOTAssembly(dllBytes, mode);
             }
             MainEntry.Log(MainEntry.LogCategory.Assets, "补充元数据Dll加载完毕==" + aotMetaAssemblyFiles.ToJson());
+        }
+    }
+
+    public class DownLoadApk
+    {
+        private string apkFileName = "Demo.apk"; // APK 文件名，放在 StreamingAssets 中
+        public bool CheckDownLoadApk(string cloudVersion)
+        {
+            string localVersion = PlayerPrefs.GetString("apkVersion", string.Empty);
+            if (!string.IsNullOrEmpty(localVersion) && !string.IsNullOrEmpty(cloudVersion))
+            {
+                string[] part1 = localVersion.Split('.');
+                string localApkVersion = part1[0];
+                
+                string[] part2 = cloudVersion.Split('.');
+                string cloudApkVersion = part2[0];
+
+                if (localApkVersion != cloudApkVersion)
+                {
+                    //直接下载整包
+                    MainEntry.Instance.StartCoroutine(DownloadAndInstall(SystemModel.Instance.CurrChannelConfig.ApkUrl,cloudVersion));
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        public IEnumerator DownloadAndInstall(string url,string cloudVersion)
+        {
+            using (UnityWebRequest www = UnityWebRequest.Get(url))
+            {
+                string tempPath = Path.Combine(Application.persistentDataPath, apkFileName);
+                if (File.Exists(tempPath))
+                {
+                    MainEntry.LogError(MainEntry.LogCategory.Assets, "找到本地安装包,直接安装。");
+                    InstallAPKInternal(tempPath);
+                }
+                
+                www.SendWebRequest();
+                // 循环检查进度
+                while (!www.isDone)
+                {
+                    //MainEntry.LogError(MainEntry.LogCategory.Assets,$"下载进度: {www.downloadProgress * 100}%");
+                    yield return null; // 等待下一帧
+                }
+
+                if (www.result == UnityWebRequest.Result.ConnectionError ||
+                    www.result == UnityWebRequest.Result.ProtocolError)
+                {
+                    MainEntry.LogError(MainEntry.LogCategory.Assets,www.error);
+                }
+                else
+                {
+                    // 将 APK 数据保存到临时文件
+                    if (File.Exists(tempPath)) File.Delete(tempPath);
+                    File.WriteAllBytes(tempPath, www.downloadHandler.data);
+                    // 调用内部安装方法
+                    if (InstallAPKInternal(tempPath))
+                    {
+                        PlayerPrefs.SetString("apkVersion", cloudVersion); // 替换为实际版本号
+                        PlayerPrefs.Save();
+                    }
+                    else
+                    {
+                        Application.Quit();
+                    }
+                }
+            }
+        }
+
+        private bool InstallAPKInternal(string apkPath)
+        {
+            AndroidJavaClass javaClass = new AndroidJavaClass("com.example.mylibrary.Install");
+            return javaClass.CallStatic<bool>("安装apk", apkPath);
         }
     }
 }

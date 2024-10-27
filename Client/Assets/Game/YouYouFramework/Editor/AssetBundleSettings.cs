@@ -137,7 +137,25 @@ public class AssetBundleSettings : ScriptableObject
     [LabelText("上传资源到云端")]
     public void UpdateLoadAssetBundle()
     {
-        COSUploader.UploadAB();
+        COSUploader.UploadAB(AssetVersion,GetUploadPath());
+    }
+
+    private string GetUploadPath()
+    {
+        string path = "";
+        switch (CurrBuildTarget)
+        {
+            default:
+            case CusBuildTarget.Windows:
+                path = "/Unity/AssetBundle/"+ AssetVersion+"/"+ "Windows"+ "/";
+                break;
+            case CusBuildTarget.Android:
+                path = "/Unity/AssetBundle/" + AssetVersion+"/" + "Android" + "/";
+                break;
+            case CusBuildTarget.IOS:
+                break;
+        }
+        return path;
     }
 
 

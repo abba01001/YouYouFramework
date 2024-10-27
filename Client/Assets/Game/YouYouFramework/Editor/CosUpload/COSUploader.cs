@@ -26,8 +26,35 @@ namespace YouYou
         private static UploadResultWindow uploadWindow;
         private static Stopwatch stopwatch;
         
+        public static async Task WriteAndUploadAPKVersion(CosXml cosXml, string version)
+        {
+            string localFilePath = Path.Combine(Application.persistentDataPath, "APKVersion.txt");
+            // 写入版本号到文件
+            using (StreamWriter writer = new StreamWriter(localFilePath, false))
+            {
+                await writer.WriteLineAsync(version);
+            }
+
+            string relativePath = Path.GetFileName(localFilePath);
+            using (FileStream fileStream = new FileStream(localFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                var dic = SecurityUtil.GetSecretKeyDic();
+                PutObjectRequest request = new PutObjectRequest(dic["bucket"], "APK/" + relativePath, fileStream);
+                request.SetSign(TimeUtils.GetCurrentTime(TimeUnit.Seconds), 600);
+                try
+                {
+                    await Task.Run(() => cosXml.PutObject(request));
+                }
+                catch (Exception ex)
+                {
+                    GameEntry.LogError($"{relativePath} 上传状态：<color=red>失败</color>，错误：{ex.Message}");
+                }
+            }
+        }
+
+
         
-        public static async void UploadAB()
+        public static async void UploadAB(string version,string uploadPath)
         {
             cosConfig = Resources.Load<CosConfig>("CosConfig");
             CosXml cosXml = CreateCosXml();
@@ -42,11 +69,12 @@ namespace YouYou
                 BuildTarget activeBuildTarget = EditorUserBuildSettings.activeBuildTarget;
 
                 // 设置基础文件夹
-                string baseFolder = Path.Combine(SettingsUtil.ProjectDir, "AssetBundles", PlayerPrefs.GetString(YFConstDefine.AssetVersion), GetPlatformOption(activeBuildTarget));
+                string baseFolder = Path.Combine(SettingsUtil.ProjectDir, "AssetBundles", version, GetPlatformOption(activeBuildTarget));
                 var dic = SecurityUtil.GetSecretKeyDic();
                 // 递归上传整个文件夹
-                await UploadFolderAsync(cosXml, dic["bucket"], cosConfig.cosABRoot, baseFolder);
-                
+                GameUtil.LogError("上传路径",uploadPath);
+                await UploadFolderAsync(cosXml, dic["bucket"], uploadPath, baseFolder);
+                await WriteAndUploadAPKVersion(cosXml,version);
                 string totalTime = $"所有文件上传完成，总耗时: {stopwatch.Elapsed.TotalSeconds:0.00} 秒";
                 uploadWindow.UpdateLog(successLog.ToString(), failureLog.ToString(), totalTime);
             }
@@ -146,7 +174,7 @@ namespace YouYou
                 .SetConnectionTimeoutMs(60000)  //设置连接超时时间，单位毫秒，默认45000ms
                 .SetReadWriteTimeoutMs(40000)  //设置读写超时时间，单位毫秒，默认45000ms
                 .IsHttps(true)  //设置默认 HTTPS 请求
-                .SetAppid(cosConfig.appid)
+                .SetAppid("1318826377")
                 .SetRegion(dic["region"])
                 .Build();
 

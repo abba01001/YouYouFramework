@@ -177,6 +177,50 @@ namespace Main
             onComplete?.Invoke("RequestFail");
         }
 
+        //临时处理下载文件
+        public async void DownAPKVersion(string url, int tryRequestCount,Action onUpdate,Action<string> onComplete)
+        {
+            int currentRetry = 0;
+            while (currentRetry < tryRequestCount)
+            {
+                using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
+                {
+                    try
+                    {
+                        onUpdate?.Invoke();
+                        await webRequest.SendWebRequest();
+                        if (webRequest.responseCode == 404)
+                        {
+                            onComplete?.Invoke("EmptyGameData");
+                            return;
+                        }
+                        if (webRequest.result == UnityWebRequest.Result.ConnectionError ||
+                            webRequest.result == UnityWebRequest.Result.ProtocolError)
+                        {
+                            currentRetry++;
+                            await UniTask.Delay(100); // 等待 0.1 秒
+                        }
+                        else
+                        {
+                            string result = webRequest.downloadHandler.text;
+                            MainEntry.Log(MainEntry.LogCategory.GameData, "成功拉取云端APKVersion.txt");
+                            onComplete?.Invoke(result);
+                            return;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        if (e.Message.Contains("404"))
+                        {
+                            onComplete?.Invoke("EmptyGameData");
+                            return;
+                        }
+                    }
+                }
+            }
+            onComplete?.Invoke("RequestFail");
+        }
+        
         public async void GetServerTime(string url, int tryRequestCount,Action onUpdate,Action<DateTime> onComplete)
         {
             int currentRetry = 0;

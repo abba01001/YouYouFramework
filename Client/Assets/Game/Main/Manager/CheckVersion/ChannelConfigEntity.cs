@@ -20,13 +20,15 @@ public class ChannelConfigEntity
     /// <summary>
     /// 资源版本号
     /// </summary>
-    public string SourceVersion = "1.0.0";
+    public string SourceVersion = "";
 
     /// <summary>
     /// 资源地址
     /// </summary>
     public string SourceUrl = "https://abab01001-1318826377.cos.ap-guangzhou.myqcloud.com/Unity/AssetBundle/";
     public string GameDataUrl = "https://abab01001-1318826377.cos.ap-guangzhou.myqcloud.com/Unity/GameData/";
+    public string APKVersionUrl = "https://abab01001-1318826377.cos.ap-guangzhou.myqcloud.com/APK/APKVersion.txt";
+    public string ApkUrl = "https://abab01001-1318826377.cos.ap-guangzhou.myqcloud.com/APK/Demo.apk";
     #region RealSourceUrl 真正的资源地址
     private string m_RealSourceUrl;
     /// <summary>

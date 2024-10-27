@@ -11,8 +11,6 @@ using YouYou;
 
 public class SDKManager : Observable<SDKManager>
 {
-    private static CosConfig cosConfig;
-
     public void Init()
     {
 
@@ -24,7 +22,6 @@ public class SDKManager : Observable<SDKManager>
     
     public async Task UploadGameData(string localFilePath)
     {
-        cosConfig = Resources.Load<CosConfig>("CosConfig");
         CosXml cosXml = CreateCosXml();
 
         string relativePath = Path.GetFileName(localFilePath); // 获取文件名
@@ -51,7 +48,7 @@ public class SDKManager : Observable<SDKManager>
             .SetConnectionTimeoutMs(60000)  //设置连接超时时间，单位毫秒，默认45000ms
             .SetReadWriteTimeoutMs(40000)  //设置读写超时时间，单位毫秒，默认45000ms
             .IsHttps(true)  //设置默认 HTTPS 请求
-            .SetAppid(cosConfig.appid)
+            .SetAppid("1318826377")
             .SetRegion(dic["region"])
             .Build();
 

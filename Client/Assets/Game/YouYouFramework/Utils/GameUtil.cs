@@ -6,6 +6,7 @@ using System;
 using System.Reflection;
 using YouYou;
 using Cysharp.Threading.Tasks;
+using Main;
 using Unity.VisualScripting;
 using UnityEngine.UI;
 
@@ -210,5 +211,26 @@ public class GameUtil
     {
         string combinedMessage = StringUtil.JointString(messages);
         Debug.LogError(combinedMessage);
+    }
+
+    public static string GetCosABRoot(string assetVersion)
+    {
+        RuntimePlatform platform = Application.platform;
+        GameUtil.LogError(platform);
+        string path = "";
+
+        switch (platform)
+        {
+            case RuntimePlatform.WindowsPlayer:
+                path = "/Unity/AssetBundle/"+ assetVersion+"/"+ "Windows"+ "/";
+                break;
+            case RuntimePlatform.Android:
+                path = "/Unity/AssetBundle/" + assetVersion+"/" + "Android" + "/";
+                break;
+            default:
+                Debug.Log("未知平台");
+                break;
+        }
+        return path;
     }
 }

@@ -73,6 +73,13 @@ namespace Main
             Retry = MainEntry.ParamsSettings.GetGradeParamData(YFConstDefine.Download_Retry, MainEntry.CurrDeviceGrade);
             DownloadRoutineCount = MainEntry.ParamsSettings.GetGradeParamData(YFConstDefine.Download_RoutineCount, MainEntry.CurrDeviceGrade);
             FlushSize = MainEntry.ParamsSettings.GetGradeParamData(YFConstDefine.Download_FlushSize, MainEntry.CurrDeviceGrade);
+            
+            GetAPKVersion(SystemModel.Instance.CurrChannelConfig.APKVersionUrl, null, (result) =>
+            {
+                // 获取第一行的版本号
+                string version = result.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)[0];
+                SystemModel.Instance.CurrChannelConfig.SourceVersion = version;
+            });
         }
 
         /// <summary>
@@ -102,6 +109,15 @@ namespace Main
         {
             DownloadRoutine routine = DownloadRoutine.Create();
             routine.DownloadGameData(url, 30,onUpdate, onComplete: (string fileUrl) =>
+            {
+                onComplete(fileUrl);
+            });
+        }
+        
+        public void GetAPKVersion(string url, Action onUpdate = null, Action<string> onComplete = null)
+        {
+            DownloadRoutine routine = DownloadRoutine.Create();
+            routine.DownAPKVersion(url, 30,onUpdate, onComplete: (string fileUrl) =>
             {
                 onComplete(fileUrl);
             });
