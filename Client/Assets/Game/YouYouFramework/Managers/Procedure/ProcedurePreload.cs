@@ -63,6 +63,7 @@ namespace YouYou
                 }
 
                 //先走登录
+                //访问数据库，连接服务器
                 if (Constants.IsLoginGame)
                 {
                     GameEntry.UI.CloseUIForm<FormLogin>();

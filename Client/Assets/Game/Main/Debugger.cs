@@ -4,7 +4,7 @@ public class Debugger : MonoBehaviour
 {
     private string logContent = "";  // 用于存储日志
     private Vector2 scrollPosition;  // 滚动条位置
-    private bool showLogWindow = true;  // 控制日志窗口的显示
+    private bool showLogWindow = false;  // 控制日志窗口的显示
     private GUIStyle logStyle;  // 用于设置字体样式
     private const float scrollSpeed = 10f;  // 滚动速度限制
 

@@ -54,7 +54,6 @@ namespace YouYou
 // 初始化数据库连接
     public void Init()
     {
-        return;
         string connectionString = $"Server={SecurityUtil.GetSqlKeyDic()["Server"]};Database={SecurityUtil.GetSqlKeyDic()["Database"]};" +
                                   $"User ID={SecurityUtil.GetSqlKeyDic()["User ID"]};Password={SecurityUtil.GetSqlKeyDic()["Password"]};" +
                                   $"Port={SecurityUtil.GetSqlKeyDic()["Port"]};charset=utf8mb4";
