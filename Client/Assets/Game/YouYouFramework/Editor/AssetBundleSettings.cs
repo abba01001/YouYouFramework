@@ -27,7 +27,7 @@ public class AssetBundleSettings : ScriptableObject
     string keyPassword = "FrameWork";
     #endregion
 
-
+    [PropertySpace(2)]
     [HorizontalGroup("Common", LabelWidth = 75)]
     [VerticalGroup("Common/Left")]
     [LabelText("资源版本号")]
@@ -56,10 +56,11 @@ public class AssetBundleSettings : ScriptableObject
     [VerticalGroup("Common/Left")]
     [LabelText("参数")]
     public BuildAssetBundleOptions Options;
-
+    
     [PropertySpace(6)]
     [VerticalGroup("Common/Left")]
     [LabelText("出包路径")]
+    [ReadOnly] // 如果你有定义 ReadOnly 特性，可以用这个来显示为只读
     public string PublishPath;
     
     [VerticalGroup("Common/Right")]
@@ -137,6 +138,7 @@ public class AssetBundleSettings : ScriptableObject
     [LabelText("上传资源到云端")]
     public void UpdateLoadAssetBundle()
     {
+        COSUploader.UploadVersion(AssetVersion);
         COSUploader.UploadAB(AssetVersion,GetUploadPath());
     }
 
@@ -184,6 +186,7 @@ public class AssetBundleSettings : ScriptableObject
             target = BuildTarget.Android,
             options = BuildOptions.CompressWithLz4
         };
+        COSUploader.UploadVersion(AssetVersion);
         BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
         BuildSummary summary = report.summary;
         if (summary.result == BuildResult.Succeeded)
@@ -680,6 +683,17 @@ public class AssetBundleSettings : ScriptableObject
         }
     }
 
+    private void OnEnable()
+    {
+        PublishPath = $"C:/Users/A1-0990/Desktop/APK/{AssetVersion}.apk";
+    }
+    
+    private void OnValidate()
+    {
+        PublishPath = $"C:/Users/A1-0990/Desktop/APK/{AssetVersion}.apk";
+    }
+
+    
     private string[] GetValidateFiles(FileInfo[] arrFiles)
     {
         List<string> lst = new List<string>();
@@ -697,7 +711,7 @@ public class AssetBundleSettings : ScriptableObject
         return lst.ToArray();
     }
 
-    [LabelText("输出APK并上传云端")]
+    [LabelText("勾选出包时自动上传云端")]
     public bool IsUploadAPK;
     
 

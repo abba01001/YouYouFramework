@@ -26,15 +26,27 @@ namespace YouYou
         private static UploadResultWindow uploadWindow;
         private static Stopwatch stopwatch;
         
-        public static async Task WriteAndUploadAPKVersion(CosXml cosXml, string version)
+        public static async Task UploadVersion(string sourceVersion)
         {
+            CosXml cosXml = CreateCosXml();
             string localFilePath = Path.Combine(Application.persistentDataPath, "APKVersion.txt");
-            // 写入版本号到文件
+            string[] versionParts = sourceVersion.Split('.');
+            string apkVersion = versionParts[0] + ".0.0"; 
             using (StreamWriter writer = new StreamWriter(localFilePath, false))
             {
-                await writer.WriteLineAsync(version);
+                await writer.WriteLineAsync(apkVersion);
+                await writer.WriteLineAsync(sourceVersion);
             }
 
+            
+            // 将版本信息写入 Resources 资源
+            string resourcesVersionFilePath = Path.Combine(Application.dataPath, "Resources", "version.txt");
+            using (StreamWriter writer = new StreamWriter(resourcesVersionFilePath, false))
+            {
+                await writer.WriteLineAsync(apkVersion);
+                await writer.WriteLineAsync(sourceVersion);
+            }
+            
             string relativePath = Path.GetFileName(localFilePath);
             using (FileStream fileStream = new FileStream(localFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
@@ -95,7 +107,6 @@ namespace YouYou
                 // 递归上传整个文件夹
                 GameUtil.LogError("上传路径",uploadPath);
                 await UploadFolderAsync(cosXml, dic["bucket"], uploadPath, baseFolder);
-                await WriteAndUploadAPKVersion(cosXml,version);
                 string totalTime = $"所有文件上传完成，总耗时: {stopwatch.Elapsed.TotalSeconds:0.00} 秒";
                 uploadWindow.UpdateLog(successLog.ToString(), failureLog.ToString(), totalTime);
             }

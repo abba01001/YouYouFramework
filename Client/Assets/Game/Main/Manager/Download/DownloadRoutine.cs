@@ -203,7 +203,8 @@ namespace Main
                         else
                         {
                             string result = webRequest.downloadHandler.text;
-                            MainEntry.Log(MainEntry.LogCategory.GameData, "成功拉取云端APKVersion.txt");
+                            MainEntry.Log(MainEntry.LogCategory.GameData, "成功拉取云端APKVersion.txt \n" +
+                                                                          $"{result}");
                             onComplete?.Invoke(result);
                             return;
                         }

@@ -19,51 +19,71 @@ namespace Main
             System.Data.AcceptRejectRule acceptRejectRule = System.Data.AcceptRejectRule.None;
             System.Net.WebSockets.WebSocketReceiveResult webSocketReceiveResult = null;
         }
-        public async Task Init()
+        public void Init()
         {
 #if EDITORLOAD
             GameObject gameEntry = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Game/Download/Hotfix/GameEntry.prefab");
             UnityEngine.Object.Instantiate(gameEntry);
             return;
 #endif
-            
             MainEntry.Download.GetAPKVersion(SystemModel.Instance.CurrChannelConfig.APKVersionUrl, null, (result) =>
             {
-                // 获取第一行的版本号
-                string version = result.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)[0];
-                SystemModel.Instance.CurrChannelConfig.SourceVersion = version;
-                InitDefaultVersion();
-                CheckVersion();
+                InitServerVersion(result);
+                InitLocalVersion();
+                CompareVersion();
             });
-
         }
 
-        private void CheckVersion()
+        private void InitServerVersion(string result)
+        {
+            string apkVersion = result.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)[0];
+            string sourceVersion = result.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)[1];
+            SystemModel.Instance.CurrChannelConfig.APKVersion = apkVersion;
+            SystemModel.Instance.CurrChannelConfig.SourceVersion = sourceVersion;
+        }
+               
+        private void InitLocalVersion()
+        {
+            TextAsset versionFile = Resources.Load<TextAsset>("version"); // 不带后缀名
+            if (versionFile != null)
+            {
+                string version = versionFile.text;
+                string[] versionLines = version.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+                if (versionLines.Length >= 2)
+                {
+                    string apkVersion = versionLines[0]; // 第一行
+                    string sourceVersion = versionLines[1]; // 第二行
+                    PlayerPrefs.SetString("apkVersion",apkVersion);
+                    PlayerPrefs.SetString("sourceVersion",sourceVersion);
+                }
+            }
+        }
+
+        
+        private void CompareVersion()
         {
             //初始化CDN的VersionFile信息
-            MainEntry.Assets.VersionFile.InitCDNVersionFile((string cloudVersion) =>
+            MainEntry.Assets.VersionFile.InitCDNVersionFile(() =>
             {
-                MainEntry.LogError(MainEntry.LogCategory.Assets,
-                    $"======本地版本{PlayerPrefs.GetString("localVersion")}======云端版本{cloudVersion}");
-                //先校验游戏版本
-
+                MainEntry.LogError(MainEntry.LogCategory.Assets,$"===本地apk{PlayerPrefs.GetString("apkVersion")}和资源{PlayerPrefs.GetString("sourceVersion")}" +
+                                                                $"===云端apk{SystemModel.Instance.CurrChannelConfig.APKVersion}和资源{SystemModel.Instance.CurrChannelConfig.SourceVersion}");
 #if UNITY_EDITOR
-                PlayerPrefs.SetString("localVersion", cloudVersion); // 替换为实际版本号
+                PlayerPrefs.SetString("sourceVersion", SystemModel.Instance.CurrChannelConfig.SourceVersion);
+                PlayerPrefs.SetString("apkVersion", SystemModel.Instance.CurrChannelConfig.APKVersion);
                 PlayerPrefs.Save();
 #else
+                //校验游戏版本
                 DownLoadApk dl = new DownLoadApk();
-                if (dl.CheckDownLoadApk(cloudVersion))
+                if (dl.CheckDownLoadApk())
                 {
                     return;
                 }
 #endif
-
                 //下载并加载热更程序集
                 CheckAndDownload(YFConstDefine.HotfixAssetBundlePath, (string fileUrl) =>
                 {
 #if !UNITY_EDITOR
-                    hotfixAb =
- AssetBundle.LoadFromFile(string.Format("{0}/{1}", Application.persistentDataPath, fileUrl));
+                    hotfixAb = AssetBundle.LoadFromFile(string.Format("{0}/{1}", Application.persistentDataPath, fileUrl));
                     LoadMetadataForAOTAssemblies();
                     System.Reflection.Assembly.Load(hotfixAb.LoadAsset<TextAsset>("Assembly-CSharp.dll.bytes").bytes);
                     MainEntry.Log(MainEntry.LogCategory.Assets, "Assembly-CSharp.dll加载完毕");
@@ -76,15 +96,7 @@ namespace Main
                 });
             });
         }
-        
-        private void InitDefaultVersion()
-        {
-            if (string.IsNullOrEmpty(PlayerPrefs.GetString("localVersion")))
-            {
-                PlayerPrefs.SetString("localVersion",SystemModel.Instance.CurrChannelConfig.DefaultVersion);//第一次安装没有版本号，给个默认值
-            }
-        }
-        
+ 
         private void CheckAndDownload(string url, Action<string> onComplete)
         {
             bool isEquals = MainEntry.Assets.CheckVersionChangeSingle(url);
@@ -131,33 +143,28 @@ namespace Main
 
     public class DownLoadApk
     {
-        private string apkFileName = "Demo.apk"; // APK 文件名，放在 StreamingAssets 中
-        public bool CheckDownLoadApk(string cloudVersion)
+        private string apkFileName = "{0}.apk"; // APK 文件名，放在 StreamingAssets 中
+        public bool CheckDownLoadApk()
         {
-            string localVersion = PlayerPrefs.GetString("localVersion", string.Empty);
-            if (!string.IsNullOrEmpty(localVersion) && !string.IsNullOrEmpty(cloudVersion))
+            string localApk = PlayerPrefs.GetString("apkVersion", string.Empty);
+            string cloudApk = SystemModel.Instance.CurrChannelConfig.APKVersion;
+            if (!string.IsNullOrEmpty(localApk) && !string.IsNullOrEmpty(cloudApk))
             {
-                string[] part1 = localVersion.Split('.');
-                string localApkVersion = part1[0];
-                
-                string[] part2 = cloudVersion.Split('.');
-                string cloudApkVersion = part2[0];
-
-                if (localApkVersion != cloudApkVersion)
+                if (localApk != cloudApk)
                 {
                     //直接下载整包
-                    MainEntry.Instance.StartCoroutine(DownloadAndInstall(SystemModel.Instance.CurrChannelConfig.ApkUrl,cloudVersion));
+                    MainEntry.Instance.StartCoroutine(DownloadAndInstall(string.Format(SystemModel.Instance.CurrChannelConfig.ApkUrl,cloudApk)));
                     return true;
                 }
             }
             return false;
         }
         
-        public IEnumerator DownloadAndInstall(string url,string cloudVersion)
+        public IEnumerator DownloadAndInstall(string url)
         {
             using (UnityWebRequest www = UnityWebRequest.Get(url))
             {
-                string tempPath = Path.Combine(Application.persistentDataPath, apkFileName);
+                string tempPath = Path.Combine(Application.persistentDataPath,string.Format(apkFileName,SystemModel.Instance.CurrChannelConfig.APKVersion));
                 if (File.Exists(tempPath))
                 {
                     MainEntry.LogError(MainEntry.LogCategory.Assets, "找到本地安装包,直接安装。");
@@ -168,8 +175,8 @@ namespace Main
                 // 循环检查进度
                 while (!www.isDone)
                 {
-                    //MainEntry.LogError(MainEntry.LogCategory.Assets,$"下载进度: {www.downloadProgress * 100}%");
-                    yield return null; // 等待下一帧
+                    MainEntry.LogError(MainEntry.LogCategory.Assets,$"下载进度: {www.downloadProgress * 100}%");
+                    yield return new WaitForSeconds(0.5f);
                 }
 
                 if (www.result == UnityWebRequest.Result.ConnectionError ||
@@ -185,7 +192,8 @@ namespace Main
                     // 调用内部安装方法
                     if (InstallAPKInternal(tempPath))
                     {
-                        PlayerPrefs.SetString("localVersion", cloudVersion); // 替换为实际版本号
+                        PlayerPrefs.SetString("apkVersion",SystemModel.Instance.CurrChannelConfig.APKVersion);
+                        PlayerPrefs.SetString("sourceVersion",SystemModel.Instance.CurrChannelConfig.SourceVersion);
                         PlayerPrefs.Save();
                     }
                     else

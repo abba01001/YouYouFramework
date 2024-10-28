@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01aecc1a1ad5afc4f9289263945c2a5d, type: 3}
   m_Name: AssetBundleSettings
   m_EditorClassIdentifier: 
-  AssetVersion: 1.0.0
+  AssetVersion: 2.0.0
   CurrBuildTarget: 1
   Options: 272
-  PublishPath: C:/Users/A1-0990/Desktop/APK/Demo.apk
+  PublishPath: C:/Users/A1-0990/Desktop/APK/2.0.0.apk
   IsUploadAPK: 1
   AssetBundleSavePath: AssetBundles
   IsCanEditor: 1
