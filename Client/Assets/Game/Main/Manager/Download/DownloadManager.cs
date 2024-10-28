@@ -73,13 +73,6 @@ namespace Main
             Retry = MainEntry.ParamsSettings.GetGradeParamData(YFConstDefine.Download_Retry, MainEntry.CurrDeviceGrade);
             DownloadRoutineCount = MainEntry.ParamsSettings.GetGradeParamData(YFConstDefine.Download_RoutineCount, MainEntry.CurrDeviceGrade);
             FlushSize = MainEntry.ParamsSettings.GetGradeParamData(YFConstDefine.Download_FlushSize, MainEntry.CurrDeviceGrade);
-            
-            GetAPKVersion(SystemModel.Instance.CurrChannelConfig.APKVersionUrl, null, (result) =>
-            {
-                // 获取第一行的版本号
-                string version = result.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)[0];
-                SystemModel.Instance.CurrChannelConfig.SourceVersion = version;
-            });
         }
 
         /// <summary>

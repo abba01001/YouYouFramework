@@ -52,7 +52,28 @@ namespace YouYou
             }
         }
 
-
+        public static async Task UploadAPK(string apkFilePath)
+        {
+            // 获取APK文件名
+            CosXml cosXml = CreateCosXml();
+            string apkFileName = Path.GetFileName(apkFilePath);
+            using (FileStream fileStream = new FileStream(apkFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                var dic = SecurityUtil.GetSecretKeyDic();
+                PutObjectRequest request = new PutObjectRequest(dic["bucket"], "APK/" + apkFileName, fileStream);
+                request.SetSign(TimeUtils.GetCurrentTime(TimeUnit.Seconds), 600);
+        
+                try
+                {
+                    await Task.Run(() => cosXml.PutObject(request));
+                    EditorUtility.DisplayDialog("上传至云端", "APK上传成功！", "确定");
+                }
+                catch (Exception ex)
+                {
+                    GameEntry.LogError($"{apkFileName} 上传状态：<color=red>失败</color>，错误：{ex.Message}");
+                }
+            }
+        }
         
         public static async void UploadAB(string version,string uploadPath)
         {

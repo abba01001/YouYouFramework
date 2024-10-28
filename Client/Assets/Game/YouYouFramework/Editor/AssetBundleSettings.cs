@@ -177,7 +177,6 @@ public class AssetBundleSettings : ScriptableObject
         
         //这里能不能弹出一个窗口，然后选择添加场景？
         string[] scenes = { "Assets/Game/Scene_Launch.unity" };
-        string buildPath = "Builds/Android/GameBuild.apk";
         BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions
         {
             scenes = scenes,
@@ -190,6 +189,7 @@ public class AssetBundleSettings : ScriptableObject
         if (summary.result == BuildResult.Succeeded)
         {
             EditorUtility.DisplayDialog("打包成功", "APK 已成功生成！", "确定");
+            if (IsUploadAPK) COSUploader.UploadAPK(PublishPath);
             string directoryPath = Path.GetDirectoryName(PublishPath); // 获取文件夹路径
             System.Diagnostics.Process.Start("explorer.exe", directoryPath);
         }
@@ -697,6 +697,9 @@ public class AssetBundleSettings : ScriptableObject
         return lst.ToArray();
     }
 
+    [LabelText("输出APK并上传云端")]
+    public bool IsUploadAPK;
+    
 
     [LabelText("资源包保存路径")]
     [FolderPath]

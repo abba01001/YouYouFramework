@@ -26,23 +26,29 @@ namespace Main
             UnityEngine.Object.Instantiate(gameEntry);
             return;
 #endif
+            
+            MainEntry.Download.GetAPKVersion(SystemModel.Instance.CurrChannelConfig.APKVersionUrl, null, (result) =>
+            {
+                // 获取第一行的版本号
+                string version = result.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)[0];
+                SystemModel.Instance.CurrChannelConfig.SourceVersion = version;
+                InitDefaultVersion();
+                CheckVersion();
+            });
+
+        }
+
+        private void CheckVersion()
+        {
             //初始化CDN的VersionFile信息
-            while (SystemModel.Instance.CurrChannelConfig.SourceVersion == "")
-            {
-                await Task.Delay(100);
-            }
-            if (string.IsNullOrEmpty(PlayerPrefs.GetString("apkVersion")))
-            {
-                PlayerPrefs.SetString("apkVersion","0.0.0"); // 替换为实际版本号
-            }
             MainEntry.Assets.VersionFile.InitCDNVersionFile((string cloudVersion) =>
             {
-                MainEntry.LogError(MainEntry.LogCategory.Assets,$"======本地版本{PlayerPrefs.GetString("apkVersion")}======云端版本{cloudVersion}");
+                MainEntry.LogError(MainEntry.LogCategory.Assets,
+                    $"======本地版本{PlayerPrefs.GetString("localVersion")}======云端版本{cloudVersion}");
                 //先校验游戏版本
-                
-                
+
 #if UNITY_EDITOR
-                PlayerPrefs.SetString("apkVersion", cloudVersion); // 替换为实际版本号
+                PlayerPrefs.SetString("localVersion", cloudVersion); // 替换为实际版本号
                 PlayerPrefs.Save();
 #else
                 DownLoadApk dl = new DownLoadApk();
@@ -56,20 +62,29 @@ namespace Main
                 CheckAndDownload(YFConstDefine.HotfixAssetBundlePath, (string fileUrl) =>
                 {
 #if !UNITY_EDITOR
-                    hotfixAb = AssetBundle.LoadFromFile(string.Format("{0}/{1}", Application.persistentDataPath, fileUrl));
+                    hotfixAb =
+ AssetBundle.LoadFromFile(string.Format("{0}/{1}", Application.persistentDataPath, fileUrl));
                     LoadMetadataForAOTAssemblies();
                     System.Reflection.Assembly.Load(hotfixAb.LoadAsset<TextAsset>("Assembly-CSharp.dll.bytes").bytes);
                     MainEntry.Log(MainEntry.LogCategory.Assets, "Assembly-CSharp.dll加载完毕");
 #else
-                    hotfixAb = AssetBundle.LoadFromFile(string.Format("{0}/{1}", Application.persistentDataPath, fileUrl));
+                    hotfixAb = AssetBundle.LoadFromFile(string.Format("{0}/{1}", Application.persistentDataPath,
+                        fileUrl));
 #endif
                     UnityEngine.Object.Instantiate(hotfixAb.LoadAsset<GameObject>("formcheckversion.prefab"));
                     UnityEngine.Object.Instantiate(hotfixAb.LoadAsset<GameObject>("gameentry.prefab"));
                 });
             });
-
         }
-
+        
+        private void InitDefaultVersion()
+        {
+            if (string.IsNullOrEmpty(PlayerPrefs.GetString("localVersion")))
+            {
+                PlayerPrefs.SetString("localVersion",SystemModel.Instance.CurrChannelConfig.DefaultVersion);//第一次安装没有版本号，给个默认值
+            }
+        }
+        
         private void CheckAndDownload(string url, Action<string> onComplete)
         {
             bool isEquals = MainEntry.Assets.CheckVersionChangeSingle(url);
@@ -119,7 +134,7 @@ namespace Main
         private string apkFileName = "Demo.apk"; // APK 文件名，放在 StreamingAssets 中
         public bool CheckDownLoadApk(string cloudVersion)
         {
-            string localVersion = PlayerPrefs.GetString("apkVersion", string.Empty);
+            string localVersion = PlayerPrefs.GetString("localVersion", string.Empty);
             if (!string.IsNullOrEmpty(localVersion) && !string.IsNullOrEmpty(cloudVersion))
             {
                 string[] part1 = localVersion.Split('.');
@@ -170,7 +185,7 @@ namespace Main
                     // 调用内部安装方法
                     if (InstallAPKInternal(tempPath))
                     {
-                        PlayerPrefs.SetString("apkVersion", cloudVersion); // 替换为实际版本号
+                        PlayerPrefs.SetString("localVersion", cloudVersion); // 替换为实际版本号
                         PlayerPrefs.Save();
                     }
                     else
