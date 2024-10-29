@@ -17,6 +17,7 @@ public class FormLogin : UIFormBase
     protected override void Awake()
     {
         base.Awake();
+        GameEntry.SQL.InitConnect();
         loginBtn.SetButtonClick(Login);
     }
 

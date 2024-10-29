@@ -59,7 +59,6 @@ namespace YouYou
                 if (!ShowLoginPanel)
                 {
                     ShowLoginPanel = true;
-                    GameEntry.SQL.Init();
                     GameEntry.UI.OpenUIForm<FormLogin>();
                 }
 
@@ -70,7 +69,6 @@ namespace YouYou
                     GameEntry.UI.CloseUIForm<FormLogin>();
                     GameEntry.Procedure.ChangeState(ProcedureState.Game);
                 }
-                
                 //进入到业务流程
             }
         }

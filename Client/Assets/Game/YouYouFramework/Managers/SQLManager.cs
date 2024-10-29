@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using UnityEngine;
 
@@ -36,6 +37,7 @@ namespace YouYou
     //这里改成服务器那边返回 TODO
     public void Login(string account,string password)
     {
+        if (!OpenConnection()) return;
         if (Find(account))
         {
             if (ValidateUser(account, password,out string uuid))
@@ -43,46 +45,64 @@ namespace YouYou
                 Constants.UserUUID = uuid;
                 GameEntry.Player.InitGameData();
             }
+            else
+            {
+                GameUtil.LogError("密码错误！");
+            }
         }
         else
         {
             RegisterAccount(account,password);
         }
+        CloseConnection(); // 确保关闭连接
+
     }
 
     // 初始化数据库连接
-    public void Init()
+    public async Task InitConnect()
     {
-        string connectionString = $"Server={SecurityUtil.GetSqlKeyDic()["Server"]};Database={SecurityUtil.GetSqlKeyDic()["Database"]};" +
-                                  $"User ID={SecurityUtil.GetSqlKeyDic()["User ID"]};Password={SecurityUtil.GetSqlKeyDic()["Password"]};" +
-                                  $"Port={SecurityUtil.GetSqlKeyDic()["Port"]};charset=utf8mb4";
+        
+        var builder = new MySqlConnectionStringBuilder
+        {
+            Server = $"{SecurityUtil.GetSqlKeyDic()["Server"]}",
+            UserID = $"{SecurityUtil.GetSqlKeyDic()["User ID"]}",
+            Password = $"{SecurityUtil.GetSqlKeyDic()["Password"]}",
+            Database =$"{SecurityUtil.GetSqlKeyDic()["Database"]}",
+            Port = UInt32.Parse(SecurityUtil.GetSqlKeyDic()["Port"]),
+            CharacterSet = "utf8mb4"
+        };
+        string connectionString = builder.ToString();
+        //GameUtil.LogError("连接字符串",connectionString);
         int maxRetries = 3; // 最大重试次数
         int retryCount = 0; // 当前重试次数
         bool isConnected = false; // 连接状态
-        while (retryCount < maxRetries && !isConnected)
+        while (!isConnected && retryCount < maxRetries)
         {
             try
             {
+                Debug.Log("尝试打开数据库连接");
                 connection = new MySqlConnection(connectionString);
-                connection.Open(); // 尝试打开连接
+                await connection.OpenAsync(); // 异步打开连接
                 isConnected = true; // 连接成功
             }
             catch (MySqlException ex) // 捕获 MySqlException 异常
             {
                 retryCount++;
-                Debug.LogError($"数据库连接失败，尝试次数: {retryCount}/{maxRetries}，错误信息: {ex.Message}");
-                System.Threading.Thread.Sleep(1000);
+                Debug.LogError($"数据库连接失败，尝试次数: {retryCount}/{maxRetries}，错误信息: {ex.Message}\n详细异常: {ex}");
+                await Task.Delay(1000); // 异步等待1秒后重试
             }
-            finally
+            catch (Exception ex) // 捕获其他异常
             {
-                // 如果连接成功，关闭连接
-                if (isConnected)
-                {
-                    connection.Close();
-                    //CreateDataTable();
-                    Debug.Log("数据库连接正常");
-                }
+                Debug.LogError($"出现非 MySQL 异常: {ex.Message}\n详细异常: {ex}");
+                break; // 退出循环避免无意义的重试
             }
+        }
+
+        if (isConnected)
+        {
+            connection.Close(); // 连接成功后关闭连接
+            CreateDataTable();
+            Debug.Log("数据库连接正常");
         }
         if (!isConnected)
         {
@@ -151,7 +171,7 @@ namespace YouYou
                        "user_uuid CHAR(36) NOT NULL UNIQUE, " +
                        "user_account VARCHAR(50) NOT NULL UNIQUE, " +
                        "user_password VARCHAR(88) NOT NULL) " +
-                       "CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci";
+                       "CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci";
 
         if (OpenConnection())
         {
@@ -213,6 +233,9 @@ namespace YouYou
     /// <summary>
     /// 查找用户是否存在
     /// </summary>
+    /// <summary>
+    /// 查找用户是否存在
+    /// </summary>
     private bool Find(string user_account)
     {
         string query = "SELECT COUNT(*) FROM register_data WHERE user_account = @value";
@@ -229,6 +252,8 @@ namespace YouYou
         }
         return false;
     }
+
+
 
     /// <summary>
     /// 修改用户密码
@@ -255,8 +280,6 @@ namespace YouYou
     {
         string query = "SELECT user_uuid, user_password FROM register_data WHERE user_account = @account";
         user_uuid = null; // 初始化输出参数
-        user_account = "a123";
-        input_password = "a123";
         if (OpenConnection())
         {
             using (var cmd = new MySqlCommand(query, connection))

@@ -115,6 +115,7 @@ public sealed class SecurityUtil
     {
         string fullSavePath = "";
 #if UNITY_EDITOR
+        secretKeys = new Dictionary<string, string>();
         fullSavePath = Path.Combine(Application.dataPath, "Game/Download/Key/SecretKey.bytes");
         if (File.Exists(fullSavePath))
         {
@@ -127,6 +128,7 @@ public sealed class SecurityUtil
 #endif
         if (secretKeys == null)
         {
+            secretKeys = new Dictionary<string, string>();
             Dictionary<string, string> dic = new Dictionary<string, string>();
             fullSavePath = "Assets/Game/Download/Key/SecretKey.bytes";
             AssetReferenceEntity referenceEntity = GameEntry.Loader.LoadMainAsset(fullSavePath);
@@ -146,18 +148,20 @@ public sealed class SecurityUtil
     {
         string fullSavePath = "";
 #if UNITY_EDITOR
+        sqlKeys = new Dictionary<string, string>();
         fullSavePath = Path.Combine(Application.dataPath, "Game/Download/Key/SqlKey.bytes");
         if (File.Exists(fullSavePath))
         {
             // 读取 .bytes 文件的内容
             byte[] bytes = File.ReadAllBytes(fullSavePath);
             string decryptedData = DecryptSecretKey(bytes);
-            secretKeys = JsonConvert.DeserializeObject<Dictionary<string, string>>(decryptedData);
+            sqlKeys = JsonConvert.DeserializeObject<Dictionary<string, string>>(decryptedData);
         }
         return sqlKeys;
 #endif
         if (sqlKeys == null)
         {
+            sqlKeys = new Dictionary<string, string>();
             fullSavePath = "Assets/Game/Download/Key/SqlKey.bytes";
             AssetReferenceEntity referenceEntity = GameEntry.Loader.LoadMainAsset(fullSavePath);
             if (referenceEntity != null)
