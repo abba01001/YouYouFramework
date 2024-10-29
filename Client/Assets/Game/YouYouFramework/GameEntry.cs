@@ -119,7 +119,6 @@ namespace YouYou
             Audio.Init();
             Atlas.Init();
             SDK.Init();
-            SQL.Init();
             Dialogue.Init();
             Task.Init();
 

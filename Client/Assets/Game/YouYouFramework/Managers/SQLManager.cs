@@ -51,7 +51,6 @@ namespace YouYou
     }
 
     // 初始化数据库连接
-// 初始化数据库连接
     public void Init()
     {
         string connectionString = $"Server={SecurityUtil.GetSqlKeyDic()["Server"]};Database={SecurityUtil.GetSqlKeyDic()["Database"]};" +

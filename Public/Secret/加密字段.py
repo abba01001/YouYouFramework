@@ -26,7 +26,7 @@ def save_to_file(encrypted_data, file_name):
         f.write(base64.b64decode(encrypted_data))
 
     # Client 目录路径
-    client_dir_path = os.path.join('..', '..', 'Client', 'Assets', 'PackageTool', file_name)
+    client_dir_path = os.path.join('..', '..', 'Client', 'Assets', 'Game','Download','Key', file_name)
     with open(client_dir_path, 'wb') as f:
         f.write(base64.b64decode(encrypted_data))
 

@@ -110,63 +110,65 @@ public sealed class SecurityUtil
         }
     }
 
+    private static Dictionary<string, string> secretKeys;
     public static Dictionary<string, string> GetSecretKeyDic()
     {
-        Dictionary<string, string> dic = new Dictionary<string, string>();
-        string decryptedData = null;
+        string fullSavePath = "";
 #if UNITY_EDITOR
-        string fullSavePath = Path.Combine(Application.dataPath, "PackageTool/SecretKey.bytes");
+        fullSavePath = Path.Combine(Application.dataPath, "Game/Download/Key/SecretKey.bytes");
         if (File.Exists(fullSavePath))
         {
             // 读取 .bytes 文件的内容
             byte[] bytes = File.ReadAllBytes(fullSavePath);
-            decryptedData = DecryptSecretKey(bytes);
+            string decryptedData = DecryptSecretKey(bytes);
+            secretKeys = JsonConvert.DeserializeObject<Dictionary<string, string>>(decryptedData);
         }
-#else
-            string fullSavePath = "Assets/PackageTool/SecretKey.bytes";
+        return secretKeys;
+#endif
+        if (secretKeys == null)
+        {
+            Dictionary<string, string> dic = new Dictionary<string, string>();
+            fullSavePath = "Assets/Game/Download/Key/SecretKey.bytes";
             AssetReferenceEntity referenceEntity = GameEntry.Loader.LoadMainAsset(fullSavePath);
             if (referenceEntity != null)
             {
                 TextAsset obj = UnityEngine.Object.Instantiate(referenceEntity.Target as TextAsset);
                 AutoReleaseHandle.Add(referenceEntity, null);
-                decryptedData = DecryptSecretKey(obj.bytes);
+                string decryptedData = DecryptSecretKey(obj.bytes);
+                secretKeys = JsonConvert.DeserializeObject<Dictionary<string, string>>(decryptedData);
             }
-#endif
-
-        if (decryptedData != null)
-        {
-            dic = JsonConvert.DeserializeObject<Dictionary<string, string>>(decryptedData);
         }
-        return dic;
+        return secretKeys;
     }
 
+    private static Dictionary<string, string> sqlKeys;
     public static Dictionary<string, string> GetSqlKeyDic()
     {
-        Dictionary<string, string> dic = new Dictionary<string, string>();
-        string decryptedData = null;
+        string fullSavePath = "";
 #if UNITY_EDITOR
-        string fullSavePath = Path.Combine(Application.dataPath, "PackageTool/SqlKey.bytes");
+        fullSavePath = Path.Combine(Application.dataPath, "Game/Download/Key/SqlKey.bytes");
         if (File.Exists(fullSavePath))
         {
             // 读取 .bytes 文件的内容
             byte[] bytes = File.ReadAllBytes(fullSavePath);
-            decryptedData = DecryptSecretKey(bytes);
+            string decryptedData = DecryptSecretKey(bytes);
+            secretKeys = JsonConvert.DeserializeObject<Dictionary<string, string>>(decryptedData);
         }
-#else
-            string fullSavePath = "Assets/PackageTool/SqlKey.bytes";
+        return sqlKeys;
+#endif
+        if (sqlKeys == null)
+        {
+            fullSavePath = "Assets/Game/Download/Key/SqlKey.bytes";
             AssetReferenceEntity referenceEntity = GameEntry.Loader.LoadMainAsset(fullSavePath);
             if (referenceEntity != null)
             {
                 TextAsset obj = UnityEngine.Object.Instantiate(referenceEntity.Target as TextAsset);
                 AutoReleaseHandle.Add(referenceEntity, null);
-                decryptedData = DecryptSecretKey(obj.bytes);
+                string decryptedData = DecryptSecretKey(obj.bytes);
+                sqlKeys = JsonConvert.DeserializeObject<Dictionary<string, string>>(decryptedData);
             }
-#endif
-        if (decryptedData != null)
-        {
-            dic = JsonConvert.DeserializeObject<Dictionary<string, string>>(decryptedData);
         }
-        return dic;
+        return sqlKeys;
     }
     
     // 解密 AES 加密的数据

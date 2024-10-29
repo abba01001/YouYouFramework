@@ -686,11 +686,13 @@ public class AssetBundleSettings : ScriptableObject
     private void OnEnable()
     {
         PublishPath = $"C:/Users/A1-0990/Desktop/APK/{AssetVersion}.apk";
+        PlayerSettings.bundleVersion = AssetVersion;
     }
     
     private void OnValidate()
     {
         PublishPath = $"C:/Users/A1-0990/Desktop/APK/{AssetVersion}.apk";
+        PlayerSettings.bundleVersion = AssetVersion;
     }
 
     
