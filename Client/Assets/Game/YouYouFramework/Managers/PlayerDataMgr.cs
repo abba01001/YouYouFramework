@@ -101,19 +101,14 @@ public class PlayerDataMgr : Observable<PlayerDataMgr>
         CommonIntDic.TryAdd("你好", 1);
         string jsonData = JsonConvert.SerializeObject(GenerateGameData());
         string filePath = string.Format("{0}/{1}{2}", Application.persistentDataPath,Constants.UserUUID,".json");
-        try
+        if (writeToLocal)
         {
             if (File.Exists(filePath)) File.Delete(filePath);
             File.WriteAllText(filePath, SecurityUtil.Encrypt(jsonData));
         }
-        catch (Exception ex)
-        {
-            GameEntry.LogError("保存数据到文件时发生错误: " + ex.Message);
-        }
-
         if (writeToCloud)
         {
-            GameEntry.LogError($"本地路径{filePath}\n上传json文件:{jsonData}");
+            GameEntry.LogError($"本地路径{filePath}\n上传云端json文件:{jsonData}");
             GameEntry.SDK.UploadGameData(filePath);
         }
     }

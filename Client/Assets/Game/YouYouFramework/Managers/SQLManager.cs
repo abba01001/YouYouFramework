@@ -7,299 +7,168 @@ using UnityEngine;
 namespace YouYou
 {
     public class SQLManager
-{
-    public SQLManager()
     {
+        private MySqlConnection connection;
 
-    }
-    private MySqlConnection connection;
-    
-    // 注册新账户
-    public void RegisterAccount(string accountId, string passWord)
-    {
-        if (string.IsNullOrWhiteSpace(accountId) || string.IsNullOrWhiteSpace(passWord))
-        {
-            Debug.LogError("请输入账号和密码");
-            return;
-        }
+        public SQLManager() { }
 
-        if (Insert(accountId, passWord))
+        // 初始化数据库连接
+        public async Task InitConnect()
         {
-            Debug.Log("注册成功");
-            GameEntry.Player.InitGameData();
-        }
-        else
-        {
-            Debug.LogError("注册失败");
-        }
-    }
-
-    //这里改成服务器那边返回 TODO
-    public void Login(string account,string password)
-    {
-        if (!OpenConnection()) return;
-        if (Find(account))
-        {
-            if (ValidateUser(account, password,out string uuid))
+            var builder = new MySqlConnectionStringBuilder
             {
-                Constants.UserUUID = uuid;
+                Server = SecurityUtil.GetSqlKeyDic()["Server"],
+                UserID = SecurityUtil.GetSqlKeyDic()["User ID"],
+                Password = SecurityUtil.GetSqlKeyDic()["Password"],
+                Database = SecurityUtil.GetSqlKeyDic()["Database"],
+                Port = UInt32.Parse(SecurityUtil.GetSqlKeyDic()["Port"]),
+                CharacterSet = "utf8mb4"
+            };
+
+            connection = new MySqlConnection(builder.ToString());
+            await connection.OpenAsync();
+            await connection.CloseAsync();
+            Debug.Log("数据库连接正常");
+        }
+
+        // 统一打开和关闭连接
+        private async Task<T> ExecuteWithConnectionAsync<T>(Func<MySqlCommand, Task<T>> action, bool useLongConnection = false)
+        {
+            if (connection.State == ConnectionState.Closed)
+                await connection.OpenAsync();
+
+            await using var cmd = connection.CreateCommand();
+            try
+            {
+                return await action(cmd);
+            }
+            finally
+            {
+                // 如果使用短连接，确保每次都关闭连接
+                if (!useLongConnection && connection.State == ConnectionState.Open)
+                    await connection.CloseAsync();
+            }
+        }
+
+        // 注册新账户
+        public async Task RegisterAccountAsync(string accountId, string passWord)
+        {
+            if (string.IsNullOrWhiteSpace(accountId) || string.IsNullOrWhiteSpace(passWord))
+            {
+                Debug.LogError("请输入账号和密码");
+                return;
+            }
+
+            if (await InsertAsync(accountId, passWord))
+            {
+                Debug.Log("注册成功");
                 GameEntry.Player.InitGameData();
             }
             else
             {
-                GameUtil.LogError("密码错误！");
-            }
-        }
-        else
-        {
-            RegisterAccount(account,password);
-        }
-        CloseConnection(); // 确保关闭连接
-
-    }
-
-    // 初始化数据库连接
-    public async Task InitConnect()
-    {
-        
-        var builder = new MySqlConnectionStringBuilder
-        {
-            Server = $"{SecurityUtil.GetSqlKeyDic()["Server"]}",
-            UserID = $"{SecurityUtil.GetSqlKeyDic()["User ID"]}",
-            Password = $"{SecurityUtil.GetSqlKeyDic()["Password"]}",
-            Database =$"{SecurityUtil.GetSqlKeyDic()["Database"]}",
-            Port = UInt32.Parse(SecurityUtil.GetSqlKeyDic()["Port"]),
-            CharacterSet = "utf8mb4"
-        };
-        string connectionString = builder.ToString();
-        //GameUtil.LogError("连接字符串",connectionString);
-        int maxRetries = 3; // 最大重试次数
-        int retryCount = 0; // 当前重试次数
-        bool isConnected = false; // 连接状态
-        while (!isConnected && retryCount < maxRetries)
-        {
-            try
-            {
-                Debug.Log("尝试打开数据库连接");
-                connection = new MySqlConnection(connectionString);
-                await connection.OpenAsync(); // 异步打开连接
-                isConnected = true; // 连接成功
-            }
-            catch (MySqlException ex) // 捕获 MySqlException 异常
-            {
-                retryCount++;
-                Debug.LogError($"数据库连接失败，尝试次数: {retryCount}/{maxRetries}，错误信息: {ex.Message}\n详细异常: {ex}");
-                await Task.Delay(1000); // 异步等待1秒后重试
-            }
-            catch (Exception ex) // 捕获其他异常
-            {
-                Debug.LogError($"出现非 MySQL 异常: {ex.Message}\n详细异常: {ex}");
-                break; // 退出循环避免无意义的重试
+                Debug.LogError("注册失败");
             }
         }
 
-        if (isConnected)
+        // 登录
+        public async Task LoginAsync(string account, string password)
         {
-            connection.Close(); // 连接成功后关闭连接
-            CreateDataTable();
-            Debug.Log("数据库连接正常");
-        }
-        if (!isConnected)
-        {
-            Debug.LogError("所有数据库连接尝试均失败，请检查连接设置");
-        }
-    }
-
-
-    /// <summary>
-    /// 打开数据库连接
-    /// </summary>
-    public bool OpenConnection()
-    {
-        try
-        {
-            if (connection.State == ConnectionState.Closed)
-                connection.Open();
-            return true;
-        }
-        catch (MySqlException ex)
-        {
-            Debug.LogError($"SQL数据库连接错误： {ex.Message}");
-            return false;
-        }
-    }
-
-    /// <summary>
-    /// 关闭数据库连接
-    /// </summary>
-    public bool CloseConnection()
-    {
-        try
-        {
-            if (connection.State == ConnectionState.Open)
-                connection.Close();
-            return true;
-        }
-        catch (MySqlException ex)
-        {
-            Debug.LogError(ex.Message);
-            return false;
-        }
-    }
-
-    /// <summary>
-    /// 检查是否存在数据表
-    /// </summary>
-    public bool HasDataTable(string tableName)
-    {
-        string query = $"SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '{connection.Database}' AND table_name = '{tableName}'";
-        using (var cmd = new MySqlCommand(query, connection))
-        {
-            int result = Convert.ToInt32(cmd.ExecuteScalar());
-            return result > 0;
-        }
-    }
-
-    /// <summary>
-    /// 创建数据表，包含唯一标识user_uuid和账号唯一约束
-    /// </summary>
-    public void CreateDataTable()
-    {
-        string name = "register_data";
-        string query = $"CREATE TABLE IF NOT EXISTS {name} (" +
-                       "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
-                       "user_uuid CHAR(36) NOT NULL UNIQUE, " +
-                       "user_account VARCHAR(50) NOT NULL UNIQUE, " +
-                       "user_password VARCHAR(88) NOT NULL) " +
-                       "CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci";
-
-        if (OpenConnection())
-        {
-            using (var cmd = new MySqlCommand(query, connection))
+            if (await FindAsync(account))
             {
-                cmd.ExecuteNonQuery(); // 执行创建表的命令
+                var (isValid, uuid) = await ValidateUserAsync(account, password);
+                if (isValid)
+                {
+                    Constants.UserUUID = uuid;
+                    GameEntry.Player.InitGameData();
+                }
+                else
+                {
+                    GameUtil.LogError("密码错误！");
+                }
             }
-            CloseConnection(); // 确保关闭连接
-        }
-    }
-
-
-    /// <summary>
-    /// 插入新用户数据，使用UUID作为唯一标识
-    /// </summary>
-    private bool Insert(string user_account, string user_password)
-    {
-        // 生成唯一UUID
-        string user_uuid = Guid.NewGuid().ToString();
-        user_password = SecurityUtil.ConvertBase64Key(user_account);
-        string query = "INSERT INTO register_data (user_uuid, user_account, user_password) VALUES(@uuid, @account, @password)";
-
-        if (OpenConnection())
-        {
-            using (var cmd = new MySqlCommand(query, connection))
+            else
             {
+                await RegisterAccountAsync(account, password);
+            }
+        }
+
+        // 创建数据表
+        public async Task CreateDataTableAsync()
+        {
+            string query = "CREATE TABLE IF NOT EXISTS register_data (" +
+                           "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
+                           "user_uuid CHAR(36) NOT NULL UNIQUE, " +
+                           "user_account VARCHAR(50) NOT NULL UNIQUE, " +
+                           "user_password VARCHAR(88) NOT NULL) " +
+                           "CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci";
+
+            await ExecuteWithConnectionAsync(async cmd =>
+            {
+                cmd.CommandText = query;
+                await cmd.ExecuteNonQueryAsync();
+                return true;
+            });
+        }
+
+        // 插入新用户数据
+        private async Task<bool> InsertAsync(string user_account, string user_password)
+        {
+            string user_uuid = Guid.NewGuid().ToString();
+            user_password = SecurityUtil.ConvertBase64Key(user_password); // 确保密码是加密的
+            string query = "INSERT INTO register_data (user_uuid, user_account, user_password) VALUES(@uuid, @account, @password)";
+
+            return await ExecuteWithConnectionAsync(async cmd =>
+            {
+                cmd.CommandText = query;
                 cmd.Parameters.AddWithValue("@uuid", user_uuid);
                 cmd.Parameters.AddWithValue("@account", user_account);
                 cmd.Parameters.AddWithValue("@password", user_password);
-                Constants.UserUUID = user_uuid;
-                int result = cmd.ExecuteNonQuery();
-                CloseConnection();
+                Constants.UserUUID = user_uuid; // 存储 UUID
+                int result = await cmd.ExecuteNonQueryAsync();
                 return result > 0;
-            }
+            });
         }
-        return false;
-    }
 
-    /// <summary>
-    /// 删除用户
-    /// </summary>
-    private bool Delete(string user_account)
-    {
-        string query = "DELETE FROM register_data WHERE user_account = @value";
-
-        if (OpenConnection())
+        // 查找用户是否存在
+        private async Task<bool> FindAsync(string user_account)
         {
-            using (var cmd = new MySqlCommand(query, connection))
+            string query = "SELECT COUNT(*) FROM register_data WHERE user_account = @value";
+
+            return await ExecuteWithConnectionAsync(async cmd =>
             {
+                cmd.CommandText = query;
                 cmd.Parameters.AddWithValue("@value", user_account);
-                int result = cmd.ExecuteNonQuery();
-                CloseConnection();
+                int result = Convert.ToInt32(await cmd.ExecuteScalarAsync());
                 return result > 0;
-            }
+            });
         }
-        return false;
-    }
 
-    /// <summary>
-    /// 查找用户是否存在
-    /// </summary>
-    /// <summary>
-    /// 查找用户是否存在
-    /// </summary>
-    private bool Find(string user_account)
-    {
-        string query = "SELECT COUNT(*) FROM register_data WHERE user_account = @value";
-
-        if (OpenConnection())
+        // 验证用户
+        private async Task<(bool isValid, string user_uuid)> ValidateUserAsync(string user_account, string input_password)
         {
-            using (var cmd = new MySqlCommand(query, connection))
+            string query = "SELECT user_uuid, user_password FROM register_data WHERE user_account = @account";
+            return await ExecuteWithConnectionAsync(async cmd =>
             {
-                cmd.Parameters.AddWithValue("@value", user_account);
-                int result = Convert.ToInt32(cmd.ExecuteScalar());
-                CloseConnection();
-                return result > 0;
-            }
-        }
-        return false;
-    }
-
-
-
-    /// <summary>
-    /// 修改用户密码
-    /// </summary>
-    private bool Change(string user_account, string user_password)
-    {
-        string query = "UPDATE register_data SET user_password = @newpassword WHERE user_account = @account";
-
-        if (OpenConnection())
-        {
-            using (var cmd = new MySqlCommand(query, connection))
-            {
-                cmd.Parameters.AddWithValue("@newpassword", user_password);
+                cmd.CommandText = query;
                 cmd.Parameters.AddWithValue("@account", user_account);
-                int result = cmd.ExecuteNonQuery();
-                CloseConnection();
-                return result > 0;
-            }
-        }
-        return false;
-    }
-    
-    private bool ValidateUser(string user_account, string input_password, out string user_uuid)
-    {
-        string query = "SELECT user_uuid, user_password FROM register_data WHERE user_account = @account";
-        user_uuid = null; // 初始化输出参数
-        if (OpenConnection())
-        {
-            using (var cmd = new MySqlCommand(query, connection))
-            {
-                cmd.Parameters.AddWithValue("@account", user_account);
-                using (var reader = cmd.ExecuteReader())
+                using (var reader = await cmd.ExecuteReaderAsync())
                 {
-                    if (reader.Read()) // 如果找到了用户
+                    if (await reader.ReadAsync())
                     {
-                        user_uuid = reader["user_uuid"].ToString(); // 获取 UUID
-                        string stored_password = reader["user_password"].ToString();
-                        return stored_password == SecurityUtil.GetBase64Key(input_password);
+                        var user_uuid = reader["user_uuid"].ToString();
+                        var stored_password = reader["user_password"].ToString();
+                        return (stored_password == SecurityUtil.GetBase64Key(input_password), user_uuid);
                     }
                 }
-                CloseConnection();
-            }
+                return (false, null); // 用户不存在或密码不匹配
+            });
         }
-        return false; // 用户不存在或密码不匹配
+
+        // 关闭数据库连接
+        public async Task CloseConnectionAsync()
+        {
+            if (connection.State == ConnectionState.Open)
+                await connection.CloseAsync();
+        }
     }
 }
-
-}
-

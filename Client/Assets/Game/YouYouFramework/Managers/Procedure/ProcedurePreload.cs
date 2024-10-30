@@ -59,6 +59,7 @@ namespace YouYou
                 if (!ShowLoginPanel)
                 {
                     ShowLoginPanel = true;
+                    GameEntry.SQL.InitConnect();
                     GameEntry.UI.OpenUIForm<FormLogin>();
                 }
 

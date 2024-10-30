@@ -17,13 +17,12 @@ public class FormLogin : UIFormBase
     protected override void Awake()
     {
         base.Awake();
-        GameEntry.SQL.InitConnect();
         loginBtn.SetButtonClick(Login);
     }
 
     private void Login()
     {
         if(account.text == "" || password.text == "") return;
-        GameEntry.SQL.Login(account.text, password.text);
+        GameEntry.SQL.LoginAsync(account.text, password.text);
     }
 }
