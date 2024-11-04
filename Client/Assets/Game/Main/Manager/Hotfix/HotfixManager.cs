@@ -118,26 +118,18 @@ namespace Main
         /// </summary>
         private static void LoadMetadataForAOTAssemblies()
         {
-            //这里补充完泛型，同时也要在AssetBundleSettings里CopyHofixDll里补充进去
-            List<string> aotMetaAssemblyFiles = new List<string>()
-            {
-                "mscorlib.dll",
-                "System.dll",
-                "System.Core.dll",
-                "UniTask.dll",
-                "UnityEngine.AndroidJNIModule.dll"
-            };
+            SupplementAOTDll t = new SupplementAOTDll();
             /// 注意，补充元数据是给AOT dll补充元数据，而不是给热更新dll补充元数据。
             /// 热更新dll不缺元数据，不需要补充，如果调用LoadMetadataForAOTAssembly会返回错误
             /// 
             HomologousImageMode mode = HomologousImageMode.SuperSet;
-            foreach (var aotDllName in aotMetaAssemblyFiles)
+            foreach (var aotDllName in t.aotMetaAssemblyFiles)
             {
                 byte[] dllBytes = hotfixAb.LoadAsset<TextAsset>(aotDllName + ".bytes").bytes;
                 // 加载assembly对应的dll，会自动为它hook。一旦aot泛型函数的native函数不存在，用解释器版本代码
                 LoadImageErrorCode err = RuntimeApi.LoadMetadataForAOTAssembly(dllBytes, mode);
             }
-            MainEntry.Log(MainEntry.LogCategory.Assets, "补充元数据Dll加载完毕==" + aotMetaAssemblyFiles.ToJson());
+            MainEntry.Log(MainEntry.LogCategory.Assets, "补充元数据Dll加载完毕==" + t.aotMetaAssemblyFiles.ToJson());
         }
     }
 
