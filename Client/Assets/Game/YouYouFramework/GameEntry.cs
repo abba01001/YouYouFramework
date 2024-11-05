@@ -2,6 +2,8 @@ using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
 using System.Collections;
+using MessagePack;
+using MessagePack.Resolvers;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -45,6 +47,7 @@ namespace YouYou
         public static LoggerManager Logger { get; private set; }
         public static EventManager Event { get; private set; }
         public static TimeManager Time { get; private set; }
+        public static DataManger Data { get; private set; }
         public static FsmManager Fsm { get; private set; }
         public static ProcedureManager Procedure { get; private set; }
         public static DataTableManager DataTable { get; private set; }
@@ -86,6 +89,7 @@ namespace YouYou
             Logger = new LoggerManager();
             Event = new EventManager();
             Time = new TimeManager();
+            Data = new DataManger();
             Fsm = new FsmManager();
             Procedure = new ProcedureManager();
             DataTable = new DataTableManager();
@@ -121,8 +125,8 @@ namespace YouYou
             SDK.Init();
             Dialogue.Init();
             Task.Init();
-
-            InitNetTime();
+            Time.Init();
+            Data.Init();
             //进入第一个流程
             Procedure.ChangeState(ProcedureState.Launch);
             
@@ -139,6 +143,36 @@ namespace YouYou
             ViewQueueManager.Instance.RegisterEvents();
         }
 
+        public class Startup
+        {
+            static bool serializerRegistered = false;
+            [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+            static void Initialize()
+            {
+                if (!serializerRegistered)
+                {
+                    GameUtil.LogError("11111111111");
+                    StaticCompositeResolver.Instance.Register(
+                        MessagePack.Resolvers.GeneratedResolver.Instance,
+                        MessagePack.Resolvers.StandardResolver.Instance
+                    );
+
+                    var option = MessagePackSerializerOptions.Standard.WithResolver(StaticCompositeResolver.Instance);
+
+                    MessagePackSerializer.DefaultOptions = option;
+                    serializerRegistered = true;
+                }
+            }
+
+#if UNITY_EDITOR
+            [UnityEditor.InitializeOnLoadMethod]
+            static void EditorInitialize()
+            {
+                Initialize();
+            }
+#endif
+        }
+        
         private void Test1()
         {
             QueueManager.Instance.AddEventTask("Hello","CloseHello");
@@ -165,15 +199,10 @@ namespace YouYou
             
         }
 
-        void InitNetTime()
-        {
-            Http.InitNetTime();
-        }
-
-        
         void Update()
         {
             Time.OnUpdate();
+            Data.OnUpdate();
             Procedure.OnUpdate();
             Pool.OnUpdate();
             Scene.OnUpdate();

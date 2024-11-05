@@ -115,16 +115,7 @@ namespace Main
                 onComplete(fileUrl);
             });
         }
-        
-        public void GetServerTime(string url, Action onUpdate = null, Action<DateTime> onComplete = null)
-        {
-            DownloadRoutine routine = DownloadRoutine.Create();
-            routine.GetServerTime(url, 30,onUpdate, onComplete: (DateTime serverTime) =>
-            {
-                onComplete(serverTime);
-            });
-        }
-        
+
 
         /// <summary>
         /// 下载多个文件

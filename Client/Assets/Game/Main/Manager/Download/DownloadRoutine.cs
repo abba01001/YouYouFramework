@@ -221,58 +221,6 @@ namespace Main
             }
             onComplete?.Invoke("RequestFail");
         }
-        
-        public async void GetServerTime(string url, int tryRequestCount,Action onUpdate,Action<DateTime> onComplete)
-        {
-            int currentRetry = 0;
-
-            while (currentRetry < tryRequestCount)
-            {
-                using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
-                {
-                    try
-                    {
-                        onUpdate?.Invoke();
-                        await webRequest.SendWebRequest();
-                        if (webRequest.responseCode == 404)
-                        {
-                            onComplete?.Invoke(DateTime.Now.ToLocalTime());
-                            return; // 遇到 404 错误直接退出
-                        }
-                        if (webRequest.result == UnityWebRequest.Result.ConnectionError ||
-                            webRequest.result == UnityWebRequest.Result.ProtocolError)
-                        {
-                            currentRetry++;
-                            await UniTask.Delay(100); // 等待 0.1 秒
-                        }
-                        else
-                        {
-                            // 处理成功响应
-                            string dateStr = webRequest.GetResponseHeader("Date");
-                            if (DateTime.TryParse(dateStr, out DateTime serverTime))
-                            {
-                                onComplete?.Invoke(serverTime);
-                                MainEntry.Log(MainEntry.LogCategory.NetWork, "获取服务器时间成功 {0}",serverTime.ToLocalTime());
-                            }
-                            else
-                            {
-                                onComplete?.Invoke(DateTime.Now.ToLocalTime());
-                            }
-                            return; // 成功后退出方法
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        if (e.Message.Contains("404"))
-                        {
-                            onComplete?.Invoke(DateTime.Now.ToLocalTime());
-                            return;
-                        }
-                    }
-                }
-            }
-            onComplete?.Invoke(DateTime.Now.ToLocalTime());
-        }
 
         /// <summary>
         /// 从零下载

@@ -47,10 +47,9 @@ namespace MessagePack.Resolvers
 
         static GeneratedResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(2)
+            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(1)
             {
-                { typeof(global::DataService), 0 },
-                { typeof(global::MyClass), 1 },
+                { typeof(global::DataManger), 0 },
             };
         }
 
@@ -64,8 +63,7 @@ namespace MessagePack.Resolvers
 
             switch (key)
             {
-                case 0: return new MessagePack.Formatters.DataServiceFormatter();
-                case 1: return new MessagePack.Formatters.MyClassFormatter();
+                case 0: return new MessagePack.Formatters.DataMangerFormatter();
                 default: return null;
             }
         }

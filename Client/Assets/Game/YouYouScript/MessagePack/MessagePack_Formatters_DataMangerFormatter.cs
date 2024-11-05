@@ -16,10 +16,10 @@
 
 namespace MessagePack.Formatters
 {
-    public sealed class MyClassFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::MyClass>
+    public sealed class DataMangerFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::DataManger>
     {
 
-        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::MyClass value, global::MessagePack.MessagePackSerializerOptions options)
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::DataManger value, global::MessagePack.MessagePackSerializerOptions options)
         {
             if (value == null)
             {
@@ -27,14 +27,11 @@ namespace MessagePack.Formatters
                 return;
             }
 
-            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(3);
+            writer.WriteArrayHeader(1);
             writer.Write(value.Age);
-            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.FirstName, options);
-            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.LastName, options);
         }
 
-        public global::MyClass Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        public global::DataManger Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
         {
             if (reader.TryReadNil())
             {
@@ -42,9 +39,8 @@ namespace MessagePack.Formatters
             }
 
             options.Security.DepthStep(ref reader);
-            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
             var length = reader.ReadArrayHeader();
-            var ____result = new global::MyClass();
+            var ____result = new global::DataManger();
 
             for (int i = 0; i < length; i++)
             {
@@ -52,12 +48,6 @@ namespace MessagePack.Formatters
                 {
                     case 0:
                         ____result.Age = reader.ReadInt32();
-                        break;
-                    case 1:
-                        ____result.FirstName = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Deserialize(ref reader, options);
-                        break;
-                    case 2:
-                        ____result.LastName = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     default:
                         reader.Skip();
