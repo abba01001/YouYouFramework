@@ -10,12 +10,11 @@ using YouYou;
 
 public interface IDataManager
 {
-    
     string UserId { get; set; }
     void SaveData(bool writeLocal = true,bool writeCloud = false);
     void SaveDialogueId(int type, int id);
     void SetPlayerPos(Vector3 pos);
-    Task LoadGameData();
+    void LoadGameData();
     PlayerRoleData PlayerRoleData { get; set; }
     int DataUpdateTime { get; set; }
 }
@@ -124,7 +123,7 @@ public class DataManager : Observable<DataManager>, IDataManager
     }
     
     
-    private void InitGameData(byte[] datas)
+    public void InitGameData(byte[] datas)
     {
         if (datas != null)
         {
@@ -148,24 +147,9 @@ public class DataManager : Observable<DataManager>, IDataManager
     }
     
     
-    public async Task LoadGameData()
+    public void LoadGameData()
     {
-        (DownloadStatus status,byte[] datas) = await GameEntry.SDK.DownloadGameData(GameEntry.Data.UserId);
-        switch (status)
-        {
-            case DownloadStatus.Success: //处理成功的情况
-                InitGameData(datas);
-                Constants.IsLoginGame = true;
-                break;
-            case DownloadStatus.FileNotFound: //处理文件未找到的情况
-                SaveData(true,true);
-                Constants.IsLoginGame = true;
-                break;
-            case DownloadStatus.NetworkError: //处理网络错误的情况
-                break;
-            case DownloadStatus.UnknownError: //处理未知错误的情况
-                break;
-        }
+        GameUtil.LogError("111111111111");
     }
     
     public void SaveData(bool writeLocal = true,bool writeCloud = false)

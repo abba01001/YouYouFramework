@@ -53,7 +53,7 @@ namespace Main
 
             if (VersionFile.GetVersionFileExists())
             {
-                if (!string.IsNullOrEmpty(VersionFile.LocalAssetsVersion) && VersionFile.LocalAssetsVersion.Equals(VersionFile.CDNVersion))
+                if (!string.IsNullOrEmpty(VersionFile.LocalAssetsVersion) && VersionFile.LocalAssetsVersion.Equals(VersionFile.CdnAssetVersion))
                 {
                     MainEntry.Log(MainEntry.LogCategory.Assets, "可写区版本号和CDN版本号一致 进入预加载流程");
                     CheckVersionComplete?.Invoke();
@@ -193,7 +193,7 @@ namespace Main
         /// </summary>
         private void OnDownloadMulitComplete()
         {
-            VersionFile.SetAssetVersion(VersionFile.CDNVersion);
+            VersionFile.SetAssetVersion(VersionFile.CdnAssetVersion);
 
             CheckVersionDownloadComplete?.Invoke();
             MainEntry.ClassObjectPool.Enqueue(m_DownloadingParams);

@@ -104,7 +104,6 @@ namespace YouYou
                     return AssetBundle.LoadFromFile(string.Format("{0}/{1}", Application.persistentDataPath, assetBundlePath));
                 }
             }
-
             GameEntry.LogError(LogCategory.Loader, "本地没有该资源, 或许要去服务端下载==" + assetBundlePath);
             return null;
         }

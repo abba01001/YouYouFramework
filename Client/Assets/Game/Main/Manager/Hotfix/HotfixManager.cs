@@ -26,6 +26,7 @@ namespace Main
             UnityEngine.Object.Instantiate(gameEntry);
             return;
 #endif
+            
             MainEntry.Download.GetAPKVersion(SystemModel.Instance.CurrChannelConfig.APKVersionUrl, null, (result) =>
             {
                 InitServerVersion(result);
@@ -41,7 +42,7 @@ namespace Main
             SystemModel.Instance.CurrChannelConfig.APKVersion = apkVersion;
             SystemModel.Instance.CurrChannelConfig.SourceVersion = sourceVersion;
         }
-               
+        
         private void InitLocalVersion()
         {
             TextAsset versionFile = Resources.Load<TextAsset>("version"); // 不带后缀名
@@ -52,10 +53,15 @@ namespace Main
                 if (versionLines.Length >= 2)
                 {
                     string apkVersion = versionLines[0]; // 第一行
-                    string sourceVersion = versionLines[1]; // 第二行
+                    string assetVersion = versionLines[1]; // 第二行
                     PlayerPrefs.SetString("apkVersion",apkVersion);
-                    PlayerPrefs.SetString("sourceVersion",sourceVersion);
+                    PlayerPrefs.SetString("assetVersion",assetVersion);
                 }
+            }
+            else
+            {
+                PlayerPrefs.SetString("assetVersion",Application.version);
+                PlayerPrefs.SetString("apkVersion",Application.version);
             }
         }
 
@@ -65,11 +71,12 @@ namespace Main
             //初始化CDN的VersionFile信息
             MainEntry.Assets.VersionFile.InitCDNVersionFile(() =>
             {
-                MainEntry.LogError(MainEntry.LogCategory.Assets,$"===本地apk{PlayerPrefs.GetString("apkVersion")}和资源{PlayerPrefs.GetString("sourceVersion")}" +
-                                                                $"===云端apk{SystemModel.Instance.CurrChannelConfig.APKVersion}和资源{SystemModel.Instance.CurrChannelConfig.SourceVersion}");
+                MainEntry.LogError(MainEntry.LogCategory.Assets,
+                    $"===本地apk{PlayerPrefs.GetString("apkVersion")}和资源{PlayerPrefs.GetString("assetVersion")}" +
+                    $"===云端apk{MainEntry.Assets.VersionFile.CdnApkVersion}和资源{MainEntry.Assets.VersionFile.CdnAssetVersion}");
 #if UNITY_EDITOR
-                PlayerPrefs.SetString("sourceVersion", SystemModel.Instance.CurrChannelConfig.SourceVersion);
-                PlayerPrefs.SetString("apkVersion", SystemModel.Instance.CurrChannelConfig.APKVersion);
+                PlayerPrefs.SetString("assetVersion",MainEntry.Assets.VersionFile.CdnAssetVersion);
+                PlayerPrefs.SetString("apkVersion", MainEntry.Assets.VersionFile.CdnApkVersion);
                 PlayerPrefs.Save();
 #else
                 //校验游戏版本
@@ -139,7 +146,7 @@ namespace Main
         public bool CheckDownLoadApk()
         {
             string localApk = PlayerPrefs.GetString("apkVersion", string.Empty);
-            string cloudApk = SystemModel.Instance.CurrChannelConfig.APKVersion;
+            string cloudApk = MainEntry.Assets.VersionFile.CdnApkVersion;
             if (!string.IsNullOrEmpty(localApk) && !string.IsNullOrEmpty(cloudApk))
             {
                 if (localApk != cloudApk)
@@ -156,7 +163,7 @@ namespace Main
         {
             using (UnityWebRequest www = UnityWebRequest.Get(url))
             {
-                string tempPath = Path.Combine(Application.persistentDataPath,string.Format(apkFileName,SystemModel.Instance.CurrChannelConfig.APKVersion));
+                string tempPath = Path.Combine(Application.persistentDataPath,string.Format(apkFileName,MainEntry.Assets.VersionFile.CdnApkVersion));
                 if (File.Exists(tempPath))
                 {
                     MainEntry.LogError(MainEntry.LogCategory.Assets, "找到本地安装包,直接安装。");
@@ -184,8 +191,8 @@ namespace Main
                     // 调用内部安装方法
                     if (InstallAPKInternal(tempPath))
                     {
-                        PlayerPrefs.SetString("apkVersion",SystemModel.Instance.CurrChannelConfig.APKVersion);
-                        PlayerPrefs.SetString("sourceVersion",SystemModel.Instance.CurrChannelConfig.SourceVersion);
+                        PlayerPrefs.SetString("apkVersion",MainEntry.Assets.VersionFile.CdnApkVersion);
+                        PlayerPrefs.SetString("assetVersion",MainEntry.Assets.VersionFile.CdnAssetVersion);
                         PlayerPrefs.Save();
                     }
                     else

@@ -19,7 +19,7 @@ namespace Main
         /// <param name="buffer">字节数组</param>
         /// <param name="version">版本号</param>
         /// <returns></returns>
-        public Dictionary<string, VersionFileEntity> GetAssetBundleVersionList(byte[] buffer, ref string version)
+        public Dictionary<string, VersionFileEntity> GetAssetBundleVersionList(byte[] buffer, ref string apkVersion,ref string assetVersion)
         {
             buffer = ZlibHelper.DeCompressBytes(buffer);
 
@@ -33,7 +33,7 @@ namespace Main
             {
                 if (i == 0)
                 {
-                    version = ms.ReadUTF8String().Trim();
+                    assetVersion = ms.ReadUTF8String().Trim();
                 }
                 else
                 {
@@ -43,7 +43,6 @@ namespace Main
                     entity.Size = ms.ReadULong();
                     entity.IsFirstData = ms.ReadByte() == 1;
                     entity.IsEncrypt = ms.ReadByte() == 1;
-
                     dic[entity.AssetBundleName] = entity;
                 }
             }
@@ -51,16 +50,13 @@ namespace Main
         }
 
         #region CDN
-        /// <summary>
-        /// CDN资源版本号
-        /// </summary>
-        private string m_CDNVersion;
+        // CDN资源版本号
+        private string m_CDNAssetVersion;
+        public string CdnAssetVersion { get { return m_CDNAssetVersion; } }
 
-        /// <summary>
-        /// CDN资源版本号
-        /// </summary>
-        public string CDNVersion { get { return m_CDNVersion; } }
-
+        private string m_CDNApkVersion;
+        public string CdnApkVersion { get { return m_CDNApkVersion; } }
+        
         /// <summary>
         /// CDN资源包信息
         /// </summary>
@@ -87,7 +83,7 @@ namespace Main
             {
                 if (request.result == UnityWebRequest.Result.Success)
                 {
-                    m_CDNVersionDic = GetAssetBundleVersionList(request.downloadHandler.data, ref m_CDNVersion);
+                    m_CDNVersionDic = GetAssetBundleVersionList(request.downloadHandler.data, ref m_CDNApkVersion,ref m_CDNAssetVersion);
                     MainEntry.Log(MainEntry.LogCategory.Assets, "OnInitCDNVersionFile");
                     if (GetVersionFileExists())
                     {

@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -201,14 +203,32 @@ namespace YouYou
                 helper.spatialBlend = 1;
             }
         }
-        public void PlayAudio(string audioName)
+        public async Task PlayAudio(string audioName)
         {
             Sys_AudioEntity sys_Audio = GameEntry.DataTable.Sys_AudioDBModel.GetEntity(audioName);
-            AssetReferenceEntity referenceEntity = GameEntry.Loader.LoadMainAsset(sys_Audio.AssetFullPath);
-            AudioSource helper = PlayAudio2(referenceEntity.Target as AudioClip, sys_Audio.Volume, sys_Audio.Priority);
-            if (helper != null)
+            AudioSource helper = GameEntry.Pool.GameObjectPool.Spawn(AudioSourcePrefab.transform, poolId: 2).GetComponent<AudioSource>();
+            AudioClip clip = await GameEntry.Loader.LoadMainAssetAsync<AudioClip>($"{sys_Audio.AssetFullPath}", helper.gameObject);
+            PlayAudio3(helper,clip, sys_Audio.Volume, sys_Audio.Priority);
+        }
+
+        private void PlayAudio3(AudioSource helper,AudioClip audioClip, float volume = 1, int priority = 128)
+        {
+            AudioSourceList.Add(helper);
+            helper.clip = audioClip;
+            helper.mute = false;
+            helper.volume = volume;
+            helper.priority = priority;
+            helper.spatialBlend = 0;
+            helper.Play();
+
+            if (!helper.loop)
             {
-                AutoReleaseHandle.Add(referenceEntity, helper.gameObject);
+                PoolObj poolObj = helper.GetComponent<PoolObj>();
+                poolObj.SetDelayTimeDespawn(audioClip.length);
+                poolObj.OnDespawn = () =>
+                {
+                    AudioSourceList.Remove(helper);
+                };
             }
         }
 

@@ -22,7 +22,7 @@ public class FormLogin : UIFormBase
     {
         base.Awake();
         loginBtn.SetButtonClick(Login);
-        GameEntry.SDK.DownloadAvatar("1", null);
+        //GameEntry.SDK.DownloadAvatar("1", null);
     }
 
     private void Login()

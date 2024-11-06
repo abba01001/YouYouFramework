@@ -191,7 +191,6 @@ namespace Main
                         await webRequest.SendWebRequest();
                         if (webRequest.responseCode == 404)
                         {
-                            onComplete?.Invoke("EmptyGameData");
                             return;
                         }
                         if (webRequest.result == UnityWebRequest.Result.ConnectionError ||
@@ -213,13 +212,11 @@ namespace Main
                     {
                         if (e.Message.Contains("404"))
                         {
-                            onComplete?.Invoke("EmptyGameData");
                             return;
                         }
                     }
                 }
             }
-            onComplete?.Invoke("RequestFail");
         }
 
         /// <summary>

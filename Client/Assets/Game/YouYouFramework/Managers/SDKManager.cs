@@ -6,10 +6,12 @@ using COSXML;
 using COSXML.Auth;
 using COSXML.Model.Object;
 using COSXML.Utils;
+using Cysharp.Threading.Tasks;
 using Main;
 using MessagePack;
 using MySql.Data.MySqlClient;
 using UnityEngine;
+using UnityEngine.Networking;
 using YouYou;
 
 public enum DownloadStatus
@@ -56,53 +58,37 @@ public class SDKManager : Observable<SDKManager>
         }
     }
 
-    //从云端拉数据
-    public async Task<(DownloadStatus, byte[])> DownloadGameData(string userId)
+    public async UniTask DownloadGameData(string userId)
     {
-        CosXml cosXml = CreateCosXml();
         string fileName = $"{userId}.bin"; // 生成文件名
-        var dic = SecurityUtil.GetSecretKeyDic();
-        string bucketName = dic["bucket"];
-        string filePath = "Unity/GameData/" + fileName; // COS 上的文件路径
         string localDir = Application.persistentDataPath;
         string localFilePath = Path.Combine(localDir, fileName);
-        GetObjectRequest request = new GetObjectRequest(bucketName, filePath, localDir, fileName);
+        string cosUrl = $"{SystemModel.Instance.CurrChannelConfig.GameDataUrl}/{fileName}";
         try
         {
-            GetObjectResult result = await Task.Run(() => cosXml.GetObject(request));
-            if (result.httpCode == 200)
+            // 创建 UnityWebRequest 来下载文件
+            UnityWebRequest request = UnityWebRequest.Get(cosUrl);
+            await request.SendWebRequest(); // 发送请求并等待响应
+            if (request.result == UnityWebRequest.Result.Success)
             {
+                File.WriteAllBytes(localFilePath, request.downloadHandler.data);
                 GameEntry.LogError($"文件 {fileName} 下载并保存到 {localFilePath} 成功！");
                 byte[] fileContent = File.ReadAllBytes(localFilePath);
-                return (DownloadStatus.Success, fileContent);
-            }
-            else if (result.httpCode == 404)
-            {
-                GameEntry.LogError($"文件 {fileName} 未找到");
-                return (DownloadStatus.FileNotFound, null);
+                GameEntry.Data.InitGameData(fileContent);
+                Constants.IsLoginGame = true;
             }
             else
             {
-                GameEntry.LogError($"{fileName} 下载失败，状态码：{result?.httpCode ?? -1}");
-                return (DownloadStatus.UnknownError, null);
+                // 下载失败，输出错误信息
+                GameEntry.LogError($"下载失败，错误：{request.error}");
             }
         }
         catch (Exception ex)
         {
-            GameEntry.LogError($"{fileName} 下载状态：<color=red>失败</color>，错误：{ex.Message}");
-            if (ex.Message.Contains("No such file or directory"))
-            {
-                return (DownloadStatus.FileNotFound, null);
-            }
-
-            if (ex.Message.Contains("network"))
-            {
-                return (DownloadStatus.NetworkError, null);
-            }
-
-            return (DownloadStatus.UnknownError, null);
+            GameEntry.LogError($"文件下载失败，错误：{ex.Message}");
         }
     }
+
 
     //下载头像
     public async Task<Texture2D> DownloadAvatar(string spriteId, Action<Texture2D> action = null)
@@ -124,7 +110,8 @@ public class SDKManager : Observable<SDKManager>
             Debug.Log($"头像已存在，直接加载本地头像：{localFilePath}");
             byte[] avatarBytes = File.ReadAllBytes(localFilePath);
             Texture2D texture = new Texture2D(2, 2); // 创建一个新的 Texture2D 对象
-            texture.LoadImage(avatarBytes); // 加载字节数组为纹理
+            texture.LoadRawTextureData(avatarBytes); // 直接加载原始纹理数据
+            texture.Apply(); // 应用纹理数据
             action?.Invoke(texture);
             return texture;
         }
@@ -159,6 +146,7 @@ public class SDKManager : Observable<SDKManager>
 
     static CosXml CreateCosXml()
     {
+        GameUtil.LogError("8888888888888888888");
         var dic = SecurityUtil.GetSecretKeyDic();
         CosXmlConfig config = new CosXmlConfig.Builder()
             .SetConnectionTimeoutMs(60000) //设置连接超时时间，单位毫秒，默认45000ms
@@ -169,9 +157,10 @@ public class SDKManager : Observable<SDKManager>
             .Build();
 
         long durationSecond = 600; //每次请求签名有效时长，单位为秒
+        GameUtil.LogError("7777777777777777777777777777777");
         QCloudCredentialProvider qCloudCredentialProvider =
             new DefaultQCloudCredentialProvider(dic["secretId"], dic["secretKey"], durationSecond);
-
+        GameUtil.LogError("6666666666666666");
         return new CosXmlServer(config, qCloudCredentialProvider);
     }
 
@@ -229,7 +218,7 @@ public class SDKManager : Observable<SDKManager>
         if (await InsertAsync(accountId, passWord))
         {
             Debug.Log("注册成功");
-            GameEntry.Data.LoadGameData();
+            DownloadGameData(GameEntry.Data.UserId);
         }
         else
         {
@@ -246,7 +235,10 @@ public class SDKManager : Observable<SDKManager>
             if (isValid)
             {
                 GameEntry.Data.UserId = uuid;
-                GameEntry.Data.LoadGameData();
+                GameUtil.LogError($" GameEntry.Data.UserId==={ GameEntry.Data.UserId}");
+                GameUtil.LogError("存在LoadGameData？？？",GameEntry.Data.GetType().GetMethod("LoadGameData"));
+                DownloadGameData(GameEntry.Data.UserId);
+                GameUtil.LogError($"加载数据");
             }
             else
             {

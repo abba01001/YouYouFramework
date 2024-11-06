@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
@@ -18,6 +19,15 @@ public class AssetBundleSettings : ScriptableObject
         Windows,
         Android,
         IOS
+    }
+
+    public string APKVersion
+    {
+        get
+        {
+            string[] versionParts = AssetVersion.Split('.');
+            return  versionParts[0] + ".0.0";
+        }
     }
 
     #region 打包签名
@@ -107,7 +117,7 @@ public class AssetBundleSettings : ScriptableObject
                 {
                     //打包这个路径
                     string path = assetBundleData.Path[j];
-                    BuildAssetBundleForPath(path, assetBundleData.Overall);
+                    BuildAssetBundleForPath(path, assetBundleData.Overall,assetBundleData.SubPackageID);
                 }
             }
         }
@@ -164,7 +174,7 @@ public class AssetBundleSettings : ScriptableObject
     [VerticalGroup("Common/Right")]
     [Button(ButtonSizes.Medium)]
     [LabelText("出包")]
-    public void PublishAPK()
+    public async void PublishAPK()
     {
         SetKeystoreInfo();
         if (PublishPath == String.Empty)
@@ -638,7 +648,8 @@ public class AssetBundleSettings : ScriptableObject
     /// </summary>
     /// <param name="path"></param>
     /// <param name="overall">打成一个资源包</param>
-    private void BuildAssetBundleForPath(string path, bool overall)
+    /// <param name="subPackageId">分包id</param>
+    private void BuildAssetBundleForPath(string path, bool overall, string subPackageId)
     {
         string fullPath = Application.dataPath + "/" + path;
         //Debug.LogError("fullPath=" + fullPath);
@@ -647,6 +658,25 @@ public class AssetBundleSettings : ScriptableObject
         DirectoryInfo directory = new DirectoryInfo(fullPath);
         FileInfo[] arrFiles = directory.GetFiles("*", SearchOption.AllDirectories);
 
+        if (!string.IsNullOrEmpty(subPackageId))
+        {
+            HandleSubPack(overall, arrFiles, subPackageId);
+        }
+        else
+        {
+            HandleNormalPack(overall, arrFiles, path);
+        }
+    }
+
+    //处理分包
+    private void HandleSubPack(bool overall,FileInfo[] arrFiles,string subPackageId)
+    {
+        
+    }
+    
+    //处理正常的包
+    private void HandleNormalPack(bool overall,FileInfo[] arrFiles,string path)
+    {
         if (overall)
         {
             //打成一个资源包
@@ -736,6 +766,10 @@ public class AssetBundleSettings : ScriptableObject
         [LabelText("是否要打包")]
         public bool IsBuild = true;
 
+        [LabelText("分包ID")]
+        [Tooltip("如果为空，表示不是分包")]
+        public string SubPackageID = ""; // 空字符串表示不是分包
+        
         [LabelText("文件夹为一个资源包")]
         /// <summary>
         /// 文件夹为一个资源包

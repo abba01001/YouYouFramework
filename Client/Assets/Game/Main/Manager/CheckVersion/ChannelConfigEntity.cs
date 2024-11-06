@@ -60,5 +60,25 @@ public class ChannelConfigEntity
         }
     }
 
+    public string EditorRealSourceUrl
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(m_RealSourceUrl))
+            {
+                string buildTarget = string.Empty;
+
+#if UNITY_STANDALONE_WIN
+                buildTarget = "Windows";
+#elif UNITY_ANDROID
+                buildTarget = "Android";
+#elif UNITY_IPHONE
+                buildTarget = "iOS";
+#endif
+                m_RealSourceUrl = string.Format("{0}{1}/{2}/", SourceUrl, Application.version, buildTarget);
+            }
+            return m_RealSourceUrl;
+        }
+    }
     #endregion
 }
