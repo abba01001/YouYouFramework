@@ -10,8 +10,6 @@
     public static float MainRoleJumpHeight = 1.5f;//主角跳跃高度
     public static float MainRoleMoveSpeed = 4f;//玩家移动速度
     public static bool IsLoadDataTable = false; 
-    public static string UserUUID = string.Empty;
-    public static string GameDataFileName = "";
     public static bool IsLoginGame = false;
     
     // 定义全局常量，常量值不可修改
@@ -24,7 +22,6 @@
     public const float GroundCheckDistance = 0.1f; // 地面检测距离
     public const string SECURITYKEY = "3ZkPqF9hDjW8q2Z7";//钥匙
     public const int BLOCK_SIZE = 16; // AES块大小
-    public const string EMPTYGAMEDATA = "EmptyGameData";
     public const string REQUESTFAIL = "RequestFail";
     public const string GETREDPOINT = "GetRedPoint";
     public const string CLEARREDPOINT = "ClearRedPoint";

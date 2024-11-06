@@ -151,7 +151,7 @@ public class DataManager : Observable<DataManager>, IDataManager
     
     public async Task LoadGameData()
     {
-        (DownloadStatus status,byte[] datas) = await GameEntry.SDK.DownloadGameData(Constants.UserUUID);
+        (DownloadStatus status,byte[] datas) = await GameEntry.SDK.DownloadGameData(GameEntry.Data.UserId);
         switch (status)
         {
             case DownloadStatus.Success: //处理成功的情况
@@ -179,7 +179,7 @@ public class DataManager : Observable<DataManager>, IDataManager
             if (Time.time - lastWriteTime >= writeCooldown)
             {
                 var str = Convert.ToBase64String(binaryData);
-                PlayerPrefs.SetString(Constants.UserUUID, str);
+                PlayerPrefs.SetString(GameEntry.Data.UserId, str);
                 
                 var options = MessagePackSerializerOptions.Standard.WithResolver(ContractlessStandardResolver.Instance);
                 string json = MessagePackSerializer.SerializeToJson(this, options);
@@ -191,7 +191,7 @@ public class DataManager : Observable<DataManager>, IDataManager
         {
             if (Time.time - lastUploadTime >= uploadCooldown)
             {
-                GameEntry.SDK.UploadGameData(Constants.UserUUID, binaryData);
+                GameEntry.SDK.UploadGameData(UserId, binaryData);
                 lastUploadTime = Time.time;  // 更新上传的时间
             }
         }

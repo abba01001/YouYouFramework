@@ -78,7 +78,7 @@ namespace YouYou
                 var (isValid, uuid) = await ValidateUserAsync(account, password);
                 if (isValid)
                 {
-                    Constants.UserUUID = uuid;
+                    GameEntry.Data.UserId = uuid;
                     GameEntry.Data.LoadGameData();
                 }
                 else
@@ -122,7 +122,6 @@ namespace YouYou
                 cmd.Parameters.AddWithValue("@uuid", GameEntry.Data.UserId);
                 cmd.Parameters.AddWithValue("@account", user_account);
                 cmd.Parameters.AddWithValue("@password", user_password);
-                Constants.UserUUID = GameEntry.Data.UserId; // 存储 UUID
                 int result = await cmd.ExecuteNonQueryAsync();
                 return result > 0;
             });
