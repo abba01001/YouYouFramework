@@ -28,6 +28,6 @@ public class FormLogin : UIFormBase
     private void Login()
     {
         if(account.text == "" || password.text == "") return;
-        GameEntry.SQL.LoginAsync(account.text, password.text);
+        GameEntry.SDK.LoginAsync(account.text, password.text);
     }
 }

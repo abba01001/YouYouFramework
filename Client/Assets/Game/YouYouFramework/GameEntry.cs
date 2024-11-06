@@ -63,7 +63,6 @@ namespace YouYou
         public static TaskManager Task { get; private set; }
         public static QualityManager Quality { get; private set; }
         public static SDKManager SDK { get; private set; }
-        public static SQLManager SQL { get; private set; }
         public static DialogueManager Dialogue { get; private set; }
         public static GuideManager Guide { get; private set; }
 
@@ -104,7 +103,6 @@ namespace YouYou
             Task = new TaskManager();
             Quality = new QualityManager();
             SDK = new SDKManager();
-            SQL = new SQLManager();
             Dialogue = new DialogueManager();
             Guide = new GuideManager();
 
