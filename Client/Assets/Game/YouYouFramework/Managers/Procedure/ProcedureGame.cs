@@ -73,7 +73,7 @@ namespace YouYou
             // PoolObj dungeonGenerator = await GameEntry.Pool.GameObjectPool.SpawnAsync(PrefabName.DungeonGenerator,parent1.transform);
             // RuntimeDungeon runtimeDungeon = dungeonGenerator.GetComponent<RuntimeDungeon>();
             // runtimeDungeon.GenerateOnStart = false;
-            LoadCurrentLevel(GameEntry.Player.GetPlayerRoleData().levelId.ToString());
+            LoadCurrentLevel(GameEntry.Data.PlayerRoleData.levelId.ToString());
             //dungeonGenerator.GetComponent<DungeonSetup>().InitParams(new object[] {playerCtrl.transform, rotateJoy});
         }
         

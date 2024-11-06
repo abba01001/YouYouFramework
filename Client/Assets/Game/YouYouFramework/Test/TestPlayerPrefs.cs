@@ -10,10 +10,10 @@ public class TestPlayerPrefs : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.A))
         {
             //性能好, 并支持事件
-            GameEntry.Player.SetFloat(Constants.StorgeKey.MasterVolume, 1);
-            GameEntry.Player.SetFloat(Constants.StorgeKey.AudioVolume, 1);
-            GameEntry.Player.SetFloat(Constants.StorgeKey.BGMVolume, 1);
-            GameEntry.Player.SetInt(Constants.StorgeKey.FrameRate, 2);
+            // GameEntry.Player.SetFloat(Constants.StorgeKey.MasterVolume, 1);
+            // GameEntry.Player.SetFloat(Constants.StorgeKey.AudioVolume, 1);
+            // GameEntry.Player.SetFloat(Constants.StorgeKey.BGMVolume, 1);
+            // GameEntry.Player.SetInt(Constants.StorgeKey.FrameRate, 2);
         }
 
         if (Input.GetKeyUp(KeyCode.S))

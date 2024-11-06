@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using MessagePack;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -29,6 +30,7 @@ public class LevelModelData
 }
 
 [Serializable]
+[MessagePackObject(keyAsPropertyName: true)]
 public class PlayerRoleData
 {
     public List<float> playerBornPos;

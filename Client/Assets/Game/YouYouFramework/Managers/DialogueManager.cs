@@ -44,7 +44,7 @@ public class DialogueManager : Observable<DialogueManager>
     private void ParseDialogueTable()
     {
         if(!Constants.IsLoadDataTable || IsHandleIng) return;
-        PlayerRoleData playerRoleData = GameEntry.Player.GetPlayerRoleData();
+        PlayerRoleData playerRoleData = GameEntry.Data.PlayerRoleData;
         foreach (var pair in GameEntry.DataTable.Sys_DialogueDBModel.IdByDic)
         {
             int dialogueType = pair.Value.DialogueType;
@@ -54,7 +54,7 @@ public class DialogueManager : Observable<DialogueManager>
             }
             else
             {
-                GameEntry.Player.SaveDialogueId(dialogueType,1);
+                GameEntry.Data.SaveDialogueId(dialogueType,1);
             }
         }
     }

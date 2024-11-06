@@ -119,7 +119,7 @@ public class PlayerCtrl : MonoBehaviour
             if (lastPlayerPos.Value != transform.position)
             {
                 lastPlayerPos = transform.position;
-                GameEntry.Player.SetPlayerPos(lastPlayerPos.Value);
+                GameEntry.Data.SetPlayerPos(lastPlayerPos.Value);
             }
         }
     }
@@ -135,7 +135,7 @@ public class PlayerCtrl : MonoBehaviour
             if (lastPlayerRotate.Value != transform.rotation.eulerAngles)
             {
                 lastPlayerRotate = transform.rotation.eulerAngles;
-                GameEntry.Player.SetPlayerRotate(lastPlayerRotate.Value);
+                GameEntry.Data.SetPlayerRotate(lastPlayerRotate.Value);
             }
         }
     }
@@ -236,10 +236,10 @@ public class PlayerCtrl : MonoBehaviour
     {
         transform.position = (Vector3)param;
         transform.rotation = Quaternion.identity;
-        PlayerRoleData playerRoleData = GameEntry.Player.GetPlayerRoleData();
+        PlayerRoleData playerRoleData = GameEntry.Data.PlayerRoleData;
         if (playerRoleData.firstEntryLevel)
         {
-            GameEntry.Player.SetPlayerBornPos((Vector3)param);
+            GameEntry.Data.SetPlayerBornPos((Vector3)param);
         }
         else
         {

@@ -217,7 +217,7 @@ public class PlayerCamera : MonoBehaviour
             if (lastCameraRotate.Value != transform.rotation.eulerAngles)
             {
                 lastCameraRotate = transform.rotation.eulerAngles;
-                GameEntry.Player.SetCameraRotate(lastCameraRotate.Value);
+                GameEntry.Data.SetCameraRotate(lastCameraRotate.Value);
             }
         }
     }

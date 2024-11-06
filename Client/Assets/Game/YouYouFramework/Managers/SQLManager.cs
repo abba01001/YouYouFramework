@@ -62,7 +62,7 @@ namespace YouYou
             if (await InsertAsync(accountId, passWord))
             {
                 Debug.Log("注册成功");
-                GameEntry.Player.InitGameData();
+                GameEntry.Data.LoadGameData();
             }
             else
             {
@@ -79,7 +79,7 @@ namespace YouYou
                 if (isValid)
                 {
                     Constants.UserUUID = uuid;
-                    GameEntry.Player.InitGameData();
+                    GameEntry.Data.LoadGameData();
                 }
                 else
                 {
@@ -113,17 +113,16 @@ namespace YouYou
         // 插入新用户数据
         private async Task<bool> InsertAsync(string user_account, string user_password)
         {
-            string user_uuid = Guid.NewGuid().ToString();
             user_password = SecurityUtil.ConvertBase64Key(user_password); // 确保密码是加密的
             string query = "INSERT INTO register_data (user_uuid, user_account, user_password) VALUES(@uuid, @account, @password)";
 
             return await ExecuteWithConnectionAsync(async cmd =>
             {
                 cmd.CommandText = query;
-                cmd.Parameters.AddWithValue("@uuid", user_uuid);
+                cmd.Parameters.AddWithValue("@uuid", GameEntry.Data.UserId);
                 cmd.Parameters.AddWithValue("@account", user_account);
                 cmd.Parameters.AddWithValue("@password", user_password);
-                Constants.UserUUID = user_uuid; // 存储 UUID
+                Constants.UserUUID = GameEntry.Data.UserId; // 存储 UUID
                 int result = await cmd.ExecuteNonQueryAsync();
                 return result > 0;
             });

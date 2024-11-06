@@ -47,12 +47,11 @@ namespace YouYou
         public static LoggerManager Logger { get; private set; }
         public static EventManager Event { get; private set; }
         public static TimeManager Time { get; private set; }
-        public static DataManger Data { get; private set; }
+        public static DataManager Data { get; private set; }
         public static FsmManager Fsm { get; private set; }
         public static ProcedureManager Procedure { get; private set; }
         public static DataTableManager DataTable { get; private set; }
         public static HttpManager Http { get; private set; }
-        public static PlayerDataMgr Player { get; private set; }
         public static LocalizationManager Localization { get; private set; }
         public static PoolManager Pool { get; private set; }
         public static YouYouSceneManager Scene { get; private set; }
@@ -89,12 +88,11 @@ namespace YouYou
             Logger = new LoggerManager();
             Event = new EventManager();
             Time = new TimeManager();
-            Data = new DataManger();
+            Data = new DataManager();
             Fsm = new FsmManager();
             Procedure = new ProcedureManager();
             DataTable = new DataTableManager();
             Http = new HttpManager();
-            Player = new PlayerDataMgr();
             Localization = new LocalizationManager();
             Pool = new PoolManager();
             Scene = new YouYouSceneManager();
@@ -114,7 +112,6 @@ namespace YouYou
             Procedure.Init();
             DataTable.Init();
             Http.Init();
-            Player.Init();
             Localization.Init();
             Pool.Init();
             Scene.Init();
@@ -151,12 +148,10 @@ namespace YouYou
             {
                 if (!serializerRegistered)
                 {
-                    GameUtil.LogError("11111111111");
                     StaticCompositeResolver.Instance.Register(
                         MessagePack.Resolvers.GeneratedResolver.Instance,
                         MessagePack.Resolvers.StandardResolver.Instance
                     );
-
                     var option = MessagePackSerializerOptions.Standard.WithResolver(StaticCompositeResolver.Instance);
 
                     MessagePackSerializer.DefaultOptions = option;
@@ -214,12 +209,17 @@ namespace YouYou
             Dialogue.OnUpdate();
             Input.OnUpdate();
             Task.OnUpdate();
-            Player.OnUpdate();
             GameEntry.Event.Dispatch(Constants.EventName.GameEntryOnUpdate);
         }
+
+        private void LateUpdate()
+        {
+            
+        }
+
         private void OnApplicationQuit()
         {
-            Player.SaveDataAll(true,true);
+            Data.SaveData(true,true);
             Logger.SyncLog();
             Logger.Dispose();
             Fsm.Dispose();
@@ -230,7 +230,7 @@ namespace YouYou
         {
             if (pause)
             {
-                Player.SaveDataAll(true,true);
+                Data.SaveData(true,true);
                 GameEntry.Event.Dispatch(Constants.EventName.GameEntryOnApplicationPause);
             }
         }

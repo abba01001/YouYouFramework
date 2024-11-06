@@ -43,10 +43,10 @@ namespace YouYou
             BGMSource.name = "BGMSource";
             BGMSource.outputAudioMixerGroup = GameEntry.Instance.MonsterMixer.FindMatchingGroups("BGM")[0];
 
-            GameEntry.Player.AddEventListener(Constants.StorgeKey.MasterVolume, RefreshMasterVolume);
-            GameEntry.Player.AddEventListener(Constants.StorgeKey.BGMVolume, RefreshBGM);
-            GameEntry.Player.AddEventListener(Constants.StorgeKey.AudioVolume, RefreshAudio);
-            GameEntry.Player.AddEventListener(Constants.StorgeKey.GamePause, OnGamePause);
+            // GameEntry.Player.AddEventListener(Constants.StorgeKey.MasterVolume, RefreshMasterVolume);
+            // GameEntry.Player.AddEventListener(Constants.StorgeKey.BGMVolume, RefreshBGM);
+            // GameEntry.Player.AddEventListener(Constants.StorgeKey.AudioVolume, RefreshAudio);
+            // GameEntry.Player.AddEventListener(Constants.StorgeKey.GamePause, OnGamePause);
 
             RefreshMasterVolume(null);
             RefreshBGM(null);
@@ -239,15 +239,15 @@ namespace YouYou
 
         private void RefreshMasterVolume(object userData)
         {
-            SetMasterVolume(GameEntry.Player.GetFloat(Constants.StorgeKey.MasterVolume));
+            //SetMasterVolume(GameEntry.Player.GetFloat(Constants.StorgeKey.MasterVolume));
         }
         private void RefreshAudio(object userData)
         {
-            SetAudioVolume(GameEntry.Player.GetFloat(Constants.StorgeKey.AudioVolume));
+            //SetAudioVolume(GameEntry.Player.GetFloat(Constants.StorgeKey.AudioVolume));
         }
         private void RefreshBGM(object userData)
         {
-            SetBGMVolume(GameEntry.Player.GetFloat(Constants.StorgeKey.BGMVolume));
+            //SetBGMVolume(GameEntry.Player.GetFloat(Constants.StorgeKey.BGMVolume));
         }
         private void OnGamePause(object userData)
         {
