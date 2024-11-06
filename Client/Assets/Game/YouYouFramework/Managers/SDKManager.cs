@@ -98,6 +98,58 @@ public class SDKManager : Observable<SDKManager>
         }
     }
 
+    //下载头像
+    public async Task<Texture2D> DownloadAvatar(string spriteId,Action<Texture2D> action = null)
+    {
+        CosXml cosXml = CreateCosXml();
+        string fileName = $"{spriteId}.jpg"; // 头像文件名
+        var dic = SecurityUtil.GetSecretKeyDic();
+        string bucketName = dic["bucket"];
+        string filePath = "Unity/HeadImage/" + fileName; // COS 上的文件路径
+        string localDir = Path.Combine(Application.persistentDataPath, "HeadIcon"); // 创建 "HeadIcon" 文件夹路径
+        if (!Directory.Exists(localDir))
+        {
+            Directory.CreateDirectory(localDir);  // 如果文件夹不存在，创建它
+        }
+        string localFilePath = Path.Combine(localDir, fileName); // 完整的文件路径
+        if (File.Exists(localFilePath))
+        {
+            Debug.Log($"头像已存在，直接加载本地头像：{localFilePath}");
+            byte[] avatarBytes = File.ReadAllBytes(localFilePath);
+            Texture2D texture = new Texture2D(2, 2); // 创建一个新的 Texture2D 对象
+            texture.LoadImage(avatarBytes); // 加载字节数组为纹理
+            action?.Invoke(texture);
+            return texture;
+        }
+        else
+        {
+            Debug.Log("本地头像不存在，开始从COS下载");
+            GetObjectRequest request = new GetObjectRequest(bucketName, filePath, localDir, fileName);
+            try
+            {
+                GetObjectResult result = await Task.Run(() => cosXml.GetObject(request));
+                if (result.httpCode == 200)
+                {
+                    Debug.Log($"头像下载成功，保存路径: {localFilePath}");
+                    byte[] avatarBytes = File.ReadAllBytes(localFilePath);
+                    Texture2D texture = new Texture2D(2, 2); // 创建一个新的 Texture2D 对象
+                    texture.LoadImage(avatarBytes); // 加载字节数组为纹理
+                    return texture;
+                }
+                else
+                {
+                    Debug.LogError($"头像下载失败，状态码：{result.httpCode}");
+                    return null; // 如果下载失败，返回null
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"下载头像失败：{ex.Message}");
+                return null; // 如果发生异常，返回null
+            }
+        }
+    }
+    
     static CosXml CreateCosXml()
     {
         var dic = SecurityUtil.GetSecretKeyDic();

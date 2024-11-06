@@ -50,8 +50,7 @@ public class DataManager : Observable<DataManager>, IDataManager
     #endregion
 
     #region 临时public数据
-    [IgnoreMember]
-    public long Coin { get; }
+    [IgnoreMember] public long Coin { get; }
     #endregion
 
     #region 临时private数据
