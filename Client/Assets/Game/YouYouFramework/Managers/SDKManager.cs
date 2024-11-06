@@ -63,30 +63,22 @@ public class SDKManager : Observable<SDKManager>
         string fileName = $"{userId}.bin"; // 生成文件名
         string localDir = Application.persistentDataPath;
         string localFilePath = Path.Combine(localDir, fileName);
-        string cosUrl = $"{SystemModel.Instance.CurrChannelConfig.GameDataUrl}/{fileName}";
-        try
+        string cosUrl = $"{SystemModel.Instance.CurrChannelConfig.GameDataUrl}{fileName}";
+        
+        GameUtil.LogError($"地址{cosUrl}");
+        DownloadRoutine routine = DownloadRoutine.Create();
+        routine.DownLoadGameData(cosUrl, 30,null, (byte[] data) =>
         {
-            // 创建 UnityWebRequest 来下载文件
-            UnityWebRequest request = UnityWebRequest.Get(cosUrl);
-            await request.SendWebRequest(); // 发送请求并等待响应
-            if (request.result == UnityWebRequest.Result.Success)
-            {
-                File.WriteAllBytes(localFilePath, request.downloadHandler.data);
-                GameEntry.LogError($"文件 {fileName} 下载并保存到 {localFilePath} 成功！");
-                byte[] fileContent = File.ReadAllBytes(localFilePath);
-                GameEntry.Data.InitGameData(fileContent);
-                Constants.IsLoginGame = true;
-            }
-            else
-            {
-                // 下载失败，输出错误信息
-                GameEntry.LogError($"下载失败，错误：{request.error}");
-            }
-        }
-        catch (Exception ex)
+            File.WriteAllBytes(localFilePath,data);
+            GameEntry.LogError($"文件 {fileName} 下载并保存到 {localFilePath} 成功！");
+            byte[] fileContent = File.ReadAllBytes(localFilePath);
+            GameEntry.Data.InitGameData(fileContent);
+            Constants.IsLoginGame = true;
+        }, () =>
         {
-            GameEntry.LogError($"文件下载失败，错误：{ex.Message}");
-        }
+            GameEntry.Data.SaveData();
+            Constants.IsLoginGame = true;
+        });
     }
 
 

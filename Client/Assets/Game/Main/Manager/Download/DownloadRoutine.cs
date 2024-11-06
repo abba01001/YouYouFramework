@@ -219,6 +219,46 @@ namespace Main
             }
         }
 
+        //临时处理
+        public async void DownLoadGameData(string url, int tryRequestCount,Action onUpdate,Action<byte[]> successCb,Action failCb)
+        {
+            int currentRetry = 0;
+            while (currentRetry < tryRequestCount)
+            {
+                using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
+                {
+                    try
+                    {
+                        onUpdate?.Invoke();
+                        await webRequest.SendWebRequest();
+                        if (webRequest.responseCode == 404)
+                        {
+                            return;
+                        }
+                        if (webRequest.result == UnityWebRequest.Result.ConnectionError ||
+                            webRequest.result == UnityWebRequest.Result.ProtocolError)
+                        {
+                            currentRetry++;
+                            await UniTask.Delay(100); // 等待 0.1 秒
+                        }
+                        else
+                        {
+                            successCb?.Invoke(webRequest.downloadHandler.data);
+                            return;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        if (e.Message.Contains("404"))
+                        {
+                            failCb?.Invoke();
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+        
         /// <summary>
         /// 从零下载
         /// </summary>

@@ -18,7 +18,7 @@ MonoBehaviour:
   PublishPath: C:/Users/A1-0990/Desktop/APK/7.0.1.apk
   IsUploadAPK: 1
   AssetBundleSavePath: AssetBundles
-  IsCanEditor: 1
+  IsCanEditor: 0
   Datas:
   - Name: "Hotfix\u7A0B\u5E8F\u96C6"
     IsBuild: 1
