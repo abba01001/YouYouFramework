@@ -181,7 +181,7 @@ namespace Main
                 m_CallBackArgs.Value = data.error;
             }
 
-            if (!string.IsNullOrWhiteSpace(m_CallBackArgs.Value)) MainEntry.Log(MainEntry.LogCategory.NetWork, "WebAPI回调:{0}, ==>>{1}", m_Url, m_CallBackArgs.ToJson());
+            //if (!string.IsNullOrWhiteSpace(m_CallBackArgs.Value)) MainEntry.Log(MainEntry.LogCategory.NetWork, "WebAPI回调:{0}, ==>>{1}", m_Url, m_CallBackArgs.ToJson());
             m_CallBack?.Invoke(m_CallBackArgs);
 
             m_CurrRetry = 0;

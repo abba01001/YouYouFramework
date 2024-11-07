@@ -143,17 +143,26 @@ namespace YouYou
             m_LocalAssetsVersionDic.Clear();
             StringBuilder sbr = StringHelper.PoolNew();
             string url = sbr.AppendFormatNoGC(cloudVersionFilePath).ToString();
-            using (UnityWebRequest request = UnityWebRequest.Get(url))
+            try
             {
-                await request.SendWebRequest();
-                if (request.result == UnityWebRequest.Result.Success)
+                using (UnityWebRequest request = UnityWebRequest.Get(url))
                 {
-                    m_CDNVersionDic = GetAssetBundleVersionList(request.downloadHandler.data);
-                    if (File.Exists(localVersionFilePath))
+                    request.timeout = 2;
+                    await request.SendWebRequest();
+                    if (request.result == UnityWebRequest.Result.Success)
                     {
-                        m_LocalAssetsVersionDic = GetAssetBundleVersionList();
+                        m_CDNVersionDic = GetAssetBundleVersionList(request.downloadHandler.data);
+                        if (File.Exists(localVersionFilePath))
+                        {
+                            m_LocalAssetsVersionDic = GetAssetBundleVersionList();
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                // 捕获异常并打印错误信息
+                GameUtil.LogError($"获取云端版本文件时发生异常: {ex.Message}");
             }
         }
 

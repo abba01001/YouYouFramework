@@ -180,7 +180,6 @@ namespace Main
         //临时处理下载文件
         public async void DownAPKVersion(string url, int tryRequestCount,Action onUpdate,Action<string> onComplete)
         {
-            MainEntry.LogError(MainEntry.LogCategory.Assets,$"DownAPKVersion地址{url}");
             int currentRetry = 0;
             while (currentRetry < tryRequestCount)
             {

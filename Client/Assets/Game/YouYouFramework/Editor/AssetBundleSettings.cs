@@ -133,15 +133,22 @@ public class AssetBundleSettings : ScriptableObject
         CreateVersionFile();
         Debug.Log("VersionFile生成版本文件完毕");
 
+        UploadAssetsAsync();
         
+    }
+
+    private async Task UploadAssetsAsync()
+    {
         if (IsUploadAsset)
         {
+            await Task.Delay(1000);  // 延迟 1 秒
+            // 等待文件存在
             while (!File.Exists($"{Application.persistentDataPath}/{YFConstDefine.VersionFileName}"))
             {
-                System.Threading.Thread.Sleep(500);  // 每 500 毫秒检查一次
+                await Task.Delay(1000);  // 每 1000 毫秒检查一次
             }
             COSUploader.UploadVersion(AssetVersion);
-            COSUploader.UploadAB(AssetVersion,GetUploadPath());
+            COSUploader.UploadAB(AssetVersion, GetUploadPath());
         }
     }
 

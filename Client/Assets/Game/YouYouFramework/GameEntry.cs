@@ -134,30 +134,22 @@ namespace YouYou
             };
             StopCoroutine(GameUtil.CheckKeys(keyMappings));
             StartCoroutine(GameUtil.CheckKeys(keyMappings));
-            Initialize();
             ViewQueueManager.Instance.RegisterEvents();
+            Initialize();
         }
 
-        void Initialize()
+        private void Initialize()
         {
-            bool serializerRegistered = false;
-            if (!serializerRegistered)
-            {
-                StaticCompositeResolver.Instance.Register(
-                    MessagePack.Resolvers.GeneratedResolver.Instance,
-                    MessagePack.Resolvers.StandardResolver.Instance,
-                    MessagePack.Unity.UnityResolver.Instance,
-                    MessagePack.Unity.Extension.UnityBlitWithPrimitiveArrayResolver.Instance,
-                    MessagePack.Resolvers.BuiltinResolver.Instance,
-                    MessagePack.Resolvers.PrimitiveObjectResolver.Instance,
-                    MessagePack.Resolvers.StandardResolver.Instance
-                );
-                var option = MessagePackSerializerOptions.Standard.WithResolver(StaticCompositeResolver.Instance);
-                MessagePackSerializer.DefaultOptions = option;
-                serializerRegistered = true;
-            }
+            GameUtil.LogError("Startup初始化成功");
+            StaticCompositeResolver.Instance.Register(
+                MessagePack.Resolvers.GeneratedResolver.Instance,
+                MessagePack.Resolvers.StandardResolver.Instance
+            );
+            var option = MessagePackSerializerOptions.Standard.WithResolver(StaticCompositeResolver.Instance);
+
+            MessagePackSerializer.DefaultOptions = option;
         }
-        
+
         private void Test1()
         {
             QueueManager.Instance.AddEventTask("Hello","CloseHello");

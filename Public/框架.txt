@@ -22,6 +22,7 @@ GameEntry游戏入口里,一堆管理器初始化,流程启动。
 进入ProcedureState.CheckVersion流程(这里把本地资源版本信息清空了,强制校验本地的资源和云端的资源信息,下载云端资源信息(下载资源流程重点))
 下载完之后进入ProcedureState.Preload流程(初始化测试Sql连接，弹出登录界面)
 
+//改了YouYouFrameWork里的代码，打ab包资源，好像不更新？（是因为代码里没按保存键，程序集没有刷新。。。）
 
 
 

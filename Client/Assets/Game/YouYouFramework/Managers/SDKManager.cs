@@ -233,19 +233,13 @@ public class SDKManager : Observable<SDKManager>
     {
         account = "abc123";
         password = "abc123";
-        GameUtil.LogError("===================");
         if (await FindAsync(account))
         {
-            GameUtil.LogError($"登录");
             var (isValid, uuid) = await ValidateUserAsync(account, password);
-            GameUtil.LogError($"状态{isValid}==={uuid}");
             if (isValid)
             {
                 GameEntry.Data.UserId = uuid;
-                GameUtil.LogError($" GameEntry.Data.UserId==={ GameEntry.Data.UserId}");
-                GameUtil.LogError("存在LoadGameData？？？",GameEntry.Data.GetType().GetMethod("LoadGameData"));
                 DownloadGameData(GameEntry.Data.UserId);
-                GameUtil.LogError($"加载数据");
             }
             else
             {

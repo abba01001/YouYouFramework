@@ -163,14 +163,14 @@ public class DataManager : Observable<DataManager>, IDataManager
                 var str = Convert.ToBase64String(binaryData);
                 PlayerPrefs.SetString(GameEntry.Data.UserId, str);
                 
-                var options = MessagePackSerializerOptions.Standard.WithResolver(ContractlessStandardResolver.Instance);
-                string json = MessagePackSerializer.SerializeToJson(this, options);
+                string json = MessagePackSerializer.SerializeToJson(this, MessagePackSerializer.DefaultOptions);
                 lastWriteTime = Time.time;  // 更新写入的时间
                 GameUtil.LogError($"写入本地++++===={json}");
             }
         }
         if (writeCloud)
         {
+            GameUtil.LogError($"开始上传{Time.time - lastUploadTime >= uploadCooldown}");
             if (Time.time - lastUploadTime >= uploadCooldown)
             {
                 GameEntry.SDK.UploadGameData(UserId, binaryData);
