@@ -27,7 +27,7 @@ public class FormLogin : UIFormBase
 
     private void Login()
     {
-        if(account.text == "" || password.text == "") return;
+        //if(account.text == "" || password.text == "") return;
         GameEntry.SDK.LoginAsync(account.text, password.text);
     }
 }

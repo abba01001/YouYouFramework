@@ -133,8 +133,13 @@ public class AssetBundleSettings : ScriptableObject
         CreateVersionFile();
         Debug.Log("VersionFile生成版本文件完毕");
 
+        
         if (IsUploadAsset)
         {
+            while (!File.Exists($"{Application.persistentDataPath}/{YFConstDefine.VersionFileName}"))
+            {
+                System.Threading.Thread.Sleep(500);  // 每 500 毫秒检查一次
+            }
             COSUploader.UploadVersion(AssetVersion);
             COSUploader.UploadAB(AssetVersion,GetUploadPath());
         }

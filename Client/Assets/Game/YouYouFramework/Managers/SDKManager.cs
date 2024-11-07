@@ -58,29 +58,37 @@ public class SDKManager : Observable<SDKManager>
         }
     }
 
-    public async UniTask DownloadGameData(string userId)
+    public async void DownloadGameData(string userId)
     {
-        string fileName = $"{userId}.bin"; // 生成文件名
-        string localDir = Application.persistentDataPath;
-        string localFilePath = Path.Combine(localDir, fileName);
-        string cosUrl = $"{SystemModel.Instance.CurrChannelConfig.GameDataUrl}{fileName}";
+        CosXml cosXml = CreateCosXml();
+        string fileName = $"{userId}.bin";
+        var dic = SecurityUtil.GetSecretKeyDic();
+        string bucketName = dic["bucket"];
+        string filePath = "Unity/GameData/" + fileName; // COS 上的文件路径
+        string localDir = Application.persistentDataPath; // 创建 "HeadIcon" 文件夹路径
         
-        GameUtil.LogError($"地址{cosUrl}");
-        DownloadRoutine routine = DownloadRoutine.Create();
-        routine.Test1(null);
-        routine.Test2();
-        routine.DownLoadGameData(cosUrl, 30,null, (byte[] data) =>
+        string localFilePath = Path.Combine(localDir, fileName); // 完整的文件路径
+        GetObjectRequest request = new GetObjectRequest(bucketName, filePath, localDir, fileName);
+        try
         {
-            File.WriteAllBytes(localFilePath,data);
-            GameEntry.LogError($"文件 {fileName} 下载并保存到 {localFilePath} 成功！");
-            byte[] fileContent = File.ReadAllBytes(localFilePath);
-            GameEntry.Data.InitGameData(fileContent);
-            Constants.IsLoginGame = true;
-        }, () =>
+            GetObjectResult result = await Task.Run(() => cosXml.GetObject(request));
+            if (result.httpCode == 200)
+            {
+                Debug.Log($"下载成功，保存路径: {localFilePath}");
+                byte[] fileContent = File.ReadAllBytes(localFilePath);
+                GameEntry.Data.InitGameData(fileContent);
+                Constants.IsLoginGame = true;
+            }
+            else
+            {
+                GameEntry.Data.SaveData(true,true);
+                Constants.IsLoginGame = true;
+            }
+        }
+        catch (Exception ex)
         {
-            GameEntry.Data.SaveData();
-            Constants.IsLoginGame = true;
-        });
+            Debug.LogError($"下载失败：{ex.Message}");
+        }
     }
 
 
@@ -223,9 +231,14 @@ public class SDKManager : Observable<SDKManager>
     // 登录
     public async Task LoginAsync(string account, string password)
     {
+        account = "abc123";
+        password = "abc123";
+        GameUtil.LogError("===================");
         if (await FindAsync(account))
         {
+            GameUtil.LogError($"登录");
             var (isValid, uuid) = await ValidateUserAsync(account, password);
+            GameUtil.LogError($"状态{isValid}==={uuid}");
             if (isValid)
             {
                 GameEntry.Data.UserId = uuid;

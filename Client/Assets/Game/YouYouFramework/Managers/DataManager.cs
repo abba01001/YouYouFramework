@@ -149,7 +149,6 @@ public class DataManager : Observable<DataManager>, IDataManager
     
     public void LoadGameData()
     {
-        GameUtil.LogError("111111111111");
     }
     
     public void SaveData(bool writeLocal = true,bool writeCloud = false)

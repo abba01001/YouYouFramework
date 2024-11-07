@@ -180,6 +180,7 @@ namespace Main
         //临时处理下载文件
         public async void DownAPKVersion(string url, int tryRequestCount,Action onUpdate,Action<string> onComplete)
         {
+            MainEntry.LogError(MainEntry.LogCategory.Assets,$"DownAPKVersion地址{url}");
             int currentRetry = 0;
             while (currentRetry < tryRequestCount)
             {
@@ -219,59 +220,53 @@ namespace Main
             }
         }
 
-        //临时处理
-
-        public void Test1(Action<byte[]> successCb)
+        public async UniTask DownloadFileAsync(string url, Action<byte[]> successCb, Action failCb, Action onUpdate)
         {
-            Debug.LogError($"测试11111111111");
-        }
-
-        public void Test2()
-        {
-            Debug.LogError($"测试2222222222");
-        }
-        
-        public async void DownLoadGameData(string url, int tryRequestCount,Action onUpdate,Action<byte[]> successCb,Action failCb)
-        {
+            int maxRetries = 5; // 最大重试次数
             int currentRetry = 0;
-            Debug.LogError($"测试333333333333");
-            while (currentRetry < tryRequestCount)
+            UnityWebRequest webRequest = null;
+
+            while (currentRetry < maxRetries)
             {
-                Debug.LogError($"测试444444444444");
-                // currentRetry++;
-                // using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
-                // {
-                //     try
-                //     {
-                //         onUpdate?.Invoke();
-                //         await webRequest.SendWebRequest();
-                //         if (webRequest.responseCode == 404)
-                //         {
-                //             return;
-                //         }
-                //         if (webRequest.result == UnityWebRequest.Result.ConnectionError ||
-                //             webRequest.result == UnityWebRequest.Result.ProtocolError)
-                //         {
-                //             currentRetry++;
-                //             await UniTask.Delay(100); // 等待 0.1 秒
-                //         }
-                //         else
-                //         {
-                //             successCb?.Invoke(webRequest.downloadHandler.data);
-                //             return;
-                //         }
-                //     }
-                //     catch (Exception e)
-                //     {
-                //         if (e.Message.Contains("404"))
-                //         {
-                //             failCb?.Invoke();
-                //             return;
-                //         }
-                //     }
-                // }
+                try
+                {
+                    webRequest = UnityWebRequest.Get(url);
+                    webRequest.timeout = 10; // 设置超时为10秒
+
+                    onUpdate?.Invoke();
+                    await webRequest.SendWebRequest();
+
+                    if (webRequest.responseCode == 404)
+                    {
+                        Debug.LogError("文件未找到，404 错误");
+                        return; // 文件未找到，直接返回
+                    }
+
+                    if (webRequest.result == UnityWebRequest.Result.ConnectionError ||
+                        webRequest.result == UnityWebRequest.Result.ProtocolError)
+                    {
+                        currentRetry++;
+                        Debug.LogWarning($"连接错误，重试 {currentRetry}/{maxRetries}");
+                        await UniTask.Delay(100); // 等待 0.1 秒后重试
+                    }
+                    else
+                    {
+                        successCb?.Invoke(webRequest.downloadHandler.data);
+                        return; // 成功下载后返回
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError("发生了异常: " + e.Message);
+                    failCb?.Invoke(); // 调用失败回调
+                    return;
+                }
             }
+
+            Debug.LogError("下载失败，已达到最大重试次数");
+            failCb?.Invoke(); // 达到最大重试次数后调用失败回调
         }
+
         
         /// <summary>
         /// 从零下载

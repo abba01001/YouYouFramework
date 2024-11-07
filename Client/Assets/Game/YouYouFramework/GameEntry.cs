@@ -134,36 +134,28 @@ namespace YouYou
             };
             StopCoroutine(GameUtil.CheckKeys(keyMappings));
             StartCoroutine(GameUtil.CheckKeys(keyMappings));
-
+            Initialize();
             ViewQueueManager.Instance.RegisterEvents();
         }
 
-        public class Startup
+        void Initialize()
         {
-            static bool serializerRegistered = false;
-            [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-            static void Initialize()
+            bool serializerRegistered = false;
+            if (!serializerRegistered)
             {
-                if (!serializerRegistered)
-                {
-                    StaticCompositeResolver.Instance.Register(
-                        MessagePack.Resolvers.GeneratedResolver.Instance,
-                        MessagePack.Resolvers.StandardResolver.Instance
-                    );
-                    var option = MessagePackSerializerOptions.Standard.WithResolver(StaticCompositeResolver.Instance);
-
-                    MessagePackSerializer.DefaultOptions = option;
-                    serializerRegistered = true;
-                }
+                StaticCompositeResolver.Instance.Register(
+                    MessagePack.Resolvers.GeneratedResolver.Instance,
+                    MessagePack.Resolvers.StandardResolver.Instance,
+                    MessagePack.Unity.UnityResolver.Instance,
+                    MessagePack.Unity.Extension.UnityBlitWithPrimitiveArrayResolver.Instance,
+                    MessagePack.Resolvers.BuiltinResolver.Instance,
+                    MessagePack.Resolvers.PrimitiveObjectResolver.Instance,
+                    MessagePack.Resolvers.StandardResolver.Instance
+                );
+                var option = MessagePackSerializerOptions.Standard.WithResolver(StaticCompositeResolver.Instance);
+                MessagePackSerializer.DefaultOptions = option;
+                serializerRegistered = true;
             }
-
-#if UNITY_EDITOR
-            [UnityEditor.InitializeOnLoadMethod]
-            static void EditorInitialize()
-            {
-                Initialize();
-            }
-#endif
         }
         
         private void Test1()

@@ -28,7 +28,9 @@ namespace YouYou
         private static int totalFileCount = 0;
         private static int successCount = 0;
         private static int failCount = 0;
-        private static string rootPath = @$"F:\UnityStudy\YouYouFramework\Client\AssetBundles\{Application.version}\Android\";
+        private static string rootPath = @$"{System.IO.Directory.GetParent(Application.dataPath).FullName}\AssetBundles\{Application.version}\Android\";
+        private static string localVersionFilePath = $"{Application.persistentDataPath}/{YFConstDefine.VersionFileName}";
+        private static string cloudVersionFilePath = $"{SystemModel.Instance.CurrChannelConfig.EditorRealSourceUrl}{YFConstDefine.VersionFileName}";
         private static UploadResultWindow uploadWindow;
         private static Stopwatch stopwatch;
         
@@ -105,13 +107,11 @@ namespace YouYou
             uploadWindow.Show(); // 显示窗口
             
             await GetCloudAssetFiles();
-            
             try
             {
                 stopwatch.Start(); // 开始计时
                 // 获取当前的构建平台
                 BuildTarget activeBuildTarget = EditorUserBuildSettings.activeBuildTarget;
-
                 // 设置基础文件夹
                 string baseFolder = Path.Combine(SettingsUtil.ProjectDir, "AssetBundles", version, GetPlatformOption(activeBuildTarget));
                 var dic = SecurityUtil.GetSecretKeyDic();
@@ -142,14 +142,14 @@ namespace YouYou
             m_CDNVersionDic.Clear();
             m_LocalAssetsVersionDic.Clear();
             StringBuilder sbr = StringHelper.PoolNew();
-            string url = sbr.AppendFormatNoGC("{0}{1}", SystemModel.Instance.CurrChannelConfig.EditorRealSourceUrl, YFConstDefine.VersionFileName).ToString();
+            string url = sbr.AppendFormatNoGC(cloudVersionFilePath).ToString();
             using (UnityWebRequest request = UnityWebRequest.Get(url))
             {
                 await request.SendWebRequest();
                 if (request.result == UnityWebRequest.Result.Success)
                 {
                     m_CDNVersionDic = GetAssetBundleVersionList(request.downloadHandler.data);
-                    if (File.Exists(string.Format("{0}/{1}", Application.persistentDataPath, YFConstDefine.VersionFileName)))
+                    if (File.Exists(localVersionFilePath))
                     {
                         m_LocalAssetsVersionDic = GetAssetBundleVersionList();
                     }
@@ -186,7 +186,7 @@ namespace YouYou
         
         private static Dictionary<string, VersionFileEntity> GetAssetBundleVersionList()
         {
-            string json = IOUtil.GetFileText($"{Application.persistentDataPath}/{YFConstDefine.VersionFileName}");
+            string json = IOUtil.GetFileText(localVersionFilePath);
             return json.ToObject<Dictionary<string, VersionFileEntity>>();
         }
         
@@ -223,11 +223,6 @@ namespace YouYou
                 {
                     PutObjectRequest request = new PutObjectRequest(bucket, cosPath + "/" + relativePath, fileStream);
                     request.SetSign(TimeUtils.GetCurrentTime(TimeUnit.Seconds), 600);
-                    request.SetCosProgressCallback(delegate (long completed, long total)
-                    {
-                        GameEntry.LogError($"Progress uploading {relativePath}: {completed * 100.0 / total:0.00}%");
-                    });
-
                     try
                     {
                         await Task.Run(() =>
