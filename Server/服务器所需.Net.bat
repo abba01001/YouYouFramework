@@ -3,8 +3,8 @@ chcp 65001
 setlocal
 
 REM 设置所需的 .NET SDK 版本和下载链接
-set DOTNET_VERSION=5.0.408
-set INSTALLER_URL=https://download.visualstudio.microsoft.com/download/pr/14ccbee3-e812-4068-af47-1631444310d1/3b8da657b99d28f1ae754294c9a8f426/dotnet-sdk-5.0.408-win-x64.exe
+set DOTNET_VERSION=6.0.427
+set INSTALLER_URL=https://download.visualstudio.microsoft.com/download/pr/d28a1003-167b-4223-b7fe-5e4c35d462af/a34a42006700d482816b24224ff3425c/dotnet-sdk-6.0.427-win-x64.exe
 
 REM 检查是否安装了所需版本的 .NET SDK
 set "INSTALLED_SDK="
