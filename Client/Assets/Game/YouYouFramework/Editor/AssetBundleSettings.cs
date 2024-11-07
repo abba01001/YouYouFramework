@@ -21,15 +21,6 @@ public class AssetBundleSettings : ScriptableObject
         IOS
     }
 
-    public string APKVersion
-    {
-        get
-        {
-            string[] versionParts = AssetVersion.Split('.');
-            return  versionParts[0] + ".0.0";
-        }
-    }
-
     #region 打包签名
     string keystoreRelativePath = "Assets/PackageTool/user.keystore";
     string keystorePassword = "FrameWork";
@@ -75,7 +66,7 @@ public class AssetBundleSettings : ScriptableObject
     
     [VerticalGroup("Common/Right")]
     [Button(ButtonSizes.Medium)]
-    [LabelText("清空本地CDN资源包")]
+    [LabelText("清空本地AB包资源")]
     public void ClearAssetBundle()
     {
         if (Directory.Exists(TempPath))
@@ -100,7 +91,7 @@ public class AssetBundleSettings : ScriptableObject
 
     [VerticalGroup("Common/Right")]
     [Button(ButtonSizes.Medium)]
-    [LabelText("打包到本地CDN")]
+    [LabelText("输出AB包资源到本地")]
     public void BuildAssetBundle()
     {
         CopyHofixDll();
@@ -141,15 +132,12 @@ public class AssetBundleSettings : ScriptableObject
 
         CreateVersionFile();
         Debug.Log("VersionFile生成版本文件完毕");
-    }
 
-    [VerticalGroup("Common/Right")]
-    [Button(ButtonSizes.Medium)]
-    [LabelText("上传资源到云端")]
-    public void UpdateLoadAssetBundle()
-    {
-        COSUploader.UploadVersion(AssetVersion);
-        COSUploader.UploadAB(AssetVersion,GetUploadPath());
+        if (IsUploadAsset)
+        {
+            COSUploader.UploadVersion(AssetVersion);
+            COSUploader.UploadAB(AssetVersion,GetUploadPath());
+        }
     }
 
     private string GetUploadPath()
@@ -493,17 +481,13 @@ public class AssetBundleSettings : ScriptableObject
         }
 
         string strVersionFilePath = path + "/VersionFile.txt"; //版本文件路径
-
         //如果版本文件存在 则删除
         IOUtil.DeleteFile(strVersionFilePath);
-
         StringBuilder sbContent = new StringBuilder();
-
         DirectoryInfo directory = new DirectoryInfo(path);
 
         //拿到文件夹下所有文件
         FileInfo[] arrFiles = directory.GetFiles("*", SearchOption.AllDirectories);
-
         sbContent.AppendLine(AssetVersion);
         for (int i = 0; i < arrFiles.Length; i++)
         {
@@ -548,9 +532,7 @@ public class AssetBundleSettings : ScriptableObject
             string strLine = string.Format("{0}|{1}|{2}|{3}|{4}", name, md5, size, isFirstData ? 1 : 0, isEncrypt ? 1 : 0);
             sbContent.AppendLine(strLine);
         }
-
         IOUtil.CreateTextFile(strVersionFilePath, sbContent.ToString());
-
         MMO_MemoryStream ms = new MMO_MemoryStream();
         string str = sbContent.ToString().Trim();
         string[] arr = str.Split('\n');
@@ -735,10 +717,12 @@ public class AssetBundleSettings : ScriptableObject
         return lst.ToArray();
     }
 
-    [LabelText("勾选出包时自动上传云端")]
+    [LabelText("勾选输出资源时上传到云端")]
+    public bool IsUploadAsset;
+    
+    [LabelText("勾选输出包时上传到云端")]
     public bool IsUploadAPK;
     
-
     [LabelText("资源包保存路径")]
     [FolderPath]
     /// <summary>

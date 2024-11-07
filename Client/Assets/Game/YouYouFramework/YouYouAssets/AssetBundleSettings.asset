@@ -16,7 +16,8 @@ MonoBehaviour:
   CurrBuildTarget: 1
   Options: 272
   PublishPath: C:/Users/A1-0990/Desktop/APK/7.0.1.apk
-  IsUploadAPK: 1
+  IsUploadAsset: 1
+  IsUploadAPK: 0
   AssetBundleSavePath: AssetBundles
   IsCanEditor: 0
   Datas:

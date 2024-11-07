@@ -67,6 +67,8 @@ public class SDKManager : Observable<SDKManager>
         
         GameUtil.LogError($"地址{cosUrl}");
         DownloadRoutine routine = DownloadRoutine.Create();
+        routine.Test1(null);
+        routine.Test2();
         routine.DownLoadGameData(cosUrl, 30,null, (byte[] data) =>
         {
             File.WriteAllBytes(localFilePath,data);

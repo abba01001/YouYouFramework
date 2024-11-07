@@ -220,42 +220,56 @@ namespace Main
         }
 
         //临时处理
+
+        public void Test1(Action<byte[]> successCb)
+        {
+            Debug.LogError($"测试11111111111");
+        }
+
+        public void Test2()
+        {
+            Debug.LogError($"测试2222222222");
+        }
+        
         public async void DownLoadGameData(string url, int tryRequestCount,Action onUpdate,Action<byte[]> successCb,Action failCb)
         {
             int currentRetry = 0;
+            Debug.LogError($"测试333333333333");
             while (currentRetry < tryRequestCount)
             {
-                using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
-                {
-                    try
-                    {
-                        onUpdate?.Invoke();
-                        await webRequest.SendWebRequest();
-                        if (webRequest.responseCode == 404)
-                        {
-                            return;
-                        }
-                        if (webRequest.result == UnityWebRequest.Result.ConnectionError ||
-                            webRequest.result == UnityWebRequest.Result.ProtocolError)
-                        {
-                            currentRetry++;
-                            await UniTask.Delay(100); // 等待 0.1 秒
-                        }
-                        else
-                        {
-                            successCb?.Invoke(webRequest.downloadHandler.data);
-                            return;
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        if (e.Message.Contains("404"))
-                        {
-                            failCb?.Invoke();
-                            return;
-                        }
-                    }
-                }
+                Debug.LogError($"测试444444444444");
+                // currentRetry++;
+                // using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
+                // {
+                //     try
+                //     {
+                //         onUpdate?.Invoke();
+                //         await webRequest.SendWebRequest();
+                //         if (webRequest.responseCode == 404)
+                //         {
+                //             return;
+                //         }
+                //         if (webRequest.result == UnityWebRequest.Result.ConnectionError ||
+                //             webRequest.result == UnityWebRequest.Result.ProtocolError)
+                //         {
+                //             currentRetry++;
+                //             await UniTask.Delay(100); // 等待 0.1 秒
+                //         }
+                //         else
+                //         {
+                //             successCb?.Invoke(webRequest.downloadHandler.data);
+                //             return;
+                //         }
+                //     }
+                //     catch (Exception e)
+                //     {
+                //         if (e.Message.Contains("404"))
+                //         {
+                //             failCb?.Invoke();
+                //             return;
+                //         }
+                //     }
+                // }
             }
         }
         
