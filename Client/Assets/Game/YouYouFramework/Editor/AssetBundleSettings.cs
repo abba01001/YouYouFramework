@@ -733,7 +733,7 @@ public class AssetBundleSettings : ScriptableObject
 
     private void OnEnable()
     {
-        PublishPath = $"{Application.persistentDataPath}/输出路径";
+        PublishPath = $"{Application.persistentDataPath}/OutPut";
         PlayerSettings.bundleVersion = AssetVersion;
     }
     
