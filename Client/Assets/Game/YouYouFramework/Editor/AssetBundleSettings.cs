@@ -3,6 +3,7 @@ using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 using YouYou;
+using Debug = UnityEngine.Debug;
 
 [CreateAssetMenu(menuName = "YouYouAsset/AssetBundleSettings")]
 public class AssetBundleSettings : ScriptableObject
@@ -57,12 +59,13 @@ public class AssetBundleSettings : ScriptableObject
     [VerticalGroup("Common/Left")]
     [LabelText("参数")]
     public BuildAssetBundleOptions Options;
-    
+
     [PropertySpace(6)]
     [VerticalGroup("Common/Left")]
-    [LabelText("出包路径")]
+    [LabelText("输出路径")]
     [ReadOnly] // 如果你有定义 ReadOnly 特性，可以用这个来显示为只读
-    public string PublishPath;
+    [SerializeField]
+    private string PublishPath = "";//$"{Application.persistentDataPath}/输出路径";
     
     [VerticalGroup("Common/Right")]
     [Button(ButtonSizes.Medium)]
@@ -174,36 +177,32 @@ public class AssetBundleSettings : ScriptableObject
     [VerticalGroup("Common/Right")]
     [Button(ButtonSizes.Medium)]
     [LabelText("出包")]
-    public async void PublishAPK()
+    public void PublishAPK()
     {
         SetKeystoreInfo();
-        if (PublishPath == String.Empty)
-        {
-            // 弹出提示窗口并调用选择路径方法
-            if (EditorUtility.DisplayDialog("出包路径未设置", "请先设置出包路径！", "确定"))
-            {
-                SelectPublishPath(); // 用户点击“确定”后选择路径
-            }
-            return; // 路径未设置，不执行打包
-        }
-        
         //这里能不能弹出一个窗口，然后选择添加场景？
+        var path = PublishPath + $"/{AssetVersion}.apk";
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
         string[] scenes = { "Assets/Game/Scene_Launch.unity" };
         BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions
         {
             scenes = scenes,
-            locationPathName = PublishPath,
+            locationPathName = path,
             target = BuildTarget.Android,
             options = BuildOptions.CompressWithLz4
         };
         COSUploader.UploadVersion(AssetVersion);
+        EditorUserBuildSettings.exportAsGoogleAndroidProject = false; 
         BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
         BuildSummary summary = report.summary;
         if (summary.result == BuildResult.Succeeded)
         {
             EditorUtility.DisplayDialog("打包成功", "APK 已成功生成！", "确定");
-            if (IsUploadAPK) COSUploader.UploadAPK(PublishPath);
-            string directoryPath = Path.GetDirectoryName(PublishPath); // 获取文件夹路径
+            if (IsUploadAPK) COSUploader.UploadAPK(path);
+            string directoryPath = Path.GetDirectoryName(path); // 获取文件夹路径
             System.Diagnostics.Process.Start("explorer.exe", directoryPath);
         }
         if (summary.result == BuildResult.Failed)
@@ -214,14 +213,47 @@ public class AssetBundleSettings : ScriptableObject
         }
     }
     
-    // 添加选择输出路径的方法
-    public void SelectPublishPath()
+    [VerticalGroup("Common/Right")]
+    [Button(ButtonSizes.Medium)]
+    [LabelText("导出Gradle工程")]
+    public void ExportGradleProject()
     {
-        string path = EditorUtility.OpenFolderPanel("选择输出文件夹", "", "");
-        if (!string.IsNullOrEmpty(path))
+        // 设置Keystore信息（如果需要的话）
+        SetKeystoreInfo();
+    
+        var path = PublishPath + "/GradleProject";
+        if (!Directory.Exists(path))
         {
-            PublishPath = path + "/GameBuild.apk"; // 生成 APK 的完整路径
-            Debug.Log("已选择输出路径: " + PublishPath);
+            Directory.CreateDirectory(path);
+        }
+
+        // 配置导出Gradle项目
+        string[] scenes = { "Assets/Game/Scene_Launch.unity" };
+        BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions
+        {
+            // 自动包含所有场景
+            scenes = scenes, // 使用当前编辑器中的所有场景
+            locationPathName = path, // 导出的路径
+            target = BuildTarget.Android, // 构建目标平台
+            options = BuildOptions.AcceptExternalModificationsToPlayer | BuildOptions.Development | BuildOptions.AllowDebugging // 允许外部修改，开发模式等
+        };
+        
+        // 执行导出
+        EditorUserBuildSettings.exportAsGoogleAndroidProject = true; 
+        BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
+        BuildSummary summary = report.summary;
+
+        if (summary.result == BuildResult.Succeeded)
+        {
+            EditorUtility.DisplayDialog("导出成功", "Gradle 项目已成功导出！", "确定");
+            string directoryPath = Path.GetDirectoryName(path); // 获取文件夹路径
+            Process.Start("explorer.exe", directoryPath);
+        }
+        else if (summary.result == BuildResult.Failed)
+        {
+            string errorMessage = "导出失败！\n错误信息: " + summary.totalErrors;
+            GameEntry.LogError(errorMessage);
+            EditorUtility.DisplayDialog("导出失败", errorMessage, "确定");
         }
     }
 
@@ -701,13 +733,12 @@ public class AssetBundleSettings : ScriptableObject
 
     private void OnEnable()
     {
-        PublishPath = $"C:/Users/A1-0990/Desktop/APK/{AssetVersion}.apk";
+        PublishPath = $"{Application.persistentDataPath}/输出路径";
         PlayerSettings.bundleVersion = AssetVersion;
     }
     
     private void OnValidate()
     {
-        PublishPath = $"C:/Users/A1-0990/Desktop/APK/{AssetVersion}.apk";
         PlayerSettings.bundleVersion = AssetVersion;
     }
 
