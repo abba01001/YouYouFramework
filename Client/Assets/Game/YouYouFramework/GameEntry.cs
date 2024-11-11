@@ -140,6 +140,7 @@ namespace YouYou
 
         private void Initialize()
         {
+            GameUtil.LogError("Startup初始化成功");
             StaticCompositeResolver.Instance.Register(
                 MessagePack.Resolvers.GeneratedResolver.Instance,
                 MessagePack.Resolvers.StandardResolver.Instance
