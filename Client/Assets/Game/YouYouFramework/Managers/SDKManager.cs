@@ -302,6 +302,20 @@ public class SDKManager : Observable<SDKManager>
             return result > 0;
         });
     }
+    
+    //更新密码
+    public async Task<bool> UpdateUserPasswordAsync(string userId, string newPassword)
+    {
+        string query = "UPDATE register_data SET user_password = @newPassword WHERE user_uuid = @userId";
+        return await ExecuteWithConnectionAsync(async cmd =>
+        {
+            cmd.CommandText = query;
+            cmd.Parameters.AddWithValue("@newPassword", SecurityUtil.ConvertBase64Key(newPassword));
+            cmd.Parameters.AddWithValue("@userId", userId);
+            int result = await cmd.ExecuteNonQueryAsync();
+            return result > 0;
+        });
+    }
 
     // 验证用户
     private async Task<(bool isValid, string user_uuid)> ValidateUserAsync(string user_account, string input_password)

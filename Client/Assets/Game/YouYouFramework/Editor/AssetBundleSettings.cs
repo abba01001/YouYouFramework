@@ -789,5 +789,12 @@ public class AssetBundleSettings : ScriptableObject
         /// 路径
         /// </summary>
         public string[] Path;
+
+        // [LabelText("是否为分包")]
+        // public bool IsSubPackage;
+        //
+        // // 用于标识不同分包的唯一标识符
+        // [LabelText("分包ID")]
+        // public string SubPackageID; // 新增字段，用于标识不同的分包
     }
 }
