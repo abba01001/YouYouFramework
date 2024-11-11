@@ -148,8 +148,11 @@ public class SDKManager : Observable<SDKManager>
 
     static CosXml CreateCosXml()
     {
-        GameUtil.LogError("8888888888888888888");
         var dic = SecurityUtil.GetSecretKeyDic();
+        foreach (var pair in dic)
+        {
+            GameUtil.LogError($"{pair.Key}=={pair.Value}");
+        }
         CosXmlConfig config = new CosXmlConfig.Builder()
             .SetConnectionTimeoutMs(60000) //设置连接超时时间，单位毫秒，默认45000ms
             .SetReadWriteTimeoutMs(40000) //设置读写超时时间，单位毫秒，默认45000ms
@@ -159,10 +162,8 @@ public class SDKManager : Observable<SDKManager>
             .Build();
 
         long durationSecond = 600; //每次请求签名有效时长，单位为秒
-        GameUtil.LogError("7777777777777777777777777777777");
         QCloudCredentialProvider qCloudCredentialProvider =
             new DefaultQCloudCredentialProvider(dic["secretId"], dic["secretKey"], durationSecond);
-        GameUtil.LogError("6666666666666666");
         return new CosXmlServer(config, qCloudCredentialProvider);
     }
 
