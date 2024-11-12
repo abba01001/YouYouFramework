@@ -51,16 +51,20 @@ SpriteAtlas:
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: 21300000, guid: c63bb402cf5095a4aad5150c9eb2a226, type: 3}
   - {fileID: 21300000, guid: 26760be7e6ff4ce4bb0d937c61b9c66b, type: 3}
   - {fileID: 21300000, guid: f987491961f91b9499fe878a667aa5c5, type: 3}
   - {fileID: 21300000, guid: 676e443955b722541aae85703c83b840, type: 3}
+  - {fileID: 21300000, guid: b5f55949812b53d48bc18a08d2f675cf, type: 3}
   - {fileID: 21300000, guid: ffdd62fcf7b878546a1e67e640321cf2, type: 3}
   - {fileID: 21300000, guid: 23e4191de5c7f05469112ecfeb162ea1, type: 3}
   - {fileID: 21300000, guid: 35643edf58fa8ac44b0b04619bae21ab, type: 3}
   m_PackedSpriteNamesToIndex:
+  - cardline
   - Popup_00_Glow_white
   - Btn_MainButton_Blue
   - Play_Joystick_handle
+  - cardarrow
   - JoyKnob
   - Play_Joystick_bg
   - JoyBg

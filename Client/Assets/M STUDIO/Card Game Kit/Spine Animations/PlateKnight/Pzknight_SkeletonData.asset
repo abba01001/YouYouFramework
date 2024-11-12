@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f1b3b4b945939a54ea0b23d3396115fb, type: 3}
-  m_Name: EggKnight_SkeletonData
+  m_Name: Pzknight_SkeletonData
   m_EditorClassIdentifier: 
   atlasAssets:
-  - {fileID: 11400000, guid: 474d1f799520607478a6df80e83e4c06, type: 2}
+  - {fileID: 11400000, guid: 333758c4817a0d4409b50df38e0709db, type: 2}
   scale: 0.01
-  skeletonJSON: {fileID: 4900000, guid: 89cf4ec6cc72147a1856bda9bef96fcf, type: 3}
+  skeletonJSON: {fileID: 4900000, guid: 2f1524e0821384b11850739cf8f33738, type: 3}
   isUpgradingBlendModeMaterials: 0
   blendModeMaterials:
     requiresBlendModeMaterials: 0
-    applyAdditiveMaterial: 0
+    applyAdditiveMaterial: 1
     additiveMaterials: []
     multiplyMaterials: []
     screenMaterials: []
@@ -27,5 +27,5 @@ MonoBehaviour:
   fromAnimation: []
   toAnimation: []
   duration: []
-  defaultMix: 0
+  defaultMix: 0.2
   controller: {fileID: 0}

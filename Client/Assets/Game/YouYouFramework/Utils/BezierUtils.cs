@@ -93,4 +93,22 @@ public static class BezierUtils
 
         return p;
     }
+    
+    // 计算贝塞尔曲线中的某个点
+    public static Vector3 CalculateBezierPoint(float t, Vector3 startPoint, Vector3 controlPoint1,
+        Vector3 controlPoint2, Vector3 endPoint)
+    {
+        float u = 1 - t;
+        float tt = t * t;
+        float uu = u * u;
+        float uuu = uu * u;
+        float ttt = tt * t;
+
+        Vector3 point = uuu * startPoint;
+        point += 3 * uu * t * controlPoint1;
+        point += 3 * u * tt * controlPoint2;
+        point += ttt * endPoint;
+
+        return point;
+    }
 }
