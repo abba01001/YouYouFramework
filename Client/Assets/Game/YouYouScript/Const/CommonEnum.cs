@@ -32,6 +32,7 @@ public enum SceneGroupName : uint
 {
     None,
     Main,
+    Battle,
 }
 
 public enum EventName : uint

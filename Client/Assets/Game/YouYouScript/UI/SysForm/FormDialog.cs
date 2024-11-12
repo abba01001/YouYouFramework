@@ -47,7 +47,6 @@ public class FormDialog : UIFormBase
         btnOK.onClick.AddListener(() =>
         {
             m_OkAction?.Invoke();
-            GameEntry.Data.SaveData(true,true);
             Close();
         });
         btnCancel.onClick.AddListener(() =>

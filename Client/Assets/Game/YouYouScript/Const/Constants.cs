@@ -13,7 +13,6 @@
     public static bool IsLoginGame = false;
     
     
-    
     // 定义全局常量，常量值不可修改
     public const float GRAVITY = -9.81f;//重力
     public const string CASTLEPATH = "Assets/Game/Download/DunGenMap/Dungeon/Castle/Tiles/";

@@ -81,7 +81,7 @@ public class SDKManager : Observable<SDKManager>
             }
             else
             {
-                GameEntry.Data.SaveData(true,true);
+                GameEntry.Data.SaveData(true,true,true,true);
                 Constants.IsLoginGame = true;
             }
         }
@@ -220,6 +220,7 @@ public class SDKManager : Observable<SDKManager>
         if (await InsertAsync(accountId, passWord))
         {
             Debug.Log("注册成功");
+            GameEntry.Data.IsFirstLoginTime = true;
             DownloadGameData(GameEntry.Data.UserId);
         }
         else

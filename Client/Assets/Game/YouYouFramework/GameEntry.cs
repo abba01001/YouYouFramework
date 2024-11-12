@@ -201,7 +201,7 @@ namespace YouYou
 
         private void OnApplicationQuit()
         {
-            Data.SaveData(true,true);
+            Data.SaveData(true,true, true, true);
             Logger.SyncLog();
             Logger.Dispose();
             Fsm.Dispose();
@@ -212,7 +212,7 @@ namespace YouYou
         {
             if (pause)
             {
-                Data.SaveData(true,true);
+                Data.SaveData(true,true, true, true);
                 GameEntry.Event.Dispatch(Constants.EventName.GameEntryOnApplicationPause);
             }
         }

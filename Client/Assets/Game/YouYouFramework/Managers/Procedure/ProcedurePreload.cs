@@ -68,7 +68,17 @@ namespace YouYou
                 if (Constants.IsLoginGame)
                 {
                     GameEntry.UI.CloseUIForm<FormLogin>();
-                    GameEntry.Procedure.ChangeState(ProcedureState.Game);
+                    if (GameEntry.Data.IsFirstLoginTime)
+                    {
+                        GameEntry.Data.IsFirstLoginTime = false;
+                        GameEntry.Data.SaveData(true,true,true,true);
+                        // TODO
+                        GameEntry.Procedure.ChangeState(ProcedureState.Game);
+                    }
+                    else
+                    {
+                        GameEntry.Procedure.ChangeState(ProcedureState.Game);
+                    }
                 }
                 //进入到业务流程
             }

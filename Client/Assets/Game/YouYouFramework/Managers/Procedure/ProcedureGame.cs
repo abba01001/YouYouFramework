@@ -36,7 +36,7 @@ namespace YouYou
             if (main3Skybox != null)
             {
                 RenderSettings.skybox = main3Skybox;
-                DynamicGI.UpdateEnvironment(); // 更新全局光照（如果需要）
+                DynamicGI.UpdateEnvironment();
             }
             
             var mapParent = GameObject.Find("Map");

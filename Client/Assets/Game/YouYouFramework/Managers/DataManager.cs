@@ -10,8 +10,7 @@ using YouYou;
 
 public interface IDataManager
 {
-    string UserId { get; set; }
-    void SaveData(bool writeLocal = true,bool writeCloud = false);
+    void SaveData(bool writeLocal = true,bool ignoreLocalTime = false,bool writeCloud = false,bool ignoreCloudTime = false);
     void SaveDialogueId(int type, int id);
     void SetPlayerPos(Vector3 pos);
     void LoadGameData();
@@ -34,6 +33,20 @@ public class DataManager : Observable<DataManager>, IDataManager
             SaveData();
         }
     }
+
+    private bool _is_first_login_time;
+    public bool IsFirstLoginTime
+    {
+        get => _is_first_login_time;
+        set
+        {
+            _is_first_login_time = value;
+            SaveData();
+        }
+    }
+    private int _data_update_time; //保存数据时的时间戳
+    public int DataUpdateTime { get => _data_update_time; set { _data_update_time = value; } }
+    
     private PlayerRoleData _playerRoleData;
     public PlayerRoleData PlayerRoleData
     {
@@ -44,8 +57,7 @@ public class DataManager : Observable<DataManager>, IDataManager
             SaveData();
         }
     }
-    private int _data_update_time; //保存数据时的时间戳
-    public int DataUpdateTime { get => _data_update_time; set { _data_update_time = value; } }
+
     #endregion
 
     #region 临时public数据
@@ -151,14 +163,21 @@ public class DataManager : Observable<DataManager>, IDataManager
     {
     }
     
-    public void SaveData(bool writeLocal = true,bool writeCloud = false)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="writeLocal">写入本地</param>
+    /// <param name="ignoreLocalTime">无视cd写入</param>
+    /// <param name="writeCloud">写入云端</param>
+    /// <param name="ignoreCloudTime">无视cd写入</param>
+    public void SaveData(bool writeLocal = true,bool ignoreLocalTime = false,bool writeCloud = false,bool ignoreCloudTime = false)
     {
         if (!Constants.IsLoginGame) return;
         _data_update_time = (int)GameEntry.Time.GetNetTime();
         var binaryData = MessagePackSerializer.Serialize(this, MessagePackSerializer.DefaultOptions);
         if (writeLocal)
         {
-            if (Time.time - lastWriteTime >= writeCooldown)
+            if (Time.time - lastWriteTime >= writeCooldown || ignoreLocalTime)
             {
                 var str = Convert.ToBase64String(binaryData);
                 PlayerPrefs.SetString(GameEntry.Data.UserId, str);
@@ -171,7 +190,7 @@ public class DataManager : Observable<DataManager>, IDataManager
         if (writeCloud)
         {
             GameUtil.LogError($"开始上传{Time.time - lastUploadTime >= uploadCooldown}");
-            if (Time.time - lastUploadTime >= uploadCooldown)
+            if (Time.time - lastUploadTime >= uploadCooldown || ignoreCloudTime)
             {
                 GameEntry.SDK.UploadGameData(UserId, binaryData);
                 lastUploadTime = Time.time;  // 更新上传的时间
