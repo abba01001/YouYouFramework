@@ -246,7 +246,7 @@ namespace YouYou
         /// 创建定时器，可循环多次
         /// </summary>
         /// <param name="interval">间隔时间</param>
-        /// <param name="loop">循环次数</param>
+        /// <param name="loop">循环次数（-1为无线循环）</param>
         /// <param name="onUpdate">循环一次时调用</param>
         /// <param name="onComplete">全部循环完毕时调用</param>
         /// <param name="unScaled">是否无视Time.timeScale</param>

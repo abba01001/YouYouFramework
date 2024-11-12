@@ -48,6 +48,10 @@
         public const string TestEvent = "TestEvent";
         public const string GameEntryOnUpdate = "GameEntryOnUpdate";
         public const string GameEntryOnApplicationQuit = "GameEntryOnApplicationQuit";
+        public const string InitBattleData = "InitBattleData";
+        public const string StartNewRound = "StartNewRound";
+        public const string StopRoundTimer = "StopRoundTimer";
+        public const string RefreshGameTimer = "RefreshGameTimer";
         public const string GameEntryOnApplicationPause = "GameEntryOnApplicationPause";
         public const string LoadingSceneUpdate = "LoadingSceneUpdate";
         public const string PopupAction = "PopupAction";

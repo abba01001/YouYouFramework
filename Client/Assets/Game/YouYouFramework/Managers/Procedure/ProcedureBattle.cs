@@ -32,6 +32,7 @@ namespace YouYou
         internal override void OnUpdate()
         {
             base.OnUpdate();
+            BattleCtrl.Instance.Update();
         }
         internal override void OnLeave()
         {
