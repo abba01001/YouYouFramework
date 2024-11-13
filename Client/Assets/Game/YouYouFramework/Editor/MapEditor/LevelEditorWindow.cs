@@ -1,20 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using DunGen;
-using Sirenix.OdinInspector;
-using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 using UnityEngine;
-using YouYou;
-
+using Sirenix.OdinInspector;
+using Sirenix.OdinInspector.Editor;
 
 public class LevelEditorWindow : OdinEditorWindow
 {
-    private const string DefaultBasePath = "Assets/Game/Download/DunGenMap/Level/"; // 默认的保存路径
+    private const string DefaultBasePath = "Assets/Game/Download/MapLevel/"; // 默认的保存路径
     private string basePath = DefaultBasePath; // 当前保存路径
-    private GameObject MapGenerator = null;
 
     // 窗口显示
     [MenuItem("Tools/关卡编辑器")]
@@ -24,7 +19,10 @@ public class LevelEditorWindow : OdinEditorWindow
     }
 
     // 关卡名称与保存按钮
-    [HorizontalGroup("LevelInfo")] [LabelText("关卡名称")] [PropertySpace(10)] [OnValueChanged("UpdateSavePath")]
+    [HorizontalGroup("LevelInfo")] 
+    [LabelText("关卡名称")] 
+    [PropertySpace(10)] 
+    [OnValueChanged("UpdateSavePath")]
     public string levelName = "DefaultLevel"; // 默认关卡名
 
     [HorizontalGroup("LevelInfo", width: 0.3f)]
@@ -40,98 +38,16 @@ public class LevelEditorWindow : OdinEditorWindow
     public void LoadLevel() => LoadCurrentLevel();
 
     // 保存路径设置
-    [BoxGroup("关卡编辑器")] [HorizontalGroup("PathGroup")] [LabelText("保存路径")] [HideIf("isCustomPathEnabled")] [ReadOnly]
+    [BoxGroup("关卡编辑器")] 
+    [LabelText("保存路径")] 
+    [ReadOnly]
     public string fullSavePath;
-
-    [HorizontalGroup("PathGroup", width: 0.2f)] [LabelText("自定义路径")] [ToggleLeft]
-    public bool isCustomPathEnabled;
-
-    [BoxGroup("关卡编辑器")] [ShowIf("isCustomPathEnabled")] [LabelText("自定义保存路径")]
-    public string customPath;
-
-    [BoxGroup("关卡编辑器")] [LabelText("加密保存")]
-    public bool encryptSave = true; // 加密保存选项
-
-    [BoxGroup("关卡编辑器")] [LabelText("是否随机生成地图")] [ReadOnly]
-    public bool isRandomGeneratedDisplayed;
-
-    [BoxGroup("关卡编辑器")] [LabelText("保存为随机生成地图")] [ToggleLeft]
-    public static bool isRandomGenerated;
-
-    private static bool hasLoadedPrefab = false;
-    private static List<float> BornPos = new List<float>(3) {0, 0, 0};
-    // 窗口启用时初始化
-    private void OnEnable()
-    {
-        UpdateSavePath();
-        if (!hasLoadedPrefab)
-        {
-            LoadDungeonGenerator();
-            hasLoadedPrefab = true;
-        }
-    }
-
-    private void OnDisable()
-    {
-        CleanUpDungeon();
-        hasLoadedPrefab = false;
-    }
-
-    // 加载地图生成器
-    private void LoadDungeonGenerator()
-    {
-        string prefabPath = "Assets/Game/Download/Prefab/DungeonMap/DungeonGenerator.prefab";
-        GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
-        if (prefab != null)
-        {
-            MapGenerator = Instantiate(prefab, Vector3.zero, Quaternion.identity);
-            RuntimeDungeon runtimeDungeon = MapGenerator.GetComponent<RuntimeDungeon>();
-            runtimeDungeon.GenerateOnStart = false;
-        }
-        else
-        {
-            Debug.LogWarning("未找到指定的预制体。");
-        }
-    }
 
     // 实时更新保存路径
     private void UpdateSavePath()
     {
-        string path = isCustomPathEnabled ? customPath : DefaultBasePath;
-        fullSavePath = Path.Combine(path, levelName + ".json");
+        fullSavePath = Path.Combine(DefaultBasePath, levelName + ".json");
         Repaint();
-    }
-
-    // 随机生成地图
-    [HorizontalGroup("MapGenerator")]
-    [Button("随机生成地图", ButtonSizes.Large)]
-    [GUIColor(0.5f, 0.8f, 0.5f)]
-    [PropertySpace(5)]
-    public void RandomGenerate()
-    {
-        if (MapGenerator != null)
-        {
-            MapGenerator.GetComponent<RuntimeDungeon>().Generate();
-        }
-        else
-        {
-            EditorUtility.DisplayDialog("地图生成器", "请先初始化地图生成器", "确定");
-        }
-    }
-
-    // 清理场景
-    [HorizontalGroup("MapGenerator")]
-    [Button("清理场景", ButtonSizes.Large)]
-    [GUIColor(0.8f, 0.5f, 0.5f)]
-    [PropertySpace(5)]
-    public void CleanLevel()
-    {
-        bool confirm = EditorUtility.DisplayDialog("清理场景", "是否清理当前场景所有预制体", "是", "否");
-        if (confirm)
-        {
-            CleanUpDungeon();
-            LoadDungeonGenerator();
-        }
     }
 
     // 保存关卡
@@ -142,9 +58,6 @@ public class LevelEditorWindow : OdinEditorWindow
             Debug.LogWarning("关卡名称不能为空！");
             return;
         }
-
-        string path = isCustomPathEnabled ? customPath : DefaultBasePath;
-        string fullSavePath = Path.Combine(path, levelName + ".json");
 
         if (File.Exists(fullSavePath) && !ConfirmOverwrite(fullSavePath)) return;
 
@@ -159,36 +72,26 @@ public class LevelEditorWindow : OdinEditorWindow
     }
 
     // 收集关卡数据
-    private static LevelData GatherLevelData()
+    private LevelData GatherLevelData()
     {
-        LevelData levelData = new LevelData();
-        // {
-        //     isRandomGenerated = isRandomGenerated,
-        //     models = new List<LevelModelData>(),
-        //     bornPos = BornPos
-        // };
-        //
-        // GameObject dungeon = GameObject.Find("Dungeon");
-        // if (dungeon != null)
-        // {
-        //     foreach (Transform child in dungeon.transform)
-        //     {
-        //         if (child.TryGetComponent(out Tile tile))
-        //         {
-        //             levelData.models.Add(new LevelModelData
-        //             {
-        //                 modelPrefabName = child.gameObject.name.Replace("(Clone)", "").Trim(),
-        //                 position = child.position,
-        //                 rotation = child.rotation,
-        //                 scale = child.localScale,
-        //             });
-        //         }
-        //     }
-        // }
-        // else
-        // {
-        //     Debug.LogWarning("未找到 'Dungeon' 物体。");
-        // }
+        LevelData levelData = new LevelData
+        {
+            levelID = 1, // 这里可以按需要设置ID
+            levelName = levelName,  // 使用 levelName 的值
+            levelDescription = "关卡描述", // 按需要设置描述
+            levelDifficulty = 1, // 设置关卡难度，1表示简单
+            stages = new List<LevelStage>(), // 这里可以添加阶段数据
+            events = new List<EventData>(), // 这里可以添加事件数据
+            rewards = new List<RewardData>(), // 这里可以添加奖励数据
+            goal = LevelGoal.DefeatAllEnemies, // 设置目标
+            backgroundMusic = "BackgroundMusicPath", // 设置背景音乐
+            mapSceneName = "MapSceneName", // 设置场景名
+            levelTips = new List<string> { "关卡提示信息" } // 设置关卡提示信息
+        };
+
+        // 如果有具体数据，可以填充 stages, events 和 rewards 等列表
+        // 例如：
+        // levelData.stages.Add(new LevelStage { stageName = "第一波敌人", ... });
 
         return levelData;
     }
@@ -197,11 +100,6 @@ public class LevelEditorWindow : OdinEditorWindow
     private void SaveLevelDataToFile(string path, LevelData levelData)
     {
         string json = JsonUtility.ToJson(levelData, true);
-        if (encryptSave)
-        {
-            json = Constants.ENCRYPTEDKEY + SecurityUtil.Encrypt(json); // 添加加密标记
-        }
-
         File.WriteAllText(path, json);
         Debug.Log($"关卡数据已保存到: {path}");
     }
@@ -215,9 +113,6 @@ public class LevelEditorWindow : OdinEditorWindow
             return;
         }
 
-        string path = isCustomPathEnabled ? customPath : DefaultBasePath;
-        string fullSavePath = Path.Combine(path, levelName + ".json");
-
         if (!File.Exists(fullSavePath))
         {
             Debug.LogWarning($"未找到文件: {fullSavePath}");
@@ -225,11 +120,6 @@ public class LevelEditorWindow : OdinEditorWindow
         }
 
         string json = File.ReadAllText(fullSavePath);
-        if (json.StartsWith(Constants.ENCRYPTEDKEY))
-        {
-            json = SecurityUtil.Decrypt(json.Substring(Constants.ENCRYPTEDKEY.Length));
-        }
-
         LoadLevelDataFromJson(json);
     }
 
@@ -237,71 +127,76 @@ public class LevelEditorWindow : OdinEditorWindow
     private void LoadLevelDataFromJson(string json)
     {
         LevelData levelData = JsonUtility.FromJson<LevelData>(json);
-        //isRandomGeneratedDisplayed = levelData.isRandomGenerated;
+        Debug.Log($"加载关卡: {levelData.levelName}");
 
+        // 清理之前的场景
         CleanUpDungeon();
 
-        GameObject dungeon = new GameObject("Dungeon");
-        // foreach (LevelModelData modelData in levelData.models)
-        // {
-        //     InstantiatePrefab(modelData, dungeon.transform);
-        // }
+        // 处理关卡数据，例如加载敌人、奖励等
+        foreach (var stage in levelData.stages)
+        {
+            // 加载每个阶段
+            Debug.Log($"加载阶段: {stage.stageName}");
+        }
     }
 
     // 清理当前场景
     private void CleanUpDungeon()
     {
-        GameObject dungeon = GameObject.Find("Dungeon");
-        if (dungeon != null)
-        {
-            DestroyImmediate(dungeon);
-        }
-
-        if (MapGenerator != null)
-        {
-            DestroyImmediate(MapGenerator);
-        }
+        // 可以在这里处理清理之前场景的逻辑
     }
 
-    // 实例化预制体
-    private void InstantiatePrefab(LevelModelData modelData, Transform parent)
-    {
-        string prefabPath = GetPrefabPath(modelData);
-        GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
-        if (prefab != null)
-        {
-            GameObject instance = Instantiate(prefab, modelData.position, modelData.rotation, parent);
-            instance.transform.localScale = modelData.scale;
-        }
-        else
-        {
-            Debug.LogWarning($"未找到预制体: {modelData.modelPrefabName}");
-        }
-    }
+    // 将LevelData直接显示并可编辑
+    [FoldoutGroup("关卡数据")]
+    [PropertySpace(10)]
+    public LevelData levelData = new LevelData();
 
-    public static void SaveBornPos(Vector3 pos)
-    {
-        BornPos = new List<float>() {pos.x, pos.y, pos.z};
-    }
-    
-    // 获取预制体路径
-    private string GetPrefabPath(LevelModelData modelData)
-    {
-        string prefabPath = "";
-        if (modelData.modelPrefabName.Contains("Castle"))
-        {
-            prefabPath = Constants.CASTLEPATH + $"{modelData.modelPrefabName}.prefab";
-        }
-        else if (modelData.modelPrefabName.Contains("Graveyard"))
-        {
-            prefabPath = Constants.GRAVEYARDPATH + $"{modelData.modelPrefabName}.prefab";
-        }
-        else
-        {
-            EditorUtility.DisplayDialog("加载预制体错误", $"类型{modelData.modelPrefabName}", "确定");
-            return "";
-        }
+    // 对于关卡中的子数据（如阶段、事件等），使用 [InlineEditor] 或 [ListDrawerSettings] 来序列化显示
+    [FoldoutGroup("关卡数据/阶段")]
+    [LabelText("阶段信息")]
+    [InlineEditor(InlineEditorModes.FullEditor)]
+    public List<LevelStage> stages = new List<LevelStage>();
 
-        return prefabPath; // 自定义路径
-    }
+    [FoldoutGroup("关卡数据/事件")]
+    [LabelText("事件信息")]
+    [InlineEditor(InlineEditorModes.FullEditor)]
+    public List<EventData> events = new List<EventData>();
+
+    [FoldoutGroup("关卡数据/奖励")]
+    [LabelText("奖励信息")]
+    [InlineEditor(InlineEditorModes.FullEditor)]
+    public List<RewardData> rewards = new List<RewardData>();
+
+    // 显示字段的中文标签
+    [FoldoutGroup("关卡数据/关卡基础信息")]
+    [LabelText("关卡ID")]
+    public int levelID;
+
+    [FoldoutGroup("关卡数据/关卡基础信息")]
+    [LabelText("关卡名称")]
+    public string levelName = "DefaultLevel"; // 保留一个声明，避免重复
+
+    [FoldoutGroup("关卡数据/关卡基础信息")]
+    [LabelText("关卡描述")]
+    public string levelDescription;
+
+    [FoldoutGroup("关卡数据/关卡基础信息")]
+    [LabelText("关卡难度")]
+    public int levelDifficulty;
+
+    [FoldoutGroup("关卡数据/关卡目标")]
+    [LabelText("关卡目标")]
+    public LevelGoal goal;
+
+    [FoldoutGroup("关卡数据/音效和场景")]
+    [LabelText("背景音乐")]
+    public string backgroundMusic;
+
+    [FoldoutGroup("关卡数据/音效和场景")]
+    [LabelText("关卡场景")]
+    public string mapSceneName;
+
+    [FoldoutGroup("关卡数据/提示信息")]
+    [LabelText("关卡提示")]
+    public List<string> levelTips = new List<string>();
 }
