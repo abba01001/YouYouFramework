@@ -161,34 +161,34 @@ public class LevelEditorWindow : OdinEditorWindow
     // 收集关卡数据
     private static LevelData GatherLevelData()
     {
-        LevelData levelData = new LevelData
-        {
-            isRandomGenerated = isRandomGenerated,
-            models = new List<LevelModelData>(),
-            bornPos = BornPos
-        };
-
-        GameObject dungeon = GameObject.Find("Dungeon");
-        if (dungeon != null)
-        {
-            foreach (Transform child in dungeon.transform)
-            {
-                if (child.TryGetComponent(out Tile tile))
-                {
-                    levelData.models.Add(new LevelModelData
-                    {
-                        modelPrefabName = child.gameObject.name.Replace("(Clone)", "").Trim(),
-                        position = child.position,
-                        rotation = child.rotation,
-                        scale = child.localScale,
-                    });
-                }
-            }
-        }
-        else
-        {
-            Debug.LogWarning("未找到 'Dungeon' 物体。");
-        }
+        LevelData levelData = new LevelData();
+        // {
+        //     isRandomGenerated = isRandomGenerated,
+        //     models = new List<LevelModelData>(),
+        //     bornPos = BornPos
+        // };
+        //
+        // GameObject dungeon = GameObject.Find("Dungeon");
+        // if (dungeon != null)
+        // {
+        //     foreach (Transform child in dungeon.transform)
+        //     {
+        //         if (child.TryGetComponent(out Tile tile))
+        //         {
+        //             levelData.models.Add(new LevelModelData
+        //             {
+        //                 modelPrefabName = child.gameObject.name.Replace("(Clone)", "").Trim(),
+        //                 position = child.position,
+        //                 rotation = child.rotation,
+        //                 scale = child.localScale,
+        //             });
+        //         }
+        //     }
+        // }
+        // else
+        // {
+        //     Debug.LogWarning("未找到 'Dungeon' 物体。");
+        // }
 
         return levelData;
     }
@@ -237,15 +237,15 @@ public class LevelEditorWindow : OdinEditorWindow
     private void LoadLevelDataFromJson(string json)
     {
         LevelData levelData = JsonUtility.FromJson<LevelData>(json);
-        isRandomGeneratedDisplayed = levelData.isRandomGenerated;
+        //isRandomGeneratedDisplayed = levelData.isRandomGenerated;
 
         CleanUpDungeon();
 
         GameObject dungeon = new GameObject("Dungeon");
-        foreach (LevelModelData modelData in levelData.models)
-        {
-            InstantiatePrefab(modelData, dungeon.transform);
-        }
+        // foreach (LevelModelData modelData in levelData.models)
+        // {
+        //     InstantiatePrefab(modelData, dungeon.transform);
+        // }
     }
 
     // 清理当前场景

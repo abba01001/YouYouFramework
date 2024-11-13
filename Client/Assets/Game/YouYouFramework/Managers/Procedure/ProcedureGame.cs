@@ -73,50 +73,50 @@ namespace YouYou
             // PoolObj dungeonGenerator = await GameEntry.Pool.GameObjectPool.SpawnAsync(PrefabName.DungeonGenerator,parent1.transform);
             // RuntimeDungeon runtimeDungeon = dungeonGenerator.GetComponent<RuntimeDungeon>();
             // runtimeDungeon.GenerateOnStart = false;
-            LoadCurrentLevel(GameEntry.Data.PlayerRoleData.levelId.ToString());
+            //LoadCurrentLevel(GameEntry.Data.PlayerRoleData.levelId.ToString());
             //dungeonGenerator.GetComponent<DungeonSetup>().InitParams(new object[] {playerCtrl.transform, rotateJoy});
         }
         
         // 加载关卡
-        private void LoadCurrentLevel(string levelName)
-        {
-            if (string.IsNullOrEmpty(levelName))
-            {
-                Debug.LogWarning("关卡名称不能为空！");
-                return;
-            }
-
-            string fullSavePath = "Assets/Game/Download/DunGenMap/Level/" + levelName + ".json";
-            AssetReferenceEntity referenceEntity = GameEntry.Loader.LoadMainAsset(fullSavePath);
-            if (referenceEntity != null)
-            {
-                TextAsset obj = UnityEngine.Object.Instantiate(referenceEntity.Target as TextAsset);
-                AutoReleaseHandle.Add(referenceEntity, MapParent);
-
-                string json = obj.text;
-                if (json.StartsWith(Constants.ENCRYPTEDKEY))
-                {
-                    json = SecurityUtil.Decrypt(json.Substring(Constants.ENCRYPTEDKEY.Length));
-                }
-                LoadLevelDataFromJson(json);
-            }
-            else
-            {
-                Debug.LogWarning($"未找到文件: {fullSavePath}");
-            }
-        }
-        
-        private void LoadLevelDataFromJson(string json)
-        {
-            LevelData levelData = JsonUtility.FromJson<LevelData>(json);
-            Transform parent = MapParent.transform;
-            foreach (LevelModelData modelData in levelData.models)
-            {
-                InstantiatePrefab(modelData, parent);
-            }
-            GameEntry.Event?.Dispatch(Constants.EventName.UpdatePlayerPos,new Vector3(levelData.bornPos[0],levelData.bornPos[1],levelData.bornPos[2]));
-        }
-        
+        // private void LoadCurrentLevel(string levelName)
+        // {
+        //     if (string.IsNullOrEmpty(levelName))
+        //     {
+        //         Debug.LogWarning("关卡名称不能为空！");
+        //         return;
+        //     }
+        //
+        //     string fullSavePath = "Assets/Game/Download/DunGenMap/Level/" + levelName + ".json";
+        //     AssetReferenceEntity referenceEntity = GameEntry.Loader.LoadMainAsset(fullSavePath);
+        //     if (referenceEntity != null)
+        //     {
+        //         TextAsset obj = UnityEngine.Object.Instantiate(referenceEntity.Target as TextAsset);
+        //         AutoReleaseHandle.Add(referenceEntity, MapParent);
+        //
+        //         string json = obj.text;
+        //         if (json.StartsWith(Constants.ENCRYPTEDKEY))
+        //         {
+        //             json = SecurityUtil.Decrypt(json.Substring(Constants.ENCRYPTEDKEY.Length));
+        //         }
+        //         LoadLevelDataFromJson(json);
+        //     }
+        //     else
+        //     {
+        //         Debug.LogWarning($"未找到文件: {fullSavePath}");
+        //     }
+        // }
+        //
+        // private void LoadLevelDataFromJson(string json)
+        // {
+        //     LevelData levelData = JsonUtility.FromJson<LevelData>(json);
+        //     Transform parent = MapParent.transform;
+        //     foreach (LevelModelData modelData in levelData.models)
+        //     {
+        //         InstantiatePrefab(modelData, parent);
+        //     }
+        //     GameEntry.Event?.Dispatch(Constants.EventName.UpdatePlayerPos,new Vector3(levelData.bornPos[0],levelData.bornPos[1],levelData.bornPos[2]));
+        // }
+        //
         // 实例化预制体
         private void InstantiatePrefab(LevelModelData modelData, Transform parent)
         {
