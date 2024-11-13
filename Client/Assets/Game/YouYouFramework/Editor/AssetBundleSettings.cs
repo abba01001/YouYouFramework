@@ -111,7 +111,7 @@ public class AssetBundleSettings : ScriptableObject
                 {
                     //打包这个路径
                     string path = assetBundleData.Path[j];
-                    BuildAssetBundleForPath(path, assetBundleData.Overall,assetBundleData.SubPackageID);
+                    BuildAssetBundleForPath(path, assetBundleData.Overall);
                 }
             }
         }
@@ -675,7 +675,7 @@ public class AssetBundleSettings : ScriptableObject
     /// <param name="path"></param>
     /// <param name="overall">打成一个资源包</param>
     /// <param name="subPackageId">分包id</param>
-    private void BuildAssetBundleForPath(string path, bool overall, string subPackageId)
+    private void BuildAssetBundleForPath(string path, bool overall)
     {
         string fullPath = Application.dataPath + "/" + path;
         //Debug.LogError("fullPath=" + fullPath);
@@ -683,21 +683,7 @@ public class AssetBundleSettings : ScriptableObject
         //1.拿到文件夹下所有文件
         DirectoryInfo directory = new DirectoryInfo(fullPath);
         FileInfo[] arrFiles = directory.GetFiles("*", SearchOption.AllDirectories);
-
-        if (!string.IsNullOrEmpty(subPackageId))
-        {
-            HandleSubPack(overall, arrFiles, subPackageId);
-        }
-        else
-        {
-            HandleNormalPack(overall, arrFiles, path);
-        }
-    }
-
-    //处理分包
-    private void HandleSubPack(bool overall,FileInfo[] arrFiles,string subPackageId)
-    {
-        
+        HandleNormalPack(overall, arrFiles, path);
     }
     
     //处理正常的包
@@ -792,10 +778,6 @@ public class AssetBundleSettings : ScriptableObject
 
         [LabelText("是否要打包")]
         public bool IsBuild = true;
-
-        [LabelText("分包ID")]
-        [Tooltip("如果为空，表示不是分包")]
-        public string SubPackageID = ""; // 空字符串表示不是分包
         
         [LabelText("文件夹为一个资源包")]
         /// <summary>
@@ -820,12 +802,5 @@ public class AssetBundleSettings : ScriptableObject
         /// 路径
         /// </summary>
         public string[] Path;
-
-        // [LabelText("是否为分包")]
-        // public bool IsSubPackage;
-        //
-        // // 用于标识不同分包的唯一标识符
-        // [LabelText("分包ID")]
-        // public string SubPackageID; // 新增字段，用于标识不同的分包
     }
 }

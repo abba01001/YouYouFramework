@@ -16,6 +16,11 @@ public class BattleQueueManager :Singleton<BattleQueueManager>
         renderQueue.Enqueue(command);
     }
 
+    public void Start()
+    {
+        ArrowEffectManager.Instance.Start();
+    }
+    
     public void Update()
     {
         while (renderQueue.Count > 0 && !renderBlock)

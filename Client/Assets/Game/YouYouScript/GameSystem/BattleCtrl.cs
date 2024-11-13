@@ -15,6 +15,7 @@ public class BattleCtrl : Singleton<BattleCtrl>
     //注册事件
     public void InitBattle()
     {
+        BattleQueueManager.Instance.Start();
         GameEntry.Event.AddEventListener(Constants.EventName.InitBattleData, InitBattleData);
         GameEntry.Event.AddEventListener(Constants.EventName.StartNewRound, StartNewRound);
         GameEntry.Event.AddEventListener(Constants.EventName.StopRoundTimer, StopRoundTimer);

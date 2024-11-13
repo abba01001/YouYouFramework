@@ -23,7 +23,6 @@ MonoBehaviour:
   Datas:
   - Name: "Hotfix\u7A0B\u5E8F\u96C6"
     IsBuild: 1
-    SubPackageID: 
     Overall: 1
     IsFirstData: 1
     IsEncrypt: 0
@@ -31,7 +30,6 @@ MonoBehaviour:
     - Game/Download/Hotfix
   - Name: "\u6570\u636E\u8868"
     IsBuild: 1
-    SubPackageID: 
     Overall: 1
     IsFirstData: 1
     IsEncrypt: 1
@@ -39,7 +37,6 @@ MonoBehaviour:
     - Game/Download/DataTable
   - Name: "\u9884\u5236\u4F53"
     IsBuild: 1
-    SubPackageID: 
     Overall: 0
     IsFirstData: 1
     IsEncrypt: 0
@@ -47,7 +44,6 @@ MonoBehaviour:
     - Game/Download/Prefab
   - Name: "\u901A\u7528\u7D20\u6750"
     IsBuild: 1
-    SubPackageID: 
     Overall: 1
     IsFirstData: 1
     IsEncrypt: 0
@@ -56,7 +52,6 @@ MonoBehaviour:
     - Game/Download/Font
   - Name: "\u573A\u666F"
     IsBuild: 1
-    SubPackageID: 
     Overall: 0
     IsFirstData: 1
     IsEncrypt: 0
@@ -64,7 +59,6 @@ MonoBehaviour:
     - Game/Download/Scenes
   - Name: "\u97F3\u4E50"
     IsBuild: 1
-    SubPackageID: 
     Overall: 0
     IsFirstData: 0
     IsEncrypt: 0
@@ -72,7 +66,6 @@ MonoBehaviour:
     - Game/Download/Sound
   - Name: "\u65E0\u9650\u5730\u56FE\u8D44\u6E90"
     IsBuild: 1
-    SubPackageID: 
     Overall: 1
     IsFirstData: 1
     IsEncrypt: 0
@@ -80,7 +73,6 @@ MonoBehaviour:
     - Game/Download/DunGenMap
   - Name: "\u56FE\u96C6\u8D44\u6E90"
     IsBuild: 1
-    SubPackageID: 
     Overall: 1
     IsFirstData: 1
     IsEncrypt: 0
@@ -88,9 +80,15 @@ MonoBehaviour:
     - Game/Download/Atlas/Textures
   - Name: "\u5BC6\u94A5"
     IsBuild: 1
-    SubPackageID: 
     Overall: 1
     IsFirstData: 1
     IsEncrypt: 0
     Path:
     - Game/Download/Key
+  - Name: "Spin\u52A8\u753B"
+    IsBuild: 1
+    Overall: 0
+    IsFirstData: 0
+    IsEncrypt: 0
+    Path:
+    - Game/Download/Spine
