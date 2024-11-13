@@ -22,24 +22,27 @@ public class DragAndReturn : MonoBehaviour, IPointerDownHandler, IDragHandler, I
         initialRotation = rectTransform.eulerAngles; // 获取初始角度
         initialScale = rectTransform.localScale; // 获取初始缩放比例
         siblingIndex = transform.GetSiblingIndex();
-        line = ArrowEffectManager.Instance.GetArrowLine(transform);
     }
 
     // 点击事件
     public void OnPointerDown(PointerEventData eventData)
     {
         if (!isClickable) return; // 如果不可点击，则返回
-
+        if (line == null)
+        {
+            line = ArrowEffectManager.Instance.GetArrowLine(transform);
+            line.ShowArrow(true);
+        }
         // 禁用点击和拖拽，直到动画结束
         isClickable = false;
         transform.SetAsLastSibling();
+        line.transform.SetAsLastSibling();
         dragOffset = rectTransform.localPosition - (Vector3)eventData.position;
         rectTransform.DOScale(initialScale * 1.2f, 0.2f).SetEase(Ease.OutSine); // 放大卡牌，比例可以根据需要调整
         RotateToZeroAngle();
 
         isDragging = true;
 
-        line.ShowArrow(true);
         Vector3 localPosition = (Vector3)eventData.position + dragOffset;
         rectTransform.localPosition = localPosition;
         line.UpdateArrowPositions(rectTransform.localPosition);
@@ -50,6 +53,11 @@ public class DragAndReturn : MonoBehaviour, IPointerDownHandler, IDragHandler, I
     public void OnDrag(PointerEventData eventData)
     {
         if (!isDragging) return;
+        if (line == null)
+        {
+            line = ArrowEffectManager.Instance.GetArrowLine(transform);
+            line.ShowArrow(true);
+        }
         Vector3 localPosition = (Vector3)eventData.position + dragOffset;
         rectTransform.localPosition = localPosition;
         line.UpdateArrowPositions(rectTransform.localPosition);
@@ -58,7 +66,9 @@ public class DragAndReturn : MonoBehaviour, IPointerDownHandler, IDragHandler, I
     // 松开事件
     public void OnPointerUp(PointerEventData eventData)
     {
+        if (line == null) return;
         line.ShowArrow(false);
+        line = null;
         isDragging = false;
         transform.SetSiblingIndex(siblingIndex);
         

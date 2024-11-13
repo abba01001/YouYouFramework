@@ -22,11 +22,6 @@ public class ArrowLine : MonoBehaviour
     private float timer = 0;
     private float interval = 0.5f;
 
-    private void Start()
-    {
-        ShowArrow(false);
-    }
-
     public void ShowArrow(bool bo)
     {
         transform.localScale = bo ? Vector3.one : Vector3.zero;
@@ -40,6 +35,8 @@ public class ArrowLine : MonoBehaviour
             GameObject temp = Instantiate(Arrow, parent);
             ItemList.Add(temp);
         }
+        transform.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+        transform.localPosition = Vector3.zero;
         arrowObj.gameObject.SetActive(false);
         lineObj.gameObject.SetActive(false);
         allSpineTransforms = enemys;
@@ -85,7 +82,7 @@ public class ArrowLine : MonoBehaviour
     // 更新目标Spine
     public void UpdateTargetSpine()
     {
-        if (allSpineTransforms == null || allSpineTransforms.Length == 0)
+        if (allSpineTransforms == null || allSpineTransforms.Length == 0 || transform.localScale == Vector3.zero)
         {
             return;
         }
@@ -93,18 +90,19 @@ public class ArrowLine : MonoBehaviour
         // 假设我们选择距离当前箭头起点最近的Spine
         Transform closestSpine = null;
         float minDistance = Mathf.Infinity;
-        var t1 = startPoint / 150f;
+        var t1 = startPoint;// / 150f;
         foreach (var spine in allSpineTransforms)
         {
-            float distance = Vector2.Distance(t1, spine.transform.position);
+            float distance = Vector3.Distance(t1, spine.transform.position);
             if (minDistance == Mathf.Infinity) minDistance = distance;
+            GameUtil.LogError($"{spine.transform.name}==距离{distance}");
             if (distance <= minDistance)
             {
                 minDistance = distance;
                 closestSpine = spine.transform;
             }
         }
-
+        
         if (closestSpine != null)
         {
             targetSpine = closestSpine;

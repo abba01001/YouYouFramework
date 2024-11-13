@@ -4,6 +4,7 @@ using UnityEngine;
 [System.Serializable]
 public class LevelData
 {
+    [Header("关卡id")]
     public int levelID;              // 关卡ID
     public string levelName;         // 关卡名称
     public string levelDescription;  // 关卡描述

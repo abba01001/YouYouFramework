@@ -67,7 +67,7 @@ public class MapManager : MonoBehaviour
 
     public void InitData()
     {
-     
+        itemBase.transform.gameObject.SetActive(false);
         if (layerDic == null)
         {
             layerDic = new Dictionary<int, MaplayerItem>();

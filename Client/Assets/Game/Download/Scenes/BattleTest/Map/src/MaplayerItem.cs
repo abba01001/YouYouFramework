@@ -55,6 +55,7 @@ public class MaplayerItem
         for (int i = 0; i < Count; i++)
         {
             MapItemBase nowItem = MonoBehaviour.Instantiate(item, rootObj);
+            nowItem.transform.gameObject.SetActive(true);
             int xR = Random.Range(-xRandom, xRandom);
             int yR = Random.Range(-yRandom, yRandom);
             if (nowLayer == 0)

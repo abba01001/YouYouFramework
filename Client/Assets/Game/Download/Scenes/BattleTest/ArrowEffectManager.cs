@@ -37,6 +37,7 @@ public class ArrowEffectManager :Singleton<ArrowEffectManager>
             t.gameObject.SetActive(true);
             line = t.GetComponent<ArrowLine>();
             line.InitData(t.transform,GameObject.FindGameObjectsWithTag("Spine"));
+            line.ShowArrow(true);
             ArrowLineList.Add(line);
         }
         return line;

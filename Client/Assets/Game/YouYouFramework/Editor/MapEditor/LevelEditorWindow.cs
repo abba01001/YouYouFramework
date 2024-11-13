@@ -50,6 +50,11 @@ public class LevelEditorWindow : OdinEditorWindow
         Repaint();
     }
 
+    private void OnEnable()
+    {
+        UpdateSavePath();
+    }
+
     // 保存关卡
     private void SaveCurrentLevel()
     {
@@ -167,36 +172,4 @@ public class LevelEditorWindow : OdinEditorWindow
     [InlineEditor(InlineEditorModes.FullEditor)]
     public List<RewardData> rewards = new List<RewardData>();
 
-    // 显示字段的中文标签
-    [FoldoutGroup("关卡数据/关卡基础信息")]
-    [LabelText("关卡ID")]
-    public int levelID;
-
-    [FoldoutGroup("关卡数据/关卡基础信息")]
-    [LabelText("关卡名称")]
-    public string levelName = "DefaultLevel"; // 保留一个声明，避免重复
-
-    [FoldoutGroup("关卡数据/关卡基础信息")]
-    [LabelText("关卡描述")]
-    public string levelDescription;
-
-    [FoldoutGroup("关卡数据/关卡基础信息")]
-    [LabelText("关卡难度")]
-    public int levelDifficulty;
-
-    [FoldoutGroup("关卡数据/关卡目标")]
-    [LabelText("关卡目标")]
-    public LevelGoal goal;
-
-    [FoldoutGroup("关卡数据/音效和场景")]
-    [LabelText("背景音乐")]
-    public string backgroundMusic;
-
-    [FoldoutGroup("关卡数据/音效和场景")]
-    [LabelText("关卡场景")]
-    public string mapSceneName;
-
-    [FoldoutGroup("关卡数据/提示信息")]
-    [LabelText("关卡提示")]
-    public List<string> levelTips = new List<string>();
 }
