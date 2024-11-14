@@ -1,0 +1,108 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: SkillIcon5
+  serializedVersion: 2
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: Android
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 48
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: c4f2b02ef794c774ca10d806bf5de871, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 24b391e07751a4822ad1e1bbba9f0efc, type: 3}
+  - {fileID: 21300000, guid: 51305bf0eecca4a42b5ab5f5450bfc35, type: 3}
+  - {fileID: 21300000, guid: 1b58cd316f27e410188b875bf2ffd4e9, type: 3}
+  - {fileID: 21300000, guid: 3cb76fa1b9a3c490fa5bae023613ff3b, type: 3}
+  - {fileID: 21300000, guid: 04ed61c1713d84b449df53bac1622dea, type: 3}
+  - {fileID: 21300000, guid: 2bdc5af1dd16b43daa5c9908f633a577, type: 3}
+  - {fileID: 21300000, guid: 8ffd306206ad5424dbf3dfbaa206d77b, type: 3}
+  - {fileID: 21300000, guid: f26aebd5fc2284d049dd864527ab2464, type: 3}
+  - {fileID: 21300000, guid: 9e228bc6e21944a589f66dbae8f8bee9, type: 3}
+  - {fileID: 21300000, guid: 6bd936176846647d9831cb3178c495b9, type: 3}
+  - {fileID: 21300000, guid: 890140f7a96dd4b57be57e9fec57cd8d, type: 3}
+  - {fileID: 21300000, guid: 754459587c563467396dc5a19469a3a9, type: 3}
+  - {fileID: 21300000, guid: 4cab85886a9704dc29795f37cf177aaf, type: 3}
+  - {fileID: 21300000, guid: 7ccd02b8ee48b47c697a06ae270798f8, type: 3}
+  - {fileID: 21300000, guid: e631a72aa46384c678b310bb0b2f3483, type: 3}
+  - {fileID: 21300000, guid: c559a72a2176c46449ac7742c80a905d, type: 3}
+  - {fileID: 21300000, guid: f3ef1bca8893241d3b689b2919b3ea53, type: 3}
+  - {fileID: 21300000, guid: 2588293bef5014ff29c966f5ff9dc44a, type: 3}
+  - {fileID: 21300000, guid: 6b40effbdb28f4b2e96b044533b80b65, type: 3}
+  - {fileID: 21300000, guid: 6439314c445e64c1bbbef32218045a29, type: 3}
+  - {fileID: 21300000, guid: f85c88dcf0698416aaa1aa12306ba4ab, type: 3}
+  - {fileID: 21300000, guid: 25a1663eee35a4a6383025ff87c9a07c, type: 3}
+  - {fileID: 21300000, guid: fde02acec9dfd43c38e67e351acacd47, type: 3}
+  - {fileID: 21300000, guid: 26b56fce1ae324fe3b0d4cbd320f8c12, type: 3}
+  - {fileID: 21300000, guid: d157f18f1f23047ea937bfffa61e4772, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - skill_95
+  - skill_92
+  - skill_96
+  - skill_109
+  - skill_94
+  - skill_114
+  - skill_101
+  - skill_97
+  - skill_93
+  - skill_112
+  - skill_99
+  - skill_115
+  - skill_105
+  - skill_91
+  - skill_104
+  - skill_108
+  - skill_100
+  - skill_110
+  - skill_103
+  - skill_111
+  - skill_107
+  - skill_106
+  - skill_98
+  - skill_102
+  - skill_113
+  m_RenderDataMap: {}
+  m_Tag: SkillIcon5
+  m_IsVariant: 0
+  m_IsPlaceholder: 0

@@ -6,7 +6,7 @@ SpriteAtlas:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: FirstLogin
+  m_Name: LoginEntry
   serializedVersion: 2
   m_EditorData:
     serializedVersion: 2
@@ -139,6 +139,6 @@ SpriteAtlas:
   - CutScene704
   - CutScene102
   m_RenderDataMap: {}
-  m_Tag: FirstLogin
+  m_Tag: LoginEntry
   m_IsVariant: 0
   m_IsPlaceholder: 0

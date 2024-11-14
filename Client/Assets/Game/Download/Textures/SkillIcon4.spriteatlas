@@ -1,0 +1,98 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: SkillIcon4
+  serializedVersion: 2
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: Android
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 48
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: cdea2951450f40549a5fb658088bc864, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: ca906760bec1a42a59352b0862693fef, type: 3}
+  - {fileID: 21300000, guid: 2f4f706175d524c3885326b678c67131, type: 3}
+  - {fileID: 21300000, guid: 6902ba5291fae4430860e7569ef291e7, type: 3}
+  - {fileID: 21300000, guid: 7c6e127314efe498c812c10df57696ce, type: 3}
+  - {fileID: 21300000, guid: 14e7ae73886bd431182b5d4dc74250e5, type: 3}
+  - {fileID: 21300000, guid: 21f6d174d7efa4a499933c44039d600f, type: 3}
+  - {fileID: 21300000, guid: f048181675936408f951c3d448680f31, type: 3}
+  - {fileID: 21300000, guid: 7ef582b6a21224268907e5a968fab360, type: 3}
+  - {fileID: 21300000, guid: 83936bf617c2f4d5ebcb5867acda32f7, type: 3}
+  - {fileID: 21300000, guid: 122b23e7595334d4481e3d2ee9345c84, type: 3}
+  - {fileID: 21300000, guid: b60a75785cf6b4d749488861ea23a03c, type: 3}
+  - {fileID: 21300000, guid: 930fd7cb5fbff4dcd837b2959657212c, type: 3}
+  - {fileID: 21300000, guid: 5feade9caa6f84fabb99df4c7fc95ef6, type: 3}
+  - {fileID: 21300000, guid: 88b931adb38f1427f909f9d037747111, type: 3}
+  - {fileID: 21300000, guid: 80cabfcd6067445da8d64b391895203e, type: 3}
+  - {fileID: 21300000, guid: c59a90ae2da0f4e23b97e38cc1950f5c, type: 3}
+  - {fileID: 21300000, guid: a10349de6ffbe45ae8d8a76c23713086, type: 3}
+  - {fileID: 21300000, guid: b934aeee1cd574f66b65d6eca76595f3, type: 3}
+  - {fileID: 21300000, guid: ec6b642f49b01475ea95a75b735152d5, type: 3}
+  - {fileID: 21300000, guid: d85ed1cf723ea495f9ed4bafc1c6c99c, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - skill_80
+  - skill_81
+  - skill_82
+  - skill_76
+  - skill_83
+  - skill_78
+  - skill_86
+  - skill_75
+  - skill_74
+  - skill_88
+  - skill_85
+  - skill_89
+  - skill_71
+  - skill_90
+  - skill_77
+  - skill_84
+  - skill_87
+  - skill_73
+  - skill_79
+  - skill_72
+  m_RenderDataMap: {}
+  m_Tag: SkillIcon4
+  m_IsVariant: 0
+  m_IsPlaceholder: 0
