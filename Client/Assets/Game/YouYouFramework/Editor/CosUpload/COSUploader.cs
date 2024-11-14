@@ -288,6 +288,7 @@ namespace YouYou
                 else
                 {
                     GameUtil.LogError($"资源出现问题==本地没有这个资源,但是云端有这个资源{abName}");
+                    return false;
                 }
                 return true;
             }
@@ -316,6 +317,9 @@ namespace YouYou
             string message = $"需上传文件数: {totalFileCount}\n成功上传: {successCount}\n失败上传: {failCount}";
             EditorUtility.DisplayDialog("上传结果", message, "确定");
         }
+        
+
+
     }
     
     // 自定义上传结果窗口

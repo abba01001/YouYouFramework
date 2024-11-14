@@ -22,13 +22,19 @@ namespace YouYou
         internal override void OnEnter()
         {
             base.OnEnter();
-            BattleCtrl.Instance.InitBattle();
-            GameEntry.Scene.LoadSceneAction(SceneGroupName.Battle, 1, () =>
-            {
-                GameEntry.UI.OpenUIForm<FormBattle>();
-            });
+            BattleCtrl.Instance.Init();
+            GameEntry.Scene.LoadSceneAction(SceneGroupName.Battle, 1, LoadSceneFinish);
         }
 
+        private void LoadSceneFinish()
+        {
+            //初始化玩家、敌人
+            BattleCtrl.Instance.InitBattleData(null);
+            
+            //初始化界面
+            GameEntry.UI.OpenUIForm<FormBattle>();
+        }
+        
         internal override void OnUpdate()
         {
             base.OnUpdate();
@@ -36,7 +42,7 @@ namespace YouYou
         }
         internal override void OnLeave()
         {
-            BattleCtrl.Instance.EndBattle();
+            BattleCtrl.Instance.End();
             base.OnLeave();
         }
         internal override void OnDestroy()

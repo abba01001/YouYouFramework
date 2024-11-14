@@ -13,7 +13,7 @@ public class BattleCtrl : Singleton<BattleCtrl>
     private TimeAction TimeAction { get; set; }
 
     //注册事件
-    public void InitBattle()
+    public void Init()
     {
         BattleQueueManager.Instance.Start();
         GameEntry.Event.AddEventListener(Constants.EventName.InitBattleData, InitBattleData);
@@ -23,7 +23,7 @@ public class BattleCtrl : Singleton<BattleCtrl>
     }
 
     //卸载事件
-    public void EndBattle()
+    public void End()
     {
         GameEntry.Event.RemoveEventListener(Constants.EventName.InitBattleData, InitBattleData);
         GameEntry.Event.RemoveEventListener(Constants.EventName.StartNewRound, StartNewRound);

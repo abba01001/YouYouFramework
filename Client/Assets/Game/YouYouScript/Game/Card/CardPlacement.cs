@@ -39,7 +39,7 @@ public class CardPlacement : MonoBehaviour
     
     void Start()
     {
-        CreateCardPanel();
+        //CreateCardPanel();
         // canvasRectTransform = GetComponentInParent<Canvas>().GetComponent<RectTransform>();  // 获取画布的RectTransform
         // ArrangeCardsInArc();  // 初始化时执行卡牌排列
     }

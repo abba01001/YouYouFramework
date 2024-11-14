@@ -1,0 +1,118 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: FirstLogin
+  serializedVersion: 2
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: Android
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 50
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 996e4b05d48dc4e78abe44ad33e77b85, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 20811c2027c736a41bc770871501de96, type: 3}
+  - {fileID: -3164809056393425246, guid: dfe103e19cd70254b91e07146780f097, type: 3}
+  - {fileID: -5225540622116197949, guid: 7467ffe134308d54cba26a42802dadff, type: 3}
+  - {fileID: -3164809056393425246, guid: 64a15f03fe9956d45a75141bc442f673, type: 3}
+  - {fileID: -5225540622116197949, guid: 23a8b573927c82b48959fa9bd156b877, type: 3}
+  - {fileID: 21300000, guid: ef57f7736c220664c802eca7e6c6ffcf, type: 3}
+  - {fileID: 21300000, guid: cc4f9b730b2b7eb458886ac83e041e8f, type: 3}
+  - {fileID: 21300000, guid: f9ecd3b307e16844dbfa44e2ae0c19b5, type: 3}
+  - {fileID: 141893073332109768, guid: f21dbff3357a52847bd31bfbcdf35950, type: 3}
+  - {fileID: -2276259661975475453, guid: e92735a4e39a45a4e96a8d1ee33b4577, type: 3}
+  - {fileID: 2750298860172458669, guid: 026b76c4fc24d3a4985b87e99d546be3, type: 3}
+  - {fileID: 21300000, guid: a4927525d66ac134092c638953cacabd, type: 3}
+  - {fileID: 2750298860172458669, guid: 6b2261650ebd33746b5c0675ebbef2eb, type: 3}
+  - {fileID: -3164809056393425246, guid: 76fff5d587cc1f74eb6b6372733c3b54, type: 3}
+  - {fileID: 21300000, guid: 0e578c7660b7be14dabaaa8e2a38fbfb, type: 3}
+  - {fileID: -5225540622116197949, guid: a07f383753c271946a4f8da86514094e, type: 3}
+  - {fileID: 21300000, guid: 46ad1cb8b6fc202458a520f4071f2803, type: 3}
+  - {fileID: 21300000, guid: aae2f43956173ea458d78a7d4bdf3d89, type: 3}
+  - {fileID: -3164809056393425246, guid: 7a75a869c14c2e64b84cf9679a05ceaf, type: 3}
+  - {fileID: 8793915729297761979, guid: d32994992f9802645bf9360fe3a55f74, type: 3}
+  - {fileID: 21300000, guid: 2aa0acd931110ef4088e857eb183ba61, type: 3}
+  - {fileID: 8793915729297761979, guid: ab684fea14490e6429cee0271d5c4e11, type: 3}
+  - {fileID: 21300000, guid: edac6f9b22a981b44ad704c36ebc8011, type: 3}
+  - {fileID: -5225540622116197949, guid: 38e237cbfd60eee409e57b0f66824712, type: 3}
+  - {fileID: 8793915729297761979, guid: 7d1cbf4c50c92954291b227f0e42dc7d, type: 3}
+  - {fileID: 21300000, guid: 52b82acca77c9d04e87d252abbd2eef1, type: 3}
+  - {fileID: 21300000, guid: 4259a4fcca5d6d3468fca5a33e2774a5, type: 3}
+  - {fileID: 21300000, guid: 4ed0adfd5d6bc884fa33052eb3364ccf, type: 3}
+  - {fileID: 21300000, guid: 1ea5315e98558404993ec26d9f5a6b6d, type: 3}
+  - {fileID: 21300000, guid: 7558e13f68dcbe64fb52b7b851ce8fd3, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - 04
+  - 01_0
+  - 02_0
+  - 01_0
+  - 02_0
+  - 06
+  - 04
+  - 08
+  - 06_0
+  - 05_0
+  - 04_0
+  - 06
+  - 04_0
+  - 01_0
+  - 07
+  - 02_0
+  - 07
+  - 03
+  - 01_0
+  - 03_0
+  - 01
+  - 03_0
+  - 01
+  - 02_0
+  - 03_0
+  - 05
+  - 03
+  - 02
+  - 02
+  - 05
+  m_RenderDataMap: {}
+  m_Tag: FirstLogin
+  m_IsVariant: 0
+  m_IsPlaceholder: 0

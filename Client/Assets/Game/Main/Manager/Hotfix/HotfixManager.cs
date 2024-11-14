@@ -26,7 +26,7 @@ namespace Main
             UnityEngine.Object.Instantiate(gameEntry);
             return;
 #endif
-            
+            MainEntry.LogError(MainEntry.LogCategory.Assets,$"========{SystemModel.Instance.CurrChannelConfig.APKVersionUrl}");
             MainEntry.Download.GetAPKVersion(SystemModel.Instance.CurrChannelConfig.APKVersionUrl, null, (result) =>
             {
                 InitServerVersion(result);

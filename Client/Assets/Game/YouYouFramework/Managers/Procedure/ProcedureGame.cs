@@ -23,7 +23,7 @@ namespace YouYou
         {
             base.OnEnter();
             GameEntry.UI.OpenUIForm<FormLoading>();
-            GameEntry.Scene.LoadSceneAction(SceneGroupName.Main, 3,Init);
+            GameEntry.Scene.LoadSceneAction(SceneGroupName.Main, 1,Init);
         }
 
         private void Init()
@@ -45,23 +45,9 @@ namespace YouYou
                 GameObject.Destroy(mapParent);
             }
             MapParent = new GameObject("Map");
-            
-            //初始化界面
-            InitFormBattle();
-            //初始化玩家
-            
-            //初始化敌人
-            
-            //初始化卡牌面板
-            
-            InitPlayer();
+
         }
 
-        private void InitFormBattle()
-        {
-            GameEntry.UI.OpenUIForm<FormBattle>();
-        }
-        
         private async void InitPlayer()
         {
             var parent = new GameObject("Player");

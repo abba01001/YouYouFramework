@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01aecc1a1ad5afc4f9289263945c2a5d, type: 3}
   m_Name: AssetBundleSettings
   m_EditorClassIdentifier: 
-  AssetVersion: 7.0.1
+  AssetVersion: 9.0.0
   CurrBuildTarget: 1
   Options: 272
   PublishPath: C:/Users/A1-0990/AppData/LocalLow/DefaultCompany/YFYouYou/OutPut
@@ -64,13 +64,14 @@ MonoBehaviour:
     IsEncrypt: 0
     Path:
     - Game/Download/Sound
-  - Name: "\u56FE\u96C6\u8D44\u6E90"
+  - Name: "\u7EB9\u7406\u8D44\u6E90"
     IsBuild: 1
     Overall: 1
     IsFirstData: 1
     IsEncrypt: 0
     Path:
-    - Game/Download/Atlas/Textures
+    - Game/Download/Textures/Atlas
+    - Game/Download/Textures/BackGround
   - Name: "\u5BC6\u94A5"
     IsBuild: 1
     Overall: 1
@@ -80,7 +81,7 @@ MonoBehaviour:
     - Game/Download/Key
   - Name: "Spin\u52A8\u753B"
     IsBuild: 1
-    Overall: 0
+    Overall: 1
     IsFirstData: 0
     IsEncrypt: 0
     Path:

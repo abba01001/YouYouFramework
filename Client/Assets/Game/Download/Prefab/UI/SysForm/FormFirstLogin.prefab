@@ -510,7 +510,6 @@ GameObject:
   - component: {fileID: 8750533633200975110}
   - component: {fileID: 4217535608213528387}
   - component: {fileID: 8821429544845713317}
-  - component: {fileID: 8856058237280870768}
   m_Layer: 5
   m_Name: FormFirstLogin
   m_TagString: Untagged
@@ -579,21 +578,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 32567
---- !u!114 &8856058237280870768
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8820732231229538952}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b7c8f3a7922e6945b0151da8ec6397c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  account: {fileID: 0}
-  password: {fileID: 0}
-  loginBtn: {fileID: 0}
 --- !u!1 &8821429544588092631
 GameObject:
   m_ObjectHideFlags: 0
