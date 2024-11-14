@@ -274,16 +274,21 @@ namespace YouYou
 
         private static bool CheckNeedUpload(string abName)
         {
+            if (m_LocalAssetsVersionDic.Count == 0 || m_CDNVersionDic.Count == 0) return true;
             if (abName == "Android" || abName == "AssetInfo.bytes" || abName == "AssetInfo.json") return true;
             if (m_CDNVersionDic.ContainsKey(abName))
             {
                 if (m_LocalAssetsVersionDic.ContainsKey(abName))
                 {
-                    if (m_LocalAssetsVersionDic[abName].MD5 != m_CDNVersionDic[abName].MD5)
+                    bool needUpload = m_LocalAssetsVersionDic[abName].MD5 != m_CDNVersionDic[abName].MD5 ||
+                                      m_LocalAssetsVersionDic[abName].Size != m_CDNVersionDic[abName].Size ||
+                                      m_LocalAssetsVersionDic[abName].IsEncrypt != m_CDNVersionDic[abName].IsEncrypt ||
+                                      m_LocalAssetsVersionDic[abName].IsFirstData != m_CDNVersionDic[abName].IsFirstData;
+                    if (needUpload)
                     {
                         GameUtil.LogError($"上传资源{abName},云端md5{m_CDNVersionDic[abName].MD5},本地md5{m_LocalAssetsVersionDic[abName].MD5}");
                     }
-                    return m_LocalAssetsVersionDic[abName].MD5 != m_CDNVersionDic[abName].MD5;
+                    return needUpload;
                 }
                 else
                 {

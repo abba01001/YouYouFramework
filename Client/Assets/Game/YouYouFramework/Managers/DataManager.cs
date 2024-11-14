@@ -184,12 +184,12 @@ public class DataManager : Observable<DataManager>, IDataManager
                 
                 string json = MessagePackSerializer.SerializeToJson(this, MessagePackSerializer.DefaultOptions);
                 lastWriteTime = Time.time;  // 更新写入的时间
-                GameUtil.LogError($"写入本地++++===={json}");
+                MainEntry.Log(MainEntry.LogCategory.GameData,$"写入本地文件=={json}");
             }
         }
         if (writeCloud)
         {
-            GameUtil.LogError($"开始上传{Time.time - lastUploadTime >= uploadCooldown}");
+            MainEntry.Log(MainEntry.LogCategory.GameData,$"上传云端?{Time.time - lastUploadTime >= uploadCooldown}");
             if (Time.time - lastUploadTime >= uploadCooldown || ignoreCloudTime)
             {
                 GameEntry.SDK.UploadGameData(UserId, binaryData);

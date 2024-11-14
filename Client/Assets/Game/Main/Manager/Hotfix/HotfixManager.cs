@@ -26,7 +26,7 @@ namespace Main
             UnityEngine.Object.Instantiate(gameEntry);
             return;
 #endif
-            MainEntry.LogError(MainEntry.LogCategory.Assets,$"========{SystemModel.Instance.CurrChannelConfig.APKVersionUrl}");
+            MainEntry.Log(MainEntry.LogCategory.Assets,$"请求APK版本={SystemModel.Instance.CurrChannelConfig.APKVersionUrl}");
             MainEntry.Download.GetAPKVersion(SystemModel.Instance.CurrChannelConfig.APKVersionUrl, null, (result) =>
             {
                 InitServerVersion(result);
@@ -71,7 +71,7 @@ namespace Main
             //初始化CDN的VersionFile信息
             MainEntry.Assets.VersionFile.InitCDNVersionFile(() =>
             {
-                MainEntry.LogError(MainEntry.LogCategory.Assets,
+                MainEntry.Log(MainEntry.LogCategory.Assets,
                     $"===本地apk{PlayerPrefs.GetString("apkVersion")}和资源{PlayerPrefs.GetString("assetVersion")}" +
                     $"===云端apk{MainEntry.Assets.VersionFile.CdnApkVersion}和资源{MainEntry.Assets.VersionFile.CdnAssetVersion}");
 #if UNITY_EDITOR

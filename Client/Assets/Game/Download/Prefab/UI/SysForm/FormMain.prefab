@@ -79,7 +79,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "\u767B\u5F55"
+  m_Text: "\u5F00\u59CB"
 --- !u!1 &6475851571339081648
 GameObject:
   m_ObjectHideFlags: 0
@@ -332,7 +332,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   account: {fileID: 0}
   password: {fileID: 0}
-  loginBtn: {fileID: 0}
+  loginBtn: {fileID: 587920083049653436}
 --- !u!1 &8821429544588092631
 GameObject:
   m_ObjectHideFlags: 0

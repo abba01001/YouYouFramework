@@ -89,6 +89,23 @@ namespace Main
                     {
                         //可写区版本文件存在，加载版本文件信息
                         m_LocalAssetsVersionDic = GetAssetBundleVersionList(ref m_LocalAssetsVersion);
+                        foreach (var pair in m_LocalAssetsVersionDic)
+                        {
+                            if (pair.Key == "game/download/datatable.assetbundle")
+                            {
+                                MainEntry.LogError(MainEntry.LogCategory.Assets,$"本地{pair.Value.MD5}");
+                                break;
+                            }
+                        }
+
+                        foreach (var pair in m_CDNVersionDic)
+                        {
+                            if (pair.Key == "game/download/datatable.assetbundle")
+                            {
+                                MainEntry.LogError(MainEntry.LogCategory.Assets, $"云端{pair.Value.MD5}");
+                                break;
+                            }
+                        }
                         MainEntry.Log(MainEntry.LogCategory.Assets, "OnInitLocalVersionFile");
                     }
                     onInitComplete?.Invoke();

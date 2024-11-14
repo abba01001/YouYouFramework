@@ -88,7 +88,7 @@ namespace Main
             m_CurrRetry = 0;
 
             m_DownloadLocalFilePath = string.Format("{0}/{1}", Application.persistentDataPath, m_CurrFileUrl);
-            MainEntry.LogError(MainEntry.LogCategory.Assets,$"资源路径{m_DownloadLocalFilePath}");
+            MainEntry.Log(MainEntry.LogCategory.Assets,$"资源路径{m_DownloadLocalFilePath}");
             //如果本地已有目标文件, 则删除
             if (File.Exists(m_DownloadLocalFilePath)) File.Delete(m_DownloadLocalFilePath);
 

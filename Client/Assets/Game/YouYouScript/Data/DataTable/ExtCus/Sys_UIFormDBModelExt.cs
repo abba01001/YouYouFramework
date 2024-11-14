@@ -24,6 +24,7 @@ namespace YouYou
                         entity.AssetFullPath = string.IsNullOrWhiteSpace(entity.AssetPath_English) ? entity.AssetPath_Chinese : entity.AssetPath_English;
                         break;
                 }
+                GameUtil.LogError(entity.AssetFullPath);
                 string[] strs = entity.AssetFullPath.Split('.')[0].Split('/');
                 if (strs.Length >= 1)
                 {

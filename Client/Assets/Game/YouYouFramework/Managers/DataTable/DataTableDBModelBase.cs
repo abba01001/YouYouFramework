@@ -95,6 +95,14 @@ namespace YouYou
                 return null;
             }
         }
+
+        public void PrintDic()
+        {
+	        foreach (var pair in m_Dic)
+	        {
+		        GameUtil.LogError(pair.Value.ToJson());
+	        }
+        }
         #endregion
 
         /// <summary>

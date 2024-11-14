@@ -136,8 +136,7 @@ public class AssetBundleSettings : ScriptableObject
         CreateVersionFile();
         Debug.Log("VersionFile生成版本文件完毕");
 
-        UploadAssetsAsync();
-        
+
     }
 
     private async Task UploadAssetsAsync()
@@ -150,8 +149,7 @@ public class AssetBundleSettings : ScriptableObject
             {
                 await Task.Delay(1000);  // 每 1000 毫秒检查一次
             }
-            COSUploader.UploadVersion(AssetVersion);
-            COSUploader.UploadAB(AssetVersion, GetUploadPath());
+
         }
     }
 
@@ -605,6 +603,13 @@ public class AssetBundleSettings : ScriptableObject
         fs.Write(buffer, 0, buffer.Length);
         fs.Close();
         fs.Dispose();
+
+        if (IsUploadAsset)
+        {
+            COSUploader.UploadVersion(AssetVersion);
+            COSUploader.UploadAB(AssetVersion, GetUploadPath()); 
+        }
+        //UploadAssetsAsync();
     }
 
     #endregion
@@ -693,13 +698,8 @@ public class AssetBundleSettings : ScriptableObject
             //打成一个资源包
             AssetBundleBuild build = new AssetBundleBuild();
             build.assetBundleName = path + ".ab";
-            GameUtil.LogError("----------------------");
             build.assetBundleVariant = "y";
             string[] arr = GetValidateFiles(arrFiles);
-            foreach (var str in arr)
-            {
-                GameUtil.LogError($"=====资源路径{str}");
-            }
             build.assetNames = arr;
             builds.Add(build);
         }

@@ -5,13 +5,14 @@ using YouYou;
 
 public class TestDataTable : MonoBehaviour
 {
-#if UNITY_EDITOR
+//#if UNITY_EDITOR
     void Update()
     {
         if (Input.GetKeyUp(KeyCode.A))
         {
-            Sys_UIFormEntity entity = GameEntry.DataTable.Sys_UIFormDBModel.GetDic(1);
-            GameEntry.Log(LogCategory.ZhangSan, entity.ToJson());
+            // Sys_UIFormEntity entity = GameEntry.DataTable.Sys_UIFormDBModel.GetDic(1);
+            // GameEntry.Log(LogCategory.ZhangSan, entity.ToJson());
+            GameEntry.DataTable.Sys_UIFormDBModel.PrintDic();
         }
 
         if (Input.GetKeyUp(KeyCode.S))
@@ -26,5 +27,5 @@ public class TestDataTable : MonoBehaviour
             GameEntry.Log(LogCategory.ZhangSan, entity.ToJson());
         }
     }
-#endif
+//#endif
 }

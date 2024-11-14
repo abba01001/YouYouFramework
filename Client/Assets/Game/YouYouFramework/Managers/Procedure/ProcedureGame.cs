@@ -31,12 +31,14 @@ namespace YouYou
                 DynamicGI.UpdateEnvironment();
             }
             
-            var mapParent = GameObject.Find("Map");
-            if (mapParent != null)
-            {
-                GameObject.Destroy(mapParent);
-            }
-            MapParent = new GameObject("Map");
+            GameEntry.UI.OpenUIForm<FormMain>();
+            
+            // var mapParent = GameObject.Find("Map");
+            // if (mapParent != null)
+            // {
+            //     GameObject.Destroy(mapParent);
+            // }
+            // MapParent = new GameObject("Map");
 
         }
 

@@ -21,13 +21,10 @@ public class FormMain : UIFormBase
     protected override void Awake()
     {
         base.Awake();
-        loginBtn.SetButtonClick(Login);
+        loginBtn.SetButtonClick(() =>
+        {
+            GameEntry.Audio.PlayBGM(BGMName.maintheme1);
+        });
         //GameEntry.SDK.DownloadAvatar("1", null);
-    }
-
-    private void Login()
-    {
-        //if(account.text == "" || password.text == "") return;
-        GameEntry.SDK.LoginAsync(account.text, password.text);
     }
 }
