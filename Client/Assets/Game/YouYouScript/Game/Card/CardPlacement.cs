@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;  // 引入 DOTween 库
+using DG.Tweening;
+using UnityEngine.UI; // 引入 DOTween 库
 
 public class CardPlacement : MonoBehaviour
 {
@@ -11,13 +12,36 @@ public class CardPlacement : MonoBehaviour
     public float offset = 85f;     // 额外的Y轴偏移量
     public float enterDuration = 8f;  // 卡牌入场的动画时长（加长时间）
     public float delayBetweenCards = 0.1f;  // 每张卡牌之间的延时（减少延时）
-
     private RectTransform canvasRectTransform;
 
+    public void StartPlay(List<BaseCard> _cards,Canvas _canvas)
+    {
+        cards = _cards;
+        canvasRectTransform = _canvas.GetComponent<RectTransform>();
+        ArrangeCardsInArc();
+    }
+
+    private void CreateCardPanel()
+    {
+        // 创建CardPanel物体
+        GameObject cardPanel = new GameObject("CardPanel");
+        cardPanel.transform.SetParent(GameObject.Find("UIRoot").transform);  // 将CardPanel设置为当前物体的子物体
+        cardPanel.transform.SetLocalPositionAndRotation(Vector3.zero,Quaternion.identity);
+        cardPanel.AddComponent<CanvasRenderer>();
+        cardPanel.AddComponent<GraphicRaycaster>();
+        RectTransform rectTransform = cardPanel.GetComponent<RectTransform>();
+        rectTransform.anchorMin = new Vector2(0, 0);
+        rectTransform.anchorMax = new Vector2(1, 1);
+        rectTransform.pivot = new Vector2(0.5f, 0.5f);
+        rectTransform.sizeDelta = new Vector2(0, 0);
+        cardPanel.transform.localScale = Vector3.one;
+    }
+    
     void Start()
     {
-        canvasRectTransform = GetComponentInParent<Canvas>().GetComponent<RectTransform>();  // 获取画布的RectTransform
-        ArrangeCardsInArc();  // 初始化时执行卡牌排列
+        CreateCardPanel();
+        // canvasRectTransform = GetComponentInParent<Canvas>().GetComponent<RectTransform>();  // 获取画布的RectTransform
+        // ArrangeCardsInArc();  // 初始化时执行卡牌排列
     }
 
     private void Update()

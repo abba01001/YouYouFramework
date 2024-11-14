@@ -46,7 +46,14 @@ namespace YouYou
             }
             MapParent = new GameObject("Map");
             
+            //初始化界面
             InitFormBattle();
+            //初始化玩家
+            
+            //初始化敌人
+            
+            //初始化卡牌面板
+            
             InitPlayer();
         }
 
@@ -157,6 +164,7 @@ namespace YouYou
         }
         internal override void OnLeave()
         {
+            //清理一些资源
             base.OnLeave();
         }
         internal override void OnDestroy()
