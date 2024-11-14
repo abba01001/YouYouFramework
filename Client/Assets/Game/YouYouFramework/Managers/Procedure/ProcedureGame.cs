@@ -28,7 +28,7 @@ namespace YouYou
 
         private void Init()
         {
-            Scene targetScene = SceneManager.GetSceneByName("Main_3");
+            Scene targetScene = SceneManager.GetSceneByName("Main_1");
             SceneManager.SetActiveScene(targetScene);
 
             Material main3Skybox = Resources.Load<Material>("CloudyNight"); // 确保路径正确

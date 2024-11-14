@@ -140,6 +140,7 @@ namespace YouYou
             List<string> dependsAssetList = assetEntity.DependsAssetBundleList;
             for (int i = 0; i < dependsAssetList.Count; i++)
             {
+                GameUtil.LogError($"资源路径========={dependsAssetList[i]}");
                 GameEntry.Loader.LoadAssetBundle(dependsAssetList[i]);
             }
 

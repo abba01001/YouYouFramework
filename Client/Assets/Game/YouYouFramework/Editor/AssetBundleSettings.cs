@@ -329,7 +329,6 @@ public class AssetBundleSettings : ScriptableObject
                     {
                         //不是遍历文件夹打包 说明这个路径就是一个包
                         path = path + ".assetbundle";
-
                         AssetBundleEncryptFile(path);
                     }
                     else
@@ -694,8 +693,13 @@ public class AssetBundleSettings : ScriptableObject
             //打成一个资源包
             AssetBundleBuild build = new AssetBundleBuild();
             build.assetBundleName = path + ".ab";
+            GameUtil.LogError("----------------------");
             build.assetBundleVariant = "y";
             string[] arr = GetValidateFiles(arrFiles);
+            foreach (var str in arr)
+            {
+                GameUtil.LogError($"=====资源路径{str}");
+            }
             build.assetNames = arr;
             builds.Add(build);
         }

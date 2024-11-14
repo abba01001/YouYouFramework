@@ -15,8 +15,8 @@ MonoBehaviour:
   AssetVersion: 9.0.0
   CurrBuildTarget: 1
   Options: 272
-  PublishPath: C:/Users/A1-0990/AppData/LocalLow/DefaultCompany/YFYouYou/OutPut
-  IsUploadAsset: 1
+  PublishPath: C:/Users/Administrator/AppData/LocalLow/DefaultCompany/YFYouYou/OutPut
+  IsUploadAsset: 0
   IsUploadAPK: 0
   AssetBundleSavePath: AssetBundles
   IsCanEditor: 1
@@ -67,11 +67,16 @@ MonoBehaviour:
   - Name: "\u7EB9\u7406\u8D44\u6E90"
     IsBuild: 1
     Overall: 1
-    IsFirstData: 1
+    IsFirstData: 0
     IsEncrypt: 0
     Path:
-    - Game/Download/Textures/Atlas
     - Game/Download/Textures/BackGround
+    - Game/Download/Textures/Card
+    - Game/Download/Textures/Common
+    - Game/Download/Textures/Login
+    - Game/Download/Textures/LoginEntry
+    - Game/Download/Textures/Map
+    - Game/Download/Textures/SkillIcon
   - Name: "\u5BC6\u94A5"
     IsBuild: 1
     Overall: 1
