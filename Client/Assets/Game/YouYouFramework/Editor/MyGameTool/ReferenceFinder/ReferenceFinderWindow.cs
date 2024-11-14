@@ -151,6 +151,8 @@ public class ReferenceFinderWindow : EditorWindow
         EditorGUILayout.BeginHorizontal(toolbarGUIStyle);
         if (GUILayout.Button("更新项目资源数据", toolbarButtonGUIStyle))
         {
+            if (File.Exists(ReferenceFinderData.CACHE_PATH))
+                File.Delete(ReferenceFinderData.CACHE_PATH);
             data.CollectDependenciesInfo();
             needUpdateAssetTree = true;
             EditorGUIUtility.ExitGUI();

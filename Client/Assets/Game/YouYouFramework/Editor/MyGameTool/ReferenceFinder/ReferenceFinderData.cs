@@ -9,8 +9,8 @@ using UnityEngine;
 public class ReferenceFinderData
 {
     //缓存路径
-    private const string CACHE_PATH = "Library/ReferenceFinderCache";
-    private const string CACHE_VERSION = "V1";
+    public const string CACHE_PATH = "Library/ReferenceFinderCache";
+    public const string CACHE_VERSION = "V1";
     //资源引用信息字典
     public Dictionary<string, AssetDescription> assetDict = new Dictionary<string, AssetDescription>();    
 
