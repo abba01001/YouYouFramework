@@ -1,12 +1,6 @@
-using System;
-using System.Collections;
-using System.IO;
-using System.Reflection;
-using MessagePack;
-using MessagePack.Resolvers;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Networking;
 using UnityEngine.UI;
 using YouYou;
 
@@ -17,10 +11,11 @@ public class FormLogin : UIFormBase
     [SerializeField] private TMP_InputField account;
     [SerializeField] private TMP_InputField password;
     [SerializeField] private Button loginBtn;
-
+    [SerializeField] private Image bgImage;
     protected override void Awake()
     {
         base.Awake();
+        LoadLoginBg();
         loginBtn.SetButtonClick(Login);
         //GameEntry.SDK.DownloadAvatar("1", null);
     }
@@ -29,5 +24,18 @@ public class FormLogin : UIFormBase
     {
         //if(account.text == "" || password.text == "") return;
         GameEntry.SDK.LoginAsync(account.text, password.text);
+    }
+    
+    public async UniTask LoadLoginBg()
+    {
+        // Texture2D texture = await GameEntry.Loader.LoadMainAssetAsync<Texture2D>($"Assets/Game/Download/Textures/BackGround/LoginBg.png",this.gameObject);
+        // if (texture != null)
+        // {
+        //     // 将纹理转换为 Sprite
+        //     Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+        //     // 将加载的 sprite 赋值给 Image 组件
+        //     GameUtil.LogError(bgImage == null,"===",sprite == null);
+        //     bgImage.sprite = sprite;
+        // }
     }
 }

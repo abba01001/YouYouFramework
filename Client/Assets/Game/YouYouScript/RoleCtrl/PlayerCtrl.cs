@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using DunGen.DungeonCrawler;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 using YouYou;
 

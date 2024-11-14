@@ -9,30 +9,30 @@ namespace YouYou
     {
 #if UNITY_EDITOR
         /// <summary>
-        /// ÔÚ¼àÊÓÃæ°åÏÔÊ¾µÄĞÅÏ¢
+        /// åœ¨ç›‘è§†é¢æ¿æ˜¾ç¤ºçš„ä¿¡æ¯
         /// </summary>
         public Dictionary<string, AssetBundleReferenceEntity> InspectorDic = new Dictionary<string, AssetBundleReferenceEntity>();
 #endif
 
         /// <summary>
-        /// ×ÊÔ´³ØÃû³Æ
+        /// èµ„æºæ± åç§°
         /// </summary>
         public string PoolName { get; private set; }
 
         /// <summary>
-        /// ×ÊÔ´³Ø×Öµä
+        /// èµ„æºæ± å­—å…¸
         /// </summary>
         private Dictionary<string, AssetBundleReferenceEntity> m_AssetBundleDic;
 
         /// <summary>
-        /// ĞèÒªÒÆ³ıµÄKeyÁ´±í
+        /// éœ€è¦ç§»é™¤çš„Keyé“¾è¡¨
         /// </summary>
         private LinkedList<string> m_NeedRemoveKeyList;
 
         /// <summary>
-        /// ¹¹Ôìº¯Êı
+        /// æ„é€ å‡½æ•°
         /// </summary>
-        /// <param name="poolName">×ÊÔ´³ØÃû³Æ</param>
+        /// <param name="poolName">èµ„æºæ± åç§°</param>
         public AssetBundlePool(string poolName)
         {
             PoolName = poolName;
@@ -41,7 +41,7 @@ namespace YouYou
         }
 
         /// <summary>
-        /// ×¢²áµ½×ÊÔ´³Ø
+        /// æ³¨å†Œåˆ°èµ„æºæ± 
         /// </summary>
         public void Register(AssetBundleReferenceEntity entity)
         {
@@ -52,7 +52,7 @@ namespace YouYou
         }
 
         /// <summary>
-        /// ×ÊÔ´È¡³Ø
+        /// èµ„æºå–æ± 
         /// </summary>
         public AssetBundleReferenceEntity Spawn(string resourceName)
         {
@@ -64,7 +64,7 @@ namespace YouYou
         }
 
         /// <summary>
-        /// ÊÍ·Å×ÊÔ´³ØÖĞ¿ÉÊÍ·Å×ÊÔ´
+        /// é‡Šæ”¾èµ„æºæ± ä¸­å¯é‡Šæ”¾èµ„æº
         /// </summary>
         public void Release()
         {
@@ -85,7 +85,7 @@ namespace YouYou
                 }
             }
 
-            //Ñ­»·Á´±í ´Ó×ÖµäÖĞÒÆ³ıÖÆ¶¨µÄKey
+            //å¾ªç¯é“¾è¡¨ ä»å­—å…¸ä¸­ç§»é™¤åˆ¶å®šçš„Key
             LinkedListNode<string> curr = m_NeedRemoveKeyList.First;
             while (curr != null)
             {

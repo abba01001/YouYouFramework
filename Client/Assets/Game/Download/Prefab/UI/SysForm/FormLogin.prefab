@@ -1702,6 +1702,7 @@ MonoBehaviour:
   account: {fileID: 5423118119780841784}
   password: {fileID: 8345727567368554823}
   loginBtn: {fileID: 587920083049653436}
+  bgImage: {fileID: 8821429544588092628}
 --- !u!1 &8821429544588092631
 GameObject:
   m_ObjectHideFlags: 0

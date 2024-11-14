@@ -1,14 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using DunGen;
-using DunGen.DungeonCrawler;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using Path = DG.Tweening.Plugins.Core.PathCore.Path;
 
 
 namespace YouYou
@@ -60,7 +52,6 @@ namespace YouYou
             YouYouJoystick moveJoy = GameEntry.UI.GetUIForm<FormBattle>("FormBattle").GetMoveJoystick();
             Animator animator = playerModel.GetComponentInChildren<Animator>(true);
             playerCtrl.GetComponent<PlayerCtrl>().InitParams(new object[] { animator,moveJoy, playerCamera.GetComponent<Camera>() });
-            playerCtrl.GetComponent<ClickableObjectHandler>().InitParams(new object[] { playerCamera.GetComponent<Camera>() });
             playerCamera.GetComponent<PlayerCamera>().InitParams(new object[] { playerCtrl.transform, rotateJoy });
             
             // PoolObj dungeonGenerator = await GameEntry.Pool.GameObjectPool.SpawnAsync(PrefabName.DungeonGenerator,parent1.transform);

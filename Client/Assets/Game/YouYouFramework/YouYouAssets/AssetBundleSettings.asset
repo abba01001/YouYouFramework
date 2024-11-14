@@ -17,7 +17,7 @@ MonoBehaviour:
   Options: 272
   PublishPath: C:/Users/Administrator/AppData/LocalLow/DefaultCompany/YFYouYou/OutPut
   IsUploadAsset: 1
-  IsUploadAPK: 1
+  IsUploadAPK: 0
   AssetBundleSavePath: AssetBundles
   IsCanEditor: 1
   Datas:
@@ -70,7 +70,6 @@ MonoBehaviour:
     IsFirstData: 1
     IsEncrypt: 0
     Path:
-    - Game/Download/Textures/BackGround
     - Game/Download/Textures/Card
     - Game/Download/Textures/Common
     - Game/Download/Textures/Login
@@ -81,13 +80,13 @@ MonoBehaviour:
     - Game/Download/Textures/SkillIcon3
     - Game/Download/Textures/SkillIcon4
     - Game/Download/Textures/SkillIcon5
-  - Name: "\u5BC6\u94A5"
+  - Name: "\u5E38\u9A7B\u80CC\u666F\u8D44\u6E90"
     IsBuild: 1
-    Overall: 1
+    Overall: 0
     IsFirstData: 1
     IsEncrypt: 0
     Path:
-    - Game/Download/Key
+    - Game/Download/Textures/ResidentBg
   - Name: "Spin\u52A8\u753B"
     IsBuild: 1
     Overall: 1
@@ -104,3 +103,10 @@ MonoBehaviour:
     - Game/Download/Spine/PlateKnight
     - Game/Download/Spine/Player
     - Game/Download/Spine/Vacuum
+  - Name: "\u5BC6\u94A5"
+    IsBuild: 1
+    Overall: 1
+    IsFirstData: 1
+    IsEncrypt: 0
+    Path:
+    - Game/Download/Key
