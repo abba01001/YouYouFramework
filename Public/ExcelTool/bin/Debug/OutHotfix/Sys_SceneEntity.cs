@@ -1,26 +1,24 @@
+
 using System.Collections;
 
-namespace Hotfix
+/// <summary>
+/// Sys_Scene实体
+/// </summary>
+public partial class Sys_SceneEntity : DataTableEntityBase
 {
     /// <summary>
-      /// Sys_Scene实体
+    /// 场景组
     /// </summary>
-    public partial class Sys_SceneEntity : DataTableEntityBase
-    {
-        /// <summary>
-        /// 场景组
-        /// </summary>
-        public string SceneGroup;
+    public string SceneGroup;
 
-        /// <summary>
-        /// 场景路径
-        /// </summary>
-        public string AssetFullPath;
+    /// <summary>
+    /// 场景路径
+    /// </summary>
+    public string AssetFullPath;
 
-        /// <summary>
-        /// 背景音乐
-        /// </summary>
-        public string BGMId;
+    /// <summary>
+    /// 背景音乐
+    /// </summary>
+    public string BGMId;
 
-    }
 }

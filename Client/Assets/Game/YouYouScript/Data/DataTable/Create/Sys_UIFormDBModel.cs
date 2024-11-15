@@ -22,7 +22,7 @@ namespace YouYou
         {
             int rows = ms.ReadInt();
             int columns = ms.ReadInt();
-            GameUtil.LogError($"配置表行数:{rows}");
+
             for (int i = 0; i < rows; i++)
             {
                 Sys_UIFormEntity entity = new Sys_UIFormEntity();
