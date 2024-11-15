@@ -67,6 +67,14 @@ public class AssetBundleSettings : ScriptableObject
     [SerializeField]
     private string PublishPath = "";//$"{Application.persistentDataPath}/输出路径";
     
+    [VerticalGroup("Common/Left")]
+    [Button(ButtonSizes.Medium)]
+    [LabelText("AB包资源预览")]
+    public void Test()
+    {
+        AssetComparerWindow.ShowWindow();
+    }
+    
     [VerticalGroup("Common/Right")]
     [Button(ButtonSizes.Medium)]
     [LabelText("清空本地AB包资源")]
@@ -807,4 +815,6 @@ public class AssetBundleSettings : ScriptableObject
         /// </summary>
         public string[] Path;
     }
+    
+
 }

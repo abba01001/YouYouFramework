@@ -11,7 +11,7 @@ using Main;
 using UnityEngine.Networking;
 using Sirenix.OdinInspector;
 
-public class AssetVersionComparerWindow : EditorWindow
+public class AssetComparerWindow : EditorWindow
 {
     private string localVersionFilePath;
     private string cloudVersionFilePath;
@@ -350,11 +350,9 @@ public class AssetVersionComparerWindow : EditorWindow
             return $"{size} B";
     }
 
-    // 打开窗口
-    [MenuItem("Tools/资源版本对比工具")]
     public static void ShowWindow()
     {
-        AssetVersionComparerWindow window = GetWindow<AssetVersionComparerWindow>("资源版本对比工具");
+        AssetComparerWindow window = GetWindow<AssetComparerWindow>("资源版本对比工具");
         window.minSize = new Vector2(600, 200);
         window.Show();
     }
