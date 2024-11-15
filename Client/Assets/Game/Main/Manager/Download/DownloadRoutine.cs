@@ -202,7 +202,7 @@ namespace Main
                         else
                         {
                             string result = webRequest.downloadHandler.text;
-                            MainEntry.Log(MainEntry.LogCategory.GameData, "成功拉取云端APKVersion.txt \n" +
+                            MainEntry.Log(MainEntry.LogCategory.Assets, "成功下载云端Apk和AssetBundle版本信息=>\n" +
                                                                           $"{result}");
                             onComplete?.Invoke(result);
                             return;

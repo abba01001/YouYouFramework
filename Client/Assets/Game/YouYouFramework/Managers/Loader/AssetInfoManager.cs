@@ -76,7 +76,6 @@ namespace YouYou
                         entity.DependsAssetBundleList.Add(ms.ReadUTF8String());
                     }
                 }
-
                 m_AssetInfoDic[entity.AssetFullPath] = entity;
             }
 

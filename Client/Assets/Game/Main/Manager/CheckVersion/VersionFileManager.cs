@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -79,40 +80,23 @@ namespace Main
                     onComplete?.Invoke(request);
                 }
             }
+            MainEntry.Log(MainEntry.LogCategory.Assets, $"开始请求云端AssetBundle资源列表信息=>{url}");
             MainEntry.Instance.StartCoroutine(UnityWebRequestGet(url, (request) =>
             {
                 if (request.result == UnityWebRequest.Result.Success)
                 {
                     m_CDNVersionDic = GetAssetBundleVersionList(request.downloadHandler.data, ref m_CDNApkVersion,ref m_CDNAssetVersion);
-                    MainEntry.Log(MainEntry.LogCategory.Assets, "OnInitCDNVersionFile");
                     if (GetVersionFileExists())
                     {
                         //可写区版本文件存在，加载版本文件信息
                         m_LocalAssetsVersionDic = GetAssetBundleVersionList(ref m_LocalAssetsVersion);
-                        foreach (var pair in m_LocalAssetsVersionDic)
-                        {
-                            if (pair.Key == "game/download/datatable.assetbundle")
-                            {
-                                MainEntry.LogError(MainEntry.LogCategory.Assets,$"本地{pair.Value.MD5}");
-                                break;
-                            }
-                        }
-
-                        foreach (var pair in m_CDNVersionDic)
-                        {
-                            if (pair.Key == "game/download/datatable.assetbundle")
-                            {
-                                MainEntry.LogError(MainEntry.LogCategory.Assets, $"云端{pair.Value.MD5}");
-                                break;
-                            }
-                        }
-                        MainEntry.Log(MainEntry.LogCategory.Assets, "OnInitLocalVersionFile");
+                        MainEntry.Log(MainEntry.LogCategory.Assets, "成功下载云端AssetBundle资源列表");
                     }
                     onInitComplete?.Invoke();
                 }
                 else
                 {
-                    Main.MainEntry.Log(MainEntry.LogCategory.Assets, "初始化CDN资源包信息失败，url==" + url);
+                    MainEntry.Log(MainEntry.LogCategory.Assets, "下载云端AssetBundle资源列表失败");
                 }
             }));
         }

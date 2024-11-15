@@ -97,13 +97,30 @@ namespace YouYou
                 }
             }
         }
+
+        public static async Task ShowUploadWindow()
+        {
+            if (uploadWindow == null) uploadWindow = new UploadResultWindow(); // 创建上传结果窗口
+            uploadWindow.Show(); // 显示窗口
+            successLog.AppendLine($"倒计时3秒后开启上传至云端");
+            uploadWindow.UpdateLog(successLog.ToString(), failureLog.ToString(), "");
+            await UniTask.Delay(1000); // 延迟 1 秒
+            successLog.AppendLine($"倒计时2秒后开启上传至云端");
+            uploadWindow.UpdateLog(successLog.ToString(), failureLog.ToString(), "");
+            await UniTask.Delay(1000); // 延迟 1 秒
+            successLog.AppendLine($"倒计时1秒后开启上传至云端");
+            uploadWindow.UpdateLog(successLog.ToString(), failureLog.ToString(), "");
+            await UniTask.Delay(1000); // 延迟 1 秒
+            successLog.AppendLine($"开始上传");
+            uploadWindow.UpdateLog(successLog.ToString(), failureLog.ToString(), "");
+        }
         
-        public static async void UploadAB(string version,string uploadPath)
+        public static async void UploadAssetBundle(string version,string uploadPath)
         {
             cosConfig = Resources.Load<CosConfig>("CosConfig");
             CosXml cosXml = CreateCosXml();
             stopwatch = new Stopwatch(); // 用于记录耗时
-            uploadWindow = new UploadResultWindow(); // 创建上传结果窗口
+            if(uploadWindow == null) uploadWindow = new UploadResultWindow(); // 创建上传结果窗口
             uploadWindow.Show(); // 显示窗口
             
             await GetCloudAssetFiles();
@@ -131,7 +148,7 @@ namespace YouYou
             finally
             {
                 // 上传完成后关闭窗口并显示结果提示
-                uploadWindow.Close();
+                //uploadWindow.Close();
                 ShowUploadResult();
             }
         }
@@ -141,6 +158,11 @@ namespace YouYou
         {
             m_CDNVersionDic.Clear();
             m_LocalAssetsVersionDic.Clear();
+            if (File.Exists(localVersionFilePath))
+            {
+                m_LocalAssetsVersionDic = GetAssetBundleVersionList();
+            }
+            
             StringBuilder sbr = StringHelper.PoolNew();
             string url = sbr.AppendFormatNoGC(cloudVersionFilePath).ToString();
             try
@@ -152,10 +174,7 @@ namespace YouYou
                     if (request.result == UnityWebRequest.Result.Success)
                     {
                         m_CDNVersionDic = GetAssetBundleVersionList(request.downloadHandler.data);
-                        if (File.Exists(localVersionFilePath))
-                        {
-                            m_LocalAssetsVersionDic = GetAssetBundleVersionList();
-                        }
+
                     }
                 }
             }
@@ -164,6 +183,7 @@ namespace YouYou
                 // 捕获异常并打印错误信息
                 GameUtil.LogError($"获取云端版本文件时发生异常: {ex.Message}");
             }
+            
         }
 
 
@@ -286,13 +306,13 @@ namespace YouYou
                                       m_LocalAssetsVersionDic[abName].IsFirstData != m_CDNVersionDic[abName].IsFirstData;
                     if (needUpload)
                     {
-                        GameUtil.LogError($"上传资源{abName},云端md5{m_CDNVersionDic[abName].MD5},本地md5{m_LocalAssetsVersionDic[abName].MD5}");
+                        MainEntry.Log(MainEntry.LogCategory.Assets,$"上传资源{abName},云端md5{m_CDNVersionDic[abName].MD5},本地md5{m_LocalAssetsVersionDic[abName].MD5}");
                     }
                     return needUpload;
                 }
                 else
                 {
-                    GameUtil.LogError($"资源出现问题==本地没有这个资源,但是云端有这个资源{abName}");
+                    MainEntry.LogWarning(MainEntry.LogCategory.Assets,$"资源出现问题==本地没有这个资源,但是云端有这个资源{abName}");
                     return false;
                 }
                 return true;

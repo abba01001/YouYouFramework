@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
@@ -144,19 +145,19 @@ public class AssetBundleSettings : ScriptableObject
         CreateVersionFile();
         Debug.Log("VersionFile生成版本文件完毕");
 
-
+        AssetDatabase.Refresh();
+        UploadAssetsAsync();
     }
 
     private async Task UploadAssetsAsync()
     {
         if (IsUploadAsset)
         {
-            await Task.Delay(1000);  // 延迟 1 秒
+            COSUploader.ShowUploadWindow();
+            await UniTask.Delay(3000);  // 延迟 1 秒
             // 等待文件存在
-            while (!File.Exists($"{Application.persistentDataPath}/{YFConstDefine.VersionFileName}"))
-            {
-                await Task.Delay(1000);  // 每 1000 毫秒检查一次
-            }
+            COSUploader.UploadVersion(AssetVersion);
+            COSUploader.UploadAssetBundle(AssetVersion, GetUploadPath()); 
 
         }
     }
@@ -611,13 +612,6 @@ public class AssetBundleSettings : ScriptableObject
         fs.Write(buffer, 0, buffer.Length);
         fs.Close();
         fs.Dispose();
-
-        if (IsUploadAsset)
-        {
-            COSUploader.UploadVersion(AssetVersion);
-            COSUploader.UploadAB(AssetVersion, GetUploadPath()); 
-        }
-        //UploadAssetsAsync();
     }
 
     #endregion

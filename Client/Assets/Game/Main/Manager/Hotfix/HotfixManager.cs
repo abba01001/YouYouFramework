@@ -26,7 +26,7 @@ namespace Main
             UnityEngine.Object.Instantiate(gameEntry);
             return;
 #endif
-            MainEntry.Log(MainEntry.LogCategory.Assets,$"请求APK版本={SystemModel.Instance.CurrChannelConfig.APKVersionUrl}");
+            MainEntry.Log(MainEntry.LogCategory.Assets,$"请求云端Apk和AssetBundle版本信息=>{SystemModel.Instance.CurrChannelConfig.APKVersionUrl}");
             MainEntry.Download.GetAPKVersion(SystemModel.Instance.CurrChannelConfig.APKVersionUrl, null, (result) =>
             {
                 InitServerVersion(result);
@@ -72,8 +72,8 @@ namespace Main
             MainEntry.Assets.VersionFile.InitCDNVersionFile(() =>
             {
                 MainEntry.Log(MainEntry.LogCategory.Assets,
-                    $"===本地apk{PlayerPrefs.GetString("apkVersion")}和资源{PlayerPrefs.GetString("assetVersion")}" +
-                    $"===云端apk{MainEntry.Assets.VersionFile.CdnApkVersion}和资源{MainEntry.Assets.VersionFile.CdnAssetVersion}");
+                    $"本地apk{PlayerPrefs.GetString("apkVersion")}和资源{PlayerPrefs.GetString("assetVersion")}" +
+                    $"==云端apk{MainEntry.Assets.VersionFile.CdnApkVersion}和资源{MainEntry.Assets.VersionFile.CdnAssetVersion}");
 #if UNITY_EDITOR
                 PlayerPrefs.SetString("assetVersion",MainEntry.Assets.VersionFile.CdnAssetVersion);
                 PlayerPrefs.SetString("apkVersion", MainEntry.Assets.VersionFile.CdnApkVersion);
@@ -109,12 +109,12 @@ namespace Main
             bool isEquals = MainEntry.Assets.CheckVersionChangeSingle(url);
             if (isEquals)
             {
-                MainEntry.Log(MainEntry.LogCategory.Assets, "资源没变化, 不用重新下载, url==" + url);
+                MainEntry.Log(MainEntry.LogCategory.Assets, "Hotfix热更资源没变化, 不用重新下载, url==" + url);
                 onComplete?.Invoke(url);
             }
             else
             {
-                MainEntry.Log(MainEntry.LogCategory.Assets, "资源有更新, 重新下载, url==" + url);
+                MainEntry.Log(MainEntry.LogCategory.Assets, "Hotfix热更资源有更新, 重新下载, url==" + url);
                 MainEntry.Download.BeginDownloadSingle(url, onComplete: onComplete);
             }
         }

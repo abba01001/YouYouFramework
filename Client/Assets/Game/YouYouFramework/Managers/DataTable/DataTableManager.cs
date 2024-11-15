@@ -102,7 +102,6 @@ namespace YouYou
                 if (onComplete != null) onComplete(buffer);
             });
 #else
-            GameUtil.LogError($"路径{GameUtil.GetLastPathName(dataTableName)}");
             GameEntry.Loader.LoadAssetAction(GameUtil.GetLastPathName(dataTableName), m_DataTableBundle, onComplete: (AssetReferenceEntity referenceEntity) =>
             {
                 if (referenceEntity == null) return;
