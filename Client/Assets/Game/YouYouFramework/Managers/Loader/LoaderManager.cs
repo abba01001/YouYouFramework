@@ -220,6 +220,7 @@ namespace YouYou
                     m_AssetLoaderList.Remove(routine);
                 };
                 //加载资源
+                GameUtil.LogError($"加载资源{assetFullPath}");
                 routine.LoadAssetAsync(assetFullPath, assetBundle);
             });
             AssetTaskGroup.Run();
