@@ -33,6 +33,11 @@ namespace Main
         /// 是否已经加密
         /// </summary>
         public bool IsEncrypt;
+        
+        public override string ToString()
+                {
+                    return $"AssetBundleName: {AssetBundleName}, MD5: {MD5}, Size: {Size}, IsFirstData: {IsFirstData}, IsEncrypt: {IsEncrypt}";
+                }
 
     }
 }

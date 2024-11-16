@@ -1,17 +1,16 @@
 using System;
 using System.Data;
 using System.IO;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using COSXML;
 using COSXML.Auth;
 using COSXML.Model.Object;
 using COSXML.Utils;
-using Cysharp.Threading.Tasks;
 using Main;
-using MessagePack;
 using MySql.Data.MySqlClient;
 using UnityEngine;
-using UnityEngine.Networking;
 using YouYou;
 
 public enum DownloadStatus
@@ -344,4 +343,24 @@ public class SDKManager : Observable<SDKManager>
     }
     #endregion
 
+    #region 后台
+
+    // 调用这个方法发送POST请求
+    public async void PostVersion()
+    {
+        string url = "http://159.75.164.29:32002/api/tutorials/getVersion";
+        // 你要发送的数据，序列化成JSON格式
+        var postData = new
+        {
+            key = "value",  // 根据API的实际需求构建请求体
+            anotherKey = "anotherValue"
+        };
+        string jsonData = JsonUtility.ToJson(postData);
+        // 调用 PostAsync 方法
+        GameEntry.Http.Post(url, null, true, (s =>
+        {
+            GameUtil.LogError(s);
+        }));
+    }
+    #endregion
 }

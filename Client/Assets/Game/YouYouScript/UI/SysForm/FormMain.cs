@@ -23,7 +23,7 @@ public class FormMain : UIFormBase
         base.Awake();
         loginBtn.SetButtonClick(() =>
         {
-            GameEntry.Audio.PlayBGM(BGMName.maintheme1);
+            GameEntry.Audio.PlayBGM("maintheme1");
         });
         //GameEntry.SDK.DownloadAvatar("1", null);
     }

@@ -29,7 +29,7 @@ namespace YouYou
         private static int successCount = 0;
         private static int failCount = 0;
         private static string rootPath = @$"{System.IO.Directory.GetParent(Application.dataPath).FullName}\AssetBundles\{Application.version}\Android\";
-        private static string localVersionFilePath = $"{Application.persistentDataPath}/{YFConstDefine.VersionFileName}";
+        private static string localVersionFilePath = @$"{System.IO.Directory.GetParent(Application.dataPath).FullName}/AssetBundles/{Application.version}/Android"+$"/{YFConstDefine.VersionFileName}";
         private static string cloudVersionFilePath = $"{SystemModel.Instance.CurrChannelConfig.EditorRealSourceUrl}{YFConstDefine.VersionFileName}";
         private static UploadResultWindow uploadWindow;
         private static Stopwatch stopwatch;
@@ -160,7 +160,7 @@ namespace YouYou
             m_LocalAssetsVersionDic.Clear();
             if (File.Exists(localVersionFilePath))
             {
-                m_LocalAssetsVersionDic = GetAssetBundleVersionList();
+                m_LocalAssetsVersionDic = GetAssetBundleVersionList(await File.ReadAllBytesAsync(localVersionFilePath));
             }
             
             StringBuilder sbr = StringHelper.PoolNew();
@@ -296,28 +296,30 @@ namespace YouYou
         {
             if (m_LocalAssetsVersionDic.Count == 0 || m_CDNVersionDic.Count == 0) return true;
             if (abName == "Android" || abName == "AssetInfo.bytes" || abName == "AssetInfo.json") return true;
-            if (m_CDNVersionDic.ContainsKey(abName))
+            if (!m_CDNVersionDic.ContainsKey(abName)) return true;//云端没有，本地直接上传
+            if (m_LocalAssetsVersionDic.ContainsKey(abName))//
             {
-                if (m_LocalAssetsVersionDic.ContainsKey(abName))
+                if (abName == "game/download/hotfix.assetbundle")
                 {
-                    bool needUpload = m_LocalAssetsVersionDic[abName].MD5 != m_CDNVersionDic[abName].MD5 ||
-                                      m_LocalAssetsVersionDic[abName].Size != m_CDNVersionDic[abName].Size ||
-                                      m_LocalAssetsVersionDic[abName].IsEncrypt != m_CDNVersionDic[abName].IsEncrypt ||
-                                      m_LocalAssetsVersionDic[abName].IsFirstData != m_CDNVersionDic[abName].IsFirstData;
-                    if (needUpload)
-                    {
-                        MainEntry.Log(MainEntry.LogCategory.Assets,$"上传资源{abName},云端md5{m_CDNVersionDic[abName].MD5},本地md5{m_LocalAssetsVersionDic[abName].MD5}");
-                    }
-                    return needUpload;
+                    GameUtil.LogError(m_LocalAssetsVersionDic[abName].ToString());
+                    GameUtil.LogError(m_CDNVersionDic[abName].ToString());
                 }
-                else
+                //本地有，要判断云端的和本地的是否相同，不同则上传
+                bool needUpload = m_LocalAssetsVersionDic[abName].MD5 != m_CDNVersionDic[abName].MD5 ||
+                                  m_LocalAssetsVersionDic[abName].Size != m_CDNVersionDic[abName].Size ||
+                                  m_LocalAssetsVersionDic[abName].IsEncrypt != m_CDNVersionDic[abName].IsEncrypt ||
+                                  m_LocalAssetsVersionDic[abName].IsFirstData != m_CDNVersionDic[abName].IsFirstData;
+                if (needUpload)
                 {
-                    MainEntry.LogWarning(MainEntry.LogCategory.Assets,$"资源出现问题==本地没有这个资源,但是云端有这个资源{abName}");
-                    return false;
+                    MainEntry.Log(MainEntry.LogCategory.Assets,$"上传资源{abName},云端md5{m_CDNVersionDic[abName].MD5},本地md5{m_LocalAssetsVersionDic[abName].MD5}");
                 }
-                return true;
+                return needUpload;
             }
-            return true;
+            else
+            {
+                MainEntry.LogWarning(MainEntry.LogCategory.Assets,$"资源出现问题==本地没有这个资源,但是云端有这个资源{abName}");
+                return false;
+            }
         }
         
         static CosXml CreateCosXml()

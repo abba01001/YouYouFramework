@@ -11,11 +11,12 @@ public class TestDownload : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.A))
         {
-            //这是为了删掉断点续传存档点
-            PlayerPrefs.DeleteAll();
-
-            //单文件下载
-            MainEntry.Download.BeginDownloadSingle("download/datatable.assetbundle");
+            // //这是为了删掉断点续传存档点
+            // PlayerPrefs.DeleteAll();
+            //
+            // //单文件下载
+            // MainEntry.Download.BeginDownloadSingle("download/datatable.assetbundle");
+            SDKManager.Instance.PostVersion();
         }
 
         if (Input.GetKeyUp(KeyCode.S))

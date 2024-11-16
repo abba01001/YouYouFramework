@@ -9,7 +9,7 @@ public class TestAudio : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.A))
         {
-            GameEntry.Audio.PlayBGM(BGMName.maintheme1);
+            //GameEntry.Audio.PlayBGM(BGMName.maintheme1);
         }
 
         if (Input.GetKeyUp(KeyCode.S))
@@ -19,7 +19,7 @@ public class TestAudio : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.D))
         {
-            GameEntry.Audio.PlayBGM(BGMName.button_sound);
+            //GameEntry.Audio.PlayBGM(BGMName.button_sound);
         }
     }
 }

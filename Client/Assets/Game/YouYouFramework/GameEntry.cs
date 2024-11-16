@@ -34,6 +34,10 @@ namespace YouYou
         [Header("UI分组")]
         public UIGroup[] UIGroups;
 
+        [FoldoutGroup("UIGroup")]
+        [Header("屏幕阻挡这招")]
+        public GameObject BlockMask;
+        
         [FoldoutGroup("AudioGroup")]
         [Header("声音主混合器")]
         public AudioMixer MonsterMixer;
@@ -43,6 +47,7 @@ namespace YouYou
         private YouYouLanguage m_CurrLanguage;
         public static YouYouLanguage CurrLanguage;
 
+        
         //管理器属性
         public static LoggerManager Logger { get; private set; }
         public static EventManager Event { get; private set; }
@@ -75,7 +80,7 @@ namespace YouYou
         {
             Log(LogCategory.Procedure, "GameEntry.OnAwake()");
             Instance = this;
-
+            ShowBlockMask(false);
             UIRootRectTransform = UIRootCanvasScaler.GetComponent<RectTransform>();
 
             CurrLanguage = m_CurrLanguage;
@@ -138,6 +143,11 @@ namespace YouYou
             Initialize();
         }
 
+        public void ShowBlockMask(bool state)
+        {
+            BlockMask.SetActive(state);
+        }
+        
         private void Initialize()
         {
             StaticCompositeResolver.Instance.Register(

@@ -12,7 +12,8 @@ public class TestDataTable : MonoBehaviour
         {
             // Sys_UIFormEntity entity = GameEntry.DataTable.Sys_UIFormDBModel.GetDic(1);
             // GameEntry.Log(LogCategory.ZhangSan, entity.ToJson());
-            GameEntry.DataTable.Sys_UIFormDBModel.PrintDic();
+            //GameEntry.DataTable.Sys_UIFormDBModel.PrintDic();
+            //
         }
 
         if (Input.GetKeyUp(KeyCode.S))

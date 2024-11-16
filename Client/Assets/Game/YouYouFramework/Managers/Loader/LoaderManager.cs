@@ -26,7 +26,6 @@ namespace YouYou
         /// 资源加载器链表
         /// </summary>
         private LinkedList<AssetLoaderRoutine> m_AssetLoaderList;
-
         public LoaderManager()
         {
             AssetInfo = new AssetInfoManager();
@@ -259,8 +258,12 @@ namespace YouYou
                 GameEntry.LogError(LogCategory.Loader, "依赖的游戏物体不可为空");
                 return null;
             }
+            //这里屏蔽点击
+            GameEntry.Instance.ShowBlockMask(true);
             AssetReferenceEntity referenceEntity = await LoadMainAssetAsync(assetFullPath, onUpdate, onDownloadUpdate);
             AutoReleaseHandle.Add(referenceEntity, target);
+            GameEntry.Instance.ShowBlockMask(false);
+            //还原点击
             return referenceEntity.Target as T;
         }
         /// <summary>

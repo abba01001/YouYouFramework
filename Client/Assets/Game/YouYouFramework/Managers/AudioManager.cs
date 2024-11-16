@@ -108,11 +108,11 @@ namespace YouYou
         public AudioSource BGMSource { get; private set; }
         public Sys_BGMEntity CurrBGMEntity;
 
-        public void PlayBGM(BGMName audioName)
-        {
-            PlayBGM(audioName.ToString());
-        }
-        public void PlayBGM(string audioName)
+        // public void PlayBGM(BGMName audioName)
+        // {
+        //     PlayBGM(audioName.ToString());
+        // }
+        public async void PlayBGM(string audioName)
         {
             Sys_BGMEntity entity = GameEntry.DataTable.Sys_BGMDBModel.GetEntity(audioName);
             if (entity == null)
@@ -122,9 +122,10 @@ namespace YouYou
             }
 
             CurrBGMEntity = entity;
-            AudioClip audioClip = GameEntry.Loader.LoadMainAsset<AudioClip>(CurrBGMEntity.AssetFullPath, BGMSource.gameObject);
+            AudioClip audioClip = await GameEntry.Loader.LoadMainAssetAsync<AudioClip>(CurrBGMEntity.AssetFullPath, BGMSource.gameObject);
             PlayBGM(audioClip, CurrBGMEntity.IsLoop == 1, CurrBGMEntity.Volume, CurrBGMEntity.IsFadeIn == 1, CurrBGMEntity.IsFadeOut == 1);
         }
+        
         public void PlayBGM(AudioClip audioClip, bool isLoop, float volume, bool isFadeIn, bool isFadeOut)
         {
             if (audioClip == null)

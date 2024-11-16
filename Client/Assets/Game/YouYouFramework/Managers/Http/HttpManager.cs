@@ -59,7 +59,7 @@ namespace YouYou
         {
             GetArgs(url, loadingCircle, (args) =>
             {
-                if (args.Value.JsonCutApart("Status").ToInt() == 1) callBack?.Invoke(args.Value.JsonCutApart("Content"));
+                if (args.Value.JsonCutApart("status").ToInt() == 1) callBack?.Invoke(args.Value.JsonCutApart("data"));
             });
         }
         public UniTask<HttpCallBackArgs> GetArgsAsync(string url, bool loadingCircle = false)
@@ -91,6 +91,7 @@ namespace YouYou
                     }
                     else
                     {
+                        GameUtil.LogError(ret);
                         callBack?.Invoke(ret);
                     }
                 });
@@ -100,7 +101,8 @@ namespace YouYou
         {
             PostArgs(url, json, loadingCircle, (args) =>
             {
-                if (args.Value.JsonCutApart("Status").ToInt() == 1) callBack?.Invoke(args.Value.JsonCutApart("Content"));
+                callBack?.Invoke(args.Value.JsonCutApart("content"));
+                if (args.Value.JsonCutApart("status").ToInt() == 1) callBack?.Invoke(args.Value.JsonCutApart("data"));
             });
         }
         public UniTask<HttpCallBackArgs> PostArgsAsync(string url, string json = null, bool loadingCircle = false)
