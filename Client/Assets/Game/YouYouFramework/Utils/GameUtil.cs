@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System;
 using System.Reflection;
+using System.Text;
 using YouYou;
 using Cysharp.Threading.Tasks;
 using Main;
@@ -233,4 +234,71 @@ public class GameUtil
         }
         return path;
     }
+
+    #region 获取app md5值
+
+    public static string GetSignatureMD5Hash()
+    {
+        var player = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+        var activity = player.GetStatic<AndroidJavaObject>("currentActivity");
+        var PackageManager = new AndroidJavaClass("android.content.pm.PackageManager");
+
+
+        var packageName = activity.Call<string>("getPackageName");
+
+
+        var GET_SIGNATURES = PackageManager.GetStatic<int>("GET_SIGNATURES");
+        var packageManager = activity.Call<AndroidJavaObject>("getPackageManager");
+        var packageInfo = packageManager.Call<AndroidJavaObject>("getPackageInfo", packageName, GET_SIGNATURES);
+        var signatures = packageInfo.Get<AndroidJavaObject[]>("signatures");
+
+
+        if (signatures != null && signatures.Length > 0)
+        {
+            byte[] bytes = signatures[0].Call<byte[]>("toByteArray");
+            string str = getSignValidString(bytes);
+            GameUtil.LogError("md5码====》",string.Format("<color=#ffffffff><---{0}-{1}----></color>", str, "test1"));
+            return str;
+        }
+        return null;
+    }
+
+    private static String getSignValidString(byte[] paramArrayOfByte)
+    {
+        var MessageDigest = new AndroidJavaClass("java.security.MessageDigest");
+        var localMessageDigest = MessageDigest.CallStatic<AndroidJavaObject>("getInstance", "MD5");
+
+        localMessageDigest.Call("update", paramArrayOfByte);
+        return toHexString(localMessageDigest.Call<byte[]>("digest"));
+    }
+
+    public static String toHexString(byte[] paramArrayOfByte)
+    {
+        if (paramArrayOfByte == null)
+        {
+            return null;
+        }
+
+        StringBuilder localStringBuilder = new StringBuilder(2 * paramArrayOfByte.Length);
+        for (int i = 0;; i++)
+        {
+            if (i >= paramArrayOfByte.Length)
+            {
+                return localStringBuilder.ToString();
+            }
+
+            String str =
+                new AndroidJavaClass("java.lang.Integer").CallStatic<String>("toString", 0xFF & paramArrayOfByte[i],
+                    16);
+            if (str.Length == 1)
+            {
+                str = "0" + str;
+            }
+
+            localStringBuilder.Append(str);
+        }
+    }
+
+    #endregion
+
 }

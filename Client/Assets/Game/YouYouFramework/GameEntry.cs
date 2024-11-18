@@ -2,6 +2,7 @@ using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
 using System.Collections;
+using Main;
 using MessagePack;
 using MessagePack.Resolvers;
 using Unity.VisualScripting;
@@ -82,7 +83,7 @@ namespace YouYou
             Instance = this;
             ShowBlockMask(false);
             UIRootRectTransform = UIRootCanvasScaler.GetComponent<RectTransform>();
-
+            MainEntry.Reporter.ShowLogPanel(false);
             CurrLanguage = m_CurrLanguage;
         }
         private void Start()
@@ -214,9 +215,16 @@ namespace YouYou
             Logger.SyncLog();
             Logger.Dispose();
             Fsm.Dispose();
-
+            UploadLogData();
             GameEntry.Event.Dispatch(Constants.EventName.GameEntryOnApplicationQuit);
         }
+
+        private void UploadLogData()
+        {
+            MainEntry.Reporter.WriteLogsToFile();
+            SDK.UploadLogData(Data.UserId);
+        }
+        
         private void OnApplicationPause(bool pause)
         {
             if (pause)

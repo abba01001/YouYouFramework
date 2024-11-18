@@ -299,11 +299,11 @@ namespace YouYou
             if (!m_CDNVersionDic.ContainsKey(abName)) return true;//云端没有，本地直接上传
             if (m_LocalAssetsVersionDic.ContainsKey(abName))//
             {
-                if (abName == "game/download/hotfix.assetbundle")
-                {
-                    GameUtil.LogError(m_LocalAssetsVersionDic[abName].ToString());
-                    GameUtil.LogError(m_CDNVersionDic[abName].ToString());
-                }
+                // if (abName == "game/download/hotfix.assetbundle")
+                // {
+                //     GameUtil.LogError(m_LocalAssetsVersionDic[abName].ToString());
+                //     GameUtil.LogError(m_CDNVersionDic[abName].ToString());
+                // }
                 //本地有，要判断云端的和本地的是否相同，不同则上传
                 bool needUpload = m_LocalAssetsVersionDic[abName].MD5 != m_CDNVersionDic[abName].MD5 ||
                                   m_LocalAssetsVersionDic[abName].Size != m_CDNVersionDic[abName].Size ||

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Reflection;
+using Main;
 using MessagePack;
 using MessagePack.Resolvers;
 using TMPro;
@@ -24,6 +25,8 @@ public class FormMain : UIFormBase
         loginBtn.SetButtonClick(() =>
         {
             GameEntry.Audio.PlayBGM("maintheme1");
+            MainEntry.Reporter.ShowLogPanel(true);
+
         });
         //GameEntry.SDK.DownloadAvatar("1", null);
     }

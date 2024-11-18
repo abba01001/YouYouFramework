@@ -79,6 +79,8 @@ namespace Main
         /// </summary>
         public static HotfixManager Hotfix { get; private set; }
 
+        public static ReporterManager Reporter { get; private set; }
+        
         /// <summary>
         /// 单例
         /// </summary>
@@ -107,7 +109,8 @@ namespace Main
             Assets = new CheckVersionManager();
             ClassObjectPool = new ClassObjectPool();
             Hotfix = new HotfixManager();
-
+            Reporter = gameObject.GetComponentInChildren<ReporterManager>();
+            
             Download.Init();
             Assets.Init();
             Hotfix.Init();
