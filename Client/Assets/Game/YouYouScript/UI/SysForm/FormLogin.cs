@@ -17,9 +17,9 @@ public class FormLogin : UIFormBase
         base.Awake();
         LoadLoginBg();
         loginBtn.SetButtonClick(Login);
-#if !UNITY_EDITOR
-        GameUtil.GetSignatureMD5Hash();
-#endif
+// #if !UNITY_EDITOR
+//         GameUtil.GetSignatureMD5Hash();
+// #endif
         //GameEntry.SDK.DownloadAvatar("1", null);
     }
 
