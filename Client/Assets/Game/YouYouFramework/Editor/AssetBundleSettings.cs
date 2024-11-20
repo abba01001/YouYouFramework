@@ -40,18 +40,25 @@ public class AssetBundleSettings : ScriptableObject
     [PropertySpace(5)]
     [VerticalGroup("Common/Left")]
     [LabelText("目标平台")]
-    public CusBuildTarget CurrBuildTarget;
+    [ValueDropdown("GetCusBuildTargetOptions")]
+    public string CurrBuildTarget;
 
+    private IEnumerable<string> GetCusBuildTargetOptions()
+    {
+        return Enum.GetNames(typeof(CusBuildTarget)); // 返回枚举名称作为字符串列表
+    }
+    
     public BuildTarget GetBuildTarget()
     {
-        switch (CurrBuildTarget)
+        string targetString = CurrBuildTarget.ToString();
+        switch (targetString)
         {
             default:
-            case CusBuildTarget.Windows:
+            case "Windows":
                 return BuildTarget.StandaloneWindows64;
-            case CusBuildTarget.Android:
+            case "Android":
                 return BuildTarget.Android;
-            case CusBuildTarget.IOS:
+            case "IOS":
                 return BuildTarget.iOS;
         }
     }
@@ -168,13 +175,13 @@ public class AssetBundleSettings : ScriptableObject
         switch (CurrBuildTarget)
         {
             default:
-            case CusBuildTarget.Windows:
+            case "Windows":
                 path = "/Unity/AssetBundle/"+ AssetVersion+"/"+ "Windows"+ "/";
                 break;
-            case CusBuildTarget.Android:
+            case "Android":
                 path = "/Unity/AssetBundle/" + AssetVersion+"/" + "Android" + "/";
                 break;
-            case CusBuildTarget.IOS:
+            case "IOS":
                 break;
         }
         return path;

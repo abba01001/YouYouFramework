@@ -1,5 +1,5 @@
 %YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
+%TAG !u! tag:yousandi.cn,2023:
 --- !u!687078895 &4343727234628468602
 SpriteAtlas:
   m_ObjectHideFlags: 0
@@ -11,7 +11,7 @@ SpriteAtlas:
   m_EditorData:
     serializedVersion: 2
     textureSettings:
-      serializedVersion: 2
+      serializedVersion: 3
       anisoLevel: 1
       compressionQuality: 50
       maxTextureSize: 2048
@@ -20,11 +20,13 @@ SpriteAtlas:
       generateMipMaps: 0
       readable: 0
       crunchedCompression: 0
+      webStreaming: 0
       sRGB: 1
     platformSettings:
     - serializedVersion: 3
       m_BuildTarget: Android
       m_MaxTextureSize: 2048
+      m_MaxPlaceholderSize: 32
       m_ResizeAlgorithm: 0
       m_TextureFormat: 48
       m_TextureCompression: 1
@@ -32,6 +34,7 @@ SpriteAtlas:
       m_CrunchedCompression: 0
       m_AllowsAlphaSplitting: 0
       m_Overridden: 1
+      m_IgnorePlatformSupport: 0
       m_AndroidETC2FallbackOverride: 0
       m_ForceMaximumCompressionQuality_BC6H_BC7: 0
     packingSettings:
@@ -49,6 +52,27 @@ SpriteAtlas:
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
+    packedSpriteRenderDataKeys:
+    - 40126e20e8e3546f3a4137859cbc10aa: 21300000
+    - e825964059a564943bf1e62dfe12b125: 21300000
+    - 9fe10f80280f7499bbf317cbae23b59e: 21300000
+    - c83e04909d5904ec5b439f72457fc0d5: 21300000
+    - b511e303753a3443f9acc0e469901ccb: 21300000
+    - 31dc1b531370946bfb04dc9981ba34a7: 21300000
+    - 755d9024d5746445297909bdb424543f: 21300000
+    - f220bb347df0245f183764e1db3e050b: 21300000
+    - da120d35e674348e786f39b1b62dc562: 21300000
+    - b6c38fa65d5c14c119bdd7220301805d: 21300000
+    - fad51707014224feab8c131c591bd770: 21300000
+    - 230d56f7cd69d46b6a4d453cb78f10c3: 21300000
+    - 639cd9f76ccd84e70904b8eba30af0fb: 21300000
+    - 7aa312388b67a44e6a7a30f082931e88: 21300000
+    - 8553594887c7e454fa8983fbc95c9719: 21300000
+    - 960283d983172493095881028405a99b: 21300000
+    - 70dce11ae825d4b0ca11577ac173cbdd: 21300000
+    - 0332db1c8e18c4f09978bcf595b5ee3c: 21300000
+    - f213da1dcfaf24da09506e8c4267b9bc: 21300000
+    - 12e7887fa382e449490526eb8c776506: 21300000
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: 40126e20e8e3546f3a4137859cbc10aa, type: 3}

@@ -69,8 +69,7 @@ public class ChangeAllAudioImporter
             }
 
             //πÿ±’‘§º”‘ÿ
-            importer.preloadAudioData = false;
-
+            //importer.preloadAudioData = false;
             importer.SetOverrideSampleSettings(BuildTargetGroup.iOS.ToString(), audioImporterSampleSettingsios);
             importer.SetOverrideSampleSettings(BuildTargetGroup.Android.ToString(), audioImporterSampleSettingsAndroid);
 

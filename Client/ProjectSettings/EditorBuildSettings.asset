@@ -1,5 +1,5 @@
 %YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
+%TAG !u! tag:yousandi.cn,2023:
 --- !u!1045 &1
 EditorBuildSettings:
   m_ObjectHideFlags: 0
@@ -18,3 +18,10 @@ EditorBuildSettings:
     path: Assets/Game/Download/Scenes/Main_3.unity
     guid: aaeff198a1a1a674883afd120566eabe
   m_configObjects: {}
+  m_SlimFeaturesWeixinMiniGame:
+    AllocateOverhead: 1
+    DecompressASTC: 0
+    DecompressDXT: 1
+    DecompressETC: 1
+    FreeTypeSfntPng: 1
+    LightProbe: 2

@@ -83,6 +83,7 @@ namespace Main
             MainEntry.Log(MainEntry.LogCategory.Assets, $"开始请求云端AssetBundle资源列表信息=>{url}");
             MainEntry.Instance.StartCoroutine(UnityWebRequestGet(url, (request) =>
             {
+                Debug.LogError($"返回结果{request.result}");
                 if (request.result == UnityWebRequest.Result.Success)
                 {
                     m_CDNVersionDic = GetAssetBundleVersionList(request.downloadHandler.data, ref m_CDNApkVersion,ref m_CDNAssetVersion);

@@ -1,5 +1,5 @@
 %YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
+%TAG !u! tag:yousandi.cn,2023:
 --- !u!687078895 &4343727234628468602
 SpriteAtlas:
   m_ObjectHideFlags: 0
@@ -11,7 +11,7 @@ SpriteAtlas:
   m_EditorData:
     serializedVersion: 2
     textureSettings:
-      serializedVersion: 2
+      serializedVersion: 3
       anisoLevel: 1
       compressionQuality: 50
       maxTextureSize: 2048
@@ -20,11 +20,13 @@ SpriteAtlas:
       generateMipMaps: 0
       readable: 0
       crunchedCompression: 0
+      webStreaming: 0
       sRGB: 1
     platformSettings:
     - serializedVersion: 3
       m_BuildTarget: Android
       m_MaxTextureSize: 2048
+      m_MaxPlaceholderSize: 32
       m_ResizeAlgorithm: 0
       m_TextureFormat: 50
       m_TextureCompression: 1
@@ -32,6 +34,7 @@ SpriteAtlas:
       m_CrunchedCompression: 0
       m_AllowsAlphaSplitting: 0
       m_Overridden: 1
+      m_IgnorePlatformSupport: 0
       m_AndroidETC2FallbackOverride: 0
       m_ForceMaximumCompressionQuality_BC6H_BC7: 0
     packingSettings:
@@ -49,6 +52,15 @@ SpriteAtlas:
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
+    packedSpriteRenderDataKeys:
+    - c63bb402cf5095a4aad5150c9eb2a226: 21300000
+    - 26760be7e6ff4ce4bb0d937c61b9c66b: 21300000
+    - f987491961f91b9499fe878a667aa5c5: 21300000
+    - 676e443955b722541aae85703c83b840: 21300000
+    - b5f55949812b53d48bc18a08d2f675cf: 21300000
+    - ffdd62fcf7b878546a1e67e640321cf2: 21300000
+    - 23e4191de5c7f05469112ecfeb162ea1: 21300000
+    - 35643edf58fa8ac44b0b04619bae21ab: 21300000
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: c63bb402cf5095a4aad5150c9eb2a226, type: 3}

@@ -21,12 +21,15 @@ namespace Main
         }
         public void Init()
         {
-#if EDITORLOAD
+#if EDITORLOAD || !WEIXINMINIGAME
+            Debug.LogError("222222222");
+            MainEntry.Log(MainEntry.LogCategory.Assets,$"========请求云端Apk和AssetBundle版本信息=>{SystemModel.Instance.CurrChannelConfig.APKVersionUrl}");
             GameObject gameEntry = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Game/Download/Hotfix/GameEntry.prefab");
             UnityEngine.Object.Instantiate(gameEntry);
             return;
 #endif
-            MainEntry.Log(MainEntry.LogCategory.Assets,$"请求云端Apk和AssetBundle版本信息=>{SystemModel.Instance.CurrChannelConfig.APKVersionUrl}");
+            Debug.LogError("33333333333");
+            MainEntry.Log(MainEntry.LogCategory.Assets,$"========请求云端Apk和AssetBundle版本信息=>{SystemModel.Instance.CurrChannelConfig.APKVersionUrl}");
             MainEntry.Download.GetAPKVersion(SystemModel.Instance.CurrChannelConfig.APKVersionUrl, null, (result) =>
             {
                 InitServerVersion(result);

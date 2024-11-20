@@ -180,6 +180,7 @@ namespace Main
         //临时处理下载文件
         public async void DownAPKVersion(string url, int tryRequestCount,Action onUpdate,Action<string> onComplete)
         {
+            Debug.LogError($"请求{url}");
             int currentRetry = 0;
             while (currentRetry < tryRequestCount)
             {
@@ -188,7 +189,9 @@ namespace Main
                     try
                     {
                         onUpdate?.Invoke();
+                        Debug.LogError("8888888");
                         await webRequest.SendWebRequest();
+                        Debug.LogError($"999999======={webRequest.responseCode}========{webRequest.result}");
                         if (webRequest.responseCode == 404)
                         {
                             return;
@@ -210,6 +213,7 @@ namespace Main
                     }
                     catch (Exception e)
                     {
+                        Debug.LogError("777777");
                         if (e.Message.Contains("404"))
                         {
                             return;

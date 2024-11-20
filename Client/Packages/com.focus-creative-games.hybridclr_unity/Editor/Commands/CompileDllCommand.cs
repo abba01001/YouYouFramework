@@ -30,6 +30,7 @@ namespace HybridCLR.Editor.Commands
 
         public static void CompileDll(BuildTarget target)
         {
+            Debug.LogError(target);
             CompileDll(SettingsUtil.GetHotUpdateDllsOutputDirByTarget(target), target);
         }
 

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: d2a8f0021d6b47c5923d8972dfb81ef1
+guid: W3hOvXytU3m6fSR2cB3Clyu5mb665i8HX9/u0b1CRzlcgwViltn9v4w=
 PluginImporter:
   externalObjects: {}
   serializedVersion: 2
@@ -91,6 +91,11 @@ PluginImporter:
       settings: {}
   - first:
       WebGL: WebGL
+    second:
+      enabled: 1
+      settings: {}
+  - first:
+      WeixinMiniGame: WeixinMiniGame
     second:
       enabled: 1
       settings: {}

@@ -177,7 +177,7 @@ namespace YouYou
                 State state;
 #if UNITY_STANDALONE
                 state = State.KeyboardMouse;
-#elif UNITY_IOS || UNITY_ANDROID
+#elif UNITY_IOS || UNITY_ANDROID || WEIXINMINIGAME
                 state = State.Touch;
 #endif
 #if UNITY_EDITOR

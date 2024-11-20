@@ -33,11 +33,21 @@ public class MacroSettings : ScriptableObject
         ASSETBUNDLE,
         EDITORLOAD
     }
-    private string m_Macor;
 
     [LabelText("资源加载方式")]
-    public AssetLoadTarget CurrAssetLoadTarget;
+    [ValueDropdown("GetAssetLoadTargetOptions")]  // 使用 ValueDropdown 提供选择列表
+    public string CurrAssetLoadTarget = "ASSETBUNDLE";
 
+    // 提供一个方法来返回下拉列表的选项
+    private IEnumerable<string> GetAssetLoadTargetOptions()
+    {
+        return Enum.GetNames(typeof(AssetLoadTarget));  // 返回枚举名称作为字符串列表
+    }
+
+    
+    private string m_Macor;
+
+    
     [PropertySpace(10)]
     [BoxGroup("MacroSettings")]
     [TableList(ShowIndexLabels = true, AlwaysExpanded = true)]
@@ -98,7 +108,7 @@ public class MacroSettings : ScriptableObject
             {
                 if (m_Macor.IndexOf(AssetLoadTargets[i].ToString()) != -1)
                 {
-                    CurrAssetLoadTarget = AssetLoadTargets[i];
+                    CurrAssetLoadTarget = AssetLoadTargets[i].ToString();
                 }
             }
 

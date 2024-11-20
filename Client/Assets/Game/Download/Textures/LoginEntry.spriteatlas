@@ -1,5 +1,5 @@
 %YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
+%TAG !u! tag:yousandi.cn,2023:
 --- !u!687078895 &4343727234628468602
 SpriteAtlas:
   m_ObjectHideFlags: 0
@@ -11,7 +11,7 @@ SpriteAtlas:
   m_EditorData:
     serializedVersion: 2
     textureSettings:
-      serializedVersion: 2
+      serializedVersion: 3
       anisoLevel: 1
       compressionQuality: 50
       maxTextureSize: 2048
@@ -20,11 +20,13 @@ SpriteAtlas:
       generateMipMaps: 0
       readable: 0
       crunchedCompression: 0
+      webStreaming: 0
       sRGB: 1
     platformSettings:
     - serializedVersion: 3
       m_BuildTarget: Android
       m_MaxTextureSize: 2048
+      m_MaxPlaceholderSize: 32
       m_ResizeAlgorithm: 0
       m_TextureFormat: 50
       m_TextureCompression: 1
@@ -32,6 +34,7 @@ SpriteAtlas:
       m_CrunchedCompression: 0
       m_AllowsAlphaSplitting: 0
       m_Overridden: 1
+      m_IgnorePlatformSupport: 0
       m_AndroidETC2FallbackOverride: 0
       m_ForceMaximumCompressionQuality_BC6H_BC7: 0
     packingSettings:
@@ -49,6 +52,50 @@ SpriteAtlas:
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
+    packedSpriteRenderDataKeys:
+    - e746ef10ab4f5453595bfe1221711161: 8793915729297761979
+    - adcb32b0e5ab14ff6a39d6fbd959395c: 21300000
+    - b15226c072b4646eaaa8fbb0c92070ce: 21300000
+    - e04e2ad069b0f46eda7abfe31b59d4b0: 21300000
+    - 4599b561532dd494da7c1eb47b7cfde7: 21300000
+    - 6d4b4b022f4fa43548201da80546b2c0: 21300000
+    - b303aa8225301494d9e6b681c91c9afc: 141893073332109768
+    - eb1bd7a2655b047c2a563773c93fa00a: 21300000
+    - 123599f29db4645f38349607b6fa8f01: 21300000
+    - 2d86f2533a6f04f9b88823f62864bb8d: -5225540622116197949
+    - fcbaab34e11c84c8cb3bd7c19d34f80f: -3164809056393425246
+    - 495db5949cccd42ca84f142ddc1dff82: -3164809056393425246
+    - ad593c94ab78f473aa5207b2220e5911: 21300000
+    - 77ea2ce40b21742b8a212166e30f0b3a: 21300000
+    - 15cbe9d54f44d4135810d8e2e488c13c: -2276259661975475453
+    - 891ea2361f33144a58affb57317c05b1: 21300000
+    - 6f82e176729fe439b9837872d7f4b3df: 2750298860172458669
+    - ddc295c6cbfb3443c8ba0ceaf8f14be1: 21300000
+    - dc31f3176d05c445da95fd30f6c1d253: 21300000
+    - 4416c857379ba41bc8fef5ea4c074adc: 21300000
+    - 68d7f5f738a084490b3db5118b764c3b: 21300000
+    - 79d299984c21f410c9ba0cd28fe71e1f: 2750298860172458669
+    - 5ed9f30960e824389b4e0a782dbf6420: -3164809056393425246
+    - 7e830149d113141a19f8a6ff3aaee733: 7336298474659753992
+    - 6a7014890e96a4c6fad2f4b547ed773f: 8793915729297761979
+    - 57a4ace9079e740d4be0d17066b305d8: 21300000
+    - c6c8031aa495b4256bfd22d026d4f995: 21300000
+    - c5216c8a0763d436d8b5de883e235217: 21300000
+    - 2cfa86aa9964f476c9bf7fbd07458c69: -3164809056393425246
+    - 7a3837ea19bfe47c99f0e3bcfa70332e: 21300000
+    - 1276e82b533214dda87870df1dc61ee1: 21300000
+    - 1cd6bcab4ad2046e19d538ae3d26f95c: -247037112251525876
+    - 4c12e66d44dfc4205857fb2daad84966: 21300000
+    - aca515ed306224069919137c4f9f42a7: -5225540622116197949
+    - 6475d40ec1eff4ca28fef7476e57955f: 141893073332109768
+    - 581a874e35cac4d368e54835ff4e67f1: 21300000
+    - 211ec74e6207340f9b3d7fc9ea5ef7e9: -2276259661975475453
+    - 62456b4e58a7d4c808050c2bcf0e44ec: 8793915729297761979
+    - 8372855e7c50947b591317da9df1bd16: -5225540622116197949
+    - 308ed59ea73914338bc52462bee484b7: 21300000
+    - 2634ae9e49665402eb88b0443ed5b73c: -5225540622116197949
+    - 9846f3de0e8d9429baa2f166d1492dba: 21300000
+    - 7cc8d82fbe0884941ac91558c435d5dd: 21300000
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 8793915729297761979, guid: e746ef10ab4f5453595bfe1221711161, type: 3}

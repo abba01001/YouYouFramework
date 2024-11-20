@@ -42,7 +42,7 @@ namespace BezierAnimation
             Handles.matrix = Matrix4x4.TRS(pathPoint.transform.position, pathPoint.transform.rotation, Vector3.one);
 
             Handles.color = Color.green;
-            Vector3 startTangent = Handles.FreeMoveHandle(pathPoint.startTangent, Quaternion.identity, HandleUtility.GetHandleSize(pathPoint.startTangent) * 0.15f, Vector3.zero, Handles.SphereHandleCap);
+            var fmh_45_83_638677097351485802 = Quaternion.identity; Vector3 startTangent = Handles.FreeMoveHandle(pathPoint.startTangent, HandleUtility.GetHandleSize(pathPoint.startTangent) * 0.15f, Vector3.zero, Handles.SphereHandleCap);
             if (startTangent != pathPoint.startTangent)
             {
                 Undo.RegisterCompleteObjectUndo(pathPoint, "Change StartTangent");
@@ -53,7 +53,7 @@ namespace BezierAnimation
             Handles.DrawDottedLine(Vector3.zero, pathPoint.startTangent, 1);
 
             Handles.color = Color.red;
-            Vector3 endTangent = Handles.FreeMoveHandle(pathPoint.endTangent, Quaternion.identity, HandleUtility.GetHandleSize(pathPoint.endTangent) * 0.15f, Vector3.zero, Handles.SphereHandleCap);
+            var fmh_56_79_638677097351539293 = Quaternion.identity; Vector3 endTangent = Handles.FreeMoveHandle(pathPoint.endTangent, HandleUtility.GetHandleSize(pathPoint.endTangent) * 0.15f, Vector3.zero, Handles.SphereHandleCap);
             if (endTangent != pathPoint.endTangent)
             {
                 Undo.RegisterCompleteObjectUndo(pathPoint, "Change EndTangent");
