@@ -49,8 +49,10 @@ public class ChannelConfigEntity
 
 #if UNITY_STANDALONE_WIN
                 buildTarget = "Windows";
-#elif UNITY_ANDROID || WEIXINMINIGAME
+#elif UNITY_ANDROID
 				buildTarget = "Android";
+#elif WEIXINMINIGAME
+                buildTarget = "WeiXinMiniGame";
 #elif UNITY_IPHONE
                 buildTarget = "iOS";
 #endif

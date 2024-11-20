@@ -78,7 +78,8 @@ public class AssetBundleSettings : ScriptableObject
     [LabelText("AB包资源预览")]
     public void Test()
     {
-        GameUtil.LogError(CurrBuildTarget);
+        BuildTarget activeBuildTarget = EditorUserBuildSettings.activeBuildTarget;
+        
         //AssetComparerWindow.ShowWindow();
     }
     
@@ -179,6 +180,9 @@ public class AssetBundleSettings : ScriptableObject
                 break;
             case CusBuildTarget.Android:
                 path = "/Unity/AssetBundle/" + AssetVersion+"/" + "Android" + "/";
+                break;
+            case CusBuildTarget.WeiXinMiniGame:
+                path = "/Unity/AssetBundle/" + AssetVersion+"/" + "WeiXinMiniGame" + "/";
                 break;
             case CusBuildTarget.IOS:
                 break;

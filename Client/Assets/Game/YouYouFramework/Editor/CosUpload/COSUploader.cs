@@ -229,6 +229,8 @@ namespace YouYou
                     return "Windows";
                 case BuildTarget.Android:
                     return "Android";
+                case BuildTarget.WeixinMiniGame:
+                    return "WeiXinMiniGame";
                 default:
                     return "Windows"; // 默认返回 Windows
             }
