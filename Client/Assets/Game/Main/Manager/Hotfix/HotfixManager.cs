@@ -21,7 +21,7 @@ namespace Main
         }
         public void Init()
         {
-#if EDITORLOAD || !WEIXINMINIGAME
+#if EDITORLOAD
             Debug.LogError("222222222");
             MainEntry.Log(MainEntry.LogCategory.Assets,$"========请求云端Apk和AssetBundle版本信息=>{SystemModel.Instance.CurrChannelConfig.APKVersionUrl}");
             GameObject gameEntry = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Game/Download/Hotfix/GameEntry.prefab");

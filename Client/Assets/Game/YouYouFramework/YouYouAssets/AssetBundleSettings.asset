@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: AssetBundleSettings
   m_EditorClassIdentifier: 
   AssetVersion: 9.0.0
-  CurrBuildTarget: 1
-  Options: 272
-  PublishPath: C:/Users/A1-0990/AppData/LocalLow/DefaultCompany/YFYouYou/OutPut
+  CurrBuildTarget: 3
+  Options: 33280
+  PublishPath: C:/Users/Administrator/AppData/LocalLow/DefaultCompany/YFYouYou/OutPut
   IsUploadAsset: 1
   IsUploadAPK: 0
   AssetBundleSavePath: AssetBundles

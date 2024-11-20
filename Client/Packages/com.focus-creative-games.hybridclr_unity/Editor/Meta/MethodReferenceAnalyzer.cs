@@ -1,4 +1,5 @@
 ﻿using dnlib.DotNet;
+using HybridCLR.Editor.ABI;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -10,26 +11,17 @@ namespace HybridCLR.Editor.Meta
 {
     public class MethodReferenceAnalyzer
     {
-        private readonly Action<GenericMethod> _onNewMethod;
+        private readonly Action<MethodDef, List<TypeSig>, List<TypeSig>, GenericMethod> _onNewMethod;
 
         private readonly ConcurrentDictionary<MethodDef, List<IMethod>> _methodEffectInsts = new ConcurrentDictionary<MethodDef, List<IMethod>>();
 
-        public MethodReferenceAnalyzer(Action<GenericMethod> onNewMethod)
+        public MethodReferenceAnalyzer(Action<MethodDef, List<TypeSig>, List<TypeSig>, GenericMethod> onNewMethod)
         {
             _onNewMethod = onNewMethod;
         }
 
         public void WalkMethod(MethodDef method, List<TypeSig> klassGenericInst, List<TypeSig> methodGenericInst)
         {
-            if (klassGenericInst != null || methodGenericInst != null)
-            {
-                //var typeSig = klassGenericInst != null ? new GenericInstSig(method.DeclaringType.ToTypeSig().ToClassOrValueTypeSig(), klassGenericInst) : method.DeclaringType?.ToTypeSig();
-                //Debug.Log($"== walk generic method {typeSig}::{method.Name} {method.MethodSig}");
-            }
-            else
-            {
-                //Debug.Log($"== walk not geneeric method:{method}");
-            }
             var ctx = new GenericArgumentContext(klassGenericInst, methodGenericInst);
 
             if (_methodEffectInsts.TryGetValue(method, out var effectInsts))
@@ -37,7 +29,7 @@ namespace HybridCLR.Editor.Meta
                 foreach (var met in effectInsts)
                 {
                     var resolveMet = GenericMethod.ResolveMethod(met, ctx)?.ToGenericShare();
-                    _onNewMethod(resolveMet);
+                    _onNewMethod(method, klassGenericInst, methodGenericInst, resolveMet);
                 }
                 return;
             }
@@ -69,7 +61,7 @@ namespace HybridCLR.Editor.Meta
                             continue;
                         }
                         effectInsts.Add(met);
-                        _onNewMethod(resolveMet);
+                        _onNewMethod(method, klassGenericInst, methodGenericInst, resolveMet);
                         break;
                     }
                     case ITokenOperand token:

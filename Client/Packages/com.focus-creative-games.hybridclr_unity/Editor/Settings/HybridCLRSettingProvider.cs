@@ -4,7 +4,8 @@ using UnityEditor;
 using UnityEditor.Presets;
 using UnityEngine;
 using UnityEngine.UIElements;
-namespace HybridCLR.Editor
+
+namespace HybridCLR.Editor.Settings
 {
     public class HybridCLRSettingsProvider : SettingsProvider
     {
@@ -72,7 +73,7 @@ namespace HybridCLR.Editor
             content.tooltip = "点击访问 HybridCLR 官方文档";
             if (GUI.Button(rect, content, buttonStyle))
             {
-                Application.OpenURL("https://focus-creative-games.github.io/hybridclr/");
+                Application.OpenURL("https://hybridclr.doc.code-philosophy.com/");
             }
             #endregion
             #region 绘制 Preset

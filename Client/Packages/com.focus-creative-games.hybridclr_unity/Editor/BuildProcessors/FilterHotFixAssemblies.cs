@@ -1,6 +1,7 @@
 ﻿using HybridCLR.Editor.Meta;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,15 +26,18 @@ namespace HybridCLR.Editor.BuildProcessors
                 return assemblies;
             }
             List<string> allHotUpdateDllNames = SettingsUtil.HotUpdateAssemblyNamesExcludePreserved;
-            List<string> allHotupdateDllFiles = SettingsUtil.HotUpdateAssemblyFilesExcludePreserved;
 
             // 检查是否重复填写
             var hotUpdateDllSet = new HashSet<string>();
             foreach(var hotUpdateDll in allHotUpdateDllNames)
             {
+                if (string.IsNullOrWhiteSpace(hotUpdateDll))
+                {
+                    throw new BuildFailedException($"hot update assembly name cann't be empty");
+                }
                 if (!hotUpdateDllSet.Add(hotUpdateDll))
                 {
-                    throw new Exception($"热更新 assembly:{hotUpdateDll} 在列表中重复，请除去重复条目");
+                    throw new BuildFailedException($"hot update assembly:{hotUpdateDll} is duplicated");
                 }
             }
 
@@ -41,16 +45,24 @@ namespace HybridCLR.Editor.BuildProcessors
             // 检查是否填写了正确的dll名称
             foreach (var hotUpdateDllName in allHotUpdateDllNames)
             {
-                string hotUpdateDllFile = hotUpdateDllName + ".dll";
-                if (assemblies.All(ass => !ass.EndsWith(hotUpdateDllFile)) && string.IsNullOrEmpty(assResolver.ResolveAssembly(hotUpdateDllName, false)))
+                if (assemblies.Select(Path.GetFileNameWithoutExtension).All(ass => ass != hotUpdateDllName) 
+                    && string.IsNullOrEmpty(assResolver.ResolveAssembly(hotUpdateDllName, false)))
                 {
-                    throw new Exception($"热更新 assembly:{hotUpdateDllFile} 不存在，请检查拼写错误");
+                    throw new BuildFailedException($"hot update assembly:{hotUpdateDllName} doesn't exist");
                 }
-                Debug.Log($"[FilterHotFixAssemblies] 过滤热更新assembly:{hotUpdateDllFile}");
             }
-            
+
             // 将热更dll从打包列表中移除
-            return assemblies.Where(ass => allHotupdateDllFiles.All(dll => !ass.EndsWith(dll, StringComparison.OrdinalIgnoreCase))).ToArray();
+            return assemblies.Where(ass =>
+            {
+                string assName = Path.GetFileNameWithoutExtension(ass);
+                bool reserved = allHotUpdateDllNames.All(dll => !assName.Equals(dll, StringComparison.Ordinal));
+                if (!reserved)
+                {
+                    Debug.Log($"[FilterHotFixAssemblies] filter assembly:{assName}");
+                }
+                return reserved;
+            }).ToArray();
         }
     }
 }

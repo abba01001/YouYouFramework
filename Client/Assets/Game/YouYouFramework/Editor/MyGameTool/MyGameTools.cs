@@ -13,13 +13,13 @@ public partial class MyGameTools
     public const string LinkFile = "Assets/HybridCLRData/Generated/link.xml";
     public const string STRIP_GENERATE_TAG = "<!--GENERATE_TAG-->";
     private const string MatchPattern = "<assembly[\\s]+fullname[\\s]*=[\\s]*\"([^\"]+)\"";
-    [MenuItem("YouYouTools/Link.xml管理")]
+    [MenuItem("YouYouTools/Link.xml锟斤拷锟斤拷")]
     public static void ShowStripConfigEditor()
     {
         EditorWindow.GetWindow<StripLinkConfigWindow>("Strip LinkConfig Editor").Show();
     }
     /// <summary>
-    /// 获取项目全部dll
+    /// 锟斤拷取锟斤拷目全锟斤拷dll
     /// </summary>
     /// <returns></returns>
     public static string[] GetProjectAssemblyDlls()
@@ -28,12 +28,10 @@ public partial class MyGameTools
 
         string projectDir = SettingsUtil.ProjectDir;
         BuildTarget buildTarget = EditorUserBuildSettings.activeBuildTarget;
-        // 构建目标相对路径
         string relativePath = Path.Combine("HybridCLRData", "AssembliesPostIl2CppStrip", buildTarget.ToString());
-        // 完整路径
         string fullPath = Path.Combine(projectDir, relativePath);
-
-
+        
+        
         var dllDir = fullPath;
         if (!Directory.Exists(dllDir))
         {
@@ -49,7 +47,7 @@ public partial class MyGameTools
         return dlls.ToArray();
     }
     /// <summary>
-    /// 获取已经配置到link.xml里的dll
+    /// 锟斤拷取锟窖撅拷锟斤拷锟矫碉拷link.xml锟斤拷锟絛ll
     /// </summary>
     /// <returns></returns>
     public static string[] GetSelectedAssemblyDlls()

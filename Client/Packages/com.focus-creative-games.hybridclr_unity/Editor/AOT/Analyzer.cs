@@ -17,11 +17,15 @@ namespace HybridCLR.Editor.AOT
             public AssemblyReferenceDeepCollector Collector { get; set; }
 
             public int MaxIterationCount { get; set; }
+
+            public bool ComputeAotAssembly { get; set; }
         }
 
         private readonly int _maxInterationCount;
 
         private readonly AssemblyReferenceDeepCollector _assemblyCollector;
+
+        private readonly bool _computeAotAssembly;
 
         private readonly HashSet<GenericClass> _genericTypes = new HashSet<GenericClass>();
         private readonly HashSet<GenericMethod> _genericMethods = new HashSet<GenericMethod>();
@@ -47,6 +51,7 @@ namespace HybridCLR.Editor.AOT
         {
             _assemblyCollector = options.Collector;
             _maxInterationCount = options.MaxIterationCount;
+            _computeAotAssembly = options.ComputeAotAssembly;
             _methodReferenceAnalyzer = new MethodReferenceAnalyzer(this.OnNewMethod);
             _hotUpdateAssemblyFiles = new HashSet<string>(options.Collector.GetRootAssemblyNames().Select(assName => assName + ".dll"));
         }
@@ -58,20 +63,20 @@ namespace HybridCLR.Editor.AOT
                 return;
             }
             gc = gc.ToGenericShare();
-            if (_genericTypes.Add(gc) && NeedWalk(gc.Type))
+            if (_genericTypes.Add(gc) && NeedWalk(null, gc.Type))
             {
                 WalkType(gc);
             }
         }
 
-        private bool NeedWalk(TypeDef type)
+        private bool NeedWalk(MethodDef callFrom, TypeDef type)
         {
-            return _hotUpdateAssemblyFiles.Contains(type.Module.Name);
+            return _hotUpdateAssemblyFiles.Contains(type.Module.Name) || callFrom == null || callFrom.HasGenericParameters;
         }
 
         private bool IsAotType(TypeDef type)
         {
-            return !_hotUpdateAssemblyFiles.Contains(type.Module.Name);
+            return _computeAotAssembly || !_hotUpdateAssemblyFiles.Contains(type.Module.Name);
         }
 
         private bool IsAotGenericMethod(MethodDef method)
@@ -79,13 +84,13 @@ namespace HybridCLR.Editor.AOT
             return IsAotType(method.DeclaringType) && method.HasGenericParameters;
         }
 
-        private void OnNewMethod(GenericMethod method)
+        private void OnNewMethod(MethodDef methodDef, List<TypeSig> klassGenericInst, List<TypeSig> methodGenericInst, GenericMethod method)
         {
             if(method == null)
             {
                 return;
             }
-            if (_genericMethods.Add(method) && NeedWalk(method.Method.DeclaringType))
+            if (NeedWalk(methodDef, method.Method.DeclaringType) && _genericMethods.Add(method))
             {
                 _newMethods.Add(method);
             }
@@ -101,7 +106,7 @@ namespace HybridCLR.Editor.AOT
             {
                 return;
             }
-            if (_genericMethods.Add(method) && NeedWalk(method.Method.DeclaringType))
+            if (NeedWalk(null, method.Method.DeclaringType) && _genericMethods.Add(method))
             {
                 _newMethods.Add(method);
             }
@@ -157,9 +162,9 @@ namespace HybridCLR.Editor.AOT
                 for (uint rid = 1, n = ass.Metadata.TablesStream.TypeSpecTable.Rows; rid <= n; rid++)
                 {
                     var ts = ass.ResolveTypeSpec(rid);
-                    if (!ts.ContainsGenericParameter)
+                    var cs = GenericClass.ResolveClass(ts, null)?.ToGenericShare();
+                    if (cs != null)
                     {
-                        var cs = GenericClass.ResolveClass(ts, null)?.ToGenericShare();
                         TryAddAndWalkGenericType(cs);
                     }
                 }
@@ -167,10 +172,6 @@ namespace HybridCLR.Editor.AOT
                 for (uint rid = 1, n = ass.Metadata.TablesStream.MethodSpecTable.Rows; rid <= n; rid++)
                 {
                     var ms = ass.ResolveMethodSpec(rid);
-                    if (ms.DeclaringType.ContainsGenericParameter || ms.GenericInstMethodSig.ContainsGenericParameter)
-                    {
-                        continue;
-                    }
                     var gm = GenericMethod.ResolveMethod(ms, null)?.ToGenericShare();
                     TryAddMethodNotWalkType(gm);
                 }
@@ -195,11 +196,29 @@ namespace HybridCLR.Editor.AOT
             }
         }
 
+        private bool IsNotShareableAOTGenericType(TypeDef typeDef)
+        {
+            if (!IsAotType(typeDef))
+            {
+                return false;
+            }
+            return typeDef.GenericParameters.Any(c => !c.HasReferenceTypeConstraint);
+        }
+
+        private bool IsNotShareableAOTGenericMethod(MethodDef method)
+        {
+            if (!IsAotGenericMethod(method))
+            {
+                return false;
+            }
+            return method.GenericParameters.Concat(method.DeclaringType.GenericParameters).Any(c => !c.HasReferenceTypeConstraint);
+        }
+
         private void FilterAOTGenericTypeAndMethods()
         {
             ConstraintContext cc = this.ConstraintContext;
-            AotGenericTypes.AddRange(_genericTypes.Where(type => IsAotType(type.Type)).Select(gc => cc.ApplyConstraints(gc)));
-            AotGenericMethods.AddRange(_genericMethods.Where(method => IsAotGenericMethod(method.Method)).Select(gm => cc.ApplyConstraints(gm)));
+            AotGenericTypes.AddRange(_genericTypes.Where(type => IsNotShareableAOTGenericType(type.Type)).Select(gc => cc.ApplyConstraints(gc)));
+            AotGenericMethods.AddRange(_genericMethods.Where(method => IsNotShareableAOTGenericMethod(method.Method)).Select(gm => cc.ApplyConstraints(gm)));
         }
 
         public void Run()

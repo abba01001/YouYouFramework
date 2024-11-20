@@ -7,7 +7,7 @@
       "dependencies": {},
       "url": "https://packages.tuanjie.cn"
     },
-    "com.focus-creative-games.hybridclr_unity": {
+    "com.code-philosophy.hybridclr": {
       "version": "file:com.focus-creative-games.hybridclr_unity",
       "depth": 0,
       "source": "embedded",

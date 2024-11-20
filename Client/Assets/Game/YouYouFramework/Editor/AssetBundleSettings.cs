@@ -21,7 +21,8 @@ public class AssetBundleSettings : ScriptableObject
     {
         Windows,
         Android,
-        IOS
+        IOS,
+        WeiXinMiniGame
     }
 
     #region 打包签名
@@ -40,32 +41,29 @@ public class AssetBundleSettings : ScriptableObject
     [PropertySpace(5)]
     [VerticalGroup("Common/Left")]
     [LabelText("目标平台")]
-    [ValueDropdown("GetCusBuildTargetOptions")]
-    public string CurrBuildTarget;
+    [EnumPaging]
+    public CusBuildTarget CurrBuildTarget;
 
-    private IEnumerable<string> GetCusBuildTargetOptions()
-    {
-        return Enum.GetNames(typeof(CusBuildTarget)); // 返回枚举名称作为字符串列表
-    }
-    
     public BuildTarget GetBuildTarget()
     {
-        string targetString = CurrBuildTarget.ToString();
-        switch (targetString)
+        switch (CurrBuildTarget)
         {
             default:
-            case "Windows":
+            case CusBuildTarget.Windows:
                 return BuildTarget.StandaloneWindows64;
-            case "Android":
+            case CusBuildTarget.Android:
                 return BuildTarget.Android;
-            case "IOS":
+            case CusBuildTarget.IOS:
                 return BuildTarget.iOS;
+            case CusBuildTarget.WeiXinMiniGame:
+                return BuildTarget.WeixinMiniGame;
         }
     }
 
     [PropertySpace(3)]
     [VerticalGroup("Common/Left")]
     [LabelText("参数")]
+    [EnumPaging]
     public BuildAssetBundleOptions Options;
 
     [PropertySpace(6)]
@@ -80,7 +78,8 @@ public class AssetBundleSettings : ScriptableObject
     [LabelText("AB包资源预览")]
     public void Test()
     {
-        AssetComparerWindow.ShowWindow();
+        GameUtil.LogError(CurrBuildTarget);
+        //AssetComparerWindow.ShowWindow();
     }
     
     [VerticalGroup("Common/Right")]
@@ -175,13 +174,13 @@ public class AssetBundleSettings : ScriptableObject
         switch (CurrBuildTarget)
         {
             default:
-            case "Windows":
+            case CusBuildTarget.Windows:
                 path = "/Unity/AssetBundle/"+ AssetVersion+"/"+ "Windows"+ "/";
                 break;
-            case "Android":
+            case CusBuildTarget.Android:
                 path = "/Unity/AssetBundle/" + AssetVersion+"/" + "Android" + "/";
                 break;
-            case "IOS":
+            case CusBuildTarget.IOS:
                 break;
         }
         return path;

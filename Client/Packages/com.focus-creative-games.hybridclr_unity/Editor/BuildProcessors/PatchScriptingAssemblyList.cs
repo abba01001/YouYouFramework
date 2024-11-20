@@ -9,21 +9,30 @@ using UnityEditor;
 using UnityEditor.Android;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
-using UnityEditor.Il2Cpp;
 using UnityEditor.UnityLinker;
 using UnityEngine;
 using UnityFS;
+#if !UNITY_2023_1_OR_NEWER
+using UnityEditor.Il2Cpp;
+#endif
 
 namespace HybridCLR.Editor.BuildProcessors
 {
     public class PatchScriptingAssemblyList :
 #if UNITY_ANDROID
         IPostGenerateGradleAndroidProject,
+#elif UNITY_OPENHARMONY
+        UnityEditor.OpenHarmony.IPostGenerateOpenHarmonyProject,
 #endif
         IPostprocessBuildWithReport
 #if !UNITY_2021_1_OR_NEWER && UNITY_WEBGL
-     , IIl2CppProcessor
+        , IIl2CppProcessor
 #endif
+
+#if UNITY_PS5
+        , IUnityLinkerProcessor
+#endif
+
     {
         public int callbackOrder => 0;
 
@@ -42,16 +51,36 @@ namespace HybridCLR.Editor.BuildProcessors
             }
         }
 
+#if UNITY_OPENHARMONY
+
+        public void OnPostGenerateOpenHarmonyProject(string path)
+        {
+            OnPostGenerateGradleAndroidProject(path);
+        }
+
+#endif
+
         public void OnPostprocessBuild(BuildReport report)
         {
             // 如果target为Android,由于已经在OnPostGenerateGradelAndroidProject中处理过，
             // 这里不再重复处理
-#if !UNITY_ANDROID && !UNITY_WEBGL
-
+#if !UNITY_ANDROID && !UNITY_WEBGL && !UNITY_OPENHARMONY
             PathScriptingAssembilesFile(report.summary.outputPath);
 #endif
         }
 
+#if UNITY_PS5
+        /// <summary>
+        /// 打包模式如果是 Package 需要在这个阶段提前处理 .json , PC Hosted 和 GP5 模式不受影响
+        /// </summary>
+
+        public string GenerateAdditionalLinkXmlFile(UnityEditor.Build.Reporting.BuildReport report, UnityEditor.UnityLinker.UnityLinkerBuildPipelineData data)
+        {
+            string path = $"{SettingsUtil.ProjectDir}/Library/PlayerDataCache/PS5/Data"; 
+            PathScriptingAssembilesFile(path);
+            return null;
+        }
+#endif
         public void PathScriptingAssembilesFile(string path)
         {
             if (!SettingsUtil.Enable)
@@ -84,7 +113,7 @@ namespace HybridCLR.Editor.BuildProcessors
 
             if (jsonFiles.Length == 0)
             {
-                //Debug.LogError($"can not find file {SettingsUtil.ScriptingAssembliesJsonFile}");
+                Debug.LogWarning($"can not find file {SettingsUtil.ScriptingAssembliesJsonFile}");
                 return;
             }
 
@@ -96,9 +125,11 @@ namespace HybridCLR.Editor.BuildProcessors
                 patcher.Save(file);
             }
         }
-
         private void AddHotFixAssembliesToBinFile(string path)
         {
+#if UNITY_STANDALONE_OSX
+            path = Path.GetDirectoryName(path);
+#endif
             if (AddHotFixAssembliesToGlobalgamemanagers(path))
             {
                 return;
@@ -148,7 +179,7 @@ namespace HybridCLR.Editor.BuildProcessors
             return true;
         }
 
-#if UNITY_WEBGL
+#if UNITY_WEBGL && !UNITY_2022_3_OR_NEWER
         public void OnBeforeConvertRun(BuildReport report, Il2CppBuildPipelineData data)
         {
             PathScriptingAssembilesFile($"{SettingsUtil.ProjectDir}/Temp/StagingArea/Data");

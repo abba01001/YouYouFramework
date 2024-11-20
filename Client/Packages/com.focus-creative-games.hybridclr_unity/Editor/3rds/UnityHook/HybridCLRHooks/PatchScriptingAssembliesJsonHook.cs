@@ -12,7 +12,7 @@ using System.IO;
 
 namespace HybridCLR.MonoHook
 {
-#if UNITY_2021_1_OR_NEWER && UNITY_WEBGL
+#if UNITY_2021_1_OR_NEWER && (UNITY_WEBGL || UNITY_WEIXINMINIGAME)
     [InitializeOnLoad]
     public class PatchScriptingAssembliesJsonHook
     {
@@ -35,12 +35,27 @@ namespace HybridCLR.MonoHook
 
         private static string BuildMainWindowTitle()
         {
-            string tempJsonPath = $"{Application.dataPath}/../Library/PlayerDataCache/WebGL/Data/ScriptingAssemblies.json";
-            if (File.Exists(tempJsonPath))
+            foreach (var tempJsonPath in Directory.GetDirectories($"{Application.dataPath}/../Library/PlayerDataCache", "*", SearchOption.TopDirectoryOnly))
             {
+                string dirName = Path.GetFileName(tempJsonPath);
+#if UNITY_WEIXINMINIGAME
+                Debug.Assert(EditorUserBuildSettings.activeBuildTarget == BuildTarget.WeixinMiniGame);
+                if (!dirName.Contains("WeixinMiniGame"))
+                {
+                    continue;
+                }
+#else
+                Debug.Assert(EditorUserBuildSettings.activeBuildTarget == BuildTarget.WebGL);
+                if (!dirName.Contains("WebGL"))
+                {
+                    continue;
+                }
+#endif
+
                 var patcher = new PatchScriptingAssemblyList();
-                patcher.PathScriptingAssembilesFile(Path.GetDirectoryName(tempJsonPath));
+                patcher.PathScriptingAssembilesFile(tempJsonPath);
             }
+
             string newTitle = BuildMainWindowTitleProxy();
             return newTitle;
         }
