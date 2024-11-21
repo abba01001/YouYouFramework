@@ -783,7 +783,7 @@ PlayerSettings:
   suppressCommonWarnings: 1
   allowUnsafeCode: 1
   useDeterministicCompilation: 1
-  selectedPlatform: 2
+  selectedPlatform: 3
   additionalIl2CppArgs: 
   scriptingRuntimeVersion: 1
   monoAOTCompilation: 0
@@ -899,7 +899,7 @@ PlayerSettings:
     -s ERROR_ON_UNDEFINED_SYMBOLS=0 -s TOTAL_MEMORY=256MB -s EXPORTED_RUNTIME_METHODS=''["ccall","cwrap","stackTrace","addRunDependency","removeRunDependency","FS_createPath","FS_createDataFile","stackTrace","writeStackCookie","checkStackCookie","lengthBytesUTF8","stringToUTF8"]''
     --profiling-funcs '
   weixinMiniGameModulesDirectory: 
-  weixinMiniGameTemplate: PATH:F:\UnityStudy\YouYouFramework\Client\Library\PackageCache\com.qq.weixin.minigame@65b7e86611\WebGLTemplates\WXTemplate2022TJ
+  weixinMiniGameTemplate: APPLICATION:PWA
   weixinMiniGameAnalyzeBuildSize: 0
   weixinMiniGameUseEmbeddedResources: 0
   weixinMiniGameCompressionFormat: 2

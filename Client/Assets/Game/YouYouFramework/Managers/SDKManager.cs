@@ -372,10 +372,9 @@ public class SDKManager : Observable<SDKManager>
 
     #region 后台
 
-    // 调用这个方法发送POST请求
+    // 请求版本信息
     public async void PostVersion()
     {
-        string url = "http://159.75.164.29:32002/api/tutorials/getVersion";
         // 你要发送的数据，序列化成JSON格式
         var postData = new
         {
@@ -383,8 +382,39 @@ public class SDKManager : Observable<SDKManager>
             anotherKey = "anotherValue"
         };
         string jsonData = JsonUtility.ToJson(postData);
-        // 调用 PostAsync 方法
-        GameEntry.Http.Post(url, null, true, (s =>
+        GameEntry.Http.Post(Constants.PostUrl.getVersion, null, true, (s =>
+        {
+            GameUtil.LogError(s);
+        }));
+    }
+    
+    //请求登录
+    public async void PostLogin()
+    {
+        // 你要发送的数据，序列化成JSON格式
+        var postData = new
+        {
+            key = "value",  // 根据API的实际需求构建请求体
+            anotherKey = "anotherValue"
+        };
+        string jsonData = JsonUtility.ToJson(postData);
+        GameEntry.Http.Post(Constants.PostUrl.login, null, true, (s =>
+        {
+            GameUtil.LogError(s);
+        }));
+    }
+
+    //请求注册
+    public async void PostRegister()
+    {
+        // 你要发送的数据，序列化成JSON格式
+        var postData = new
+        {
+            key = "value",  // 根据API的实际需求构建请求体
+            anotherKey = "anotherValue"
+        };
+        string jsonData = JsonUtility.ToJson(postData);
+        GameEntry.Http.Post(Constants.PostUrl.register, null, true, (s =>
         {
             GameUtil.LogError(s);
         }));

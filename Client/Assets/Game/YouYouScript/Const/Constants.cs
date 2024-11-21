@@ -62,4 +62,13 @@
 
     }
     
+    public struct PostUrl
+    {
+        public const string getVersion = "http://159.75.164.29:32002/api/tutorials/getVersion";
+        public const string login = "http://159.75.164.29:32002/api/tutorials/getVersion";
+        public const string register = "http://159.75.164.29:32002/api/tutorials/getVersion";
+    }
+    
+    
+    
 }
