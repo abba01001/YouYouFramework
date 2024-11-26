@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using Main;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,7 +19,7 @@ public class FormLogin : UIFormBase
         LoadLoginBg();
         loginBtn.SetButtonClick(Login);
 #if !UNITY_EDITOR
-        GameUtil.GetSignatureMD5Hash();
+        //GameUtil.GetSignatureMD5Hash();
 #endif
         //GameEntry.SDK.DownloadAvatar("1", null);
     }
@@ -26,7 +27,12 @@ public class FormLogin : UIFormBase
     private void Login()
     {
         //if(account.text == "" || password.text == "") return;
-        GameEntry.SDK.LoginAsync(account.text, password.text);
+        //GameEntry.SDK.LoginAsync(account.text, password.text);
+        TalkingDataSDK.BackgroundSessionEnabled();
+        TalkingDataSDK.InitSDK("0F4749337D034F9B9F80E2B0DD31851D","101","");
+        TalkingDataSDK.StartA();
+        GameUtil.LogError("初始化TalkingDataSDK");
+        MainEntry.Reporter.ShowLogPanel(true);
     }
     
     public async UniTask LoadLoginBg()

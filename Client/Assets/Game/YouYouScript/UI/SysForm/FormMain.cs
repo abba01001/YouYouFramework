@@ -25,8 +25,6 @@ public class FormMain : UIFormBase
         loginBtn.SetButtonClick(() =>
         {
             GameEntry.Audio.PlayBGM("maintheme1");
-            MainEntry.Reporter.ShowLogPanel(true);
-
         });
         //GameEntry.SDK.DownloadAvatar("1", null);
     }

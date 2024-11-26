@@ -37,6 +37,7 @@ public class SDKManager : Observable<SDKManager>
     //上传数据到云端
     public async Task UploadGameData(string userId, byte[] binaryData)
     {
+        return;
         CosXml cosXml = CreateCosXml();
         // 生成文件名
         string fileName = $"{userId}.bin";
@@ -59,6 +60,7 @@ public class SDKManager : Observable<SDKManager>
     
     public async Task UploadLogData(string userId)
     {
+        return;
         string logFilePath = Path.Combine(Application.persistentDataPath, "Logs.txt");
         // 直接使用文件路径打开文件流
         using (FileStream fileStream = new FileStream(logFilePath, FileMode.Open, FileAccess.Read))
