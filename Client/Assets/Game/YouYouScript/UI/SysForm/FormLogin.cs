@@ -29,21 +29,44 @@ public class FormLogin : UIFormBase
     {
         //if(account.text == "" || password.text == "") return;
         //GameEntry.SDK.LoginAsync(account.text, password.text);
-        TalkingDataSDK.BackgroundSessionEnabled();
-        TalkingDataSDK.InitSDK(Constants.TalkingDataAppid,"101","");
-        
-        //用户获得隐私授权后才能调用StartA()
-        TalkingDataSDK.StartA();
+        // TalkingDataSDK.BackgroundSessionEnabled();
+        // TalkingDataSDK.InitSDK(Constants.TalkingDataAppid,"101","");
+        //
+        // //用户获得隐私授权后才能调用StartA()
+        // TalkingDataSDK.StartA();
+        //
+        // GameUtil.LogError("初始化TalkingDataSDK");
+        //
+        // Dictionary<string,object> dic = new Dictionary<string,object>();
+        // dic.Add("测试数据1","家电");
+        // TalkingDataSDK.OnEvent("游戏埋点数据",dic,null);
         MainEntry.Reporter.ShowLogPanel(true);
-        
-        GameUtil.LogError("初始化TalkingDataSDK");
 
-        Dictionary<string,object> dic = new Dictionary<string,object>();
-        dic.Add("测试数据1","家电");
-        TalkingDataSDK.OnEvent("游戏埋点数据",dic,null);
-        
+        ShowToastMessage("你好呀");
     }
     
+    public void ShowToastMessage(string message)
+    {
+        using (AndroidJavaClass toastUtil = new AndroidJavaClass("com.example.mylibrary.ToastUtil"))
+        {
+            // 获取当前的 Activity
+            using (AndroidJavaObject currentActivity = GetUnityActivity())
+            {
+                // 调用 showToast 方法
+                toastUtil.CallStatic("showToast", currentActivity, message);
+            }
+        }
+    }
+
+    // 获取 Unity 的 Activity 对象
+    private AndroidJavaObject GetUnityActivity()
+    {
+        using (AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+        {
+            return unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+        }
+    }
+
     public async UniTask LoadLoginBg()
     {
         // Texture2D texture = await GameEntry.Loader.LoadMainAssetAsync<Texture2D>($"Assets/Game/Download/Textures/BackGround/LoginBg.png",this.gameObject);
