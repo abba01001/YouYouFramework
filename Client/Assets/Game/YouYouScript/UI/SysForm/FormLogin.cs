@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Main;
 using TMPro;
@@ -29,10 +30,18 @@ public class FormLogin : UIFormBase
         //if(account.text == "" || password.text == "") return;
         //GameEntry.SDK.LoginAsync(account.text, password.text);
         TalkingDataSDK.BackgroundSessionEnabled();
-        TalkingDataSDK.InitSDK("0F4749337D034F9B9F80E2B0DD31851D","101","");
+        TalkingDataSDK.InitSDK(Constants.TalkingDataAppid,"101","");
+        
+        //用户获得隐私授权后才能调用StartA()
         TalkingDataSDK.StartA();
-        GameUtil.LogError("初始化TalkingDataSDK");
         MainEntry.Reporter.ShowLogPanel(true);
+        
+        GameUtil.LogError("初始化TalkingDataSDK");
+
+        Dictionary<string,object> dic = new Dictionary<string,object>();
+        dic.Add("测试数据1","家电");
+        TalkingDataSDK.OnEvent("游戏埋点数据",dic,null);
+        
     }
     
     public async UniTask LoadLoginBg()

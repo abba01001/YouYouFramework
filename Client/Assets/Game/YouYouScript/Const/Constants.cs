@@ -20,6 +20,7 @@
     public const string ENCRYPTEDKEY = "ENCRYPTED:";
 
 
+    public const string TalkingDataAppid = "0F4749337D034F9B9F80E2B0DD31851D";
     public const float GroundCheckDistance = 0.1f; // 地面检测距离
     public const string SECURITYKEY = "3ZkPqF9hDjW8q2Z7";//钥匙
     public const int BLOCK_SIZE = 16; // AES块大小

@@ -13,14 +13,6 @@ using MySql.Data.MySqlClient;
 using UnityEngine;
 using YouYou;
 
-public enum DownloadStatus
-{
-    Success = 0,
-    FileNotFound = 1,
-    NetworkError = 2,
-    UnknownError = 3
-}
-
 public class SDKManager : Observable<SDKManager>
 {
     private MySqlConnection sqlConnection;
