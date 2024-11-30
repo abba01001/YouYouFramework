@@ -13,7 +13,6 @@ public interface IDataManager
     void SaveData(bool writeLocal = true,bool ignoreLocalTime = false,bool writeCloud = false,bool ignoreCloudTime = false);
     void SaveDialogueId(int type, int id);
     void SetPlayerPos(Vector3 pos);
-    void LoadGameData();
     PlayerRoleData PlayerRoleData { get; set; }
     int DataUpdateTime { get; set; }
 }
@@ -24,9 +23,14 @@ public class DataManager : Observable<DataManager>, IDataManager
     #region 持久化数据
 
     private string _user_id;
+
     public string UserId
     {
-        get => _user_id;
+        get
+        {
+            if (string.IsNullOrEmpty(_user_id)) _user_id = Guid.NewGuid().ToString("N");
+            return _user_id;
+        }
         set
         {
             _user_id = value;
@@ -46,6 +50,9 @@ public class DataManager : Observable<DataManager>, IDataManager
     }
     private int _data_update_time; //保存数据时的时间戳
     public int DataUpdateTime { get => _data_update_time; set { _data_update_time = value; } }
+    
+    private int _last_refresh_time; //刷新时间
+    public int LastRefreshTime{get => _last_refresh_time; set { _last_refresh_time = value; }}
     
     private PlayerRoleData _playerRoleData;
     public PlayerRoleData PlayerRoleData
@@ -128,12 +135,6 @@ public class DataManager : Observable<DataManager>, IDataManager
     {
         
     }
-
-    public void Init()
-    {
-        InitGameData(null);
-    }
-    
     
     public void InitGameData(byte[] datas)
     {
@@ -151,18 +152,8 @@ public class DataManager : Observable<DataManager>, IDataManager
                 }
             }
         }
-        else
-        {
-            if (string.IsNullOrEmpty(_user_id)) _user_id = Guid.NewGuid().ToString("N");
-            _playerRoleData = new PlayerRoleData();
-        }
     }
-    
-    
-    public void LoadGameData()
-    {
-    }
-    
+
     /// <summary>
     /// 
     /// </summary>

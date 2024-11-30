@@ -27,7 +27,15 @@ namespace YouYou
             m_CurrProgress = 0;
 
             BeginTask();
+            GameEntry.Event.AddEventListener(Constants.EventName.LoginSuccess,OnLoginSuccess);
         }
+
+        internal override void OnLeave()
+        {
+            base.OnLeave();
+            GameEntry.Event.RemoveEventListener(Constants.EventName.LoginSuccess,OnLoginSuccess);
+        }
+
         internal override void OnUpdate()
         {
             base.OnUpdate();
@@ -49,38 +57,24 @@ namespace YouYou
             }
 
             
-            if (m_CurrProgress == 1)
+            if (m_CurrProgress == 1 && !ShowLoginPanel)
             {
                 MainEntry.Instance.PreloadComplete();
-                if (!ShowLoginPanel)
-                {
-                    ShowLoginPanel = true;
-                    GameEntry.SDK.InitSqlConnect();
-                    GameEntry.UI.OpenUIForm<FormLogin>();
-                }
-
-                //先走登录
-                //访问数据库，连接服务器
-                if (Constants.IsLoginGame)
-                {
-                    GameEntry.UI.CloseUIForm<FormLogin>();
-                    if (GameEntry.Data.IsFirstLoginTime)
-                    {
-                        GameEntry.Data.IsFirstLoginTime = false;
-                        GameEntry.Data.SaveData(true,true,true,true);
-                        // TODO
-                        GameEntry.Procedure.ChangeState(ProcedureState.Game);
-                    }
-                    else
-                    {
-                        GameEntry.Procedure.ChangeState(ProcedureState.Game);
-                    }
-                }
-                //进入到业务流程
+                ShowLoginPanel = true;
+                GameEntry.SDK.InitSqlConnect();
+                GameEntry.UI.OpenUIForm<FormLogin>();
             }
         }
 
-
+        private void OnLoginSuccess(object userdata)
+        {
+            GameEntry.UI.CloseUIForm<FormLogin>();
+            if (GameEntry.Data.IsFirstLoginTime) GameEntry.Data.IsFirstLoginTime = false;
+            GameEntry.SDK.InitTalkingData();
+            GameEntry.Time.InitNetTime();
+            GameEntry.Data.SaveData(true,true,true,true);
+            GameEntry.Procedure.ChangeState(ProcedureState.Game);
+        }
 
         
         /// <summary>

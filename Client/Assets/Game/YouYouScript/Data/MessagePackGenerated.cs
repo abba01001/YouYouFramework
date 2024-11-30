@@ -113,6 +113,8 @@ namespace MessagePack.Formatters
         private static global::System.ReadOnlySpan<byte> GetSpan_IsFirstLoginTime() => new byte[1 + 16] { 176, 73, 115, 70, 105, 114, 115, 116, 76, 111, 103, 105, 110, 84, 105, 109, 101 };
         // DataUpdateTime
         private static global::System.ReadOnlySpan<byte> GetSpan_DataUpdateTime() => new byte[1 + 14] { 174, 68, 97, 116, 97, 85, 112, 100, 97, 116, 101, 84, 105, 109, 101 };
+        // LastRefreshTime
+        private static global::System.ReadOnlySpan<byte> GetSpan_LastRefreshTime() => new byte[1 + 15] { 175, 76, 97, 115, 116, 82, 101, 102, 114, 101, 115, 104, 84, 105, 109, 101 };
         // PlayerRoleData
         private static global::System.ReadOnlySpan<byte> GetSpan_PlayerRoleData() => new byte[1 + 14] { 174, 80, 108, 97, 121, 101, 114, 82, 111, 108, 101, 68, 97, 116, 97 };
 
@@ -125,13 +127,15 @@ namespace MessagePack.Formatters
             }
 
             var formatterResolver = options.Resolver;
-            writer.WriteMapHeader(4);
+            writer.WriteMapHeader(5);
             writer.WriteRaw(GetSpan_UserId());
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.UserId, options);
             writer.WriteRaw(GetSpan_IsFirstLoginTime());
             writer.Write(value.IsFirstLoginTime);
             writer.WriteRaw(GetSpan_DataUpdateTime());
             writer.Write(value.DataUpdateTime);
+            writer.WriteRaw(GetSpan_LastRefreshTime());
+            writer.Write(value.LastRefreshTime);
             writer.WriteRaw(GetSpan_PlayerRoleData());
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PlayerRoleData>(formatterResolver).Serialize(ref writer, value.PlayerRoleData, options);
         }
@@ -184,6 +188,11 @@ namespace MessagePack.Formatters
                                 continue;
 
                         }
+                    case 15:
+                        if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_LastRefreshTime().Slice(1))) { goto FAIL; }
+
+                        ____result.LastRefreshTime = reader.ReadInt32();
+                        continue;
 
                 }
             }

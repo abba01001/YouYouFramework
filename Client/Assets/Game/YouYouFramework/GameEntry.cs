@@ -127,12 +127,12 @@ namespace YouYou
             Dialogue.Init();
             Task.Init();
             Time.Init();
-            Data.Init();
             //进入第一个流程
             Procedure.ChangeState(ProcedureState.Launch);
             
             Dictionary<(KeyCode, KeyCode?), Action> keyMappings = new Dictionary<(KeyCode, KeyCode?), Action>
             {
+                {(KeyCode.Keypad0, KeyCode.LeftControl), Test0},
                 {(KeyCode.Keypad1, KeyCode.LeftControl), Test1},
                 {(KeyCode.Keypad2, KeyCode.LeftControl), Test2},
                 {(KeyCode.Keypad3, KeyCode.LeftControl), Test3},
@@ -160,6 +160,13 @@ namespace YouYou
             MessagePackSerializer.DefaultOptions = option;
         }
 
+        private bool isOpen = false;
+        private void Test0()
+        {
+            isOpen = !isOpen;
+            MainEntry.Reporter.ShowLogPanel(isOpen);
+        }
+        
         private void Test1()
         {
             QueueManager.Instance.AddEventTask("Hello","CloseHello");

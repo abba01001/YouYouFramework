@@ -23,19 +23,20 @@ namespace YouYou
         private float unscaledMinTime;
         private long? netTime;
         private TimeAction netTimeAction;
-        public void SetNetTime(long time)
-        {
-            netTime = time;
-            RefreshNetTime();
-        }
 
         public void Init()
+        {
+
+        }
+
+        public void InitNetTime()
         {
             string url = "https://www.baidu.com";
             GetServerTime(url, 30, null, onComplete: (DateTime serverTime) =>
             {
-                long time = GameEntry.Time.DateTimeToUnixTimestamp(serverTime);
-                SetNetTime(time);
+                long time = GameEntry.Time.DateTimeToUnixTimeStamp(serverTime);
+                netTime = time;
+                RefreshNetTime();
             });
         }
 
@@ -97,25 +98,45 @@ namespace YouYou
         public long GetNetTime()
         {
             if (netTime.HasValue) return netTime.Value;
-            return DateTimeToUnixTimestamp(DateTime.Now);
+            return DateTimeToUnixTimeStamp(DateTime.Now);
         }
 
         public DateTime GetNetDate()
         {
-            if (netTime.HasValue) return UnixTimestampToDateTime(netTime.Value);
+            if (netTime.HasValue) return UnixTimeStampToDateTime(netTime.Value);
             return DateTime.Now;
         }
-        
-        public long DateTimeToUnixTimestamp(DateTime dateTime)
+        public DateTime UnixTimeStampToDateTime(double unixTimeStamp)
         {
-            DateTimeOffset dateTimeOffset = new DateTimeOffset(dateTime.ToLocalTime());
-            return dateTimeOffset.ToUnixTimeSeconds();
+            DateTime utcDateTime = DateTimeOffset.FromUnixTimeSeconds((long)unixTimeStamp).UtcDateTime;
+            TimeZoneInfo cstZone = TimeZoneInfo.CreateCustomTimeZone("China Standard Time", TimeSpan.FromHours(8), "China Standard Time", "China Standard Time");
+            DateTime cstDateTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(utcDateTime, DateTimeKind.Utc), cstZone);
+            return cstDateTime;
         }
         
-        public DateTime UnixTimestampToDateTime(long unixTimestamp)
+        public long DateTimeToUnixTimeStamp(DateTime dateTime)
         {
-            DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(unixTimestamp);
-            return dateTimeOffset.UtcDateTime.ToLocalTime();
+            // 创建自定义 UTC+8 的中国标准时间时区
+            TimeZoneInfo cstZone = TimeZoneInfo.CreateCustomTimeZone("China Standard Time", TimeSpan.FromHours(8), "China Standard Time", "China Standard Time");
+            // 将中国标准时间转换为 UTC 时间
+            DateTime utcDateTime = TimeZoneInfo.ConvertTimeToUtc(DateTime.SpecifyKind(dateTime, DateTimeKind.Unspecified), cstZone);
+            // 计算 Unix 时间戳
+            double unixTimeStamp = (utcDateTime - new DateTime(1970, 1, 1)).TotalSeconds;
+            return (long)unixTimeStamp;
+        }
+
+        public bool CheckNewDay()
+        {
+            int now = (int)GetNetTime();
+            DateTime dt1 = UnixTimeStampToDateTime(GameEntry.Data.LastRefreshTime);
+            DateTime dt2 = UnixTimeStampToDateTime(now);
+            GameEntry.Data.LastRefreshTime = now;
+            return dt1.Date != dt2.Date;
+        }
+
+        public void ExcuteNewDay()
+        {
+            GameEntry.LogError($"新的一天开启了");
         }
         
         internal TimeManager()
@@ -126,6 +147,7 @@ namespace YouYou
 
         private void RefreshNetTime()
         {
+            if (!Constants.IsLoginGame) return;
             netTimeAction?.Stop();
             netTimeAction = CreateTimerLoop(this, 1f, -1, (int loop) =>
             {
@@ -133,6 +155,7 @@ namespace YouYou
                 {
                     long newTime = netTime.Value + 1;
                     netTime = newTime;
+                    if (CheckNewDay()) ExcuteNewDay();
                 }
             });
         }

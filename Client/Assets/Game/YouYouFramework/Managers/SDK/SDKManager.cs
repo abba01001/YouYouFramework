@@ -2,6 +2,7 @@ using System;
 using System.Data;
 using System.IO;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using COSXML;
@@ -9,6 +10,7 @@ using COSXML.Auth;
 using COSXML.Model.Object;
 using COSXML.Utils;
 using Main;
+using MessagePack;
 using MySql.Data.MySqlClient;
 using UnityEngine;
 using YouYou;
@@ -29,7 +31,6 @@ public class SDKManager : Observable<SDKManager>
     //上传数据到云端
     public async Task UploadGameData(string userId, byte[] binaryData)
     {
-        return;
         CosXml cosXml = CreateCosXml();
         // 生成文件名
         string fileName = $"{userId}.bin";
@@ -41,7 +42,7 @@ public class SDKManager : Observable<SDKManager>
             try
             {
                 PutObjectResult result = await Task.Run(() => cosXml.PutObject(request));
-                GameEntry.LogError($"游戏数据 {fileName} 上传成功！");
+                GameEntry.LogError($"游戏数据 {fileName} 上传成功{result.IsSuccessful()}！");
             }
             catch (Exception ex)
             {
@@ -52,7 +53,6 @@ public class SDKManager : Observable<SDKManager>
     
     public async Task UploadLogData(string userId)
     {
-        return;
         string logFilePath = Path.Combine(Application.persistentDataPath, "Logs.txt");
         // 直接使用文件路径打开文件流
         using (FileStream fileStream = new FileStream(logFilePath, FileMode.Open, FileAccess.Read))
@@ -82,33 +82,91 @@ public class SDKManager : Observable<SDKManager>
     {
         CosXml cosXml = CreateCosXml();
         string fileName = $"{userId}.bin";
+        string tempFileName = $"temp_{userId}.bin";
         var dic = SecurityUtil.GetSecretKeyDic();
         string bucketName = dic["bucket"];
         string filePath = "Unity/GameData/" + fileName; // COS 上的文件路径
-        string localDir = Application.persistentDataPath; // 创建 "HeadIcon" 文件夹路径
+        string localDir = Application.persistentDataPath;
         
-        string localFilePath = Path.Combine(localDir, fileName); // 完整的文件路径
-        GetObjectRequest request = new GetObjectRequest(bucketName, filePath, localDir, fileName);
+        string localFilePath = Path.Combine(localDir, fileName); // 完整的存档文件路径
+        string tempFilePath = Path.Combine(localDir, tempFileName); // 临时文件路径
+
+        GetObjectRequest request = new GetObjectRequest(bucketName, filePath, localDir, tempFileName);
         try
         {
             GetObjectResult result = await Task.Run(() => cosXml.GetObject(request));
             if (result.httpCode == 200)
             {
-                Debug.Log($"下载成功，保存路径: {localFilePath}");
-                byte[] fileContent = File.ReadAllBytes(localFilePath);
-                GameEntry.Data.InitGameData(fileContent);
+                GameEntry.LogError($"下载成功，保存路径: {tempFilePath}");
+                GameEntry.Data.InitGameData(GetGameData(localFilePath, tempFilePath));
                 Constants.IsLoginGame = true;
             }
             else
             {
-                GameEntry.Data.SaveData(true,true,true,true);
                 Constants.IsLoginGame = true;
             }
+            GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);
         }
         catch (Exception ex)
         {
             Debug.LogError($"下载失败：{ex.Message}");
         }
+    }
+
+    public byte[] GetGameData(string localFilePath,string tempFilePath)
+    {
+        byte[] fileContent = default;
+
+        if (File.Exists(localFilePath))
+        {
+            fileContent = CompareGameData(localFilePath,tempFilePath);
+        }
+        else
+        {
+            fileContent = File.ReadAllBytes(tempFilePath);
+            File.Move(tempFilePath, localFilePath);
+        }
+        return fileContent;
+    }
+    
+    //游戏存档校验
+    public byte[] CompareGameData(string localFilePath,string tempFilePath)
+    {
+        byte[] localData = File.ReadAllBytes(localFilePath);
+        byte[] cloudData = File.ReadAllBytes(tempFilePath);
+        
+        int cloudDataUpdateTime = default;
+        DataManager mc1 = MessagePackSerializer.Deserialize<DataManager>(cloudData);
+        foreach (var property in mc1.GetType().GetProperties())
+        {
+            if (property.Name == "DataUpdateTime")
+            {
+                cloudDataUpdateTime = property.GetValue(mc1).ToInt();
+                break;
+            }
+        }
+        
+        int localDataUpdateTime = default;
+        DataManager mc2 = MessagePackSerializer.Deserialize<DataManager>(localData);
+        foreach (var property in mc2.GetType().GetProperties())
+        {
+            if (property.Name == "DataUpdateTime")
+            {
+                localDataUpdateTime = property.GetValue(mc2).ToInt();
+                break;
+            }
+        }
+
+        if (cloudDataUpdateTime > localDataUpdateTime)
+        {
+            if (File.Exists(localFilePath)) File.Delete(localFilePath);
+            File.Move(tempFilePath, localFilePath);
+        }
+        else
+        {
+            File.Delete(tempFilePath);
+        }
+        return cloudDataUpdateTime > localDataUpdateTime ? cloudData : localData;
     }
 
 
@@ -383,5 +441,19 @@ public class SDKManager : Observable<SDKManager>
             GameUtil.LogError(s);
         }));
     }
+    #endregion
+
+    #region TalkingData
+
+    public void InitTalkingData()
+    {
+        TalkingDataSDK.BackgroundSessionEnabled();
+        TalkingDataSDK.InitSDK(Constants.TalkingDataAppid, "101", "");
+
+        //用户获得隐私授权后才能调用StartA()
+        TalkingDataSDK.StartA();
+        GameUtil.LogError("初始化TalkingDataSDK完成");
+    }
+
     #endregion
 }

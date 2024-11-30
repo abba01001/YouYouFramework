@@ -28,21 +28,15 @@ public class FormLogin : UIFormBase
     private void Login()
     {
         //if(account.text == "" || password.text == "") return;
-        //GameEntry.SDK.LoginAsync(account.text, password.text);
-        // TalkingDataSDK.BackgroundSessionEnabled();
-        // TalkingDataSDK.InitSDK(Constants.TalkingDataAppid,"101","");
-        //
-        // //用户获得隐私授权后才能调用StartA()
-        // TalkingDataSDK.StartA();
-        //
-        // GameUtil.LogError("初始化TalkingDataSDK");
-        //
+        GameEntry.SDK.LoginAsync(account.text, password.text);
+
         // Dictionary<string,object> dic = new Dictionary<string,object>();
         // dic.Add("测试数据1","家电");
         // TalkingDataSDK.OnEvent("游戏埋点数据",dic,null);
-        MainEntry.Reporter.ShowLogPanel(true);
 
+#if !UNITY_EDITOR
         ShowToastMessage("你好呀");
+#endif
     }
     
     public void ShowToastMessage(string message)

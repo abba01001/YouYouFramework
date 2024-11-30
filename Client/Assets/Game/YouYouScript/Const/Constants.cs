@@ -43,7 +43,7 @@
         public const string Screen = "Screen";
         public const string QualityLevel = "QualityLevel";
     }
-    
+
     public struct EventName
     {
         public const string TestEvent = "TestEvent";
@@ -60,7 +60,7 @@
         public const string EventMessage = "EventMessage";
         public const string UpdatePlayerPos = "UpdatePlayerPos";
         public const string FinishLoadDataTable = "FinishLoadDataTable";
-
+        public const string LoginSuccess = "LoginSuccess";
     }
     
 }
