@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Debugger : MonoBehaviour
@@ -8,7 +9,7 @@ public class Debugger : MonoBehaviour
     private GUIStyle logStyle;  // 用于设置字体样式
     private const float scrollSpeed = 10f;  // 滚动速度限制
 
-    void OnEnable()
+    private void Awake()
     {
         // 监听 Unity 日志消息
         Application.logMessageReceived += HandleLog;

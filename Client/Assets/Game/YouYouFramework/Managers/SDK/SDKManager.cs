@@ -53,6 +53,7 @@ public class SDKManager : Observable<SDKManager>
     
     public async Task UploadLogData(string userId)
     {
+        return;
         string logFilePath = Path.Combine(Application.persistentDataPath, "Logs.txt");
         // 直接使用文件路径打开文件流
         using (FileStream fileStream = new FileStream(logFilePath, FileMode.Open, FileAccess.Read))

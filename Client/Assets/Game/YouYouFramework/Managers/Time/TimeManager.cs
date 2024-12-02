@@ -106,23 +106,16 @@ namespace YouYou
             if (netTime.HasValue) return UnixTimeStampToDateTime(netTime.Value);
             return DateTime.Now;
         }
-        public DateTime UnixTimeStampToDateTime(double unixTimeStamp)
+        public DateTime UnixTimeStampToDateTime(long unixTimeStamp)
         {
-            DateTime utcDateTime = DateTimeOffset.FromUnixTimeSeconds((long)unixTimeStamp).UtcDateTime;
-            TimeZoneInfo cstZone = TimeZoneInfo.CreateCustomTimeZone("China Standard Time", TimeSpan.FromHours(8), "China Standard Time", "China Standard Time");
-            DateTime cstDateTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(utcDateTime, DateTimeKind.Utc), cstZone);
-            return cstDateTime;
+            DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(unixTimeStamp);
+            return dateTimeOffset.UtcDateTime.ToLocalTime();
         }
         
         public long DateTimeToUnixTimeStamp(DateTime dateTime)
         {
-            // 创建自定义 UTC+8 的中国标准时间时区
-            TimeZoneInfo cstZone = TimeZoneInfo.CreateCustomTimeZone("China Standard Time", TimeSpan.FromHours(8), "China Standard Time", "China Standard Time");
-            // 将中国标准时间转换为 UTC 时间
-            DateTime utcDateTime = TimeZoneInfo.ConvertTimeToUtc(DateTime.SpecifyKind(dateTime, DateTimeKind.Unspecified), cstZone);
-            // 计算 Unix 时间戳
-            double unixTimeStamp = (utcDateTime - new DateTime(1970, 1, 1)).TotalSeconds;
-            return (long)unixTimeStamp;
+            DateTimeOffset dateTimeOffset = new DateTimeOffset(dateTime.ToLocalTime());
+            return dateTimeOffset.ToUnixTimeSeconds();
         }
 
         public bool CheckNewDay()

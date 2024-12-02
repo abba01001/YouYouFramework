@@ -191,8 +191,9 @@ public class AssetBundleSettings : ScriptableObject
         var path = PublishPath + $"/{AssetVersion}.apk";
         if (!Directory.Exists(path))
         {
-            Directory.CreateDirectory(path);
+            File.Delete(path);
         }
+        Directory.CreateDirectory(path);
         string[] scenes = { "Assets/Game/Scene_Launch.unity" };
         BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions
         {

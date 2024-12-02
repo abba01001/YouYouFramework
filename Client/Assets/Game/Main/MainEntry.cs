@@ -100,7 +100,6 @@ namespace Main
             //初始化系统参数
             HttpRetry = ParamsSettings.GetGradeParamData(YFConstDefine.Http_Retry, CurrDeviceGrade);
             HttpRetryInterval = ParamsSettings.GetGradeParamData(YFConstDefine.Http_RetryInterval, CurrDeviceGrade);
-
         }
         private void Start()
         {

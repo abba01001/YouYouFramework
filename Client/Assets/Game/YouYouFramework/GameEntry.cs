@@ -89,7 +89,6 @@ namespace YouYou
         private void Start()
         {
             Log(LogCategory.Procedure, "GameEntry.OnStart()");
-
             Logger = new LoggerManager();
             Event = new EventManager();
             Time = new TimeManager();
