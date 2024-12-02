@@ -255,13 +255,13 @@ namespace YouYou
             BattleBg.gameObject.MSetActive(false);
             if (_type == BGType.Main)
             {
-                if (MainBg.mainTexture.name != _bgName)
+                if (MainBg.sprite == null || (MainBg.sprite != null && MainBg.sprite.name != _bgName))
                 {
-                    GameUtil.LogError(_bgName);
                     Texture2D texture = await GameEntry.Loader.LoadMainAssetAsync<Texture2D>(_bgName, this.gameObject);
                     if (texture != null)
                     {
                         Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),new Vector2(0.5f, 0.5f));
+                        sprite.name = _bgName;
                         MainBg.sprite = sprite;
                     }
                 }
@@ -269,12 +269,13 @@ namespace YouYou
             }
             else if (_type == BGType.Battle)
             {
-                if (BattleBg.mainTexture.name != _bgName)
+                if (BattleBg.sprite == null || (BattleBg.sprite != null && BattleBg.sprite.name != _bgName))
                 {
                     Texture2D texture = await GameEntry.Loader.LoadMainAssetAsync<Texture2D>(_bgName, this.gameObject);
                     if (texture != null)
                     {
                         Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),new Vector2(0.5f, 0.5f));
+                        sprite.name = _bgName;
                         BattleBg.sprite = sprite;
                     }
                 }
