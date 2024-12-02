@@ -61,6 +61,14 @@
         public const string UpdatePlayerPos = "UpdatePlayerPos";
         public const string FinishLoadDataTable = "FinishLoadDataTable";
         public const string LoginSuccess = "LoginSuccess";
+
+        public const string InitCardObj = "InitCardObj";
+    }
+    
+    public struct ItemPath
+    {
+        public const string CardObj = "Assets/Game/Download/Prefab/Item/Card.prefab";
+        public const string ArrowLine = "Assets/Game/Download/Prefab/Item/ArrowLine.prefab";
     }
     
 }

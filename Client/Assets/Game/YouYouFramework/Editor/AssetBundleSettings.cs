@@ -157,7 +157,7 @@ public class AssetBundleSettings : ScriptableObject
             await UniTask.Delay(3000);  // 延迟 1 秒
             // 等待文件存在
             COSUploader.UploadVersion(AssetVersion);
-            COSUploader.UploadAssetBundle(AssetVersion, GetUploadPath()); 
+            COSUploader.UploadAssetBundle(AssetVersion, GetUploadPath(),IsForceUploadAsset); 
 
         }
     }
@@ -753,8 +753,11 @@ public class AssetBundleSettings : ScriptableObject
         return lst.ToArray();
     }
 
-    [LabelText("勾选输出资源时上传到云端")]
+    [LabelText("勾选输出资源时上传到云端(增量上传)")]
     public bool IsUploadAsset;
+    
+    [LabelText("勾选输出资源时上传到云端(全部上传)")]
+    public bool IsForceUploadAsset;
     
     [LabelText("勾选输出包时上传到云端")]
     public bool IsUploadAPK;

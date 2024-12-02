@@ -8,7 +8,6 @@ public class BaseCard : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
     protected Vector3 initialRotation; // 初始旋转角度
     protected Vector3 initialScale; // 初始缩放
     protected RectTransform rectTransform; // RectTransform 组件
-    protected Vector3 dragOffset; // 拖拽时的偏移量
     protected bool isDragging = false; // 是否正在拖拽
     protected bool isClickable = true; // 是否可以点击
     private int siblingIndex; // 保存初始的兄弟节点索引
@@ -34,22 +33,30 @@ public class BaseCard : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         if (!isClickable) return;
         isClickable = false; // 禁止其他点击操作
         transform.SetAsLastSibling(); // 将卡牌置于最上层
-        dragOffset = rectTransform.localPosition - (Vector3) eventData.position;
         rectTransform.DOScale(initialScale * 1.2f, 0.2f).SetEase(Ease.OutSine);
         RotateToZeroAngle();
         isDragging = true;
-        Vector3 localPosition = (Vector3) eventData.position + dragOffset;
-        rectTransform.localPosition = localPosition;
+        
+        // 将屏幕坐标转换为局部坐标
+        Vector2 localPosition;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            rectTransform.parent as RectTransform, // 父级 RectTransform
+            eventData.position,                   // 当前鼠标屏幕坐标
+            eventData.pressEventCamera,           // 当前的摄像机（UI 事件摄像机）
+            out localPosition                     // 转换结果为局部坐标
+        );
+        // 将计算出的局部坐标加上拖拽偏移量
+        rectTransform.localPosition = (Vector3) localPosition;
         HandleLineArrow(1);
     }
 
     //state 0释放，1点击，2拖拽
-    private void HandleLineArrow(int state)
+    private async void HandleLineArrow(int state)
     {
         if (!InitComplete) return;
         if (!EnableShowArrowLine) return;
         // 如果箭头效果需要显示
-        if (line == null && state is 1 or 2) line = ArrowEffectManager.Instance.GetArrowLine(transform);
+        if (line == null && state is 1 or 2) line = await ArrowEffectManager.Instance.GetArrowLine(transform);
         if (state == 1)
         {
             line.ShowArrow(true);
@@ -76,10 +83,22 @@ public class BaseCard : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
     {
         if (!InitComplete) return;
         if (!isDragging) return;
+
+        // 更新箭头等逻辑
         HandleLineArrow(2);
-        Vector3 localPosition = (Vector3) eventData.position + dragOffset;
-        rectTransform.localPosition = localPosition;
+
+        // 将屏幕坐标转换为局部坐标
+        Vector2 localPosition;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            rectTransform.parent as RectTransform, // 父级 RectTransform
+            eventData.position,                   // 当前鼠标屏幕坐标
+            eventData.pressEventCamera,           // 当前的摄像机（UI 事件摄像机）
+            out localPosition                     // 转换结果为局部坐标
+        );
+        // 将计算出的局部坐标加上拖拽偏移量
+        rectTransform.localPosition = (Vector3) localPosition;
     }
+
 
     // 松开事件
     public virtual void OnPointerUp(PointerEventData eventData)

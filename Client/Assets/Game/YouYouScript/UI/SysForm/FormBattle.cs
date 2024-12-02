@@ -12,26 +12,42 @@ using YouYou;
 /// </summary>
 public class FormBattle : UIFormBase
 {
-    [SerializeField] private YouYouJoystick MoveJoystick;
-    [SerializeField] private YouYouJoystick RotateJoystick;
-    [SerializeField] private Image jumpBtn;
-    public YouYouJoystick GetMoveJoystick()
+    public static CardPlacement CardPlacement;
+    [SerializeField] private Button exitBtn;
+    [SerializeField] private Button testBtn;
+    protected override void Awake()
     {
-        return MoveJoystick;
+        base.Awake();
+        exitBtn.SetButtonClick(()=>{
+            GameEntry.Procedure.ChangeState(ProcedureState.Game);
+        });
+        testBtn.SetButtonClick(() =>
+        {
+            GameEntry.UI.OpenUIForm<FormMap>();
+        });
+        CardPlacement = transform.Get<CardPlacement>("BattleCardPanel");
+        CardPlacement.Init(this.transform);
     }
-    
-    public YouYouJoystick GetRotateJoystick()
-    {
-        return RotateJoystick;
-    }
-    
+
     protected override void OnEnable()
     {
         base.OnEnable();
+        GameEntry.Event.AddEventListener(Constants.EventName.InitCardObj, InitCards);
     }
     protected override void OnDisable()
     {
         base.OnDisable();
-        //GameEntry.Event.RemoveEventListener(EventName.LoadingSceneUpdate, OnLoadingProgressChange);
+        GameEntry.Event.RemoveEventListener(Constants.EventName.InitCardObj, InitCards);
+    }
+
+    private async void InitCards(object userdata)
+    {
+        List<BaseCard> list = new List<BaseCard>();
+        for (int i = 0; i < 3; i++)
+        {
+            PoolObj poolObj = await GameEntry.Pool.GameObjectPool.SpawnAsync(Constants.ItemPath.CardObj,CardPlacement.transform);
+            list.Add(poolObj.GetComponent<BaseCard>());
+        }
+        CardPlacement.StartPlay(list);
     }
 }

@@ -1,7 +1,3 @@
-using Main;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using YouYou;
@@ -12,19 +8,14 @@ using YouYou;
 /// </summary>
 public class FormMap : UIFormBase
 {
-    [SerializeField] private YouYouJoystick MoveJoystick;
-    [SerializeField] private YouYouJoystick RotateJoystick;
-    [SerializeField] private Image jumpBtn;
-    public YouYouJoystick GetMoveJoystick()
+    [SerializeField] private Button exitBtn;
+
+    protected override void Awake()
     {
-        return MoveJoystick;
+        base.Awake();
+        exitBtn.SetButtonClick(Close);
     }
-    
-    public YouYouJoystick GetRotateJoystick()
-    {
-        return RotateJoystick;
-    }
-    
+
     protected override void OnEnable()
     {
         base.OnEnable();

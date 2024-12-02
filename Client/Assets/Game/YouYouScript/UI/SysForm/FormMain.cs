@@ -25,6 +25,9 @@ public class FormMain : UIFormBase
         loginBtn.SetButtonClick(() =>
         {
             GameEntry.Audio.PlayBGM("maintheme1");
+            GameEntry.Instance.ShowBackGround(BGType.Main, "Assets/Game/Download/Textures/ResidentBg/MainBg.png");
+            GameEntry.Procedure.ChangeState(ProcedureState.Battle);
+            GameEntry.UI.CloseUIForm<FormMain>();
         });
         //GameEntry.SDK.DownloadAvatar("1", null);
     }

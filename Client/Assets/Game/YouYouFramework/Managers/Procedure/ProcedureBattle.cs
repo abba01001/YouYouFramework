@@ -20,17 +20,18 @@ namespace YouYou
         internal override void OnEnter()
         {
             base.OnEnter();
+            GameEntry.Instance.ShowBackGround(BGType.Battle, "Assets/Game/Download/Textures/ResidentBg/blue_01.png");
             BattleCtrl.Instance.Init();
             GameEntry.Scene.LoadSceneAction(SceneGroupName.Battle, 1, LoadSceneFinish);
         }
 
         private void LoadSceneFinish()
         {
-            //初始化玩家、敌人
-            BattleCtrl.Instance.InitBattleData(null);
-            
             //初始化界面
             GameEntry.UI.OpenUIForm<FormBattle>();
+            
+            //初始化玩家、敌人
+            GameEntry.Event.Dispatch(Constants.EventName.InitBattleData,null);
         }
         
         internal override void OnUpdate()
@@ -41,6 +42,7 @@ namespace YouYou
         internal override void OnLeave()
         {
             BattleCtrl.Instance.End();
+            GameEntry.UI.CloseUIForm<FormBattle>();
             base.OnLeave();
         }
         internal override void OnDestroy()

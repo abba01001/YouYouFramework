@@ -59,6 +59,7 @@ namespace YouYou
 
             //场景只需要给AssetBundle做引用计数， 不需要给Asset做引用计数
             AssetInfoEntity assetEntity = GameEntry.Loader.AssetInfo.GetAssetEntity(sceneFullPath);
+            if(assetEntity == null) return;
             AssetBundleReferenceEntity assetBundleEntity = GameEntry.Pool.AssetBundlePool.Spawn(assetEntity.AssetBundleFullPath);
             assetBundleEntity.ReferenceRemove();
             for (int i = 0; i < assetEntity.DependsAssetBundleList.Count; i++)

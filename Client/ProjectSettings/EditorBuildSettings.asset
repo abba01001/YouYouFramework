@@ -12,9 +12,6 @@ EditorBuildSettings:
     path: Assets/Game/Download/Scenes/Main.unity
     guid: 6117a6a264c463c44acb6e9f57e75505
   - enabled: 0
-    path: Assets/Game/Download/Scenes/Main_2.unity
-    guid: d1143783fc7856f4c833a8a61a2844e6
-  - enabled: 0
-    path: Assets/Game/Download/Scenes/Main_3.unity
-    guid: aaeff198a1a1a674883afd120566eabe
+    path: Assets/Game/Download/Scenes/Battle.unity
+    guid: 40ff7718fdb169149a30fadb83000738
   m_configObjects: {}

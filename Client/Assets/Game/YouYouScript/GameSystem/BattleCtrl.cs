@@ -80,6 +80,8 @@ public class BattleCtrl : Singleton<BattleCtrl>
         Participants = new BattleParticipants(GetPlayers(), GetEnemies());
         Participants.DetermineTurnOrder();
         TotalRounds = 1;
+        
+        GameEntry.Event.Dispatch(Constants.EventName.InitCardObj,null);
     }
 
     private List<Player> GetPlayers()

@@ -33,7 +33,7 @@ namespace YouYou
         private static string cloudVersionFilePath = $"{SystemModel.Instance.CurrChannelConfig.EditorRealSourceUrl}{YFConstDefine.VersionFileName}";
         private static UploadResultWindow uploadWindow;
         private static Stopwatch stopwatch;
-        
+        private static bool dontCheck = false;
         private static Dictionary<string, VersionFileEntity> m_CDNVersionDic = new Dictionary<string, VersionFileEntity>();
         private static Dictionary<string, VersionFileEntity> m_LocalAssetsVersionDic = new Dictionary<string, VersionFileEntity>();
         
@@ -115,8 +115,9 @@ namespace YouYou
             uploadWindow.UpdateLog(successLog.ToString(), failureLog.ToString(), "");
         }
         
-        public static async void UploadAssetBundle(string version,string uploadPath)
+        public static async void UploadAssetBundle(string version,string uploadPath,bool _dontCheck)
         {
+            dontCheck = _dontCheck;
             cosConfig = Resources.Load<CosConfig>("CosConfig");
             CosXml cosXml = CreateCosXml();
             stopwatch = new Stopwatch(); // 用于记录耗时
@@ -294,6 +295,7 @@ namespace YouYou
 
         private static bool CheckNeedUpload(string abName)
         {
+            if (dontCheck) return true;
             if (m_LocalAssetsVersionDic.Count == 0 || m_CDNVersionDic.Count == 0) return true;
             if (abName == "Android" || abName == "AssetInfo.bytes" || abName == "AssetInfo.json") return true;
             if (!m_CDNVersionDic.ContainsKey(abName)) return true;//云端没有，本地直接上传

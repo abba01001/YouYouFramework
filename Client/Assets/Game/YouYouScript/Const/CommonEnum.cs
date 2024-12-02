@@ -70,3 +70,9 @@ public enum WebSocketMethod : uint
     TestWebSocket,
     DueTimeCallBack,
 }
+
+public enum BGType : uint
+{
+    Main,
+    Battle
+}

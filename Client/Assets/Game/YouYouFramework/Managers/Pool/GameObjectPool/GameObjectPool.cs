@@ -127,9 +127,26 @@ namespace YouYou
         }
 
         #region Spawn 从对象池中获取对象
+
         /// <summary>
         /// 从对象池中获取对象
         /// </summary>
+        public async UniTask<PoolObj> SpawnAsync(string prefabPath, Transform panent = null)
+        {
+            AssetReferenceEntity referenceEntity = await GameEntry.Loader.LoadMainAssetAsync(prefabPath);
+            GameObject retObj = referenceEntity.Target as GameObject;
+            if (retObj == null)
+            {
+                YouYou.GameEntry.LogError(LogCategory.Loader, "找不到Prefab, AssetFullName==" + prefabPath);
+                return null;
+            }
+
+            Transform prefab = retObj.transform;
+            int prefabId = prefab.gameObject.GetInstanceID();
+            m_PrefabAssetDic[prefabId] = referenceEntity;
+            return Spawn(prefab, panent);
+        }
+        
         public async UniTask<PoolObj> SpawnAsync(PrefabName prefabName, Transform panent = null)
         {
             Sys_PrefabEntity sys_Prefab = GameEntry.DataTable.Sys_PrefabDBModel.GetEntity(prefabName.ToString());

@@ -14,6 +14,7 @@ namespace YouYou
         internal override void OnEnter()
         {
             base.OnEnter();
+            GameEntry.Instance.ShowBackGround(BGType.Main, "Assets/Game/Download/Textures/ResidentBg/MainBg.png");
             GameEntry.UI.OpenUIForm<FormLoading>();
             GameEntry.Scene.LoadSceneAction(SceneGroupName.Main, 1,Init);
         }
@@ -22,14 +23,13 @@ namespace YouYou
         {
             Scene targetScene = SceneManager.GetSceneByName("Main");
             SceneManager.SetActiveScene(targetScene);
-
-            Material main3Skybox = Resources.Load<Material>("CloudyNight"); // 确保路径正确
-            // 更新渲染设置中的天空盒
-            if (main3Skybox != null)
-            {
-                RenderSettings.skybox = main3Skybox;
-                DynamicGI.UpdateEnvironment();
-            }
+            // Material main3Skybox = Resources.Load<Material>("CloudyNight"); // 确保路径正确
+            // // 更新渲染设置中的天空盒
+            // if (main3Skybox != null)
+            // {
+            //     RenderSettings.skybox = main3Skybox;
+            //     DynamicGI.UpdateEnvironment();
+            // }
             
             GameEntry.UI.OpenUIForm<FormMain>();
             
@@ -44,17 +44,17 @@ namespace YouYou
 
         private async void InitPlayer()
         {
-            var parent = new GameObject("Player");
-            
-            PoolObj playerCtrl = await GameEntry.Pool.GameObjectPool.SpawnAsync(PrefabName.PlayerCtrl,parent.transform);
-            PoolObj playerModel = await GameEntry.Pool.GameObjectPool.SpawnAsync(PrefabName.Archer,playerCtrl.transform);
-            PoolObj playerCamera = await GameEntry.Pool.GameObjectPool.SpawnAsync(PrefabName.PlayerCamera,parent.transform);
-            
-            YouYouJoystick rotateJoy = GameEntry.UI.GetUIForm<FormBattle>("FormBattle").GetRotateJoystick();
-            YouYouJoystick moveJoy = GameEntry.UI.GetUIForm<FormBattle>("FormBattle").GetMoveJoystick();
-            Animator animator = playerModel.GetComponentInChildren<Animator>(true);
-            playerCtrl.GetComponent<PlayerCtrl>().InitParams(new object[] { animator,moveJoy, playerCamera.GetComponent<Camera>() });
-            playerCamera.GetComponent<PlayerCamera>().InitParams(new object[] { playerCtrl.transform, rotateJoy });
+            // var parent = new GameObject("Player");
+            //
+            // PoolObj playerCtrl = await GameEntry.Pool.GameObjectPool.SpawnAsync(PrefabName.PlayerCtrl,parent.transform);
+            // PoolObj playerModel = await GameEntry.Pool.GameObjectPool.SpawnAsync(PrefabName.Archer,playerCtrl.transform);
+            // PoolObj playerCamera = await GameEntry.Pool.GameObjectPool.SpawnAsync(PrefabName.PlayerCamera,parent.transform);
+            //
+            // YouYouJoystick rotateJoy = GameEntry.UI.GetUIForm<FormBattle>("FormBattle").GetRotateJoystick();
+            // YouYouJoystick moveJoy = GameEntry.UI.GetUIForm<FormBattle>("FormBattle").GetMoveJoystick();
+            // Animator animator = playerModel.GetComponentInChildren<Animator>(true);
+            // playerCtrl.GetComponent<PlayerCtrl>().InitParams(new object[] { animator,moveJoy, playerCamera.GetComponent<Camera>() });
+            // playerCamera.GetComponent<PlayerCamera>().InitParams(new object[] { playerCtrl.transform, rotateJoy });
             
             // PoolObj dungeonGenerator = await GameEntry.Pool.GameObjectPool.SpawnAsync(PrefabName.DungeonGenerator,parent1.transform);
             // RuntimeDungeon runtimeDungeon = dungeonGenerator.GetComponent<RuntimeDungeon>();

@@ -21,8 +21,8 @@ public class FormLoading : UIFormBase
     {
         VarFloat varFloat = (VarFloat)userData;
         txtTip.text = string.Format("正在进入场景, 加载进度 {0}%", Math.Floor(varFloat * 100));
-        m_Scrollbar.size = varFloat;
-
+        GameUtil.LogError("进度条:",varFloat.Value);
+        m_Scrollbar.size = varFloat.Value;
         if (varFloat == 1) Close();
     }
 
@@ -30,13 +30,12 @@ public class FormLoading : UIFormBase
     {
         base.OnEnable();
         GameEntry.Event.AddEventListener(Constants.EventName.LoadingSceneUpdate, OnLoadingProgressChange);
-
-        //txtTip.text = string.Empty;
-        //m_Scrollbar.size = 0;
+        m_Scrollbar.size = 0;
     }
     protected override void OnDisable()
     {
         base.OnDisable();
         GameEntry.Event.RemoveEventListener(Constants.EventName.LoadingSceneUpdate, OnLoadingProgressChange);
+        m_Scrollbar.size = 0f;
     }
 }

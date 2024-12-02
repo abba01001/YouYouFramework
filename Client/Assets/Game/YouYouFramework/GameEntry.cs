@@ -36,8 +36,16 @@ namespace YouYou
         public UIGroup[] UIGroups;
 
         [FoldoutGroup("UIGroup")]
-        [Header("屏幕阻挡这招")]
+        [Header("屏幕阻挡遮罩")]
         public GameObject BlockMask;
+        
+        [FoldoutGroup("UIGroup")]
+        [Header("主页背景")]
+        public Image MainBg;
+        
+        [FoldoutGroup("UIGroup")]
+        [Header("战斗背景")]
+        public Image BattleBg;
         
         [FoldoutGroup("AudioGroup")]
         [Header("声音主混合器")]
@@ -240,6 +248,39 @@ namespace YouYou
             }
         }
 
+
+        public async void ShowBackGround(BGType _type,string _bgName)
+        {
+            MainBg.gameObject.MSetActive(false);
+            BattleBg.gameObject.MSetActive(false);
+            if (_type == BGType.Main)
+            {
+                if (MainBg.mainTexture.name != _bgName)
+                {
+                    GameUtil.LogError(_bgName);
+                    Texture2D texture = await GameEntry.Loader.LoadMainAssetAsync<Texture2D>(_bgName, this.gameObject);
+                    if (texture != null)
+                    {
+                        Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),new Vector2(0.5f, 0.5f));
+                        MainBg.sprite = sprite;
+                    }
+                }
+                MainBg.gameObject.MSetActive(true);
+            }
+            else if (_type == BGType.Battle)
+            {
+                if (BattleBg.mainTexture.name != _bgName)
+                {
+                    Texture2D texture = await GameEntry.Loader.LoadMainAssetAsync<Texture2D>(_bgName, this.gameObject);
+                    if (texture != null)
+                    {
+                        Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),new Vector2(0.5f, 0.5f));
+                        BattleBg.sprite = sprite;
+                    }
+                }
+                BattleBg.gameObject.MSetActive(true);
+            }
+        }
 
         public static void Log(LogCategory catetory, object message, params object[] args)
         {

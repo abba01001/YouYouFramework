@@ -11,8 +11,9 @@ public class BattleParticipants
     public int TurnCount { get; set; }             // 当前回合数
     public BattleCharacter CurrentPlayer { get; set; } // 当前出牌的角色
 
-    public BattleParticipants(List<Player> players, List<Enemy> enemies)
+    public BattleParticipants(List<Player> players,List<Enemy> enemies)
     {
+        
         Players = players;
         Enemies = enemies;
     }
@@ -35,6 +36,7 @@ public class BattleParticipants
     
     public void DetermineTurnOrder()
     {
+        if(Players.Count == 0 || Enemies.Count == 0) return;
         // 我们将分别根据玩家和敌人的优先级来决定出牌顺序
         var playerPrioritySum = Players.Sum(player => player.PrioritySum);  // 玩家方所有角色的优先级总和
         var enemyPrioritySum = Enemies.Sum(enemy => enemy.PrioritySum);  // 敌方所有角色的优先级总和

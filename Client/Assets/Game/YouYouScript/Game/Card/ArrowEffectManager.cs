@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using YouYou;
 
@@ -7,12 +8,11 @@ public class ArrowEffectManager :Singleton<ArrowEffectManager>
 {
     private List<ArrowLine> ArrowLineList = new List<ArrowLine>();
     private GameObject parent;
-    private GameObject linePrefab;
     public void Start()
     {
     }
 
-    public ArrowLine GetArrowLine(Transform head)
+    public async UniTask<ArrowLine> GetArrowLine(Transform head)
     {
         if (parent == null)
         {
@@ -25,15 +25,9 @@ public class ArrowEffectManager :Singleton<ArrowEffectManager>
             line = value;
             break;
         }
-
-        if (linePrefab == null)
-        {
-            linePrefab = GameObject.Find("ArrowLine");
-            linePrefab.gameObject.SetActive(false);
-        }
         if (line == null)
         {
-            GameObject t = GameObject.Instantiate(linePrefab, head.transform.parent);
+            PoolObj t = await GameEntry.Pool.GameObjectPool.SpawnAsync(Constants.ItemPath.ArrowLine,head.transform.parent);
             t.gameObject.SetActive(true);
             line = t.GetComponent<ArrowLine>();
             line.InitData(t.transform,GameObject.FindGameObjectsWithTag("Spine"));

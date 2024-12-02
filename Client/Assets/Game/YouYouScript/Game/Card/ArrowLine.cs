@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using YouYou;
 
 public class ArrowLine : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class ArrowLine : MonoBehaviour
     private List<GameObject> ItemList = new List<GameObject>();
 
     // 存储所有Spine的Transform数组
-    private GameObject[] allSpineTransforms;
+    [SerializeField] private GameObject[] allSpineTransforms;
     private Transform targetSpine; // 当前指向的目标Spine
     private float timer = 0;
     private float interval = 0.5f;
@@ -95,7 +96,6 @@ public class ArrowLine : MonoBehaviour
         {
             float distance = Vector3.Distance(t1, spine.transform.position);
             if (minDistance == Mathf.Infinity) minDistance = distance;
-            GameUtil.LogError($"{spine.transform.name}==距离{distance}");
             if (distance <= minDistance)
             {
                 minDistance = distance;
@@ -109,12 +109,12 @@ public class ArrowLine : MonoBehaviour
 
             // 转换目标Spine位置到画布坐标系
             Vector3 worldPosition = targetSpine.position; // 获取目标Spine的世界坐标
-            Vector3 screenPosition = Camera.main.WorldToScreenPoint(worldPosition); // 转换为屏幕坐标
+            Vector3 screenPosition = GameEntry.Instance.UICamera.WorldToScreenPoint(worldPosition); // 转换为屏幕坐标
             RectTransform canvasRectTransform = this.GetComponentInParent<Canvas>().GetComponent<RectTransform>();
             Vector2 localPoint;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRectTransform, screenPosition, Camera.main,
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRectTransform, screenPosition, GameEntry.Instance.UICamera,
                 out localPoint);
-            endPoint = localPoint + new Vector2(0, 250); // 根据需求微调坐标
+            endPoint = localPoint + new Vector2(0, 100); // 根据需求微调坐标
         }
     }
 
