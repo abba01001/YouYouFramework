@@ -8,36 +8,55 @@ using UnityEngine;
 
 public class GridCharacter : MonoBehaviour
 {
-    private Vector2Int currentPosition;
     private Coroutine moveCoroutine;
+    private Vector3 initScale;
+    private Animator animator;
+    private void Awake()
+    {
+        initScale = transform.localScale;
+        animator = transform.GetComponentInChildren<Animator>();
+    }
 
-    public void MoveTo(Vector2Int targetPosition, Action onComplete)
+    public void RefreshParentGrid(BattleGrid grid)
+    {
+        this.transform.SetParent(grid.ModelRoot);
+    }
+
+    public void SetTargetPos(Vector2 endPosition)
+    {
+        transform.position = endPosition;
+    }
+    
+    public void MoveTo(Vector2 targetPosition,Action onComplete)
     {
         if (moveCoroutine != null)
         {
             StopCoroutine(moveCoroutine);
         }
-
         moveCoroutine = StartCoroutine(MoveCoroutine(targetPosition, onComplete));
     }
 
-    private IEnumerator MoveCoroutine(Vector2Int targetPosition, Action onComplete)
+    private IEnumerator MoveCoroutine(Vector2 targetPosition, Action onComplete)
     {
         // 当前格子的局部位置
-        Vector3 startPosition = transform.localPosition;
-        Vector3 endPosition = BattleGridManager.Instance.GetGrid(targetPosition).transform.localPosition;
-        float time = 0;
-        float duration = 1f; // 移动时间
-
+        Vector3 startPosition = transform.position;
+        Vector3 endPosition = new Vector3(targetPosition.x, targetPosition.y, 0);
+        transform.localScale = new Vector3(endPosition.x > startPosition.x ? -initScale.x : initScale.x, initScale.y, initScale.z);
+        animator.SetBool("Run",true);
+        float distance = Vector3.Distance(startPosition, endPosition);
+        float moveSpeed = 81f;
+        float duration = distance / moveSpeed;
+        float time = 0f;
+        
         while (time < duration)
         {
             time += Time.deltaTime;
-            transform.localPosition = Vector3.Lerp(startPosition, endPosition, time / duration);
+            transform.position = Vector3.Lerp(startPosition, endPosition, time / duration);
             yield return null;
         }
 
-        transform.localPosition = endPosition;
-        currentPosition = targetPosition;
+        animator.SetBool("Run",false);
+        transform.position = endPosition;
 
         onComplete?.Invoke();
     }

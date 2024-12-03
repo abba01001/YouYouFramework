@@ -6,11 +6,12 @@ public class BattleGridManager : MonoBehaviour
 {
     public static BattleGridManager Instance;
 
-    private BattleGrid selectedOrignGrid;
+    private BattleGrid RecordSelectGrid;
+    private BattleGrid RecordTargetGrid;
     private Dictionary<Vector2Int, BattleGrid> gridMap = new Dictionary<Vector2Int, BattleGrid>();
     private Transform gridParent;
     public RectTransform barImage;
-    public bool Selecting => selectedOrignGrid != null;
+    public bool Selecting => RecordSelectGrid != null;
 
     private void Awake()
     {
@@ -45,82 +46,69 @@ public class BattleGridManager : MonoBehaviour
         }
     }
 
-    // 选择格子逻辑
-    public void OnGridSelected(BattleGrid grid)
+        
+    // 示例数据交换方法
+    private void SwapGrid(BattleGrid orignGrid, BattleGrid targetGrid)
     {
-        if (selectedOrignGrid == null)
-        {
-            // 选择起始格子
-            selectedOrignGrid = grid;
-            selectedOrignGrid.ShowOrignSelect(true);
-        }
-        else
-        {
-            // 设置目标格子
-            if (grid != selectedOrignGrid)
-            {
-                GridCharacter character = selectedOrignGrid.OccupiedCharacters.Count > 0 ? selectedOrignGrid.OccupiedCharacters[0] : null; // 默认选择第一个角色
-                if (character != null)
-                {
-                    // 尝试将角色移动到目标格子
-                    if (grid.TryOccupy(character))
-                    {
-                        selectedOrignGrid.Release(character); // 移除角色
-                        selectedOrignGrid.ShowOrignSelect(false);
-                        selectedOrignGrid = null; // 清除选择
-                    }
-                }
-            }
-        }
+        orignGrid.MoveToTargetGrid(targetGrid);
+        targetGrid.MoveToTargetGrid(orignGrid);
+        
+        List<GridCharacter> tempList = targetGrid.OccupiedCharacters;
+        targetGrid.OccupiedCharacters = orignGrid.OccupiedCharacters;
+        orignGrid.OccupiedCharacters = tempList;
+
     }
 
     public void OnSelectOrignGrid(BattleGrid grid)
     {
-        selectedOrignGrid = grid;
+        RecordSelectGrid = grid;
         foreach (var pair in gridMap)
         {
             pair.Value.ShowGrid(true);
             pair.Value.ShowOrignSelect(grid == pair.Value);
         }
-
         barImage.position = grid.transform.position;
     }
 
     public void OnSelectTargetGrid(BattleGrid grid)
     {
+        barImage.transform.localScale = Vector3.one;
         // 计算原始格子和目标格子之间的向量
-        Vector2 originPos = selectedOrignGrid.Position;
+        Vector2 originPos = RecordSelectGrid.Position;
         Vector2 targetPos = grid.Position;
-        Vector3 direction = targetPos - originPos;
+        barImage.sizeDelta = new Vector2((targetPos - originPos).magnitude * 81f, barImage.sizeDelta.y);
 
-        // 计算两者之间的距离
-        //float distance = direction.magnitude;
-        float distance = Vector2.Distance(targetPos,originPos) * 81f; // 根据需要的比例缩放距离
-
-        // 更新 barImage 的大小（宽度）
-        barImage.sizeDelta = new Vector2(distance, barImage.sizeDelta.y);
-
-        // 计算条形图的旋转角度
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-
-        // 更新 barImage 的旋转
-        barImage.transform.rotation = Quaternion.Euler(0, 0, angle);
-
-
+        
+        Vector3 direction = grid.transform.position - RecordSelectGrid.transform.position;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg; // 获取角度
+        
+        barImage.transform.rotation = Quaternion.Euler(0, 0, angle); // 旋转线条
         foreach (var pair in gridMap)
         {
             pair.Value.ShowTargetSelect(grid == pair.Value);
         }
     }
 
-    public void OnReleaseGrid(BattleGrid grid)
+    public void SetTargetGrid(BattleGrid grid)
     {
-        selectedOrignGrid = null;
+        RecordTargetGrid = grid;
+    }
+    
+    public void OnReleaseGrid()
+    {
         foreach (var pair in gridMap)
         {
             pair.Value.ShowOrignSelect(false);
             pair.Value.ShowTargetSelect(false);
             pair.Value.ShowGrid(false);
         }
+
+        if (RecordTargetGrid != null && RecordSelectGrid != RecordTargetGrid)
+        {
+            SwapGrid(RecordSelectGrid, RecordTargetGrid);
+        }
+        barImage.transform.localScale = Vector3.zero;
+        RecordSelectGrid = null;
+        RecordTargetGrid = null;
     }
 }
