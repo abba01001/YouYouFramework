@@ -3,21 +3,41 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class BattleGrid : MonoBehaviour, IPointerClickHandler
+public class BattleGrid : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler,IPointerUpHandler
 {
-    [SerializeField]private Vector2Int Position; // 格子位置
+    public Vector2Int Position { get; private set; } // 格子位置
     public List<GridCharacter> OccupiedCharacters = new List<GridCharacter>(); // 存储最多3个角色
 
     private Image gridImage;
-    private GameObject selectionIndicator;
-
-    private void Awake()
+    private GameObject orignSelectObj;
+    private GameObject targetSelectObj;
+    private bool isPressed = false;
+    private void Start()
     {
-        gridImage = GetComponent<Image>();
-        selectionIndicator = transform.Find("Select").gameObject;
-        selectionIndicator.SetActive(false);
+        gridImage = transform.Get<Image>("Root");
+        orignSelectObj = transform.Find("OrignSelect").gameObject;
+        targetSelectObj = transform.Find("TargetSelect").gameObject;
+        orignSelectObj.SetActive(false);
+        ShowGrid(false);
+        ShowTargetSelect(false);
+        ShowOrignSelect(false);
     }
 
+    public void ShowGrid(bool state)
+    {
+        gridImage.color = state ? Color.white : Color.clear;
+    }
+
+    public void ShowTargetSelect(bool state)
+    {
+        targetSelectObj.SetActive(state);
+    }
+
+    public void ShowOrignSelect(bool state)
+    {
+        orignSelectObj.SetActive(state);
+    }
+    
     public void UpdateGridPos(Vector2Int pos)
     {
         Position = pos;
@@ -45,13 +65,41 @@ public class BattleGrid : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    public void ShowSelect(bool state)
+
+    // 鼠标按下时，保持放大状态
+    public void OnPointerDown(PointerEventData eventData)
     {
-        selectionIndicator.SetActive(state);
+        // 标记为已按下，立即放大
+        isPressed = true;
+        BattleGridManager.Instance.OnSelectOrignGrid(this);
+    }
+    
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (!BattleGridManager.Instance.Selecting) return;
+        if (!isPressed) // 只有在没有被按下时，才进行缩放
+        {
+            BattleGridManager.Instance.OnSelectTargetGrid(this);
+        }
     }
 
-    public void OnPointerClick(PointerEventData eventData)
+    // 鼠标松开时，恢复原始大小
+    public void OnPointerUp(PointerEventData eventData)
     {
-        BattleGridManager.Instance.OnGridSelected(this);
+        // 标记为未按下，恢复原始大小
+        if (isPressed)
+        {
+            isPressed = false;
+            BattleGridManager.Instance.OnReleaseGrid(this);
+        }
+    }
+        
+    // 鼠标退出时，恢复原始大小
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (!isPressed) // 只有在没有被按下时，才恢复原始大小
+        {
+
+        }
     }
 }

@@ -6,9 +6,12 @@ public class BattleGridManager : MonoBehaviour
 {
     public static BattleGridManager Instance;
 
-    private BattleGrid selectedGrid;
+    private BattleGrid selectedOrignGrid;
     private Dictionary<Vector2Int, BattleGrid> gridMap = new Dictionary<Vector2Int, BattleGrid>();
     private Transform gridParent;
+    public RectTransform barImage;
+    public bool Selecting => selectedOrignGrid != null;
+
     private void Awake()
     {
         gridParent = transform.Find("GridLayout");
@@ -26,6 +29,7 @@ public class BattleGridManager : MonoBehaviour
     {
         gridMap[position] = grid;
         gridMap[position].UpdateGridPos(position);
+
     }
 
     // 获取格子
@@ -44,29 +48,79 @@ public class BattleGridManager : MonoBehaviour
     // 选择格子逻辑
     public void OnGridSelected(BattleGrid grid)
     {
-        if (selectedGrid == null)
+        if (selectedOrignGrid == null)
         {
             // 选择起始格子
-            selectedGrid = grid;
-            selectedGrid.ShowSelect(true);
+            selectedOrignGrid = grid;
+            selectedOrignGrid.ShowOrignSelect(true);
         }
         else
         {
             // 设置目标格子
-            if (grid != selectedGrid)
+            if (grid != selectedOrignGrid)
             {
-                GridCharacter character = selectedGrid.OccupiedCharacters.Count > 0 ? selectedGrid.OccupiedCharacters[0] : null; // 默认选择第一个角色
+                GridCharacter character = selectedOrignGrid.OccupiedCharacters.Count > 0 ? selectedOrignGrid.OccupiedCharacters[0] : null; // 默认选择第一个角色
                 if (character != null)
                 {
                     // 尝试将角色移动到目标格子
                     if (grid.TryOccupy(character))
                     {
-                        selectedGrid.Release(character); // 移除角色
-                        selectedGrid.ShowSelect(false);
-                        selectedGrid = null; // 清除选择
+                        selectedOrignGrid.Release(character); // 移除角色
+                        selectedOrignGrid.ShowOrignSelect(false);
+                        selectedOrignGrid = null; // 清除选择
                     }
                 }
             }
+        }
+    }
+
+    public void OnSelectOrignGrid(BattleGrid grid)
+    {
+        selectedOrignGrid = grid;
+        foreach (var pair in gridMap)
+        {
+            pair.Value.ShowGrid(true);
+            pair.Value.ShowOrignSelect(grid == pair.Value);
+        }
+
+        barImage.position = grid.transform.position;
+    }
+
+    public void OnSelectTargetGrid(BattleGrid grid)
+    {
+        // 计算原始格子和目标格子之间的向量
+        Vector2 originPos = selectedOrignGrid.Position;
+        Vector2 targetPos = grid.Position;
+        Vector3 direction = targetPos - originPos;
+
+        // 计算两者之间的距离
+        //float distance = direction.magnitude;
+        float distance = Vector2.Distance(targetPos,originPos) * 81f; // 根据需要的比例缩放距离
+
+        // 更新 barImage 的大小（宽度）
+        barImage.sizeDelta = new Vector2(distance, barImage.sizeDelta.y);
+
+        // 计算条形图的旋转角度
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+        // 更新 barImage 的旋转
+        barImage.transform.rotation = Quaternion.Euler(0, 0, angle);
+
+
+        foreach (var pair in gridMap)
+        {
+            pair.Value.ShowTargetSelect(grid == pair.Value);
+        }
+    }
+
+    public void OnReleaseGrid(BattleGrid grid)
+    {
+        selectedOrignGrid = null;
+        foreach (var pair in gridMap)
+        {
+            pair.Value.ShowOrignSelect(false);
+            pair.Value.ShowTargetSelect(false);
+            pair.Value.ShowGrid(false);
         }
     }
 }
