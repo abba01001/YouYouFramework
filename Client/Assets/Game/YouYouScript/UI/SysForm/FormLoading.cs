@@ -16,14 +16,15 @@ public class FormLoading : UIFormBase
     private Scrollbar m_Scrollbar;
     [SerializeField]
     private Text txtTip;
-
+    private float m_TargetProgress;
     private void OnLoadingProgressChange(object userData)
     {
-        VarFloat varFloat = (VarFloat)userData;
-        txtTip.text = string.Format("正在进入场景, 加载进度 {0}%", Math.Floor(varFloat * 100));
-        GameUtil.LogError("进度条:",varFloat.Value);
-        m_Scrollbar.size = varFloat.Value;
-        if (varFloat == 1) Close();
+        VarFloat m_TargetProgress  = userData as VarFloat;
+        //VarFloat varFloat = (VarFloat)userData;
+        txtTip.text = string.Format("正在进入场景, 加载进度 {0}%", Math.Floor(m_TargetProgress.Value * 100));
+        GameUtil.LogError("进度条:",m_TargetProgress.Value);
+        m_Scrollbar.size = (float)m_TargetProgress.Value * 100 / 100f;
+        if (m_TargetProgress == 1) Close();
     }
 
     protected override void OnEnable()
