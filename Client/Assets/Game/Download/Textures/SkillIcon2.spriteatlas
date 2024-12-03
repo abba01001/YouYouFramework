@@ -44,64 +44,13 @@ SpriteAtlas:
       enableAlphaDilation: 0
     secondaryTextureSettings: {}
     variantMultiplier: 1
-    packables:
-    - {fileID: 102900000, guid: 912d1e419bd985b4aa41376860a52774, type: 3}
+    packables: []
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
-  m_PackedSprites:
-  - {fileID: 21300000, guid: de865ae190f3c41fa8df96f1d67e0cc5, type: 3}
-  - {fileID: 21300000, guid: 2568d8220dcc143afb2156e13c13a336, type: 3}
-  - {fileID: 21300000, guid: 5f9010523aab2486ca167dd148bbddd5, type: 3}
-  - {fileID: 21300000, guid: 19e84a82af39444f9a793be5ef533496, type: 3}
-  - {fileID: 21300000, guid: d43e64d3584234c1e82a8f779a916704, type: 3}
-  - {fileID: 21300000, guid: de207ac532ede4cc68a27aadc8ae85ae, type: 3}
-  - {fileID: 21300000, guid: 3a5cf3f51617b42efbbcfb08b199d8e9, type: 3}
-  - {fileID: 21300000, guid: 5f778e863a7934ea19591a90f47fb26f, type: 3}
-  - {fileID: 21300000, guid: 54f29e97f9c6a44b7a59bea531301858, type: 3}
-  - {fileID: 21300000, guid: a51dadf77ed3543818506856607ac5a6, type: 3}
-  - {fileID: 21300000, guid: 73ed0ae879c1c4eaf8f58097a6c1c093, type: 3}
-  - {fileID: 21300000, guid: 86d552899f4e8433ca1a7d2a8163dea2, type: 3}
-  - {fileID: 21300000, guid: b7376599bed634966be330d0baf5540f, type: 3}
-  - {fileID: 21300000, guid: 400f9acafa54b4c4f9c78591a13e5b50, type: 3}
-  - {fileID: 21300000, guid: fb6da40b2d8854b2baa37f6f0e9eb53e, type: 3}
-  - {fileID: 21300000, guid: 03e02dbb6a23c4732873d6aef359785e, type: 3}
-  - {fileID: 21300000, guid: 87266c5c1c75e437baa11d00fab385d7, type: 3}
-  - {fileID: 21300000, guid: 751a02adb40ed4317b84c195bb988f3b, type: 3}
-  - {fileID: 21300000, guid: b9ac465ecc7304108ad0df10f91f10ad, type: 3}
-  - {fileID: 21300000, guid: cfca2faeed2f34f93b6cb94671532e64, type: 3}
-  - {fileID: 21300000, guid: ea4d7c0fed1b148e9bda317398bc00cf, type: 3}
-  - {fileID: 21300000, guid: 62e80f2f94ec94f75b92cb1c616106d8, type: 3}
-  - {fileID: 21300000, guid: f9639e3f8ccc24465bafb0a8cdc7c390, type: 3}
-  - {fileID: 21300000, guid: 73f6eb5f4c6564131b97b9ad17318a2c, type: 3}
-  - {fileID: 21300000, guid: 6940babfdb2c6465b9fa81747ffd73ad, type: 3}
-  m_PackedSpriteNamesToIndex:
-  - skill_27
-  - skill_30
-  - skill_39
-  - skill_44
-  - skill_45
-  - skill_40
-  - skill_29
-  - skill_31
-  - skill_32
-  - skill_36
-  - skill_37
-  - skill_35
-  - skill_33
-  - skill_34
-  - skill_28
-  - skill_38
-  - skill_43
-  - skill_42
-  - skill_26
-  - skill_48
-  - skill_41
-  - skill_46
-  - skill_47
-  - skill_50
-  - skill_49
+  m_PackedSprites: []
+  m_PackedSpriteNamesToIndex: []
   m_RenderDataMap: {}
   m_Tag: SkillIcon2
   m_IsVariant: 0

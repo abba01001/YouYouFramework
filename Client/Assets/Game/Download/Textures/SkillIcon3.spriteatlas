@@ -44,54 +44,13 @@ SpriteAtlas:
       enableAlphaDilation: 0
     secondaryTextureSettings: {}
     variantMultiplier: 1
-    packables:
-    - {fileID: 102900000, guid: 4d0a2e3ece79e4947b49a1f912f6a788, type: 3}
+    packables: []
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
-  m_PackedSprites:
-  - {fileID: 21300000, guid: 40126e20e8e3546f3a4137859cbc10aa, type: 3}
-  - {fileID: 21300000, guid: e825964059a564943bf1e62dfe12b125, type: 3}
-  - {fileID: 21300000, guid: 9fe10f80280f7499bbf317cbae23b59e, type: 3}
-  - {fileID: 21300000, guid: c83e04909d5904ec5b439f72457fc0d5, type: 3}
-  - {fileID: 21300000, guid: b511e303753a3443f9acc0e469901ccb, type: 3}
-  - {fileID: 21300000, guid: 31dc1b531370946bfb04dc9981ba34a7, type: 3}
-  - {fileID: 21300000, guid: 755d9024d5746445297909bdb424543f, type: 3}
-  - {fileID: 21300000, guid: f220bb347df0245f183764e1db3e050b, type: 3}
-  - {fileID: 21300000, guid: da120d35e674348e786f39b1b62dc562, type: 3}
-  - {fileID: 21300000, guid: b6c38fa65d5c14c119bdd7220301805d, type: 3}
-  - {fileID: 21300000, guid: fad51707014224feab8c131c591bd770, type: 3}
-  - {fileID: 21300000, guid: 230d56f7cd69d46b6a4d453cb78f10c3, type: 3}
-  - {fileID: 21300000, guid: 639cd9f76ccd84e70904b8eba30af0fb, type: 3}
-  - {fileID: 21300000, guid: 7aa312388b67a44e6a7a30f082931e88, type: 3}
-  - {fileID: 21300000, guid: 8553594887c7e454fa8983fbc95c9719, type: 3}
-  - {fileID: 21300000, guid: 960283d983172493095881028405a99b, type: 3}
-  - {fileID: 21300000, guid: 70dce11ae825d4b0ca11577ac173cbdd, type: 3}
-  - {fileID: 21300000, guid: 0332db1c8e18c4f09978bcf595b5ee3c, type: 3}
-  - {fileID: 21300000, guid: f213da1dcfaf24da09506e8c4267b9bc, type: 3}
-  - {fileID: 21300000, guid: 12e7887fa382e449490526eb8c776506, type: 3}
-  m_PackedSpriteNamesToIndex:
-  - skill_53
-  - skill_67
-  - skill_54
-  - skill_55
-  - skill_64
-  - skill_59
-  - skill_61
-  - skill_62
-  - skill_68
-  - skill_51
-  - skill_58
-  - skill_65
-  - skill_52
-  - skill_70
-  - skill_57
-  - skill_56
-  - skill_69
-  - skill_66
-  - skill_60
-  - skill_63
+  m_PackedSprites: []
+  m_PackedSpriteNamesToIndex: []
   m_RenderDataMap: {}
   m_Tag: SkillIcon3
   m_IsVariant: 0
