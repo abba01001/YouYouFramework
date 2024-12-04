@@ -49,7 +49,6 @@
         public const string TestEvent = "TestEvent";
         public const string GameEntryOnUpdate = "GameEntryOnUpdate";
         public const string GameEntryOnApplicationQuit = "GameEntryOnApplicationQuit";
-        public const string InitBattleData = "InitBattleData";
         public const string StartNewRound = "StartNewRound";
         public const string StopRoundTimer = "StopRoundTimer";
         public const string RefreshGameTimer = "RefreshGameTimer";
@@ -62,13 +61,18 @@
         public const string FinishLoadDataTable = "FinishLoadDataTable";
         public const string LoginSuccess = "LoginSuccess";
 
-        public const string InitCardObj = "InitCardObj";
+        public const string InitBattleData = "InitBattleData";
     }
     
     public struct ItemPath
     {
         public const string CardObj = "Assets/Game/Download/Prefab/Item/Card.prefab";
         public const string ArrowLine = "Assets/Game/Download/Prefab/Item/ArrowLine.prefab";
+    }
+
+    public struct ModelPath
+    {
+        public const string Hero101 = "Assets/Game/Download/Prefab/Model/Hero101.prefab";
     }
     
 }

@@ -89,6 +89,7 @@ namespace YouYou
         {
             Log(LogCategory.Procedure, "GameEntry.OnAwake()");
             Instance = this;
+            BlockMask.gameObject.SetActive(false);
             ShowBlockMask(false);
             UIRootRectTransform = UIRootCanvasScaler.GetComponent<RectTransform>();
             MainEntry.Reporter.ShowLogPanel(false);
@@ -153,6 +154,7 @@ namespace YouYou
 
         public void ShowBlockMask(bool state)
         {
+            return;
             BlockMask.SetActive(state);
         }
         

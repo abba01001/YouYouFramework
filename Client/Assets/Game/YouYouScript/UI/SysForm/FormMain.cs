@@ -24,8 +24,9 @@ public class FormMain : UIFormBase
         base.Awake();
         loginBtn.SetButtonClick(() =>
         {
+            GameUtil.LogError("111111");
             GameEntry.Audio.PlayBGM("maintheme1");
-            GameEntry.Instance.ShowBackGround(BGType.Main, "Assets/Game/Download/Textures/ResidentBg/MainBg.png");
+            GameEntry.Instance.ShowBackGround(BGType.Main, "Assets/Game/Download/Textures/BackGround/Home/home_map_1.png");
             GameEntry.Procedure.ChangeState(ProcedureState.Battle);
             GameEntry.UI.CloseUIForm<FormMain>();
         });

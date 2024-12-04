@@ -44,28 +44,13 @@ SpriteAtlas:
       enableAlphaDilation: 0
     secondaryTextureSettings: {}
     variantMultiplier: 1
-    packables:
-    - {fileID: 102900000, guid: 51c74dde316ac41099bf426d8883c138, type: 3}
+    packables: []
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
-  m_PackedSprites:
-  - {fileID: 21300000, guid: 39bf9720d47254a86a9fb8917a88a58e, type: 3}
-  - {fileID: 21300000, guid: 4dd933b4df88c414d9dac02cc72ae96c, type: 3}
-  - {fileID: 21300000, guid: d5dea4558803f48b1aa1a761a895692c, type: 3}
-  - {fileID: 21300000, guid: de73d6551715d4ad3abfe23b5591c365, type: 3}
-  - {fileID: 21300000, guid: c36fe195ef66f46d486661e9c22d5ff1, type: 3}
-  - {fileID: 21300000, guid: 8ae7689670922454695b3dde5a5945a9, type: 3}
-  - {fileID: 21300000, guid: 655dd008c8324412b997b984f1322b6d, type: 3}
-  m_PackedSpriteNamesToIndex:
-  - card_description
-  - card_level_frame
-  - card_background
-  - card_type
-  - card_frame
-  - card_slot
-  - card_level
+  m_PackedSprites: []
+  m_PackedSpriteNamesToIndex: []
   m_RenderDataMap: {}
   m_Tag: Card
   m_IsVariant: 0

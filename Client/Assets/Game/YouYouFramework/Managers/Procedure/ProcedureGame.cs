@@ -14,7 +14,7 @@ namespace YouYou
         internal override void OnEnter()
         {
             base.OnEnter();
-            GameEntry.Instance.ShowBackGround(BGType.Main, "Assets/Game/Download/Textures/ResidentBg/MainBg.png");
+            GameEntry.Instance.ShowBackGround(BGType.Main, "Assets/Game/Download/Textures/BackGround/Home/home_map_1.png");
             GameEntry.UI.OpenUIForm<FormLoading>();
             GameEntry.Scene.LoadSceneAction(SceneGroupName.Main, 1,Init);
         }

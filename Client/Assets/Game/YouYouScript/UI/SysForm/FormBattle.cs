@@ -12,42 +12,32 @@ using YouYou;
 /// </summary>
 public class FormBattle : UIFormBase
 {
-    public static CardPlacement CardPlacement;
     [SerializeField] private Button exitBtn;
     [SerializeField] private Button testBtn;
+    [SerializeField] private Button callBtn;
     protected override void Awake()
     {
         base.Awake();
-        exitBtn.SetButtonClick(()=>{
-            GameEntry.Procedure.ChangeState(ProcedureState.Game);
-        });
-        testBtn.SetButtonClick(() =>
+        // exitBtn.SetButtonClick(()=>{
+        //     GameEntry.Procedure.ChangeState(ProcedureState.Game);
+        // });
+        // testBtn.SetButtonClick(() =>
+        // {
+        //     GameEntry.UI.OpenUIForm<FormMap>();
+        // });
+        callBtn.SetButtonClick(() =>
         {
-            GameEntry.UI.OpenUIForm<FormMap>();
+            BattleGridManager.Instance.CallHero();
         });
-        CardPlacement = transform.Get<CardPlacement>("BattleCardPanel");
-        CardPlacement.Init(this.transform);
     }
 
     protected override void OnEnable()
     {
         base.OnEnable();
-        GameEntry.Event.AddEventListener(Constants.EventName.InitCardObj, InitCards);
     }
     protected override void OnDisable()
     {
         base.OnDisable();
-        GameEntry.Event.RemoveEventListener(Constants.EventName.InitCardObj, InitCards);
     }
 
-    private async void InitCards(object userdata)
-    {
-        List<BaseCard> list = new List<BaseCard>();
-        for (int i = 0; i < 3; i++)
-        {
-            PoolObj poolObj = await GameEntry.Pool.GameObjectPool.SpawnAsync(Constants.ItemPath.CardObj,CardPlacement.transform);
-            list.Add(poolObj.GetComponent<BaseCard>());
-        }
-        CardPlacement.StartPlay(list);
-    }
 }

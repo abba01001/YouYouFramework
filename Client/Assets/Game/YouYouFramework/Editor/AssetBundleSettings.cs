@@ -189,7 +189,7 @@ public class AssetBundleSettings : ScriptableObject
         SetKeystoreInfo();
         //这里能不能弹出一个窗口，然后选择添加场景？
         var path = PublishPath + $"/{AssetVersion}.apk";
-        if (!Directory.Exists(path))
+        if (Directory.Exists(path))
         {
             File.Delete(path);
         }
@@ -728,6 +728,8 @@ public class AssetBundleSettings : ScriptableObject
     {
         PublishPath = $"{Application.persistentDataPath}/OutPut";
         PlayerSettings.bundleVersion = AssetVersion;
+        IsForceUploadAsset = false;
+        IsUploadAPK = false;
     }
     
     private void OnValidate()

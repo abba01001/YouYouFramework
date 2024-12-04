@@ -20,7 +20,7 @@ namespace YouYou
         internal override void OnEnter()
         {
             base.OnEnter();
-            GameEntry.Instance.ShowBackGround(BGType.Battle, "Assets/Game/Download/Textures/ResidentBg/blue_01.png");
+            GameEntry.Instance.ShowBackGround(BGType.Battle, "Assets/Game/Download/Textures/BackGround/Battle/single_map_1.png");
             BattleCtrl.Instance.Init();
             GameEntry.Scene.LoadSceneAction(SceneGroupName.Battle, 1, LoadSceneFinish);
         }

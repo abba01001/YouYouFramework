@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01aecc1a1ad5afc4f9289263945c2a5d, type: 3}
   m_Name: AssetBundleSettings
   m_EditorClassIdentifier: 
-  AssetVersion: 10.0.0
+  AssetVersion: 11.0.0
   CurrBuildTarget: 1
   Options: 272
   PublishPath: C:/Users/A1-0990/AppData/LocalLow/DefaultCompany/YFYouYou/OutPut
@@ -51,6 +51,7 @@ MonoBehaviour:
     Path:
     - Game/Download/Shader
     - Game/Download/Font
+    - Game/Download/Material
   - Name: "\u573A\u666F"
     IsBuild: 1
     Overall: 0
@@ -71,36 +72,21 @@ MonoBehaviour:
     IsFirstData: 1
     IsEncrypt: 0
     Path:
-    - Game/Download/Textures/Card
     - Game/Download/Textures/Common
+    - Game/Download/Textures/Fight
+    - Game/Download/Textures/FX
     - Game/Download/Textures/Login
     - Game/Download/Textures/LoginEntry
     - Game/Download/Textures/Map
-    - Game/Download/Textures/Hero
+    - Game/Download/Textures/Model
   - Name: "\u80CC\u666F\u8D44\u6E90"
-    IsBuild: 1
-    Overall: 0
-    IsFirstData: 0
-    IsEncrypt: 0
-    Path:
-    - Game/Download/Textures/HomeBg
-    - Game/Download/Textures/FightBg
-  - Name: "Spin\u52A8\u753B"
     IsBuild: 1
     Overall: 1
     IsFirstData: 0
     IsEncrypt: 0
     Path:
-    - Game/Download/Spine/Bubbles
-    - Game/Download/Spine/EggKnight
-    - Game/Download/Spine/Fish
-    - Game/Download/Spine/JuicerKnight
-    - Game/Download/Spine/LaundryKnight
-    - Game/Download/Spine/Mop
-    - Game/Download/Spine/PigHammer
-    - Game/Download/Spine/PlateKnight
-    - Game/Download/Spine/Player
-    - Game/Download/Spine/Vacuum
+    - Game/Download/Textures/BackGround/Home
+    - Game/Download/Textures/BackGround/Battle
   - Name: "\u5BC6\u94A5"
     IsBuild: 1
     Overall: 1

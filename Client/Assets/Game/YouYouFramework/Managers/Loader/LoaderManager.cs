@@ -112,7 +112,6 @@ namespace YouYou
         {
             AssetInfoEntity assetEntity = GameEntry.Loader.AssetInfo.GetAssetEntity(assetFullName);
             if (assetEntity == null) return null;
-
             //加载这个资源所依赖的资源包
             List<string> dependsAssetList = assetEntity.DependsAssetBundleList;
             for (int i = 0; i < dependsAssetList.Count; i++)
