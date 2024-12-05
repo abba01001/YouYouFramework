@@ -40,5 +40,8 @@ public class BattleCtrl : Singleton<BattleCtrl>
         //先初始化玩家。然后玩家AI
         //初始化敌方
         //初始化路径
+        
     }
+
+
 }

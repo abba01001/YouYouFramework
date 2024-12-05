@@ -68,11 +68,18 @@
     {
         public const string CardObj = "Assets/Game/Download/Prefab/Item/Card.prefab";
         public const string ArrowLine = "Assets/Game/Download/Prefab/Item/ArrowLine.prefab";
+        
     }
 
     public struct ModelPath
     {
+        public const string Path000001 = "Assets/Game/Download/Prefab/Model/Path000001.prefab";
+
+        
+        
         public const string Hero101 = "Assets/Game/Download/Prefab/Model/Hero101.prefab";
+        
+        public const string Enemy21001 = "Assets/Game/Download/Prefab/Model/Enemy21001.prefab";
     }
     
 }

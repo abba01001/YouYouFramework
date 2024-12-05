@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using YouYou;
 
 public class EnemyBase : CharacterBase, IDamageable
 {
-    [HideInInspector] protected int healthValue = 20;
+    [HideInInspector] protected int healthValue = 100;
     [HideInInspector] protected int defenseValue = 0;
     [HideInInspector] public bool isAlive => healthValue > 0;
 
@@ -18,12 +19,22 @@ public class EnemyBase : CharacterBase, IDamageable
     private float totalPathLength = 0f; // 总路径长度
     private float speedFactor = 1f; // 速度因子（默认 1，增速时 > 1，减速时 < 1）
 
-    private void Start()
+    private void OnEnable()
     {
+        healthValue = 100;
+        currentWaypointIndex = 0;
         modelDi.gameObject.SetActive(false);
         blood.gameObject.SetActive(false);
         defense.gameObject.SetActive(false);
-        
+    }
+
+    public void InitPath(List<Transform> points)
+    {
+        waypoints = points;
+    }
+    
+    public void StartRun()
+    {
         if (waypoints.Count > 0)
         {
             modelRoot.transform.localScale = Vector3.one * 2;
@@ -31,6 +42,7 @@ public class EnemyBase : CharacterBase, IDamageable
             totalPathLength = CalculateTotalPathLength();
             moveSpeed = totalPathLength / totalTime; // 每秒需要移动的距离
             transform.position = waypoints[currentWaypointIndex].position;
+            StopCoroutine(FollowPath());
             StartCoroutine(FollowPath());
         }
     }
@@ -113,6 +125,7 @@ public class EnemyBase : CharacterBase, IDamageable
         // 如果血量小于等于零，则死亡
         if (healthValue <= 0)
         {
+            StopCoroutine(FollowPath());
             Die();
         }
         else
@@ -136,7 +149,7 @@ public class EnemyBase : CharacterBase, IDamageable
         animator.SetBool("Die",true);
         // 进行死亡逻辑处理（如销毁敌人对象等）
         await UniTask.Delay(2000);
-        transform.gameObject.SetActive(false);
+        GameEntry.Pool.GameObjectPool.Despawn(transform);
     }
 
     private void UpdateHealthBar()

@@ -1,6 +1,10 @@
 using System.Collections;
 using UnityEngine;
 using System;
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
+using Unity.VisualScripting;
+using YouYou;
 
 
 public class GridCharacterBase : CharacterBase
@@ -83,18 +87,87 @@ public class GridCharacterBase : CharacterBase
 
     private void HandleStayInRange(Collider2D other)
     {
-        GameUtil.LogError("Enemy is staying within range: " + other.name);
         if (timer >= attackCd)
         {
             timer = 0;
+            SetFace(transform.position.x > other.transform.position.x ? 1 : -1);
+            other.GetComponentInParent<EnemyBase>().TakeNormalDamage(5);
             animator.Play("attack");
+            GenerateTx(other.gameObject);
         }
         // 你可以在这里处理物体在范围内停留时的逻辑
     }
 
+    private async void GenerateTx(GameObject target)
+    {
+        await UniTask.Delay(300);
+        // 从对象池中获取特效对象
+        PoolObj tx = await GameEntry.Pool.GameObjectPool.SpawnAsync("Assets/Game/Download/Prefab/Effect/tx_MergerGame_01.prefab");
+        Vector3 startPosition = transform.position;
+        Vector3 targetPosition = target.transform.position;
+    
+        // 保证Z轴一致
+        targetPosition = new Vector3(targetPosition.x, targetPosition.y, startPosition.z);
+        tx.transform.position = startPosition;
+
+        // 飞行总时间
+        float flightDuration = 1f;
+        float elapsedTime = 0f;
+
+        // 计算飞行的方向和距离
+        Vector3 direction = targetPosition - startPosition;
+        float distance = direction.magnitude;
+
+        // 根据目标相对位置调整控制点
+        Vector3 controlPoint;
+        if (direction.x > 0) // 目标在右侧
+        {
+            controlPoint = startPosition + new Vector3(distance / 2, 150, 0); // 向上抛物线
+        }
+        else if (direction.x < 0) // 目标在左侧
+        {
+            controlPoint = startPosition + new Vector3(-distance / 2, 150, 0); // 向上抛物线
+        }
+        else if (direction.y < 0) // 目标在下方
+        {
+            controlPoint = startPosition + new Vector3(0, -150, 0); // 向下抛物线
+        }
+        else // 目标在上方
+        {
+            controlPoint = startPosition + new Vector3(0, 150, 0); // 向上抛物线
+        }
+
+        // 运行飞行路径
+        while (elapsedTime < flightDuration)
+        {
+            elapsedTime += Time.deltaTime;
+        
+            // 动态更新目标位置
+            targetPosition = target.transform.position;
+        
+            // 计算贝塞尔曲线位置
+            float t = elapsedTime / flightDuration;
+            Vector3 currentPos = BezierUtils.CalculateBezierPoint(t, startPosition, controlPoint, controlPoint, targetPosition);
+        
+            // 更新特效的位置
+            tx.transform.position = currentPos;
+
+            await UniTask.Yield();
+        }
+
+        // 最终位置设置为目标位置
+        tx.transform.position = target.transform.position;
+
+        // 飞行完成后销毁 tx
+        GameEntry.Pool.GameObjectPool.Despawn(tx);
+    }
+
+
+
+
+    
     private void HandleExitRange(Collider2D other)
     {
-        GameUtil.LogError("Enemy exited range: " + other.name);
         // 你可以在这里处理物体离开范围时的逻辑
     }
     

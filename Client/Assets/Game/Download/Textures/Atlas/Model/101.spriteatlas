@@ -6,7 +6,7 @@ SpriteAtlas:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Hero101
+  m_Name: 101
   serializedVersion: 2
   m_EditorData:
     serializedVersion: 2
@@ -165,6 +165,6 @@ SpriteAtlas:
   - 101_baoposhou-idle_08
   - 101_baoposhou-attack_04
   m_RenderDataMap: {}
-  m_Tag: Hero101
+  m_Tag: 101
   m_IsVariant: 0
   m_IsPlaceholder: 0

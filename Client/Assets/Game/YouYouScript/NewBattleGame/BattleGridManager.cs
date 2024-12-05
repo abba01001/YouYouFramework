@@ -27,11 +27,13 @@ public class BattleGridManager : MonoBehaviour
     private BattleGrid RecordSelectGrid;
     private BattleGrid RecordTargetGrid;
     private List<BattleGrid> girdList = new List<BattleGrid>();
+    private List<Transform> waypoints = new List<Transform>();
     private Transform gridParent;
     public RectTransform barImage;
     public bool Selecting => RecordSelectGrid != null;
     private void Awake()
-    {
+    {   
+        Instance = this;
         gridParent = transform.Find("GridLayout");
         for (int i = 0; i < gridParent.childCount; i++)
         {
@@ -40,9 +42,18 @@ public class BattleGridManager : MonoBehaviour
             RegisterGrid(new Vector2Int(x, y),gridParent.GetChild(i).GetComponent<BattleGrid>());
         }
         girdList.Sort(new BattleGridPositionComparer());
-        Instance = this;
+        GeneratePath();
     }
 
+    private async void GeneratePath()
+    {
+        PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync(Constants.ModelPath.Path000001);
+        for (int i = 0; i < obj.gameObject.transform.childCount; i++)
+        {
+            waypoints.Add(obj.transform.GetChild(i));
+        }
+    }
+    
     // 注册格子
     public void RegisterGrid(Vector2Int position, BattleGrid grid)
     {
@@ -64,16 +75,29 @@ public class BattleGridManager : MonoBehaviour
         return null;
     }
 
+    private int count = 0;
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
             CallHero();
+  
         }
+    }
+
+    private async void GenerateEnemy()
+    {
+        PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync(Constants.ModelPath.Enemy21001);
+        obj.GetComponent<EnemyBase>().InitPath(waypoints);
+        obj.GetComponent<EnemyBase>().StartRun();
     }
 
     public async void CallHero()
     {
+        GameEntry.Time.CreateTimerLoop(this, 1, 3, (int count) =>
+        {
+            GenerateEnemy();
+        });
         BattleGrid grid = GetNearbyGrid();
         if (grid != null)
         {
@@ -82,12 +106,17 @@ public class BattleGridManager : MonoBehaviour
             Vector3 B = grid.transform.position;
             B = new Vector3(B.x, B.y, A.z);
             PoolObj tx = await GameEntry.Pool.GameObjectPool.SpawnAsync("Assets/Game/Download/Prefab/Effect/tx_MergerGame_01.prefab");
+            PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync(Constants.ModelPath.Hero101);
+            
             tx.transform.position = A;
             Vector3[] path = BezierUtils.GetBeizerList(A, B + new Vector3(100, 100, 0), B, 20);
-            PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync(Constants.ModelPath.Hero101);
             obj.gameObject.SetActive(false);
             grid.FillCharacter(obj.GetComponent<GridCharacterBase>());
-            tx.transform.DOPath(path, 1f, PathType.CatmullRom).SetEase(Ease.OutCirc).OnComplete(async () =>
+            tx.transform.DOPath(path, 1f, PathType.CatmullRom).SetEase(Ease.OutCirc).OnComplete(() =>
+            {
+                GameEntry.Pool.GameObjectPool.Despawn(tx);
+            });
+            GameEntry.Time.CreateTimerLoop(this, 0.8f, 1, null, () =>
             {
                 obj.gameObject.SetActive(true);
                 obj.GetComponent<GridCharacterBase>().PlayBornAnim();
