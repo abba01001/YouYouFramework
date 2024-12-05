@@ -1,0 +1,37 @@
+{
+    "levelID": 1,
+    "path": "Assets/Game/Download/Prefab/Model/Path000001.prefab",
+    "bgPath": "Assets/Game/Download/Textures/BackGround/Battle/single_map_1.png",
+    "levelName": "第1关",
+    "levelDescription": "关卡描述",
+    "difficulty": 0,
+    "goal": 0,
+    "stages": [
+        {
+            "stageIndex": "1",
+            "startTime": 3,
+            "enemy": {
+                "model": "Assets/Game/Download/Prefab/Model/Enemy21001.prefab",
+                "health": 30,
+                "attack": 0,
+                "defense": 0,
+                "enemyType": "",
+                "level": 0,
+                "enemyCount": 20,
+                "interval": 0.5,
+                "skills": [],
+                "rewards": []
+            },
+            "events": [],
+            "finalRewards": []
+        }
+    ],
+    "events": [],
+    "rewards": [],
+    "backgroundMusic": [
+        "musicexample"
+    ],
+    "levelTips": [
+        "关卡提示信息"
+    ]
+}

@@ -15,7 +15,7 @@ MonoBehaviour:
   AssetVersion: 11.0.0
   CurrBuildTarget: 1
   Options: 272
-  PublishPath: C:/Users/Administrator/AppData/LocalLow/DefaultCompany/YFYouYou/OutPut
+  PublishPath: C:/Users/A1-0990/AppData/LocalLow/DefaultCompany/YFYouYou/OutPut
   IsUploadAsset: 1
   IsForceUploadAsset: 0
   IsUploadAPK: 0
@@ -94,3 +94,10 @@ MonoBehaviour:
     IsEncrypt: 0
     Path:
     - Game/Download/Key
+  - Name: "\u5173\u5361"
+    IsBuild: 1
+    Overall: 1
+    IsFirstData: 1
+    IsEncrypt: 1
+    Path:
+    - Game/Download/MapLevel

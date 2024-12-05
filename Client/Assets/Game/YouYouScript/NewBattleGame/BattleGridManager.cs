@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using YouYou;
 
@@ -22,8 +23,8 @@ public class BattleGridPositionComparer : IComparer<BattleGrid>
 
 public class BattleGridManager : MonoBehaviour
 {
+    [LabelText("地图编辑器模式")] public bool IsEditorMode = false;
     public static BattleGridManager Instance;
-
     private BattleGrid RecordSelectGrid;
     private BattleGrid RecordTargetGrid;
     private List<BattleGrid> girdList = new List<BattleGrid>();
@@ -31,6 +32,7 @@ public class BattleGridManager : MonoBehaviour
     private Transform gridParent;
     public RectTransform barImage;
     public bool Selecting => RecordSelectGrid != null;
+    public List<Transform> Path => waypoints;
     private void Awake()
     {   
         Instance = this;
@@ -47,13 +49,26 @@ public class BattleGridManager : MonoBehaviour
 
     private async void GeneratePath()
     {
-        PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync(Constants.ModelPath.Path000001);
-        for (int i = 0; i < obj.gameObject.transform.childCount; i++)
+        if (!IsEditorMode)
         {
-            waypoints.Add(obj.transform.GetChild(i));
+            waypoints.Clear();
+            PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync(Constants.ModelPath.Path000001);
+            for (int i = 0; i < obj.gameObject.transform.childCount; i++)
+            {
+                waypoints.Add(obj.transform.GetChild(i));
+            }
         }
     }
-    
+
+    public void ChangePath(GameObject pathPrefab)
+    {
+        waypoints.Clear();
+        for (int i = 0; i < pathPrefab.transform.childCount; i++)
+        {
+            waypoints.Add(pathPrefab.transform.GetChild(i));
+        }
+    }
+
     // 注册格子
     public void RegisterGrid(Vector2Int position, BattleGrid grid)
     {
