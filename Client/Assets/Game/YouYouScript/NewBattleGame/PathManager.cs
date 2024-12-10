@@ -5,7 +5,6 @@ using System.Collections.Generic;
 public class PathManager : MonoBehaviour
 {
     public List<Transform> waypoints;  // 存储路径点
-    public bool isEditorMode = true;   // 是否处于编辑器模式
 
     // 可扩展：运行时管理路径点
     public void AddWaypoint(Transform waypoint)

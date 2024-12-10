@@ -1,44 +1,46 @@
 using UnityEditor;
 using UnityEditor.SceneManagement;
 
-public class LanuchScene
+public class LaunchScene
 {
+    private const string PREF_KEY_SELECTED_MODE = "LaunchScene_SelectedMode"; // 保存选择的键名
+    private static bool isSelectGame => EditorPrefs.GetString(PREF_KEY_SELECTED_MODE, "default") == "game";
+    private static bool isSelectMapEditor => EditorPrefs.GetString(PREF_KEY_SELECTED_MODE, "default") == "mapEditor";
+    private static bool isDefault => EditorPrefs.GetString(PREF_KEY_SELECTED_MODE, "default") == "default";
+
     [MenuItem("启动场景/游戏", true)]
     static bool ValidatePlayModeUseFirstScene()
     {
-        SceneAsset game = AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/Game/Scene_Launch.unity");
-        Menu.SetChecked("启动场景/游戏", EditorSceneManager.playModeStartScene == game);
-        Menu.SetChecked("启动场景/手动选择", EditorSceneManager.playModeStartScene == null);
+        Menu.SetChecked("启动场景/游戏", isSelectGame);
+        Menu.SetChecked("启动场景/关卡编辑器", isSelectMapEditor);
+        Menu.SetChecked("启动场景/手动选择", isDefault);
         return !EditorApplication.isPlaying;
     }
 
     [MenuItem("启动场景/游戏")]
     static void GameScene()
     {
-        Menu.SetChecked("启动场景/关卡编辑器", false);
-        Menu.SetChecked("启动场景/游戏", true);
-        Menu.SetChecked("启动场景/手动选择", false);
-        SceneAsset scene = AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/Game/Scene_Launch.unity");
-        EditorSceneManager.playModeStartScene = scene;
+        SaveSelection("game");
+        EditorSceneManager.playModeStartScene = AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/Game/Scene_Launch.unity");
     }
 
     [MenuItem("启动场景/关卡编辑器")]
     static void MapEditorScene()
     {
-        Menu.SetChecked("启动场景/关卡编辑器", true);
-        Menu.SetChecked("启动场景/游戏", false);
-        Menu.SetChecked("启动场景/手动选择", false);
-        SceneAsset scene = AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/Game/MapEditor.unity");
-        EditorSceneManager.playModeStartScene = scene;
+        SaveSelection("mapEditor");
+        EditorSceneManager.playModeStartScene = AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/Game/Scene_Launch.unity");
     }
 
     [MenuItem("启动场景/手动选择")]
     static void AnyScene()
     {
-        Menu.SetChecked("启动场景/游戏", false);
-        Menu.SetChecked("启动场景/关卡编辑器", false);
-        // Menu.SetChecked("启动场景/关卡编辑器", false);
-        Menu.SetChecked("启动场景/手动选择", true);
+        SaveSelection("default");
         EditorSceneManager.playModeStartScene = null;
+    }
+
+    // 保存选择状态到 EditorPrefs
+    static void SaveSelection(string mode)
+    {
+        EditorPrefs.SetString(PREF_KEY_SELECTED_MODE, mode);
     }
 }

@@ -429,7 +429,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 87.89
+  m_Radius: 87.5
 --- !u!114 &4334074807409530858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -443,7 +443,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 87.5
-  rangeColor: {r: 1, g: 0, b: 0, a: 1}
+  rangeColor: {r: 1, g: 0, b: 0, a: 0.43137255}
   targetLayer:
     serializedVersion: 2
     m_Bits: 262144

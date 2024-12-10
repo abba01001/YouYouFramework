@@ -92,7 +92,7 @@ namespace YouYou
             BlockMask.gameObject.SetActive(false);
             ShowBlockMask(false);
             UIRootRectTransform = UIRootCanvasScaler.GetComponent<RectTransform>();
-            MainEntry.Reporter.ShowLogPanel(false);
+            if(MainEntry.Reporter != null) MainEntry.Reporter.ShowLogPanel(false);
             CurrLanguage = m_CurrLanguage;
         }
         private void Start()

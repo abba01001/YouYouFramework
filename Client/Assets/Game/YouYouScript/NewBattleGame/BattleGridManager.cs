@@ -23,7 +23,6 @@ public class BattleGridPositionComparer : IComparer<BattleGrid>
 
 public class BattleGridManager : MonoBehaviour
 {
-    [LabelText("地图编辑器模式")] public bool IsEditorMode = false;
     public static BattleGridManager Instance;
     private BattleGrid RecordSelectGrid;
     private BattleGrid RecordTargetGrid;
@@ -49,23 +48,11 @@ public class BattleGridManager : MonoBehaviour
 
     private async void GeneratePath()
     {
-        if (!IsEditorMode)
-        {
-            waypoints.Clear();
-            PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync(Constants.ModelPath.Path000001);
-            for (int i = 0; i < obj.gameObject.transform.childCount; i++)
-            {
-                waypoints.Add(obj.transform.GetChild(i));
-            }
-        }
-    }
-
-    public void ChangePath(GameObject pathPrefab)
-    {
         waypoints.Clear();
-        for (int i = 0; i < pathPrefab.transform.childCount; i++)
+        PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync(Constants.ModelPath.Path000001);
+        for (int i = 0; i < obj.gameObject.transform.childCount; i++)
         {
-            waypoints.Add(pathPrefab.transform.GetChild(i));
+            waypoints.Add(obj.transform.GetChild(i));
         }
     }
 
@@ -91,15 +78,6 @@ public class BattleGridManager : MonoBehaviour
     }
 
     private int count = 0;
-    public void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            CallHero();
-  
-        }
-    }
-
     private async void GenerateEnemy()
     {
         PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync(Constants.ModelPath.Enemy21001);
@@ -109,10 +87,6 @@ public class BattleGridManager : MonoBehaviour
 
     public async void CallHero()
     {
-        GameEntry.Time.CreateTimerLoop(this, 1, 3, (int count) =>
-        {
-            GenerateEnemy();
-        });
         BattleGrid grid = GetNearbyGrid();
         if (grid != null)
         {
@@ -144,11 +118,7 @@ public class BattleGridManager : MonoBehaviour
     {
         orignGrid.MoveToTargetGrid(targetGrid);
         targetGrid.MoveToTargetGrid(orignGrid);
-        
-        List<GridCharacterBase> tempList = targetGrid.OccupiedCharacters;
-        targetGrid.OccupiedCharacters = orignGrid.OccupiedCharacters;
-        orignGrid.OccupiedCharacters = tempList;
-
+        (targetGrid.OccupiedCharacters, orignGrid.OccupiedCharacters) = (orignGrid.OccupiedCharacters, targetGrid.OccupiedCharacters);
     }
 
     public void OnSelectOrignGrid(BattleGrid grid)

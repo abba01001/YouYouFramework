@@ -3657,6 +3657,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5becd2d992e1b6449fb99b6dd6b5a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsEditorMode: 1
   barImage: {fileID: 8322187473552266731}
 --- !u!114 &8322187473916692999
 MonoBehaviour:

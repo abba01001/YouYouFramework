@@ -56,13 +56,19 @@ namespace YouYou
                 MainEntry.Instance.PreloadUpdate(m_CurrProgress);
             }
 
-            
             if (m_CurrProgress == 1 && !ShowLoginPanel)
             {
-                MainEntry.Instance.PreloadComplete();
                 ShowLoginPanel = true;
+                MainEntry.Instance.PreloadComplete();
+
+#if !MAPEDITOR_MODEL
                 GameEntry.SDK.InitSqlConnect();
                 GameEntry.UI.OpenUIForm<FormLogin>();
+#else
+                GameEntry.Procedure.ChangeState(ProcedureState.MapEditor);
+#endif
+                
+
             }
         }
 

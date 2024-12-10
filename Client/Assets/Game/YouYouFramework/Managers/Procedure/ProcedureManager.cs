@@ -31,7 +31,11 @@ namespace YouYou
         /// <summary>
         /// 战斗
         /// </summary>
-        Battle
+        Battle,
+        /// <summary>
+        /// 战斗
+        /// </summary>
+        MapEditor,
     }
     /// <summary>
     /// 流程管理器
@@ -65,6 +69,7 @@ namespace YouYou
             states[(byte)ProcedureState.Preload] = new ProcedurePreload();
             states[(byte)ProcedureState.Game] = new ProcedureGame();
             states[(byte)ProcedureState.Battle] = new ProcedureBattle();
+            states[(byte)ProcedureState.MapEditor] = new ProcedureMapEditor();
             CurrFsm = GameEntry.Fsm.Create(this, states);
         }
         internal void OnUpdate()

@@ -97,7 +97,11 @@ public class LevelEditorWindow : OdinEditorWindow
 
         if (!File.Exists(fullSavePath))
         {
-            Debug.LogWarning($"未找到文件: {fullSavePath}");
+            EditorUtility.DisplayDialog(
+                "提示",
+                $"未找到关卡{levelName}！",
+                "确定"
+            );
             return;
         }
 
