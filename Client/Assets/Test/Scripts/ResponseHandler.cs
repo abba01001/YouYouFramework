@@ -44,7 +44,7 @@ public class ResponseHandler
     // 示例处理方法，接收 BaseMessage 作为参数
     private void s2c_handle_request_heart_beat(BaseMessage message)
     {
-        ProtocolHelper.UnpackData<ItemData>(message, (itemData) =>
+        ProtocolHelper.UnpackData<Protocols.Item.ItemData>(message, (itemData) =>
         {
             NetManager.Instance.Logger.LogMessage(socket,$"解包成功: Item ID: {itemData.ItemId}, Item Name: {itemData.ItemName}");
         });

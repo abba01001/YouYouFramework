@@ -168,15 +168,15 @@ public class BattleGrid : MonoBehaviour, IPointerEnterHandler, IPointerDownHandl
     
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (!BattleGridManager.Instance.Selecting) return;
-        BattleGridManager.Instance.SetTargetGrid(this);
-        BattleGridManager.Instance.OnSelectTargetGrid(this);
+        if (!BattleCtrl.Instance.GridManager.Selecting) return;
+        BattleCtrl.Instance.GridManager.SetTargetGrid(this);
+        BattleCtrl.Instance.GridManager.OnSelectTargetGrid(this);
     }
 
     public void OnMouseDrag()
     {
         if (this.OccupiedCharacters.Count <= 0) return;
-        BattleGridManager.Instance.OnSelectOrignGrid(this);
+        BattleCtrl.Instance.GridManager.OnSelectOrignGrid(this);
         isDrage = true;
     }
     
@@ -186,7 +186,7 @@ public class BattleGrid : MonoBehaviour, IPointerEnterHandler, IPointerDownHandl
         // 标记为未按下，恢复原始大小
         if (isDrage)
         {
-            BattleGridManager.Instance.OnReleaseGrid();
+            BattleCtrl.Instance.GridManager.OnReleaseGrid();
             isPressed = false;
         }
     }

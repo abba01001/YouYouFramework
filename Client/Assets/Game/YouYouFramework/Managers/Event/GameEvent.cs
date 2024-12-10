@@ -33,3 +33,32 @@ public class EventMessage : GameEvent
         EventName = eventName;
     }
 }
+
+public class UpdateBattleTimerEvent : GameEvent
+{
+    public int Interval;
+    public UpdateBattleTimerEvent(int interval)
+    {
+        Interval = interval;
+    }
+}
+
+public class UpdateBattleRoundEvent : GameEvent
+{
+    public LevelStage Stage;
+    public int StageCount;
+    public UpdateBattleRoundEvent(LevelStage stage,int stageCount)
+    {
+        Stage = stage;
+        StageCount = stageCount;
+    }
+}
+
+public class UpdateEnemyCountEvent : GameEvent
+{
+    public int Count;
+    public UpdateEnemyCountEvent(int count)
+    {
+        Count = count;
+    }
+}

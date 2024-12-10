@@ -1,0 +1,144 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Battle
+  serializedVersion: 2
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: Android
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 48
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: a4ff4cf5f3a53af45a8cc069bf46a007, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 587b27b1262bd074ca9c5c3bf6bc3633, type: 3}
+  - {fileID: 21300000, guid: e68218b1884c6d444afeac41e0fe1138, type: 3}
+  - {fileID: 21300000, guid: 7b34f702111a2964f8938d4f7d5049de, type: 3}
+  - {fileID: 21300000, guid: 6ff2054247beac74b9493d6a874fba5f, type: 3}
+  - {fileID: 21300000, guid: 7d7d7552d7487a14cacd18b520cdb93b, type: 3}
+  - {fileID: 21300000, guid: 749aae82a2da9f548a3852e85cbfefb4, type: 3}
+  - {fileID: 21300000, guid: f409a0f243b8984479e821e2d0538c48, type: 3}
+  - {fileID: 21300000, guid: 49e20cd359bd2a9439ed5b81c3b630db, type: 3}
+  - {fileID: 21300000, guid: 18d5755451c01fc4d832973bdedb0697, type: 3}
+  - {fileID: 21300000, guid: 203aa654bd3914c47a1a7841231a7b08, type: 3}
+  - {fileID: 21300000, guid: 67de48949d8051f469c73a962ad3322c, type: 3}
+  - {fileID: 21300000, guid: 42b008b4cf82344488b486efd5510b01, type: 3}
+  - {fileID: 21300000, guid: ba76c1c45045dc64fbdb43eb81c7007e, type: 3}
+  - {fileID: 21300000, guid: 38e6d205327a4514fab9da193c7921ff, type: 3}
+  - {fileID: 21300000, guid: bcaeb405ae5b8234b9b4c86ed189c86a, type: 3}
+  - {fileID: 21300000, guid: 1b289415adc5dd342a9388fb959ba1d4, type: 3}
+  - {fileID: 21300000, guid: efb593455b76e094eb2e0f6b01a0f350, type: 3}
+  - {fileID: 21300000, guid: 98def9a5a9f623c4494bd253592da53c, type: 3}
+  - {fileID: 21300000, guid: 243c0266d0710b54cab453b9ad2de4c4, type: 3}
+  - {fileID: 21300000, guid: be7d02c6f2e7acc40a0019084e0e5654, type: 3}
+  - {fileID: 21300000, guid: c02989c6f096d834987a8cc32d0935f8, type: 3}
+  - {fileID: 21300000, guid: d912520731f5fbe42a620868dc4a170a, type: 3}
+  - {fileID: 21300000, guid: 675892c7b04d5a94aa2e1ae1be1cd9eb, type: 3}
+  - {fileID: 21300000, guid: 2572cb18e92f87846963d5f605a361e3, type: 3}
+  - {fileID: 21300000, guid: ebd14928157b781409990b6300e3e329, type: 3}
+  - {fileID: 21300000, guid: 451f12b8055ea2247be67b5a021b3ae7, type: 3}
+  - {fileID: 21300000, guid: d3765909e3b13d849b9c40b6ee5275d1, type: 3}
+  - {fileID: 21300000, guid: 3b50f6394f7a4994289b527e9b48b5e1, type: 3}
+  - {fileID: 21300000, guid: 0cdcf87976efc8847888f4d67a936372, type: 3}
+  - {fileID: 21300000, guid: f6fd257a73307224bad3f4c715e5d0a9, type: 3}
+  - {fileID: 21300000, guid: 10372fcaf13ebe746a38657547d2bf46, type: 3}
+  - {fileID: 21300000, guid: dde0f0ea9b09ee647a69697c8ec66db4, type: 3}
+  - {fileID: 21300000, guid: 952f04dbf0dbf9943918f6d99c873147, type: 3}
+  - {fileID: 21300000, guid: e09fe9db684089b4cb345a3d72526c47, type: 3}
+  - {fileID: 21300000, guid: 770c082c18ea1474f898ed391481c5f7, type: 3}
+  - {fileID: 21300000, guid: 3b1ca79ca9658e04b8ddae5819d344e1, type: 3}
+  - {fileID: 21300000, guid: b846157dd3c01f341acbbb2eba172c9a, type: 3}
+  - {fileID: 21300000, guid: 4065b7dd61fdc4943965ab506ecefb25, type: 3}
+  - {fileID: 21300000, guid: 2dfb3e8e1ad604142abb2fa8b3fe89c9, type: 3}
+  - {fileID: 21300000, guid: 8e3df8ae4dd5ae5469a180d91992820a, type: 3}
+  - {fileID: 21300000, guid: 2863cd3f67411f84d8a80a6731db5d71, type: 3}
+  - {fileID: 21300000, guid: 6222a14fab783fd4f99f842f891ab88d, type: 3}
+  - {fileID: 21300000, guid: 5f7fc4ef6f10f194aa6225f2bd48fa88, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - fight_icon_shuju
+  - fight_frame_boss1
+  - fight_fanwei1
+  - fight_blood_7
+  - fight_icon_more
+  - fight_blood_4
+  - fight_icon_niudanji
+  - yx_light_04
+  - fight_xiaoguai_di
+  - yx_light_01
+  - fight_frame_more
+  - yx_light_02
+  - fight_icon_renwu
+  - fight_icon_nmb
+  - yx_light_05
+  - fight_blood_3
+  - fight_icon_sound_01
+  - fight_time_di
+  - yx_light_03
+  - fight_fanwei_small
+  - fight_fanwei3
+  - fight_bingge
+  - fight_btn_A1
+  - fight_blood_6
+  - fight_blood_xiaoguai_1
+  - fight_xiaoguai
+  - fight_xiaoguai1
+  - fight_icon_renshu
+  - fight_img_di4
+  - fight_blood_xiaoguai
+  - fight_boci_di
+  - fight_icon_shenhua
+  - fight_btn_B1
+  - fight_img_quan
+  - fight_fanwei2
+  - fight_blood_2
+  - fight_icon_stop
+  - fight_blood_5
+  - fight_icon_music_01
+  - fight_blood_1
+  - fight_img_mubiao
+  - fight_img_fangxiang
+  - fight_tips_wwworddk_2
+  m_RenderDataMap: {}
+  m_Tag: Battle
+  m_IsVariant: 0
+  m_IsPlaceholder: 0

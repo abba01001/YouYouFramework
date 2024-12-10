@@ -50,7 +50,6 @@
         public const string GameEntryOnUpdate = "GameEntryOnUpdate";
         public const string GameEntryOnApplicationQuit = "GameEntryOnApplicationQuit";
         public const string StartNewRound = "StartNewRound";
-        public const string StopRoundTimer = "StopRoundTimer";
         public const string RefreshGameTimer = "RefreshGameTimer";
         public const string GameEntryOnApplicationPause = "GameEntryOnApplicationPause";
         public const string LoadingSceneUpdate = "LoadingSceneUpdate";
@@ -62,6 +61,9 @@
         public const string LoginSuccess = "LoginSuccess";
 
         public const string InitBattleData = "InitBattleData";
+        public const string UpdateBattleTimer = "UpdateBattleTimer";
+        public const string UpdateBattleRound = "UpdateBattleRound";
+        public const string UpdateEnemyCount = "UpdateEnemyCount";
     }
     
     public struct ItemPath

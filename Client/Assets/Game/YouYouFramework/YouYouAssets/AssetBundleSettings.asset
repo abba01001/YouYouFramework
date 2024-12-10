@@ -73,7 +73,7 @@ MonoBehaviour:
     IsEncrypt: 0
     Path:
     - Game/Download/Textures/Common
-    - Game/Download/Textures/Fight
+    - Game/Download/Textures/Battle
     - Game/Download/Textures/FX
     - Game/Download/Textures/Login
     - Game/Download/Textures/LoginEntry

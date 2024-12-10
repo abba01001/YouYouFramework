@@ -307,5 +307,12 @@ namespace YouYou
         {
             Time.timeScale = scale;
         }
+        
+        public string ConvertSecondsToTimeFormat(int totalSeconds)
+        {
+            int minutes = totalSeconds / 60; // 计算分钟
+            int seconds = totalSeconds % 60; // 计算剩余的秒数
+            return $"{minutes:D2}:{seconds:D2}"; // 格式化为 MM:SS
+        }
     }
 }

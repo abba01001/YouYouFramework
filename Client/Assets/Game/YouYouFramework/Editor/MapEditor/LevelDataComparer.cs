@@ -89,6 +89,11 @@ public class LevelDataComparer : EditorWindow
         {
             differences.Add($"[{filePath}] 关卡奖励为空");
         }
+
+        if (loadedLevel.goal == LevelGoal.None)
+        {
+            differences.Add($"[{filePath}] 关卡目标未配置");
+        }
         
         // ... 根据新的字段继续扩展比较
     }

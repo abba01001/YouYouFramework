@@ -41,7 +41,7 @@ public class RequestHandler
 
     public void c2s_request_item_info()
     {
-        ItemData data = new ItemData()
+        Protocols.Item.ItemData data = new Protocols.Item.ItemData()
         {
             ItemId = "1",
             ItemDescription = "物品B",

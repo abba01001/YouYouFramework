@@ -1,8 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
-using Sirenix.OdinInspector;
 using UnityEngine;
 using YouYou;
 
@@ -21,47 +18,27 @@ public class BattleGridPositionComparer : IComparer<BattleGrid>
     }
 }
 
-public class BattleGridManager : MonoBehaviour
+public class BattleGridManager
 {
-    public static BattleGridManager Instance;
     private BattleGrid RecordSelectGrid;
     private BattleGrid RecordTargetGrid;
     private List<BattleGrid> girdList = new List<BattleGrid>();
-    private List<Transform> waypoints = new List<Transform>();
     private Transform gridParent;
     public RectTransform barImage;
     public bool Selecting => RecordSelectGrid != null;
-    public List<Transform> Path => waypoints;
-    private void Awake()
-    {   
-        Instance = this;
-        gridParent = transform.Find("GridLayout");
+
+    public void InitParams(Transform _gridParent)
+    {
+        gridParent = _gridParent;
         for (int i = 0; i < gridParent.childCount; i++)
         {
             var x = i / 6 + 1;
             var y = i % 6 + 1;
-            RegisterGrid(new Vector2Int(x, y),gridParent.GetChild(i).GetComponent<BattleGrid>());
+            var grid = gridParent.GetChild(i).GetComponent<BattleGrid>();
+            girdList.Add(grid);
+            grid.UpdateGridPos(new Vector2Int(x, y));
         }
         girdList.Sort(new BattleGridPositionComparer());
-        GeneratePath();
-    }
-
-    private async void GeneratePath()
-    {
-        waypoints.Clear();
-        PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync(Constants.ModelPath.Path000001);
-        for (int i = 0; i < obj.gameObject.transform.childCount; i++)
-        {
-            waypoints.Add(obj.transform.GetChild(i));
-        }
-    }
-
-    // 注册格子
-    public void RegisterGrid(Vector2Int position, BattleGrid grid)
-    {
-        girdList.Add(grid);
-        grid.UpdateGridPos(position);
-
     }
 
     //获取最近的格子
@@ -75,14 +52,6 @@ public class BattleGridManager : MonoBehaviour
             }
         }
         return null;
-    }
-
-    private int count = 0;
-    private async void GenerateEnemy()
-    {
-        PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync(Constants.ModelPath.Enemy21001);
-        obj.GetComponent<EnemyBase>().InitPath(waypoints);
-        obj.GetComponent<EnemyBase>().StartRun();
     }
 
     public async void CallHero()

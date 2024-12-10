@@ -5,7 +5,9 @@
     "levelName": "第1关",
     "levelDescription": "关卡描述",
     "difficulty": 0,
-    "goal": 0,
+    "goal": 1,
+    "collectItems": [],
+    "inputEnemyCount": 0,
     "stages": [
         {
             "stageIndex": "1",
@@ -17,7 +19,25 @@
                 "defense": 0,
                 "enemyType": "",
                 "level": 0,
-                "enemyCount": 20,
+                "enemyCount": 10,
+                "interval": 0.5,
+                "skills": [],
+                "rewards": []
+            },
+            "events": [],
+            "finalRewards": []
+        },
+        {
+            "stageIndex": "2",
+            "startTime": 25,
+            "enemy": {
+                "model": "Assets/Game/Download/Prefab/Model/Enemy21001.prefab",
+                "health": 30,
+                "attack": 0,
+                "defense": 0,
+                "enemyType": "",
+                "level": 0,
+                "enemyCount": 15,
                 "interval": 0.5,
                 "skills": [],
                 "rewards": []

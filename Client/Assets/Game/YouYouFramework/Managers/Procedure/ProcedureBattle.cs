@@ -30,7 +30,7 @@ namespace YouYou
             //初始化界面
             GameEntry.UI.OpenUIForm<FormBattle>();
             
-            //初始化玩家、敌人
+            //初始化关卡数据
             GameEntry.Event.Dispatch(Constants.EventName.InitBattleData,null);
         }
         
