@@ -117,7 +117,7 @@ namespace Main
 
         private void CheckMapEditorMode()
         {
-#if MAPEDITOR_MODEL && !EDITORLOAD
+#if UNITY_EDITOR && MAPEDITOR_MODEL && !EDITORLOAD
             EditorUtility.DisplayDialog(
                 "提示",
                 "请选择EDITORLOAD模式打开地图编辑器！",
