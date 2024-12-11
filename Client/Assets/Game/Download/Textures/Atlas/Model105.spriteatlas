@@ -181,6 +181,6 @@ SpriteAtlas:
   - 105_youxia-born_01
   - 105_youxia-attack1_08
   m_RenderDataMap: {}
-  m_Tag: 105
+  m_Tag: Model105
   m_IsVariant: 0
   m_IsPlaceholder: 0

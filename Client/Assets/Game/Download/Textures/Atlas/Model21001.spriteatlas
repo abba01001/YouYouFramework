@@ -153,6 +153,6 @@ SpriteAtlas:
   - 21001_ganranzhe-death_07
   - 21001_ganranzhe-death_14
   m_RenderDataMap: {}
-  m_Tag: 21001
+  m_Tag: Model21001
   m_IsVariant: 0
   m_IsPlaceholder: 0

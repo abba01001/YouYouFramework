@@ -1,0 +1,156 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Model21002
+  serializedVersion: 2
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: Android
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 48
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: dd88b3d08a95eb9469a48b92fb63069e, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 64b94f30e927cbd4f897ad5ef1705a0d, type: 3}
+  - {fileID: 21300000, guid: 11a0b550431835749a579a364ac6a89a, type: 3}
+  - {fileID: 21300000, guid: f0031241d7814fd43b9ebd79a765cb90, type: 3}
+  - {fileID: 21300000, guid: bbd1cd517d6e1b042b61c92bab08f283, type: 3}
+  - {fileID: 21300000, guid: 80799a6177dd3c84180fc50fb7957e5c, type: 3}
+  - {fileID: 21300000, guid: fc1934817a709b74fa96da0d9f829b3e, type: 3}
+  - {fileID: 21300000, guid: 8bc5d142cf8b305418d10aeea510d510, type: 3}
+  - {fileID: 21300000, guid: f103f552b3cbbe448b46338208dc1af5, type: 3}
+  - {fileID: 21300000, guid: be4b5e921ff3ea949a4bfbd781215d92, type: 3}
+  - {fileID: 21300000, guid: 216a96b2188328e4bab398064c29f348, type: 3}
+  - {fileID: 21300000, guid: 25d51ae2e4d4a804aa60bfe2c97a9525, type: 3}
+  - {fileID: 21300000, guid: 61e8a523ff8f13b47b08d6c1f502d61f, type: 3}
+  - {fileID: 21300000, guid: 49fb7943c8d6170429f47acbfe343c90, type: 3}
+  - {fileID: 21300000, guid: de85be433879faa40baf50410f255ac4, type: 3}
+  - {fileID: 21300000, guid: 031cc053d339c404c948cfb8689264b2, type: 3}
+  - {fileID: 21300000, guid: 2e841c93c2053fb4cb854f63de28c61a, type: 3}
+  - {fileID: 21300000, guid: a0d956b3242c4064183649a35ef4aaa0, type: 3}
+  - {fileID: 21300000, guid: f0b5c7b3340dd034f882b28e2b8fec68, type: 3}
+  - {fileID: 21300000, guid: 1df34124b136ffb4084fb4bc69d9c044, type: 3}
+  - {fileID: 21300000, guid: d52268349beb1bf4c9b08bc2ccb082cf, type: 3}
+  - {fileID: 21300000, guid: c36aaba4bef10044cbff0dd44a61129c, type: 3}
+  - {fileID: 21300000, guid: def71bc4ebf7e25479621c9d6a2ad9b5, type: 3}
+  - {fileID: 21300000, guid: fde9801555ab0c94599a8715c3f8ba10, type: 3}
+  - {fileID: 21300000, guid: 78698d463cf4ee64c9c687cb0e0fa022, type: 3}
+  - {fileID: 21300000, guid: efc31466318b40f42acdbd81c39f3c61, type: 3}
+  - {fileID: 21300000, guid: 40b2c0865d054cc4787f36fc12b83f69, type: 3}
+  - {fileID: 21300000, guid: 5f3152f6a67e4024187e0448cb359122, type: 3}
+  - {fileID: 21300000, guid: c8d80607a6844e445b7f1e07a956349a, type: 3}
+  - {fileID: 21300000, guid: 77203a171dc04654a8876ce3c7bb274c, type: 3}
+  - {fileID: 21300000, guid: 2d31f4f77180ebf48921b610e2363e94, type: 3}
+  - {fileID: 21300000, guid: 6e336b1823ca29c42822ceb8e9cbff63, type: 3}
+  - {fileID: 21300000, guid: 0ea1e898575083643aac8a2addf5a0a4, type: 3}
+  - {fileID: 21300000, guid: eb09fce83b635d44f92c35fe68aee9c7, type: 3}
+  - {fileID: 21300000, guid: 63e9c3597ca346448896fa3b1b5b50c8, type: 3}
+  - {fileID: 21300000, guid: 23552d69136637f4ab6e7c3e39cb911a, type: 3}
+  - {fileID: 21300000, guid: 44f2b4b9986c0fc4c93da84a6d13b736, type: 3}
+  - {fileID: 21300000, guid: 03252db9fe49b2940adefacfccb54a55, type: 3}
+  - {fileID: 21300000, guid: 41bd90ba603073847a8b53b84f7b7d46, type: 3}
+  - {fileID: 21300000, guid: 3e5278ea8593d0b4e84fbc1a3ea2aeeb, type: 3}
+  - {fileID: 21300000, guid: af3d4a2be8e33874ca31009dadd8647e, type: 3}
+  - {fileID: 21300000, guid: 778bdbebe98679e4cba39941abb0c53d, type: 3}
+  - {fileID: 21300000, guid: be90bddcf25fda249b4ab478bbade3fa, type: 3}
+  - {fileID: 21300000, guid: 2330a95db195cd542b4e36cda8305a70, type: 3}
+  - {fileID: 21300000, guid: 2d8b3d4eeb7a05f44a389eeca93b4723, type: 3}
+  - {fileID: 21300000, guid: 9e35995e8c76d4e4c81ac0682423aadc, type: 3}
+  - {fileID: 21300000, guid: e854e59e231f99142b75340f3890ff28, type: 3}
+  - {fileID: 21300000, guid: 97a205ded38cb5c459a9fbe42945bca2, type: 3}
+  - {fileID: 21300000, guid: 217f3f9f148a08d45a24952ecc31fdb6, type: 3}
+  - {fileID: 21300000, guid: 2b30e6efef68bee46825c5bb028f5ed0, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - 21002_shuangyuansheshou-idle2_08
+  - 21002_shuangyuansheshou-run_08
+  - 21002_shuangyuansheshou-run_06
+  - 21002_shuangyuansheshou-run_07
+  - 21002_shuangyuansheshou-death_03
+  - 21002_shuangyuansheshou-death_05
+  - 21002_shuangyuansheshou-death_23
+  - 21002_shuangyuansheshou-death_15
+  - 21002_shuangyuansheshou-death_17
+  - 21002_shuangyuansheshou-death_18
+  - 21002_shuangyuansheshou-death_22
+  - 21002_shuangyuansheshou-death_07
+  - 21002_shuangyuansheshou-death_09
+  - 21002_shuangyuansheshou-death_02
+  - 21002_shuangyuansheshou-idle2_06
+  - 21002_shuangyuansheshou-idle2_03
+  - 21002_shuangyuansheshou-idle2_09
+  - 21002_shuangyuansheshou-death_20
+  - 21002_shuangyuansheshou-death_12
+  - 21002_shuangyuansheshou-run_00
+  - 21002_shuangyuansheshou-run_02
+  - 21002_shuangyuansheshou-run_09
+  - 21002_shuangyuansheshou-idle2_04
+  - 21002_shuangyuansheshou-idle2_01
+  - 21002_shuangyuansheshou-death_14
+  - 21002_shuangyuansheshou-idle2_11
+  - 21002_shuangyuansheshou-idle2_02
+  - 21002_shuangyuansheshou-idle2_07
+  - 21002_shuangyuansheshou-death_00
+  - 21002_shuangyuansheshou-idle2_05
+  - 21002_shuangyuansheshou-run_04
+  - 21002_shuangyuansheshou-death_10
+  - 21002_shuangyuansheshou-death_13
+  - 21002_shuangyuansheshou-death_16
+  - 21002_shuangyuansheshou-run_03
+  - 21002_shuangyuansheshou-idle2_14
+  - 21002_shuangyuansheshou-run_01
+  - 21002_shuangyuansheshou-idle2_00
+  - 21002_shuangyuansheshou-death_21
+  - 21002_shuangyuansheshou-idle2_13
+  - 21002_shuangyuansheshou-death_19
+  - 21002_shuangyuansheshou-death_06
+  - 21002_shuangyuansheshou-idle2_12
+  - 21002_shuangyuansheshou-run_05
+  - 21002_shuangyuansheshou-death_01
+  - 21002_shuangyuansheshou-death_08
+  - 21002_shuangyuansheshou-idle2_10
+  - 21002_shuangyuansheshou-death_11
+  - 21002_shuangyuansheshou-death_04
+  m_RenderDataMap: {}
+  m_Tag: Model21002
+  m_IsVariant: 0
+  m_IsPlaceholder: 0

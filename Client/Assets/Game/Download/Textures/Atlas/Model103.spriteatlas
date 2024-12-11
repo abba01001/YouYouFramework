@@ -219,6 +219,6 @@ SpriteAtlas:
   - 103_yuansuling-idle_29
   - 103_yuansuling-idle_19
   m_RenderDataMap: {}
-  m_Tag: 103
+  m_Tag: Model103
   m_IsVariant: 0
   m_IsPlaceholder: 0

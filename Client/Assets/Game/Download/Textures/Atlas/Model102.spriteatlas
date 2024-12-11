@@ -171,6 +171,6 @@ SpriteAtlas:
   - 102_yemanren-attack1_04
   - 102_yemanren-born_11
   m_RenderDataMap: {}
-  m_Tag: 102
+  m_Tag: Model102
   m_IsVariant: 0
   m_IsPlaceholder: 0

@@ -165,6 +165,6 @@ SpriteAtlas:
   - 101_baoposhou-idle_08
   - 101_baoposhou-attack_04
   m_RenderDataMap: {}
-  m_Tag: 101
+  m_Tag: Model101
   m_IsVariant: 0
   m_IsPlaceholder: 0

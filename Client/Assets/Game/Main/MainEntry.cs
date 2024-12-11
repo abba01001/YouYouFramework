@@ -1,7 +1,6 @@
 using Sirenix.OdinInspector;
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace Main
@@ -103,7 +102,8 @@ namespace Main
         }
         private void Start()
         {
-            //初始化管理器
+            CheckMapEditorMode();
+            
             Download = new DownloadManager();
             Assets = new CheckVersionManager();
             ClassObjectPool = new ClassObjectPool();
@@ -114,6 +114,19 @@ namespace Main
             Assets.Init();
             Hotfix.Init();
         }
+
+        private void CheckMapEditorMode()
+        {
+#if MAPEDITOR_MODEL && !EDITORLOAD
+            EditorUtility.DisplayDialog(
+                "提示",
+                "请选择EDITORLOAD模式打开地图编辑器！",
+                "确定"
+            );          
+            EditorApplication.isPlaying = false; 
+#endif
+        }
+        
         private void Update()
         {
             Download.OnUpdate();

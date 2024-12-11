@@ -1,0 +1,160 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Model21007
+  serializedVersion: 2
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: Android
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 48
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: d55049fb4fa61ab41b65d6ce83867a70, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 45d8d5111cec61344aedc17e4044e655, type: 3}
+  - {fileID: 21300000, guid: 52bd3611b55eb114a88b5a78cce21464, type: 3}
+  - {fileID: 21300000, guid: 211b9d11747b19f4dbe097de24901491, type: 3}
+  - {fileID: 21300000, guid: 3dadf6a110bec0640afd2d0ab455d76c, type: 3}
+  - {fileID: 21300000, guid: 5bfb21c13d24815438db222e5bca434f, type: 3}
+  - {fileID: 21300000, guid: 52dfb4e18b5485746846e91df7a55604, type: 3}
+  - {fileID: 21300000, guid: d6e15c02563d5c946acc2e79680d800f, type: 3}
+  - {fileID: 21300000, guid: 7daf746227003d24d8d4b805a56b1298, type: 3}
+  - {fileID: 21300000, guid: 49424f726550ca54bbfa7781ce5902cf, type: 3}
+  - {fileID: 21300000, guid: 7aabcca279979ac468404ce324f2b1a6, type: 3}
+  - {fileID: 21300000, guid: ed41f703daf8c204380eeab87b90f357, type: 3}
+  - {fileID: 21300000, guid: 9ab65f03eb96e1d42925fb6039045a76, type: 3}
+  - {fileID: 21300000, guid: 1056f8139ecf08a448d5c3aa3c997a0c, type: 3}
+  - {fileID: 21300000, guid: 4b5ab3630c8b2ca4ca6f42f258b05eda, type: 3}
+  - {fileID: 21300000, guid: 9fdc09b3dd9f5f44d9013cc84d878e91, type: 3}
+  - {fileID: 21300000, guid: 4eab421484bed134da124e7b000f1515, type: 3}
+  - {fileID: 21300000, guid: ba655414e676d3d4480a9a21fcabc305, type: 3}
+  - {fileID: 21300000, guid: 44cb785462285e545b798daeb6dcf9b5, type: 3}
+  - {fileID: 21300000, guid: 5f17c5b4ead67a24d8e101944460e74c, type: 3}
+  - {fileID: 21300000, guid: 20acf8d46c5e9ab4ea07547bb17557f7, type: 3}
+  - {fileID: 21300000, guid: c5e317553b90fec449c42ab34e61b9d3, type: 3}
+  - {fileID: 21300000, guid: 7e70dad569641e94a855496dfa1a5ef0, type: 3}
+  - {fileID: 21300000, guid: 592d1a56c6eda384e94ea0e24f6bd923, type: 3}
+  - {fileID: 21300000, guid: ef56ba661414b624cbc26e326b5a7507, type: 3}
+  - {fileID: 21300000, guid: 71008996dc01e0c48bac0446f29990d8, type: 3}
+  - {fileID: 21300000, guid: df8817c6a72232e4b8a6e6964670cc2b, type: 3}
+  - {fileID: 21300000, guid: a29a9cc62dad18445ba806697a7a2a63, type: 3}
+  - {fileID: 21300000, guid: 198a5df69f062604abb0cdeb37c1e30f, type: 3}
+  - {fileID: 21300000, guid: c75c68270c7bf174fa887e47e1dc8cfd, type: 3}
+  - {fileID: 21300000, guid: 89ab1e371e076ef489781f70dc6855f3, type: 3}
+  - {fileID: 21300000, guid: feb1fb6717bb7dd4f864644d42b5ea48, type: 3}
+  - {fileID: 21300000, guid: b69f043800c2f4a4cbe77f7f5b8e3d49, type: 3}
+  - {fileID: 21300000, guid: b443e5c8e865f2c4a8b3ad09882293db, type: 3}
+  - {fileID: 21300000, guid: 3c280309ecc180b4faf87ad052ba463c, type: 3}
+  - {fileID: 21300000, guid: a7de4b5990af7044eaaca195cc93c750, type: 3}
+  - {fileID: 21300000, guid: ab842d6a588815141917098fdeaaffa8, type: 3}
+  - {fileID: 21300000, guid: 64d6597a9852779409061197115949ea, type: 3}
+  - {fileID: 21300000, guid: ee67f81b0f03f524f9cd3f649fe44b59, type: 3}
+  - {fileID: 21300000, guid: 08f38dac5bc3bdd41967c058f60908f1, type: 3}
+  - {fileID: 21300000, guid: 6812782dbfaa20b4084c0adf52d57fbc, type: 3}
+  - {fileID: 21300000, guid: 3367433d0160f074e962a417c5805590, type: 3}
+  - {fileID: 21300000, guid: 8788d53dff646cc49b7e51ca45207103, type: 3}
+  - {fileID: 21300000, guid: fa37ab4df7058a24aa75dfefacf4247d, type: 3}
+  - {fileID: 21300000, guid: 32d95a1ea6742f840834e5c253e11c42, type: 3}
+  - {fileID: 21300000, guid: f355e9fe05643e74681c61e52fda707f, type: 3}
+  - {fileID: 21300000, guid: 2efd670fc3d99ca4092568042bbad384, type: 3}
+  - {fileID: 21300000, guid: bc3e1a2f93e5def4fbc8bcd45180c36e, type: 3}
+  - {fileID: 21300000, guid: b7fc7b3f64debcc439b35f255379b44d, type: 3}
+  - {fileID: 21300000, guid: 6b1dff5f2411199499575720fe7e7233, type: 3}
+  - {fileID: 21300000, guid: 21e74d8f0dbce5a499fe4b533a69e41e, type: 3}
+  - {fileID: 21300000, guid: bee2b2cf7cad4404aba5a945694a7ee8, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - 21007_bailang-idle2_12
+  - 21007_bailang-death_04
+  - 21007_bailang-run_06
+  - 21007_bailang-run_02
+  - 21007_bailang-idle2_15
+  - 21007_bailang-idle2_04
+  - 21007_bailang-idle2_00
+  - 21007_bailang-idle2_01
+  - 21007_bailang-death_21
+  - 21007_bailang-idle2_13
+  - 21007_bailang-idle2_11
+  - 21007_bailang-idle2_14
+  - 21007_bailang-run_03
+  - 21007_bailang-idle2_07
+  - 21007_bailang-death_10
+  - 21007_bailang-death_16
+  - 21007_bailang-death_05
+  - 21007_bailang-run_08
+  - 21007_bailang-run_07
+  - 21007_bailang-idle2_05
+  - 21007_bailang-idle2_10
+  - 21007_bailang-death_08
+  - 21007_bailang-idle2_06
+  - 21007_bailang-run_04
+  - 21007_bailang-run_01
+  - 21007_bailang-death_12
+  - 21007_bailang-death_09
+  - 21007_bailang-idle2_02
+  - 21007_bailang-run_09
+  - 21007_bailang-death_01
+  - 21007_bailang-death_11
+  - 21007_bailang-idle2_09
+  - 21007_bailang-death_17
+  - 21007_bailang-death_15
+  - 21007_bailang-death_13
+  - 21007_bailang-death_20
+  - 21007_bailang-death_19
+  - 21007_bailang-idle2_16
+  - 21007_bailang-death_14
+  - 21007_bailang-idle2_08
+  - 21007_bailang-death_23
+  - 21007_bailang-run_00
+  - 21007_bailang-death_22
+  - 21007_bailang-death_02
+  - 21007_bailang-death_06
+  - 21007_bailang-death_07
+  - 21007_bailang-death_18
+  - 21007_bailang-run_05
+  - 21007_bailang-death_03
+  - 21007_bailang-idle2_03
+  - 21007_bailang-death_00
+  m_RenderDataMap: {}
+  m_Tag: Model21007
+  m_IsVariant: 0
+  m_IsPlaceholder: 0

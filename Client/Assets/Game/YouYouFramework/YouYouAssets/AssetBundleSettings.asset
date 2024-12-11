@@ -52,6 +52,7 @@ MonoBehaviour:
     - Game/Download/Shader
     - Game/Download/Font
     - Game/Download/Material
+    - Game/Download/Anim
   - Name: "\u573A\u666F"
     IsBuild: 1
     Overall: 0
