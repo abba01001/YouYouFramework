@@ -13,7 +13,7 @@
             "stageIndex": "1",
             "startTime": 3,
             "enemy": {
-                "model": "Assets/Game/Download/Prefab/Model/Enemy21001.prefab",
+                "modelId": 21001,
                 "health": 30,
                 "attack": 0,
                 "defense": 0,
@@ -31,7 +31,7 @@
             "stageIndex": "2",
             "startTime": 25,
             "enemy": {
-                "model": "Assets/Game/Download/Prefab/Model/Enemy21001.prefab",
+                "modelId": 21001,
                 "health": 30,
                 "attack": 0,
                 "defense": 0,

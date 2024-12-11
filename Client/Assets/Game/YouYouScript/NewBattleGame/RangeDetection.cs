@@ -1,24 +1,29 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class RangeDetection : MonoBehaviour
 {
-    public float radius = 5f;  // 圆的半径
-    public Color rangeColor = Color.red;  // 圆的颜色
-    public LayerMask targetLayer;  // 目标物体所在的层
+    public float radius = 5f; // 圆的半径
+    public Color rangeColor = Color.red; // 圆的颜色
+    public LayerMask targetLayer; // 目标物体所在的层
 
-    // 定义事件：物体进入范围时触发
-    public event System.Action<Collider2D> OnObjectEnterRange;
-    // 定义事件：物体在范围内停留时触发
-    public event System.Action<Collider2D> OnObjectStayInRange;
-    // 定义事件：物体离开范围时触发
-    public event System.Action<Collider2D> OnObjectExitRange;
+    public event System.Action<List<Collider2D>> OnObjectsEnterRange;
+    public event System.Action<List<Collider2D>> OnObjectsStayInRange;
+    public event System.Action<List<Collider2D>> OnObjectsExitRange;
 
     private CircleCollider2D circleCollider2D;
+    private HashSet<Collider2D> objectsInRange = new HashSet<Collider2D>();
+    private List<Collider2D> tempEnterList = new List<Collider2D>();
+    private List<Collider2D> tempExitList = new List<Collider2D>();
 
     private void Awake()
     {
         // 获取 CircleCollider2D 组件，如果没有则添加一个
         circleCollider2D = GetComponent<CircleCollider2D>();
+        if (circleCollider2D == null)
+        {
+            circleCollider2D = gameObject.AddComponent<CircleCollider2D>();
+        }
 
         // 设置碰撞体的半径和触发器模式
         circleCollider2D.radius = radius;
@@ -34,28 +39,39 @@ public class RangeDetection : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // 如果目标物体在目标层中并进入范围，触发事件
-        if (((1 << other.gameObject.layer) & targetLayer) != 0)
+        if (IsInTargetLayer(other))
         {
-            OnObjectEnterRange?.Invoke(other);
+            if (objectsInRange.Add(other)) // 确保对象是第一次进入
+            {
+                tempEnterList.Clear();
+                tempEnterList.Add(other);
+                OnObjectsEnterRange?.Invoke(tempEnterList); // 传递所有新进入的对象
+            }
         }
     }
 
     private void OnTriggerStay2D(Collider2D other)
     {
-        // 如果目标物体在目标层中并停留在范围内，触发事件
-        if (((1 << other.gameObject.layer) & targetLayer) != 0)
+        if (IsInTargetLayer(other))
         {
-            OnObjectStayInRange?.Invoke(other);
+            // 每帧触发停留事件，传递当前范围内的所有对象
+            var stayingObjects = new List<Collider2D>(objectsInRange);
+            OnObjectsStayInRange?.Invoke(stayingObjects);
         }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        // 如果目标物体在目标层中并离开范围，触发事件
-        if (((1 << other.gameObject.layer) & targetLayer) != 0)
+        if (objectsInRange.Remove(other)) // 从集合中移除
         {
-            OnObjectExitRange?.Invoke(other);
+            tempExitList.Clear();
+            tempExitList.Add(other);
+            OnObjectsExitRange?.Invoke(tempExitList); // 传递所有离开的对象
         }
+    }
+
+    private bool IsInTargetLayer(Collider2D collider)
+    {
+        return ((1 << collider.gameObject.layer) & targetLayer) != 0;
     }
 }

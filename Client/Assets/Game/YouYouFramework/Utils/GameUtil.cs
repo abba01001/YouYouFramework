@@ -14,6 +14,7 @@ using UnityEngine.UI;
 public class GameUtil
 {
     private static readonly System.Random _random = new System.Random();
+    private static StringBuilder stringBuilder = new StringBuilder();
     
     /// <summary>
     /// 加载FBX嵌入的所有动画
@@ -78,6 +79,13 @@ public class GameUtil
     public static int RandomRange(int minInclusive, int maxExclusive)
     {
         return _random.Next(minInclusive, maxExclusive);
+    }
+    
+    public static string GetRandomString(List<string> stringList)
+    {
+        // 通过 RandomRange 方法生成一个随机索引
+        int randomIndex = RandomRange(0, stringList.Count);
+        return stringList[randomIndex];
     }
     
     public static float RandomRange(float minInclusive, float maxExclusive)
@@ -167,6 +175,11 @@ public class GameUtil
                 }
             }
         }
+    }
+
+    public static string GetModelPath(int modelId)
+    {
+        return $"Assets/Game/Download/Prefab/Model/{modelId}.prefab";
     }
     
     public static void PlayAnimation(Animator animator, string animName, int layer, Action endCall = null, bool disableAnimator = true)

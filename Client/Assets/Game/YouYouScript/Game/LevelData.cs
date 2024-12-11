@@ -40,7 +40,7 @@ public class LevelStage
 [System.Serializable]
 public class EnemyData
 {
-    [LabelText("模型ID")] public string model; // 敌人名称
+    [LabelText("模型ID")] public int modelId; // 模型ID
     [LabelText("血量")] public int health; // 敌人血量
     [LabelText("攻击力")] public int attack; // 敌人攻击力
     [LabelText("防御力")] public int defense; // 敌人防御力

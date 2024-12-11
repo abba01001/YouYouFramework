@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 
-public class BattleGrid : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler,IPointerUpHandler
+public class BattleGrid : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler,IPointerUpHandler,IDragHandler
 {
     public Vector2Int Position;
     public Transform ModelRoot { get; private set; }
@@ -25,6 +25,7 @@ public class BattleGrid : MonoBehaviour, IPointerEnterHandler, IPointerDownHandl
         targetSelectObj = transform.Find("TargetSelect").gameObject;
         rangeImage = transform.Get<Image>("Range");
         orignSelectObj.SetActive(false);
+        
         ShowRange(false);
         ShowGrid(false);
         ShowTargetSelect(false);
@@ -32,9 +33,20 @@ public class BattleGrid : MonoBehaviour, IPointerEnterHandler, IPointerDownHandl
         InitGridCharacter();
     }
 
-    public bool CanDropCharacter()
+    public bool CanDropCharacter(int model)
     {
-        return OccupiedCharacters.Count < 3;
+        if (OccupiedCharacters.Count > 0)
+        {
+            if (OccupiedCharacters.Count < 3)
+            {
+                return OccupiedCharacters[0].config.ModelId == model;
+            }
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 
     public void FillCharacter(GridCharacterBase gridCharacterBase)
@@ -172,13 +184,6 @@ public class BattleGrid : MonoBehaviour, IPointerEnterHandler, IPointerDownHandl
         BattleCtrl.Instance.GridManager.SetTargetGrid(this);
         BattleCtrl.Instance.GridManager.OnSelectTargetGrid(this);
     }
-
-    public void OnMouseDrag()
-    {
-        if (this.OccupiedCharacters.Count <= 0) return;
-        BattleCtrl.Instance.GridManager.OnSelectOrignGrid(this);
-        isDrage = true;
-    }
     
     // 鼠标松开时，恢复原始大小
     public void OnPointerUp(PointerEventData eventData)
@@ -189,5 +194,12 @@ public class BattleGrid : MonoBehaviour, IPointerEnterHandler, IPointerDownHandl
             BattleCtrl.Instance.GridManager.OnReleaseGrid();
             isPressed = false;
         }
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        if (this.OccupiedCharacters.Count <= 0) return;
+        BattleCtrl.Instance.GridManager.OnSelectOrignGrid(this);
+        isDrage = true;
     }
 }

@@ -93,7 +93,7 @@ public class TextureOptimizer : Editor
             // 设置为 ASTC 4x4 格式
             importer.textureCompression = TextureImporterCompression.Compressed;
             importer.crunchedCompression = true;
-
+            importer.textureType = TextureImporterType.Sprite;
             // 修改平台设置
             TextureImporterPlatformSettings platformSettings = new TextureImporterPlatformSettings
             {

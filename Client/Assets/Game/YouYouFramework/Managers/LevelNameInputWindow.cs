@@ -1,3 +1,4 @@
+#if EDITORLOAD
 using UnityEditor;
 using UnityEngine;
 
@@ -64,3 +65,4 @@ public class LevelNameInputWindow : EditorWindow
         isValid = false;
     }
 }
+#endif

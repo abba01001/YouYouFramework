@@ -80,6 +80,10 @@
         
         
         public const string Hero101 = "Assets/Game/Download/Prefab/Model/Hero101.prefab";
+        public const string Hero102 = "Assets/Game/Download/Prefab/Model/Hero102.prefab";
+        public const string Hero103 = "Assets/Game/Download/Prefab/Model/Hero103.prefab";
+        public const string Hero104 = "Assets/Game/Download/Prefab/Model/Hero104.prefab";
+        public const string Hero105 = "Assets/Game/Download/Prefab/Model/Hero105.prefab";
         
         public const string Enemy21001 = "Assets/Game/Download/Prefab/Model/Enemy21001.prefab";
     }

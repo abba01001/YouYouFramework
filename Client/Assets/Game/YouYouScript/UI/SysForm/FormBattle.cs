@@ -37,7 +37,7 @@ public class FormBattle : UIFormBase
         });
         settingBtn.SetButtonClick(ShowSetting);
         settingRect.transform.localScale = new Vector3(1, 0, 1);
-        BattleCtrl.Instance.GridManager.InitParams(transform.Find("GridLayout"));
+        BattleCtrl.Instance.GridManager.InitParams(transform.Find("GridLayout"),transform.Find("Line").GetComponent<RectTransform>());
     }
 
     private void ShowSetting()

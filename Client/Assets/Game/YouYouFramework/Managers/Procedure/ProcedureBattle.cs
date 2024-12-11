@@ -29,9 +29,40 @@ namespace YouYou
         {
             //初始化界面
             GameEntry.UI.OpenUIForm<FormBattle>();
+
+            LevelData data = LoadCurrentLevel("1");
             
             //初始化关卡数据
-            GameEntry.Event.Dispatch(Constants.EventName.InitBattleData,null);
+            GameEntry.Event.Dispatch(Constants.EventName.InitBattleData,data);
+        }
+        
+        //加载关卡
+        private LevelData LoadCurrentLevel(string levelName)
+        {
+            if (string.IsNullOrEmpty(levelName))
+            {
+                Debug.LogWarning("关卡名称不能为空！");
+                return null;
+            }
+        
+            string fullSavePath = "Assets/Game/Download/MapLevel/" + levelName + ".json";
+            AssetReferenceEntity referenceEntity = GameEntry.Loader.LoadMainAsset(fullSavePath);
+            if (referenceEntity != null)
+            {
+                TextAsset obj = UnityEngine.Object.Instantiate(referenceEntity.Target as TextAsset);
+                AutoReleaseHandle.Add(referenceEntity, MapParent);
+                string json = obj.text;
+                // if (json.StartsWith(Constants.ENCRYPTEDKEY))
+                // {
+                //     json = SecurityUtil.Decrypt(json.Substring(Constants.ENCRYPTEDKEY.Length));
+                // }
+                return JsonUtility.FromJson<LevelData>(json);
+            }
+            else
+            {
+                Debug.LogWarning($"未找到文件: {fullSavePath}");
+                return null;
+            }
         }
         
         internal override void OnUpdate()

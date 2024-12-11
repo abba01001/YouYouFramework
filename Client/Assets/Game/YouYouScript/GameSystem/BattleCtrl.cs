@@ -90,8 +90,8 @@ public class BattleCtrl : Singleton<BattleCtrl>
         int count = 0;
         while (count < data.enemy.enemyCount)
         {
-            PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync(data.enemy.model);
-            obj.GetComponent<EnemyBase>().InitPath(Waypoints);
+            PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync(GameUtil.GetModelPath(data.enemy.modelId));
+            obj.GetComponent<EnemyBase>().WayPoints = Waypoints;
             obj.GetComponent<EnemyBase>().StartRun();
             count++;
             GameEntry.Event.Dispatch(Constants.EventName.UpdateEnemyCount,new UpdateEnemyCountEvent(1));

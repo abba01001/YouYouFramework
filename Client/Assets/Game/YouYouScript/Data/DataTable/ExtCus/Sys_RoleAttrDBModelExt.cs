@@ -15,9 +15,9 @@ namespace YouYou
             for (int i = 0; i < m_List.Count; i++)
             {
                 Sys_RoleAttrEntity entity = m_List[i];
-                if (!IdByDic.ContainsKey(entity.Id))
+                if (!IdByDic.ContainsKey(entity.ModelId))
                 {
-                    IdByDic.Add(entity.Id, entity);
+                    IdByDic.Add(entity.ModelId, entity);
                 }
                 else
                 {
@@ -26,13 +26,13 @@ namespace YouYou
             }
         }
 
-        public Sys_RoleAttrEntity GetEntity(int task_id)
+        public Sys_RoleAttrEntity GetEntity(int modelId)
         {
-            if (IdByDic.ContainsKey(task_id))
+            if (IdByDic.ContainsKey(modelId))
             {
-                return IdByDic[task_id];
+                return IdByDic[modelId];
             }
-            YouYou.GameEntry.LogError(LogCategory.Framework, "没有找到对话, DialogueId==" + task_id);
+            YouYou.GameEntry.LogError(LogCategory.Framework, "没有找到对话, DialogueId==" + modelId);
             return null;
         }
     }

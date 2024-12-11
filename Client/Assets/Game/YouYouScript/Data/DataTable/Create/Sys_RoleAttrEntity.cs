@@ -10,17 +10,17 @@ namespace YouYou
         /// <summary>
         /// 角色id
         /// </summary>
-        public int RoleId;
+        public int ModelId;
 
         /// <summary>
-        /// 等级
+        /// 攻击范围
         /// </summary>
-        public int Level;
+        public float AttackRange;
 
         /// <summary>
-        /// 经验
+        /// 攻击间隔
         /// </summary>
-        public int Exp;
+        public float AttackInterval;
 
         /// <summary>
         /// 红

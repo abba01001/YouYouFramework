@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Unity.VisualScripting;
@@ -14,14 +15,20 @@ public class GridCharacterBase : CharacterBase
     public float attackCd = 0.75f;
     public float timer = 0.75f;
     private Transform detection;
+    public Sys_RoleAttrEntity config { get; set; }
+    public void InitParams(Sys_RoleAttrEntity _config)
+    {
+        config = _config;
+    }
+    
     public override void Awake()
     {
         base.Awake();
         detection = transform.Find("Detection");
         RangeDetection rangeDetection = GetComponentInChildren<RangeDetection>();
-        rangeDetection.OnObjectEnterRange += HandleEnterRange;
-        rangeDetection.OnObjectStayInRange += HandleStayInRange;
-        rangeDetection.OnObjectExitRange += HandleExitRange;
+        rangeDetection.OnObjectsEnterRange += HandleEnterRange;
+        rangeDetection.OnObjectsStayInRange += HandleStayInRange;
+        rangeDetection.OnObjectsExitRange += HandleExitRange;
     }
 
     public void PlayBornAnim()
@@ -74,9 +81,8 @@ public class GridCharacterBase : CharacterBase
         onComplete?.Invoke();
     }
     
-    private void HandleEnterRange(Collider2D other)
+    private void HandleEnterRange(List<Collider2D> colliders)
     {
-        GameUtil.LogError("Enemy entered range: " + other.name);
         // 你可以在这里处理进入范围时的逻辑
     }
 
@@ -85,19 +91,38 @@ public class GridCharacterBase : CharacterBase
         timer += Time.deltaTime;
     }
 
-    private void HandleStayInRange(Collider2D other)
+    private void HandleStayInRange(List<Collider2D> colliders)
     {
         if (timer >= attackCd)
         {
             timer = 0;
-            SetFace(transform.position.x > other.transform.position.x ? 1 : -1);
-            other.GetComponentInParent<EnemyBase>().TakeNormalDamage(5);
-            animator.Play("attack");
-            GenerateTx(other.gameObject);
+            GameObject enemy = GetNearEnemy(colliders);
+            if (enemy != null)
+            {
+                SetFace(transform.position.x > enemy.transform.position.x ? 1 : -1);
+                enemy.GetComponentInParent<EnemyBase>().TakeNormalDamage(5);
+                animator.Play("attack");
+                //if(ModelPath == Constants.ModelPath.Hero101) GenerateTx(enemy.gameObject);
+            }
         }
-        // 你可以在这里处理物体在范围内停留时的逻辑
     }
 
+    private GameObject GetNearEnemy(List<Collider2D> colliders)
+    {
+        float d1 = 999999999999;
+        GameObject obj = null;
+        foreach (var col in colliders)
+        {
+            var d2 = Mathf.Abs(Vector3.Distance(col.gameObject.transform.position, transform.position));
+            if (d2 <= d1)
+            {
+                d1 = d2;
+                obj = col.gameObject;
+            }
+        }
+        return obj;
+    }
+    
     private async void GenerateTx(GameObject target)
     {
         await UniTask.Delay(300);
@@ -137,36 +162,22 @@ public class GridCharacterBase : CharacterBase
             controlPoint = startPosition + new Vector3(0, 150, 0); // 向上抛物线
         }
 
-        // 运行飞行路径
         while (elapsedTime < flightDuration)
         {
             elapsedTime += Time.deltaTime;
-        
-            // 动态更新目标位置
             targetPosition = target.transform.position;
-        
-            // 计算贝塞尔曲线位置
             float t = elapsedTime / flightDuration;
             Vector3 currentPos = BezierUtils.CalculateBezierPoint(t, startPosition, controlPoint, controlPoint, targetPosition);
-        
-            // 更新特效的位置
             tx.transform.position = currentPos;
-
             await UniTask.Yield();
         }
-
-        // 最终位置设置为目标位置
         tx.transform.position = target.transform.position;
-
-        // 飞行完成后销毁 tx
         GameEntry.Pool.GameObjectPool.Despawn(tx);
     }
 
 
-
-
     
-    private void HandleExitRange(Collider2D other)
+    private void HandleExitRange(List<Collider2D> colliders)
     {
         // 你可以在这里处理物体离开范围时的逻辑
     }

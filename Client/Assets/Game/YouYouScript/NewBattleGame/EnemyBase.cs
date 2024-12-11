@@ -12,13 +12,14 @@ public class EnemyBase : CharacterBase, IDamageable
     [HideInInspector] protected int defenseValue = 0;
     [HideInInspector] public bool isAlive => healthValue > 0;
 
-    public List<Transform> waypoints; // 存储路径点
     [HideInInspector] private float totalTime = 15f; // 总共走完路径所需的时间（单位秒）
     [HideInInspector] private float moveSpeed = 0f; // 计算出的每秒移动距离
     [HideInInspector] private int currentWaypointIndex = 0; // 当前目标路径点的索引
     private float totalPathLength = 0f; // 总路径长度
     private float speedFactor = 1f; // 速度因子（默认 1，增速时 > 1，减速时 < 1）
 
+    
+    public List<Transform> WayPoints { get; set; } // 存储路径点
     private void OnEnable()
     {
         healthValue = 100;
@@ -27,21 +28,16 @@ public class EnemyBase : CharacterBase, IDamageable
         blood.gameObject.SetActive(false);
         defense.gameObject.SetActive(false);
     }
-
-    public void InitPath(List<Transform> points)
-    {
-        waypoints = points;
-    }
     
     public void StartRun()
     {
-        if (waypoints.Count > 0)
+        if (WayPoints is {Count: > 0})
         {
             modelRoot.transform.localScale = Vector3.one * 2;
             // 计算路径总长度
             totalPathLength = CalculateTotalPathLength();
             moveSpeed = totalPathLength / totalTime; // 每秒需要移动的距离
-            transform.position = waypoints[currentWaypointIndex].position;
+            transform.position = WayPoints[currentWaypointIndex].position;
             StopCoroutine(FollowPath());
             StartCoroutine(FollowPath());
         }
@@ -51,15 +47,15 @@ public class EnemyBase : CharacterBase, IDamageable
     private float CalculateTotalPathLength()
     {
         float length = 0f;
-        for (int i = 0; i < waypoints.Count - 1; i++)
+        for (int i = 0; i < WayPoints.Count - 1; i++)
         {
-            length += Vector3.Distance(waypoints[i].position, waypoints[i + 1].position);
+            length += Vector3.Distance(WayPoints[i].position, WayPoints[i + 1].position);
         }
 
         // 如果是循环路径，最后一个点到第一个点的距离
-        if (waypoints.Count > 1)
+        if (WayPoints.Count > 1)
         {
-            length += Vector3.Distance(waypoints[waypoints.Count - 1].position, waypoints[0].position);
+            length += Vector3.Distance(WayPoints[WayPoints.Count - 1].position, WayPoints[0].position);
         }
 
         return length;
@@ -73,7 +69,7 @@ public class EnemyBase : CharacterBase, IDamageable
         {
             animator.SetBool("Run",true);
             // 获取目标路径点
-            Transform targetWaypoint = waypoints[currentWaypointIndex];
+            Transform targetWaypoint = WayPoints[currentWaypointIndex];
 
             // 计算目标位置
             Vector3 direction = targetWaypoint.position - transform.position;
@@ -103,7 +99,7 @@ public class EnemyBase : CharacterBase, IDamageable
                 {
                     SetFace(1);
                 }
-                if (currentWaypointIndex >= waypoints.Count)
+                if (currentWaypointIndex >= WayPoints.Count)
                 {
                     currentWaypointIndex = 0; // 如果到达最后一个路径点，重置到第一个路径点
                 }

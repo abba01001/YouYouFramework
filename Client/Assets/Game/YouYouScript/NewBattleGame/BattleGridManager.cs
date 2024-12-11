@@ -27,9 +27,10 @@ public class BattleGridManager
     public RectTransform barImage;
     public bool Selecting => RecordSelectGrid != null;
 
-    public void InitParams(Transform _gridParent)
+    public void InitParams(Transform _gridParent,RectTransform _barImage)
     {
         gridParent = _gridParent;
+        barImage = _barImage;
         for (int i = 0; i < gridParent.childCount; i++)
         {
             var x = i / 6 + 1;
@@ -42,11 +43,11 @@ public class BattleGridManager
     }
 
     //获取最近的格子
-    public BattleGrid GetNearbyGrid()
+    public BattleGrid GetNearbyGrid(int modelId)
     {
         foreach (var value in girdList)
         {
-            if (value.CanDropCharacter())
+            if (value.CanDropCharacter(modelId))
             {
                 return value;
             }
@@ -56,20 +57,24 @@ public class BattleGridManager
 
     public async void CallHero()
     {
-        BattleGrid grid = GetNearbyGrid();
-        if (grid != null)
+        int modelId = GameUtil.RandomRange(101, 106); 
+        BattleGrid grid = GetNearbyGrid(modelId);
+        Sys_RoleAttrEntity entity = GameEntry.DataTable.Sys_RoleAttrDBModel.GetEntity(modelId);
+        if (grid != null && entity != null)
         {
             float k = 0.2f;
             Vector3 A = new Vector3(0, -200, 0);
             Vector3 B = grid.transform.position;
             B = new Vector3(B.x, B.y, A.z);
+            
             PoolObj tx = await GameEntry.Pool.GameObjectPool.SpawnAsync("Assets/Game/Download/Prefab/Effect/tx_MergerGame_01.prefab");
-            PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync(Constants.ModelPath.Hero101);
+            PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync(GameUtil.GetModelPath(modelId));
             
             tx.transform.position = A;
             Vector3[] path = BezierUtils.GetBeizerList(A, B + new Vector3(100, 100, 0), B, 20);
             obj.gameObject.SetActive(false);
             grid.FillCharacter(obj.GetComponent<GridCharacterBase>());
+            obj.GetComponent<GridCharacterBase>().InitParams(entity);
             tx.transform.DOPath(path, 1f, PathType.CatmullRom).SetEase(Ease.OutCirc).OnComplete(() =>
             {
                 GameEntry.Pool.GameObjectPool.Despawn(tx);

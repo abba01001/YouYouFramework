@@ -27,9 +27,9 @@ namespace YouYou
             {
                 Sys_RoleAttrEntity entity = new Sys_RoleAttrEntity();
                 entity.Id = ms.ReadInt();
-                entity.RoleId = ms.ReadInt();
-                entity.Level = ms.ReadInt();
-                entity.Exp = ms.ReadInt();
+                entity.ModelId = ms.ReadInt();
+                entity.AttackRange = ms.ReadFloat();
+                entity.AttackInterval = ms.ReadFloat();
                 entity.Hp = ms.ReadInt();
                 entity.Mp = ms.ReadInt();
 

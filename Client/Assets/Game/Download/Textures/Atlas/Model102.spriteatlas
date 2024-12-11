@@ -1,0 +1,176 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Model102
+  serializedVersion: 2
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: Android
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 48
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 2ef3102fb985f5d4ca902bd3e92b98f4, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 0f582c10c1aa6374ea3fa6d2938477f8, type: 3}
+  - {fileID: 21300000, guid: 32ec8020cbd921f438352b5aa874fd00, type: 3}
+  - {fileID: 21300000, guid: 46f6074029e82e14688cc349ec6dee7e, type: 3}
+  - {fileID: 21300000, guid: cd2ccba033de1814abbb393c1c00d0df, type: 3}
+  - {fileID: 21300000, guid: a340eac0e1a22124698a0f2665a3c131, type: 3}
+  - {fileID: 21300000, guid: ed586b01e22a9e1408adf907ee9aba35, type: 3}
+  - {fileID: 21300000, guid: a5bb44b1933527548bb865ac5022f433, type: 3}
+  - {fileID: 21300000, guid: bade3eb157acf654e8fbf8cb7f7cf3a5, type: 3}
+  - {fileID: 21300000, guid: 1f9099c18eb35044d9e4f571260a957f, type: 3}
+  - {fileID: 21300000, guid: e540f4d132a0cd74c96044e29af58b1b, type: 3}
+  - {fileID: 21300000, guid: bfd5c2d24f5329d47857c97132c4664d, type: 3}
+  - {fileID: 21300000, guid: 024bb6e2bdec06648b58544bbb0501d6, type: 3}
+  - {fileID: 21300000, guid: f7ab1b334bd0632459fb84d6528e1ebf, type: 3}
+  - {fileID: 21300000, guid: 4bd6ed83717fbaf49b3f9b777061d668, type: 3}
+  - {fileID: 21300000, guid: ac176d938ed39f94a86dc8c11b1bef86, type: 3}
+  - {fileID: 21300000, guid: 4fc0df93c3e7f0e42b5ddcdc2976a1c6, type: 3}
+  - {fileID: 21300000, guid: ac84d6a3233718c47a318cc921fc5b8f, type: 3}
+  - {fileID: 21300000, guid: 156867c37f6813c469523549460e9211, type: 3}
+  - {fileID: 21300000, guid: 038628d3cbe545f4b8767de78514ba20, type: 3}
+  - {fileID: 21300000, guid: da43a0e3425780945a35c25ae335afa0, type: 3}
+  - {fileID: 21300000, guid: cb9b3214ae932a04c964839db960d14e, type: 3}
+  - {fileID: 21300000, guid: 43063234cbe96394ea0e52adc9cd74ec, type: 3}
+  - {fileID: 21300000, guid: 210946a4e5342554e85d43698db2b038, type: 3}
+  - {fileID: 21300000, guid: 5f66e3655232c0448a4d3f7499eb5637, type: 3}
+  - {fileID: 21300000, guid: 15a039857d561f24588b20be9bc1b54a, type: 3}
+  - {fileID: 21300000, guid: 3af384953db255446835d9b586a32589, type: 3}
+  - {fileID: 21300000, guid: df1abbd5a2f29d141957181e4730958d, type: 3}
+  - {fileID: 21300000, guid: 2e6d92e5c43eba4458b0302bd20bee2c, type: 3}
+  - {fileID: 21300000, guid: 031d2d57bccbbfe41b946a188299dcfa, type: 3}
+  - {fileID: 21300000, guid: e93701673472c8348a920c8fb9dc9e05, type: 3}
+  - {fileID: 21300000, guid: f6602e87597b79a409f8724a191f9f16, type: 3}
+  - {fileID: 21300000, guid: 9997a897698bb7a4987d27c57ce2577b, type: 3}
+  - {fileID: 21300000, guid: 1f142ab78aca54a489e9b4932c432d6d, type: 3}
+  - {fileID: 21300000, guid: 9fd60fe731026684aa6161269e25ccc2, type: 3}
+  - {fileID: 21300000, guid: 3c1596886fead7d49ab2613ff7dbf83b, type: 3}
+  - {fileID: 21300000, guid: db558cd84dc964e479de3ae0a55c2bcf, type: 3}
+  - {fileID: 21300000, guid: 3fb4cbf89e7ecaf4987fe0867d91a601, type: 3}
+  - {fileID: 21300000, guid: 7f5d0679635012144853d3860172a316, type: 3}
+  - {fileID: 21300000, guid: 9baffa79ce293814fb0f58124eaea86e, type: 3}
+  - {fileID: 21300000, guid: 83a1fc2a0ac624e4ba10c560603fa03d, type: 3}
+  - {fileID: 21300000, guid: 63bfed6af28ca4a409c23609f77f6f7b, type: 3}
+  - {fileID: 21300000, guid: c6d1968ac53b54d4997ca952c5bd43a5, type: 3}
+  - {fileID: 21300000, guid: f50b9dcafc9895248988b59d553f97f1, type: 3}
+  - {fileID: 21300000, guid: f8223eda054b75547b60d372db3a8a87, type: 3}
+  - {fileID: 21300000, guid: 861e341b6243d324b9964aed2489ac51, type: 3}
+  - {fileID: 21300000, guid: 568d546b10953c94c89523a80a1fab90, type: 3}
+  - {fileID: 21300000, guid: 50a60f8b0b6e5574eaae7047d2f4b6c4, type: 3}
+  - {fileID: 21300000, guid: 5390f5ab6f541f249a92fb0bec9cebea, type: 3}
+  - {fileID: 21300000, guid: f850f75c11974af47a1abd7cb659b811, type: 3}
+  - {fileID: 21300000, guid: 00274d5cb5ff0f1428622526e247ec79, type: 3}
+  - {fileID: 21300000, guid: a9050d6c69e717949ae9f3c95f246b40, type: 3}
+  - {fileID: 21300000, guid: 376ef07c252a7244193c51b3ae2b6e94, type: 3}
+  - {fileID: 21300000, guid: 7d34627cfa50ce9459d0ac597f168503, type: 3}
+  - {fileID: 21300000, guid: bc5ea4dca1edcd84892716d2e5cdd63e, type: 3}
+  - {fileID: 21300000, guid: 394cb2ec4b8fca342b8dd13a74d4e3d8, type: 3}
+  - {fileID: 21300000, guid: 26d6343da2f3c6d4eb0134f02d686420, type: 3}
+  - {fileID: 21300000, guid: 1e78921eea0ece84d873dc434509681a, type: 3}
+  - {fileID: 21300000, guid: a0dd0bbef8c608e4f9717c41b9bde24d, type: 3}
+  - {fileID: 21300000, guid: 085116dfd12319443b195d40c6866ae6, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - 102_yemanren-run_03
+  - 102_yemanren-born_10
+  - 102_yemanren-born_12
+  - 102_yemanren-idle_11
+  - 102_yemanren-idle_18
+  - 102_yemanren-run_00
+  - 102_yemanren-attack1_07
+  - 102_yemanren-idle_15
+  - 102_yemanren-born_03
+  - 102_yemanren-born_01
+  - 102_yemanren-attack1_09
+  - 102_yemanren-born_13
+  - 102_yemanren-born_06
+  - 102_yemanren-idle_04
+  - 102_yemanren-born_04
+  - 102_yemanren-attack1_10
+  - 102_yemanren-run_05
+  - 102_yemanren-born_14
+  - 102_yemanren-attack1_03
+  - 102_yemanren-idle_00
+  - 102_yemanren-run_01
+  - 102_yemanren-born_02
+  - 102_yemanren-born_15
+  - 102_yemanren-idle_19
+  - 102_yemanren-idle_06
+  - 102_yemanren-idle_10
+  - 102_yemanren-attack1_05
+  - 102_yemanren-run_08
+  - 102_yemanren-born_09
+  - 102_yemanren-attack1_01
+  - 102_yemanren-idle_13
+  - 102_yemanren-idle_09
+  - 102_yemanren-idle_01
+  - 102_yemanren-born_00
+  - 102_yemanren-idle_17
+  - 102_yemanren-born_07
+  - 102_yemanren-idle_16
+  - 102_yemanren-attack1_11
+  - 102_yemanren-idle_12
+  - 102_yemanren-idle_05
+  - 102_yemanren-idle_08
+  - 102_yemanren-attack1_00
+  - 102_yemanren-run_02
+  - 102_yemanren-born_05
+  - 102_yemanren-idle_02
+  - 102_yemanren-run_09
+  - 102_yemanren-run_10
+  - 102_yemanren-run_07
+  - 102_yemanren-idle_14
+  - 102_yemanren-attack1_02
+  - 102_yemanren-idle_07
+  - 102_yemanren-born_08
+  - 102_yemanren-run_04
+  - 102_yemanren-attack1_06
+  - 102_yemanren-idle_03
+  - 102_yemanren-run_06
+  - 102_yemanren-attack1_08
+  - 102_yemanren-attack1_04
+  - 102_yemanren-born_11
+  m_RenderDataMap: {}
+  m_Tag: 102
+  m_IsVariant: 0
+  m_IsPlaceholder: 0

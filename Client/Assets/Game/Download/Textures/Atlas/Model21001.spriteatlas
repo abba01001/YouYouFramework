@@ -1,0 +1,158 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Model21001
+  serializedVersion: 2
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: Android
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 48
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: b208a20370b8acf4fae7dd1b08d8e32b, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: f3ed1720887cc8640bbfddc67d872c79, type: 3}
+  - {fileID: 21300000, guid: 50e1d15047ca3264db20849e42aacf1d, type: 3}
+  - {fileID: 21300000, guid: 6eafa8a09a105cb4cb5f63e96a76ec5d, type: 3}
+  - {fileID: 21300000, guid: 1710e121a21ca8d44a7b2cf98090b976, type: 3}
+  - {fileID: 21300000, guid: 8cdf2731cb42cc64abface4fa599993e, type: 3}
+  - {fileID: 21300000, guid: 129fb2a1aa49ade4f953a15be62ca3f3, type: 3}
+  - {fileID: 21300000, guid: a64cc162e502cfc44bf9a3a4c153ef67, type: 3}
+  - {fileID: 21300000, guid: 6f1a9f723321e7c40bfcbfd0f030bab4, type: 3}
+  - {fileID: 21300000, guid: 4a1601f2408ef3c4aa0ac67b62d92afe, type: 3}
+  - {fileID: 21300000, guid: 7a9c05f21dbecaf4db6a40ad836c77f6, type: 3}
+  - {fileID: 21300000, guid: 2e61d5a38adf6024d8b1a4892f6d483d, type: 3}
+  - {fileID: 21300000, guid: 706b8eb391e23964ab26cd8103544ff0, type: 3}
+  - {fileID: 21300000, guid: 95f341440ac06164f83528f3817c61eb, type: 3}
+  - {fileID: 21300000, guid: 33fdb74421a9e4643ba29bd841cd1a94, type: 3}
+  - {fileID: 21300000, guid: f44ed825d10255249ab6d91714fc44d5, type: 3}
+  - {fileID: 21300000, guid: bc05a28500351ce49bde57aa808f59b9, type: 3}
+  - {fileID: 21300000, guid: 3cbf71f59acf72a45893e73c72757520, type: 3}
+  - {fileID: 21300000, guid: 7696ba0619759b843bdff863c5a3c3c1, type: 3}
+  - {fileID: 21300000, guid: 26183e3645205324eb7d1e3f540de6fc, type: 3}
+  - {fileID: 21300000, guid: d1ff7e4689bb60e40a7645409677e736, type: 3}
+  - {fileID: 21300000, guid: 9d8d1b86979b8d6478180d4d4da45950, type: 3}
+  - {fileID: 21300000, guid: 6ed13d37e67a74247a2f1a698c8bd6d9, type: 3}
+  - {fileID: 21300000, guid: 11f9f5e7d977a4342b9947dc78b4d1d4, type: 3}
+  - {fileID: 21300000, guid: 0b7f2eb898a21844181ee276e184f9a1, type: 3}
+  - {fileID: 21300000, guid: 805b2ce87f3b4414c8c2621bf9960e18, type: 3}
+  - {fileID: 21300000, guid: 76964129ea1bea34c84d46a385d4362f, type: 3}
+  - {fileID: 21300000, guid: d456b94992512854eb846ff01b230030, type: 3}
+  - {fileID: 21300000, guid: dc170899da3fc98429738f36b137e112, type: 3}
+  - {fileID: 21300000, guid: 6c726fc9368f8114197e0ab40386f739, type: 3}
+  - {fileID: 21300000, guid: b7bf9df9ff7d57c41bfb59aed1358ee4, type: 3}
+  - {fileID: 21300000, guid: 208bf53a35e87434da5fb656b0c16e1b, type: 3}
+  - {fileID: 21300000, guid: 4c71e60bf81913c4187d78c68ba4a15f, type: 3}
+  - {fileID: 21300000, guid: c61e4a0ba044edd46af47fe611e593ec, type: 3}
+  - {fileID: 21300000, guid: ddf3c91ccbb85bb4bb505a710b8ac9e7, type: 3}
+  - {fileID: 21300000, guid: be69c52c5f8e20f44b84c0e6e24bbd92, type: 3}
+  - {fileID: 21300000, guid: 5028255cd037b57488f6fe9aeb404a32, type: 3}
+  - {fileID: 21300000, guid: 37aadfac9ce4bc747b87f52435894d25, type: 3}
+  - {fileID: 21300000, guid: fa12abcca1a10004cbd2f66736b8e0a7, type: 3}
+  - {fileID: 21300000, guid: 3e32720d888f3b44fa1f39e56dd07c1c, type: 3}
+  - {fileID: 21300000, guid: 10b9bd5d8c27f5d45b26df1dd62919ab, type: 3}
+  - {fileID: 21300000, guid: a6e2eacd1f6fd3443af100a5439a339d, type: 3}
+  - {fileID: 21300000, guid: b4a6441edf18c3a4ca830b6260d7b5b3, type: 3}
+  - {fileID: 21300000, guid: 3e2c1a7e50642c94991b614a2d69f620, type: 3}
+  - {fileID: 21300000, guid: 219b70ae227af8a45b62e07bbb48b33d, type: 3}
+  - {fileID: 21300000, guid: ba34690ff7ed96242bd079d71b616787, type: 3}
+  - {fileID: 21300000, guid: f2d140af3e6a18e409d94e3bc2b173dc, type: 3}
+  - {fileID: 21300000, guid: 1b71c7cf6215aac4b936bdd32d6d7188, type: 3}
+  - {fileID: 21300000, guid: b19687df2e159b441a525b254607ac93, type: 3}
+  - {fileID: 21300000, guid: 53eb57ffa719f5a4d97e80bfc187ab83, type: 3}
+  - {fileID: 21300000, guid: 9deb69ff1b40a67449c7c7d6eac5a304, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - 21001_ganranzhe-run_07
+  - 21001_ganranzhe-idle2_01
+  - 21001_ganranzhe-idle2_09
+  - 21001_ganranzhe-idle2_04
+  - 21001_ganranzhe-idle2_12
+  - 21001_ganranzhe-death_16
+  - 21001_ganranzhe-death_10
+  - 21001_ganranzhe-run_03
+  - 21001_ganranzhe-death_11
+  - 21001_ganranzhe-death_23
+  - 21001_ganranzhe-death_17
+  - 21001_ganranzhe-death_13
+  - 21001_ganranzhe-idle2_03
+  - 21001_ganranzhe-idle2_08
+  - 21001_ganranzhe-death_06
+  - 21001_ganranzhe-death_21
+  - 21001_ganranzhe-death_02
+  - 21001_ganranzhe-death_18
+  - 21001_ganranzhe-idle2_06
+  - 21001_ganranzhe-death_09
+  - 21001_ganranzhe-run_04
+  - 21001_ganranzhe-death_04
+  - 21001_ganranzhe-death_19
+  - 21001_ganranzhe-run_09
+  - 21001_ganranzhe-run_00
+  - 21001_ganranzhe-death_05
+  - 21001_ganranzhe-death_01
+  - 21001_ganranzhe-death_12
+  - 21001_ganranzhe-idle2_14
+  - 21001_ganranzhe-death_00
+  - 21001_ganranzhe-idle2_00
+  - 21001_ganranzhe-death_22
+  - 21001_ganranzhe-idle2_13
+  - 21001_ganranzhe-idle2_10
+  - 21001_ganranzhe-death_03
+  - 21001_ganranzhe-idle2_11
+  - 21001_ganranzhe-idle2_05
+  - 21001_ganranzhe-idle2_02
+  - 21001_ganranzhe-run_01
+  - 21001_ganranzhe-run_08
+  - 21001_ganranzhe-run_06
+  - 21001_ganranzhe-idle2_15
+  - 21001_ganranzhe-run_05
+  - 21001_ganranzhe-run_02
+  - 21001_ganranzhe-death_15
+  - 21001_ganranzhe-death_08
+  - 21001_ganranzhe-death_20
+  - 21001_ganranzhe-idle2_07
+  - 21001_ganranzhe-death_07
+  - 21001_ganranzhe-death_14
+  m_RenderDataMap: {}
+  m_Tag: 21001
+  m_IsVariant: 0
+  m_IsPlaceholder: 0

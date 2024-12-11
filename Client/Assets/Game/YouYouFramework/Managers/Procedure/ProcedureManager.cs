@@ -69,7 +69,9 @@ namespace YouYou
             states[(byte)ProcedureState.Preload] = new ProcedurePreload();
             states[(byte)ProcedureState.Game] = new ProcedureGame();
             states[(byte)ProcedureState.Battle] = new ProcedureBattle();
+            #if EDITORLOAD
             states[(byte)ProcedureState.MapEditor] = new ProcedureMapEditor();
+            #endif
             CurrFsm = GameEntry.Fsm.Create(this, states);
         }
         internal void OnUpdate()
