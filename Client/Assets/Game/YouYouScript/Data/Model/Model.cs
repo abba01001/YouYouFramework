@@ -14,51 +14,27 @@ public class TestModel
 }
 
 [Serializable]
-public class LevelModelData
-{
-    public string modelPrefabName;  // 模型的Prefab路径
-    public Vector3 position;         // 模型的位置
-    public Quaternion rotation;      // 模型的旋转
-    public Vector3 scale;            // 模型的缩放
-    
-    public LevelModelData() 
-    {
-        position = Vector3.zero;
-        rotation = Quaternion.identity;
-        scale = Vector3.one;
-    }
-}
-
-[Serializable]
 [MessagePackObject(keyAsPropertyName: true)]
 public class PlayerRoleData
 {
-    public List<float> playerBornPos;
-    public List<float> playerPos;
-    public List<float> playerRotate;
-    public List<float> cameraRotate;
-    public bool firstEntryLevel;
-    public int levelId;
-    public int curExp;
-    public int totalExp;
-    public int curHp;
-    public int maxHp;
-    public int curMp;
-    public int maxMp;
+    public string name;
     public int totalOnlineDuration;
     public int todayOnlineDuration;
     public Dictionary<int,int> dialogueIds;
+    public Dictionary<int, int> equipInfo;//穿戴装备信息
+    public Dictionary<int, int> bagWareHouse;//背包仓库
+    public Dictionary<int, int> equipWareHouse;//装备仓库
+    public Dictionary<string, int> roleAttr;//角色属性
     public PlayerRoleData()
     {
-        playerBornPos = new List<float>();
-        playerPos = new List<float>();
-        playerRotate = new List<float>();
-        cameraRotate = new List<float>();
-        firstEntryLevel = true;
-        levelId = 1;
         dialogueIds = new Dictionary<int, int>();
+        equipInfo = new Dictionary<int, int>();
+        bagWareHouse = new Dictionary<int, int>();
+        equipWareHouse = new Dictionary<int, int>();
+        roleAttr = new Dictionary<string, int>();
         totalOnlineDuration = 0;
         todayOnlineDuration = 0;
+        name = "";
     }
 }
 

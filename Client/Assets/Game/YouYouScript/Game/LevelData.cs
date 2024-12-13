@@ -41,14 +41,8 @@ public class LevelStage
 public class EnemyData
 {
     [LabelText("模型ID")] public int modelId; // 模型ID
-    [LabelText("血量")] public int health; // 敌人血量
-    [LabelText("攻击力")] public int attack; // 敌人攻击力
-    [LabelText("防御力")] public int defense; // 敌人防御力
-    [LabelText("类型")] public string enemyType; // 敌人类型（普通、精英、boss等）
-    [LabelText("等级")] public int level; // 敌人的等级，影响属性
     [LabelText("怪物数量")] public int enemyCount; // 敌人数量
     [LabelText("产生间隔")] public float interval; // 生成间隔
-    [LabelText("技能")] public List<EnemySkill> skills; // 敌人的技能
     [LabelText("奖励")] public List<ItemData> rewards; // 使用 List<RewardData> 替代 Dictionary
 }
 

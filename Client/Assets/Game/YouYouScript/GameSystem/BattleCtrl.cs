@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Main;
 using UnityEngine;
+using UnityEngine.Rendering;
 using YouYou;
 
 public class BattleCtrl : Singleton<BattleCtrl>
 {
     public BattleGridManager GridManager { get; set; }
-    public int TotalRounds { get; set; }  // 总回合数
+    public int MaxEnemyCount => 100; //最大敌人数
     private TimeAction TimeAction { get; set; }
     public  LevelData CurLevelData { get; set; }
     private List<Transform> Waypoints { get; set; }
@@ -93,6 +94,7 @@ public class BattleCtrl : Singleton<BattleCtrl>
             PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync(GameUtil.GetModelPath(data.enemy.modelId));
             obj.GetComponent<EnemyBase>().WayPoints = Waypoints;
             obj.GetComponent<EnemyBase>().StartRun();
+            obj.GetComponent<SortingGroup>().sortingOrder -= count;
             count++;
             GameEntry.Event.Dispatch(Constants.EventName.UpdateEnemyCount,new UpdateEnemyCountEvent(1));
             await UniTask.Delay(TimeSpan.FromSeconds(data.enemy.interval));

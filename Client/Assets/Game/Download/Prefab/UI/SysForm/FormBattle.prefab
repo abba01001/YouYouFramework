@@ -4348,6 +4348,7 @@ MonoBehaviour:
   timer: {fileID: 5828314124255343487}
   round: {fileID: 3661528067183155646}
   enermyCount: {fileID: 5501806569387131273}
+  enermyImage: {fileID: 8322187474802890496}
 --- !u!1 &8322187473931324172
 GameObject:
   m_ObjectHideFlags: 0

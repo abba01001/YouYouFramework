@@ -75,7 +75,13 @@ namespace YouYou
         private void OnLoginSuccess(object userdata)
         {
             GameEntry.UI.CloseUIForm<FormLogin>();
-            if (GameEntry.Data.IsFirstLoginTime) GameEntry.Data.IsFirstLoginTime = false;
+            GameUtil.LogError("111111111111");
+            if (GameEntry.Data.IsFirstLoginTime)
+            {
+                GameEntry.Data.InitPlayData();
+                GameEntry.Data.IsFirstLoginTime = false;
+            }
+            GameUtil.LogError("2222222222");
             GameEntry.SDK.InitTalkingData();
             GameEntry.Time.InitNetTime();
             GameEntry.Data.SaveData(true,true,true,true);

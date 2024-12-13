@@ -17,8 +17,8 @@ public class FormBattle : UIFormBase
     [SerializeField] private Text timer;
     [SerializeField] private Text round;
     [SerializeField] private Text enermyCount;
+    [SerializeField] private Image enermyImage;
     
-    private int totalEnemyCount;
     private int curEnemyCount;
     private bool isShowSetting;
     protected override void Awake()
@@ -35,6 +35,10 @@ public class FormBattle : UIFormBase
         {
             BattleCtrl.Instance.GridManager.CallHero();
         });
+        enermyImage.fillAmount = 0;
+        enermyCount.text = "";
+        round.text = "";
+        timer.text = "00:00";
         settingBtn.SetButtonClick(ShowSetting);
         settingRect.transform.localScale = new Vector3(1, 0, 1);
         BattleCtrl.Instance.GridManager.InitParams(transform.Find("GridLayout"),transform.Find("Line").GetComponent<RectTransform>());
@@ -80,13 +84,15 @@ public class FormBattle : UIFormBase
     {
         UpdateEnemyCountEvent t = userdata as UpdateEnemyCountEvent;
         curEnemyCount = Mathf.Max(curEnemyCount + t.Count, 0);
-        enermyCount.text = $"{curEnemyCount}/{totalEnemyCount}";
+        enermyCount.text = $"{curEnemyCount}/{BattleCtrl.Instance.MaxEnemyCount}";
+
+        float value = (float) curEnemyCount / BattleCtrl.Instance.MaxEnemyCount;
+        enermyImage.DOFillAmount(value, 0.5f);
     }
     
     private void UpdateRound(object userdata)
     {
         UpdateBattleRoundEvent t = userdata as UpdateBattleRoundEvent;
         round.text = $"波次:{t.Stage.stageIndex}/{t.StageCount}";
-        totalEnemyCount += t.Stage.enemy.enemyCount;
     }
 }

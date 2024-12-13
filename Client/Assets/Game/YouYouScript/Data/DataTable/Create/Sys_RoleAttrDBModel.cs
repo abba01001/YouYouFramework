@@ -29,6 +29,7 @@ namespace YouYou
                 entity.Id = ms.ReadInt();
                 entity.ModelId = ms.ReadInt();
                 entity.AttackRange = ms.ReadFloat();
+                entity.GridContain = ms.ReadInt();
                 entity.AttackInterval = ms.ReadFloat();
                 entity.Hp = ms.ReadInt();
                 entity.Mp = ms.ReadInt();

@@ -12,9 +12,9 @@ public interface IDataManager
 {
     void SaveData(bool writeLocal = true,bool ignoreLocalTime = false,bool writeCloud = false,bool ignoreCloudTime = false);
     void SaveDialogueId(int type, int id);
-    void SetPlayerPos(Vector3 pos);
     PlayerRoleData PlayerRoleData { get; set; }
     int DataUpdateTime { get; set; }
+    void InitPlayData();
 }
 
 [MessagePackObject(keyAsPropertyName: true)]
@@ -42,11 +42,7 @@ public class DataManager : Observable<DataManager>, IDataManager
     public bool IsFirstLoginTime
     {
         get => _is_first_login_time;
-        set
-        {
-            _is_first_login_time = value;
-            SaveData();
-        }
+        set => _is_first_login_time = value;
     }
     private int _data_update_time; //保存数据时的时间戳
     public int DataUpdateTime { get => _data_update_time; set { _data_update_time = value; } }
@@ -72,10 +68,6 @@ public class DataManager : Observable<DataManager>, IDataManager
     #endregion
 
     #region 临时private数据
-    [IgnoreMember] private List<float> playerPosCache = new List<float>(3){0,0,0};
-    [IgnoreMember] private List<float> playerRotateCache = new List<float>(3){0,0,0};
-    [IgnoreMember] private List<float> playerBornPosCache = new List<float>(3){0,0,0};
-    [IgnoreMember] private List<float> cameraRotateCache = new List<float>(3){0,0,0};
     [IgnoreMember] private float lastWriteTime = 0f; // 上次写入时间
     [IgnoreMember] private float lastUploadTime = 0f; // 上次上传时间
     [IgnoreMember] private float writeCooldown = 5f; // 写入的冷却时间（5秒）
@@ -97,40 +89,17 @@ public class DataManager : Observable<DataManager>, IDataManager
         }
     }
 
-    public void SetPlayerPos(Vector3 pos)
+    public void InitPlayData()
     {
-        playerPosCache[0] = pos.x;
-        playerPosCache[1] = pos.y;
-        playerPosCache[2] = pos.z;
-        PlayerRoleData.playerPos = playerPosCache;
+        _playerRoleData = new PlayerRoleData();
+        _playerRoleData.roleAttr.Add("role_level",1);
+        _playerRoleData.roleAttr.Add("role_exp", 0);
+        _playerRoleData.roleAttr.Add("role_heat", 0);
+        _playerRoleData.roleAttr.Add("role_coin", 0);
+        _playerRoleData.roleAttr.Add("role_snow", 0);
+        _playerRoleData.roleAttr.Add("role_liveness", 0);
     }
-
-    public void SetPlayerRotate(Vector3 rotate)
-    {
-        playerRotateCache[0] = rotate.x;
-        playerRotateCache[1] = rotate.y;
-        playerRotateCache[2] = rotate.z;
-        PlayerRoleData.playerRotate = playerRotateCache;
-    }
-
-    public void SetPlayerBornPos(Vector3 pos)
-    {
-        playerBornPosCache[0] = pos.x;
-        playerBornPosCache[1] = pos.y;
-        playerBornPosCache[2] = pos.z;
-        PlayerRoleData.playerBornPos = playerBornPosCache;
-    }
-
-    public void SetCameraRotate(Vector3 rotate)
-    {
-        cameraRotateCache[0] = rotate.x;
-        cameraRotateCache[1] = rotate.y;
-        cameraRotateCache[2] = rotate.z;
-        PlayerRoleData.cameraRotate = cameraRotateCache;
-    }
-
-    #endregion
-
+    
     public void OnUpdate()
     {
         
@@ -188,4 +157,6 @@ public class DataManager : Observable<DataManager>, IDataManager
             }
         }
     }
+    
+    #endregion
 }

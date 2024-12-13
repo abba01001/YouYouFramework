@@ -8,7 +8,7 @@ namespace YouYou
     public partial class Sys_RoleAttrEntity : DataTableEntityBase
     {
         /// <summary>
-        /// 角色id
+        /// 模型id
         /// </summary>
         public int ModelId;
 
@@ -16,6 +16,11 @@ namespace YouYou
         /// 攻击范围
         /// </summary>
         public float AttackRange;
+
+        /// <summary>
+        /// 格子容纳数
+        /// </summary>
+        public int GridContain;
 
         /// <summary>
         /// 攻击间隔

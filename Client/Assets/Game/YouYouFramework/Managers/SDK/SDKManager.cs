@@ -297,7 +297,8 @@ public class SDKManager : Observable<SDKManager>
         {
             Debug.Log("注册成功");
             GameEntry.Data.IsFirstLoginTime = true;
-            DownloadGameData(GameEntry.Data.UserId);
+            Constants.IsLoginGame = true;
+            GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);
         }
         else
         {

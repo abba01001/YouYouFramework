@@ -37,6 +37,7 @@ public class BattleGrid : MonoBehaviour, IPointerEnterHandler, IPointerDownHandl
     {
         if (OccupiedCharacters.Count > 0)
         {
+            if (OccupiedCharacters[0].config.GridContain == 1) return false;
             if (OccupiedCharacters.Count < 3)
             {
                 return OccupiedCharacters[0].config.ModelId == model;

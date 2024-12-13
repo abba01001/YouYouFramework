@@ -13,15 +13,9 @@
             "stageIndex": "1",
             "startTime": 3,
             "enemy": {
-                "modelId": 21001,
-                "health": 30,
-                "attack": 0,
-                "defense": 0,
-                "enemyType": "",
-                "level": 0,
+                "modelId": 21003,
                 "enemyCount": 10,
                 "interval": 0.5,
-                "skills": [],
                 "rewards": []
             },
             "events": [],
@@ -32,14 +26,8 @@
             "startTime": 25,
             "enemy": {
                 "modelId": 21001,
-                "health": 30,
-                "attack": 0,
-                "defense": 0,
-                "enemyType": "",
-                "level": 0,
                 "enemyCount": 15,
                 "interval": 0.5,
-                "skills": [],
                 "rewards": []
             },
             "events": [],

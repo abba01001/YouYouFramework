@@ -1,0 +1,124 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Main
+  serializedVersion: 2
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: Android
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 50
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 90ce7cc3c0f9c7c44b2519b4dfc17086, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 3edb4411235bf584abe19a60f5064947, type: 3}
+  - {fileID: 21300000, guid: 04c40b21a89ad3c44bdf843318f49dbe, type: 3}
+  - {fileID: 21300000, guid: 48525651ef4910d438acddbc4bffcfbd, type: 3}
+  - {fileID: 21300000, guid: cb7cc081e8e46244dad44171d54a1e37, type: 3}
+  - {fileID: 21300000, guid: 87251f32c8dcc414287a0f9b368c29c0, type: 3}
+  - {fileID: 21300000, guid: ec674cc2a8aea3d41a40e51b3fabbbb7, type: 3}
+  - {fileID: 21300000, guid: 9b1787e2fe13e1f44be091e5151fd032, type: 3}
+  - {fileID: 21300000, guid: c4fafbf21521aa549838a244b8cac6ff, type: 3}
+  - {fileID: 21300000, guid: 25598603862915e4db5a84deb59f99c5, type: 3}
+  - {fileID: 21300000, guid: 14426653d8e73f544b08dc5f8a5c9c40, type: 3}
+  - {fileID: 21300000, guid: cf7e4f145d60af446b098c523a5d9102, type: 3}
+  - {fileID: 21300000, guid: 15971ea4e8cf11d4dbaea066300dcca6, type: 3}
+  - {fileID: 21300000, guid: 6c6d71f4605277949adb854f59112857, type: 3}
+  - {fileID: 21300000, guid: 9f1103d68c34bf84ab76c74f0375cef1, type: 3}
+  - {fileID: 21300000, guid: fb39b15894b43be4ca0866552c5a12d3, type: 3}
+  - {fileID: 21300000, guid: 3ebd67781c9939f448e8c6574db8342f, type: 3}
+  - {fileID: 21300000, guid: 4fb6af1971e662641876619228e35c08, type: 3}
+  - {fileID: 21300000, guid: 545dd4a9300762c43a8770762c34a749, type: 3}
+  - {fileID: 21300000, guid: af68b8c9afb6b524498057440992618f, type: 3}
+  - {fileID: 21300000, guid: adfc0fd95d798fb44998eba33cec7420, type: 3}
+  - {fileID: 21300000, guid: feba077a6fb8266478adc41ae83f1fbc, type: 3}
+  - {fileID: 21300000, guid: 4d48a8bae80319d42ac8681f456b56da, type: 3}
+  - {fileID: 21300000, guid: 324e105c2a68c334794daddeac460528, type: 3}
+  - {fileID: 21300000, guid: acb6c95ca7dca6e4699d8d6a38cb357d, type: 3}
+  - {fileID: 21300000, guid: 5d3dc08c5d970114c809f78063e3bcb8, type: 3}
+  - {fileID: 21300000, guid: 60ff97cc08941274c8fb08c0b6300cb7, type: 3}
+  - {fileID: 21300000, guid: c31b89bd51ddf204d9a3713d1fecd6ab, type: 3}
+  - {fileID: 21300000, guid: 4b98ca8e4b6f3e6449550154dfbae783, type: 3}
+  - {fileID: 21300000, guid: 930014fe147c4ad4bb0832ec720552b5, type: 3}
+  - {fileID: 21300000, guid: 2bd9bb3f531fc574bb4f53c724eca7f6, type: 3}
+  - {fileID: 21300000, guid: 0e57ce8f4e3b9ad4c8b987f2335f3218, type: 3}
+  - {fileID: 21300000, guid: d540dbcf7ad54d148857d72b979cca33, type: 3}
+  - {fileID: 21300000, guid: 283894ff45f41b445b06500438256417, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - main_gk_line_
+  - main_btn_lock
+  - main_tips1_1
+  - main_dengji_bg
+  - main_btn_B1
+  - mian_touxiang_bg
+  - main_tips1
+  - main_jindutiaoB1_di
+  - main_tips4
+  - main_btn_A1
+  - main_jindutiao1
+  - main_btn_E2
+  - mian_frame_guanzhi
+  - main_btn_huanqu
+  - main_btn_D2
+  - main_btn_B2
+  - main_more_bg
+  - main_chatbg
+  - main_btn_C1
+  - main_btn_C2
+  - mian_phb_icon_qiehuan
+  - main_tips5
+  - main_huodong_bg1
+  - main_btn_hyzd
+  - mian_phb_frame_qiehuan
+  - main_btn_A2
+  - main_btn_kspp
+  - main_lock1
+  - main_btn_E1
+  - main_btn_D1
+  - main_huodong_mrzb
+  - mian_frame
+  - main_tips2
+  m_RenderDataMap: {}
+  m_Tag: Main
+  m_IsVariant: 0
+  m_IsPlaceholder: 0

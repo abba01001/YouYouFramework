@@ -103,40 +103,7 @@ namespace YouYou
         //     GameEntry.Event?.Dispatch(Constants.EventName.UpdatePlayerPos,new Vector3(levelData.bornPos[0],levelData.bornPos[1],levelData.bornPos[2]));
         // }
         //
-        // 实例化预制体
-        private void InstantiatePrefab(LevelModelData modelData, Transform parent)
-        {
-            string prefabPath = GetPrefabPath(modelData);
-            GameObject prefab = GameUtil.LoadPrefabClone(prefabPath);
-            prefab.transform.localScale = modelData.scale;
-            prefab.transform.position = modelData.position;
-            prefab.transform.rotation = modelData.rotation;
-            prefab.transform.SetParent(parent);
-            prefab.transform.localScale = modelData.scale;
-        }
-        
-        // 获取预制体路径
-        private string GetPrefabPath(LevelModelData modelData)
-        {
-            string prefabPath = "";
-            if (modelData.modelPrefabName.Contains("Castle"))
-            {
-                prefabPath = Constants.CASTLEPATH + $"{modelData.modelPrefabName}.prefab";
-            }
-            else if (modelData.modelPrefabName.Contains("Graveyard"))
-            {
-                prefabPath = Constants.GRAVEYARDPATH + $"{modelData.modelPrefabName}.prefab";
-            }
-            else
-            {
-#if UNITY_EDITOR
-                EditorUtility.DisplayDialog("加载预制体错误", $"类型{modelData.modelPrefabName}", "确定");
-#endif
-                return "";
-            }
-            return prefabPath; // 自定义路径
-        }
-        
+
         internal override void OnUpdate()
         {
             base.OnUpdate();
