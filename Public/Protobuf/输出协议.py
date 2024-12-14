@@ -69,7 +69,7 @@ def copy_files_to_target(source_dir, target_dir):
 
 def main():
     # 设置路径
-    bin_dir = 'bin'
+    bin_dir = 'include'
     proto_root = 'local'
     output_dir = 'publish'
     client_dir = os.path.join('..', '..', 'Client', 'Assets', 'Game', 'Download', 'Protocol')
