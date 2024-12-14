@@ -26,6 +26,3 @@ MonoBehaviour:
   - Enabled: 1
     Name: "\u6253\u5370\u9519\u8BEF\u65E5\u5FD7"
     Macro: DEBUG_LOG_ERROR
-  - Enabled: 0
-    Name: "\u5730\u56FE\u7F16\u8F91\u5668\u6A21\u5F0F"
-    Macro: MAPEDITOR_MODEL

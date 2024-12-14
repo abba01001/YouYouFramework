@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18ead1d033e2ed04abcd0fb9eec905eb, type: 3}
   m_Name: ParamsSettings
   m_EditorClassIdentifier: 
+  IsMapEditorMode: 0
   WebAccountUrl: 
   TestWebAccountUrl: 127.0.0.1:8083
-  IsTest: 1
+  IsTestMode: 0
   PostIsEncrypt: 0
   PostContentType: 
   GeneralParams:

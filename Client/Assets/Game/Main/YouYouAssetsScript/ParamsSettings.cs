@@ -8,12 +8,16 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "YouYouAsset/ParamsSettings")]
 public class ParamsSettings : ScriptableObject
 {
-    [BoxGroup("InitUrl")] public string WebAccountUrl;
-    [BoxGroup("InitUrl")] public string TestWebAccountUrl;
-    [BoxGroup("InitUrl")] public bool IsTest;
-    [BoxGroup("InitUrl")] public bool PostIsEncrypt;//是否加密(如时间戳)
-    [BoxGroup("InitUrl")] public string PostContentType;//设置ContentType
+    [LabelText("启动地图编辑器模式")]public bool IsMapEditorMode;//地图编辑器模式
 
+    
+    [BoxGroup("网络参数设置")] public string WebAccountUrl;
+    [BoxGroup("网络参数设置")][LabelText("测试服务器IP")] public string TestWebAccountUrl;
+    [BoxGroup("网络参数设置")][LabelText("测试模式")] public bool IsTestMode;
+    [BoxGroup("网络参数设置")] public bool PostIsEncrypt;//是否加密(如时间戳)
+    [BoxGroup("网络参数设置")] public string PostContentType;//设置ContentType
+
+    
     #region 常规数据
     /// <summary>
     /// 常规数据

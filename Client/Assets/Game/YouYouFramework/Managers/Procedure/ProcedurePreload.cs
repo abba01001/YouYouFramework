@@ -68,14 +68,15 @@ namespace YouYou
                 ShowLoginPanel = true;
                 MainEntry.Instance.PreloadComplete();
 
-#if !MAPEDITOR_MODEL
+#if UNITY_EDITOR
+                if (MainEntry.ParamsSettings.IsMapEditorMode)
+                {
+                    GameEntry.Procedure.ChangeState(ProcedureState.MapEditor);
+                    return;
+                }
+#endif
                 GameEntry.SDK.InitSqlConnect();
                 GameEntry.UI.OpenUIForm<FormLogin>();
-#else
-                GameEntry.Procedure.ChangeState(ProcedureState.MapEditor);
-#endif
-                
-
             }
         }
 

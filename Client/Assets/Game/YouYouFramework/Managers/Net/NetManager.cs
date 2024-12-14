@@ -100,17 +100,14 @@ public class NetManager
         {
             // 更新连接状态
             connectionStatus = ConnectionStatus.Disconnected;
-            // 停止心跳协程（如果有）
             heartbeatAction?.Stop();
-            // 关闭 Socket
             if (socket != null)
             {
                 socket.Shutdown(SocketShutdown.Both); // 停止发送和接收数据
                 socket.Close(); // 释放 Socket 资源
                 socket = null;
+                GameUtil.LogError("服务器连接已断开。");
             }
-            // 日志提示
-            GameUtil.LogError("服务器连接已断开。");
         }
         catch (Exception e)
         {
