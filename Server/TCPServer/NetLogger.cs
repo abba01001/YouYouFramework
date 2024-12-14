@@ -27,7 +27,8 @@ public class NetLogger
 
     public void LogMessage(Socket socket, string message)
     {
-        logQueue.Enqueue($"{DateTime.UtcNow}---{socket.RemoteEndPoint}---{message}");
+        logQueue.Enqueue($"{DateTime.Now}---{socket.RemoteEndPoint}---{message}");
+        Console.WriteLine(message);
     }
 
     private void StartLogWriter()

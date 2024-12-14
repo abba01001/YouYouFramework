@@ -71,6 +71,7 @@ namespace YouYou
         public static YouYouSceneManager Scene { get; private set; }
         public static LoaderManager Loader { get; private set; }
         public static UIManager UI { get; private set; }
+        public static NetManager Net { get; private set; }
         public static AudioManager Audio { get; private set; }
         public static AtlasManager Atlas { get; private set; }
         public static CrossPlatformInputManager Input { get; private set; }
@@ -111,6 +112,7 @@ namespace YouYou
             Scene = new YouYouSceneManager();
             Loader = new LoaderManager();
             UI = new UIManager();
+            Net = new NetManager();
             Audio = new AudioManager();
             Atlas = new AtlasManager();
             Input = new CrossPlatformInputManager();
@@ -129,6 +131,7 @@ namespace YouYou
             Scene.Init();
             Loader.Init();
             UI.Init();
+            Net.Init();
             Audio.Init();
             Atlas.Init();
             SDK.Init();
@@ -211,6 +214,7 @@ namespace YouYou
             Scene.OnUpdate();
             Loader.OnUpdate();
             UI.OnUpdate();
+            Net.OnUpdate();
             Audio.OnUpdate();
             Atlas.OnUpdate();
             SDK.OnUpdate();
@@ -228,6 +232,7 @@ namespace YouYou
         private void OnApplicationQuit()
         {
             Data.SaveData(true,true, true, true);
+            Net.DisConnectServer();
             Logger.SyncLog();
             Logger.Dispose();
             Fsm.Dispose();

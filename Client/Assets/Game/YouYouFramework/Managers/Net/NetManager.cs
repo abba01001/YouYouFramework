@@ -7,46 +7,44 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using System.Linq;
+using Cysharp.Threading.Tasks;
+using Main;
 using Protocols;
+using YouYou;
 
-public class NetManager : MonoBehaviour
+public class NetManager
 {
-    public static NetManager Instance => instance;
-    private static NetManager instance;
-
     private Socket socket;
     private Queue<byte[]> sendQueue = new Queue<byte[]>();
     private Queue<byte[]> receiveQueue = new Queue<byte[]>();
     private byte[] receiveBytes = new byte[1024 * 1024];
 
-    private Coroutine heartbeatCoroutine;
+    private TimeAction heartbeatAction;
     private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
-    private const float heartbeatInterval = 10f; // 心跳包发送间隔
-    private const float heartbeatTimeout = 3f; // 心跳包确认超时
-
+    
+    private int CurReconnectCount; // 当前重连次数
+    private bool IsReconnect;
+    private int HeartInterval => MainEntry.ParamsSettings.GetGradeParamData("HeartInterval");
+    private int ConnectInterval => MainEntry.ParamsSettings.GetGradeParamData("ConnectInterval");
+    private int MaxReconnect => MainEntry.ParamsSettings.GetGradeParamData("MaxReconnect");
+    
     private enum ConnectionStatus { Connected, Disconnected, Unknown }
     private ConnectionStatus connectionStatus = ConnectionStatus.Unknown;
 
-    private int reconnectCount = 0; // 当前重连次数
-    private const int maxReconnectAttempts = 3; // 最大重连次数
-    private int currentMessageId = 1; // 消息ID计数器
-
+    
     public NetLogger Logger;
-    public RequestHandler Requset;
-    public ResponseHandler Response;
+    public NetRequestHandler Requset;
+    public NetResponseHandler NetResponse;
 
-    private void Awake()
+    public void Init()
     {
-        if (instance == null)
-        {
-            instance = this;
-            Logger = new NetLogger(TimeSpan.FromSeconds(5));
-            DontDestroyOnLoad(gameObject);
-        }
+        //Logger = new NetLogger(TimeSpan.FromSeconds(5));
+        //Main.MainEntry.ParamsSettings.GetGradeParamData("MobileDebug")
+
     }
 
-    private void Update()
+    public void OnUpdate()
     {
         ProcessReceivedMessages();
         // 检查连接状态
@@ -61,32 +59,65 @@ public class NetManager : MonoBehaviour
         }
     }
 
-    public void ConnectServer()
+    public async Task ConnectServerAsync()
     {
         const string ip = "127.0.0.1"; // 使用本地测试
         const int port = 8080;
 
         if (connectionStatus == ConnectionStatus.Connected) return;
-        reconnectCount = 0; // 重置重连次数
         socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        Requset = new RequestHandler(socket);
-        Response = new ResponseHandler(socket,this.Requset);
+        Requset = new NetRequestHandler(socket);
+        NetResponse = new NetResponseHandler(socket, this.Requset);
 
         try
         {
-            socket.Connect(new IPEndPoint(IPAddress.Parse(ip), port));
+            await socket.ConnectAsync(new IPEndPoint(IPAddress.Parse(ip), port)); // 异步连接
+            GameEntry.Log(LogCategory.NetWork, "连接服务器成功");
+            Requset.UpdateSenderId();
             connectionStatus = ConnectionStatus.Connected;
-            reconnectCount = 0;
-
+            CurReconnectCount = 0;
             Task.Run(SendMessagesAsync);
             Task.Run(ReceiveMessagesAsync);
-            heartbeatCoroutine = StartCoroutine(SendHeartbeat());
+            heartbeatAction?.Stop();
+            heartbeatAction = GameEntry.Time.CreateTimerLoop(this, 1f, -1, SendHeartbeat);
         }
         catch (SocketException e)
         {
             HandleConnectionError(e);
         }
     }
+
+
+    public void DisConnectServer()
+    {
+        // 检查是否已经连接
+        if (connectionStatus != ConnectionStatus.Connected)
+        {
+            GameUtil.LogError("未连接到服务器，无需断开。");
+            return;
+        }
+        try
+        {
+            // 更新连接状态
+            connectionStatus = ConnectionStatus.Disconnected;
+            // 停止心跳协程（如果有）
+            heartbeatAction?.Stop();
+            // 关闭 Socket
+            if (socket != null)
+            {
+                socket.Shutdown(SocketShutdown.Both); // 停止发送和接收数据
+                socket.Close(); // 释放 Socket 资源
+                socket = null;
+            }
+            // 日志提示
+            GameUtil.LogError("服务器连接已断开。");
+        }
+        catch (Exception e)
+        {
+            GameUtil.LogError($"断开服务器时发生异常: {e.Message}");
+        }
+    }
+
 
     private async Task SendMessagesAsync()
     {
@@ -97,7 +128,9 @@ public class NetManager : MonoBehaviour
             lock (sendQueue)
             {
                 if (sendQueue.Count > 0)
+                {
                     messageToSend = sendQueue.Dequeue();
+                }
             }
 
             if (messageToSend != null)
@@ -156,7 +189,7 @@ public class NetManager : MonoBehaviour
             try
             {
                 BaseMessage receivedMsg = BaseMessage.Parser.ParseFrom(tempMsg); // 解析收到的消息
-                Response.HandleResponse(receivedMsg);
+                NetResponse.HandleResponse(receivedMsg);
             }
             catch (Exception e)
             {
@@ -166,40 +199,50 @@ public class NetManager : MonoBehaviour
     }
 
 
-    private IEnumerator SendHeartbeat()
+    private void SendHeartbeat(int second)
     {
-        while (connectionStatus == ConnectionStatus.Connected)
+        if (second % HeartInterval == 0)
         {
             Requset.c2s_request_heart_beat();
-            cancellationTokenSource.CancelAfter(TimeSpan.FromSeconds(heartbeatTimeout));
-            yield return new WaitForSeconds(heartbeatInterval);
         }
     }
+
 
     private void HandleConnectionError(SocketException e)
     {
-        Logger.LogMessage(socket, $"连接错误: {e.ErrorCode} {e.Message}");
+        //Logger.LogMessage(socket, $"连接错误: {e.ErrorCode} {e.Message}");
         connectionStatus = ConnectionStatus.Disconnected;
     }
 
-    private async void HandleDisconnected()
+    public async void HandleDisconnected()
     {
         connectionStatus = ConnectionStatus.Disconnected;
-        Logger.LogMessage(socket, "连接已断开");
 
-        if (reconnectCount < maxReconnectAttempts)
+        while (CurReconnectCount < MaxReconnect)
         {
-            reconnectCount++;
-            Debug.Log($"尝试重连... 第 {reconnectCount} 次");
-        
-            await Task.Delay(2000); // 等待 2 秒后重连
-            ConnectServer();
+            if (!IsReconnect)
+            {
+                IsReconnect = true;
+                //弹出重新连接转圈UI
+                GameEntry.UI.OpenUIForm<FormCircle>();
+            }
+            CurReconnectCount++;
+            GameUtil.LogError($"尝试重连... 第 {CurReconnectCount} 次");
+            await ConnectServerAsync(); // 异步连接
+            // 如果连接成功，就退出重连逻辑
+            if (connectionStatus == ConnectionStatus.Connected)
+            {
+                IsReconnect = false;
+                //关闭转圈UI
+                GameEntry.UI.CloseUIForm<FormCircle>();
+                GameUtil.LogError("连接成功，退出重连逻辑");
+                return;
+            }
+            await UniTask.Delay(ConnectInterval * 1000);
         }
-        else
-        {
-            Debug.LogWarning("已达到最大重连次数。");
-        }
+        Debug.LogWarning("已达到最大重连次数，停止重连。");
     }
+
 
 
     private void Close()
@@ -209,12 +252,7 @@ public class NetManager : MonoBehaviour
         socket.Shutdown(SocketShutdown.Both);
         socket.Close();
         connectionStatus = ConnectionStatus.Disconnected;
-
-        if (heartbeatCoroutine != null)
-        {
-            StopCoroutine(heartbeatCoroutine);
-            heartbeatCoroutine = null;
-        }
+        heartbeatAction?.Stop();
     }
 
     private void OnDestroy()

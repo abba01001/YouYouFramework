@@ -27,13 +27,20 @@ namespace YouYou
             m_CurrProgress = 0;
 
             BeginTask();
-            GameEntry.Event.AddEventListener(Constants.EventName.LoginSuccess,OnLoginSuccess);
+            GameEntry.Event.AddEventListener(Constants.EventName.LoginSuccess, userdata => 
+            {
+                _ = OnLoginSuccess(userdata); // 忽略返回值，直接运行异步任务
+            });
+
         }
 
         internal override void OnLeave()
         {
             base.OnLeave();
-            GameEntry.Event.RemoveEventListener(Constants.EventName.LoginSuccess,OnLoginSuccess);
+            GameEntry.Event.RemoveEventListener(Constants.EventName.LoginSuccess, userdata => 
+            {
+                _ = OnLoginSuccess(userdata); // 忽略返回值，直接运行异步任务
+            });
         }
 
         internal override void OnUpdate()
@@ -72,20 +79,24 @@ namespace YouYou
             }
         }
 
-        private void OnLoginSuccess(object userdata)
+        private async UniTask OnLoginSuccess(object userdata)
         {
+            await GameEntry.Net.ConnectServerAsync();
             GameEntry.UI.CloseUIForm<FormLogin>();
-            GameUtil.LogError("111111111111");
             if (GameEntry.Data.IsFirstLoginTime)
             {
                 GameEntry.Data.InitPlayData();
                 GameEntry.Data.IsFirstLoginTime = false;
             }
-            GameUtil.LogError("2222222222");
             GameEntry.SDK.InitTalkingData();
             GameEntry.Time.InitNetTime();
             GameEntry.Data.SaveData(true,true,true,true);
             GameEntry.Procedure.ChangeState(ProcedureState.Game);
+        }
+
+        private void OnConnectServerSuccess(object userdata)
+        {
+            
         }
 
         

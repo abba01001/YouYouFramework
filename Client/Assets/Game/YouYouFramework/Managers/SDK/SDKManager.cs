@@ -101,12 +101,9 @@ public class SDKManager : Observable<SDKManager>
                 GameEntry.LogError($"下载成功，保存路径: {tempFilePath}");
                 GameEntry.Data.InitGameData(GetGameData(localFilePath, tempFilePath));
                 Constants.IsLoginGame = true;
+                GameEntry.Log(LogCategory.NetWork,"登录数据库成功");
+                GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);
             }
-            else
-            {
-                Constants.IsLoginGame = true;
-            }
-            GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);
         }
         catch (Exception ex)
         {
@@ -295,9 +292,9 @@ public class SDKManager : Observable<SDKManager>
 
         if (await InsertAsync(accountId, passWord))
         {
-            Debug.Log("注册成功");
             GameEntry.Data.IsFirstLoginTime = true;
             Constants.IsLoginGame = true;
+            GameEntry.Log(LogCategory.NetWork,"注册用户成功");
             GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);
         }
         else
@@ -454,7 +451,7 @@ public class SDKManager : Observable<SDKManager>
 
         //用户获得隐私授权后才能调用StartA()
         TalkingDataSDK.StartA();
-        GameUtil.LogError("初始化TalkingDataSDK完成");
+        GameEntry.Log(LogCategory.NetWork,"初始化TalkingDataSDK完成");
     }
 
     #endregion

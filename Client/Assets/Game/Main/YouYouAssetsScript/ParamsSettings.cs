@@ -23,6 +23,11 @@ public class ParamsSettings : ScriptableObject
     {
         [TableColumnWidth(260, Resizable = false)]
         /// <summary>
+        /// 参数名
+        /// </summary>
+        public string Name;
+        
+        /// <summary>
         /// 参数Key
         /// </summary>
         public string Key;

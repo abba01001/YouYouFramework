@@ -5,16 +5,16 @@ using Protocols;
 using Protocols.Item;
 using UnityEngine;
 
-public class ResponseHandler
+public class NetResponseHandler
 {
     private Socket socket;
-    private RequestHandler request;
+    private NetRequestHandler _netRequest;
     private readonly Dictionary<string, Action<BaseMessage>> _handlers = new Dictionary<string, Action<BaseMessage>>();
 
-    public ResponseHandler(Socket socket, RequestHandler request)
+    public NetResponseHandler(Socket socket, NetRequestHandler netRequest)
     {
         this.socket = socket;
-        this.request = request;
+        this._netRequest = netRequest;
         InitializeHandlers();
     }
 
@@ -44,9 +44,10 @@ public class ResponseHandler
     // 示例处理方法，接收 BaseMessage 作为参数
     private void s2c_handle_request_heart_beat(BaseMessage message)
     {
+        GameUtil.LogError($"收到心跳回应");
         ProtocolHelper.UnpackData<Protocols.Item.ItemData>(message, (itemData) =>
         {
-            NetManager.Instance.Logger.LogMessage(socket,$"解包成功: Item ID: {itemData.ItemId}, Item Name: {itemData.ItemName}");
+            //NetManager.Instance.Logger.LogMessage(socket,$"解包成功: Item ID: {itemData.ItemId}, Item Name: {itemData.ItemName}");
         });
     }
 

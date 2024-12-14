@@ -48,11 +48,6 @@ public class ResponseHandler
             //NetManager.Instance.Logger.LogMessage(socket,$"解包成功: Item ID: {itemData.ItemId}, Item Name: {itemData.ItemName}");
         });
         // 如果当前 socketA 的 ID 和消息的发送者 ID 相同，说明是自己发出的消息，不处理
-        if (message.SenderId == socket.LocalEndPoint.ToString())
-        {
-            Console.WriteLine("收到自己发送的消息，忽略处理。");
-            return;
-        }
         request.c2s_request_heart_beat();
     }
 

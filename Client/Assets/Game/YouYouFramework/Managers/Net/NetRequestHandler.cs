@@ -3,27 +3,48 @@ using System.Net.Sockets;
 using Google.Protobuf;
 using Protocols;
 using Protocols.Item;
+using YouYou;
 
 
-public class RequestHandler
+public class NetRequestHandler
 {
     private Socket socket;
-    public RequestHandler(Socket socket)
+    private string senderId;
+    public NetRequestHandler(Socket socket)
     {
         this.socket = socket;
     }
+
+    public void UpdateSenderId()
+    {
+        this.senderId = socket.RemoteEndPoint.ToString();
+    }
+    
     private void SendMessage<T>(T data) where T : IMessage<T>
     {
-        string json = data.ToJson();
+        // 检查连接是否有效
+        byte[] messageBytes = HandleMessage(data);
+        if (socket == null || !socket.Connected)
+        {
+            GameUtil.LogError("服务器已断开,无法发送心跳包");
+            GameEntry.Net.HandleDisconnected(); // 处理连接断开
+            GameEntry.Net.EnqueueMsg(messageBytes);
+            return; // 退出心跳发送循环
+        }
+        GameEntry.Net.EnqueueMsg(messageBytes);
+    }
+
+    private byte[] HandleMessage<T>(T data) where T : IMessage<T>
+    {
         byte[] byteArrayData = data.ToByteArray();
         BaseMessage message = new BaseMessage();
         message.Type = typeof(T).Name;
         message.Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();// 获取当前时间戳
-        message.SenderId = socket.RemoteEndPoint.ToString(); // 设置发送者ID
+        message.SenderId = this.senderId; // 设置发送者ID
         message.Data = ByteString.CopyFrom(byteArrayData); // 直接将序列化后的字节数组放入 Data
-        NetManager.Instance.Logger.LogMessage(socket,$"发送内容:{json}");
+        GameUtil.LogError($"发送内容{message.ToJson()}");
         byte[] messageBytes = message.ToByteArray();
-        NetManager.Instance.EnqueueMsg(messageBytes);
+        return messageBytes;
     }
 
     #region 发送协议
@@ -35,7 +56,6 @@ public class RequestHandler
         {
             /* 初始化具体业务数据 */
         };
-        Console.WriteLine("心跳包数据准备好了...");
         SendMessage(heartBeatMsg);
     }
 
