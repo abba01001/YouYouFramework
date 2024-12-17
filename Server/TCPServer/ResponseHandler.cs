@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using Protocols;
+using Protocols.Guild;
 using Protocols.Item;
 
 public class ResponseHandler
@@ -21,6 +22,7 @@ public class ResponseHandler
     {
         // 注册心跳包处理器
         RegisterHandler(nameof(HeartBeatMsg), s2c_handle_request_heart_beat);
+        RegisterHandler(nameof(GuildListMsg), s2c_handle_request_guild_list);
     }
     
     public void RegisterHandler(string messageType, Action<BaseMessage> handler)
@@ -47,8 +49,17 @@ public class ResponseHandler
         {
             //NetManager.Instance.Logger.LogMessage(socket,$"解包成功: Item ID: {itemData.ItemId}, Item Name: {itemData.ItemName}");
         });
-        // 如果当前 socketA 的 ID 和消息的发送者 ID 相同，说明是自己发出的消息，不处理
         request.c2s_request_heart_beat();
+    }
+
+    private void s2c_handle_request_guild_list(BaseMessage message)
+    {
+        //处理业务逻辑
+        ProtocolHelper.UnpackData<Protocols.Guild.GuildList>(message, (itemData) =>
+        {
+            //NetManager.Instance.Logger.LogMessage(socket,$"解包成功: Item ID: {itemData.ItemId}, Item Name: {itemData.ItemName}");
+        });
+        request.c2s_request_guild_list();
     }
 
     private void s2c_handle_other(BaseMessage message)

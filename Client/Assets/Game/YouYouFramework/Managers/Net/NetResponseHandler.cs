@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using Protocols;
+using Protocols.Guild;
 using Protocols.Item;
 using UnityEngine;
 
@@ -18,10 +19,11 @@ public class NetResponseHandler
         InitializeHandlers();
     }
 
+    // 注册响应
     public void InitializeHandlers()
     {
-        // 注册心跳包处理器
         RegisterHandler(nameof(HeartBeatMsg), s2c_handle_request_heart_beat);
+        RegisterHandler(nameof(GuildListMsg), s2c_handle_request_guild_list);
     }
     
     public void RegisterHandler(string type, Action<BaseMessage> handler)
@@ -48,6 +50,19 @@ public class NetResponseHandler
         ProtocolHelper.UnpackData<Protocols.Item.ItemData>(message, (itemData) =>
         {
             //NetManager.Instance.Logger.LogMessage(socket,$"解包成功: Item ID: {itemData.ItemId}, Item Name: {itemData.ItemName}");
+        });
+    }
+    
+    private void s2c_handle_request_guild_list(BaseMessage message)
+    {
+        GameUtil.LogError($"收到心跳回应");
+        ProtocolHelper.UnpackData<Protocols.Guild.GuildListMsg>(message, (data) =>
+        {
+            GameUtil.LogError($"解包成功:{data.GuildList.Guilds.Count}=={data.GuildList.CurrentPage}");
+            foreach (var pair in data.GuildList.Guilds)
+            {
+                GameUtil.LogError(pair.Level);
+            }
         });
     }
 

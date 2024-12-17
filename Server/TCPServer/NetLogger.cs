@@ -27,7 +27,10 @@ public class NetLogger
 
     public void LogMessage(Socket socket, string message)
     {
-        logQueue.Enqueue($"{DateTime.Now}---{socket.RemoteEndPoint}---{message}");
+        if (socket != null)
+        {
+            logQueue.Enqueue($"{DateTime.Now}---{socket.RemoteEndPoint}---{message}");
+        }
         Console.WriteLine(message);
     }
 
@@ -54,7 +57,7 @@ public class NetLogger
         }
 
         // 追加日志内容到文件
-        await File.AppendAllTextAsync(logFilePath, logBuilder.ToString());
+        //await File.AppendAllTextAsync(logFilePath, logBuilder.ToString());
     }
 
     public void Stop()

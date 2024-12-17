@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package Protocols.Guild;
+
+message GuildListMsg {
+    int32 message_id = 1; // 消息ID
+    int64 timestamp = 2;   // 时间戳
+    string sender_id = 3;  // 发送者ID
+    GuildList guildList = 4; // 公会列表
+}
+
+// 公会列表
+message GuildList {
+    repeated GuildInfo guilds = 1; // 公会信息列表
+    int32 totalCount = 2;         // 总公会数量（用于分页）
+    int32 currentPage = 3;        // 当前页码
+    int32 pageSize = 4;           // 每页显示的公会数量
+}
+
+// 公会信息
+message GuildInfo {
+    string guildId = 1;         // 公会唯一ID
+    string name = 2;            // 公会名称
+    string leaderName = 3;      // 会长名称
+    int32 level = 4;            // 公会等级
+    int32 memberCount = 5;      // 当前成员数量
+    int32 memberLimit = 6;      // 最大成员容量
+    string description = 7;     // 公会描述
+    int32 activityScore = 8;    // 活跃度分数
+    bool isRecruiting = 9;      // 是否正在招募新成员
+    string emblem = 10;         // 公会徽章图标（URL 或资源标识符）
+}

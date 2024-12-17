@@ -2,7 +2,7 @@ using System;
 using System.Net.Sockets;
 using Google.Protobuf;
 using Protocols;
-using Protocols.Item;
+using Protocols.Guild;
 using YouYou;
 
 
@@ -52,13 +52,14 @@ public class NetRequestHandler
     // 示例：心跳包请求，处理心跳数据的逻辑，返回消息对象
     public void c2s_request_heart_beat()
     {
-        HeartBeatMsg heartBeatMsg = new HeartBeatMsg
-        {
-            /* 初始化具体业务数据 */
-        };
-        SendMessage(heartBeatMsg);
+        SendMessage(new HeartBeatMsg());
     }
 
+    public void c2s_request_guild_list()
+    {
+        SendMessage(new GuildListMsg());
+    }
+    
     public void c2s_request_item_info()
     {
         Protocols.Item.ItemData data = new Protocols.Item.ItemData()
