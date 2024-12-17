@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using TCPServer.Core;
 using TCPServer.Core.DataAccess;
+using TCPServer.Core.Services;
 using TCPServer.Utils;
 
 class Program
@@ -26,18 +27,22 @@ class Program
             //    msg.SenderId = "-1";
             //    ServerSocket.BroadcastMsg(msg);
             //}
-            else if(inputStr == "A")
+            else if (inputStr == "A")
             {
-                string query = "SELECT * FROM register_data";
-                List<Dictionary<string, object>> result = SqlManager.Instance.ExecuteQuery(query);
+                //string query = "SELECT * FROM register_data";
+                //List<Dictionary<string, object>> result = SqlManager.Instance.ExecuteQuery(query);
 
-                foreach (var row in result)
-                {
-                    Console.WriteLine($"ID: {row["id"]}, UUID: {row["user_uuid"]}, Account: {row["user_account"]}, Password: {row["user_password"]}, RegisterTime: {row["register_time"]}");
-                }
+                //foreach (var row in result)
+                //{
+                //    Console.WriteLine($"ID: {row["id"]}, UUID: {row["user_uuid"]}, Account: {row["user_account"]}, Password: {row["user_password"]}, RegisterTime: {row["register_time"]}");
+                //}
                 RequestHandler request = new RequestHandler(null);
                 request.c2s_request_guild_list();
 
+            }
+            else if (inputStr == "B")
+            {
+                GuildService.AddGuild("11111", "测试公会", "测试名字", "测试描述");
             }
         }
     }
