@@ -21,7 +21,21 @@ message BaseMessage {
 
 
 message HeartBeatMsg {
-    int32 message_id = 1; // 消息ID
-    int64 timestamp = 2;   // 时间戳
-    string sender_id = 3;  // 发送者ID
+
+}
+
+message LoginMsg{
+    string user_account = 1;
+    string user_password = 2;
+    int32 state = 3;
+    string user_uuid = 4;
+    string token = 5;
+}
+
+message RegisterMsg{
+    string user_account = 1;
+    string user_password = 2;
+    int32 state = 3;
+    string user_uuid = 4;
+    string token = 5;
 }

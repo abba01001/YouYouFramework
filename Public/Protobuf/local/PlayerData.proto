@@ -4,9 +4,14 @@ package Protocols.Player;
 
 // 玩家数据结构
 message PlayerData {
-    string player_id = 1;     // 玩家ID
-    string player_name = 2;   // 玩家名称
-    int32 level = 3;          // 玩家等级
-    int32 experience = 4;     // 玩家经验值
-    repeated string inventory = 5; // 背包物品列表
+    string user_uuid = 1;         // 玩家UUID (对应 SQL: user_uuid)
+    string user_account = 2;      // 玩家账号 (对应 SQL: user_account)
+    string user_password = 3;     // 玩家密码 (对应 SQL: user_password)
+    int32 register_time = 4;      // 注册时间 (对应 SQL: register_time)
+    int32 online_duration = 5;    // 在线时长 (对应 SQL: online_duration)
+    int32 charge_money = 6;       // 充值金额 (对应 SQL: charge_money)
+    int32 final_login_time = 7;   // 最后登录时间 (对应 SQL: final_login_time)
+    int32 final_exit_time = 8;    // 最后退出时间 (对应 SQL: final_exit_time)
+    int32 guild_id = 9;           // 公会ID (对应 SQL: guild_id)
+    bool is_online = 10;          // 是否在线 (对应 SQL: is_online)
 }

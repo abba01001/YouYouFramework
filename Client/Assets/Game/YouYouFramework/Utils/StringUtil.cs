@@ -8,7 +8,10 @@ using System.Text;
 public static class StringUtil
 {
     private static StringBuilder stringBuilder = new StringBuilder();
-
+    public static readonly char[] FirstSeparator = ",".ToCharArray();
+    public static readonly char[] SecondSeparator = ";".ToCharArray();
+    public static readonly char[] ThirdSeparator = "#".ToCharArray();
+    public static readonly char[] FourthSeparator = ":".ToCharArray();
     #region IsNullOrEmpty 验证值是否为null
     /// <summary>
     /// 判断对象是否为Null、DBNull、Empty或空白字符串

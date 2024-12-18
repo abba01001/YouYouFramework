@@ -96,12 +96,17 @@ public class SDKManager : Observable<SDKManager>
         try
         {
             GetObjectResult result = await Task.Run(() => cosXml.GetObject(request));
-            if (result.httpCode == 200)
+            if (result.httpCode >= 200 && result.httpCode < 300)
             {
                 GameEntry.LogError($"下载成功，保存路径: {tempFilePath}");
                 GameEntry.Data.InitGameData(GetGameData(localFilePath, tempFilePath));
                 Constants.IsLoginGame = true;
-                GameEntry.Log(LogCategory.NetWork,"登录数据库成功");
+                GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);
+            }
+            else
+            {
+                GameEntry.Data.InitGameData(null);
+                Constants.IsLoginGame = true;
                 GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);
             }
         }

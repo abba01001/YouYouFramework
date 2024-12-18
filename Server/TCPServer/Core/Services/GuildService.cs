@@ -10,8 +10,8 @@ namespace TCPServer.Core.Services
 {
     public class GuildService
     {
-        //添加公会
-        public static bool AddGuild(string guildId, string name, string leaderName, string description)
+        //创建公会
+        public static bool CreateGuild(string guildId, string name, string leaderName, string description)
         {
             string query = @"INSERT INTO guild_list (guildId, name, leaderName, description)
                              VALUES (@guildId, @name, @leaderName, @description)";
@@ -85,7 +85,7 @@ namespace TCPServer.Core.Services
             };
         }
 
-        // 删除公会
+        // 解散公会
         public static bool DeleteGuild(string guildId)
         {
             string query = "DELETE FROM guild_list WHERE guildId = @guildId";

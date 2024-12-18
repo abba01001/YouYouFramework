@@ -72,5 +72,17 @@ public class NetRequestHandler
         };
         SendMessage(data);
     }
+
+    public void c2s_request_login(string account, string password)
+    {
+        account = "a123";
+        password = "123456";
+        LoginMsg data = new LoginMsg()
+        {
+            UserAccount = account,
+            UserPassword = password//SecurityUtil.ConvertBase64Key(password)
+        };
+        SendMessage(data);
+    }
     #endregion
 }

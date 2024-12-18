@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Main;
 using TMPro;
@@ -18,18 +19,22 @@ public class FormLogin : UIFormBase
     {
         base.Awake();
         LoadLoginBg();
-        loginBtn.SetButtonClick(Login);
+        loginBtn.SetButtonClick(() =>
+        {
+            Login();
+        });
 #if !UNITY_EDITOR
         //GameUtil.GetSignatureMD5Hash();
 #endif
         //GameEntry.SDK.DownloadAvatar("1", null);
     }
 
-    private void Login()
+    private async Task Login()
     {
         //if(account.text == "" || password.text == "") return;
-        GameEntry.SDK.LoginAsync(account.text, password.text);
-
+        //GameEntry.SDK.LoginAsync(account.text, password.text);
+        await GameEntry.Net.ConnectServerAsync();
+        GameEntry.Net.Requset.c2s_request_login(account.text,password.text);
         // Dictionary<string,object> dic = new Dictionary<string,object>();
         // dic.Add("测试数据1","家电");
         // TalkingDataSDK.OnEvent("游戏埋点数据",dic,null);

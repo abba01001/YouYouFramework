@@ -107,7 +107,7 @@ public class DataManager : Observable<DataManager>, IDataManager
     
     public void InitGameData(byte[] datas)
     {
-        if (datas != null)
+        if (datas is {Length: > 0})
         {
             DataManager mc2 = MessagePackSerializer.Deserialize<DataManager>(datas);
             PropertyInfo[] properties = mc2.GetType().GetProperties();
@@ -120,6 +120,11 @@ public class DataManager : Observable<DataManager>, IDataManager
                     targetProperty.SetValue(this, value);
                 }
             }
+        }
+        else
+        {
+            // 数据为空时，使用默认值进行初始化
+            InitializeWithDefaultData();
         }
     }
 
@@ -158,5 +163,19 @@ public class DataManager : Observable<DataManager>, IDataManager
         }
     }
     
+    #endregion
+
+    #region Private方法
+
+    private void InitializeWithDefaultData()
+    {
+        // 为每个属性设置默认值
+        // 这里只是示例，具体的默认值根据你的需求设置
+        InitPlayData();
+        
+        // 继续为其他属性初始化默认值
+        // ...
+    }
+
     #endregion
 }

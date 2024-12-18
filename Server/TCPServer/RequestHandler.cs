@@ -44,7 +44,15 @@ public class RequestHandler
     public async void c2s_request_guild_list()
     {
         GuildListMsg data = new GuildListMsg();
-        data.GuildList = await GuildService.GetGuildList(1,100);
+        data.GuildList = await GuildService.GetGuildList(1, 100);
+        SendMessage(data);
+    }
+
+    public void c2s_request_login(int state,string user_uuid)
+    {
+        LoginMsg data = new LoginMsg();
+        data.State = state;
+        data.UserUuid = user_uuid;
         SendMessage(data);
     }
 

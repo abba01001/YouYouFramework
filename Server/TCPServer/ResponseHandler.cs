@@ -4,6 +4,9 @@ using System.Net.Sockets;
 using Protocols;
 using Protocols.Guild;
 using Protocols.Item;
+using TCPServer.Core.DataAccess;
+using TCPServer.Core.Services;
+using TCPServer.Utils;
 
 public class ResponseHandler
 {
@@ -23,6 +26,7 @@ public class ResponseHandler
         // 注册心跳包处理器
         RegisterHandler(nameof(HeartBeatMsg), s2c_handle_request_heart_beat);
         RegisterHandler(nameof(GuildListMsg), s2c_handle_request_guild_list);
+        RegisterHandler(nameof(LoginMsg), s2c_handle_request_login);
     }
     
     public void RegisterHandler(string messageType, Action<BaseMessage> handler)
@@ -36,6 +40,17 @@ public class ResponseHandler
     // 处理响应的分发逻辑
     public void HandleResponse(BaseMessage message)
     {
+        if(message.Type != nameof(LoginMsg))
+        {
+            //验证token
+            if (!JwtHelper.ValidateToken(message.Token))
+            {
+                Console.WriteLine("Invalid token, please log in again.");
+                // 发送错误消息到客户端
+                request.SendErrorMessage("Invalid token");
+                return;
+            }
+        }
         if (_handlers.TryGetValue(message.Type, out var handler)) handler(message);
     }
 
@@ -62,6 +77,14 @@ public class ResponseHandler
         request.c2s_request_guild_list();
     }
 
+    private void s2c_handle_request_login(BaseMessage message)
+    {
+        ProtocolHelper.UnpackData<LoginMsg>(message, async (data) =>
+        {
+            (OperationResult state,string user_uuid) = await RoleService.LoginAsync(data.UserAccount, data.UserPassword);
+            request.c2s_request_login((int)state, user_uuid);
+        });
+    }
     private void s2c_handle_other(BaseMessage message)
     {
         Console.WriteLine("处理其他请求...");

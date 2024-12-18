@@ -32,6 +32,24 @@ namespace TCPServer.Utils
             return sqlKeys[key];
         }
 
+        static Dictionary<string, string> tokenKeys;
+        public static string GetTokenKey(string key)
+        {
+            if (tokenKeys == null)
+            {
+                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "Key", "TokenKey.bytes");
+                Console.WriteLine(filePath);
+                if (!File.Exists(filePath))
+                {
+                    throw new FileNotFoundException($"The file at {filePath} does not exist.");
+                }
+                byte[] encryptedData = File.ReadAllBytes(filePath);
+                string decryptedData = DecryptSecretKey(encryptedData);
+                tokenKeys = JsonConvert.DeserializeObject<Dictionary<string, string>>(decryptedData);
+            }
+            return tokenKeys[key];
+        }
+
         public static string DecryptSecretKey(byte[] cipherText)
         {
             using (Aes aesAlg = Aes.Create())

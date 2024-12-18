@@ -75,18 +75,15 @@ namespace YouYou
                     return;
                 }
 #endif
-                GameEntry.SDK.InitSqlConnect();
                 GameEntry.UI.OpenUIForm<FormLogin>();
             }
         }
 
         private async UniTask OnLoginSuccess(object userdata)
         {
-            await GameEntry.Net.ConnectServerAsync();
             GameEntry.UI.CloseUIForm<FormLogin>();
             if (GameEntry.Data.IsFirstLoginTime)
             {
-                GameEntry.Data.InitPlayData();
                 GameEntry.Data.IsFirstLoginTime = false;
             }
             GameEntry.SDK.InitTalkingData();

@@ -5,6 +5,7 @@ using Protocols;
 using Protocols.Guild;
 using Protocols.Item;
 using UnityEngine;
+using YouYou;
 
 public class NetResponseHandler
 {
@@ -24,6 +25,7 @@ public class NetResponseHandler
     {
         RegisterHandler(nameof(HeartBeatMsg), s2c_handle_request_heart_beat);
         RegisterHandler(nameof(GuildListMsg), s2c_handle_request_guild_list);
+        RegisterHandler(nameof(LoginMsg), s2c_handle_request_login);
     }
     
     public void RegisterHandler(string type, Action<BaseMessage> handler)
@@ -55,7 +57,7 @@ public class NetResponseHandler
     
     private void s2c_handle_request_guild_list(BaseMessage message)
     {
-        GameUtil.LogError($"收到心跳回应");
+        GameUtil.LogError($"收到request_guild_list回应");
         ProtocolHelper.UnpackData<Protocols.Guild.GuildListMsg>(message, (data) =>
         {
             GameUtil.LogError($"解包成功:{data.GuildList.Guilds.Count}=={data.GuildList.CurrentPage}");
@@ -66,6 +68,37 @@ public class NetResponseHandler
                     var value = property.GetValue(pair);
                     GameUtil.LogError($"键{property.Name}====值{value}");
                 }
+            }
+        });
+    }
+
+    //登录
+    private void s2c_handle_request_login(BaseMessage message)
+    {
+        GameUtil.LogError($"收到request_login回应");
+
+        LoginMsg msg = new LoginMsg();
+        ProtocolHelper.UnpackData<LoginMsg>(message, (data) =>
+        {
+            foreach (var property in data.GetType().GetProperties())
+            {
+                var value = property.GetValue(data);
+                GameUtil.LogError($"键{property.Name}====值{value}");
+            }
+
+            if (data.State == 0)
+            {
+                GameUtil.LogError("账号不存在");
+            }
+            else if (data.State == 1)
+            {
+                GameEntry.Data.UserId = data.UserUuid;
+                GameEntry.SDK.DownloadGameData(GameEntry.Data.UserId);
+                GameUtil.LogError("登陆成功");
+            }
+            else
+            {
+                GameUtil.LogError("密码错误");
             }
         });
     }

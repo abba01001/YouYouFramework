@@ -59,10 +59,10 @@ public class NetManager
         }
     }
 
-    public async Task ConnectServerAsync()
+    public async Task ConnectServerAsync(Action action = null)
     {
-        const string ip = "127.0.0.1"; // 使用本地测试
-        const int port = 8080;
+        string url = Main.MainEntry.ParamsSettings.TestWebAccountUrl;
+        string[] urls = url.Split(StringUtil.FourthSeparator);
 
         if (connectionStatus == ConnectionStatus.Connected) return;
         socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -71,8 +71,9 @@ public class NetManager
 
         try
         {
-            await socket.ConnectAsync(new IPEndPoint(IPAddress.Parse(ip), port)); // 异步连接
-            GameEntry.Log(LogCategory.NetWork, "连接服务器成功");
+            GameUtil.LogError(urls[0],"===",urls[1]);
+            await socket.ConnectAsync(new IPEndPoint(IPAddress.Parse(urls[0]), int.Parse(urls[1]))); // 异步连接
+            GameEntry.Log(LogCategory.NetWork, $"连接服务器成功{socket.RemoteEndPoint}");
             Requset.UpdateSenderId();
             connectionStatus = ConnectionStatus.Connected;
             CurReconnectCount = 0;
@@ -80,6 +81,7 @@ public class NetManager
             Task.Run(ReceiveMessagesAsync);
             heartbeatAction?.Stop();
             heartbeatAction = GameEntry.Time.CreateTimerLoop(this, 1f, -1, SendHeartbeat);
+            action?.Invoke();
         }
         catch (SocketException e)
         {

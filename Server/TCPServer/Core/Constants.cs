@@ -33,4 +33,9 @@ namespace TCPServer.Core
         public static string Password { get; set; } = "Password";
         public static string Port { get; set; } = "Port";
     }
+
+    public static class Token
+    {
+        public static string TokenKey { get; set; } = "TokenKey";
+    }
 }

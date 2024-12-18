@@ -1,4 +1,5 @@
 ﻿using Protocols;
+using Protocols.Player;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -29,20 +30,28 @@ class Program
             //}
             else if (inputStr == "A")
             {
-                //string query = "SELECT * FROM register_data";
-                //List<Dictionary<string, object>> result = SqlManager.Instance.ExecuteQuery(query);
+                PlayerData data = new PlayerData();
 
-                //foreach (var row in result)
+                //            RoleService.UpdateUserPropertyAsync("a123", new Dictionary<string, object>
                 //{
-                //    Console.WriteLine($"ID: {row["id"]}, UUID: {row["user_uuid"]}, Account: {row["user_account"]}, Password: {row["user_password"]}, RegisterTime: {row["register_time"]}");
-                //}
-                RequestHandler request = new RequestHandler(null);
-                request.c2s_request_guild_list();
+                //    { nameof(data.IsOnline), false },      // 更新 IsOnline 属性为 false
+                //    { nameof(data.ChargeMoney), 200 }      // 更新 ChargeMoney 属性为 100
+                //});
 
+
+                Console.WriteLine(JwtHelper.GenerateToken("a123", "测试人"));
+            }
+            else if(inputStr == "Z")
+            {
+                RoleService.GetUserByAccountAsync("a123");
             }
             else if (inputStr == "B")
             {
-                GuildService.AddGuild("11111", "测试公会", "测试名字", "测试描述");
+                GuildService.CreateGuild("11111", "测试公会", "测试名字", "测试描述");
+            }
+            else if (inputStr == "Q") {
+
+                RoleService.LoginAsync("a123", "123456");
             }
         }
     }
