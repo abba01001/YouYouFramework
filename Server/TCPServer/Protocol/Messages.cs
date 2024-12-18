@@ -24,20 +24,20 @@ namespace Protocols {
     static MessagesReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg5NZXNzYWdlcy5wcm90bxIJUHJvdG9jb2xzIogBCgtCYXNlTWVzc2FnZRIS",
+            "Cg5NZXNzYWdlcy5wcm90bxIJUHJvdG9jb2xzIpcBCgtCYXNlTWVzc2FnZRIS",
             "CgptZXNzYWdlX2lkGAEgASgFEhEKCXRpbWVzdGFtcBgCIAEoAxIRCglzZW5k",
             "ZXJfaWQYAyABKAkSIwoHbXNnVHlwZRgEIAEoDjISLlByb3RvY29scy5Nc2dU",
-            "eXBlEgwKBHR5cGUYBSABKAkSDAoEZGF0YRgGIAEoDCIOCgxIZWFydEJlYXRN",
-            "c2ciWQoITG9naW5Nc2cSFAoMdXNlcl9hY2NvdW50GAEgASgJEhUKDXVzZXJf",
-            "cGFzc3dvcmQYAiABKAkSDQoFc3RhdGUYAyABKAUSEQoJdXNlcl91dWlkGAQg",
-            "ASgJIlwKC1JlZ2lzdGVyTXNnEhQKDHVzZXJfYWNjb3VudBgBIAEoCRIVCg11",
-            "c2VyX3Bhc3N3b3JkGAIgASgJEg0KBXN0YXRlGAMgASgFEhEKCXVzZXJfdXVp",
-            "ZBgEIAEoCSoiCgdNc2dUeXBlEg0KCUhlYXJ0QmVhdBAAEggKBEVYSVQQAWIG",
-            "cHJvdG8z"));
+            "eXBlEg0KBXRva2VuGAUgASgJEgwKBHR5cGUYBiABKAkSDAoEZGF0YRgHIAEo",
+            "DCIOCgxIZWFydEJlYXRNc2ciWQoITG9naW5Nc2cSFAoMdXNlcl9hY2NvdW50",
+            "GAEgASgJEhUKDXVzZXJfcGFzc3dvcmQYAiABKAkSDQoFc3RhdGUYAyABKAUS",
+            "EQoJdXNlcl91dWlkGAQgASgJIlwKC1JlZ2lzdGVyTXNnEhQKDHVzZXJfYWNj",
+            "b3VudBgBIAEoCRIVCg11c2VyX3Bhc3N3b3JkGAIgASgJEg0KBXN0YXRlGAMg",
+            "ASgFEhEKCXVzZXJfdXVpZBgEIAEoCSoiCgdNc2dUeXBlEg0KCUhlYXJ0QmVh",
+            "dBAAEggKBEVYSVQQAWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Protocols.MsgType), }, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.BaseMessage), global::Protocols.BaseMessage.Parser, new[]{ "MessageId", "Timestamp", "SenderId", "MsgType", "Type", "Data" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.BaseMessage), global::Protocols.BaseMessage.Parser, new[]{ "MessageId", "Timestamp", "SenderId", "MsgType", "Token", "Type", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.HeartBeatMsg), global::Protocols.HeartBeatMsg.Parser, null, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.LoginMsg), global::Protocols.LoginMsg.Parser, new[]{ "UserAccount", "UserPassword", "State", "UserUuid" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.RegisterMsg), global::Protocols.RegisterMsg.Parser, new[]{ "UserAccount", "UserPassword", "State", "UserUuid" }, null, null, null, null)
@@ -103,6 +103,7 @@ namespace Protocols {
       timestamp_ = other.timestamp_;
       senderId_ = other.senderId_;
       msgType_ = other.msgType_;
+      token_ = other.token_;
       type_ = other.type_;
       data_ = other.data_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -174,8 +175,20 @@ namespace Protocols {
       }
     }
 
+    /// <summary>Field number for the "token" field.</summary>
+    public const int TokenFieldNumber = 5;
+    private string token_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Token {
+      get { return token_; }
+      set {
+        token_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     /// <summary>Field number for the "type" field.</summary>
-    public const int TypeFieldNumber = 5;
+    public const int TypeFieldNumber = 6;
     private string type_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -187,7 +200,7 @@ namespace Protocols {
     }
 
     /// <summary>Field number for the "data" field.</summary>
-    public const int DataFieldNumber = 6;
+    public const int DataFieldNumber = 7;
     private pb::ByteString data_ = pb::ByteString.Empty;
     /// <summary>
     /// 消息内容
@@ -220,6 +233,7 @@ namespace Protocols {
       if (Timestamp != other.Timestamp) return false;
       if (SenderId != other.SenderId) return false;
       if (MsgType != other.MsgType) return false;
+      if (Token != other.Token) return false;
       if (Type != other.Type) return false;
       if (Data != other.Data) return false;
       return Equals(_unknownFields, other._unknownFields);
@@ -233,6 +247,7 @@ namespace Protocols {
       if (Timestamp != 0L) hash ^= Timestamp.GetHashCode();
       if (SenderId.Length != 0) hash ^= SenderId.GetHashCode();
       if (MsgType != global::Protocols.MsgType.HeartBeat) hash ^= MsgType.GetHashCode();
+      if (Token.Length != 0) hash ^= Token.GetHashCode();
       if (Type.Length != 0) hash ^= Type.GetHashCode();
       if (Data.Length != 0) hash ^= Data.GetHashCode();
       if (_unknownFields != null) {
@@ -269,12 +284,16 @@ namespace Protocols {
         output.WriteRawTag(32);
         output.WriteEnum((int) MsgType);
       }
-      if (Type.Length != 0) {
+      if (Token.Length != 0) {
         output.WriteRawTag(42);
+        output.WriteString(Token);
+      }
+      if (Type.Length != 0) {
+        output.WriteRawTag(50);
         output.WriteString(Type);
       }
       if (Data.Length != 0) {
-        output.WriteRawTag(50);
+        output.WriteRawTag(58);
         output.WriteBytes(Data);
       }
       if (_unknownFields != null) {
@@ -303,12 +322,16 @@ namespace Protocols {
         output.WriteRawTag(32);
         output.WriteEnum((int) MsgType);
       }
-      if (Type.Length != 0) {
+      if (Token.Length != 0) {
         output.WriteRawTag(42);
+        output.WriteString(Token);
+      }
+      if (Type.Length != 0) {
+        output.WriteRawTag(50);
         output.WriteString(Type);
       }
       if (Data.Length != 0) {
-        output.WriteRawTag(50);
+        output.WriteRawTag(58);
         output.WriteBytes(Data);
       }
       if (_unknownFields != null) {
@@ -332,6 +355,9 @@ namespace Protocols {
       }
       if (MsgType != global::Protocols.MsgType.HeartBeat) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) MsgType);
+      }
+      if (Token.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Token);
       }
       if (Type.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Type);
@@ -362,6 +388,9 @@ namespace Protocols {
       }
       if (other.MsgType != global::Protocols.MsgType.HeartBeat) {
         MsgType = other.MsgType;
+      }
+      if (other.Token.Length != 0) {
+        Token = other.Token;
       }
       if (other.Type.Length != 0) {
         Type = other.Type;
@@ -405,10 +434,14 @@ namespace Protocols {
             break;
           }
           case 42: {
-            Type = input.ReadString();
+            Token = input.ReadString();
             break;
           }
           case 50: {
+            Type = input.ReadString();
+            break;
+          }
+          case 58: {
             Data = input.ReadBytes();
             break;
           }
@@ -448,10 +481,14 @@ namespace Protocols {
             break;
           }
           case 42: {
-            Type = input.ReadString();
+            Token = input.ReadString();
             break;
           }
           case 50: {
+            Type = input.ReadString();
+            break;
+          }
+          case 58: {
             Data = input.ReadBytes();
             break;
           }

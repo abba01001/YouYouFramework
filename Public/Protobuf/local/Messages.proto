@@ -15,8 +15,9 @@ message BaseMessage {
     int64 timestamp = 2;   // 时间戳
     string sender_id = 3;  // 发送者ID
     MsgType msgType = 4;      // 消息类型
-    string type = 5;
-    bytes data = 6;        // 消息内容
+    string token = 5;
+    string type = 6;
+    bytes data = 7;        // 消息内容
 }
 
 
@@ -29,7 +30,6 @@ message LoginMsg{
     string user_password = 2;
     int32 state = 3;
     string user_uuid = 4;
-    string token = 5;
 }
 
 message RegisterMsg{
@@ -37,5 +37,4 @@ message RegisterMsg{
     string user_password = 2;
     int32 state = 3;
     string user_uuid = 4;
-    string token = 5;
 }
