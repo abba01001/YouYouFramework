@@ -65,6 +65,7 @@ public class DataManager : Observable<DataManager>, IDataManager
 
     #region 临时public数据
     [IgnoreMember] public long Coin { get; }
+
     #endregion
 
     #region 临时private数据
@@ -161,6 +162,7 @@ public class DataManager : Observable<DataManager>, IDataManager
                 lastUploadTime = Time.time;  // 更新上传的时间
             }
         }
+        GameUtil.LogError($"Token值**********{Constants.Token}");
     }
     
     #endregion

@@ -2,7 +2,9 @@
 using Protocols.Player;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using TCPServer.Core;
 using TCPServer.Core.DataAccess;
 using TCPServer.Core.Services;
@@ -51,8 +53,45 @@ class Program
             }
             else if (inputStr == "Q") {
 
-                RoleService.LoginAsync("a123", "123456");
+                //RoleService.LoginAsync("a123", "123456");
+
+                TestAsync();
+
             }
         }
     }
+
+    private static async Task TestAsync()
+    {
+        int numPlayers = 100;  // 假设模拟 50 名玩家
+
+        List<Task> tasks = new List<Task>();
+        // 记录整个测试的开始时间
+        DateTime testStartTime = DateTime.Now;
+        Console.WriteLine($"测试开始时间: {testStartTime:HH:mm:ss.fff}");
+
+        for (int i = 0; i < numPlayers; i++)
+        {
+            string userUuid = Guid.NewGuid().ToString();
+            string token = JwtHelper.GenerateToken(userUuid, "测试");
+
+            // 在每个请求开始时记录开始时间
+            DateTime requestStartTime = DateTime.Now;
+
+            // 模拟登录请求
+            tasks.Add(RoleService.LoginAsync("a123", "123456"));
+        }
+
+        // 等待所有任务完成
+        await Task.WhenAll(tasks);
+
+        // 记录整个测试的结束时间
+        DateTime testEndTime = DateTime.Now;
+        TimeSpan testDuration = testEndTime - testStartTime;
+        Console.WriteLine($"测试结束时间: {testEndTime:HH:mm:ss.fff}");
+        Console.WriteLine($"整个测试持续时间: {testDuration.TotalSeconds} 秒");
+
+        Console.WriteLine("所有登录请求已完成");
+    }
+
 }

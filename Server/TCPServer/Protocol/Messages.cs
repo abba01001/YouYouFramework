@@ -28,19 +28,20 @@ namespace Protocols {
             "CgptZXNzYWdlX2lkGAEgASgFEhEKCXRpbWVzdGFtcBgCIAEoAxIRCglzZW5k",
             "ZXJfaWQYAyABKAkSIwoHbXNnVHlwZRgEIAEoDjISLlByb3RvY29scy5Nc2dU",
             "eXBlEg0KBXRva2VuGAUgASgJEgwKBHR5cGUYBiABKAkSDAoEZGF0YRgHIAEo",
-            "DCIOCgxIZWFydEJlYXRNc2ciWQoITG9naW5Nc2cSFAoMdXNlcl9hY2NvdW50",
+            "DCIOCgxIZWFydEJlYXRNc2ciaAoITG9naW5Nc2cSFAoMdXNlcl9hY2NvdW50",
             "GAEgASgJEhUKDXVzZXJfcGFzc3dvcmQYAiABKAkSDQoFc3RhdGUYAyABKAUS",
-            "EQoJdXNlcl91dWlkGAQgASgJIlwKC1JlZ2lzdGVyTXNnEhQKDHVzZXJfYWNj",
-            "b3VudBgBIAEoCRIVCg11c2VyX3Bhc3N3b3JkGAIgASgJEg0KBXN0YXRlGAMg",
-            "ASgFEhEKCXVzZXJfdXVpZBgEIAEoCSoiCgdNc2dUeXBlEg0KCUhlYXJ0QmVh",
-            "dBAAEggKBEVYSVQQAWIGcHJvdG8z"));
+            "EQoJdXNlcl91dWlkGAQgASgJEg0KBXRva2VuGAUgASgJImsKC1JlZ2lzdGVy",
+            "TXNnEhQKDHVzZXJfYWNjb3VudBgBIAEoCRIVCg11c2VyX3Bhc3N3b3JkGAIg",
+            "ASgJEg0KBXN0YXRlGAMgASgFEhEKCXVzZXJfdXVpZBgEIAEoCRINCgV0b2tl",
+            "bhgFIAEoCSoiCgdNc2dUeXBlEg0KCUhlYXJ0QmVhdBAAEggKBEVYSVQQAWIG",
+            "cHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Protocols.MsgType), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.BaseMessage), global::Protocols.BaseMessage.Parser, new[]{ "MessageId", "Timestamp", "SenderId", "MsgType", "Token", "Type", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.HeartBeatMsg), global::Protocols.HeartBeatMsg.Parser, null, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.LoginMsg), global::Protocols.LoginMsg.Parser, new[]{ "UserAccount", "UserPassword", "State", "UserUuid" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.RegisterMsg), global::Protocols.RegisterMsg.Parser, new[]{ "UserAccount", "UserPassword", "State", "UserUuid" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.LoginMsg), global::Protocols.LoginMsg.Parser, new[]{ "UserAccount", "UserPassword", "State", "UserUuid", "Token" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.RegisterMsg), global::Protocols.RegisterMsg.Parser, new[]{ "UserAccount", "UserPassword", "State", "UserUuid", "Token" }, null, null, null, null)
           }));
     }
     #endregion
@@ -699,6 +700,7 @@ namespace Protocols {
       userPassword_ = other.userPassword_;
       state_ = other.state_;
       userUuid_ = other.userUuid_;
+      token_ = other.token_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -756,6 +758,18 @@ namespace Protocols {
       }
     }
 
+    /// <summary>Field number for the "token" field.</summary>
+    public const int TokenFieldNumber = 5;
+    private string token_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Token {
+      get { return token_; }
+      set {
+        token_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -775,6 +789,7 @@ namespace Protocols {
       if (UserPassword != other.UserPassword) return false;
       if (State != other.State) return false;
       if (UserUuid != other.UserUuid) return false;
+      if (Token != other.Token) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -786,6 +801,7 @@ namespace Protocols {
       if (UserPassword.Length != 0) hash ^= UserPassword.GetHashCode();
       if (State != 0) hash ^= State.GetHashCode();
       if (UserUuid.Length != 0) hash ^= UserUuid.GetHashCode();
+      if (Token.Length != 0) hash ^= Token.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -820,6 +836,10 @@ namespace Protocols {
         output.WriteRawTag(34);
         output.WriteString(UserUuid);
       }
+      if (Token.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(Token);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -846,6 +866,10 @@ namespace Protocols {
         output.WriteRawTag(34);
         output.WriteString(UserUuid);
       }
+      if (Token.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(Token);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -867,6 +891,9 @@ namespace Protocols {
       }
       if (UserUuid.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(UserUuid);
+      }
+      if (Token.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Token);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -891,6 +918,9 @@ namespace Protocols {
       }
       if (other.UserUuid.Length != 0) {
         UserUuid = other.UserUuid;
+      }
+      if (other.Token.Length != 0) {
+        Token = other.Token;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -927,6 +957,10 @@ namespace Protocols {
             UserUuid = input.ReadString();
             break;
           }
+          case 42: {
+            Token = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -960,6 +994,10 @@ namespace Protocols {
           }
           case 34: {
             UserUuid = input.ReadString();
+            break;
+          }
+          case 42: {
+            Token = input.ReadString();
             break;
           }
         }
@@ -1008,6 +1046,7 @@ namespace Protocols {
       userPassword_ = other.userPassword_;
       state_ = other.state_;
       userUuid_ = other.userUuid_;
+      token_ = other.token_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1065,6 +1104,18 @@ namespace Protocols {
       }
     }
 
+    /// <summary>Field number for the "token" field.</summary>
+    public const int TokenFieldNumber = 5;
+    private string token_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Token {
+      get { return token_; }
+      set {
+        token_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1084,6 +1135,7 @@ namespace Protocols {
       if (UserPassword != other.UserPassword) return false;
       if (State != other.State) return false;
       if (UserUuid != other.UserUuid) return false;
+      if (Token != other.Token) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1095,6 +1147,7 @@ namespace Protocols {
       if (UserPassword.Length != 0) hash ^= UserPassword.GetHashCode();
       if (State != 0) hash ^= State.GetHashCode();
       if (UserUuid.Length != 0) hash ^= UserUuid.GetHashCode();
+      if (Token.Length != 0) hash ^= Token.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1129,6 +1182,10 @@ namespace Protocols {
         output.WriteRawTag(34);
         output.WriteString(UserUuid);
       }
+      if (Token.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(Token);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1155,6 +1212,10 @@ namespace Protocols {
         output.WriteRawTag(34);
         output.WriteString(UserUuid);
       }
+      if (Token.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(Token);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1176,6 +1237,9 @@ namespace Protocols {
       }
       if (UserUuid.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(UserUuid);
+      }
+      if (Token.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Token);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1200,6 +1264,9 @@ namespace Protocols {
       }
       if (other.UserUuid.Length != 0) {
         UserUuid = other.UserUuid;
+      }
+      if (other.Token.Length != 0) {
+        Token = other.Token;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1236,6 +1303,10 @@ namespace Protocols {
             UserUuid = input.ReadString();
             break;
           }
+          case 42: {
+            Token = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -1269,6 +1340,10 @@ namespace Protocols {
           }
           case 34: {
             UserUuid = input.ReadString();
+            break;
+          }
+          case 42: {
+            Token = input.ReadString();
             break;
           }
         }

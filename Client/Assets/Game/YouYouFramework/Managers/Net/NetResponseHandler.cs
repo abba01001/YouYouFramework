@@ -94,7 +94,7 @@ public class NetResponseHandler
             {
                 GameEntry.Data.UserId = data.UserUuid;
                 GameEntry.SDK.DownloadGameData(GameEntry.Data.UserId);
-                GameUtil.LogError("登陆成功");
+                Constants.Token = data.Token;
             }
             else
             {

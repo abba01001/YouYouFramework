@@ -1,4 +1,5 @@
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Sockets;
 using System.Xml;
 using Google.Protobuf;
@@ -8,6 +9,7 @@ using Protocols.Guild;
 using Protocols.Item;
 using TCPServer;
 using TCPServer.Core.Services;
+using TCPServer.Utils;
 
 public class RequestHandler
 {
@@ -24,7 +26,6 @@ public class RequestHandler
         message.Type = typeof(T).Name;
         message.Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();// 获取当前时间戳
         message.Data = ByteString.CopyFrom(byteArrayData); // 直接将序列化后的字节数组放入 Data
-
         string messageJson = JsonConvert.SerializeObject(message);
         ServerSocket.Logger.LogMessage(socket,$"发送内容{messageJson}");
         if (socket == null) return;
@@ -53,6 +54,7 @@ public class RequestHandler
         LoginMsg data = new LoginMsg();
         data.State = state;
         data.UserUuid = user_uuid;
+        data.Token = JwtHelper.GenerateToken(data.UserUuid, "测试");
         SendMessage(data);
     }
 

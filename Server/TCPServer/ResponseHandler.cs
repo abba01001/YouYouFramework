@@ -43,11 +43,9 @@ public class ResponseHandler
         if(message.Type != nameof(LoginMsg))
         {
             //验证token
-            if (!JwtHelper.ValidateToken(message.Token))
+            if (JwtHelper.ValidateToken(message.Token) == null)
             {
-                Console.WriteLine("Invalid token, please log in again.");
-                // 发送错误消息到客户端
-                request.SendErrorMessage("Invalid token");
+                Console.WriteLine("用户Token验证失败");
                 return;
             }
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -32,9 +33,20 @@ public static class ServerSocket
         Logger.LogMessage(socket, "开始监听客户端连接...");
         socket.Listen(clientNum);
 
+        // 保留您原始的字符串格式，添加连接池参数
+
+    //    SqlManager.Initialize(
+    //$"Server={KeyUtils.GetSqlKey(SqlKey.Server)};" +
+    //$"Database={KeyUtils.GetSqlKey(SqlKey.Database)};" +
+    //$"UserId={KeyUtils.GetSqlKey(SqlKey.UserId)};" +
+    //$"Password={KeyUtils.GetSqlKey(SqlKey.Password)};" +
+    //$"Port={KeyUtils.GetSqlKey(SqlKey.Port)};" +
+    //"Pooling=true;MinPoolSize=20;MaxPoolSize=600;ConnectionTimeout=30;"
+//);
+
 
         SqlManager.Initialize($"Server={KeyUtils.GetSqlKey(SqlKey.Server)};Database={KeyUtils.GetSqlKey(SqlKey.Database)};" +
-            $"UserId={KeyUtils.GetSqlKey(SqlKey.UserId)};Password={KeyUtils.GetSqlKey(SqlKey.Password)};Port = {KeyUtils.GetSqlKey(SqlKey.Port)}");
+           $"UserId={KeyUtils.GetSqlKey(SqlKey.UserId)};Password={KeyUtils.GetSqlKey(SqlKey.Password)};Port = {KeyUtils.GetSqlKey(SqlKey.Port)}");
 
         cancellationTokenSource = new CancellationTokenSource();
         acceptClientTask = AcceptClientConnectAsync(cancellationTokenSource.Token);
@@ -66,19 +78,28 @@ public static class ServerSocket
 
     public static async Task ReceiveClientMsgAsync(CancellationToken cancellationToken)
     {
+        var tasks = new List<Task>(); // 存储所有接收消息的任务
         while (!isClose && !cancellationToken.IsCancellationRequested)
         {
+            // 并行处理每个客户端的消息接收
             foreach (var client in clientList)
             {
-                try
+                tasks.Add(Task.Run(async () =>
                 {
-                    await client.ReceiveMsgAsync();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine($"ReceiveClientMsg Exception: {e.Message}");
-                }
+                    try
+                    {
+                        await client.ReceiveMsgAsync();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"ReceiveClientMsg Exception: {e.Message}");
+                    }
+                }));
             }
+
+            // 等待所有任务完成
+            await Task.WhenAll(tasks);
+            tasks.Clear(); // 清空已完成的任务列表，准备下一轮
             await Task.Delay(100); // 防止高 CPU 占用
         }
     }
@@ -91,8 +112,9 @@ public static class ServerSocket
 
         byte[] msgBytes = message.ToByteArray(); // 使用 Protobuf 序列化消息
         var sendTasks = clientList.Select(client => client.SendMsg(msgBytes));
-        Task.WhenAll(sendTasks); // 使用 Task.WhenAll 来并行发送消息
+        Task.WhenAll(sendTasks).Wait(); // 等待所有任务完成
     }
+
 
     public static void Close()
     {

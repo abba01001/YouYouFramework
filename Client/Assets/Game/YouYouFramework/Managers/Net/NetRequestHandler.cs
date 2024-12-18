@@ -42,7 +42,8 @@ public class NetRequestHandler
         message.Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();// 获取当前时间戳
         message.SenderId = this.senderId; // 设置发送者ID
         message.Data = ByteString.CopyFrom(byteArrayData); // 直接将序列化后的字节数组放入 Data
-        GameUtil.LogError($"发送内容{message.ToJson()}");
+        message.Token = Constants.Token;
+        GameUtil.LogError($"发送Token==={Constants.Token},内容{message.ToJson()}");
         byte[] messageBytes = message.ToByteArray();
         return messageBytes;
     }

@@ -62,42 +62,34 @@ namespace TCPServer.Core.Services
         // 登录验证
         public static async Task<(OperationResult, string)> LoginAsync(string userAccount, string userPassword)
         {
-            string query = "SELECT * FROM register_data WHERE user_account = @user_account";
+            // 合并查询和更新为一个事务性操作，减少数据库交互
+            string query = @"
+        UPDATE register_data
+        SET is_online = 1
+        WHERE user_account = @user_account AND user_password = @user_password;
+        
+        SELECT user_uuid
+        FROM register_data
+        WHERE user_account = @user_account AND user_password = @user_password;
+    ";
+
             var parameters = new Dictionary<string, object>
-            {
-                { "@user_account", userAccount }
-            };
+    {
+        { "@user_account", userAccount },
+        { "@user_password", userPassword }
+    };
 
             var result = await SqlManager.Instance.ExecuteQueryAsync(query, parameters);
+
             if (result.Count == 0)
             {
                 return (OperationResult.UserNotFound, null);
             }
 
-            var user = result[0];
-            string storedPassword = user["user_password"].ToString();
-
-            if (storedPassword != userPassword)
-            {
-                return (OperationResult.PasswordIncorrect, null);
-            }
-
-            string updateQuery = "UPDATE register_data SET is_online = 1 WHERE user_account = @user_account";
-            var updateParameters = new Dictionary<string, object>
-            {
-                { "@user_account", userAccount }
-            };
-
-            int rowsAffected = await SqlManager.Instance.ExecuteNonQueryAsync(updateQuery, updateParameters);
-
-            if (rowsAffected > 0)
-            {
-                string userUuid = user["user_uuid"].ToString();
-                return (OperationResult.Success, userUuid);
-            }
-
-            return (OperationResult.UpdateFailed, null);
+            string userUuid = result[0]["user_uuid"].ToString();
+            return (OperationResult.Success, userUuid);
         }
+
 
         // 改密码功能
         public static async Task<OperationResult> ChangePasswordAsync(string userAccount, string oldPassword, string newPassword)

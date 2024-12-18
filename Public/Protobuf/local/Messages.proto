@@ -30,6 +30,7 @@ message LoginMsg{
     string user_password = 2;
     int32 state = 3;
     string user_uuid = 4;
+    string token = 5;
 }
 
 message RegisterMsg{
@@ -37,4 +38,5 @@ message RegisterMsg{
     string user_password = 2;
     int32 state = 3;
     string user_uuid = 4;
+    string token = 5;
 }
