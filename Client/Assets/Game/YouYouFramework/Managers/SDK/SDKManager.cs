@@ -53,31 +53,35 @@ public class SDKManager : Observable<SDKManager>
     
     public async Task UploadLogData(string userId)
     {
-        return;
-        string logFilePath = Path.Combine(Application.persistentDataPath, "Logs.txt");
-        // 直接使用文件路径打开文件流
-        using (FileStream fileStream = new FileStream(logFilePath, FileMode.Open, FileAccess.Read))
-        {
-            // 创建COS客户端实例
-            CosXml cosXml = CreateCosXml();
-            string fileName = $"{userId}.txt";  // 文件扩展名改为txt
-            var dic = SecurityUtil.GetSecretKeyDic();
-            // 创建上传请求
-            PutObjectRequest request = new PutObjectRequest(dic["bucket"], "Unity/LogData/" + fileName, fileStream);
-            request.SetSign(TimeUtils.GetCurrentTime(TimeUnit.Seconds), 600);
-            try
-            {
-                // 异步上传文件
-                PutObjectResult result = await Task.Run(() => cosXml.PutObject(request));
-                GameEntry.LogError($"日志文件 {fileName} 上传成功！");
-            }
-            catch (Exception ex)
-            {
-                GameEntry.LogError($"{fileName} 上传状态：<color=red>失败</color>，错误：{ex.Message}");
-            }
-        }
-    }
+        MainEntry.Reporter.WriteLogsToFile();
 
+        string filePath = Path.Combine(Application.persistentDataPath, "Logs.txt");
+        string zipFilePath = Path.Combine(Application.persistentDataPath, "Logs.txt.zip");
+        GameUtil.CompressFile($"{filePath}", null, async () =>
+        {
+            // 直接使用文件路径打开文件流
+            using (FileStream fileStream = new FileStream(zipFilePath, FileMode.Open, FileAccess.Read))
+            {
+                // 创建COS客户端实例
+                CosXml cosXml = CreateCosXml();
+                string fileName = $"{userId}.txt"; // 文件扩展名改为txt
+                var dic = SecurityUtil.GetSecretKeyDic();
+                // 创建上传请求
+                PutObjectRequest request = new PutObjectRequest(dic["bucket"], "Unity/LogData/" + fileName, fileStream);
+                request.SetSign(TimeUtils.GetCurrentTime(TimeUnit.Seconds), 600);
+                try
+                {
+                    // 异步上传文件
+                    PutObjectResult result = await Task.Run(() => cosXml.PutObject(request));
+                    GameEntry.LogError($"日志文件 {fileName} 上传成功！");
+                }
+                catch (Exception ex)
+                {
+                    GameEntry.LogError($"{fileName} 上传状态：<color=red>失败</color>，错误：{ex.Message}");
+                }
+            }
+        });
+    }
 
     public async void DownloadGameData(string userId)
     {

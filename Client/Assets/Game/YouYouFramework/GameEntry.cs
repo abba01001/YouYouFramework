@@ -236,14 +236,8 @@ namespace YouYou
             Logger.SyncLog();
             Logger.Dispose();
             Fsm.Dispose();
-            UploadLogData();
-            GameEntry.Event.Dispatch(Constants.EventName.GameEntryOnApplicationQuit);
-        }
-
-        private void UploadLogData()
-        {
-            MainEntry.Reporter.WriteLogsToFile();
             SDK.UploadLogData(Data.UserId);
+            GameEntry.Event.Dispatch(Constants.EventName.GameEntryOnApplicationQuit);
         }
         
         private void OnApplicationPause(bool pause)

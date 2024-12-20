@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TCPServer.Core.DataAccess;
 using System.Security.Cryptography;
 using Protocols.Player;
+using TCPServer.Utils;
 
 namespace TCPServer.Core.Services
 {
@@ -94,25 +95,22 @@ namespace TCPServer.Core.Services
         // 改密码功能
         public static async Task<OperationResult> ChangePasswordAsync(string userAccount, string oldPassword, string newPassword)
         {
+            // 先获取用户信息
             var result = await GetUserByAccountAsync(userAccount);
             if (result == null)
                 return OperationResult.UserNotFound;
-
             string storedPassword = result["user_password"].ToString();
-
+            // 验证旧密码是否正确
             if (storedPassword != oldPassword)
                 return OperationResult.PasswordIncorrect;
-
-            string updateQuery = "UPDATE register_data SET user_password = @newPassword WHERE user_account = @user_account";
-            var updateParameters = new Dictionary<string, object>
-            {
-                { "@newPassword", newPassword },
-                { "@user_account", userAccount }
-            };
-
-            int rowsAffected = await SqlManager.Instance.ExecuteNonQueryAsync(updateQuery, updateParameters);
-            return rowsAffected > 0 ? OperationResult.Success : OperationResult.UpdateFailed;
+            // 创建更新的属性字典
+            var updatedAttrs = new Dictionary<string, object>
+    {
+        { "user_password", newPassword }  // 更新密码
+    };
+            return await UpdateUserPropertyAsync(userAccount, updatedAttrs);
         }
+
 
         // 获取用户信息
         public static async Task<Dictionary<string, object>> GetUserByAccountAsync(string userAccount)
@@ -145,19 +143,18 @@ namespace TCPServer.Core.Services
         {
             if (updatedAttrs == null || updatedAttrs.Count == 0)
                 return OperationResult.UpdateFailed;
+
+            if (!GlobalUtils.ValidateKey<PlayerData>(updatedAttrs)) return OperationResult.PropertyNotFound;
+
             var queryParts = new List<string>();
             var parameters = new Dictionary<string, object> { { "@user_account", userAccount } };
+
 
             // 遍历传入的字段
             foreach (var kvp in updatedAttrs)
             {
                 string propertyName = kvp.Key;
                 object value = kvp.Value;
-
-                // 判断是否为无效值，跳过
-                //if (IsInvalidValue(propertyName, value))
-                //    continue;
-
                 // 转换成数据库中的列名
                 string columnName = ConvertToColumnName(propertyName);
 
@@ -199,16 +196,6 @@ namespace TCPServer.Core.Services
                 .Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + char.ToLower(x) : char.ToLower(x).ToString()));
 
             return columnName;
-        }
-
-        //校验字段有效性
-        private static bool IsInvalidValue(string propertyName,object value)
-        {
-            if (propertyName == "Parser" || propertyName == "Descriptor" ||
-                value is string stringVlaue && stringVlaue == string.Empty ||
-                value == null || (value is int intValue && intValue == 0))
-                    return false;
-            return true;
         }
     }
 }

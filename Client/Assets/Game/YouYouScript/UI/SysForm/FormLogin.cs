@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Main;
@@ -33,8 +34,16 @@ public class FormLogin : UIFormBase
     {
         //if(account.text == "" || password.text == "") return;
         //GameEntry.SDK.LoginAsync(account.text, password.text);
-        await GameEntry.Net.ConnectServerAsync();
-        GameEntry.Net.Requset.c2s_request_login(account.text,password.text);
+        
+        
+        
+        //await GameEntry.Net.ConnectServerAsync();
+        //GameEntry.Net.Requset.c2s_request_login(account.text,password.text);
+        string filePath = Path.Combine(Application.persistentDataPath, "Logs.txt");
+        //GameUtil.CompressFile($"{filePath}", null, null);
+        GameEntry.SDK.UploadLogData("1111111111");
+
+
         // Dictionary<string,object> dic = new Dictionary<string,object>();
         // dic.Add("测试数据1","家电");
         // TalkingDataSDK.OnEvent("游戏埋点数据",dic,null);
