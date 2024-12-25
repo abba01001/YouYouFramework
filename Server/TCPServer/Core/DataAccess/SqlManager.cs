@@ -165,6 +165,7 @@ namespace TCPServer.Core.DataAccess
                 {
                     foreach (var param in parameters)
                     {
+                        Console.WriteLine($"{param.Key}====={param.Value}");
                         command.Parameters.AddWithValue(param.Key, param.Value);
                     }
                 }
@@ -176,7 +177,9 @@ namespace TCPServer.Core.DataAccess
                         var row = new Dictionary<string, object>();
                         for (int i = 0; i < reader.FieldCount; i++)
                         {
-                            row[reader.GetName(i)] = reader[i];
+                            var fieldName = reader.GetName(i);
+                            var fieldValue = reader[i];
+                            row[fieldName] = fieldValue;
                         }
                         results.Add(row);
                     }

@@ -1,8 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Net.Sockets;
 using Google.Protobuf;
+using Google.Protobuf.Collections;
 using Protocols;
+using Protocols.Game;
 using Protocols.Guild;
+using Protocols.Player;
 using YouYou;
 
 
@@ -56,11 +60,13 @@ public class NetRequestHandler
         SendMessage(new HeartBeatMsg());
     }
 
+    //请求公会列表
     public void c2s_request_guild_list()
     {
         SendMessage(new GuildListMsg());
     }
-    
+
+    //请求物品
     public void c2s_request_item_info()
     {
         Protocols.Item.ItemData data = new Protocols.Item.ItemData()
@@ -74,15 +80,31 @@ public class NetRequestHandler
         SendMessage(data);
     }
 
+    //请求登录
     public void c2s_request_login(string account, string password)
     {
         account = "a123";
-        password = "123456";
+        password = "99999";
         LoginMsg data = new LoginMsg()
         {
             UserAccount = account,
             UserPassword = password//SecurityUtil.ConvertBase64Key(password)
         };
+        SendMessage(data);
+    }
+    
+        
+    //更新玩家数据
+    public void c2s_request_update_role_info(Dictionary<string,string> values)
+    {
+        UpdateUserRequest data = new UpdateUserRequest()
+        {
+            UserUuid = GameEntry.Data.UserId,
+        };
+        foreach (var kvp in values)
+        {
+            data.UpdatedAttrs.Add(kvp.Key, kvp.Value);
+        }
         SendMessage(data);
     }
     #endregion

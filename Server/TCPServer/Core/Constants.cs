@@ -10,8 +10,6 @@ namespace TCPServer.Core
     {
         public static string SECURITYKEY = "3ZkPqF9hDjW8q2Z7";//钥匙
         public static int BLOCK_SIZE = 16; // AES块大小
-
-
         //public struct SqlKey
         //{
         //    public string SqlServer = "Server";
@@ -32,6 +30,11 @@ namespace TCPServer.Core
         public static string UserId { get; set; } = "User ID";
         public static string Password { get; set; } = "Password";
         public static string Port { get; set; } = "Port";
+    }
+
+    public static class SqlTable
+    {
+        public static string GameSaveData { get; set; } = "game_saves";
     }
 
     public static class Token

@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using Google.Protobuf;
 using Protocols;
 using Protocols.Guild;
 using Protocols.Item;
+using Protocols.Player;
 using UnityEngine;
 using YouYou;
 
@@ -26,6 +28,7 @@ public class NetResponseHandler
         RegisterHandler(nameof(HeartBeatMsg), s2c_handle_request_heart_beat);
         RegisterHandler(nameof(GuildListMsg), s2c_handle_request_guild_list);
         RegisterHandler(nameof(LoginMsg), s2c_handle_request_login);
+        RegisterHandler(nameof(UpdateUserResponse), s2c_handle_request_update_role_info);
     }
     
     public void RegisterHandler(string type, Action<BaseMessage> handler)
@@ -76,16 +79,8 @@ public class NetResponseHandler
     private void s2c_handle_request_login(BaseMessage message)
     {
         GameUtil.LogError($"收到request_login回应");
-
-        LoginMsg msg = new LoginMsg();
         ProtocolHelper.UnpackData<LoginMsg>(message, (data) =>
         {
-            foreach (var property in data.GetType().GetProperties())
-            {
-                var value = property.GetValue(data);
-                GameUtil.LogError($"键{property.Name}====值{value}");
-            }
-
             if (data.State == 0)
             {
                 GameUtil.LogError("账号不存在");
@@ -93,8 +88,17 @@ public class NetResponseHandler
             else if (data.State == 1)
             {
                 GameEntry.Data.UserId = data.UserUuid;
-                GameEntry.SDK.DownloadGameData(GameEntry.Data.UserId);
+                GameUtil.LogError("数据=====》",data.SaveData.ToBase64());
+                byte[] byteArray = data.SaveData.ToByteArray();
+                
+                string base64String = Convert.ToBase64String(byteArray);
+                byte[] binaryData = Convert.FromBase64String(base64String);
+                GameUtil.LogError($"登录回调数据{base64String}");
+                
+                GameEntry.Data.InitGameData(binaryData);//data.SaveData.ToByteArray());
+                Constants.IsLoginGame = true;
                 Constants.Token = data.Token;
+                GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);
             }
             else
             {
@@ -103,6 +107,26 @@ public class NetResponseHandler
         });
     }
 
+    //修改玩家属性
+    private void s2c_handle_request_update_role_info(BaseMessage message)
+    {
+        GameUtil.LogError($"收到request_update_role_info回应");
+        ProtocolHelper.UnpackData<UpdateUserResponse>(message, (data) =>
+        {
+            if (data.Success)
+            {
+                foreach (var VARIABLE in data.UpdatedFields)
+                {
+                    GameUtil.LogError($"{VARIABLE.FieldName}==={VARIABLE.NewValue}");
+                }
+            }
+            else
+            {
+                
+            }
+        });
+    }
+    
     private void s2c_handle_other(BaseMessage message)
     {
         Console.WriteLine("处理其他请求...");

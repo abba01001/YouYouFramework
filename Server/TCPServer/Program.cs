@@ -53,10 +53,11 @@ class Program
             }
             else if (inputStr == "Q") {
 
-                //RoleService.LoginAsync("a123", "123456");
+                RoleService.LoginAsync("a123", "99999");
 
-                TestAsync();
-
+                //TestAsync();
+                //RoleService.CreateUserAsync("a123", "123456");
+                //RoleService.ChangePasswordAsync("a123", "123456","66666");
             }
         }
     }

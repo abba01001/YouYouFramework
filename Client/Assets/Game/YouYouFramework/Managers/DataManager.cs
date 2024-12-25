@@ -4,6 +4,7 @@ using MessagePack;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
+using Google.Protobuf;
 using MessagePack.Resolvers;
 using UnityEngine;
 using YouYou;
@@ -110,16 +111,25 @@ public class DataManager : Observable<DataManager>, IDataManager
     {
         if (datas is {Length: > 0})
         {
-            DataManager mc2 = MessagePackSerializer.Deserialize<DataManager>(datas);
-            PropertyInfo[] properties = mc2.GetType().GetProperties();
-            foreach (var property in properties)
+            try
             {
-                var value = property.GetValue(mc2);
-                var targetProperty = this.GetType().GetProperty(property.Name);
-                if (targetProperty != null && targetProperty.CanWrite)
+                DataManager mc2 = MessagePackSerializer.Deserialize<DataManager>(datas);
+                PropertyInfo[] properties = mc2.GetType().GetProperties();
+                foreach (var property in properties)
                 {
-                    targetProperty.SetValue(this, value);
+                    var value = property.GetValue(mc2);
+                    var targetProperty = this.GetType().GetProperty(property.Name);
+                    GameUtil.LogError($"设置{property.Name}======={value}");
+                    if (targetProperty != null && targetProperty.CanWrite)
+                    {
+                        targetProperty.SetValue(this, value);
+                    }
                 }
+            }
+            catch (MessagePackSerializationException ex)
+            {
+                GameUtil.LogError($"初始化失败 {ex.Message}===》用默认值");
+                InitializeWithDefaultData();
             }
         }
         else
@@ -141,11 +151,13 @@ public class DataManager : Observable<DataManager>, IDataManager
         if (!Constants.IsLoginGame) return;
         _data_update_time = (int)GameEntry.Time.GetNetTime();
         var binaryData = MessagePackSerializer.Serialize(this, MessagePackSerializer.DefaultOptions);
+        
+        var str = Convert.ToBase64String(binaryData);
         if (writeLocal)
         {
             if (Time.time - lastWriteTime >= writeCooldown || ignoreLocalTime)
             {
-                var str = Convert.ToBase64String(binaryData);
+                GameUtil.LogError($"保存本地数据{str}");
                 PlayerPrefs.SetString(GameEntry.Data.UserId, str);
                 
                 string json = MessagePackSerializer.SerializeToJson(this, MessagePackSerializer.DefaultOptions);
@@ -158,11 +170,11 @@ public class DataManager : Observable<DataManager>, IDataManager
             MainEntry.Log(MainEntry.LogCategory.GameData,$"上传云端?{Time.time - lastUploadTime >= uploadCooldown}");
             if (Time.time - lastUploadTime >= uploadCooldown || ignoreCloudTime)
             {
-                GameEntry.SDK.UploadGameData(UserId, binaryData);
+                GameUtil.LogError($"上传云端数据{str}");
+                GameEntry.SDK.UploadGameData(UserId, str);
                 lastUploadTime = Time.time;  // 更新上传的时间
             }
         }
-        GameUtil.LogError($"Token值**********{Constants.Token}");
     }
     
     #endregion

@@ -7,6 +7,9 @@ using TCPServer.Core.DataAccess;
 using System.Security.Cryptography;
 using Protocols.Player;
 using TCPServer.Utils;
+using Protocols.Game;
+using Google.Protobuf.WellKnownTypes;
+using Google.Protobuf;
 
 namespace TCPServer.Core.Services
 {
@@ -24,33 +27,28 @@ namespace TCPServer.Core.Services
         // 创建账号
         public static async Task<OperationResult> CreateUserAsync(string userAccount, string userPassword)
         {
-            int registerTime = (int)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            string query = @"
-                INSERT INTO register_data 
-                (user_uuid, user_account, user_password, register_time, online_duration, 
-                 charge_money, final_login_time, final_exit_time, guild_id, is_online) 
-                VALUES 
-                (@user_uuid, @user_account, @user_password, @register_time, @online_duration, 
-                 @charge_money, @final_login_time, @final_exit_time, @guild_id, @is_online);
-            ";
+            int currentTime = (int)DateTimeOffset.UtcNow.ToUnixTimeSeconds();  // 当前时间戳（秒）
+            string query = $@"
+        INSERT INTO {SqlTable.GameSaveData} 
+        (user_uuid, user_account, user_password, is_online, register_time, login_time) 
+        VALUES 
+        (@user_uuid, @user_account, @user_password, @is_online, @register_time, @login_time);
+    ";
 
             var parameters = new Dictionary<string, object>
-            {
-                { "@user_uuid", Guid.NewGuid().ToString() },
-                { "@user_account", userAccount },
-                { "@user_password", userPassword },
-                { "@register_time", registerTime },
-                { "@online_duration", 0 },
-                { "@charge_money", 0 },
-                { "@final_login_time", 0 },
-                { "@final_exit_time", 0 },
-                { "@guild_id", 0 },
-                { "@is_online", 0 }
-            };
+    {
+        { "@user_uuid", Guid.NewGuid().ToString() },
+        { "@user_account", userAccount },
+        { "@user_password", userPassword },
+        { "@is_online", 1 },  // 设置用户在线状态为 1
+        { "@register_time", currentTime },  // 注册时间为当前时间
+        { "@login_time", currentTime }  // 登录时间为当前时间
+    };
 
             try
             {
                 int rowsAffected = await SqlManager.Instance.ExecuteNonQueryAsync(query, parameters);
+                Console.WriteLine($"玩家{userAccount}注册成功:{rowsAffected > 0}");
                 return rowsAffected > 0 ? OperationResult.Success : OperationResult.UpdateFailed;
             }
             catch (Exception ex)
@@ -60,17 +58,18 @@ namespace TCPServer.Core.Services
             }
         }
 
+
         // 登录验证
-        public static async Task<(OperationResult, string)> LoginAsync(string userAccount, string userPassword)
+        public static async Task<(OperationResult, string, byte[])> LoginAsync(string userAccount, string userPassword)
         {
             // 合并查询和更新为一个事务性操作，减少数据库交互
-            string query = @"
-        UPDATE register_data
+            string query = $@"
+        UPDATE {SqlTable.GameSaveData} 
         SET is_online = 1
         WHERE user_account = @user_account AND user_password = @user_password;
         
-        SELECT user_uuid
-        FROM register_data
+        SELECT user_uuid, save_data
+        FROM {SqlTable.GameSaveData}
         WHERE user_account = @user_account AND user_password = @user_password;
     ";
 
@@ -84,12 +83,15 @@ namespace TCPServer.Core.Services
 
             if (result.Count == 0)
             {
-                return (OperationResult.UserNotFound, null);
+                Console.WriteLine("User not found or invalid credentials.");
+                return (OperationResult.UserNotFound, null, null);
             }
 
             string userUuid = result[0]["user_uuid"].ToString();
-            return (OperationResult.Success, userUuid);
+            byte[] saveData = result[0]["save_data"] as byte[] ?? new byte[0];
+            return (OperationResult.Success, userUuid, saveData); // 返回 userUuid 和 saveData
         }
+
 
 
         // 改密码功能
@@ -101,21 +103,23 @@ namespace TCPServer.Core.Services
                 return OperationResult.UserNotFound;
             string storedPassword = result["user_password"].ToString();
             // 验证旧密码是否正确
+            Console.WriteLine($"旧密码{oldPassword}===新密码{newPassword}");
             if (storedPassword != oldPassword)
                 return OperationResult.PasswordIncorrect;
             // 创建更新的属性字典
-            var updatedAttrs = new Dictionary<string, object>
+            var updatedAttrs = new Dictionary<string, string>
     {
-        { "user_password", newPassword }  // 更新密码
+        { "UserPassword", newPassword }  // 更新密码
     };
-            return await UpdateUserPropertyAsync(userAccount, updatedAttrs);
+            var(res, _) = await UpdateUserPropertyAsync(userAccount, updatedAttrs);
+            return res;
         }
 
 
         // 获取用户信息
         public static async Task<Dictionary<string, object>> GetUserByAccountAsync(string userAccount)
         {
-            string query = "SELECT * FROM register_data WHERE user_account = @user_account";
+            string query = $"SELECT * FROM {SqlTable.GameSaveData} WHERE user_account = @user_account";
             var parameters = new Dictionary<string, object>
     {
         { "@user_account", userAccount }
@@ -139,16 +143,16 @@ namespace TCPServer.Core.Services
 
 
         //更新用户任意属性
-        public static async Task<OperationResult> UpdateUserPropertyAsync(string userAccount, Dictionary<string, object> updatedAttrs)
+        public static async Task<(OperationResult Result, Dictionary<string, object> UpdatedValues)> UpdateUserPropertyAsync(string userUuid, Dictionary<string, string> updatedAttrs)
         {
             if (updatedAttrs == null || updatedAttrs.Count == 0)
-                return OperationResult.UpdateFailed;
+                return (OperationResult.UpdateFailed, null);
 
-            if (!GlobalUtils.ValidateKey<PlayerData>(updatedAttrs)) return OperationResult.PropertyNotFound;
+            if (!GlobalUtils.ValidateKey<GameSaveData>(updatedAttrs))
+                return (OperationResult.PropertyNotFound, null);
 
             var queryParts = new List<string>();
-            var parameters = new Dictionary<string, object> { { "@user_account", userAccount } };
-
+            var parameters = new Dictionary<string, object> { { "@user_uuid", userUuid } };
 
             // 遍历传入的字段
             foreach (var kvp in updatedAttrs)
@@ -160,29 +164,45 @@ namespace TCPServer.Core.Services
 
                 // 生成 SQL 更新语句
                 queryParts.Add($"{columnName} = @{columnName}");
-                parameters.Add($"@{columnName}", value);
 
-                Console.WriteLine($"列名: {propertyName} === 值: {value}");  // 调试输出
+                if(columnName == "save_data")
+                {
+                    parameters.Add($"@{columnName}", Convert.FromBase64String(value as string));
+                }
+                else
+                {
+                    parameters.Add($"@{columnName}", value);
+                }
+
+
+                Console.WriteLine($"更新键: {columnName} === 更新值: {value}"); // 调试输出
             }
 
-            if (queryParts.Count == 0) return OperationResult.UpdateFailed;
+            if (queryParts.Count == 0)
+                return (OperationResult.UpdateFailed, null);
 
             // 构建 SQL 更新查询语句
-            string updateQuery = $"UPDATE register_data SET {string.Join(", ", queryParts)} WHERE user_account = @user_account";
+            string updateQuery = $"UPDATE {SqlTable.GameSaveData} SET {string.Join(", ", queryParts)} WHERE user_uuid = @user_uuid";
 
             try
             {
                 // 执行更新
                 int rowsAffected = await SqlManager.Instance.ExecuteNonQueryAsync(updateQuery, parameters);
-                return rowsAffected > 0 ? OperationResult.Success : OperationResult.UpdateFailed;
+                if (rowsAffected <= 0) return (OperationResult.UpdateFailed, null);
+
+                // 查询更新后的数据
+                string selectQuery = $"SELECT {string.Join(", ", updatedAttrs.Keys.Select(ConvertToColumnName))} FROM {SqlTable.GameSaveData} WHERE user_uuid = @user_uuid";
+                var updatedValues = await SqlManager.Instance.ExecuteQueryAsync(selectQuery, parameters);
+                Console.WriteLine("更新成功");
+                // 返回更新结果和新数据
+                return (OperationResult.Success, updatedValues.Count > 0 ? updatedValues[0] : null);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error updating user properties: {ex.Message}");
-                return OperationResult.UpdateFailed;
+                return (OperationResult.UpdateFailed, null);
             }
         }
-
 
         // 自动将 Protobuf 的驼峰命名属性转换为下划线分隔的列名
         private static string ConvertToColumnName(string propertyName)

@@ -12,9 +12,29 @@ namespace TCPServer.Utils
     {
         // 用静态构造函数来初始化 playerDataKey，只执行一次
         private static Dictionary<Type, List<string>> playerDataKeyCache = new Dictionary<Type, List<string>>();
+        private static Dictionary<string,Type> typeCache = new Dictionary<string,Type>();
+
+        public static Type GetDataType<T>() where T : class
+        {
+            // 使用 typeof(T) 来获取泛型类型 T 的 Type 信息
+            string typeName = typeof(T).Name;
+
+            // 检查缓存中是否有该类型
+            if (typeCache.ContainsKey(typeName))
+            {
+                return typeCache[typeName];
+            }
+            else
+            {
+                // 缓存中没有类型，返回类型信息并将其加入缓存
+                Type type = typeof(T);
+                typeCache[typeName] = type;
+                return type;
+            }
+        }
 
         // 校验方法，确保 updatedAttrs 中的所有键都存在于指定类型的属性中
-        public static bool ValidateKey<T>(Dictionary<string, object> updatedAttrs)
+        public static bool ValidateKey<T>(Dictionary<string, string> updatedAttrs)
         {
             if (updatedAttrs == null || updatedAttrs.Count == 0)
                 return false;

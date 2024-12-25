@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Sockets;
 using System.Xml;
@@ -7,6 +8,7 @@ using Newtonsoft.Json;
 using Protocols;
 using Protocols.Guild;
 using Protocols.Item;
+using Protocols.Player;
 using TCPServer;
 using TCPServer.Core.Services;
 using TCPServer.Utils;
@@ -49,12 +51,14 @@ public class RequestHandler
         SendMessage(data);
     }
 
-    public void c2s_request_login(int state,string user_uuid)
+    public void c2s_request_login(int state,string user_uuid, byte[] save_data)
     {
         LoginMsg data = new LoginMsg();
         data.State = state;
         data.UserUuid = user_uuid;
         data.Token = JwtHelper.GenerateToken(data.UserUuid, "测试");
+        data.SaveData = ByteString.CopyFrom(save_data);
+        Console.WriteLine($"返回数据{Convert.ToBase64String(save_data)}");
         SendMessage(data);
     }
 
@@ -68,6 +72,18 @@ public class RequestHandler
             ItemType = 3,
             Quantity = 5,
         };
+        SendMessage(data);
+    }
+
+    public void c2s_request_update_role_info(OperationResult result, Dictionary<string, object> values)
+    {
+        UpdateUserResponse data = new UpdateUserResponse();
+        data.Success = result == OperationResult.Success;
+        //foreach (var item in values)
+        //{
+        //    UpdatedField field = new UpdatedField() { FieldName = item.Key, NewValue = (string)item.Value };
+        //    data.UpdatedFields.Add(field);
+        //}
         SendMessage(data);
     }
     #endregion

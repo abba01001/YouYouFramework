@@ -31,6 +31,7 @@ message LoginMsg{
     int32 state = 3;
     string user_uuid = 4;
     string token = 5;
+    bytes save_data = 6;
 }
 
 message RegisterMsg{

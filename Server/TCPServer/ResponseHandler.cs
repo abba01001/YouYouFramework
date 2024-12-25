@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using Protocols;
 using Protocols.Guild;
 using Protocols.Item;
+using Protocols.Player;
 using TCPServer.Core.DataAccess;
 using TCPServer.Core.Services;
 using TCPServer.Utils;
@@ -27,6 +28,7 @@ public class ResponseHandler
         RegisterHandler(nameof(HeartBeatMsg), s2c_handle_request_heart_beat);
         RegisterHandler(nameof(GuildListMsg), s2c_handle_request_guild_list);
         RegisterHandler(nameof(LoginMsg), s2c_handle_request_login);
+        RegisterHandler(nameof(UpdateUserRequest), s2c_handle_request_update_role_info);
     }
     
     public void RegisterHandler(string messageType, Action<BaseMessage> handler)
@@ -45,7 +47,7 @@ public class ResponseHandler
             //验证token
             if (JwtHelper.ValidateToken(message.Token) == null)
             {
-                Console.WriteLine("用户Token验证失败");
+                Console.WriteLine($"用户Token验证失败========{message.Type}");
                 return;
             }
         }
@@ -79,8 +81,9 @@ public class ResponseHandler
     {
         ProtocolHelper.UnpackData<LoginMsg>(message, async (data) =>
         {
-            (OperationResult state,string user_uuid) = await RoleService.LoginAsync(data.UserAccount, data.UserPassword);
-            request.c2s_request_login((int)state, user_uuid);
+            Console.WriteLine($"{nameof(LoginMsg)}: {data}");
+            (OperationResult state,string user_uuid, byte[] save_data) = await RoleService.LoginAsync(data.UserAccount, data.UserPassword);
+            request.c2s_request_login((int)state, user_uuid, save_data);
         });
     }
     private void s2c_handle_other(BaseMessage message)
@@ -88,5 +91,15 @@ public class ResponseHandler
         Console.WriteLine("处理其他请求...");
     }
 
+    //修改玩家属性
+    private void s2c_handle_request_update_role_info(BaseMessage message)
+    {
+        ProtocolHelper.UnpackData<UpdateUserRequest>(message, async (data) =>
+        {
+            Dictionary<string, string> updatedAttrs = new Dictionary<string, string>(data.UpdatedAttrs);
+            (OperationResult result, Dictionary<string, object> updatedValues) = await RoleService.UpdateUserPropertyAsync(data.UserUuid, updatedAttrs);
+            request.c2s_request_update_role_info(result, updatedValues);
+        });
+    }
     #endregion
 }

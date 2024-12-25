@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Net.Http;
@@ -12,6 +13,8 @@ using COSXML.Utils;
 using Main;
 using MessagePack;
 using MySql.Data.MySqlClient;
+using Protocols.Game;
+using Protocols.Player;
 using UnityEngine;
 using YouYou;
 
@@ -29,26 +32,33 @@ public class SDKManager : Observable<SDKManager>
 
     #region 腾讯云COS
     //上传数据到云端
-    public async Task UploadGameData(string userId, byte[] binaryData)
+    public async Task UploadGameData(string userId, string str)
     {
-        CosXml cosXml = CreateCosXml();
-        // 生成文件名
-        string fileName = $"{userId}.bin";
-        using (MemoryStream memoryStream = new MemoryStream(binaryData))
+        GameSaveData data = new GameSaveData();
+        GameEntry.Net.Requset.c2s_request_update_role_info(new Dictionary<string, string>()
         {
-            var dic = SecurityUtil.GetSecretKeyDic();
-            PutObjectRequest request = new PutObjectRequest(dic["bucket"], "Unity/GameData/" + fileName, memoryStream);
-            request.SetSign(TimeUtils.GetCurrentTime(TimeUnit.Seconds), 600);
-            try
-            {
-                PutObjectResult result = await Task.Run(() => cosXml.PutObject(request));
-                GameEntry.LogError($"游戏数据 {fileName} 上传成功{result.IsSuccessful()}！");
-            }
-            catch (Exception ex)
-            {
-                GameEntry.LogError($"{fileName} 上传状态：<color=red>失败</color>，错误：{ex.Message}");
-            }
-        }
+            {nameof(data.SaveData),str}
+        });
+        
+        
+        // CosXml cosXml = CreateCosXml();
+        // // 生成文件名
+        // string fileName = $"{userId}.bin";
+        // using (MemoryStream memoryStream = new MemoryStream(binaryData))
+        // {
+        //     var dic = SecurityUtil.GetSecretKeyDic();
+        //     PutObjectRequest request = new PutObjectRequest(dic["bucket"], "Unity/GameData/" + fileName, memoryStream);
+        //     request.SetSign(TimeUtils.GetCurrentTime(TimeUnit.Seconds), 600);
+        //     try
+        //     {
+        //         PutObjectResult result = await Task.Run(() => cosXml.PutObject(request));
+        //         GameEntry.LogError($"游戏数据 {fileName} 上传成功{result.IsSuccessful()}！");
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         GameEntry.LogError($"{fileName} 上传状态：<color=red>失败</color>，错误：{ex.Message}");
+        //     }
+        // }
     }
     
     public async Task UploadLogData(string userId)
@@ -315,8 +325,8 @@ public class SDKManager : Observable<SDKManager>
     // 登录
     public async Task LoginAsync(string account, string password)
     {
-        account = "abc123";
-        password = "abc123";
+        account = "a123";
+        password = "66666";
         if (await FindAsync(account))
         {
             var (isValid, uuid) = await ValidateUserAsync(account, password);
