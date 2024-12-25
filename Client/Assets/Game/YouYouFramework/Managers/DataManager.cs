@@ -128,12 +128,13 @@ public class DataManager : Observable<DataManager>, IDataManager
             }
             catch (MessagePackSerializationException ex)
             {
-                GameUtil.LogError($"初始化失败 {ex.Message}===》用默认值");
+                GameUtil.LogError($"初始化失败 {ex.Message}===>使用默认值初始化");
                 InitializeWithDefaultData();
             }
         }
         else
         {
+            GameUtil.LogError($"数据库没有数据====>使用默认值初始化");
             // 数据为空时，使用默认值进行初始化
             InitializeWithDefaultData();
         }

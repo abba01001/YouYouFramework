@@ -71,7 +71,6 @@ public class NetManager
 
         try
         {
-            GameUtil.LogError(urls[0],"===",urls[1]);
             await socket.ConnectAsync(new IPEndPoint(IPAddress.Parse(urls[0]), int.Parse(urls[1]))); // 异步连接
             GameEntry.Log(LogCategory.NetWork, $"连接服务器成功{socket.RemoteEndPoint}");
             Requset.UpdateSenderId();

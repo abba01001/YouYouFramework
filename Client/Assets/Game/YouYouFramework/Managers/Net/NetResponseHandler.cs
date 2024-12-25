@@ -88,13 +88,7 @@ public class NetResponseHandler
             else if (data.State == 1)
             {
                 GameEntry.Data.UserId = data.UserUuid;
-                GameUtil.LogError("数据=====》",data.SaveData.ToBase64());
-                byte[] byteArray = data.SaveData.ToByteArray();
-                
-                string base64String = Convert.ToBase64String(byteArray);
-                byte[] binaryData = Convert.FromBase64String(base64String);
-                GameUtil.LogError($"登录回调数据{base64String}");
-                
+                byte[] binaryData = data.SaveData.ToByteArray();
                 GameEntry.Data.InitGameData(binaryData);//data.SaveData.ToByteArray());
                 Constants.IsLoginGame = true;
                 Constants.Token = data.Token;
