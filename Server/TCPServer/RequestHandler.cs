@@ -79,11 +79,14 @@ public class RequestHandler
     {
         UpdateUserResponse data = new UpdateUserResponse();
         data.Success = result == OperationResult.Success;
-        //foreach (var item in values)
-        //{
-        //    UpdatedField field = new UpdatedField() { FieldName = item.Key, NewValue = (string)item.Value };
-        //    data.UpdatedFields.Add(field);
-        //}
+        foreach (var item in values)
+        {
+            if(item.Value.GetType() == typeof(string))
+            {
+                UpdatedField field = new UpdatedField() { FieldName = item.Key, NewValue = (string)item.Value };
+                data.UpdatedFields.Add(field);
+            }
+        }
         SendMessage(data);
     }
     #endregion

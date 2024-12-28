@@ -28,11 +28,23 @@ public class NetManager
     private int HeartInterval => MainEntry.ParamsSettings.GetGradeParamData("HeartInterval");
     private int ConnectInterval => MainEntry.ParamsSettings.GetGradeParamData("ConnectInterval");
     private int MaxReconnect => MainEntry.ParamsSettings.GetGradeParamData("MaxReconnect");
-    
+
     private enum ConnectionStatus { Connected, Disconnected, Unknown }
     private ConnectionStatus connectionStatus = ConnectionStatus.Unknown;
 
-    
+    private string _token = string.Empty;
+
+    public string Token
+    {
+        get => _token;
+        set
+        {
+            MainEntry.Log(MainEntry.LogCategory.NetWork,$"设置toekn =======> {value}");
+            _token = value;
+        }
+    }
+
+    public bool IsConnectServer => connectionStatus == ConnectionStatus.Connected;
     public NetLogger Logger;
     public NetRequestHandler Requset;
     public NetResponseHandler NetResponse;

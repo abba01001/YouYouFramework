@@ -10,24 +10,26 @@ namespace TCPServer.Core.Services
 {
     public class GuildService
     {
-        //创建公会
-        public static bool CreateGuild(string guildId, string name, string leaderName, string description)
+        // 创建公会
+        public static bool CreateGuild(string creatorId, string name, string leader_name, string description)
         {
-            string query = @"INSERT INTO guild_list (guildId, name, leaderName, description)
-                             VALUES (@guildId, @name, @leaderName, @description)";
+            // 使用 creatorId 作为公会的唯一标识，直接存入数据库
+            string query = $@"
+        INSERT INTO {SqlTable.GuildList} (name, leader_name, description, creatorId)
+        VALUES (@name, @leader_name, @description, @creatorId)";
 
             var parameters = new Dictionary<string, object>
-            {
-                { "@guildId", guildId },
-                { "@name", name },
-                { "@leaderName", leaderName },
-                { "@description", description },
-            };
+    {
+        { "@name", name },
+        { "@leader_name", leader_name },
+        { "@description", description },
+        { "@creatorId", creatorId }
+    };
 
             try
             {
                 int result = SqlManager.Instance.ExecuteNonQuery(query, parameters);
-                return result > 0;
+                return result > 0;  // 返回操作成功与否
             }
             catch (Exception ex)
             {
@@ -35,6 +37,7 @@ namespace TCPServer.Core.Services
                 return false;
             }
         }
+
 
         //获取公会列表
         public static async Task<GuildList> GetGuildList(int currentPage, int pageSize)

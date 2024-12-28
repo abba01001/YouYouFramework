@@ -49,7 +49,7 @@ class Program
             }
             else if (inputStr == "B")
             {
-                GuildService.CreateGuild("11111", "测试公会", "测试名字", "测试描述");
+                GuildService.CreateGuild("6816a8da-12d5-412d-a484-329250dc059a", "测试公会", "测试名字", "测试描述");
             }
             else if (inputStr == "Q") {
 

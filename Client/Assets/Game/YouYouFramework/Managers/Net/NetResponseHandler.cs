@@ -51,8 +51,7 @@ public class NetResponseHandler
     // 示例处理方法，接收 BaseMessage 作为参数
     private void s2c_handle_request_heart_beat(BaseMessage message)
     {
-        GameUtil.LogError($"收到心跳回应");
-        ProtocolHelper.UnpackData<Protocols.Item.ItemData>(message, (itemData) =>
+        ProtocolHelper.UnpackData<HeartBeatMsg>(message, (itemData) =>
         {
             //NetManager.Instance.Logger.LogMessage(socket,$"解包成功: Item ID: {itemData.ItemId}, Item Name: {itemData.ItemName}");
         });
@@ -60,7 +59,6 @@ public class NetResponseHandler
     
     private void s2c_handle_request_guild_list(BaseMessage message)
     {
-        GameUtil.LogError($"收到request_guild_list回应");
         ProtocolHelper.UnpackData<Protocols.Guild.GuildListMsg>(message, (data) =>
         {
             GameUtil.LogError($"解包成功:{data.GuildList.Guilds.Count}=={data.GuildList.CurrentPage}");
@@ -78,7 +76,6 @@ public class NetResponseHandler
     //登录
     private void s2c_handle_request_login(BaseMessage message)
     {
-        GameUtil.LogError($"收到request_login回应");
         ProtocolHelper.UnpackData<LoginMsg>(message, (data) =>
         {
             if (data.State == 0)
@@ -90,8 +87,7 @@ public class NetResponseHandler
                 GameEntry.Data.UserId = data.UserUuid;
                 byte[] binaryData = data.SaveData.ToByteArray();
                 GameEntry.Data.InitGameData(binaryData);//data.SaveData.ToByteArray());
-                Constants.IsLoginGame = true;
-                Constants.Token = data.Token;
+                GameEntry.Net.Token = data.Token;
                 GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);
             }
             else
@@ -104,7 +100,6 @@ public class NetResponseHandler
     //修改玩家属性
     private void s2c_handle_request_update_role_info(BaseMessage message)
     {
-        GameUtil.LogError($"收到request_update_role_info回应");
         ProtocolHelper.UnpackData<UpdateUserResponse>(message, (data) =>
         {
             if (data.Success)

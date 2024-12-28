@@ -3,9 +3,11 @@ using Main;
 using MessagePack;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using Google.Protobuf;
 using MessagePack.Resolvers;
+using Newtonsoft.Json;
 using UnityEngine;
 using YouYou;
 
@@ -35,7 +37,6 @@ public class DataManager : Observable<DataManager>, IDataManager
         set
         {
             _user_id = value;
-            SaveData();
         }
     }
 
@@ -113,18 +114,21 @@ public class DataManager : Observable<DataManager>, IDataManager
         {
             try
             {
+                StringBuilder logBuilder = new StringBuilder();
                 DataManager mc2 = MessagePackSerializer.Deserialize<DataManager>(datas);
                 PropertyInfo[] properties = mc2.GetType().GetProperties();
+                logBuilder.AppendLine($"========初始化GameData========");
                 foreach (var property in properties)
                 {
                     var value = property.GetValue(mc2);
                     var targetProperty = this.GetType().GetProperty(property.Name);
-                    GameUtil.LogError($"设置{property.Name}======={value}");
+                    logBuilder.AppendLine($"设置 {property.Name} =======> {value}");
                     if (targetProperty != null && targetProperty.CanWrite)
                     {
                         targetProperty.SetValue(this, value);
                     }
                 }
+                MainEntry.Log(MainEntry.LogCategory.GameData,logBuilder.ToString());
             }
             catch (MessagePackSerializationException ex)
             {
@@ -149,7 +153,7 @@ public class DataManager : Observable<DataManager>, IDataManager
     /// <param name="ignoreCloudTime">无视cd写入</param>
     public void SaveData(bool writeLocal = true,bool ignoreLocalTime = false,bool writeCloud = false,bool ignoreCloudTime = false)
     {
-        if (!Constants.IsLoginGame) return;
+        if (!GameEntry.Net.IsConnectServer) return;
         _data_update_time = (int)GameEntry.Time.GetNetTime();
         var binaryData = MessagePackSerializer.Serialize(this, MessagePackSerializer.DefaultOptions);
         
@@ -158,20 +162,17 @@ public class DataManager : Observable<DataManager>, IDataManager
         {
             if (Time.time - lastWriteTime >= writeCooldown || ignoreLocalTime)
             {
-                GameUtil.LogError($"保存本地数据{str}");
                 PlayerPrefs.SetString(GameEntry.Data.UserId, str);
-                
                 string json = MessagePackSerializer.SerializeToJson(this, MessagePackSerializer.DefaultOptions);
                 lastWriteTime = Time.time;  // 更新写入的时间
-                MainEntry.Log(MainEntry.LogCategory.GameData,$"写入本地文件=={json}");
+                MainEntry.Log(MainEntry.LogCategory.GameData,$"保存本地数据=={json}");
             }
         }
         if (writeCloud)
         {
-            MainEntry.Log(MainEntry.LogCategory.GameData,$"上传云端?{Time.time - lastUploadTime >= uploadCooldown}");
+            MainEntry.Log(MainEntry.LogCategory.GameData,$"上传云端?{Time.time - lastUploadTime >= uploadCooldown || ignoreCloudTime}");
             if (Time.time - lastUploadTime >= uploadCooldown || ignoreCloudTime)
             {
-                GameUtil.LogError($"上传云端数据{str}");
                 GameEntry.SDK.UploadGameData(UserId, str);
                 lastUploadTime = Time.time;  // 更新上传的时间
             }

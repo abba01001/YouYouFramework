@@ -140,7 +140,7 @@ namespace YouYou
 
         private void RefreshNetTime()
         {
-            if (!Constants.IsLoginGame) return;
+            if (!GameEntry.Net.IsConnectServer) return;
             netTimeAction?.Stop();
             netTimeAction = CreateTimerLoop(this, 1f, -1, (int loop) =>
             {

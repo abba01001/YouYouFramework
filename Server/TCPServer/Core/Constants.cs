@@ -35,6 +35,8 @@ namespace TCPServer.Core
     public static class SqlTable
     {
         public static string GameSaveData { get; set; } = "game_saves";
+        public static string GuildList { get; set; } = "guild_list";
+        public static string GuildMembers { get; set; } = "guild_members";
     }
 
     public static class Token

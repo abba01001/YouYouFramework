@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using Google.Protobuf;
 using Google.Protobuf.Collections;
+using Main;
 using Protocols;
 using Protocols.Game;
 using Protocols.Guild;
@@ -46,8 +47,10 @@ public class NetRequestHandler
         message.Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();// 获取当前时间戳
         message.SenderId = this.senderId; // 设置发送者ID
         message.Data = ByteString.CopyFrom(byteArrayData); // 直接将序列化后的字节数组放入 Data
-        message.Token = Constants.Token;
-        GameUtil.LogError($"发送Token==={Constants.Token},内容{message.ToJson()}");
+        message.Token = GameEntry.Net.Token;
+        
+        MainEntry.Log(MainEntry.LogCategory.NetWork,$"发送服务器{message.Type}=============>\n" +
+                                                    $"{message.ToJson()}");
         byte[] messageBytes = message.ToByteArray();
         return messageBytes;
     }
@@ -64,6 +67,12 @@ public class NetRequestHandler
     public void c2s_request_guild_list()
     {
         SendMessage(new GuildListMsg());
+    }
+
+    //请求加入公会
+    public void c2s_request_join_guild()
+    {
+        
     }
 
     //请求物品

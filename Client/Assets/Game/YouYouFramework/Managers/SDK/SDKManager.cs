@@ -63,6 +63,7 @@ public class SDKManager : Observable<SDKManager>
     
     public async Task UploadLogData(string userId)
     {
+        if (!GameEntry.Net.IsConnectServer) return;
         MainEntry.Reporter.WriteLogsToFile();
 
         string filePath = Path.Combine(Application.persistentDataPath, "Logs.txt");
@@ -114,13 +115,11 @@ public class SDKManager : Observable<SDKManager>
             {
                 GameEntry.LogError($"下载成功，保存路径: {tempFilePath}");
                 GameEntry.Data.InitGameData(GetGameData(localFilePath, tempFilePath));
-                Constants.IsLoginGame = true;
                 GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);
             }
             else
             {
                 GameEntry.Data.InitGameData(null);
-                Constants.IsLoginGame = true;
                 GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);
             }
         }
@@ -312,7 +311,6 @@ public class SDKManager : Observable<SDKManager>
         if (await InsertAsync(accountId, passWord))
         {
             GameEntry.Data.IsFirstLoginTime = true;
-            Constants.IsLoginGame = true;
             GameEntry.Log(LogCategory.NetWork,"注册用户成功");
             GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);
         }

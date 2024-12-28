@@ -3,15 +3,20 @@ using Google.Protobuf;
 using Microsoft.VisualBasic;
 using Protocols.Item;
 using System;
+using System.Collections;
 using System.IO;
+using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using System.Text;
+using Main;
 using Protocols;
+using UnityEngine;
 
 public static class ProtocolHelper
 {
-    private const string SECURITYKEY = "3ZkPqF9hDjW8q2Z7";//钥匙
+    private const string SECURITYKEY = "3ZkPqF9hDjW8q2Z7"; //钥匙
+
     // 获得自定义数据类的字节长度
     public static int GetDataBytesLength()
     {
@@ -172,19 +177,20 @@ public static class ProtocolHelper
                 {
                     if (item is int)
                     {
-                        writer.Write((int)item);
+                        writer.Write((int) item);
                     }
                     else if (item is long)
                     {
-                        writer.Write((long)item);
+                        writer.Write((long) item);
                     }
                     else if (item is string)
                     {
-                        writer.Write(((string)item).Length);
-                        writer.Write(Encoding.UTF8.GetBytes((string)item));
+                        writer.Write(((string) item).Length);
+                        writer.Write(Encoding.UTF8.GetBytes((string) item));
                     }
                     // 可以根据需要添加其他类型的处理
                 }
+
                 return ms.ToArray();
             }
         }
@@ -225,6 +231,7 @@ public static class ProtocolHelper
                         }
                     }
                 }
+
                 return dataList.ToArray();
             }
         }
@@ -242,7 +249,7 @@ public static class ProtocolHelper
             // 解包为目标类型（如 ItemData）
             T unpackedData = new T();
             unpackedData.MergeFrom(message.Data); // 直接从消息的 Data 解包
-
+            PrintPublicFields(unpackedData);
             // 执行回调，将解包后的数据传递给回调
             action?.Invoke(unpackedData);
         }
@@ -250,5 +257,40 @@ public static class ProtocolHelper
         {
             Console.WriteLine($"解包失败: {ex.Message}");
         }
+    }
+
+    private static void PrintPublicFields<T>(T obj)
+    {
+        if (obj == null)
+        {
+            GameUtil.LogError("对象为空");
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.AppendLine($"收到服务器响应{typeof(T).Name}=============>");
+
+        var fields = obj.GetType().GetProperties(); // 获取所有公开字段
+        foreach (var field in fields)
+        {
+            try
+            {
+                // 过滤掉不需要的字段
+                if (field.Name.Contains("Parser") || field.Name.Contains("Descriptor"))
+                {
+                    continue; // 跳过该字段
+                }
+
+                var value = field.GetValue(obj);
+                sb.AppendLine($"键{field.Name}:值{value}");
+            }
+            catch (Exception ex)
+            {
+                sb.AppendLine($"{field.Name}: 无法读取值 ({ex.Message})");
+            }
+        }
+
+        // 输出构建好的字符串
+        MainEntry.Log(MainEntry.LogCategory.NetWork,sb.ToString());
     }
 }
