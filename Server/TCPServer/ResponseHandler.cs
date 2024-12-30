@@ -28,6 +28,7 @@ public class ResponseHandler
         RegisterHandler(nameof(HeartBeatMsg), s2c_handle_request_heart_beat);
         RegisterHandler(nameof(GuildListMsg), s2c_handle_request_guild_list);
         RegisterHandler(nameof(LoginMsg), s2c_handle_request_login);
+        RegisterHandler(nameof(RegisterMsg), s2c_handle_request_register);
         RegisterHandler(nameof(UpdateUserRequest), s2c_handle_request_update_role_info);
     }
     
@@ -42,7 +43,7 @@ public class ResponseHandler
     // 处理响应的分发逻辑
     public void HandleResponse(BaseMessage message)
     {
-        if(message.Type != nameof(LoginMsg))
+        if(message.Type != nameof(LoginMsg) && message.Type != nameof(RegisterMsg))
         {
             //验证token
             if (JwtHelper.ValidateToken(message.Token) == null)
@@ -86,6 +87,17 @@ public class ResponseHandler
             request.c2s_request_login((int)state, user_uuid, save_data);
         });
     }
+
+    private void s2c_handle_request_register(BaseMessage message)
+    {
+        ProtocolHelper.UnpackData<RegisterMsg>(message, async (data) =>
+        {
+            Console.WriteLine($"{nameof(RegisterMsg)}: {data}");
+            OperationResult state = await RoleService.CreateUserAsync(data.UserAccount, data.UserPassword);
+            //request.c2s_request_r((int)state, user_uuid);
+        });
+    }
+
     private void s2c_handle_other(BaseMessage message)
     {
         Console.WriteLine("处理其他请求...");

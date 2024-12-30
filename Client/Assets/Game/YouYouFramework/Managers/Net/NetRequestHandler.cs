@@ -97,7 +97,19 @@ public class NetRequestHandler
         LoginMsg data = new LoginMsg()
         {
             UserAccount = account,
-            UserPassword = password//SecurityUtil.ConvertBase64Key(password)
+            UserPassword = SecurityUtil.ConvertBase64Key(password)
+        };
+        SendMessage(data);
+    }
+
+    public void c2s_request_register(string account, string password)
+    {
+        account = "a123";
+        password = "99999";
+        RegisterMsg data = new RegisterMsg()
+        {
+            UserAccount = account,
+            UserPassword = SecurityUtil.ConvertBase64Key(password)
         };
         SendMessage(data);
     }
