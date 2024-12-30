@@ -63,7 +63,7 @@ public class SDKManager : Observable<SDKManager>
     
     public async Task UploadLogData(string userId)
     {
-        if (!GameEntry.Net.IsConnectServer) return;
+        if (!GameEntry.Net.IsLoginGame) return;
         MainEntry.Reporter.WriteLogsToFile();
 
         string filePath = Path.Combine(Application.persistentDataPath, "Logs.txt");

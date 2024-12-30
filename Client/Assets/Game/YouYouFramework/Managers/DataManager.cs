@@ -153,7 +153,7 @@ public class DataManager : Observable<DataManager>, IDataManager
     /// <param name="ignoreCloudTime">无视cd写入</param>
     public void SaveData(bool writeLocal = true,bool ignoreLocalTime = false,bool writeCloud = false,bool ignoreCloudTime = false)
     {
-        if (!GameEntry.Net.IsConnectServer) return;
+        if (!GameEntry.Net.IsLoginGame) return;
         _data_update_time = (int)GameEntry.Time.GetNetTime();
         var binaryData = MessagePackSerializer.Serialize(this, MessagePackSerializer.DefaultOptions);
         

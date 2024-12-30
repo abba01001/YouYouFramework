@@ -56,7 +56,10 @@ public class RequestHandler
         LoginMsg data = new LoginMsg();
         data.State = state;
         data.UserUuid = user_uuid;
-        data.Token = JwtHelper.GenerateToken(data.UserUuid, "测试");
+        if(user_uuid != string.Empty)
+        {
+            data.Token = JwtHelper.GenerateToken(data.UserUuid, "测试");
+        }
         data.SaveData = ByteString.CopyFrom(save_data);
         Console.WriteLine($"返回数据{Convert.ToBase64String(save_data)}");
         SendMessage(data);

@@ -39,7 +39,7 @@ public class FormLogin : UIFormBase
         //if(account.text == "" || password.text == "") return;
         //GameEntry.SDK.LoginAsync(account.text, password.text);
         
-        
+        //loginBtn.GetComponent<Image>().SetImage("Assets/Game/Download/Atlas/Textures/Common","JoyBg.png",true);
         
          await GameEntry.Net.ConnectServerAsync();
          GameEntry.Net.Requset.c2s_request_login(account.text,password.text);

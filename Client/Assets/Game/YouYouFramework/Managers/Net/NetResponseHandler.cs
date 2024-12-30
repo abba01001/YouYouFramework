@@ -89,6 +89,7 @@ public class NetResponseHandler
                 GameEntry.Data.InitGameData(binaryData);//data.SaveData.ToByteArray());
                 GameEntry.Net.Token = data.Token;
                 GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);
+                Constants.IsLoginGame = true;
             }
             else
             {

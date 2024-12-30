@@ -84,11 +84,11 @@ namespace TCPServer.Core.Services
             if (result.Count == 0)
             {
                 Console.WriteLine("User not found or invalid credentials.");
-                return (OperationResult.UserNotFound, null, null);
+                return (OperationResult.UserNotFound, string.Empty, new byte[0]);
             }
 
-            string userUuid = result[0]["user_uuid"].ToString();
             byte[] saveData = result[0]["save_data"] as byte[] ?? new byte[0];
+            string userUuid = result[0]["user_uuid"].ToString();
             return (OperationResult.Success, userUuid, saveData); // 返回 userUuid 和 saveData
         }
 

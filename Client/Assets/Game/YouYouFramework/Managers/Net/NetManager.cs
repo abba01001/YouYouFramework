@@ -44,7 +44,14 @@ public class NetManager
         }
     }
 
-    public bool IsConnectServer => connectionStatus == ConnectionStatus.Connected;
+    public bool IsLoginGame
+    {
+        get
+        {
+            return connectionStatus == ConnectionStatus.Connected && Constants.IsLoginGame;
+        }
+    }
+
     public NetLogger Logger;
     public NetRequestHandler Requset;
     public NetResponseHandler NetResponse;
