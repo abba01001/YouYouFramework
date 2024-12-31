@@ -104,7 +104,7 @@ public class NetRequestHandler
 
     public void c2s_request_register(string account, string password)
     {
-        account = "a123";
+        account = "a1234";
         password = "99999";
         RegisterMsg data = new RegisterMsg()
         {

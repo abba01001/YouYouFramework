@@ -25,9 +25,10 @@ namespace TCPServer.Core.Services
     public class RoleService
     {
         // 创建账号
-        public static async Task<OperationResult> CreateUserAsync(string userAccount, string userPassword)
+        public static async Task<(OperationResult, string)> CreateUserAsync(string userAccount, string userPassword)
         {
             int currentTime = (int)DateTimeOffset.UtcNow.ToUnixTimeSeconds();  // 当前时间戳（秒）
+            string uuid = Guid.NewGuid().ToString();
             string query = $@"
         INSERT INTO {SqlTable.GameSaveData} 
         (user_uuid, user_account, user_password, is_online, register_time, login_time) 
@@ -37,10 +38,10 @@ namespace TCPServer.Core.Services
 
             var parameters = new Dictionary<string, object>
     {
-        { "@user_uuid", Guid.NewGuid().ToString() },
+        { "@user_uuid",uuid },
         { "@user_account", userAccount },
         { "@user_password", userPassword },
-        { "@is_online", 1 },  // 设置用户在线状态为 1
+        { "@is_online", true },  // 添加在线状态参数
         { "@register_time", currentTime },  // 注册时间为当前时间
         { "@login_time", currentTime }  // 登录时间为当前时间
     };
@@ -49,12 +50,12 @@ namespace TCPServer.Core.Services
             {
                 int rowsAffected = await SqlManager.Instance.ExecuteNonQueryAsync(query, parameters);
                 Console.WriteLine($"玩家{userAccount}注册成功:{rowsAffected > 0}");
-                return rowsAffected > 0 ? OperationResult.Success : OperationResult.UpdateFailed;
+                return (rowsAffected > 0 ? OperationResult.Success : OperationResult.UpdateFailed, uuid);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error creating user: {ex.Message}");
-                return OperationResult.UpdateFailed;
+                return (OperationResult.UpdateFailed, string.Empty);
             }
         }
 

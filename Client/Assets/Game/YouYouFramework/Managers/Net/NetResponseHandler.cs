@@ -28,6 +28,7 @@ public class NetResponseHandler
         RegisterHandler(nameof(HeartBeatMsg), s2c_handle_request_heart_beat);
         RegisterHandler(nameof(GuildListMsg), s2c_handle_request_guild_list);
         RegisterHandler(nameof(LoginMsg), s2c_handle_request_login);
+        RegisterHandler(nameof(RegisterMsg), s2c_handle_request_register);
         RegisterHandler(nameof(UpdateUserResponse), s2c_handle_request_update_role_info);
     }
     
@@ -94,6 +95,27 @@ public class NetResponseHandler
             else
             {
                 GameUtil.LogError("密码错误");
+            }
+        });
+    }
+    
+    //注册
+    private void s2c_handle_request_register(BaseMessage message)
+    {
+        ProtocolHelper.UnpackData<RegisterMsg>(message, (data) =>
+        {
+            if (data.State == 1)
+            {
+                GameUtil.LogError("注册成功");
+                GameEntry.Data.UserId = data.UserUuid;
+                GameEntry.Data.InitGameData(null);//data.SaveData.ToByteArray());
+                GameEntry.Net.Token = data.Token;
+                GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);
+                Constants.IsLoginGame = true;
+            }
+            else
+            {
+                GameUtil.LogError("注册失败");
             }
         });
     }

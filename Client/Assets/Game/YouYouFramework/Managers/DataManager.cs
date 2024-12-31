@@ -56,11 +56,7 @@ public class DataManager : Observable<DataManager>, IDataManager
     public PlayerRoleData PlayerRoleData
     {
         get => _playerRoleData;
-        set
-        {
-            _playerRoleData = value;
-            SaveData();
-        }
+        set => _playerRoleData = value;
     }
 
     #endregion
@@ -110,37 +106,40 @@ public class DataManager : Observable<DataManager>, IDataManager
     
     public void InitGameData(byte[] datas)
     {
+        InitializeWithDefaultData();
         if (datas is {Length: > 0})
         {
             try
             {
                 StringBuilder logBuilder = new StringBuilder();
                 DataManager mc2 = MessagePackSerializer.Deserialize<DataManager>(datas);
+                
+                
                 PropertyInfo[] properties = mc2.GetType().GetProperties();
                 logBuilder.AppendLine($"========初始化GameData========");
                 foreach (var property in properties)
                 {
                     var value = property.GetValue(mc2);
                     var targetProperty = this.GetType().GetProperty(property.Name);
-                    logBuilder.AppendLine($"设置 {property.Name} =======> {value}");
-                    if (targetProperty != null && targetProperty.CanWrite)
+                    //logBuilder.AppendLine($"设置 {property.Name} =======> {value}");
+                    if (targetProperty != null && targetProperty.CanWrite && value != null)
                     {
                         targetProperty.SetValue(this, value);
                     }
                 }
+                
+                string json = MessagePackSerializer.SerializeToJson(this, MessagePackSerializer.DefaultOptions);
+                logBuilder.AppendLine(json);
                 MainEntry.Log(MainEntry.LogCategory.GameData,logBuilder.ToString());
             }
             catch (MessagePackSerializationException ex)
             {
                 GameUtil.LogError($"初始化失败 {ex.Message}===>使用默认值初始化");
-                InitializeWithDefaultData();
             }
         }
         else
         {
             GameUtil.LogError($"数据库没有数据====>使用默认值初始化");
-            // 数据为空时，使用默认值进行初始化
-            InitializeWithDefaultData();
         }
     }
 

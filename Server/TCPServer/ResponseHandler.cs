@@ -43,16 +43,19 @@ public class ResponseHandler
     // 处理响应的分发逻辑
     public void HandleResponse(BaseMessage message)
     {
-        if(message.Type != nameof(LoginMsg) && message.Type != nameof(RegisterMsg))
+        //验证token
+        if (NeedValidateMessage(message.Type) && JwtHelper.ValidateToken(message.Token) == null)
         {
-            //验证token
-            if (JwtHelper.ValidateToken(message.Token) == null)
-            {
-                Console.WriteLine($"用户Token验证失败========{message.Type}");
-                return;
-            }
+            Console.WriteLine($"用户Token验证失败========{message.Type}");
+            return;
         }
         if (_handlers.TryGetValue(message.Type, out var handler)) handler(message);
+    }
+
+    private bool NeedValidateMessage(string msgType)
+    {
+        if (msgType == nameof(LoginMsg) || msgType == nameof(RegisterMsg)) return false;
+        return true;
     }
 
 
@@ -93,8 +96,8 @@ public class ResponseHandler
         ProtocolHelper.UnpackData<RegisterMsg>(message, async (data) =>
         {
             Console.WriteLine($"{nameof(RegisterMsg)}: {data}");
-            OperationResult state = await RoleService.CreateUserAsync(data.UserAccount, data.UserPassword);
-            //request.c2s_request_r((int)state, user_uuid);
+            (OperationResult state,string uuid) = await RoleService.CreateUserAsync(data.UserAccount, data.UserPassword);
+            request.c2s_request_register((int)state, uuid);
         });
     }
 

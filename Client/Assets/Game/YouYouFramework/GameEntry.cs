@@ -202,7 +202,8 @@ namespace YouYou
         
         private void Test4()
         {
-            
+            Data.PlayerRoleData.name = "这个是用来测试的名字";
+            Data.SaveData();
         }
 
         void Update()

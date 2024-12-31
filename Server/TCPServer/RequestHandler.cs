@@ -65,6 +65,18 @@ public class RequestHandler
         SendMessage(data);
     }
 
+    public void c2s_request_register(int state,string user_uuid)
+    {
+        RegisterMsg data = new RegisterMsg();
+        data.State = state;
+        data.UserUuid = user_uuid;
+        if (user_uuid != string.Empty)
+        {
+            data.Token = JwtHelper.GenerateToken(data.UserUuid, "测试");
+        }
+        SendMessage(data);
+    }
+
     public void c2s_request_item_info()
     {
         ItemData data = new ItemData()
