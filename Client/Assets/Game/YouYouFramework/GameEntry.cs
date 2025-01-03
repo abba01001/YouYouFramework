@@ -153,7 +153,7 @@ namespace YouYou
             StartCoroutine(GameUtil.CheckKeys(keyMappings));
             ViewQueueManager.Instance.RegisterEvents();
             Initialize();
-            Time.CreateTimerLoop(this, 10f, -1, (t) =>
+            Time.CreateTimerLoop(this, 30f, -1, (t) =>
             {
                 Data.SaveData(true);
             });

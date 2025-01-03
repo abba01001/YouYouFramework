@@ -156,10 +156,14 @@ namespace TCPServer.Core.Services
 
             if (!GlobalUtils.ValidateKey<GameSaveData>(updatedAttrs))
                 return (OperationResult.PropertyNotFound, null);
+            int currentTime = (int)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
             var queryParts = new List<string>();
-            var parameters = new Dictionary<string, object> { { "@user_uuid", userUuid } };
-
+            var parameters = new Dictionary<string, object> { 
+                { "@user_uuid", userUuid },
+                { "@save_time", currentTime},
+            };
+            queryParts.Add("save_time = @save_time");
             // 遍历传入的字段
             foreach (var kvp in updatedAttrs)
             {
