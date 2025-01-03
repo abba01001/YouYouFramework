@@ -33,15 +33,20 @@ namespace Protocols {
             "EQoJdXNlcl91dWlkGAQgASgJEg0KBXRva2VuGAUgASgJEhEKCXNhdmVfZGF0",
             "YRgGIAEoDCJrCgtSZWdpc3Rlck1zZxIUCgx1c2VyX2FjY291bnQYASABKAkS",
             "FQoNdXNlcl9wYXNzd29yZBgCIAEoCRINCgVzdGF0ZRgDIAEoBRIRCgl1c2Vy",
-            "X3V1aWQYBCABKAkSDQoFdG9rZW4YBSABKAkqIgoHTXNnVHlwZRINCglIZWFy",
-            "dEJlYXQQABIICgRFWElUEAFiBnByb3RvMw=="));
+            "X3V1aWQYBCABKAkSDQoFdG9rZW4YBSABKAkimwEKBUVtYWlsEhAKCGVtYWls",
+            "X2lkGAEgASgFEhEKCXNlbmRlcl9pZBgCIAEoCRITCgtyZWNlaXZlcl9pZBgD",
+            "IAEoCRIPCgdzdWJqZWN0GAQgASgJEg8KB2NvbnRlbnQYBSABKAkSEQoJc2Vu",
+            "ZF90aW1lGAYgASgDEg8KB2lzX3JlYWQYByABKAgSEgoKaXNfZGVsZXRlZBgI",
+            "IAEoCCoiCgdNc2dUeXBlEg0KCUhlYXJ0QmVhdBAAEggKBEVYSVQQAWIGcHJv",
+            "dG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Protocols.MsgType), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.BaseMessage), global::Protocols.BaseMessage.Parser, new[]{ "MessageId", "Timestamp", "SenderId", "MsgType", "Token", "Type", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.HeartBeatMsg), global::Protocols.HeartBeatMsg.Parser, null, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.LoginMsg), global::Protocols.LoginMsg.Parser, new[]{ "UserAccount", "UserPassword", "State", "UserUuid", "Token", "SaveData" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.RegisterMsg), global::Protocols.RegisterMsg.Parser, new[]{ "UserAccount", "UserPassword", "State", "UserUuid", "Token" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.RegisterMsg), global::Protocols.RegisterMsg.Parser, new[]{ "UserAccount", "UserPassword", "State", "UserUuid", "Token" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.Email), global::Protocols.Email.Parser, new[]{ "EmailId", "SenderId", "ReceiverId", "Subject", "Content", "SendTime", "IsRead", "IsDeleted" }, null, null, null, null)
           }));
     }
     #endregion
@@ -1381,6 +1386,490 @@ namespace Protocols {
           }
           case 42: {
             Token = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  /// <summary>
+  /// 邮件消息结构
+  /// </summary>
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class Email : pb::IMessage<Email>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<Email> _parser = new pb::MessageParser<Email>(() => new Email());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<Email> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Protocols.MessagesReflection.Descriptor.MessageTypes[4]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public Email() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public Email(Email other) : this() {
+      emailId_ = other.emailId_;
+      senderId_ = other.senderId_;
+      receiverId_ = other.receiverId_;
+      subject_ = other.subject_;
+      content_ = other.content_;
+      sendTime_ = other.sendTime_;
+      isRead_ = other.isRead_;
+      isDeleted_ = other.isDeleted_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public Email Clone() {
+      return new Email(this);
+    }
+
+    /// <summary>Field number for the "email_id" field.</summary>
+    public const int EmailIdFieldNumber = 1;
+    private int emailId_;
+    /// <summary>
+    /// 邮件ID
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int EmailId {
+      get { return emailId_; }
+      set {
+        emailId_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "sender_id" field.</summary>
+    public const int SenderIdFieldNumber = 2;
+    private string senderId_ = "";
+    /// <summary>
+    /// 发送者ID
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string SenderId {
+      get { return senderId_; }
+      set {
+        senderId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "receiver_id" field.</summary>
+    public const int ReceiverIdFieldNumber = 3;
+    private string receiverId_ = "";
+    /// <summary>
+    /// 接收者ID
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string ReceiverId {
+      get { return receiverId_; }
+      set {
+        receiverId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "subject" field.</summary>
+    public const int SubjectFieldNumber = 4;
+    private string subject_ = "";
+    /// <summary>
+    /// 邮件主题
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Subject {
+      get { return subject_; }
+      set {
+        subject_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "content" field.</summary>
+    public const int ContentFieldNumber = 5;
+    private string content_ = "";
+    /// <summary>
+    /// 邮件内容
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Content {
+      get { return content_; }
+      set {
+        content_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "send_time" field.</summary>
+    public const int SendTimeFieldNumber = 6;
+    private long sendTime_;
+    /// <summary>
+    /// 发送时间（使用Unix时间戳）
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public long SendTime {
+      get { return sendTime_; }
+      set {
+        sendTime_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "is_read" field.</summary>
+    public const int IsReadFieldNumber = 7;
+    private bool isRead_;
+    /// <summary>
+    /// 是否已读
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool IsRead {
+      get { return isRead_; }
+      set {
+        isRead_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "is_deleted" field.</summary>
+    public const int IsDeletedFieldNumber = 8;
+    private bool isDeleted_;
+    /// <summary>
+    /// 是否已删除
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool IsDeleted {
+      get { return isDeleted_; }
+      set {
+        isDeleted_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as Email);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(Email other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (EmailId != other.EmailId) return false;
+      if (SenderId != other.SenderId) return false;
+      if (ReceiverId != other.ReceiverId) return false;
+      if (Subject != other.Subject) return false;
+      if (Content != other.Content) return false;
+      if (SendTime != other.SendTime) return false;
+      if (IsRead != other.IsRead) return false;
+      if (IsDeleted != other.IsDeleted) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (EmailId != 0) hash ^= EmailId.GetHashCode();
+      if (SenderId.Length != 0) hash ^= SenderId.GetHashCode();
+      if (ReceiverId.Length != 0) hash ^= ReceiverId.GetHashCode();
+      if (Subject.Length != 0) hash ^= Subject.GetHashCode();
+      if (Content.Length != 0) hash ^= Content.GetHashCode();
+      if (SendTime != 0L) hash ^= SendTime.GetHashCode();
+      if (IsRead != false) hash ^= IsRead.GetHashCode();
+      if (IsDeleted != false) hash ^= IsDeleted.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (EmailId != 0) {
+        output.WriteRawTag(8);
+        output.WriteInt32(EmailId);
+      }
+      if (SenderId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(SenderId);
+      }
+      if (ReceiverId.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(ReceiverId);
+      }
+      if (Subject.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(Subject);
+      }
+      if (Content.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(Content);
+      }
+      if (SendTime != 0L) {
+        output.WriteRawTag(48);
+        output.WriteInt64(SendTime);
+      }
+      if (IsRead != false) {
+        output.WriteRawTag(56);
+        output.WriteBool(IsRead);
+      }
+      if (IsDeleted != false) {
+        output.WriteRawTag(64);
+        output.WriteBool(IsDeleted);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (EmailId != 0) {
+        output.WriteRawTag(8);
+        output.WriteInt32(EmailId);
+      }
+      if (SenderId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(SenderId);
+      }
+      if (ReceiverId.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(ReceiverId);
+      }
+      if (Subject.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(Subject);
+      }
+      if (Content.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(Content);
+      }
+      if (SendTime != 0L) {
+        output.WriteRawTag(48);
+        output.WriteInt64(SendTime);
+      }
+      if (IsRead != false) {
+        output.WriteRawTag(56);
+        output.WriteBool(IsRead);
+      }
+      if (IsDeleted != false) {
+        output.WriteRawTag(64);
+        output.WriteBool(IsDeleted);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (EmailId != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(EmailId);
+      }
+      if (SenderId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(SenderId);
+      }
+      if (ReceiverId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ReceiverId);
+      }
+      if (Subject.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Subject);
+      }
+      if (Content.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Content);
+      }
+      if (SendTime != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(SendTime);
+      }
+      if (IsRead != false) {
+        size += 1 + 1;
+      }
+      if (IsDeleted != false) {
+        size += 1 + 1;
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(Email other) {
+      if (other == null) {
+        return;
+      }
+      if (other.EmailId != 0) {
+        EmailId = other.EmailId;
+      }
+      if (other.SenderId.Length != 0) {
+        SenderId = other.SenderId;
+      }
+      if (other.ReceiverId.Length != 0) {
+        ReceiverId = other.ReceiverId;
+      }
+      if (other.Subject.Length != 0) {
+        Subject = other.Subject;
+      }
+      if (other.Content.Length != 0) {
+        Content = other.Content;
+      }
+      if (other.SendTime != 0L) {
+        SendTime = other.SendTime;
+      }
+      if (other.IsRead != false) {
+        IsRead = other.IsRead;
+      }
+      if (other.IsDeleted != false) {
+        IsDeleted = other.IsDeleted;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            EmailId = input.ReadInt32();
+            break;
+          }
+          case 18: {
+            SenderId = input.ReadString();
+            break;
+          }
+          case 26: {
+            ReceiverId = input.ReadString();
+            break;
+          }
+          case 34: {
+            Subject = input.ReadString();
+            break;
+          }
+          case 42: {
+            Content = input.ReadString();
+            break;
+          }
+          case 48: {
+            SendTime = input.ReadInt64();
+            break;
+          }
+          case 56: {
+            IsRead = input.ReadBool();
+            break;
+          }
+          case 64: {
+            IsDeleted = input.ReadBool();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            EmailId = input.ReadInt32();
+            break;
+          }
+          case 18: {
+            SenderId = input.ReadString();
+            break;
+          }
+          case 26: {
+            ReceiverId = input.ReadString();
+            break;
+          }
+          case 34: {
+            Subject = input.ReadString();
+            break;
+          }
+          case 42: {
+            Content = input.ReadString();
+            break;
+          }
+          case 48: {
+            SendTime = input.ReadInt64();
+            break;
+          }
+          case 56: {
+            IsRead = input.ReadBool();
+            break;
+          }
+          case 64: {
+            IsDeleted = input.ReadBool();
             break;
           }
         }

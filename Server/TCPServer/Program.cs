@@ -74,7 +74,8 @@ class Program
             }
             else if (inputStr == "R")
             {
-                RoleService.GetFriendListAsync("b23673d6-831f-4263-a1c6-5b6ade37f3ea");
+                //RoleService.GetFriendListAsync("b23673d6-831f-4263-a1c6-5b6ade37f3ea");
+                EmailService.SendEmail("root", "b23673d6-831f-4263-a1c6-5b6ade37f3ea", "测试标题", "测试内容");
             }
         }
     }
