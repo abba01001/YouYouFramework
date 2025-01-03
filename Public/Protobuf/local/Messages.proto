@@ -20,6 +20,9 @@ message BaseMessage {
     bytes data = 7;        // 消息内容
 }
 
+message HotUpdateMsg{
+
+}
 
 message HeartBeatMsg {
 
@@ -43,7 +46,7 @@ message RegisterMsg{
 }
 
 // 邮件消息结构
-message Email {
+message EmailMsg {
     int32 email_id = 1;         // 邮件ID
     string sender_id = 2;       // 发送者ID
     string receiver_id = 3;     // 接收者ID
@@ -51,5 +54,6 @@ message Email {
     string content = 5;         // 邮件内容
     int64 send_time = 6;        // 发送时间（使用Unix时间戳）
     bool is_read = 7;           // 是否已读
-    bool is_deleted = 8;        // 是否已删除
+    bool is_get = 8;            // 是否领取
+    bool is_deleted = 9;        // 是否已删除
 }

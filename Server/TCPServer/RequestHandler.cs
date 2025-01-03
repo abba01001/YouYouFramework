@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using System.Xml;
 using Google.Protobuf;
 using Newtonsoft.Json;
@@ -20,21 +21,42 @@ public class RequestHandler
     {
         this.socket = socket;
     }
-    private void SendMessage<T>(T data) where T : IMessage<T>
+    //public void SendMessage<T>(T data) where T : IMessage<T>
+    //{
+    //    byte[] byteArrayData = data.ToByteArray();
+    //    BaseMessage message = new BaseMessage();
+    //    string typeName = typeof(T).Name;
+    //    message.Type = typeof(T).Name;
+    //    message.Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();// 获取当前时间戳
+    //    message.Data = ByteString.CopyFrom(byteArrayData); // 直接将序列化后的字节数组放入 Data
+    //    string messageJson = JsonConvert.SerializeObject(message);
+    //    ServerSocket.Logger.LogMessage(socket,$"发送内容{messageJson}");
+    //    if (socket == null) return;
+    //    message.SenderId = socket.RemoteEndPoint.ToString(); // 设置发送者ID
+    //    byte[] messageBytes = message.ToByteArray();
+    //    socket.Send(messageBytes);
+    //}
+
+    public async Task SendMessage<T>(T data) where T : IMessage<T>
     {
         byte[] byteArrayData = data.ToByteArray();
         BaseMessage message = new BaseMessage();
         string typeName = typeof(T).Name;
-        message.Type = typeof(T).Name;
-        message.Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();// 获取当前时间戳
+        message.Type = typeName;
+        message.Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds(); // 获取当前时间戳
         message.Data = ByteString.CopyFrom(byteArrayData); // 直接将序列化后的字节数组放入 Data
         string messageJson = JsonConvert.SerializeObject(message);
-        ServerSocket.Logger.LogMessage(socket,$"发送内容{messageJson}");
+        ServerSocket.Logger.LogMessage(socket, $"发送内容{messageJson}");
+
         if (socket == null) return;
+
         message.SenderId = socket.RemoteEndPoint.ToString(); // 设置发送者ID
         byte[] messageBytes = message.ToByteArray();
-        socket.Send(messageBytes);
+
+        // 异步发送数据
+        await Task.Run(() => socket.Send(messageBytes)); // 使用 Task.Run 包装同步的 Send 操作
     }
+
 
     #region 发送协议
 

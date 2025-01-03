@@ -24,12 +24,11 @@ class Program
                 ServerSocket.Close();
                 break;
             }
-            //else if (inputStr.Substring(0, 2) == "B:")
-            //{
-            //    BaseMessage msg = new BaseMessage();
-            //    msg.SenderId = "-1";
-            //    ServerSocket.BroadcastMsg(msg);
-            //}
+            else if (inputStr == "K")
+            {
+                HotUpdateMsg msg = new HotUpdateMsg();
+                ServerSocket.BroadcastMsg(msg);
+            }
             else if (inputStr == "A")
             {
                 PlayerData data = new PlayerData();
@@ -75,7 +74,8 @@ class Program
             else if (inputStr == "R")
             {
                 //RoleService.GetFriendListAsync("b23673d6-831f-4263-a1c6-5b6ade37f3ea");
-                EmailService.SendEmail("root", "b23673d6-831f-4263-a1c6-5b6ade37f3ea", "测试标题", "测试内容");
+                //EmailService.SendEmail("root", "b23673d6-831f-4263-a1c6-5b6ade37f3ea", "测试标题", "测试内容");
+                EmailService.SendEmailToAllPlayers("root", "测试全服右键标题", "全服测试内容");
             }
         }
     }

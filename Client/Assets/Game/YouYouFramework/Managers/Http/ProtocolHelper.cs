@@ -237,7 +237,7 @@ public static class ProtocolHelper
         }
     }
 
-    public static void UnpackData<T>(BaseMessage message, Action<T> action) where T : IMessage<T>, new()
+    public static void UnpackData<T>(BaseMessage message, Action<T> action) where T :class, IMessage<T>, new()
     {
         if (message == null)
         {
@@ -247,11 +247,15 @@ public static class ProtocolHelper
         try
         {
             // 解包为目标类型（如 ItemData）
-            T unpackedData = new T();
-            unpackedData.MergeFrom(message.Data); // 直接从消息的 Data 解包
-            PrintPublicFields(unpackedData);
-            // 执行回调，将解包后的数据传递给回调
-            action?.Invoke(unpackedData);
+            T t = MainEntry.ClassObjectPool.Dequeue<T>();
+            t.MergeFrom(message.Data);
+            PrintPublicFields(t);
+            action?.Invoke(t);
+            MainEntry.ClassObjectPool.Enqueue(t);
+            // T unpackedData = new T();
+            // unpackedData.MergeFrom(message.Data); // 直接从消息的 Data 解包
+            // PrintPublicFields(unpackedData);
+            // action?.Invoke(unpackedData);
         }
         catch (InvalidProtocolBufferException ex)
         {

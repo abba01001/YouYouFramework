@@ -153,6 +153,10 @@ namespace YouYou
             StartCoroutine(GameUtil.CheckKeys(keyMappings));
             ViewQueueManager.Instance.RegisterEvents();
             Initialize();
+            Time.CreateTimerLoop(this, 10f, -1, (t) =>
+            {
+                Data.SaveData(true);
+            });
         }
 
         public void ShowBlockMask(bool state)
@@ -232,7 +236,7 @@ namespace YouYou
 
         private void OnApplicationQuit()
         {
-            Data.SaveData(true,true, true, true);
+            Data.SaveData(true);
             Net.DisConnectServer();
             Logger.SyncLog();
             Logger.Dispose();
@@ -245,7 +249,7 @@ namespace YouYou
         {
             if (pause)
             {
-                Data.SaveData(true,true, true, true);
+                Data.SaveData(true);
                 GameEntry.Event.Dispatch(Constants.EventName.GameEntryOnApplicationPause);
             }
         }

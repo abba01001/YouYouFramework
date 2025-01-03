@@ -14,6 +14,7 @@ using YouYou;
 public interface IDataManager
 {
     void SaveData(bool writeLocal = true,bool ignoreLocalTime = false,bool writeCloud = false,bool ignoreCloudTime = false);
+    void SaveData(bool forceWriteCloud);
     void SaveDialogueId(int type, int id);
     PlayerRoleData PlayerRoleData { get; set; }
     int DataUpdateTime { get; set; }
@@ -143,6 +144,11 @@ public class DataManager : Observable<DataManager>, IDataManager
         }
     }
 
+    public void SaveData(bool forceWriteCloud)
+    {
+        SaveData(true, true, forceWriteCloud, true);
+    }
+    
     /// <summary>
     /// 
     /// </summary>

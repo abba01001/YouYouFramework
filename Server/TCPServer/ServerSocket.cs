@@ -105,16 +105,15 @@ public static class ServerSocket
     }
 
     // 异步广播消息
-    public static void BroadcastMsg(BaseMessage message)
+    public static async Task BroadcastMsg<T>(T data) where T : IMessage<T>
     {
         if (isClose)
             return;
-
-        byte[] msgBytes = message.ToByteArray(); // 使用 Protobuf 序列化消息
-        var sendTasks = clientList.Select(client => client.SendMsg(msgBytes));
-        Task.WhenAll(sendTasks).Wait(); // 等待所有任务完成
+        var sendTasks = clientList.ToList().Select(client => client.Request.SendMessage(data));
+        // 使用 await 等待所有任务完成
+        await Task.WhenAll(sendTasks);
+        Console.WriteLine("完成");
     }
-
 
     public static void Close()
     {

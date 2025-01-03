@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Main;
+using Protocols;
+using Protocols.Guild;
+using Protocols.Player;
 
 namespace YouYou
 {
@@ -81,14 +84,39 @@ namespace YouYou
         /// </summary>
         private void InitClassReside()
         {
-            MainEntry.ClassObjectPool.SetResideCount<HttpRoutine>(3);
-            MainEntry.ClassObjectPool.SetResideCount<Dictionary<string, object>>(3);
-            MainEntry.ClassObjectPool.SetResideCount<AssetBundleLoaderRoutine>(10);
-            MainEntry.ClassObjectPool.SetResideCount<AssetLoaderRoutine>(10);
-            MainEntry.ClassObjectPool.SetResideCount<AssetReferenceEntity>(10);
-            MainEntry.ClassObjectPool.SetResideCount<AssetBundleReferenceEntity>(10);
+            // MainEntry.ClassObjectPool.SetResideCount<HttpRoutine>(3);
+            // MainEntry.ClassObjectPool.SetResideCount<Dictionary<string, object>>(3);
+            // MainEntry.ClassObjectPool.SetResideCount<AssetBundleLoaderRoutine>(10);
+            // MainEntry.ClassObjectPool.SetResideCount<AssetLoaderRoutine>(10);
+            // MainEntry.ClassObjectPool.SetResideCount<AssetReferenceEntity>(10);
+            // MainEntry.ClassObjectPool.SetResideCount<AssetBundleReferenceEntity>(10);
+            
+            foreach (var kvp in CommonUseTypeDic)
+            {
+                Type type = kvp.Key;
+                int count = kvp.Value;
+                var method = typeof(ClassObjectPool).GetMethod("SetResideCount");
+                if (method != null)
+                {
+                    var genericMethod = method.MakeGenericMethod(type);
+                    genericMethod.Invoke(MainEntry.ClassObjectPool, new object[] { (byte)count });
+                }
+            }
         }
 
+        //常用类池表
+        private Dictionary<Type, int> CommonUseTypeDic = new Dictionary<Type, int>()
+        {
+            { typeof(HttpRoutine), 3 },
+            { typeof(Dictionary<string, object>), 3 },
+            { typeof(AssetBundleLoaderRoutine), 10 },
+            { typeof(AssetLoaderRoutine), 10 },
+            { typeof(AssetReferenceEntity), 10 },
+            { typeof(AssetBundleReferenceEntity), 10 },
+            { typeof(HeartBeatMsg), 3 },
+            { typeof(GuildListMsg), 3 },
+            { typeof(UpdateUserResponse), 3 }
+        };
         #region 变量对象池
 
         /// <summary>

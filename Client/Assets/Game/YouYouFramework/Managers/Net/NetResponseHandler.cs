@@ -25,6 +25,7 @@ public class NetResponseHandler
     // 注册响应
     public void InitializeHandlers()
     {
+        RegisterHandler(nameof(HotUpdateMsg), s2c_handle_hot_update);
         RegisterHandler(nameof(HeartBeatMsg), s2c_handle_request_heart_beat);
         RegisterHandler(nameof(GuildListMsg), s2c_handle_request_guild_list);
         RegisterHandler(nameof(LoginMsg), s2c_handle_request_login);
@@ -58,6 +59,7 @@ public class NetResponseHandler
         });
     }
     
+    //公会列表
     private void s2c_handle_request_guild_list(BaseMessage message)
     {
         ProtocolHelper.UnpackData<Protocols.Guild.GuildListMsg>(message, (data) =>
@@ -65,6 +67,17 @@ public class NetResponseHandler
             GameUtil.LogError($"公会数量{data.GuildList.TotalCount}");
         });
     }
+    
+    //服务器下发热更信息
+    private void s2c_handle_hot_update(BaseMessage message)
+    {
+        ProtocolHelper.UnpackData<HotUpdateMsg>(message, (data) =>
+        {
+            GameUtil.LogError($"服务器下发资源信息");
+        });
+    }
+    
+    
 
     //登录
     private void s2c_handle_request_login(BaseMessage message)

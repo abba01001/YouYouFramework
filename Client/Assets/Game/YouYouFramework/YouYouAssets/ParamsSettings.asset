@@ -15,7 +15,7 @@ MonoBehaviour:
   WebAccountUrl: 
   TestWebAccountUrl: 127.0.0.1:8080
   IsTestMode: 0
-  IsMapEditorMode: 1
+  IsMapEditorMode: 0
   PostIsEncrypt: 0
   PostContentType: 
   GeneralParams:

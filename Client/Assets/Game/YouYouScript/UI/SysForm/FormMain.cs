@@ -32,7 +32,7 @@ public class FormMain : UIFormBase
             // {
             //     {nameof(data.UserPassword),"99999"}
             // });
-            GameEntry.Data.SaveData(true,true,true,true);
+            GameEntry.Data.SaveData(true);
             return;
             GameUtil.LogError("111111");
             GameEntry.Audio.PlayBGM("maintheme1");
