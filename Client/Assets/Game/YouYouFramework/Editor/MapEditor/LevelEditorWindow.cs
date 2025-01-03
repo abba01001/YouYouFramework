@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
+using UnityEngine.UI;
 
 public class LevelEditorWindow : OdinEditorWindow
 {
@@ -38,6 +39,11 @@ public class LevelEditorWindow : OdinEditorWindow
     
     [BoxGroup("关卡编辑器")] [LabelText("关卡数据")]
     public LevelData CurLevelData;
+    
+    [LabelText("怪物贴图预览")]
+    [HideLabel]
+    [GUIColor(0.8f, 0.8f, 0.8f)]
+    //public Texture2D displayTexture; // 用来显示模型对应的贴图
     
     // 实时更新保存路径
     private void UpdateSavePath()

@@ -10,6 +10,7 @@ using YouYou;
 public class BattleCtrl : Singleton<BattleCtrl>
 {
     public BattleGridManager GridManager { get; set; }
+    
     public int MaxEnemyCount => 100; //最大敌人数
     private TimeAction TimeAction { get; set; }
     public  LevelData CurLevelData { get; set; }

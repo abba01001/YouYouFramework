@@ -95,4 +95,6 @@ public class FormBattle : UIFormBase
         UpdateBattleRoundEvent t = userdata as UpdateBattleRoundEvent;
         round.text = $"波次:{t.Stage.stageIndex}/{t.StageCount}";
     }
+    
+    
 }

@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
+using MessagePack;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -44,6 +47,8 @@ public class EnemyData
     [LabelText("怪物数量")] public int enemyCount; // 敌人数量
     [LabelText("产生间隔")] public float interval; // 生成间隔
     [LabelText("奖励")] public List<ItemData> rewards; // 使用 List<RewardData> 替代 Dictionary
+    
+    [NonSerialized] public Texture2D displayTexture;
 }
 
 
