@@ -64,9 +64,13 @@ public class NetRequestHandler
     }
 
     //请求公会列表
-    public void c2s_request_guild_list()
+    public void c2s_request_guild_list(int pageIndex,int pageSize)
     {
-        SendMessage(new GuildListMsg());
+        GuildListMsg data = new GuildListMsg();
+        data.GuildList = new GuildList();
+        data.GuildList.CurrentPage = pageIndex;
+        data.GuildList.PageSize = pageSize;
+        SendMessage(data);
     }
 
     //请求加入公会

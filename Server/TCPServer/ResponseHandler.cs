@@ -74,11 +74,11 @@ public class ResponseHandler
     private void s2c_handle_request_guild_list(BaseMessage message)
     {
         //处理业务逻辑
-        ProtocolHelper.UnpackData<Protocols.Guild.GuildList>(message, (itemData) =>
+        ProtocolHelper.UnpackData<Protocols.Guild.GuildListMsg>(message, (data) =>
         {
+            request.c2s_request_guild_list(data.GuildList.CurrentPage,data.GuildList.PageSize);
             //NetManager.Instance.Logger.LogMessage(socket,$"解包成功: Item ID: {itemData.ItemId}, Item Name: {itemData.ItemName}");
         });
-        request.c2s_request_guild_list();
     }
 
     private void s2c_handle_request_login(BaseMessage message)

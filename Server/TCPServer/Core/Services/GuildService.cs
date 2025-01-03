@@ -50,7 +50,7 @@ namespace TCPServer.Core.Services
             int totalCount = Convert.ToInt32(SqlManager.Instance.ExecuteScalar(countQuery));
 
             // 查询公会信息
-            string query = $"SELECT guildId, name, leaderName, level, memberCount, memberLimit, description, activityScore, isRecruiting, emblem FROM guild_list LIMIT {offset}, {pageSize}";
+            string query = $"SELECT guild_id, name, leader_name, level, member_count, description, activityScore FROM guild_list LIMIT {offset}, {pageSize}";
 
             // 执行查询
 
@@ -62,16 +62,13 @@ namespace TCPServer.Core.Services
             {
                 GuildInfo guildInfo = new GuildInfo
                 {
-                    GuildId = row["guildId"]?.ToString(),
+                    GuildId = row["guild_id"]?.ToString(),
                     Name = row["name"]?.ToString(),
-                    LeaderName = row["leaderName"]?.ToString(),
+                    LeaderName = row["leader_name"]?.ToString(),
                     Level = Convert.ToInt32(row["level"]),
-                    MemberCount = Convert.ToInt32(row["memberCount"]),
-                    MemberLimit = Convert.ToInt32(row["memberLimit"]),
+                    MemberCount = Convert.ToInt32(row["member_count"]),
                     Description = row["description"]?.ToString(),
                     ActivityScore = Convert.ToInt32(row["activityScore"]),
-                    IsRecruiting = Convert.ToBoolean(row["isRecruiting"]),
-                    Emblem = row["emblem"]?.ToString()
                 };
                 guildInfos.Add(guildInfo);
             }

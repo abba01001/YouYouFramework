@@ -44,10 +44,10 @@ public class RequestHandler
         SendMessage(new HeartBeatMsg());
     }
 
-    public async void c2s_request_guild_list()
+    public async void c2s_request_guild_list(int currentPage, int pageSize)
     {
         GuildListMsg data = new GuildListMsg();
-        data.GuildList = await GuildService.GetGuildList(1, 100);
+        data.GuildList = await GuildService.GetGuildList(currentPage, pageSize);
         SendMessage(data);
     }
 

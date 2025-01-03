@@ -62,15 +62,7 @@ public class NetResponseHandler
     {
         ProtocolHelper.UnpackData<Protocols.Guild.GuildListMsg>(message, (data) =>
         {
-            GameUtil.LogError($"解包成功:{data.GuildList.Guilds.Count}=={data.GuildList.CurrentPage}");
-            foreach (var pair in data.GuildList.Guilds)
-            {
-                foreach (var property in pair.GetType().GetProperties())
-                {
-                    var value = property.GetValue(pair);
-                    GameUtil.LogError($"键{property.Name}====值{value}");
-                }
-            }
+            GameUtil.LogError($"公会数量{data.GuildList.TotalCount}");
         });
     }
 

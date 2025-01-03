@@ -42,7 +42,7 @@ public class FormMain : UIFormBase
         });
         guildBtn.SetButtonClick(() =>
         {
-            GameEntry.Net.Requset.c2s_request_guild_list();
+            GameEntry.Net.Requset.c2s_request_guild_list(1,10);
         });
         //GameEntry.SDK.DownloadAvatar("1", null);
     }

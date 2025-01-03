@@ -19,7 +19,12 @@ namespace TCPServer.Core.Services
         UserNotFound = 0,
         PasswordIncorrect = 2,
         UpdateFailed = 3,
-        PropertyNotFound = 4
+        PropertyNotFound = 4,
+            NotFound = 5,
+        NotBlocked = 6,
+        AlreadyBlocked = 7
+
+
     }
 
     public class RoleService
@@ -459,12 +464,12 @@ VALUES (@user_uuid, @friend_uuid, 1, 1),  -- 发送请求的玩家, is_invitor =
             }
         }
 
-        // 拉黑好友
-        public static async Task<OperationResult> BlockFriendAsync(string userUuid, string friendUuid)
+        // 拉黑或解除拉黑好友
+        public static async Task<OperationResult> BlockFriendAsync(string userUuid, string friendUuid, bool isBlock)
         {
-            // 1. 检查是否已经有好友关系（无论是已同意还是请求中）
+            // 1. 检查是否已经有好友关系
             string checkQuery = @"
-        SELECT COUNT(*) AS friend_count
+        SELECT status
         FROM friend_list
         WHERE (user_uuid = @user_uuid AND friend_uuid = @friend_uuid)
            OR (user_uuid = @friend_uuid AND friend_uuid = @user_uuid)
@@ -481,65 +486,112 @@ VALUES (@user_uuid, @friend_uuid, 1, 1),  -- 发送请求的玩家, is_invitor =
                 // 执行查询
                 var checkResult = await SqlManager.Instance.ExecuteQueryAsync(checkQuery, checkParameters);
 
-                // 获取查询结果的 "friend_count" 字段值
-                int count = Convert.ToInt32(checkResult[0]["friend_count"]);
-
-                // 如果没有记录，插入一条拉黑记录
-                if (count == 0)
+                // 如果没有找到记录，表示没有好友关系
+                if (checkResult.Count == 0)
                 {
-                    // 插入拉黑关系（假设status为5表示拉黑）
-                    string insertQuery = @"
-                INSERT INTO friend_list (user_uuid, friend_uuid, status, is_invitor)
-                VALUES (@user_uuid, @friend_uuid, 5, 1)  -- user_uuid 是拉黑者，status = 5 表示拉黑
-            ";
-
-                    var insertParameters = new Dictionary<string, object>
-            {
-                { "@user_uuid", userUuid },
-                { "@friend_uuid", friendUuid }
-            };
-
-                    int rowsAffected = await SqlManager.Instance.ExecuteNonQueryAsync(insertQuery, insertParameters);
-                    if (rowsAffected > 0)
+                    // 如果 isBlock 为 true，可以插入一条拉黑记录
+                    if (isBlock)
                     {
-                        Console.WriteLine("未找到好友关系，已拉黑用户并创建记录");
-                        return OperationResult.Success;
+                        string insertQuery = @"
+                    INSERT INTO friend_list (user_uuid, friend_uuid, status, is_invitor)
+                    VALUES (@user_uuid, @friend_uuid, 5, 1)  -- user_uuid 是拉黑者，status = 5 表示拉黑
+                ";
+
+                        int rowsAffected = await SqlManager.Instance.ExecuteNonQueryAsync(insertQuery, checkParameters);
+                        if (rowsAffected > 0)
+                        {
+                            Console.WriteLine("已成功拉黑好友（尚未建立好友关系）");
+                            return OperationResult.Success;
+                        }
+                        else
+                        {
+                            Console.WriteLine("创建拉黑记录失败");
+                            return OperationResult.UpdateFailed;
+                        }
                     }
                     else
                     {
-                        Console.WriteLine("创建拉黑记录失败");
-                        return OperationResult.UpdateFailed;
+                        // 如果 isBlock 为 false 且没有建立好友关系，无法解除拉黑
+                        Console.WriteLine("无法解除拉黑，尚未建立好友关系");
+                        return OperationResult.NotFound;
                     }
                 }
                 else
                 {
-                    // 如果已经有记录，更新现有记录的status为5
-                    string updateQuery = @"
-                UPDATE friend_list
-                SET status = 5  -- 5表示拉黑状态
-                WHERE (user_uuid = @user_uuid AND friend_uuid = @friend_uuid)
-                   OR (user_uuid = @friend_uuid AND friend_uuid = @user_uuid)
-            ";
+                    // 获取当前的状态
+                    int currentStatus = Convert.ToInt32(checkResult[0]["status"]);
 
-                    int rowsAffected = await SqlManager.Instance.ExecuteNonQueryAsync(updateQuery, checkParameters);
-                    if (rowsAffected > 0)
+                    // 2. 根据 isBlock 来决定是拉黑还是解除拉黑
+                    if (isBlock)
                     {
-                        Console.WriteLine("已成功拉黑好友");
-                        return OperationResult.Success;
+                        // 拉黑操作，更新为拉黑状态（status = 5）
+                        if (currentStatus != 5)  // 如果不是拉黑状态，则执行拉黑
+                        {
+                            string updateQuery = @"
+                        UPDATE friend_list
+                        SET status = 5  -- 5表示拉黑状态
+                        WHERE (user_uuid = @user_uuid AND friend_uuid = @friend_uuid)
+                           OR (user_uuid = @friend_uuid AND friend_uuid = @user_uuid)
+                    ";
+
+                            int rowsAffected = await SqlManager.Instance.ExecuteNonQueryAsync(updateQuery, checkParameters);
+                            if (rowsAffected > 0)
+                            {
+                                Console.WriteLine("已成功拉黑好友");
+                                return OperationResult.Success;
+                            }
+                            else
+                            {
+                                Console.WriteLine("拉黑失败");
+                                return OperationResult.UpdateFailed;
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("该好友已经处于拉黑状态");
+                            return OperationResult.AlreadyBlocked;
+                        }
                     }
                     else
                     {
-                        Console.WriteLine("拉黑失败");
-                        return OperationResult.UpdateFailed;
+                        // 解除拉黑操作，更新为已同意好友状态（status = 2）
+                        if (currentStatus == 5)  // 只有当前状态是拉黑状态（status = 5）时才能解除拉黑
+                        {
+                            string updateQuery = @"
+                        UPDATE friend_list
+                        SET status = 2  -- 2表示已同意好友
+                        WHERE (user_uuid = @user_uuid AND friend_uuid = @friend_uuid)
+                           OR (user_uuid = @friend_uuid AND friend_uuid = @user_uuid)
+                    ";
+
+                            int rowsAffected = await SqlManager.Instance.ExecuteNonQueryAsync(updateQuery, checkParameters);
+                            if (rowsAffected > 0)
+                            {
+                                Console.WriteLine("已成功解除拉黑好友");
+                                return OperationResult.Success;
+                            }
+                            else
+                            {
+                                Console.WriteLine("解除拉黑失败");
+                                return OperationResult.UpdateFailed;
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("好友当前未处于拉黑状态，无法解除拉黑");
+                            return OperationResult.NotBlocked;
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error blocking friend: {ex.Message}");
+                Console.WriteLine($"Error toggling block status for friend: {ex.Message}");
                 return OperationResult.UpdateFailed;
             }
         }
+
+
 
 
 
