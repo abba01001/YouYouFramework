@@ -42,7 +42,8 @@ public class FormMain : UIFormBase
         });
         guildBtn.SetButtonClick(() =>
         {
-            GameEntry.Net.Requset.c2s_request_guild_list(1,10);
+            //GameEntry.Net.Requset.c2s_request_guild_list(1,10);
+            GameEntry.Net.Requset.c2s_request_chat(4,"大家好啊！！！！");
         });
         //GameEntry.SDK.DownloadAvatar("1", null);
     }

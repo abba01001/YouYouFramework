@@ -18,9 +18,9 @@ namespace TCPServer.Core.Services
         Success = 1,
         UserNotFound = 0,
         PasswordIncorrect = 2,
-        UpdateFailed = 3,
+        Failed = 3,
         PropertyNotFound = 4,
-            NotFound = 5,
+        NotFound = 5,
         NotBlocked = 6,
         AlreadyBlocked = 7
 
@@ -55,12 +55,12 @@ namespace TCPServer.Core.Services
             {
                 int rowsAffected = await SqlManager.Instance.ExecuteNonQueryAsync(query, parameters);
                 Console.WriteLine($"玩家{userAccount}注册成功:{rowsAffected > 0}");
-                return (rowsAffected > 0 ? OperationResult.Success : OperationResult.UpdateFailed, uuid);
+                return (rowsAffected > 0 ? OperationResult.Success : OperationResult.Failed, uuid);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error creating user: {ex.Message}");
-                return (OperationResult.UpdateFailed, string.Empty);
+                return (OperationResult.Failed, string.Empty);
             }
         }
 
@@ -152,7 +152,7 @@ namespace TCPServer.Core.Services
         public static async Task<(OperationResult Result, Dictionary<string, object> UpdatedValues)> UpdateUserPropertyAsync(string userUuid, Dictionary<string, string> updatedAttrs)
         {
             if (updatedAttrs == null || updatedAttrs.Count == 0)
-                return (OperationResult.UpdateFailed, null);
+                return (OperationResult.Failed, null);
 
             if (!GlobalUtils.ValidateKey<GameSaveData>(updatedAttrs))
                 return (OperationResult.PropertyNotFound, null);
@@ -189,7 +189,7 @@ namespace TCPServer.Core.Services
             }
 
             if (queryParts.Count == 0)
-                return (OperationResult.UpdateFailed, null);
+                return (OperationResult.Failed, null);
 
             // 构建 SQL 更新查询语句
             string updateQuery = $"UPDATE {SqlTable.GameSaveData} SET {string.Join(", ", queryParts)} WHERE user_uuid = @user_uuid";
@@ -198,7 +198,7 @@ namespace TCPServer.Core.Services
             {
                 // 执行更新
                 int rowsAffected = await SqlManager.Instance.ExecuteNonQueryAsync(updateQuery, parameters);
-                if (rowsAffected <= 0) return (OperationResult.UpdateFailed, null);
+                if (rowsAffected <= 0) return (OperationResult.Failed, null);
 
                 // 查询更新后的数据
                 string selectQuery = $"SELECT {string.Join(", ", updatedAttrs.Keys.Select(ConvertToColumnName))} FROM {SqlTable.GameSaveData} WHERE user_uuid = @user_uuid";
@@ -210,7 +210,7 @@ namespace TCPServer.Core.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"Error updating user properties: {ex.Message}");
-                return (OperationResult.UpdateFailed, null);
+                return (OperationResult.Failed, null);
             }
         }
 
@@ -258,12 +258,12 @@ OR (user_uuid = @friend_uuid AND friend_uuid = @user_uuid)
                 else if (status == 3) // 3 - 已拒绝
                 {
                     Console.WriteLine("好友请求已被拒绝");
-                    return OperationResult.UpdateFailed;
+                    return OperationResult.Failed;
                 }
                 else if (status == 4) // 4 - 已删除
                 {
                     Console.WriteLine("好友关系已删除");
-                    return OperationResult.UpdateFailed;
+                    return OperationResult.Failed;
                 }
             }
 
@@ -287,7 +287,7 @@ AND status = 5
             if (blacklistResult.Count > 0)
             {
                 Console.WriteLine("您已被对方拉黑，无法添加好友");
-                return OperationResult.UpdateFailed;  // 或者返回其他适合的错误码
+                return OperationResult.Failed;  // 或者返回其他适合的错误码
             }
 
             // 3. 如果没有被拉黑且没有其他好友关系，创建两条好友请求数据
@@ -314,13 +314,13 @@ VALUES (@user_uuid, @friend_uuid, 1, 1),  -- 发送请求的玩家, is_invitor =
                 else
                 {
                     Console.WriteLine("添加好友失败");
-                    return OperationResult.UpdateFailed;
+                    return OperationResult.Failed;
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error adding friend: {ex.Message}");
-                return OperationResult.UpdateFailed;
+                return OperationResult.Failed;
             }
         }
 
@@ -353,13 +353,13 @@ VALUES (@user_uuid, @friend_uuid, 1, 1),  -- 发送请求的玩家, is_invitor =
                 else
                 {
                     Console.WriteLine("接受好友请求失败");
-                    return OperationResult.UpdateFailed;
+                    return OperationResult.Failed;
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error accepting friend request: {ex.Message}");
-                return OperationResult.UpdateFailed;
+                return OperationResult.Failed;
             }
         }
 
@@ -390,13 +390,13 @@ VALUES (@user_uuid, @friend_uuid, 1, 1),  -- 发送请求的玩家, is_invitor =
                 else
                 {
                     Console.WriteLine("删除好友失败");
-                    return OperationResult.UpdateFailed;
+                    return OperationResult.Failed;
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error deleting friend: {ex.Message}");
-                return OperationResult.UpdateFailed;
+                return OperationResult.Failed;
             }
         }
 
@@ -510,7 +510,7 @@ VALUES (@user_uuid, @friend_uuid, 1, 1),  -- 发送请求的玩家, is_invitor =
                         else
                         {
                             Console.WriteLine("创建拉黑记录失败");
-                            return OperationResult.UpdateFailed;
+                            return OperationResult.Failed;
                         }
                     }
                     else
@@ -547,7 +547,7 @@ VALUES (@user_uuid, @friend_uuid, 1, 1),  -- 发送请求的玩家, is_invitor =
                             else
                             {
                                 Console.WriteLine("拉黑失败");
-                                return OperationResult.UpdateFailed;
+                                return OperationResult.Failed;
                             }
                         }
                         else
@@ -577,7 +577,7 @@ VALUES (@user_uuid, @friend_uuid, 1, 1),  -- 发送请求的玩家, is_invitor =
                             else
                             {
                                 Console.WriteLine("解除拉黑失败");
-                                return OperationResult.UpdateFailed;
+                                return OperationResult.Failed;
                             }
                         }
                         else
@@ -591,7 +591,7 @@ VALUES (@user_uuid, @friend_uuid, 1, 1),  -- 发送请求的玩家, is_invitor =
             catch (Exception ex)
             {
                 Console.WriteLine($"Error toggling block status for friend: {ex.Message}");
-                return OperationResult.UpdateFailed;
+                return OperationResult.Failed;
             }
         }
 

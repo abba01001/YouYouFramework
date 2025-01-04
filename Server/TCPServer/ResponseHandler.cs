@@ -30,6 +30,7 @@ public class ResponseHandler
         RegisterHandler(nameof(LoginMsg), s2c_handle_request_login);
         RegisterHandler(nameof(RegisterMsg), s2c_handle_request_register);
         RegisterHandler(nameof(UpdateUserRequest), s2c_handle_request_update_role_info);
+        RegisterHandler(nameof(ChatMsg), s2c_handle_request_chat);
     }
     
     public void RegisterHandler(string messageType, Action<BaseMessage> handler)
@@ -98,6 +99,19 @@ public class ResponseHandler
             Console.WriteLine($"{nameof(RegisterMsg)}: {data}");
             (OperationResult state,string uuid) = await RoleService.CreateUserAsync(data.UserAccount, data.UserPassword);
             request.c2s_request_register((int)state, uuid);
+        });
+    }
+
+    private void s2c_handle_request_chat(BaseMessage message)
+    {
+        ProtocolHelper.UnpackData<ChatMsg>(message, async (data) =>
+        {
+            Console.WriteLine($"{nameof(ChatMsg)}: {data}");
+            OperationResult state = await ChatService.HandleChatMsg(data);
+            if(state == OperationResult.Success)
+            {
+                ServerSocket.BroadcastMsg<ChatMsg>(data);
+            }
         });
     }
 

@@ -17,7 +17,7 @@ MonoBehaviour:
   Options: 272
   PublishPath: C:/Users/A1-0990/AppData/LocalLow/DefaultCompany/YFYouYou/OutPut
   IsUploadAsset: 0
-  IsForceUploadAsset: 0
+  IsForceUploadAsset: 1
   IsUploadAPK: 0
   AssetBundleSavePath: AssetBundles
   IsCanEditor: 1
@@ -79,7 +79,23 @@ MonoBehaviour:
     - Game/Download/Textures/Login
     - Game/Download/Textures/LoginEntry
     - Game/Download/Textures/Map
-    - Game/Download/Textures/Model
+  - Name: "\u6A21\u578B\u7EB9\u7406\u8D44\u6E90"
+    IsBuild: 1
+    Overall: 1
+    IsFirstData: 1
+    IsEncrypt: 0
+    Path:
+    - Game/Download/Textures/Model/ModelPack1
+    - Game/Download/Textures/Model/ModelPack2
+    - Game/Download/Textures/Model/ModelPack3
+    - Game/Download/Textures/Model/ModelPack4
+    - Game/Download/Textures/Model/ModelPack5
+    - Game/Download/Textures/Model/ModelPack6
+    - Game/Download/Textures/Model/ModelPack7
+    - Game/Download/Textures/Model/ModelPack8
+    - Game/Download/Textures/Model/ModelPack9
+    - Game/Download/Textures/Model/ModelPack10
+    - Game/Download/Textures/Model/ModelPack11
   - Name: "\u80CC\u666F\u8D44\u6E90"
     IsBuild: 1
     Overall: 1

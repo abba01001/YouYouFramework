@@ -79,6 +79,16 @@ public class NetRequestHandler
         
     }
 
+    public void c2s_request_chat(int channel_type,string content,string user_uuid = "")
+    {
+        ChatMsg data = MainEntry.ClassObjectPool.Dequeue<ChatMsg>();//new ChatMsg();
+        data.Message = content;
+        data.ChannelType = channel_type;
+        data.ReceiverId = user_uuid;
+        data.SenderId = GameEntry.Data.UserId;
+        SendMessage(data);
+    }
+
     //请求物品
     public void c2s_request_item_info()
     {

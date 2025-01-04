@@ -151,7 +151,7 @@ public class AssetBundleSettings : ScriptableObject
 
     private async Task UploadAssetsAsync()
     {
-        if (IsUploadAsset)
+        if (IsUploadAsset || IsForceUploadAsset)
         {
             COSUploader.ShowUploadWindow();
             await UniTask.Delay(3000);  // 延迟 1 秒

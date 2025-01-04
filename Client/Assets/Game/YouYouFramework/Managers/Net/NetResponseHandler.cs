@@ -31,6 +31,7 @@ public class NetResponseHandler
         RegisterHandler(nameof(LoginMsg), s2c_handle_request_login);
         RegisterHandler(nameof(RegisterMsg), s2c_handle_request_register);
         RegisterHandler(nameof(UpdateUserResponse), s2c_handle_request_update_role_info);
+        RegisterHandler(nameof(ChatMsg), s2c_handle_chat_msg);
     }
     
     public void RegisterHandler(string type, Action<BaseMessage> handler)
@@ -141,6 +142,14 @@ public class NetResponseHandler
             {
                 
             }
+        });
+    }
+
+    private void s2c_handle_chat_msg(BaseMessage message)
+    {
+        ProtocolHelper.UnpackData<ChatMsg>(message, (data) =>
+        {
+            GameUtil.LogError($"收到服务器下发消息:=====>{data.Message}");
         });
     }
     
