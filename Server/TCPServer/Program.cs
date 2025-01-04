@@ -14,7 +14,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        ServerSocket.Start("0.0.0.0", 8080, 1024);//10.0.28.15
+        ServerSocket.Start("0.0.0.0", 17888, 1024);//10.0.28.15
 
         while (true)
         {

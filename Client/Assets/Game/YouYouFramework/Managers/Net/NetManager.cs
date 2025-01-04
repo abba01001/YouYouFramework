@@ -80,7 +80,7 @@ public class NetManager
 
     public async Task ConnectServerAsync(Action action = null)
     {
-        string url = Main.MainEntry.ParamsSettings.TestWebAccountUrl;
+        string url = Main.MainEntry.ParamsSettings.WebAccountUrl;
         string[] urls = url.Split(StringUtil.FourthSeparator);
 
         if (connectionStatus == ConnectionStatus.Connected) return;
