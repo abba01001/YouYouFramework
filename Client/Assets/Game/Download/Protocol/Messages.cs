@@ -37,8 +37,12 @@ namespace Protocols {
             "CghFbWFpbE1zZxIQCghlbWFpbF9pZBgBIAEoBRIRCglzZW5kZXJfaWQYAiAB",
             "KAkSEwoLcmVjZWl2ZXJfaWQYAyABKAkSDwoHc3ViamVjdBgEIAEoCRIPCgdj",
             "b250ZW50GAUgASgJEhEKCXNlbmRfdGltZRgGIAEoAxIPCgdpc19yZWFkGAcg",
-            "ASgIEg4KBmlzX2dldBgIIAEoCBISCgppc19kZWxldGVkGAkgASgIKiIKB01z",
-            "Z1R5cGUSDQoJSGVhcnRCZWF0EAASCAoERVhJVBABYgZwcm90bzM="));
+            "ASgIEg4KBmlzX2dldBgIIAEoCBISCgppc19kZWxldGVkGAkgASgIIrYBCgtD",
+            "aGF0TWVzc2FnZRIKCgJpZBgBIAEoBRIRCglzZW5kZXJfaWQYAiABKAkSEwoL",
+            "cmVjZWl2ZXJfaWQYAyABKAkSDwoHbWVzc2FnZRgEIAEoCRIUCgxjaGFubmVs",
+            "X3R5cGUYBSABKAUSEQoJdGltZXN0YW1wGAYgASgJEg8KB2lzX3JlYWQYByAB",
+            "KAgSFAoMbWVzc2FnZV90eXBlGAggASgFEhIKCmlzX2RlbGV0ZWQYCSABKAgq",
+            "IgoHTXNnVHlwZRINCglIZWFydEJlYXQQABIICgRFWElUEAFiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Protocols.MsgType), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -47,7 +51,8 @@ namespace Protocols {
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.HeartBeatMsg), global::Protocols.HeartBeatMsg.Parser, null, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.LoginMsg), global::Protocols.LoginMsg.Parser, new[]{ "UserAccount", "UserPassword", "State", "UserUuid", "Token", "SaveData" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.RegisterMsg), global::Protocols.RegisterMsg.Parser, new[]{ "UserAccount", "UserPassword", "State", "UserUuid", "Token" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.EmailMsg), global::Protocols.EmailMsg.Parser, new[]{ "EmailId", "SenderId", "ReceiverId", "Subject", "Content", "SendTime", "IsRead", "IsGet", "IsDeleted" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.EmailMsg), global::Protocols.EmailMsg.Parser, new[]{ "EmailId", "SenderId", "ReceiverId", "Subject", "Content", "SendTime", "IsRead", "IsGet", "IsDeleted" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.ChatMessage), global::Protocols.ChatMessage.Parser, new[]{ "Id", "SenderId", "ReceiverId", "Message", "ChannelType", "Timestamp", "IsRead", "MessageType", "IsDeleted" }, null, null, null, null)
           }));
     }
     #endregion
@@ -2068,6 +2073,530 @@ namespace Protocols {
           }
           case 64: {
             IsGet = input.ReadBool();
+            break;
+          }
+          case 72: {
+            IsDeleted = input.ReadBool();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  /// <summary>
+  /// 聊天消息结构
+  /// </summary>
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class ChatMessage : pb::IMessage<ChatMessage>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<ChatMessage> _parser = new pb::MessageParser<ChatMessage>(() => new ChatMessage());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<ChatMessage> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Protocols.MessagesReflection.Descriptor.MessageTypes[6]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ChatMessage() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ChatMessage(ChatMessage other) : this() {
+      id_ = other.id_;
+      senderId_ = other.senderId_;
+      receiverId_ = other.receiverId_;
+      message_ = other.message_;
+      channelType_ = other.channelType_;
+      timestamp_ = other.timestamp_;
+      isRead_ = other.isRead_;
+      messageType_ = other.messageType_;
+      isDeleted_ = other.isDeleted_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ChatMessage Clone() {
+      return new ChatMessage(this);
+    }
+
+    /// <summary>Field number for the "id" field.</summary>
+    public const int IdFieldNumber = 1;
+    private int id_;
+    /// <summary>
+    /// 消息ID
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int Id {
+      get { return id_; }
+      set {
+        id_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "sender_id" field.</summary>
+    public const int SenderIdFieldNumber = 2;
+    private string senderId_ = "";
+    /// <summary>
+    /// 发送者ID
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string SenderId {
+      get { return senderId_; }
+      set {
+        senderId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "receiver_id" field.</summary>
+    public const int ReceiverIdFieldNumber = 3;
+    private string receiverId_ = "";
+    /// <summary>
+    /// 接收者ID（公告频道为 NULL）
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string ReceiverId {
+      get { return receiverId_; }
+      set {
+        receiverId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "message" field.</summary>
+    public const int MessageFieldNumber = 4;
+    private string message_ = "";
+    /// <summary>
+    /// 消息内容
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Message {
+      get { return message_; }
+      set {
+        message_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "channel_type" field.</summary>
+    public const int ChannelTypeFieldNumber = 5;
+    private int channelType_;
+    /// <summary>
+    /// 消息频道类型 (1 - 公共频道, 2 - 私聊, 3 - 系统消息, 4 - 公告)
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int ChannelType {
+      get { return channelType_; }
+      set {
+        channelType_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "timestamp" field.</summary>
+    public const int TimestampFieldNumber = 6;
+    private string timestamp_ = "";
+    /// <summary>
+    /// 消息时间戳（Unix 时间戳）
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Timestamp {
+      get { return timestamp_; }
+      set {
+        timestamp_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "is_read" field.</summary>
+    public const int IsReadFieldNumber = 7;
+    private bool isRead_;
+    /// <summary>
+    /// 消息是否已读，针对私聊消息
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool IsRead {
+      get { return isRead_; }
+      set {
+        isRead_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "message_type" field.</summary>
+    public const int MessageTypeFieldNumber = 8;
+    private int messageType_;
+    /// <summary>
+    /// 消息类型 (1 - 文本, 2 - 图片, 3 - 文件)
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int MessageType {
+      get { return messageType_; }
+      set {
+        messageType_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "is_deleted" field.</summary>
+    public const int IsDeletedFieldNumber = 9;
+    private bool isDeleted_;
+    /// <summary>
+    /// 是否已删除，方便实现软删除
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool IsDeleted {
+      get { return isDeleted_; }
+      set {
+        isDeleted_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as ChatMessage);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(ChatMessage other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Id != other.Id) return false;
+      if (SenderId != other.SenderId) return false;
+      if (ReceiverId != other.ReceiverId) return false;
+      if (Message != other.Message) return false;
+      if (ChannelType != other.ChannelType) return false;
+      if (Timestamp != other.Timestamp) return false;
+      if (IsRead != other.IsRead) return false;
+      if (MessageType != other.MessageType) return false;
+      if (IsDeleted != other.IsDeleted) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Id != 0) hash ^= Id.GetHashCode();
+      if (SenderId.Length != 0) hash ^= SenderId.GetHashCode();
+      if (ReceiverId.Length != 0) hash ^= ReceiverId.GetHashCode();
+      if (Message.Length != 0) hash ^= Message.GetHashCode();
+      if (ChannelType != 0) hash ^= ChannelType.GetHashCode();
+      if (Timestamp.Length != 0) hash ^= Timestamp.GetHashCode();
+      if (IsRead != false) hash ^= IsRead.GetHashCode();
+      if (MessageType != 0) hash ^= MessageType.GetHashCode();
+      if (IsDeleted != false) hash ^= IsDeleted.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Id != 0) {
+        output.WriteRawTag(8);
+        output.WriteInt32(Id);
+      }
+      if (SenderId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(SenderId);
+      }
+      if (ReceiverId.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(ReceiverId);
+      }
+      if (Message.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(Message);
+      }
+      if (ChannelType != 0) {
+        output.WriteRawTag(40);
+        output.WriteInt32(ChannelType);
+      }
+      if (Timestamp.Length != 0) {
+        output.WriteRawTag(50);
+        output.WriteString(Timestamp);
+      }
+      if (IsRead != false) {
+        output.WriteRawTag(56);
+        output.WriteBool(IsRead);
+      }
+      if (MessageType != 0) {
+        output.WriteRawTag(64);
+        output.WriteInt32(MessageType);
+      }
+      if (IsDeleted != false) {
+        output.WriteRawTag(72);
+        output.WriteBool(IsDeleted);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Id != 0) {
+        output.WriteRawTag(8);
+        output.WriteInt32(Id);
+      }
+      if (SenderId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(SenderId);
+      }
+      if (ReceiverId.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(ReceiverId);
+      }
+      if (Message.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(Message);
+      }
+      if (ChannelType != 0) {
+        output.WriteRawTag(40);
+        output.WriteInt32(ChannelType);
+      }
+      if (Timestamp.Length != 0) {
+        output.WriteRawTag(50);
+        output.WriteString(Timestamp);
+      }
+      if (IsRead != false) {
+        output.WriteRawTag(56);
+        output.WriteBool(IsRead);
+      }
+      if (MessageType != 0) {
+        output.WriteRawTag(64);
+        output.WriteInt32(MessageType);
+      }
+      if (IsDeleted != false) {
+        output.WriteRawTag(72);
+        output.WriteBool(IsDeleted);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (Id != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Id);
+      }
+      if (SenderId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(SenderId);
+      }
+      if (ReceiverId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ReceiverId);
+      }
+      if (Message.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Message);
+      }
+      if (ChannelType != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(ChannelType);
+      }
+      if (Timestamp.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Timestamp);
+      }
+      if (IsRead != false) {
+        size += 1 + 1;
+      }
+      if (MessageType != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(MessageType);
+      }
+      if (IsDeleted != false) {
+        size += 1 + 1;
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(ChatMessage other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Id != 0) {
+        Id = other.Id;
+      }
+      if (other.SenderId.Length != 0) {
+        SenderId = other.SenderId;
+      }
+      if (other.ReceiverId.Length != 0) {
+        ReceiverId = other.ReceiverId;
+      }
+      if (other.Message.Length != 0) {
+        Message = other.Message;
+      }
+      if (other.ChannelType != 0) {
+        ChannelType = other.ChannelType;
+      }
+      if (other.Timestamp.Length != 0) {
+        Timestamp = other.Timestamp;
+      }
+      if (other.IsRead != false) {
+        IsRead = other.IsRead;
+      }
+      if (other.MessageType != 0) {
+        MessageType = other.MessageType;
+      }
+      if (other.IsDeleted != false) {
+        IsDeleted = other.IsDeleted;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            Id = input.ReadInt32();
+            break;
+          }
+          case 18: {
+            SenderId = input.ReadString();
+            break;
+          }
+          case 26: {
+            ReceiverId = input.ReadString();
+            break;
+          }
+          case 34: {
+            Message = input.ReadString();
+            break;
+          }
+          case 40: {
+            ChannelType = input.ReadInt32();
+            break;
+          }
+          case 50: {
+            Timestamp = input.ReadString();
+            break;
+          }
+          case 56: {
+            IsRead = input.ReadBool();
+            break;
+          }
+          case 64: {
+            MessageType = input.ReadInt32();
+            break;
+          }
+          case 72: {
+            IsDeleted = input.ReadBool();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            Id = input.ReadInt32();
+            break;
+          }
+          case 18: {
+            SenderId = input.ReadString();
+            break;
+          }
+          case 26: {
+            ReceiverId = input.ReadString();
+            break;
+          }
+          case 34: {
+            Message = input.ReadString();
+            break;
+          }
+          case 40: {
+            ChannelType = input.ReadInt32();
+            break;
+          }
+          case 50: {
+            Timestamp = input.ReadString();
+            break;
+          }
+          case 56: {
+            IsRead = input.ReadBool();
+            break;
+          }
+          case 64: {
+            MessageType = input.ReadInt32();
             break;
           }
           case 72: {

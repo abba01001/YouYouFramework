@@ -38,6 +38,7 @@ namespace TCPServer.Core
         public static string GuildList { get; set; } = "guild_list";
         public static string GuildMembers { get; set; } = "guild_members";
         public static string EmailList { get; set; } = "email_list";
+        public static string ChatMessages { get; set; } = "chat_messages";
     }
 
     public static class Token

@@ -75,7 +75,10 @@ class Program
             {
                 //RoleService.GetFriendListAsync("b23673d6-831f-4263-a1c6-5b6ade37f3ea");
                 //EmailService.SendEmail("root", "b23673d6-831f-4263-a1c6-5b6ade37f3ea", "测试标题", "测试内容");
-                EmailService.SendEmailToAllPlayers("root", "测试全服右键标题", "全服测试内容");
+                //EmailService.SendEmailToAllPlayers("root", "测试全服右键标题", "全服测试内容");
+                //ChatService.SendMessageToAllPlayers("root", "测试消息", 4);
+                ChatService.GetAnnouncementMessages(1, 20); // 获取公告频道的最新30条消息
+
             }
         }
     }
