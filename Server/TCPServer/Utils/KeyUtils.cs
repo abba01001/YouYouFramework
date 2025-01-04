@@ -19,7 +19,8 @@ namespace TCPServer.Utils
         {
             if(sqlKeys == null)
             {
-                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "Key", "SqlKey.bytes");
+                string projectDirectory = AppContext.BaseDirectory;
+                string filePath = Path.Combine(projectDirectory, "Key", "SqlKey.bytes");
                 Console.WriteLine(filePath);
                 if (!File.Exists(filePath))
                 {
@@ -37,7 +38,8 @@ namespace TCPServer.Utils
         {
             if (tokenKeys == null)
             {
-                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "Key", "TokenKey.bytes");
+                string projectDirectory = AppContext.BaseDirectory;
+                string filePath = Path.Combine(projectDirectory, "Key", "TokenKey.bytes");
                 Console.WriteLine(filePath);
                 if (!File.Exists(filePath))
                 {

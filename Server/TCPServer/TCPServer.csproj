@@ -1,16 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
-	<PropertyGroup>
-		<OutputType>Exe</OutputType>
-		<TargetFramework>netcoreapp5.0</TargetFramework>
-		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
-		<SelfContained>true</SelfContained>
-		<!-- 包含所有必要的运行时 -->
-		<PublishSingleFile>true</PublishSingleFile>
-		<!-- 将应用程序打包为单个文件 -->
-		<PublishTrimmed>true</PublishTrimmed>
-		<!-- 剔除未使用的代码以减少文件大小 -->
-	</PropertyGroup>
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp5.0</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <!-- 仅针对 Windows 平台 -->
+    <SelfContained>true</SelfContained>
+    <!-- 包含运行时 -->
+    <PublishSingleFile>false</PublishSingleFile>
+    <!-- 将应用程序打包为单个文件 -->
+    <PublishTrimmed>true</PublishTrimmed>
+    <!-- 剔除未使用的代码以减小文件大小 -->
+    <RemoveUnusedReferences>true</RemoveUnusedReferences>
+    <!-- 移除未使用的程序集 -->
+  </PropertyGroup>
 
 	<ItemGroup>
 	  <PackageReference Include="Google.Protobuf" Version="3.28.2" />
