@@ -37,12 +37,12 @@ namespace Protocols {
             "CghFbWFpbE1zZxIQCghlbWFpbF9pZBgBIAEoBRIRCglzZW5kZXJfaWQYAiAB",
             "KAkSEwoLcmVjZWl2ZXJfaWQYAyABKAkSDwoHc3ViamVjdBgEIAEoCRIPCgdj",
             "b250ZW50GAUgASgJEhEKCXNlbmRfdGltZRgGIAEoAxIPCgdpc19yZWFkGAcg",
-            "ASgIEg4KBmlzX2dldBgIIAEoCBISCgppc19kZWxldGVkGAkgASgIIrQBCgdD",
-            "aGF0TXNnEgwKBHV1aWQYASABKAkSEQoJc2VuZGVyX2lkGAIgASgJEhMKC3Jl",
-            "Y2VpdmVyX2lkGAMgASgJEg8KB21lc3NhZ2UYBCABKAkSFAoMY2hhbm5lbF90",
-            "eXBlGAUgASgFEhEKCXRpbWVzdGFtcBgGIAEoCRIPCgdpc19yZWFkGAcgASgI",
-            "EhQKDG1lc3NhZ2VfdHlwZRgIIAEoBRISCgppc19kZWxldGVkGAkgASgIKiIK",
-            "B01zZ1R5cGUSDQoJSGVhcnRCZWF0EAASCAoERVhJVBABYgZwcm90bzM="));
+            "ASgIEg4KBmlzX2dldBgIIAEoCBISCgppc19kZWxldGVkGAkgASgIIrIBCgdD",
+            "aGF0TXNnEgoKAmlkGAEgASgJEhEKCXNlbmRlcl9pZBgCIAEoCRITCgtyZWNl",
+            "aXZlcl9pZBgDIAEoCRIPCgdtZXNzYWdlGAQgASgJEhQKDGNoYW5uZWxfdHlw",
+            "ZRgFIAEoBRIRCgl0aW1lc3RhbXAYBiABKAkSDwoHaXNfcmVhZBgHIAEoCBIU",
+            "CgxtZXNzYWdlX3R5cGUYCCABKAUSEgoKaXNfZGVsZXRlZBgJIAEoCCoiCgdN",
+            "c2dUeXBlEg0KCUhlYXJ0QmVhdBAAEggKBEVYSVQQAWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Protocols.MsgType), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -52,7 +52,7 @@ namespace Protocols {
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.LoginMsg), global::Protocols.LoginMsg.Parser, new[]{ "UserAccount", "UserPassword", "State", "UserUuid", "Token", "SaveData" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.RegisterMsg), global::Protocols.RegisterMsg.Parser, new[]{ "UserAccount", "UserPassword", "State", "UserUuid", "Token" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.EmailMsg), global::Protocols.EmailMsg.Parser, new[]{ "EmailId", "SenderId", "ReceiverId", "Subject", "Content", "SendTime", "IsRead", "IsGet", "IsDeleted" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.ChatMsg), global::Protocols.ChatMsg.Parser, new[]{ "Uuid", "SenderId", "ReceiverId", "Message", "ChannelType", "Timestamp", "IsRead", "MessageType", "IsDeleted" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.ChatMsg), global::Protocols.ChatMsg.Parser, new[]{ "Id", "SenderId", "ReceiverId", "Message", "ChannelType", "Timestamp", "IsRead", "MessageType", "IsDeleted" }, null, null, null, null)
           }));
     }
     #endregion
@@ -2124,7 +2124,7 @@ namespace Protocols {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public ChatMsg(ChatMsg other) : this() {
-      uuid_ = other.uuid_;
+      id_ = other.id_;
       senderId_ = other.senderId_;
       receiverId_ = other.receiverId_;
       message_ = other.message_;
@@ -2142,18 +2142,18 @@ namespace Protocols {
       return new ChatMsg(this);
     }
 
-    /// <summary>Field number for the "uuid" field.</summary>
-    public const int UuidFieldNumber = 1;
-    private string uuid_ = "";
+    /// <summary>Field number for the "id" field.</summary>
+    public const int IdFieldNumber = 1;
+    private string id_ = "";
     /// <summary>
-    /// 消息UUID（唯一标识符）
+    /// 消息id（唯一标识符）
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Uuid {
-      get { return uuid_; }
+    public string Id {
+      get { return id_; }
       set {
-        uuid_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        id_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -2292,7 +2292,7 @@ namespace Protocols {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (Uuid != other.Uuid) return false;
+      if (Id != other.Id) return false;
       if (SenderId != other.SenderId) return false;
       if (ReceiverId != other.ReceiverId) return false;
       if (Message != other.Message) return false;
@@ -2308,7 +2308,7 @@ namespace Protocols {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (Uuid.Length != 0) hash ^= Uuid.GetHashCode();
+      if (Id.Length != 0) hash ^= Id.GetHashCode();
       if (SenderId.Length != 0) hash ^= SenderId.GetHashCode();
       if (ReceiverId.Length != 0) hash ^= ReceiverId.GetHashCode();
       if (Message.Length != 0) hash ^= Message.GetHashCode();
@@ -2335,9 +2335,9 @@ namespace Protocols {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (Uuid.Length != 0) {
+      if (Id.Length != 0) {
         output.WriteRawTag(10);
-        output.WriteString(Uuid);
+        output.WriteString(Id);
       }
       if (SenderId.Length != 0) {
         output.WriteRawTag(18);
@@ -2381,9 +2381,9 @@ namespace Protocols {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Uuid.Length != 0) {
+      if (Id.Length != 0) {
         output.WriteRawTag(10);
-        output.WriteString(Uuid);
+        output.WriteString(Id);
       }
       if (SenderId.Length != 0) {
         output.WriteRawTag(18);
@@ -2427,8 +2427,8 @@ namespace Protocols {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (Uuid.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Uuid);
+      if (Id.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
       }
       if (SenderId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(SenderId);
@@ -2466,8 +2466,8 @@ namespace Protocols {
       if (other == null) {
         return;
       }
-      if (other.Uuid.Length != 0) {
-        Uuid = other.Uuid;
+      if (other.Id.Length != 0) {
+        Id = other.Id;
       }
       if (other.SenderId.Length != 0) {
         SenderId = other.SenderId;
@@ -2513,7 +2513,7 @@ namespace Protocols {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            Uuid = input.ReadString();
+            Id = input.ReadString();
             break;
           }
           case 18: {
@@ -2568,7 +2568,7 @@ namespace Protocols {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 10: {
-            Uuid = input.ReadString();
+            Id = input.ReadString();
             break;
           }
           case 18: {

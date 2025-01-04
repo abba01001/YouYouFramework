@@ -60,7 +60,7 @@ message EmailMsg {
 
 // 聊天消息结构
 message ChatMsg {
-    string uuid = 1;             // 消息UUID（唯一标识符）
+    string id = 1;             // 消息id（唯一标识符）
     string sender_id = 2;        // 发送者ID
     string receiver_id = 3;      // 接收者ID（公告频道为 NULL）
     string message = 4;          // 消息内容

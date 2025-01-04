@@ -1,6 +1,8 @@
-﻿using Protocols;
+﻿using Google.Protobuf.WellKnownTypes;
+using Protocols;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using TCPServer.Core.DataAccess;
 
@@ -12,8 +14,8 @@ namespace TCPServer.Core.Services
         public static async Task<OperationResult> SendMessageAsync(string senderId, string receiverId, string messageContent, int channelType, int messageType = 1)
         {
             string query = $@"
-        INSERT INTO {SqlTable.ChatMessages} (uuid, sender_id, receiver_id, message, channel_type, is_read, message_type, is_deleted)
-        VALUES (UUID(), @senderId, @receiverId, @message, @channelType, @isRead, @messageType, @isDeleted)";
+        INSERT INTO {SqlTable.ChatMessages} (sender_id, receiver_id, message, channel_type, is_read, message_type, is_deleted)
+        VALUES (@senderId, @receiverId, @message, @channelType, @isRead, @messageType, @isDeleted)";
 
             var parameters = new Dictionary<string, object>
     {
@@ -100,7 +102,7 @@ namespace TCPServer.Core.Services
             int totalCount = Convert.ToInt32(await SqlManager.Instance.ExecuteScalarAsync(countQuery, countParameters));
 
             string query = $@"
-        SELECT uuid, sender_id, receiver_id, message, channel_type, timestamp, is_read, message_type, is_deleted 
+        SELECT sender_id, receiver_id, message, channel_type, timestamp, is_read, message_type, is_deleted 
         FROM {SqlTable.ChatMessages} 
         WHERE (receiver_id = @receiverId OR receiver_id IS NULL) AND is_deleted = FALSE AND channel_type = @channelType
         ORDER BY timestamp DESC
@@ -123,7 +125,7 @@ namespace TCPServer.Core.Services
                 {
                     messages.Add(new ChatMsg
                     {
-                        Uuid = row["uuid"]?.ToString(),  // 获取 uuid
+                        Id = row["id"]?.ToString(),  // 获取 id
                         SenderId = row["sender_id"]?.ToString(),
                         ReceiverId = row["receiver_id"]?.ToString(),
                         Message = row["message"]?.ToString(),
@@ -176,19 +178,21 @@ namespace TCPServer.Core.Services
 
                 foreach (var row in result)
                 {
-                    messages.Add(new ChatMsg
-                    {
-                        SenderId = row["sender_id"]?.ToString(),
-                        ReceiverId = row["receiver_id"]?.ToString(),
-                        Message = row["message"]?.ToString(),
-                        ChannelType = Convert.ToInt32(row["channel_type"]),
-                        Timestamp = ((DateTime)row["timestamp"]).ToString(),
-                        IsRead = Convert.ToBoolean(row["is_read"]),
-                        MessageType = Convert.ToInt32(row["message_type"]),
-                        IsDeleted = Convert.ToBoolean(row["is_deleted"])
-                    });
+                    ChatMsg msg = new ChatMsg();
+                    msg.Id = row["id"]?.ToString();  // 获取 id
+                    msg.SenderId = row["sender_id"]?.ToString();
+                    msg.ReceiverId = row["receiver_id"]?.ToString();
+                    msg.Message = row["message"]?.ToString();
+                    msg.ChannelType = Convert.ToInt32(row["channel_type"]);
+                    msg.Timestamp = ((DateTime)row["timestamp"]).ToString();
+                    msg.IsRead = Convert.ToBoolean(row["is_read"]);
+                    msg.MessageType = Convert.ToInt32(row["message_type"]);
+                    msg.IsDeleted = Convert.ToBoolean(row["is_deleted"]);
+                    // 一行打印所有字段
+                    Console.WriteLine($"Id: {msg.Id},SenderId: {msg.SenderId}, ReceiverId: {msg.ReceiverId}, Message: {msg.Message}, ChannelType: {msg.ChannelType}, " +
+                        $"Timestamp: {msg.Timestamp}, IsRead: {msg.IsRead}, MessageType: {msg.MessageType}, IsDeleted: {msg.IsDeleted}");
+                    messages.Add(msg);
                 }
-
                 return messages;
             }
             catch (Exception ex)
@@ -199,13 +203,13 @@ namespace TCPServer.Core.Services
         }
 
         // 更新消息状态（如标记已读）
-        public static bool UpdateMessageStatus(string uuid, bool isRead)
+        public static bool UpdateMessageStatus(string id, bool isRead)
         {
-            string query = "UPDATE {SqlTable.ChatMessages} SET is_read = @isRead WHERE uuid = @uuid AND is_deleted = FALSE";
+            string query = "UPDATE {SqlTable.ChatMessages} SET is_read = @isRead WHERE id = @id AND is_deleted = FALSE";
 
             var parameters = new Dictionary<string, object>
     {
-        { "@uuid", uuid },
+        { "@id", id },
         { "@isRead", isRead }
     };
 
