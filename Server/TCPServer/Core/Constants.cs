@@ -6,6 +6,19 @@ using System.Threading.Tasks;
 
 namespace TCPServer.Core
 {
+    public enum OperationResult
+    {
+        Success = 1,
+        UserNotFound = 0,
+        PasswordIncorrect = 2,
+        Failed = 3,
+        PropertyNotFound = 4,
+        NotFound = 5,
+        NotBlocked = 6,
+        AlreadyBlocked = 7
+    }
+
+
     public class Constants
     {
         public static string SECURITYKEY = "3ZkPqF9hDjW8q2Z7";//钥匙

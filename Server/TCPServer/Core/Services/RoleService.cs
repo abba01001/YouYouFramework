@@ -13,19 +13,6 @@ using Google.Protobuf;
 
 namespace TCPServer.Core.Services
 {
-    public enum OperationResult
-    {
-        Success = 1,
-        UserNotFound = 0,
-        PasswordIncorrect = 2,
-        Failed = 3,
-        PropertyNotFound = 4,
-        NotFound = 5,
-        NotBlocked = 6,
-        AlreadyBlocked = 7
-
-
-    }
 
     public class RoleService
     {
