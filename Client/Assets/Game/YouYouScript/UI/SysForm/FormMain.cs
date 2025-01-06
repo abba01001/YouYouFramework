@@ -22,6 +22,9 @@ public class FormMain : UIFormBase
     [SerializeField] private Button loginBtn;
     [SerializeField] private Button guildBtn;
     [SerializeField] private Button lordBtn;
+
+    [SerializeField] private Button MoreBtn;
+    [SerializeField] private GameObject MoreDetail;
     protected override void Awake()
     {
         base.Awake();
@@ -50,6 +53,8 @@ public class FormMain : UIFormBase
         {
             
         });
+        
+        MoreBtn.SetButtonClick(() => { MoreDetail.gameObject.MSetActive(!MoreDetail.gameObject.activeSelf); });
     }
 
     private void Start()

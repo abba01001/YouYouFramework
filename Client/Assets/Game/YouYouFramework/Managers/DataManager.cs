@@ -93,7 +93,7 @@ public class DataManager : Observable<DataManager>, IDataManager
     {
         _playerRoleData = new PlayerRoleData();
         _playerRoleData.roleAttr.Add("HuoBi1",0);
-        _playerRoleData.roleAttr.Add("HuoBi3",0);
+        _playerRoleData.roleAttr.Add("HuoBi3",2000);
         _playerRoleData.roleAttr.Add("HuoBi4",0);
         _playerRoleData.roleAttr.Add("role_level",1);
         _playerRoleData.roleAttr.Add("role_exp", 0);
