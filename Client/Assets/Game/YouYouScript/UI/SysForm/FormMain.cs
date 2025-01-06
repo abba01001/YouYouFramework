@@ -25,7 +25,6 @@ public class FormMain : UIFormBase
     protected override void Awake()
     {
         base.Awake();
-        PlayerData data = new PlayerData();
         loginBtn.SetButtonClick(() =>
         {
             // GameEntry.Net.Requset.c2s_request_update_role_info(new Dictionary<string, string>()
@@ -51,5 +50,22 @@ public class FormMain : UIFormBase
         {
             
         });
+    }
+
+    private void Start()
+    {
+        if (GoldPanel.Instance != null)
+        {
+            GoldPanel.Instance.RefreshPos(ShowType.HomePanel);
+        }
+    }
+    
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        if (GoldPanel.Instance != null)
+        {
+            GoldPanel.Instance.RefreshPos(ShowType.HomePanel);
+        }
     }
 }

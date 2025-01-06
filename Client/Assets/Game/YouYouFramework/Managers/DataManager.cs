@@ -92,6 +92,9 @@ public class DataManager : Observable<DataManager>, IDataManager
     public void InitPlayData()
     {
         _playerRoleData = new PlayerRoleData();
+        _playerRoleData.roleAttr.Add("HuoBi1",0);
+        _playerRoleData.roleAttr.Add("HuoBi3",0);
+        _playerRoleData.roleAttr.Add("HuoBi4",0);
         _playerRoleData.roleAttr.Add("role_level",1);
         _playerRoleData.roleAttr.Add("role_exp", 0);
         _playerRoleData.roleAttr.Add("role_heat", 0);
