@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
-using MessagePack;
 using Sirenix.OdinInspector;
-using UnityEngine;
 
 [System.Serializable]
 public class LevelData
@@ -47,8 +43,6 @@ public class EnemyData
     [LabelText("怪物数量")] public int enemyCount; // 敌人数量
     [LabelText("产生间隔")] public float interval; // 生成间隔
     [LabelText("奖励")] public List<ItemData> rewards; // 使用 List<RewardData> 替代 Dictionary
-    
-    [NonSerialized] public Texture2D displayTexture;
 }
 
 
@@ -65,16 +59,38 @@ public class EnemySkill
 [System.Serializable]
 public class EventData
 {
-    [LabelText("事件ID")] public int eventId; // 事件ID
+    [LabelText("事件ID")] public EventId eventId; // 事件ID
     [LabelText("事件参数")] public string eventParams; // 事件参数
 }
 
 [System.Serializable]
 public class ItemData
 {
-    [LabelText("物品")]public int type; // 奖励类型（例如：金币、卡牌等）
+    [LabelText("物品")]public ItemType type; // 奖励类型（例如：金币、卡牌等）
     [LabelText("数量")]public int amount; // 奖励数量或价值
 }
+
+[System.Serializable]
+public enum ItemType
+{
+    [LabelText("默认值")] None = 0,
+    [LabelText("金币")] CoinProp = 1,
+    [LabelText("热能")] HeatProp = 2,
+    [LabelText("雪能")] SnowProp = 3,
+}
+
+[System.Serializable]
+public enum EventId
+{
+    [LabelText("默认值")] None = 0,               // 无事件
+    [LabelText("玩家加入")] PlayerJoined = 1,    // 玩家加入
+    [LabelText("玩家离开")] PlayerLeft = 2,      // 玩家离开
+    [LabelText("游戏开始")] GameStarted = 3,     // 游戏开始
+    [LabelText("游戏结束")] GameEnded = 4,       // 游戏结束
+    [LabelText("拾取物品")] ItemPicked = 5,      // 拾取物品
+    [LabelText("自定义事件")] CustomEvent = 1000  // 自定义事件（占位）
+}
+
 
 [System.Serializable]
 public enum LevelGoal

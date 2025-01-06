@@ -1,16 +1,16 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated July 28, 2023. Replaces all prior versions.
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2023, Esoteric Software LLC
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
  * conditions of Section 2 of the Spine Editor License Agreement:
  * http://esotericsoftware.com/spine-editor-license
  *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software or
- * otherwise create derivative works of the Spine Runtimes (collectively,
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
  * "Products"), provided that each user of the Products must obtain their own
  * Spine Editor license and redistribution of the Products in any form must
  * include this license and copyright notice.
@@ -23,14 +23,16 @@
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
  * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE
- * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-using System;
-using System.Reflection;
-using UnityEditor;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
+
+using System.Reflection;
 
 namespace Spine.Unity.Editor {
 	using Editor = UnityEditor.Editor;
@@ -38,7 +40,7 @@ namespace Spine.Unity.Editor {
 	[CustomEditor(typeof(AnimationReferenceAsset))]
 	public class AnimationReferenceAssetEditor : Editor {
 
-		const string InspectorHelpText = "This is a Spine-Unity Animation Reference Asset. It serializes a reference to a SkeletonData asset and an animationName. It does not contain actual animation data. At runtime, it stores a reference to a Spine.Animation.\n\n" +
+		const string InspectorHelpText = "This is a Spine-Unity Animation Reference Asset. It serializes a reference to a SkeletonDataAsset and an animationName. It does not contain actual animation data. At runtime, it stores a reference to a Spine.Animation.\n\n" +
 				"You can use this in your AnimationState calls instead of a string animation name or a Spine.Animation reference. Use its implicit conversion into Spine.Animation or its .Animation property.\n\n" +
 				"Use AnimationReferenceAssets as an alternative to storing strings or finding animations and caching per component. This only does the lookup by string once, and allows you to store and manage animations via asset references.";
 
@@ -56,11 +58,7 @@ namespace Spine.Unity.Editor {
 		SkeletonData lastSkeletonData;
 
 		void OnEnable () { HandleOnEnablePreview(); }
-		void OnDestroy () {
-			HandleOnDestroyPreview();
-			AppDomain.CurrentDomain.DomainUnload -= OnDomainUnload;
-			EditorApplication.update -= preview.HandleEditorUpdate;
-		}
+		void OnDestroy () { HandleOnDestroyPreview(); }
 
 		public override void OnInspectorGUI () {
 			animationNameProperty = animationNameProperty ?? serializedObject.FindProperty("animationName");
@@ -68,7 +66,7 @@ namespace Spine.Unity.Editor {
 
 			Animation animation = null;
 			if (ThisSkeletonDataAsset != null) {
-				SkeletonData skeletonData = ThisSkeletonDataAsset.GetSkeletonData(true);
+				var skeletonData = ThisSkeletonDataAsset.GetSkeletonData(true);
 				if (skeletonData != null) {
 					animation = skeletonData.FindAnimation(animationName);
 				}
@@ -93,6 +91,9 @@ namespace Spine.Unity.Editor {
 				if (!string.IsNullOrEmpty(animationNameProperty.stringValue))
 					preview.PlayPauseAnimation(animationNameProperty.stringValue, true);
 			}
+
+			lastSkeletonDataAsset = ThisSkeletonDataAsset;
+			lastSkeletonData = ThisSkeletonDataAsset.GetSkeletonData(true);
 
 			//EditorGUILayout.HelpBox(AnimationReferenceAssetEditor.InspectorHelpText, MessageType.Info, true);
 			EditorGUILayout.Space();
@@ -122,9 +123,6 @@ namespace Spine.Unity.Editor {
 					}
 				}
 			}
-
-			lastSkeletonDataAsset = ThisSkeletonDataAsset;
-			lastSkeletonData = ThisSkeletonDataAsset.GetSkeletonData(true);
 		}
 
 		#region Preview Handlers
@@ -135,11 +133,6 @@ namespace Spine.Unity.Editor {
 		void HandleOnEnablePreview () {
 			if (ThisSkeletonDataAsset != null && ThisSkeletonDataAsset.skeletonJSON == null)
 				return;
-			SpineEditorUtilities.ConfirmInitialization();
-
-			// This handles the case where the managed editor assembly is unloaded before recompilation when code changes.
-			AppDomain.CurrentDomain.DomainUnload -= OnDomainUnload;
-			AppDomain.CurrentDomain.DomainUnload += OnDomainUnload;
 
 			preview.Initialize(this.Repaint, ThisSkeletonDataAsset, LastSkinName);
 			preview.PlayPauseAnimation(ThisAnimationName, true);
@@ -147,10 +140,6 @@ namespace Spine.Unity.Editor {
 			preview.OnSkinChanged += HandleOnSkinChanged;
 			EditorApplication.update -= preview.HandleEditorUpdate;
 			EditorApplication.update += preview.HandleEditorUpdate;
-		}
-
-		private void OnDomainUnload (object sender, EventArgs e) {
-			OnDestroy();
 		}
 
 		private void HandleOnSkinChanged (string skinName) {

@@ -21,7 +21,7 @@ public class FormMain : UIFormBase
     [SerializeField] private TMP_InputField password;
     [SerializeField] private Button loginBtn;
     [SerializeField] private Button guildBtn;
-
+    [SerializeField] private Button lordBtn;
     protected override void Awake()
     {
         base.Awake();
@@ -46,5 +46,10 @@ public class FormMain : UIFormBase
             GameEntry.Net.Requset.c2s_request_chat(4,"大家好啊！！！！");
         });
         //GameEntry.SDK.DownloadAvatar("1", null);
+        
+        lordBtn.SetButtonClick(() =>
+        {
+            
+        });
     }
 }

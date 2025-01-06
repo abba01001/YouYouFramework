@@ -1,0 +1,97 @@
+
+10001_nanzhujue.png
+size: 256,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+fawei
+  rotate: false
+  xy: 49, 36
+  size: 40, 47
+  orig: 40, 47
+  offset: 0, 0
+  index: -1
+liuhai
+  rotate: false
+  xy: 2, 86
+  size: 92, 91
+  orig: 92, 91
+  offset: 0, 0
+  index: -1
+shangshen
+  rotate: true
+  xy: 95, 89
+  size: 88, 70
+  orig: 88, 70
+  offset: 0, 0
+  index: -1
+toubu
+  rotate: false
+  xy: 2, 178
+  size: 155, 155
+  orig: 155, 155
+  offset: 0, 0
+  index: -1
+weibo
+  rotate: true
+  xy: 168, 94
+  size: 83, 47
+  orig: 83, 47
+  offset: 0, 0
+  index: -1
+xiashen
+  rotate: true
+  xy: 158, 178
+  size: 94, 58
+  orig: 94, 58
+  offset: 0, 0
+  index: -1
+youshou
+  rotate: false
+  xy: 158, 286
+  size: 61, 46
+  orig: 61, 46
+  offset: 0, 0
+  index: -1
+youtui
+  rotate: true
+  xy: 168, 48
+  size: 43, 47
+  orig: 43, 47
+  offset: 0, 0
+  index: -1
+youyan
+  rotate: false
+  xy: 2, 4
+  size: 35, 35
+  orig: 35, 35
+  offset: 0, 0
+  index: -1
+zuoshou
+  rotate: true
+  xy: 95, 47
+  size: 39, 61
+  orig: 39, 61
+  offset: 0, 0
+  index: -1
+zuoshoushangceng
+  rotate: false
+  xy: 91, 10
+  size: 36, 35
+  orig: 36, 35
+  offset: 0, 0
+  index: -1
+zuotui
+  rotate: false
+  xy: 2, 40
+  size: 46, 43
+  orig: 46, 43
+  offset: 0, 0
+  index: -1
+zuoyan
+  rotate: false
+  xy: 159, 8
+  size: 40, 38
+  orig: 40, 38
+  offset: 0, 0
+  index: -1

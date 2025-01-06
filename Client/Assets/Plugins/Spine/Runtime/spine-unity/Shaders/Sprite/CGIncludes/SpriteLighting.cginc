@@ -26,21 +26,14 @@ struct VertexInput
 #if defined(_NORMALMAP)
 	float4 tangent : TANGENT;
 #endif // _NORMALMAP
-#if defined(_TINT_BLACK_ON)
-	float2 tintBlackRG : TEXCOORD1;
-	float2 tintBlackB : TEXCOORD2;
-#endif
 	UNITY_VERTEX_INPUT_INSTANCE_ID
-
 };
 
 ////////////////////////////////////////
 // Normal functions
 //
 
-#if !defined(USE_LWRP) && !defined(USE_URP)
 uniform float4 _FixedNormal = float4(0, 0, 1, 1);
-#endif
 
 inline float3 getFixedNormal()
 {
@@ -141,6 +134,9 @@ inline half3 calculateSpriteWorldBinormal(VertexInput vertex, half3 normalWorld,
 // Diffuse ramp functions
 //
 
+//Disable for softer, more traditional diffuse ramping
+#define HARD_DIFFUSE_RAMP
+
 uniform sampler2D _DiffuseRamp;
 
 inline fixed3 calculateDiffuseRamp(float ramp)
@@ -150,29 +146,13 @@ inline fixed3 calculateDiffuseRamp(float ramp)
 
 inline fixed3 calculateRampedDiffuse(fixed3 lightColor, float attenuation, float angleDot)
 {
-#if defined(_FULLRANGE_HARD_RAMP)
-	float d = angleDot;
-	half3 ramp = calculateDiffuseRamp(d);
-	return lightColor * ramp * attenuation;
-#elif defined(_FULLRANGE_SOFT_RAMP)
-	float d = angleDot;
-	half3 ramp = calculateDiffuseRamp(d * attenuation);
-	return lightColor * ramp;
-#elif defined(_OLD_SOFT_RAMP)
-	// for unmodified behaviour with existing projects when
-	// the HARD_DIFFUSE_RAMP define was disabled in this file.
-	// uses only the right half of the ramp texture, as
-	// negative angleDot is clamped to [0,1] before.
 	float d = angleDot * 0.5 + 0.5;
-	half3 ramp = calculateDiffuseRamp(d);
-	return lightColor * ramp * (attenuation * 2);
-#else // _OLD_HARD_RAMP
-	// old default, for unmodified behaviour with existing projects,
-	// uses only the right half of the ramp texture, as
-	// negative angleDot is clamped to [0,1] before.
-	float d = angleDot * 0.5 + 0.5;
+#if defined(HARD_DIFFUSE_RAMP)
 	half3 ramp = calculateDiffuseRamp(d * attenuation * 2);
 	return lightColor * ramp;
+#else
+	half3 ramp = calculateDiffuseRamp(d);
+	return lightColor * ramp * (attenuation * 2);
 #endif
 }
 #endif // _DIFFUSE_RAMP
@@ -182,10 +162,9 @@ inline fixed3 calculateRampedDiffuse(fixed3 lightColor, float attenuation, float
 //
 
 #ifdef _RIM_LIGHTING
-#if !defined(USE_LWRP) && !defined(USE_URP)
+
 uniform float _RimPower;
 uniform fixed4 _RimColor;
-#endif
 
 inline fixed3 applyRimLighting(fixed3 posWorld, fixed3 normalWorld, fixed4 pixel) : SV_Target
 {
@@ -210,11 +189,8 @@ inline fixed3 applyRimLighting(fixed3 posWorld, fixed3 normalWorld, fixed4 pixel
 #ifdef _EMISSION
 
 uniform sampler2D _EmissionMap;
-
-#if !defined(USE_LWRP) && !defined(USE_URP)
 uniform fixed4 _EmissionColor;
 uniform float _EmissionPower;
-#endif
 
 
 #define APPLY_EMISSION(diffuse, uv) diffuse += tex2D(_EmissionMap, uv).rgb * _EmissionColor.rgb * _EmissionPower;

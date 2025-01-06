@@ -12,7 +12,7 @@ public class LaunchScene
     static bool ValidatePlayModeUseFirstScene()
     {
         Menu.SetChecked("启动场景/游戏", isSelectGame);
-        Menu.SetChecked("启动场景/关卡编辑器", isSelectMapEditor);
+        // Menu.SetChecked("启动场景/关卡编辑器", isSelectMapEditor);
         Menu.SetChecked("启动场景/手动选择", isDefault);
         return !EditorApplication.isPlaying;
     }
@@ -24,12 +24,12 @@ public class LaunchScene
         EditorSceneManager.playModeStartScene = AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/Game/Scene_Launch.unity");
     }
 
-    [MenuItem("启动场景/关卡编辑器")]
-    static void MapEditorScene()
-    {
-        SaveSelection("mapEditor");
-        EditorSceneManager.playModeStartScene = AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/Game/Scene_Launch.unity");
-    }
+    // [MenuItem("启动场景/关卡编辑器")]
+    // static void MapEditorScene()
+    // {
+    //     SaveSelection("mapEditor");
+    //     EditorSceneManager.playModeStartScene = AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/Game/Scene_Launch.unity");
+    // }
 
     [MenuItem("启动场景/手动选择")]
     static void AnyScene()

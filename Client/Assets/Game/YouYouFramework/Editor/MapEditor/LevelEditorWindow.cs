@@ -20,18 +20,18 @@ public class LevelEditorWindow : OdinEditorWindow
         GetWindow<LevelEditorWindow>("关卡编辑器");
     }
 
-    [HorizontalGroup("LevelInfo", width: 0.1f)] [Button("新建关卡", ButtonSizes.Medium)]
+    [HorizontalGroup("关卡信息", width: 0.1f)] [Button("新建关卡", ButtonSizes.Medium)]
     public void CreateLevel() => CreateCurrentLevel();
     
-    [HorizontalGroup("LevelInfo", width: 0.2f)] [LabelText("关卡ID")] [OnValueChanged("UpdateSavePath")] [PropertySpace(2)]
+    [HorizontalGroup("关卡信息", width: 0.2f)] [LabelText("关卡ID")] [OnValueChanged("UpdateSavePath")] [PropertySpace(2)]
     public string levelName = ""; // 默认关卡名
 
-    [HorizontalGroup("LevelInfo", width: 0.1f)] [Button("保存关卡", ButtonSizes.Medium)]
+    [HorizontalGroup("关卡信息", width: 0.1f)] [Button("保存关卡", ButtonSizes.Medium)]
     public void SaveLevel() => SaveCurrentLevel();
 
-    [HorizontalGroup("LevelInfo", width: 0.1f)] [Button("加载关卡", ButtonSizes.Medium)]
+    [HorizontalGroup("关卡信息", width: 0.1f)] [Button("加载关卡", ButtonSizes.Medium)]
     public void LoadLevel() => LoadCurrentLevel();
-    [HorizontalGroup("LevelInfo", width: 0.1f)] [Button("扫描关卡", ButtonSizes.Medium)]
+    [HorizontalGroup("关卡信息", width: 0.1f)] [Button("扫描关卡", ButtonSizes.Medium)]
     public void CheckLevel() => LevelDataComparer.ShowWindow();
 
     [BoxGroup("关卡编辑器")] [LabelText("保存路径")] [ReadOnly]
@@ -40,10 +40,20 @@ public class LevelEditorWindow : OdinEditorWindow
     [BoxGroup("关卡编辑器")] [LabelText("关卡数据")]
     public LevelData CurLevelData;
     
-    [LabelText("怪物贴图预览")]
-    [HideLabel]
-    [GUIColor(0.8f, 0.8f, 0.8f)]
-    //public Texture2D displayTexture; // 用来显示模型对应的贴图
+    [LabelText("关卡怪物模型预览")]
+    [ListDrawerSettings(Expanded = true, DraggableItems = false, HideAddButton = true, HideRemoveButton = true)]
+    public List<TextureWithTitle> TexturePreviews = new List<TextureWithTitle>();
+
+
+    [System.Serializable]
+    public class TextureWithTitle
+    {
+        [HideLabel] [GUIColor(0.9f, 0.9f, 0.9f)] // 设置背景颜色
+        public string Title = "默认标题";
+
+        [PreviewField(Alignment = ObjectFieldAlignment.Center, Height = 64)] [HideLabel]
+        public Texture2D Texture;
+    }
     
     // 实时更新保存路径
     private void UpdateSavePath()
@@ -132,8 +142,40 @@ public class LevelEditorWindow : OdinEditorWindow
         CurLevelData = JsonUtility.FromJson<LevelData>(json);
         // 清理之前的场景
         CleanUpDungeon();
-
+        LoadModelTexture();
         Repaint();
+    }
+
+    private void LoadModelTexture()
+    {
+        if (CurLevelData == null) return;
+        TexturePreviews.Clear();
+        if (CurLevelData.stages != null)
+        {
+            for (int i = 0; i < CurLevelData.stages.Count; i++)
+            {
+                EnemyData data = CurLevelData.stages[i].enemy;
+                if (data != null)
+                {
+                    TextureWithTitle model = new TextureWithTitle();
+                    model.Title = $"阶段ID{CurLevelData.stages[i].stageIndex}的怪物模型";
+                    
+                    string path = $"Assets/Game/Download/Textures/ModelPreviewIcon/{data.modelId}.png";
+                    Texture2D texture = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+
+                    if (texture != null)
+                    {
+                        model.Texture = texture;
+                    }
+                    else
+                    {
+                        GameUtil.LogError($"纹理加载失败{data.modelId}");
+                    }
+                    TexturePreviews.Add(model);
+                }
+            }
+        }
+
     }
 
     // 清理当前场景
