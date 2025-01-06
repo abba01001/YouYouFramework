@@ -69,7 +69,12 @@
     {
         public const string CardObj = "Assets/Game/Download/Prefab/Item/Card.prefab";
         public const string ArrowLine = "Assets/Game/Download/Prefab/Item/ArrowLine.prefab";
-        
+        public const string GoldPanel = "Assets/Game/Download/Prefab/UI/Panel/GoldPanel.prefab";
+        public const string GuildPanel = "Assets/Game/Download/Prefab/UI/Panel/GuildPanel.prefab";
+        public const string HeroPanel = "Assets/Game/Download/Prefab/UI/Panel/HeroPanel.prefab";
+        public const string LordPanel = "Assets/Game/Download/Prefab/UI/Panel/LordPanel.prefab";
+        public const string RankPanel = "Assets/Game/Download/Prefab/UI/Panel/RankPanel.prefab";
+        public const string ShopPanel = "Assets/Game/Download/Prefab/UI/Panel/ShopPanel.prefab";
     }
 
     public struct ModelPath
