@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7800213776644879150}
-  - component: {fileID: 331714748726765244}
+  - component: {fileID: 1472146649313457147}
   - component: {fileID: 2711594530016235923}
   m_Layer: 5
-  m_Name: ShopPanel
+  m_Name: ChatPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38,7 +38,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &331714748726765244
+--- !u!114 &1472146649313457147
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -47,7 +47,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5708925308765862714}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a330d13379e4d46af7dec89f2cc1b4, type: 3}
+  m_Script: {fileID: 11500000, guid: 511ce1886cfc64b49a7f2628d46c8caa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &2711594530016235923

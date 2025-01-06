@@ -957,7 +957,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -10.106079, y: -694}
+  m_AnchoredPosition: {x: -10.106079, y: -689}
   m_SizeDelta: {x: 555.0608, y: 42}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &731585835900655727
@@ -2373,6 +2373,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4343858224853813098}
+  - component: {fileID: 9100747913178179835}
   m_Layer: 5
   m_Name: MainPanel
   m_TagString: Untagged
@@ -2410,6 +2411,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &9100747913178179835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3779087075625144450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42c73218bebc4cc4a9481ccb45c33d48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3792467652731165255
 GameObject:
   m_ObjectHideFlags: 0
@@ -7049,42 +7062,47 @@ MonoBehaviour:
     selectObj: {fileID: 0}
     panelObj: {fileID: 0}
     btn: {fileID: 4299237696174156929}
-    HasPanel: 1
+    IsTogglePanel: 1
   - BtnType: 
     selectObj: {fileID: 0}
     panelObj: {fileID: 0}
     btn: {fileID: 3024328356318010657}
-    HasPanel: 1
+    IsTogglePanel: 1
   - BtnType: 
     selectObj: {fileID: 0}
     panelObj: {fileID: 0}
     btn: {fileID: 759888337501220251}
-    HasPanel: 1
+    IsTogglePanel: 1
   - BtnType: 
     selectObj: {fileID: 0}
     panelObj: {fileID: 0}
     btn: {fileID: 6375512954544415358}
-    HasPanel: 1
+    IsTogglePanel: 1
   - BtnType: 
     selectObj: {fileID: 0}
     panelObj: {fileID: 0}
     btn: {fileID: 8617615091838696098}
-    HasPanel: 1
+    IsTogglePanel: 1
   - BtnType: 
     selectObj: {fileID: 0}
     panelObj: {fileID: 0}
     btn: {fileID: 6707907007053773898}
-    HasPanel: 1
+    IsTogglePanel: 1
+  - BtnType: 
+    selectObj: {fileID: 0}
+    panelObj: {fileID: 0}
+    btn: {fileID: 1986349248773559852}
+    IsTogglePanel: 0
   - BtnType: 
     selectObj: {fileID: 0}
     panelObj: {fileID: 0}
     btn: {fileID: 6475851571339081648}
-    HasPanel: 0
+    IsTogglePanel: 0
   - BtnType: 
     selectObj: {fileID: 0}
     panelObj: {fileID: 0}
     btn: {fileID: 2980295237352766897}
-    HasPanel: 0
+    IsTogglePanel: 0
 --- !u!1 &8821429544588092631
 GameObject:
   m_ObjectHideFlags: 0

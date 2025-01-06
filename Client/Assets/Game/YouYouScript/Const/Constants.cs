@@ -75,6 +75,7 @@
         public const string LordPanel = "Assets/Game/Download/Prefab/UI/Panel/LordPanel.prefab";
         public const string RankPanel = "Assets/Game/Download/Prefab/UI/Panel/RankPanel.prefab";
         public const string ShopPanel = "Assets/Game/Download/Prefab/UI/Panel/ShopPanel.prefab";
+        public const string ChatPanel = "Assets/Game/Download/Prefab/UI/Panel/ChatPanel.prefab";
     }
 
     public struct ModelPath

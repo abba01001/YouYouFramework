@@ -23,7 +23,7 @@ public class HomePanelButtonData
     [HideInInspector] public GameObject selectObj;
     [HideInInspector] public GameObject panelObj;
     public GameObject btn;
-    public bool HasPanel = false;
+    public bool IsTogglePanel = false;
 }
 
 // "主"界面
@@ -47,51 +47,7 @@ public class FormMain : UIFormBase
             {
                 if(isLoadingPanel) return;
                 HandleSelectPanel(data);
-                if (data.BtnType == "ShopBtn")
-                {
-                    
-                }
-                else if (data.BtnType == "HeroBtn")
-                {
-                    
-                }
-                else if (data.BtnType == "BattleBtn")
-                {
-                    
-                }
-                else if (data.BtnType == "RankBtn")
-                {
-                    
-                }
-                else if (data.BtnType == "LordBtn")
-                {
-                    
-                }
-                else if (data.BtnType == "MoreBtn")
-                {
-                    MoreDetail.gameObject.MSetActive(!MoreDetail.gameObject.activeSelf);
-                }
-                else if (data.BtnType == "GuildBtn")
-                {
-                    //GameEntry.Net.Requset.c2s_request_guild_list(1,10);
-                    GameEntry.Net.Requset.c2s_request_chat(4,"大家好啊！！！！");
-                }
-                else if (data.BtnType == "LoginBtn")
-                {
-                    // GameEntry.Net.Requset.c2s_request_update_role_info(new Dictionary<string, string>()
-                    // {
-                    //     {nameof(data.UserPassword),"99999"}
-                    // });
-                    //GameEntry.SDK.DownloadAvatar("1", null);
-
-                    GameEntry.Data.SaveData(true);
-                    return;
-                    GameUtil.LogError("111111");
-                    GameEntry.Audio.PlayBGM("maintheme1");
-                    GameEntry.Instance.ShowBackGround(BGType.Main, "Assets/Game/Download/Textures/BackGround/Home/home_map_1.png");
-                    GameEntry.Procedure.ChangeState(ProcedureState.Battle);
-                    GameEntry.UI.CloseUIForm<FormMain>();
-                }
+                HandleBtnEvent(data);
             });
             if (data.btn.transform.Find("BarSelect"))
             {
@@ -109,6 +65,7 @@ public class FormMain : UIFormBase
 
     private async UniTask InitPanelObj(string panelPath,HomePanelButtonData data = null)
     {
+        if (data.panelObj != null) return;
         isLoadingPanel = true;
         PoolObj t = await GameEntry.Pool.GameObjectPool.SpawnAsync(panelPath,transform);
         t.gameObject.SetActive(true);
@@ -119,6 +76,7 @@ public class FormMain : UIFormBase
         isLoadingPanel = false;
     }
     
+    
     private void InitPanel(HomePanelButtonData data)
     {
         if (data.BtnType == "ShopBtn") InitPanelObj(Constants.ItemPath.ShopPanel, data);
@@ -126,6 +84,7 @@ public class FormMain : UIFormBase
         else if (data.BtnType == "HeroBtn") InitPanelObj(Constants.ItemPath.HeroPanel, data);
         else if (data.BtnType == "LordBtn") InitPanelObj(Constants.ItemPath.LordPanel, data);
         else if (data.BtnType == "RankBtn") InitPanelObj(Constants.ItemPath.RankPanel, data);
+        else if (data.BtnType == "ChatBtn") InitPanelObj(Constants.ItemPath.ChatPanel, data);
     }
 
     private void HandleSelectPanel(HomePanelButtonData data)
@@ -134,7 +93,7 @@ public class FormMain : UIFormBase
         {
             if (pair.Value.selectObj != null)
             {
-                if (data.HasPanel)
+                if (data.IsTogglePanel)
                 {
                     if (pair.Value.panelObj != null)
                     {
@@ -147,6 +106,58 @@ public class FormMain : UIFormBase
                     pair.Value.selectObj.MSetActive(data.BtnType == pair.Key);
                 }
             }
+        }
+    }
+
+    private void HandleBtnEvent(HomePanelButtonData data)
+    {
+        switch (data.BtnType)
+        {
+            case "ShopBtn":
+                // 处理 ShopBtn 的逻辑
+                break;
+            case "HeroBtn":
+                // 处理 HeroBtn 的逻辑
+                break;
+            case "BattleBtn":
+                // 处理 BattleBtn 的逻辑
+                break;
+            case "RankBtn":
+                // 处理 RankBtn 的逻辑
+                break;
+            case "LordBtn":
+                // 处理 LordBtn 的逻辑
+                break;
+            case "ChatBtn":
+                // 处理 ChatBtn 的逻辑
+                InitPanel(data);
+                data.panelObj.gameObject.MSetActive(true);
+                break;
+            case "MoreBtn":
+                MoreDetail.gameObject.MSetActive(!MoreDetail.gameObject.activeSelf);
+                break;
+            case "GuildBtn":
+                //GameEntry.Net.Requset.c2s_request_guild_list(1,10);
+                GameEntry.Net.Requset.c2s_request_chat(4, "大家好啊！！！！");
+                break;
+            case "LoginBtn":
+                // GameEntry.Net.Requset.c2s_request_update_role_info(new Dictionary<string, string>()
+                // {
+                //     {nameof(data.UserPassword),"99999"}
+                // });
+                //GameEntry.SDK.DownloadAvatar("1", null);
+
+                GameEntry.Data.SaveData(true);
+                return;
+                GameUtil.LogError("111111");
+                GameEntry.Audio.PlayBGM("maintheme1");
+                GameEntry.Instance.ShowBackGround(BGType.Main, "Assets/Game/Download/Textures/BackGround/Home/home_map_1.png");
+                GameEntry.Procedure.ChangeState(ProcedureState.Battle);
+                GameEntry.UI.CloseUIForm<FormMain>();
+                break;
+            default:
+                // 处理没有匹配的情况（如果有的话）
+                break;
         }
     }
     
