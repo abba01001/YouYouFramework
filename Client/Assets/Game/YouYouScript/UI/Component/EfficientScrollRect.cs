@@ -96,46 +96,45 @@ public class EfficientScrollRect : ScrollRect
         UpdateItemCb = cb;
     }
 
-    // public void Init(GameObjType type, GameObject prefab, object[] datas)
-    // {
-    //     // 防止在Editor模式下被运行
-    //     if (true) //Application.isPlaying)
-    //     {
-    //         horizontal = vertical ? false : true;
-    //         content.pivot = Vector2.up;
-    //         content.anchorMin = vertical ? Vector2.up : Vector2.zero;
-    //         content.anchorMax = vertical ? Vector2.one : Vector2.up;
-    //         content.anchoredPosition = Vector2.zero;
-    //         content.sizeDelta = new Vector2(viewport.rect.width, viewport.rect.height);
-    //         foreach (Transform child in content)
-    //         {
-    //             ScrollItem item = child.GetComponent<ScrollItem>();
-    //             if (item)
-    //             {
-    //                 InitItemProperty(item.transform as RectTransform);
-    //                 _uselessList.Add(item);
-    //             }
-    //             else
-    //             {
-    //                 Destroy(child.gameObject);
-    //             }
-    //         }
-    //     }
-    //
-    //     this.datas = datas;
-    //     Clear();
-    //
-    //     itemPrefab = prefab;
-    //     objType = type;
-    //     cellSize = (prefab.transform as RectTransform).sizeDelta;
-    //
-    //     InitGridCount();
-    //     InitCountentSize(this.datas.Length);
-    //
-    //     StopMovement();
-    //     OnValueChange(Vector2.zero);
-    //     InitCompleteCb?.Invoke();
-    // }
+    public void Init(GameObject prefab, object[] datas)
+    {
+        // 防止在Editor模式下被运行
+        if (true) //Application.isPlaying)
+        {
+            horizontal = vertical ? false : true;
+            content.pivot = Vector2.up;
+            content.anchorMin = vertical ? Vector2.up : Vector2.zero;
+            content.anchorMax = vertical ? Vector2.one : Vector2.up;
+            content.anchoredPosition = Vector2.zero;
+            content.sizeDelta = new Vector2(viewport.rect.width, viewport.rect.height);
+            foreach (Transform child in content)
+            {
+                ScrollItem item = child.GetComponent<ScrollItem>();
+                if (item)
+                {
+                    InitItemProperty(item.transform as RectTransform);
+                    _uselessList.Add(item);
+                }
+                else
+                {
+                    Destroy(child.gameObject);
+                }
+            }
+        }
+    
+        this.datas = datas;
+        Clear();
+    
+        itemPrefab = prefab;
+        cellSize = (prefab.transform as RectTransform).sizeDelta;
+    
+        InitGridCount();
+        InitCountentSize(this.datas.Length);
+    
+        StopMovement();
+        OnValueChange(Vector2.zero);
+        InitCompleteCb?.Invoke();
+    }
 
     public void UpdateDatas(object[] datas, bool partialUpdate, Action cb = null)
     {
@@ -177,9 +176,10 @@ public class EfficientScrollRect : ScrollRect
         else
         {
             lineCount = Mathf.FloorToInt((viewport.rect.height + lineSpace) / CellHeightWithSpace);
-            colCount = Mathf.CeilToInt((viewport.rect.width + colSpace) / CellWidthWithSpace) + 1;
+            colCount = 4;//Mathf.CeilToInt((viewport.rect.width + colSpace) / CellWidthWithSpace) + 1;
             lineCount = lineCount < 1 ? 1 : lineCount;
         }
+        GameUtil.LogError($"==={lineCount}==={colCount}========{viewport.rect.height}======={viewport.rect.width}======={CellHeightWithSpace}");
     }
 
     public void OnValueChange(Vector2 pos)
@@ -222,7 +222,7 @@ public class EfficientScrollRect : ScrollRect
         }
         else
         {
-            itemBase = new ScrollItem();//GameObjManager.Instance.PopGameObject(objType, itemPrefab).GetComponent<ScrollItem>();
+            itemBase = Instantiate(itemPrefab).GetComponent<ScrollItem>();// new ScrollItem();//GameObjManager.Instance.PopGameObject(objType, itemPrefab).GetComponent<ScrollItem>();
             itemBase.transform.SetParent(content);
             itemBase.gameObject.SetActive(true);
             itemBase.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
