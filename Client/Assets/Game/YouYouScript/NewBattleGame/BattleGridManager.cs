@@ -59,7 +59,7 @@ public class BattleGridManager
     {
         int modelId = GameUtil.RandomRange(101, 106); 
         BattleGrid grid = GetNearbyGrid(modelId);
-        Sys_RoleAttrEntity entity = GameEntry.DataTable.Sys_RoleAttrDBModel.GetEntity(modelId);
+        Sys_ModelEntity entity = GameEntry.DataTable.Sys_ModelDBModel.GetEntity(modelId);
         if (grid != null && entity != null)
         {
             float k = 0.2f;

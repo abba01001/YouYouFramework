@@ -4,35 +4,35 @@ using UnityEngine;
 
 namespace YouYou
 {
-    public partial class Sys_RoleAttrDBModel
+    public partial class Sys_ModelDBModel
     {
-        public Dictionary<int, Sys_RoleAttrEntity> IdByDic;
+        public Dictionary<int, Sys_ModelEntity> IdByDic { get;private set; }
 
         protected override void OnLoadListComple()
         {
             base.OnLoadListComple();
-            IdByDic = new Dictionary<int, Sys_RoleAttrEntity>();
+            IdByDic = new Dictionary<int, Sys_ModelEntity>();
             for (int i = 0; i < m_List.Count; i++)
             {
-                Sys_RoleAttrEntity entity = m_List[i];
+                Sys_ModelEntity entity = m_List[i];
                 if (!IdByDic.ContainsKey(entity.ModelId))
                 {
                     IdByDic.Add(entity.ModelId, entity);
                 }
                 else
                 {
-                    GameEntry.LogError(LogCategory.Framework, "RoleAttrÅäÖÃ±í´íÎó! DialogueId==" + entity.Id);
+                    GameEntry.LogError(LogCategory.Framework, "RoleAttrï¿½ï¿½ï¿½Ã±ï¿½ï¿½ï¿½ï¿½! DialogueId==" + entity.Id);
                 }
             }
         }
 
-        public Sys_RoleAttrEntity GetEntity(int modelId)
+        public Sys_ModelEntity GetEntity(int modelId)
         {
             if (IdByDic.ContainsKey(modelId))
             {
                 return IdByDic[modelId];
             }
-            YouYou.GameEntry.LogError(LogCategory.Framework, "Ã»ÓÐÕÒµ½¶Ô»°, DialogueId==" + modelId);
+            YouYou.GameEntry.LogError(LogCategory.Framework, "Ã»ï¿½ï¿½ï¿½Òµï¿½ï¿½Ô»ï¿½, DialogueId==" + modelId);
             return null;
         }
     }

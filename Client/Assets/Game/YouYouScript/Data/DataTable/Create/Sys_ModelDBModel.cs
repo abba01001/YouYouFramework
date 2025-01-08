@@ -6,14 +6,14 @@ using System;
 namespace YouYou
 {
     /// <summary>
-    /// Sys_RoleAttr数据管理
+    /// Sys_Model数据管理
     /// </summary>
-    public partial class Sys_RoleAttrDBModel : DataTableDBModelBase<Sys_RoleAttrDBModel, Sys_RoleAttrEntity>
+    public partial class Sys_ModelDBModel : DataTableDBModelBase<Sys_ModelDBModel, Sys_ModelEntity>
     {
         /// <summary>
         /// 文件名称
         /// </summary>
-        public override string DataTableName { get { return "Sys_RoleAttr"; } }
+        public override string DataTableName { get { return "Sys_Model"; } }
 
         /// <summary>
         /// 加载列表
@@ -25,7 +25,7 @@ namespace YouYou
 
             for (int i = 0; i < rows; i++)
             {
-                Sys_RoleAttrEntity entity = new Sys_RoleAttrEntity();
+                Sys_ModelEntity entity = new Sys_ModelEntity();
                 entity.Id = ms.ReadInt();
                 entity.ModelId = ms.ReadInt();
                 entity.AttackRange = ms.ReadFloat();
@@ -33,6 +33,7 @@ namespace YouYou
                 entity.AttackInterval = ms.ReadFloat();
                 entity.Hp = ms.ReadInt();
                 entity.Mp = ms.ReadInt();
+                entity.InHeroPanel = ms.ReadInt();
 
                 m_List.Add(entity);
                 m_Dic[entity.Id] = entity;

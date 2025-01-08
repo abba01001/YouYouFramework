@@ -49,3 +49,8 @@ public class DialogueCommand
     public string fromBlock { get; set; }   // 源区块 (适用于 jump)
     public string toBlock { get; set; }     // 目标区块 (适用于 jump)
 }
+
+public class HeroModel
+{
+    public int modelId;
+}

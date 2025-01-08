@@ -13,12 +13,28 @@ public class HeroPanel : MonoBehaviour
     public HeroPanelItem itemPrefab;
     private void Awake()
     {
-        List<object> datas = new List<object> { "开始游戏", "111", "2222", "4444" };
-        for (int i = 0; i < 40; i++)
+        _scrollRect.Init(itemPrefab.gameObject,GetData());
+    }
+
+    object[] GetData()
+    {
+        List<Sys_ModelEntity> list = new List<Sys_ModelEntity>();
+        foreach (var pair in GameEntry.DataTable.Sys_ModelDBModel.IdByDic)
         {
-            datas.Add($"新数据{i}");
+            if (pair.Value.InHeroPanel == 1)
+            {
+                Sys_ModelEntity entity = pair.Value;
+                list.Add(pair.Value);
+            }
         }
-        object[] dataArray = datas.ToArray();
-        _scrollRect.Init(itemPrefab.gameObject,dataArray);
+
+        object[] data = new object[list.Count];
+        int index = 0;
+        foreach (var VARIABLE in list)
+        {
+            data[index] = VARIABLE;
+            index++;
+        }
+        return data;
     }
 }

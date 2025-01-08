@@ -22,7 +22,7 @@ namespace YouYou
         public Sys_GuideDBModel Sys_GuideDBModel { get; private set; }
         public Sys_AtlasDBModel Sys_AtlasDBModel { get; private set; }
         public Sys_DialogueDBModel Sys_DialogueDBModel { get; private set; }
-        public Sys_RoleAttrDBModel Sys_RoleAttrDBModel { get; private set; }
+        public Sys_ModelDBModel Sys_ModelDBModel { get; private set; }
         /// <summary>
         /// 加载表格
         /// </summary>
@@ -56,8 +56,8 @@ namespace YouYou
             Sys_DialogueDBModel = new Sys_DialogueDBModel();
             Sys_DialogueDBModel.LoadData(m_TaskGroup);
 
-            Sys_RoleAttrDBModel = new Sys_RoleAttrDBModel();
-            Sys_RoleAttrDBModel.LoadData(m_TaskGroup);
+            Sys_ModelDBModel = new Sys_ModelDBModel();
+            Sys_ModelDBModel.LoadData(m_TaskGroup);
             
             m_TaskGroup.OnComplete += OnLoadDataTableComplete;
             m_TaskGroup.OnComplete += () =>

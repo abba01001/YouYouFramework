@@ -3,9 +3,9 @@ using System.Collections;
 namespace YouYou
 {
     /// <summary>
-      /// Sys_RoleAttr实体
+      /// Sys_Model实体
     /// </summary>
-    public partial class Sys_RoleAttrEntity : DataTableEntityBase
+    public partial class Sys_ModelEntity : DataTableEntityBase
     {
         /// <summary>
         /// 模型id
@@ -36,6 +36,11 @@ namespace YouYou
         /// 蓝
         /// </summary>
         public int Mp;
+
+        /// <summary>
+        /// 在HeroPanel里显示
+        /// </summary>
+        public int InHeroPanel;
 
     }
 }

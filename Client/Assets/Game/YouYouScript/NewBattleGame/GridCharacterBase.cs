@@ -15,8 +15,8 @@ public class GridCharacterBase : CharacterBase
     public float attackCd = 0.75f;
     public float timer = 0.75f;
     private Transform detection;
-    public Sys_RoleAttrEntity config { get; set; }
-    public void InitParams(Sys_RoleAttrEntity _config)
+    public Sys_ModelEntity config { get; set; }
+    public void InitParams(Sys_ModelEntity _config)
     {
         config = _config;
     }
