@@ -97,9 +97,6 @@ public class DataManager : Observable<DataManager>, IDataManager
         _playerRoleData.roleAttr.Add("HuoBi4",0);
         _playerRoleData.roleAttr.Add("role_level",1);
         _playerRoleData.roleAttr.Add("role_exp", 0);
-        _playerRoleData.roleAttr.Add("role_heat", 0);
-        _playerRoleData.roleAttr.Add("role_coin", 0);
-        _playerRoleData.roleAttr.Add("role_snow", 0);
         _playerRoleData.roleAttr.Add("role_liveness", 0);
     }
     

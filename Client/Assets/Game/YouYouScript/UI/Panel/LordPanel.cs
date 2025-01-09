@@ -9,11 +9,37 @@ using YouYou;
 
 public class LordPanel : MonoBehaviour
 {
+    private enum SelectItemType
+    {
+        Equip,
+        Bag
+    }
+    public EfficientScrollRect _scrollRect;
+    public HeroPanelItem itemPrefab;
+    private SelectItemType curType = SelectItemType.Equip;
+    private void Awake()
+    {
+        itemPrefab.gameObject.MSetActive(false);
+        _scrollRect.Init(itemPrefab.gameObject,GetData());
+    }
+    
     private void OnEnable()
     {
-        if (GoldPanel.Instance != null)
+
+    }
+    
+    object[] GetData()
+    {
+        Dictionary<int, int> infos = new Dictionary<int, int>();
+        infos = curType == SelectItemType.Equip ? GameEntry.Data.PlayerRoleData.equipWareHouse : GameEntry.Data.PlayerRoleData.bagWareHouse;
+        
+        object[] data = new object[infos.Count];
+        int index = 0;
+        foreach (var VARIABLE in infos)
         {
-            GoldPanel.Instance.RefreshPos(ShowType.LordPanel);
+            data[index] = VARIABLE;
+            index++;
         }
+        return data;
     }
 }

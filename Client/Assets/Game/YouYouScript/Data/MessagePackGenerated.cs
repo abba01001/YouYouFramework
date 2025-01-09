@@ -47,12 +47,13 @@ namespace MessagePack.Resolvers
 
         static GeneratedResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(4)
+            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(5)
             {
                 { typeof(global::System.Collections.Generic.Dictionary<int, int>), 0 },
                 { typeof(global::System.Collections.Generic.Dictionary<string, int>), 1 },
-                { typeof(global::DataManager), 2 },
-                { typeof(global::PlayerRoleData), 3 },
+                { typeof(global::System.Collections.Generic.List<int>), 2 },
+                { typeof(global::DataManager), 3 },
+                { typeof(global::PlayerRoleData), 4 },
             };
         }
 
@@ -68,8 +69,9 @@ namespace MessagePack.Resolvers
             {
                 case 0: return new global::MessagePack.Formatters.DictionaryFormatter<int, int>();
                 case 1: return new global::MessagePack.Formatters.DictionaryFormatter<string, int>();
-                case 2: return new MessagePack.Formatters.DataManagerFormatter();
-                case 3: return new MessagePack.Formatters.PlayerRoleDataFormatter();
+                case 2: return new global::MessagePack.Formatters.ListFormatter<int>();
+                case 3: return new MessagePack.Formatters.DataManagerFormatter();
+                case 4: return new MessagePack.Formatters.PlayerRoleDataFormatter();
                 default: return null;
             }
         }
@@ -240,7 +242,7 @@ namespace MessagePack.Formatters
             writer.WriteRaw(GetSpan_dialogueIds());
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<int, int>>(formatterResolver).Serialize(ref writer, value.dialogueIds, options);
             writer.WriteRaw(GetSpan_equipInfo());
-            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<int, int>>(formatterResolver).Serialize(ref writer, value.equipInfo, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<int>>(formatterResolver).Serialize(ref writer, value.equipInfo, options);
             writer.WriteRaw(GetSpan_bagWareHouse());
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<int, int>>(formatterResolver).Serialize(ref writer, value.bagWareHouse, options);
             writer.WriteRaw(GetSpan_equipWareHouse());
@@ -300,7 +302,7 @@ namespace MessagePack.Formatters
                     case 9:
                         if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_equipInfo().Slice(1))) { goto FAIL; }
 
-                        ____result.equipInfo = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<int, int>>(formatterResolver).Deserialize(ref reader, options);
+                        ____result.equipInfo = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<int>>(formatterResolver).Deserialize(ref reader, options);
                         continue;
                     case 12:
                         if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_bagWareHouse().Slice(1))) { goto FAIL; }

@@ -21,14 +21,14 @@ public class PlayerRoleData
     public int totalOnlineDuration;
     public int todayOnlineDuration;
     public Dictionary<int,int> dialogueIds;
-    public Dictionary<int, int> equipInfo;//穿戴装备信息
+    public List<int> equipInfo;//穿戴装备信息
     public Dictionary<int, int> bagWareHouse;//背包仓库
     public Dictionary<int, int> equipWareHouse;//装备仓库
     public Dictionary<string, int> roleAttr;//角色属性
     public PlayerRoleData()
     {
         dialogueIds = new Dictionary<int, int>();
-        equipInfo = new Dictionary<int, int>();
+        equipInfo = new List<int>();
         bagWareHouse = new Dictionary<int, int>();
         equipWareHouse = new Dictionary<int, int>();
         roleAttr = new Dictionary<string, int>();
