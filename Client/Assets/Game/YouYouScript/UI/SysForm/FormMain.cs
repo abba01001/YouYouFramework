@@ -22,6 +22,7 @@ public class HomePanelButtonData
     [HideInInspector] public string BtnType;
     [HideInInspector] public GameObject selectObj;
     [HideInInspector] public GameObject panelObj;
+    [HideInInspector] public ShowType showType;
     public GameObject btn;
     public bool IsTogglePanel = false;
 }
@@ -37,7 +38,6 @@ public class FormMain : UIFormBase
     protected override void Awake()
     {
         base.Awake();
-        InitPanelObj(Constants.ItemPath.GoldPanel);
         GameEntry.Audio.PlayBGM("Home");
         
         foreach (var data in btnList)
@@ -57,21 +57,24 @@ public class FormMain : UIFormBase
             if (data.BtnType == "BattleBtn")
             {
                 data.panelObj = transform.Find("MainPanel").gameObject;
+                data.showType = ShowType.HomePanel;
             }
             btnDic[data.BtnType] = data;
         }
+        InitPanelObj(Constants.ItemPath.GoldPanel);
         HandleSelectPanel(btnDic["BattleBtn"]);
     }
 
-    private async UniTask InitPanelObj(string panelPath,HomePanelButtonData data = null)
+    private async UniTask InitPanelObj(string panelPath,HomePanelButtonData data = null,ShowType type = ShowType.Default)
     {
-        if (data.panelObj != null) return;
         isLoadingPanel = true;
         PoolObj t = await GameEntry.Pool.GameObjectPool.SpawnAsync(panelPath,transform);
         t.gameObject.SetActive(true);
         if (data != null)
         {
             data.panelObj = t.gameObject;
+            data.panelObj.transform.SetSiblingIndex(1);
+            data.showType = type;
         }
         isLoadingPanel = false;
     }
@@ -82,7 +85,7 @@ public class FormMain : UIFormBase
         if (data.BtnType == "ShopBtn") InitPanelObj(Constants.ItemPath.ShopPanel, data);
         else if (data.BtnType == "GuildBtn") InitPanelObj(Constants.ItemPath.GuildPanel, data);
         else if (data.BtnType == "HeroBtn") InitPanelObj(Constants.ItemPath.HeroPanel, data);
-        else if (data.BtnType == "LordBtn") InitPanelObj(Constants.ItemPath.LordPanel, data);
+        else if (data.BtnType == "LordBtn") InitPanelObj(Constants.ItemPath.LordPanel, data, ShowType.LordPanel);
         else if (data.BtnType == "RankBtn") InitPanelObj(Constants.ItemPath.RankPanel, data);
         else if (data.BtnType == "ChatBtn") InitPanelObj(Constants.ItemPath.ChatPanel, data);
     }
@@ -102,6 +105,10 @@ public class FormMain : UIFormBase
                     else
                     {
                         if (data.BtnType == pair.Key) InitPanel(pair.Value);
+                    }
+                    if (data.BtnType == pair.Key)
+                    {
+                        GoldPanel.Instance.RefreshPos(data.showType);
                     }
                     pair.Value.selectObj.MSetActive(data.BtnType == pair.Key);
                 }
@@ -163,18 +170,11 @@ public class FormMain : UIFormBase
     
     private void Start()
     {
-        if (GoldPanel.Instance != null)
-        {
-            GoldPanel.Instance.RefreshPos(ShowType.HomePanel);
-        }
+
     }
     
     protected override void OnEnable()
     {
         base.OnEnable();
-        if (GoldPanel.Instance != null)
-        {
-            GoldPanel.Instance.RefreshPos(ShowType.HomePanel);
-        }
     }
 }

@@ -9,5 +9,11 @@ using YouYou;
 
 public class LordPanel : MonoBehaviour
 {
-
+    private void OnEnable()
+    {
+        if (GoldPanel.Instance != null)
+        {
+            GoldPanel.Instance.RefreshPos(ShowType.LordPanel);
+        }
+    }
 }

@@ -10,7 +10,9 @@ using YouYou;
 
 public enum ShowType
 {
-    HomePanel
+    Default,
+    HomePanel,
+    LordPanel
 }
 
 [System.Serializable]
@@ -28,7 +30,7 @@ public class GoldPanel : MonoBehaviour
     [SerializeField] private List<GoldPanelButtonData> btnList = new List<GoldPanelButtonData>();
     private Dictionary<string, GoldPanelButtonData> btnDic = new Dictionary<string, GoldPanelButtonData>();
     public static GoldPanel Instance { get; private set; }
-
+    private ShowType _curShowType = ShowType.Default;
     private void Awake()
     {
         Instance = this;
@@ -49,9 +51,20 @@ public class GoldPanel : MonoBehaviour
 
     public void RefreshPos(ShowType showType)
     {
+        if (showType == ShowType.Default)
+        {
+            btnParentRect.anchoredPosition = new Vector2(99999, 99999);
+            return;
+        }
         if (showType == ShowType.HomePanel)
         {
             btnParentRect.anchoredPosition = new Vector2(150, -213);
         }
+        else if (showType == ShowType.LordPanel)
+        {
+            btnParentRect.anchoredPosition = new Vector2(-139, -213);
+        }
+        if(_curShowType != showType) transform.GetComponent<AnimPanel>().DoAnim();
+        _curShowType = showType;
     }
 }

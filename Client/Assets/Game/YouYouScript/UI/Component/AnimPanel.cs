@@ -16,10 +16,14 @@ namespace YouYou
         void Awake()
         {
             BegScale = transform.localScale.x;
-            GameUtil.LogError("1111111");
         }
 
         private void OnEnable()
+        {
+            DoAnim();
+        }
+
+        public void DoAnim()
         {
             transform.localScale = BegScale * Vector3.one * 1.05f;
             transform.DOScale(BegScale, 0.05f).SetUpdate(true);

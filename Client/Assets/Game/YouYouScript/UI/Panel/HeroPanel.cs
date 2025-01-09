@@ -13,7 +13,13 @@ public class HeroPanel : MonoBehaviour
     public HeroPanelItem itemPrefab;
     private void Awake()
     {
+        itemPrefab.gameObject.MSetActive(false);
         _scrollRect.Init(itemPrefab.gameObject,GetData());
+    }
+
+    private void OnEnable()
+    {
+
     }
 
     object[] GetData()
@@ -24,6 +30,13 @@ public class HeroPanel : MonoBehaviour
             if (pair.Value.InHeroPanel == 1)
             {
                 Sys_ModelEntity entity = pair.Value;
+                list.Add(pair.Value);
+                list.Add(pair.Value);
+                list.Add(pair.Value);
+                list.Add(pair.Value);
+                list.Add(pair.Value);
+                list.Add(pair.Value);
+                list.Add(pair.Value);
                 list.Add(pair.Value);
             }
         }
