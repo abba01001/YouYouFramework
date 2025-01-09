@@ -1,0 +1,152 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Model202
+  serializedVersion: 2
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: Android
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 48
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: cfba31689f5665945b80848e706572f1, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 62e85af1d421f9d4a91edd436ffb1050, type: 3}
+  - {fileID: 21300000, guid: 81e85ad2c5e2e174380378d285b28e3f, type: 3}
+  - {fileID: 21300000, guid: 97ca476398c1885429e9b872f218cffa, type: 3}
+  - {fileID: 21300000, guid: 89b95963d92ac374d994d0cadd3188ed, type: 3}
+  - {fileID: 21300000, guid: 2d508ef308c876e448b77f655e01a198, type: 3}
+  - {fileID: 21300000, guid: bf724f147c872314897873c59398b2bd, type: 3}
+  - {fileID: 21300000, guid: 9c8b76c49b9666f469a803337d694cc0, type: 3}
+  - {fileID: 21300000, guid: 05a455e43133578488855d498c2aa404, type: 3}
+  - {fileID: 21300000, guid: 6f098715705ee5644ae7d9c30749f211, type: 3}
+  - {fileID: 21300000, guid: 9a824045f86779f44ab7e8a3f4f71224, type: 3}
+  - {fileID: 21300000, guid: 1109b3c5c13c2984da23c8231c4dc810, type: 3}
+  - {fileID: 21300000, guid: 0058bb16e14b7784e89aadc241e16281, type: 3}
+  - {fileID: 21300000, guid: 025ead46b40210e4e879aef92951c2a6, type: 3}
+  - {fileID: 21300000, guid: 47b40966cc1d5774ba2414121f3ff20f, type: 3}
+  - {fileID: 21300000, guid: b0a9428681977ac42aafba8cbcb0c23e, type: 3}
+  - {fileID: 21300000, guid: 14fe16e651df5ea4aa69deb7d74c81e8, type: 3}
+  - {fileID: 21300000, guid: 159be14749cb31149982111345543477, type: 3}
+  - {fileID: 21300000, guid: 1fb85867a6cc11c4396b59b88e422e88, type: 3}
+  - {fileID: 21300000, guid: 120a45873e0f2f147804bb5de82d00d4, type: 3}
+  - {fileID: 21300000, guid: f1686be73dcdb124ab4e591d8f69ddc7, type: 3}
+  - {fileID: 21300000, guid: 15da6d1812d3006438741f046d500602, type: 3}
+  - {fileID: 21300000, guid: 63da529822713444e9e89caa6e703c0d, type: 3}
+  - {fileID: 21300000, guid: d8d65ec924ca70b488f2d766aa73fff0, type: 3}
+  - {fileID: 21300000, guid: 2fdb120a9e208ad4aaef34346ec6c4fa, type: 3}
+  - {fileID: 21300000, guid: 7832154ae47cd984cbd2043475f9a792, type: 3}
+  - {fileID: 21300000, guid: d0b2f67ad9df15249b2a6c21f8e6cc7d, type: 3}
+  - {fileID: 21300000, guid: e54c288ac1f8426409227cfb344d1969, type: 3}
+  - {fileID: 21300000, guid: b60b6faaba0120b48bf6ed75d051f4da, type: 3}
+  - {fileID: 21300000, guid: c0e28cea9e481844ea08adc8b44b63bd, type: 3}
+  - {fileID: 21300000, guid: f785df6b6aee61f438724897c98e2a9b, type: 3}
+  - {fileID: 21300000, guid: 6bb993dbd607ca441bad16ac97aa9e02, type: 3}
+  - {fileID: 21300000, guid: 45ddc8db0f6792842b34e01586b53e5f, type: 3}
+  - {fileID: 21300000, guid: f75eeadb93ef0864d930d0e32746cbc2, type: 3}
+  - {fileID: 21300000, guid: b8e5c8eb6053db74ab3b066a5f96e62f, type: 3}
+  - {fileID: 21300000, guid: 007eab2c06f4edf4b83f428e8ef155c1, type: 3}
+  - {fileID: 21300000, guid: 5e98f36cf76e3cb449a81432264e1f8b, type: 3}
+  - {fileID: 21300000, guid: 05496c4d063f5da42bc4d271eae80a09, type: 3}
+  - {fileID: 21300000, guid: a26eaa5da58a37a429cea845cc46dfbb, type: 3}
+  - {fileID: 21300000, guid: af4013fdc0eaffe4f9df23b3287e11ab, type: 3}
+  - {fileID: 21300000, guid: 5e72791e34448044c9bbe59e2af22f4f, type: 3}
+  - {fileID: 21300000, guid: 361185ae4c217db4db0b83eeb8a6fefa, type: 3}
+  - {fileID: 21300000, guid: 19939aaee4c055141836428acc107e56, type: 3}
+  - {fileID: 21300000, guid: a515fcdeae19f24419e31d07cc566190, type: 3}
+  - {fileID: 21300000, guid: 9a655f7fde4c42043aefba64a71ade3e, type: 3}
+  - {fileID: 21300000, guid: b33bdc8f930edab43bde674035024097, type: 3}
+  - {fileID: 21300000, guid: 77afd1bf3f6ba0d43a707b337e1af221, type: 3}
+  - {fileID: 21300000, guid: f224dddf26fb4734fa39e75ddde2c08c, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - 202_fuyoupaoshandian-attack1_00
+  - 202_fuyoupaoshandian-run_03
+  - 202_fuyoupaoshandian-run_06
+  - 202_fuyoupaoshandian-idle_09
+  - 202_fuyoupaoshandian-attack1_04
+  - 202_fuyoupaoshandian-attack1_07
+  - 202_fuyoupaoshandian-born_09
+  - 202_fuyoupaoshandian-born_08
+  - 202_fuyoupaoshandian-idle_06
+  - 202_fuyoupaoshandian-idle_03
+  - 202_fuyoupaoshandian-idle_07
+  - 202_fuyoupaoshandian-born_07
+  - 202_fuyoupaoshandian-run_08
+  - 202_fuyoupaoshandian-attack1_11
+  - 202_fuyoupaoshandian-born_06
+  - 202_fuyoupaoshandian-attack1_02
+  - 202_fuyoupaoshandian-born_03
+  - 202_fuyoupaoshandian-run_02
+  - 202_fuyoupaoshandian-born_12
+  - 202_fuyoupaoshandian-born_02
+  - 202_fuyoupaoshandian-attack1_08
+  - 202_fuyoupaoshandian-born_14
+  - 202_fuyoupaoshandian-attack1_01
+  - 202_fuyoupaoshandian-attack1_10
+  - 202_fuyoupaoshandian-born_13
+  - 202_fuyoupaoshandian-attack1_05
+  - 202_fuyoupaoshandian-idle_08
+  - 202_fuyoupaoshandian-run_07
+  - 202_fuyoupaoshandian-idle_02
+  - 202_fuyoupaoshandian-idle_00
+  - 202_fuyoupaoshandian-born_00
+  - 202_fuyoupaoshandian-born_10
+  - 202_fuyoupaoshandian-idle_01
+  - 202_fuyoupaoshandian-idle_04
+  - 202_fuyoupaoshandian-attack1_09
+  - 202_fuyoupaoshandian-run_09
+  - 202_fuyoupaoshandian-born_05
+  - 202_fuyoupaoshandian-idle_05
+  - 202_fuyoupaoshandian-attack1_06
+  - 202_fuyoupaoshandian-born_11
+  - 202_fuyoupaoshandian-born_04
+  - 202_fuyoupaoshandian-run_01
+  - 202_fuyoupaoshandian-attack1_03
+  - 202_fuyoupaoshandian-run_00
+  - 202_fuyoupaoshandian-run_04
+  - 202_fuyoupaoshandian-born_01
+  - 202_fuyoupaoshandian-run_05
+  m_RenderDataMap: {}
+  m_Tag: Model202
+  m_IsVariant: 0
+  m_IsPlaceholder: 0

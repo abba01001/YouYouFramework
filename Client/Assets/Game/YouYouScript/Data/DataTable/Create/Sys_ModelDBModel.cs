@@ -28,12 +28,14 @@ namespace YouYou
                 Sys_ModelEntity entity = new Sys_ModelEntity();
                 entity.Id = ms.ReadInt();
                 entity.ModelId = ms.ReadInt();
+                entity.Type = ms.ReadInt();
                 entity.AttackRange = ms.ReadFloat();
                 entity.GridContain = ms.ReadInt();
                 entity.AttackInterval = ms.ReadFloat();
                 entity.Hp = ms.ReadInt();
                 entity.Mp = ms.ReadInt();
                 entity.InHeroPanel = ms.ReadInt();
+                entity.HeroPanelIcon = ms.ReadUTF8String();
 
                 m_List.Add(entity);
                 m_Dic[entity.Id] = entity;

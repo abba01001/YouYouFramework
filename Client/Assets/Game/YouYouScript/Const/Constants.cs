@@ -78,6 +78,16 @@
         public const string ChatPanel = "Assets/Game/Download/Prefab/UI/Panel/ChatPanel.prefab";
     }
 
+    public struct TexturePath
+    {
+        public const string HeroPanel = "Assets/Game/Download/Textures/HeroPanel";
+    }
+    
+    public struct AtlasPath
+    {
+        public const string HeroPanel = "Assets/Game/Download/Textures/Atlas/HeroPanel.spriteatlas";
+    }
+    
     public struct ModelPath
     {
         public const string Path000001 = "Assets/Game/Download/Prefab/Model/Path000001.prefab";

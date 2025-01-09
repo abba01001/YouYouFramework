@@ -31,13 +31,6 @@ public class HeroPanel : MonoBehaviour
             {
                 Sys_ModelEntity entity = pair.Value;
                 list.Add(pair.Value);
-                list.Add(pair.Value);
-                list.Add(pair.Value);
-                list.Add(pair.Value);
-                list.Add(pair.Value);
-                list.Add(pair.Value);
-                list.Add(pair.Value);
-                list.Add(pair.Value);
             }
         }
 

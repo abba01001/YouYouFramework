@@ -316,7 +316,7 @@ namespace YouYou
             AssetReferenceEntity referenceEntity = GameEntry.Pool.AssetPool.Spawn(assetFullPath);
             if (referenceEntity != null)
             {
-                //GameEntry.Log(LogCategory.Loader, "从分类资源池加载" + referenceEntity.AssetFullPath);
+                GameEntry.Log(LogCategory.Loader, "从分类资源池加载" + referenceEntity.AssetFullPath);
                 return referenceEntity;
             }
 
@@ -333,6 +333,10 @@ namespace YouYou
             if (referenceEntity == null) GameEntry.LogError(LogCategory.Loader, "资源加载失败,assetFullPath=={0}", assetFullPath);
             return referenceEntity;
         }
+        
+        
+        
+        
         #endregion
     }
 }

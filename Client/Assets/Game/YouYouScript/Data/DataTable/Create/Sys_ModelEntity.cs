@@ -13,6 +13,11 @@ namespace YouYou
         public int ModelId;
 
         /// <summary>
+        /// 类型
+        /// </summary>
+        public int Type;
+
+        /// <summary>
         /// 攻击范围
         /// </summary>
         public float AttackRange;
@@ -41,6 +46,11 @@ namespace YouYou
         /// 在HeroPanel里显示
         /// </summary>
         public int InHeroPanel;
+
+        /// <summary>
+        /// Panel显示的Icon
+        /// </summary>
+        public string HeroPanelIcon;
 
     }
 }

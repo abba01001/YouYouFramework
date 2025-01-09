@@ -24,10 +24,9 @@ namespace YouYou
 
         }
 
-        public SpriteAtlas GetAtlas(string atlasName)
+        public SpriteAtlas GetAtlas(string atlasPath)
         {
-            Sys_AtlasEntity sys_Atlas = GameEntry.DataTable.Sys_AtlasDBModel.GetEntity(atlasName);
-            AssetReferenceEntity referenceEntity = GameEntry.Loader.LoadMainAsset(sys_Atlas.AssetFullPath);
+            AssetReferenceEntity referenceEntity = GameEntry.Loader.LoadMainAsset(atlasPath);
             if (referenceEntity != null)
             {
                 // SpriteAtlas obj = UnityEngine.Object.Instantiate(referenceEntity.Target as SpriteAtlas, parent);
