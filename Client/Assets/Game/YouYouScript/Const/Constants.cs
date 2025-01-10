@@ -63,6 +63,10 @@
         public const string UpdateBattleTimer = "UpdateBattleTimer";
         public const string UpdateBattleRound = "UpdateBattleRound";
         public const string UpdateEnemyCount = "UpdateEnemyCount";
+
+
+
+        public const string GetSuspendReward = "GetSuspendReward";
     }
     
     public struct ItemPath

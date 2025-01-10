@@ -41,8 +41,11 @@ namespace Protocols {
             "aGF0TXNnEgoKAmlkGAEgASgJEhEKCXNlbmRlcl9pZBgCIAEoCRITCgtyZWNl",
             "aXZlcl9pZBgDIAEoCRIPCgdtZXNzYWdlGAQgASgJEhQKDGNoYW5uZWxfdHlw",
             "ZRgFIAEoBRIRCgl0aW1lc3RhbXAYBiABKAkSDwoHaXNfcmVhZBgHIAEoCBIU",
-            "CgxtZXNzYWdlX3R5cGUYCCABKAUSEgoKaXNfZGVsZXRlZBgJIAEoCCoiCgdN",
-            "c2dUeXBlEg0KCUhlYXJ0QmVhdBAAEggKBEVYSVQQAWIGcHJvdG8z"));
+            "CgxtZXNzYWdlX3R5cGUYCCABKAUSEgoKaXNfZGVsZXRlZBgJIAEoCCJoCg5T",
+            "dXNwZW5kVGltZU1zZxIRCgl1c2VyX3V1aWQYASABKAkSDAoEdHlwZRgCIAEo",
+            "BRIUCgxjYW5HZXRSZXdhcmQYAyABKAgSDAoEaG91chgEIAEoBRIRCgl0aW1l",
+            "c3RhbXAYBSABKAUqIgoHTXNnVHlwZRINCglIZWFydEJlYXQQABIICgRFWElU",
+            "EAFiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Protocols.MsgType), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -52,7 +55,8 @@ namespace Protocols {
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.LoginMsg), global::Protocols.LoginMsg.Parser, new[]{ "UserAccount", "UserPassword", "State", "UserUuid", "Token", "SaveData" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.RegisterMsg), global::Protocols.RegisterMsg.Parser, new[]{ "UserAccount", "UserPassword", "State", "UserUuid", "Token" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.EmailMsg), global::Protocols.EmailMsg.Parser, new[]{ "EmailId", "SenderId", "ReceiverId", "Subject", "Content", "SendTime", "IsRead", "IsGet", "IsDeleted" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.ChatMsg), global::Protocols.ChatMsg.Parser, new[]{ "Id", "SenderId", "ReceiverId", "Message", "ChannelType", "Timestamp", "IsRead", "MessageType", "IsDeleted" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.ChatMsg), global::Protocols.ChatMsg.Parser, new[]{ "Id", "SenderId", "ReceiverId", "Message", "ChannelType", "Timestamp", "IsRead", "MessageType", "IsDeleted" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.SuspendTimeMsg), global::Protocols.SuspendTimeMsg.Parser, new[]{ "UserUuid", "Type", "CanGetReward", "Hour", "Timestamp" }, null, null, null, null)
           }));
     }
     #endregion
@@ -2601,6 +2605,352 @@ namespace Protocols {
           }
           case 72: {
             IsDeleted = input.ReadBool();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class SuspendTimeMsg : pb::IMessage<SuspendTimeMsg>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<SuspendTimeMsg> _parser = new pb::MessageParser<SuspendTimeMsg>(() => new SuspendTimeMsg());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<SuspendTimeMsg> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Protocols.MessagesReflection.Descriptor.MessageTypes[7]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public SuspendTimeMsg() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public SuspendTimeMsg(SuspendTimeMsg other) : this() {
+      userUuid_ = other.userUuid_;
+      type_ = other.type_;
+      canGetReward_ = other.canGetReward_;
+      hour_ = other.hour_;
+      timestamp_ = other.timestamp_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public SuspendTimeMsg Clone() {
+      return new SuspendTimeMsg(this);
+    }
+
+    /// <summary>Field number for the "user_uuid" field.</summary>
+    public const int UserUuidFieldNumber = 1;
+    private string userUuid_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string UserUuid {
+      get { return userUuid_; }
+      set {
+        userUuid_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "type" field.</summary>
+    public const int TypeFieldNumber = 2;
+    private int type_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int Type {
+      get { return type_; }
+      set {
+        type_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "canGetReward" field.</summary>
+    public const int CanGetRewardFieldNumber = 3;
+    private bool canGetReward_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool CanGetReward {
+      get { return canGetReward_; }
+      set {
+        canGetReward_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "hour" field.</summary>
+    public const int HourFieldNumber = 4;
+    private int hour_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int Hour {
+      get { return hour_; }
+      set {
+        hour_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "timestamp" field.</summary>
+    public const int TimestampFieldNumber = 5;
+    private int timestamp_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int Timestamp {
+      get { return timestamp_; }
+      set {
+        timestamp_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as SuspendTimeMsg);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(SuspendTimeMsg other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (UserUuid != other.UserUuid) return false;
+      if (Type != other.Type) return false;
+      if (CanGetReward != other.CanGetReward) return false;
+      if (Hour != other.Hour) return false;
+      if (Timestamp != other.Timestamp) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (UserUuid.Length != 0) hash ^= UserUuid.GetHashCode();
+      if (Type != 0) hash ^= Type.GetHashCode();
+      if (CanGetReward != false) hash ^= CanGetReward.GetHashCode();
+      if (Hour != 0) hash ^= Hour.GetHashCode();
+      if (Timestamp != 0) hash ^= Timestamp.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (UserUuid.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(UserUuid);
+      }
+      if (Type != 0) {
+        output.WriteRawTag(16);
+        output.WriteInt32(Type);
+      }
+      if (CanGetReward != false) {
+        output.WriteRawTag(24);
+        output.WriteBool(CanGetReward);
+      }
+      if (Hour != 0) {
+        output.WriteRawTag(32);
+        output.WriteInt32(Hour);
+      }
+      if (Timestamp != 0) {
+        output.WriteRawTag(40);
+        output.WriteInt32(Timestamp);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (UserUuid.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(UserUuid);
+      }
+      if (Type != 0) {
+        output.WriteRawTag(16);
+        output.WriteInt32(Type);
+      }
+      if (CanGetReward != false) {
+        output.WriteRawTag(24);
+        output.WriteBool(CanGetReward);
+      }
+      if (Hour != 0) {
+        output.WriteRawTag(32);
+        output.WriteInt32(Hour);
+      }
+      if (Timestamp != 0) {
+        output.WriteRawTag(40);
+        output.WriteInt32(Timestamp);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (UserUuid.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(UserUuid);
+      }
+      if (Type != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Type);
+      }
+      if (CanGetReward != false) {
+        size += 1 + 1;
+      }
+      if (Hour != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Hour);
+      }
+      if (Timestamp != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Timestamp);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(SuspendTimeMsg other) {
+      if (other == null) {
+        return;
+      }
+      if (other.UserUuid.Length != 0) {
+        UserUuid = other.UserUuid;
+      }
+      if (other.Type != 0) {
+        Type = other.Type;
+      }
+      if (other.CanGetReward != false) {
+        CanGetReward = other.CanGetReward;
+      }
+      if (other.Hour != 0) {
+        Hour = other.Hour;
+      }
+      if (other.Timestamp != 0) {
+        Timestamp = other.Timestamp;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            UserUuid = input.ReadString();
+            break;
+          }
+          case 16: {
+            Type = input.ReadInt32();
+            break;
+          }
+          case 24: {
+            CanGetReward = input.ReadBool();
+            break;
+          }
+          case 32: {
+            Hour = input.ReadInt32();
+            break;
+          }
+          case 40: {
+            Timestamp = input.ReadInt32();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            UserUuid = input.ReadString();
+            break;
+          }
+          case 16: {
+            Type = input.ReadInt32();
+            break;
+          }
+          case 24: {
+            CanGetReward = input.ReadBool();
+            break;
+          }
+          case 32: {
+            Hour = input.ReadInt32();
+            break;
+          }
+          case 40: {
+            Timestamp = input.ReadInt32();
             break;
           }
         }

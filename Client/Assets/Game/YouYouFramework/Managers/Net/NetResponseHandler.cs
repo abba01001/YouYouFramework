@@ -32,6 +32,7 @@ public class NetResponseHandler
         RegisterHandler(nameof(RegisterMsg), s2c_handle_request_register);
         RegisterHandler(nameof(UpdateUserResponse), s2c_handle_request_update_role_info);
         RegisterHandler(nameof(ChatMsg), s2c_handle_chat_msg);
+        RegisterHandler(nameof(SuspendTimeMsg), s2c_handle_get_suspend_time_msg);
     }
     
     public void RegisterHandler(string type, Action<BaseMessage> handler)
@@ -41,7 +42,7 @@ public class NetResponseHandler
             _handlers.Add(type, handler);
         }
     }
-
+    
     // 处理响应的分发逻辑
     public void HandleResponse(BaseMessage message)
     {
@@ -150,6 +151,14 @@ public class NetResponseHandler
         ProtocolHelper.UnpackData<ChatMsg>(message, (data) =>
         {
             GameUtil.LogError($"收到服务器下发消息:=====>{data.Message}");
+        });
+    }
+
+    private void s2c_handle_get_suspend_time_msg(BaseMessage message)
+    {
+        ProtocolHelper.UnpackData<SuspendTimeMsg>(message, (data) =>
+        {
+            GameEntry.Data.Dispatch(Constants.EventName.GetSuspendReward,data);                
         });
     }
     

@@ -32,6 +32,7 @@ public class ResponseHandler
         RegisterHandler(nameof(RegisterMsg), s2c_handle_request_register);
         RegisterHandler(nameof(UpdateUserRequest), s2c_handle_request_update_role_info);
         RegisterHandler(nameof(ChatMsg), s2c_handle_request_chat);
+        RegisterHandler(nameof(SuspendTimeMsg), s2c_handle_get_suspend_time_msg);
     }
     
     public void RegisterHandler(string messageType, Action<BaseMessage> handler)
@@ -112,6 +113,27 @@ public class ResponseHandler
             if(state == OperationResult.Success)
             {
                 ServerSocket.BroadcastMsg<ChatMsg>(data);
+            }
+        });
+    }
+
+    private void s2c_handle_get_suspend_time_msg(BaseMessage message)
+    {
+        ProtocolHelper.UnpackData<SuspendTimeMsg>(message, async (data) =>
+        {
+            Console.WriteLine($"{nameof(SuspendTimeMsg)}: {data}");
+            if(data.Type == 0)
+            {
+                int timeStamp = await RoleService.GetSuspendTimeInHoursAsync(data.UserUuid);
+                request.c2s_request_get_suspend_reward(data.Type,false,0,timeStamp);
+            }
+            else
+            {
+                (OperationResult state, int hour) = await RoleService.CanClaimRewardAsync(data.UserUuid, data.Type);
+                if (state == OperationResult.Success)
+                {
+                    request.c2s_request_get_suspend_reward(data.Type,state == OperationResult.Success, hour);
+                }
             }
         });
     }

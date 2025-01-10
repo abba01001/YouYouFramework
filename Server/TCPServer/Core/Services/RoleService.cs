@@ -53,15 +53,18 @@ namespace TCPServer.Core.Services
 
 
         // 登录验证
+        // 登录验证
         public static async Task<(OperationResult, string, byte[])> LoginAsync(string userAccount, string userPassword)
         {
-            // 合并查询和更新为一个事务性操作，减少数据库交互
+            int currentTime = (int)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
             string query = $@"
-        UPDATE {SqlTable.GameSaveData} 
-        SET is_online = 1
+        UPDATE {SqlTable.GameSaveData}
+        SET is_online = 1, 
+            suspend_time_start = IF(suspend_time_start = 0, @current_time, suspend_time_start)
         WHERE user_account = @user_account AND user_password = @user_password;
         
-        SELECT user_uuid, save_data
+        SELECT user_uuid, save_data, suspend_time_start
         FROM {SqlTable.GameSaveData}
         WHERE user_account = @user_account AND user_password = @user_password;
     ";
@@ -69,7 +72,8 @@ namespace TCPServer.Core.Services
             var parameters = new Dictionary<string, object>
     {
         { "@user_account", userAccount },
-        { "@user_password", userPassword }
+        { "@user_password", userPassword },
+        { "@current_time", currentTime }
     };
 
             var result = await SqlManager.Instance.ExecuteQueryAsync(query, parameters);
@@ -80,11 +84,13 @@ namespace TCPServer.Core.Services
                 return (OperationResult.UserNotFound, string.Empty, new byte[0]);
             }
 
-            byte[] saveData = result[0]["save_data"] as byte[] ?? new byte[0];
             string userUuid = result[0]["user_uuid"].ToString();
-            return (OperationResult.Success, userUuid, saveData); // 返回 userUuid 和 saveData
-        }
+            byte[] saveData = result[0]["save_data"] as byte[] ?? new byte[0];
+            int suspendTimeStart = Convert.ToInt32(result[0]["suspend_time_start"]);
 
+            // 登录成功，返回用户信息
+            return (OperationResult.Success, userUuid, saveData);
+        }
 
 
         // 改密码功能
@@ -583,10 +589,110 @@ VALUES (@user_uuid, @friend_uuid, 1, 1),  -- 发送请求的玩家, is_invitor =
         }
 
 
+        // 更新挂机时间为当前时间点
+        public static async Task<OperationResult> UpdateSuspendTimeStartAsync(string userUuid)
+        {
+            var updatedAttrs = new Dictionary<string, string>
+        {
+            { "suspend_time_start", ((int)DateTimeOffset.UtcNow.ToUnixTimeSeconds()).ToString() }
+        };
+
+            var result = await UpdateUserPropertyAsync(userUuid, updatedAttrs);
+            return result.Result;
+        }
 
 
+        // 获取 suspend_time_start
+        public static async Task<int> GetSuspendTimeInHoursAsync(string userUuid)
+        {
+            string query = $"SELECT suspend_time_start FROM {SqlTable.GameSaveData} WHERE user_uuid = @user_uuid";
+            var parameters = new Dictionary<string, object>
+        {
+            { "@user_uuid", userUuid }
+        };
+            var result = await SqlManager.Instance.ExecuteQueryAsync(query, parameters);
+            if (result.Count > 0)
+            {
+                var suspendTimeStart = Convert.ToInt32(result[0]["suspend_time_start"]);
+                return suspendTimeStart;
+            }
+            return 0;  // 没有找到用户，返回 0
+        }
 
+        // 判断用户是否可以领取奖励
+        public static async Task<(OperationResult,int)> CanClaimRewardAsync(string userUuid, int rewardType)
+        {
+            // 获取当前时间（秒级）
+            int currentTime = (int)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
+            // 查询用户数据
+            string query = $@"
+        SELECT suspend_time_start, quick_get_suspend_reward_index, quick_get_suspend_reward_limit 
+        FROM {SqlTable.GameSaveData} 
+        WHERE user_uuid = @user_uuid;
+    ";
+
+            var parameters = new Dictionary<string, object>
+    {
+        { "@user_uuid", userUuid }
+    };
+
+            var result = await SqlManager.Instance.ExecuteQueryAsync(query, parameters);
+
+            if (result.Count == 0)
+            {
+                Console.WriteLine("User not found.");
+                return (OperationResult.UserNotFound, 0);
+            }
+
+            var userData = result[0];
+            int suspendTimeStart = Convert.ToInt32(userData["suspend_time_start"]);
+            int quickGetRewardIndex = Convert.ToInt32(userData["quick_get_suspend_reward_index"]);
+            int quickGetRewardLimit = Convert.ToInt32(userData["quick_get_suspend_reward_limit"]);
+
+            switch (rewardType)
+            {
+                case 1: // 类型1：根据挂机时间来领取奖励
+                    {
+                        int hoursDifference = (currentTime - suspendTimeStart) / 3600; // 计算小时差
+                        Console.WriteLine($"Hours difference: {hoursDifference}");
+
+                        if (hoursDifference > 0)  // 如果小时差大于0，则可以领取
+                        {
+                            var updateResult = await UpdateSuspendTimeStartAsync(userUuid);
+                            if (updateResult == OperationResult.Success)
+                            {
+                                Console.WriteLine("Updated suspend_time_start to current time.");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Failed to update suspend_time_start.");
+                            }
+                            return (OperationResult.Success,hoursDifference);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Insufficient hours to claim reward.");
+                            return (OperationResult.Failed, 0);
+                        }
+                    }
+                case 2: // 类型2：根据索引和限制来领取奖励
+                    {
+                        if (quickGetRewardIndex < quickGetRewardLimit)  // 如果 quick_get_suspend_reward_index 小于 quick_get_suspend_reward_limit
+                        {
+                            return (OperationResult.Success, 0);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Cannot claim reward. Limit reached.");
+                            return (OperationResult.Failed, 0);
+                        }
+                    }
+                default:
+                    Console.WriteLine("Invalid reward type.");
+                    return (OperationResult.Failed, 0);
+            }
+        }
 
 
         // 定义好友信息模型类

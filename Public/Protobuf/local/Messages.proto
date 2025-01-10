@@ -70,3 +70,11 @@ message ChatMsg {
     int32 message_type = 8;      // 消息类型 (1 - 文本, 2 - 图片, 3 - 文件)
     bool is_deleted = 9;         // 是否已删除，方便实现软删除
 }
+
+message SuspendTimeMsg{
+    string user_uuid = 1;
+    int32 type = 2;
+    bool canGetReward = 3;
+    int32 hour = 4;
+    int32 timestamp = 5;
+}

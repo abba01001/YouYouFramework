@@ -64,7 +64,7 @@ public class DataManager : Observable<DataManager>, IDataManager
 
     #region 临时public数据
     [IgnoreMember] public long Coin { get; }
-
+    [IgnoreMember] public int SuspendStartTime { get; set; } = 0;// 上传的冷却时间（10秒）
     #endregion
 
     #region 临时private数据

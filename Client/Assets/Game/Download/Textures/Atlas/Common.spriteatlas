@@ -53,6 +53,7 @@ SpriteAtlas:
   m_PackedSprites:
   - {fileID: 21300000, guid: d22075505787ea34ba5e4eec27386091, type: 3}
   - {fileID: 21300000, guid: 7f3bed90941ac2d439260170e63d9f15, type: 3}
+  - {fileID: 21300000, guid: ca0c61d09d1fe6f408048b92eebb18b2, type: 3}
   - {fileID: 21300000, guid: 45c3f6e0e0b2f3e42a91162b2a59af51, type: 3}
   - {fileID: 21300000, guid: 6596aac1422b4984388473e2174eb3a0, type: 3}
   - {fileID: 21300000, guid: 58a828e191feb1f44bb93cab3ce50df0, type: 3}
@@ -78,10 +79,12 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 69ff6a5b89998dd4ea29cbb7aff87f30, type: 3}
   - {fileID: 21300000, guid: 6f47129b2bdcde64d95ce4e91e536c7f, type: 3}
   - {fileID: 21300000, guid: b67414db87ddfd646897e273025de856, type: 3}
+  - {fileID: 21300000, guid: 6245efebb2b52b44982e7067bdaa6ce6, type: 3}
   - {fileID: 21300000, guid: ce38b94ca87882d4cb15c29e91e37072, type: 3}
   - {fileID: 21300000, guid: 41f68bec7506344f19c4a2960cda7eb0, type: 3}
   - {fileID: 21300000, guid: ffdd62fcf7b878546a1e67e640321cf2, type: 3}
   - {fileID: 21300000, guid: 23e4191de5c7f05469112ecfeb162ea1, type: 3}
+  - {fileID: 21300000, guid: 02d89f2ef01fbcb44a8ba6cc4792e12e, type: 3}
   - {fileID: 21300000, guid: 59c4b4ee32c9e284d9d72557231e9848, type: 3}
   - {fileID: 21300000, guid: a36b7ffeb8bff584b991a0528bb829af, type: 3}
   - {fileID: 21300000, guid: 56d5647f3964f2d46bf4e93983f5cadb, type: 3}
@@ -89,6 +92,7 @@ SpriteAtlas:
   m_PackedSpriteNamesToIndex:
   - huobi_bg
   - huobi_02
+  - btn_D1
   - ty_jiahao_A1
   - huobi_11
   - huobi_12
@@ -114,10 +118,12 @@ SpriteAtlas:
   - Icon_PictoIcon_Exit_l
   - huobi_04
   - huobi_13
+  - ty_btn_D1
   - huobi_08
   - Slider17_Fill
   - JoyKnob
   - Play_Joystick_bg
+  - ty_btn_close1
   - ty_tab_unselected
   - huobi_14
   - huobi_01

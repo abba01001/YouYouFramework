@@ -117,6 +117,7 @@ public class NetRequestHandler
         SendMessage(data);
     }
 
+    //请求注册
     public void c2s_request_register(string account, string password)
     {
         account = "a1234";
@@ -127,6 +128,16 @@ public class NetRequestHandler
             UserPassword = SecurityUtil.ConvertBase64Key(password)
         };
         SendMessage(data);
+    }
+    
+    //请求挂机时间 type1正常领取   2快速游历
+    public void c2s_request_get_suspend_reward(int type)
+    {
+        SendMessage(new SuspendTimeMsg()
+        {
+            UserUuid = GameEntry.Data.UserId,
+            Type = type
+        });
     }
     
         

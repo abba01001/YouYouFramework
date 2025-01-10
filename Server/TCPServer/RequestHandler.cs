@@ -74,6 +74,16 @@ public class RequestHandler
         SendMessage(data);
     }
 
+    public async void c2s_request_get_suspend_reward(int type,bool canGetReward,int hour,int timeStamp = 0)
+    {
+        SuspendTimeMsg data = new SuspendTimeMsg();
+        data.Type = type;
+        data.CanGetReward = canGetReward;
+        data.Hour = hour;
+        data.Timestamp = timeStamp;
+        SendMessage(data);
+    }
+
     public void c2s_request_login(int state,string user_uuid, byte[] save_data)
     {
         LoginMsg data = new LoginMsg();
