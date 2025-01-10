@@ -1,0 +1,144 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: LordPanel
+  serializedVersion: 2
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: Android
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 50
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 092020df86900fb4e9ce137aaafb28c5, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 6f1676704d53219459b53dac8d8fb161, type: 3}
+  - {fileID: 21300000, guid: bcec3a519228c5b4ea321f89c18783b5, type: 3}
+  - {fileID: 21300000, guid: e7f36cd153178d640b6b1ab4103433cb, type: 3}
+  - {fileID: 21300000, guid: ccee2072a9705204f9df1a046697131a, type: 3}
+  - {fileID: 21300000, guid: bcb827723b5dec44d8ab1142976851bc, type: 3}
+  - {fileID: 21300000, guid: b89c738209ff5524ba1b4bc32bdaea81, type: 3}
+  - {fileID: 21300000, guid: 9554d713cb7a49b49b6e62eaea1a63de, type: 3}
+  - {fileID: 21300000, guid: c75e0023b5e70fe4ab3a3899788897c1, type: 3}
+  - {fileID: 21300000, guid: e93ed6437566b4f48b8c09daaf0e3322, type: 3}
+  - {fileID: 21300000, guid: d925fe6372a434c43b62589c800b741f, type: 3}
+  - {fileID: 21300000, guid: 6844a835dba042943b6c8c4c53b07120, type: 3}
+  - {fileID: 21300000, guid: 0dc6db5574af54943aabdf4d7022db65, type: 3}
+  - {fileID: 21300000, guid: e552dd06a45a03048a89f6e415df7ab5, type: 3}
+  - {fileID: 21300000, guid: e202dea60b9e33546a6a05df0f69930f, type: 3}
+  - {fileID: 21300000, guid: e4df27f67b4801e46a8a6c695118ef85, type: 3}
+  - {fileID: 21300000, guid: 92623e07f96e5324a92083b9d5a7d4e9, type: 3}
+  - {fileID: 21300000, guid: e6162037b81e23741a9197bab5d660fa, type: 3}
+  - {fileID: 21300000, guid: 7b65ff5744ecbcb4481ff4a91a9e6dd8, type: 3}
+  - {fileID: 21300000, guid: a9500477e56fb2c4eb71422a8e85f91e, type: 3}
+  - {fileID: 21300000, guid: 7b61e6779b2506141bcbb789070e2a47, type: 3}
+  - {fileID: 21300000, guid: a836d97725808484897f1f29705e3f15, type: 3}
+  - {fileID: 21300000, guid: 1473c618b60b40640a380044e4a1a846, type: 3}
+  - {fileID: 21300000, guid: dff55d68f3fcb2d4cb984be568de2938, type: 3}
+  - {fileID: 21300000, guid: 95201098d88180543a7930f1252fd482, type: 3}
+  - {fileID: 21300000, guid: c1ed61f8f26105f47b7a564c944f31be, type: 3}
+  - {fileID: 21300000, guid: 07615d696bc3f0146a2a4d3b2c32b647, type: 3}
+  - {fileID: 21300000, guid: c96d33990b3a8fa4b9cb63643e04831a, type: 3}
+  - {fileID: 21300000, guid: 2206a4e9faf6820419fcd38b0bb7f698, type: 3}
+  - {fileID: 21300000, guid: b3d2c32a17c718c4a8e69e952db012b0, type: 3}
+  - {fileID: 21300000, guid: 31d7aa4aac44e404685778338d48519f, type: 3}
+  - {fileID: 21300000, guid: e72dcd8be268a564e834b378a13b49a4, type: 3}
+  - {fileID: 21300000, guid: 60252c9b5759fe4419830b4a3fa169bb, type: 3}
+  - {fileID: 21300000, guid: ede0cc0c172364b459665573d2182f1f, type: 3}
+  - {fileID: 21300000, guid: 2a607a8cd8ea64644b125e03f6232661, type: 3}
+  - {fileID: 21300000, guid: 70665bcd9bf7efb4bbfec169fcc98089, type: 3}
+  - {fileID: 21300000, guid: a8f0334e0e409394391afb51b6f6fd51, type: 3}
+  - {fileID: 21300000, guid: 73b94f5e33ca19647813de44e32000b6, type: 3}
+  - {fileID: 21300000, guid: 978fe16e045097b428d180fcddba909d, type: 3}
+  - {fileID: 21300000, guid: e795b1be9203f1648aeb27903ec30d7b, type: 3}
+  - {fileID: 21300000, guid: a8fe78dea655f7a4fa289862e9bb7ffa, type: 3}
+  - {fileID: 21300000, guid: 0e2f238fddcbaff40a7b83e5673b8be4, type: 3}
+  - {fileID: 21300000, guid: b874b0bf432fab74190f81f5d801f6c1, type: 3}
+  - {fileID: 21300000, guid: 6ebffeff14530dd43b27d6523a2a24ca, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - zj_bg_zhuangbei
+  - zj_zbc_di
+  - zj_nvlihui_00
+  - zj_icon_buwei06
+  - zj_icon_buwei04_2
+  - zj_icon_buwei03
+  - ty_frame_A1
+  - zj_lock_di02
+  - zj_pinjie_04
+  - zj_icon_buwei01_2
+  - zyhd_daoju_xuanzhong
+  - zj_zbbj_di_
+  - zj_nvjvnei_00
+  - btn_wenzhang
+  - zj_nvjvnei_00 #130298
+  - zj_icon_buwei02
+  - zj_jicon_bw01_02
+  - zj_icon_buwei06_2
+  - btn_waiguan
+  - zj_pinjie_01
+  - btn_qiangxie
+  - zj_icon_buwei05_2
+  - zj_icon_buwei04
+  - ty_frame_A4
+  - ty_frame_A7
+  - zj_icon_buwei01
+  - zj_lock_di01
+  - zj_icon_buwei02_2
+  - btn_wenwu_
+  - ty_frame_bottom
+  - ty_frame_A3
+  - ty_frame_A2
+  - zj_pinjie_03
+  - zj_light_00
+  - zj_pj_di
+  - ty_frame_A5
+  - zj_icon_buwei03_2
+  - zj_pinjie_02
+  - zj_bg_shadows
+  - btn_zhanlanguan
+  - zj_bg1
+  - zj_icon_buwei05
+  - ty_frame_A6
+  m_RenderDataMap: {}
+  m_Tag: LordPanel
+  m_IsVariant: 0
+  m_IsPlaceholder: 0

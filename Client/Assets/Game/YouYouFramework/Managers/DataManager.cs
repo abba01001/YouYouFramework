@@ -76,7 +76,13 @@ public class DataManager : Observable<DataManager>, IDataManager
     #endregion
 
     #region Public方法
-
+    public string PrintUserData()
+    {
+        var str = MessagePackSerializer.SerializeToJson(this, MessagePackSerializer.DefaultOptions);
+        Debug.Log(str);
+        return str;
+    }
+    
     public void SaveDialogueId(int type, int id)
     {
         if (PlayerRoleData.dialogueIds.ContainsKey(type))
@@ -178,6 +184,7 @@ public class DataManager : Observable<DataManager>, IDataManager
             MainEntry.Log(MainEntry.LogCategory.GameData,$"上传云端?{Time.time - lastUploadTime >= uploadCooldown || ignoreCloudTime}");
             if (Time.time - lastUploadTime >= uploadCooldown || ignoreCloudTime)
             {
+                MainEntry.Log(MainEntry.LogCategory.GameData,$"上传数据=={str}");
                 GameEntry.SDK.UploadGameData(UserId, str);
                 lastUploadTime = Time.time;  // 更新上传的时间
             }

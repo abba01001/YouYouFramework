@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [Serializable]
@@ -21,22 +22,43 @@ public class PlayerRoleData
     public int totalOnlineDuration;
     public int todayOnlineDuration;
     public Dictionary<int,int> dialogueIds;
-    public List<int> equipInfo;//穿戴装备信息
-    public Dictionary<int, int> bagWareHouse;//背包仓库
-    public Dictionary<int, int> equipWareHouse;//装备仓库
+    public Dictionary<int, int> equipLevels;//装备栏等级信息
+    public List<EqiupItemData> equipWareHouse;//装备仓库
+    public List<BagItemData> bagWareHouse;//背包仓库
     public Dictionary<string, int> roleAttr;//角色属性
     public PlayerRoleData()
     {
+        equipLevels = new Dictionary<int, int>()
+        {
+            {1,0},{2,0},{3,0},{4,0},{5,0},{6,0},
+        };
         dialogueIds = new Dictionary<int, int>();
-        equipInfo = new List<int>();
-        bagWareHouse = new Dictionary<int, int>();
-        equipWareHouse = new Dictionary<int, int>();
+        equipWareHouse = new List<EqiupItemData>();
+        bagWareHouse = new List<BagItemData>();
         roleAttr = new Dictionary<string, int>();
         totalOnlineDuration = 0;
         todayOnlineDuration = 0;
         name = "";
     }
 }
+
+[Serializable]
+[MessagePackObject(keyAsPropertyName: true)]
+public class EqiupItemData
+{
+    public int equipId;
+    public int quality;
+    public Dictionary<int, int> extraAttr = new Dictionary<int, int>();
+}
+
+[Serializable]
+[MessagePackObject(keyAsPropertyName: true)]
+public class BagItemData
+{
+    public int itemId;
+    public int itemCount;
+}
+
 
 public class DialogueCommand
 {

@@ -47,13 +47,16 @@ namespace MessagePack.Resolvers
 
         static GeneratedResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(5)
+            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(8)
             {
                 { typeof(global::System.Collections.Generic.Dictionary<int, int>), 0 },
                 { typeof(global::System.Collections.Generic.Dictionary<string, int>), 1 },
-                { typeof(global::System.Collections.Generic.List<int>), 2 },
-                { typeof(global::DataManager), 3 },
-                { typeof(global::PlayerRoleData), 4 },
+                { typeof(global::System.Collections.Generic.List<global::BagItemData>), 2 },
+                { typeof(global::System.Collections.Generic.List<global::EqiupItemData>), 3 },
+                { typeof(global::BagItemData), 4 },
+                { typeof(global::DataManager), 5 },
+                { typeof(global::EqiupItemData), 6 },
+                { typeof(global::PlayerRoleData), 7 },
             };
         }
 
@@ -69,9 +72,12 @@ namespace MessagePack.Resolvers
             {
                 case 0: return new global::MessagePack.Formatters.DictionaryFormatter<int, int>();
                 case 1: return new global::MessagePack.Formatters.DictionaryFormatter<string, int>();
-                case 2: return new global::MessagePack.Formatters.ListFormatter<int>();
-                case 3: return new MessagePack.Formatters.DataManagerFormatter();
-                case 4: return new MessagePack.Formatters.PlayerRoleDataFormatter();
+                case 2: return new global::MessagePack.Formatters.ListFormatter<global::BagItemData>();
+                case 3: return new global::MessagePack.Formatters.ListFormatter<global::EqiupItemData>();
+                case 4: return new MessagePack.Formatters.BagItemDataFormatter();
+                case 5: return new MessagePack.Formatters.DataManagerFormatter();
+                case 6: return new MessagePack.Formatters.EqiupItemDataFormatter();
+                case 7: return new MessagePack.Formatters.PlayerRoleDataFormatter();
                 default: return null;
             }
         }
@@ -107,6 +113,67 @@ namespace MessagePack.Resolvers
 
 namespace MessagePack.Formatters
 {
+    public sealed class BagItemDataFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::BagItemData>
+    {
+        // itemId
+        private static global::System.ReadOnlySpan<byte> GetSpan_itemId() => new byte[1 + 6] { 166, 105, 116, 101, 109, 73, 100 };
+        // itemCount
+        private static global::System.ReadOnlySpan<byte> GetSpan_itemCount() => new byte[1 + 9] { 169, 105, 116, 101, 109, 67, 111, 117, 110, 116 };
+
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::BagItemData value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (value is null)
+            {
+                writer.WriteNil();
+                return;
+            }
+
+            writer.WriteMapHeader(2);
+            writer.WriteRaw(GetSpan_itemId());
+            writer.Write(value.itemId);
+            writer.WriteRaw(GetSpan_itemCount());
+            writer.Write(value.itemCount);
+        }
+
+        public global::BagItemData Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (reader.TryReadNil())
+            {
+                return null;
+            }
+
+            options.Security.DepthStep(ref reader);
+            var length = reader.ReadMapHeader();
+            var ____result = new global::BagItemData();
+
+            for (int i = 0; i < length; i++)
+            {
+                var stringKey = global::MessagePack.Internal.CodeGenHelpers.ReadStringSpan(ref reader);
+                switch (stringKey.Length)
+                {
+                    default:
+                    FAIL:
+                      reader.Skip();
+                      continue;
+                    case 6:
+                        if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 110266530755689UL) { goto FAIL; }
+
+                        ____result.itemId = reader.ReadInt32();
+                        continue;
+                    case 9:
+                        if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_itemCount().Slice(1))) { goto FAIL; }
+
+                        ____result.itemCount = reader.ReadInt32();
+                        continue;
+
+                }
+            }
+
+            reader.Depth--;
+            return ____result;
+        }
+    }
+
     public sealed class DataManagerFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::DataManager>
     {
         // UserId
@@ -204,6 +271,79 @@ namespace MessagePack.Formatters
         }
     }
 
+    public sealed class EqiupItemDataFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::EqiupItemData>
+    {
+        // equipId
+        private static global::System.ReadOnlySpan<byte> GetSpan_equipId() => new byte[1 + 7] { 167, 101, 113, 117, 105, 112, 73, 100 };
+        // quality
+        private static global::System.ReadOnlySpan<byte> GetSpan_quality() => new byte[1 + 7] { 167, 113, 117, 97, 108, 105, 116, 121 };
+        // extraAttr
+        private static global::System.ReadOnlySpan<byte> GetSpan_extraAttr() => new byte[1 + 9] { 169, 101, 120, 116, 114, 97, 65, 116, 116, 114 };
+
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::EqiupItemData value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (value is null)
+            {
+                writer.WriteNil();
+                return;
+            }
+
+            var formatterResolver = options.Resolver;
+            writer.WriteMapHeader(3);
+            writer.WriteRaw(GetSpan_equipId());
+            writer.Write(value.equipId);
+            writer.WriteRaw(GetSpan_quality());
+            writer.Write(value.quality);
+            writer.WriteRaw(GetSpan_extraAttr());
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<int, int>>(formatterResolver).Serialize(ref writer, value.extraAttr, options);
+        }
+
+        public global::EqiupItemData Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (reader.TryReadNil())
+            {
+                return null;
+            }
+
+            options.Security.DepthStep(ref reader);
+            var formatterResolver = options.Resolver;
+            var length = reader.ReadMapHeader();
+            var ____result = new global::EqiupItemData();
+
+            for (int i = 0; i < length; i++)
+            {
+                var stringKey = global::MessagePack.Internal.CodeGenHelpers.ReadStringSpan(ref reader);
+                switch (stringKey.Length)
+                {
+                    default:
+                    FAIL:
+                      reader.Skip();
+                      continue;
+                    case 7:
+                        switch (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey))
+                        {
+                            default: goto FAIL;
+                            case 28228244825534821UL:
+                                ____result.equipId = reader.ReadInt32();
+                                continue;
+                            case 34186468320703857UL:
+                                ____result.quality = reader.ReadInt32();
+                                continue;
+                        }
+                    case 9:
+                        if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_extraAttr().Slice(1))) { goto FAIL; }
+
+                        ____result.extraAttr = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<int, int>>(formatterResolver).Deserialize(ref reader, options);
+                        continue;
+
+                }
+            }
+
+            reader.Depth--;
+            return ____result;
+        }
+    }
+
     public sealed class PlayerRoleDataFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::PlayerRoleData>
     {
         // name
@@ -214,12 +354,12 @@ namespace MessagePack.Formatters
         private static global::System.ReadOnlySpan<byte> GetSpan_todayOnlineDuration() => new byte[1 + 19] { 179, 116, 111, 100, 97, 121, 79, 110, 108, 105, 110, 101, 68, 117, 114, 97, 116, 105, 111, 110 };
         // dialogueIds
         private static global::System.ReadOnlySpan<byte> GetSpan_dialogueIds() => new byte[1 + 11] { 171, 100, 105, 97, 108, 111, 103, 117, 101, 73, 100, 115 };
-        // equipInfo
-        private static global::System.ReadOnlySpan<byte> GetSpan_equipInfo() => new byte[1 + 9] { 169, 101, 113, 117, 105, 112, 73, 110, 102, 111 };
-        // bagWareHouse
-        private static global::System.ReadOnlySpan<byte> GetSpan_bagWareHouse() => new byte[1 + 12] { 172, 98, 97, 103, 87, 97, 114, 101, 72, 111, 117, 115, 101 };
+        // equipLevels
+        private static global::System.ReadOnlySpan<byte> GetSpan_equipLevels() => new byte[1 + 11] { 171, 101, 113, 117, 105, 112, 76, 101, 118, 101, 108, 115 };
         // equipWareHouse
         private static global::System.ReadOnlySpan<byte> GetSpan_equipWareHouse() => new byte[1 + 14] { 174, 101, 113, 117, 105, 112, 87, 97, 114, 101, 72, 111, 117, 115, 101 };
+        // bagWareHouse
+        private static global::System.ReadOnlySpan<byte> GetSpan_bagWareHouse() => new byte[1 + 12] { 172, 98, 97, 103, 87, 97, 114, 101, 72, 111, 117, 115, 101 };
         // roleAttr
         private static global::System.ReadOnlySpan<byte> GetSpan_roleAttr() => new byte[1 + 8] { 168, 114, 111, 108, 101, 65, 116, 116, 114 };
 
@@ -241,12 +381,12 @@ namespace MessagePack.Formatters
             writer.Write(value.todayOnlineDuration);
             writer.WriteRaw(GetSpan_dialogueIds());
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<int, int>>(formatterResolver).Serialize(ref writer, value.dialogueIds, options);
-            writer.WriteRaw(GetSpan_equipInfo());
-            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<int>>(formatterResolver).Serialize(ref writer, value.equipInfo, options);
-            writer.WriteRaw(GetSpan_bagWareHouse());
-            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<int, int>>(formatterResolver).Serialize(ref writer, value.bagWareHouse, options);
+            writer.WriteRaw(GetSpan_equipLevels());
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<int, int>>(formatterResolver).Serialize(ref writer, value.equipLevels, options);
             writer.WriteRaw(GetSpan_equipWareHouse());
-            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<int, int>>(formatterResolver).Serialize(ref writer, value.equipWareHouse, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::EqiupItemData>>(formatterResolver).Serialize(ref writer, value.equipWareHouse, options);
+            writer.WriteRaw(GetSpan_bagWareHouse());
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::BagItemData>>(formatterResolver).Serialize(ref writer, value.bagWareHouse, options);
             writer.WriteRaw(GetSpan_roleAttr());
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, int>>(formatterResolver).Serialize(ref writer, value.roleAttr, options);
         }
@@ -295,24 +435,31 @@ namespace MessagePack.Formatters
 
                         }
                     case 11:
-                        if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_dialogueIds().Slice(1))) { goto FAIL; }
+                        switch (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey))
+                        {
+                            default: goto FAIL;
+                            case 7310863298363222372UL:
+                                if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 7562313UL) { goto FAIL; }
 
-                        ____result.dialogueIds = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<int, int>>(formatterResolver).Deserialize(ref reader, options);
-                        continue;
-                    case 9:
-                        if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_equipInfo().Slice(1))) { goto FAIL; }
+                                ____result.dialogueIds = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<int, int>>(formatterResolver).Deserialize(ref reader, options);
+                                continue;
 
-                        ____result.equipInfo = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<int>>(formatterResolver).Deserialize(ref reader, options);
+                            case 8531309114812625253UL:
+                                if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 7564389UL) { goto FAIL; }
+
+                                ____result.equipLevels = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<int, int>>(formatterResolver).Deserialize(ref reader, options);
+                                continue;
+
+                        }
+                    case 14:
+                        if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_equipWareHouse().Slice(1))) { goto FAIL; }
+
+                        ____result.equipWareHouse = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::EqiupItemData>>(formatterResolver).Deserialize(ref reader, options);
                         continue;
                     case 12:
                         if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_bagWareHouse().Slice(1))) { goto FAIL; }
 
-                        ____result.bagWareHouse = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<int, int>>(formatterResolver).Deserialize(ref reader, options);
-                        continue;
-                    case 14:
-                        if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_equipWareHouse().Slice(1))) { goto FAIL; }
-
-                        ____result.equipWareHouse = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<int, int>>(formatterResolver).Deserialize(ref reader, options);
+                        ____result.bagWareHouse = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<global::BagItemData>>(formatterResolver).Deserialize(ref reader, options);
                         continue;
                     case 8:
                         if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 8247344641845522290UL) { goto FAIL; }

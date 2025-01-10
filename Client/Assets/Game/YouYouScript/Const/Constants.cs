@@ -86,6 +86,9 @@
     public struct AtlasPath
     {
         public const string HeroPanel = "Assets/Game/Download/Textures/Atlas/HeroPanel.spriteatlas";
+        public const string LordPanel = "Assets/Game/Download/Textures/Atlas/LordPanel.spriteatlas";
+        public const string Equip = "Assets/Game/Download/Textures/Atlas/Equip.spriteatlas";
+        public const string Daoju = "Assets/Game/Download/Textures/Atlas/Daoju.spriteatlas";
     }
     
     public struct ModelPath

@@ -52,6 +52,7 @@ public class NetRequestHandler
         MainEntry.Log(MainEntry.LogCategory.NetWork,$"发送服务器{message.Type}=============>\n" +
                                                     $"{message.ToJson()}");
         byte[] messageBytes = message.ToByteArray();
+        GameUtil.LogError($"发送消息长度======={messageBytes.Length}");
         return messageBytes;
     }
 

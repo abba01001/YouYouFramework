@@ -172,7 +172,7 @@ namespace TCPServer.Core.Services
                 }
 
 
-                Console.WriteLine($"更新键: {columnName} === 更新值: {value}"); // 调试输出
+                Console.WriteLine($"===============>更新键: {columnName} === 更新值: {value}"); // 调试输出
             }
 
             if (queryParts.Count == 0)

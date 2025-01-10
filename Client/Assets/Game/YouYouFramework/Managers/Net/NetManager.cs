@@ -17,7 +17,7 @@ public class NetManager
     private Socket socket;
     private Queue<byte[]> sendQueue = new Queue<byte[]>();
     private Queue<byte[]> receiveQueue = new Queue<byte[]>();
-    private byte[] receiveBytes = new byte[1024 * 1024];
+    private byte[] receiveBytes = new byte[512 * 1024];
 
     private TimeAction heartbeatAction;
     private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();

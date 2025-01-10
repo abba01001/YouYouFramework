@@ -29,13 +29,10 @@ namespace YouYou
                 entity.Id = ms.ReadInt();
                 entity.ItemId = ms.ReadInt();
                 entity.Type = ms.ReadInt();
-                entity.AttackRange = ms.ReadFloat();
-                entity.GridContain = ms.ReadInt();
-                entity.AttackInterval = ms.ReadFloat();
-                entity.Hp = ms.ReadInt();
-                entity.Mp = ms.ReadInt();
-                entity.InHeroPanel = ms.ReadInt();
-                entity.HeroPanelIcon = ms.ReadUTF8String();
+                entity.Quality = ms.ReadInt();
+                entity.Stage = ms.ReadInt();
+                entity.Name = ms.ReadUTF8String();
+                entity.Desc = ms.ReadUTF8String();
 
                 m_List.Add(entity);
                 m_Dic[entity.Id] = entity;

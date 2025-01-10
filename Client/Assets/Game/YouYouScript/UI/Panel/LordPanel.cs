@@ -15,8 +15,11 @@ public class LordPanel : MonoBehaviour
         Bag
     }
     public EfficientScrollRect _scrollRect;
-    public HeroPanelItem itemPrefab;
+    public LordPanelItem itemPrefab;
     private SelectItemType curType = SelectItemType.Equip;
+
+    public bool IsEquipType => curType == SelectItemType.Equip;
+
     private void Awake()
     {
         itemPrefab.gameObject.MSetActive(false);
@@ -30,16 +33,31 @@ public class LordPanel : MonoBehaviour
     
     object[] GetData()
     {
-        Dictionary<int, int> infos = new Dictionary<int, int>();
-        infos = curType == SelectItemType.Equip ? GameEntry.Data.PlayerRoleData.equipWareHouse : GameEntry.Data.PlayerRoleData.bagWareHouse;
-        
-        object[] data = new object[infos.Count];
-        int index = 0;
-        foreach (var VARIABLE in infos)
+        if (curType == SelectItemType.Equip)
         {
-            data[index] = VARIABLE;
-            index++;
+            List<EqiupItemData> infos = GameEntry.Data.PlayerRoleData.equipWareHouse;//new List<EqiupItemData>();
+            // for (int i = 0; i < 20; i++)
+            // {
+            //     infos.Add(new EqiupItemData()
+            //     {
+            //         equipId = GameUtil.RandomRange(101,120),
+            //         quality = GameUtil.RandomRange(1,8)
+            //     });
+            // }
+            // infos.Sort((a, b) =>
+            // {
+            //     int equipIdComparison = b.equipId.CompareTo(a.equipId);  // equipId 由大到小
+            //     if (equipIdComparison != 0) return equipIdComparison;
+            //     return b.quality.CompareTo(a.quality);  // 如果 equipId 相同，按 quality 由大到小
+            // });
+            // GameEntry.Data.PlayerRoleData.equipWareHouse = infos;
+            // GameEntry.Data.SaveData(true);
+            return infos.ToArray();
         }
-        return data;
+        else
+        {
+            List<BagItemData> infos = new List<BagItemData>();
+            return infos.ToArray();
+        }
     }
 }

@@ -8,7 +8,7 @@ namespace YouYou
     public partial class Sys_ItemEntity : DataTableEntityBase
     {
         /// <summary>
-        /// 物品Id
+        /// 物品id
         /// </summary>
         public int ItemId;
 
@@ -18,39 +18,24 @@ namespace YouYou
         public int Type;
 
         /// <summary>
-        /// 攻击范围
+        /// 品质
         /// </summary>
-        public float AttackRange;
+        public int Quality;
 
         /// <summary>
-        /// 格子容纳数
+        /// 阶数
         /// </summary>
-        public int GridContain;
+        public int Stage;
 
         /// <summary>
-        /// 攻击间隔
+        /// 名字
         /// </summary>
-        public float AttackInterval;
+        public string Name;
 
         /// <summary>
-        /// 红
+        /// 描述文本
         /// </summary>
-        public int Hp;
-
-        /// <summary>
-        /// 蓝
-        /// </summary>
-        public int Mp;
-
-        /// <summary>
-        /// 在HeroPanel里显示
-        /// </summary>
-        public int InHeroPanel;
-
-        /// <summary>
-        /// Panel显示的Icon
-        /// </summary>
-        public string HeroPanelIcon;
+        public string Desc;
 
     }
 }
