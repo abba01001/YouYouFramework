@@ -31,7 +31,14 @@ public class FormYouLi : UIFormBase
         });
         getBtn.SetButtonClick(() =>
         {
-            
+            GameEntry.Net.Requset.c2s_request_get_suspend_reward(1);
+        });
+        quickGetBtn.SetButtonClick(() =>
+        {
+            if (GameEntry.Data.SuspendQuickGetRewardIndex < GameEntry.Data.SuspendQuickGetRewardLimit)
+            {
+                GameEntry.Net.Requset.c2s_request_get_suspend_reward(2);
+            }
         });
     }
 
@@ -39,7 +46,7 @@ public class FormYouLi : UIFormBase
     {
         base.OnEnable();
         GameEntry.Event.AddEventListener(Constants.EventName.GetSuspendReward,HandleGetReward);
-        if (GameEntry.Data.SuspendStartTime == 0)
+        if (GameEntry.Data.SuspendStartTime == -1)
         {
             GameEntry.Net.Requset.c2s_request_get_suspend_reward(0);
         }
@@ -48,14 +55,27 @@ public class FormYouLi : UIFormBase
     private void HandleGetReward(object data)
     {
         SuspendTimeMsg msg = data as SuspendTimeMsg;
-        if (msg.Type == 0)
+        switch (msg.Type)
         {
-            GameEntry.Data.SuspendStartTime = msg.Timestamp;
-            GameUtil.LogError(GameEntry.Time.ConvertSecondsToTimeFormat(msg.Timestamp));
-        }
-        else
-        {
-            
+            case 0:
+                GameEntry.Data.SuspendStartTime = msg.Timestamp;
+                GameEntry.Data.SuspendQuickGetRewardIndex = msg.QuickGetSuspendRewardIndex;
+                GameEntry.Data.SuspendQuickGetRewardLimit = msg.QuickGetSuspendRewardLimit;
+                GameUtil.LogError($"{GameEntry.Time.UnixTimeStampToDateTime(msg.Timestamp)}==={msg.QuickGetSuspendRewardIndex}==={msg.QuickGetSuspendRewardLimit}");
+                break;
+            case 1:
+                if (msg.CanGetReward && msg.Hour > 0)
+                {
+                    GameUtil.LogError($"挂机时间{msg.Hour}");
+                    //GameEntry.Net.Requset.c2s_request_get_suspend_reward(0);
+                }
+                break;
+            case 2:
+                if (msg.CanGetReward)
+                {
+                    //GameEntry.Net.Requset.c2s_request_get_suspend_reward(0);
+                }
+                break;
         }
     }
 

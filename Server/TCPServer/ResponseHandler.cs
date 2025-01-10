@@ -122,17 +122,22 @@ public class ResponseHandler
         ProtocolHelper.UnpackData<SuspendTimeMsg>(message, async (data) =>
         {
             Console.WriteLine($"{nameof(SuspendTimeMsg)}: {data}");
+            SuspendTimeMsg s = new SuspendTimeMsg();
             if(data.Type == 0)
             {
-                int timeStamp = await RoleService.GetSuspendTimeInHoursAsync(data.UserUuid);
-                request.c2s_request_get_suspend_reward(data.Type,false,0,timeStamp);
+                (s.Timestamp,s.QuickGetSuspendRewardIndex,s.QuickGetSuspendRewardLimit) = await RoleService.GetSuspendTimeParamsAsync(data.UserUuid);
+                s.Type = data.Type;
+                request.c2s_request_get_suspend_reward(s);
             }
             else
             {
-                (OperationResult state, int hour) = await RoleService.CanClaimRewardAsync(data.UserUuid, data.Type);
-                if (state == OperationResult.Success)
+                (OperationResult state, SuspendTimeMsg msg) = await RoleService.CanClaimRewardAsync(data.UserUuid, data.Type);
+                if (state == OperationResult.Success && msg != null)
                 {
-                    request.c2s_request_get_suspend_reward(data.Type,state == OperationResult.Success, hour);
+                    s.Type = data.Type;
+                    s.CanGetReward = true;
+                    s.Hour = msg.Hour;
+                    request.c2s_request_get_suspend_reward(s);
                 }
             }
         });

@@ -87,7 +87,6 @@ namespace YouYou
                 GameEntry.Data.IsFirstLoginTime = false;
             }
             GameEntry.SDK.InitTalkingData();
-            GameEntry.Time.InitNetTime();
             GameEntry.Data.SaveData(true,true,true,true);
             GameEntry.Procedure.ChangeState(ProcedureState.Game);
         }

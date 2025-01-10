@@ -10,6 +10,7 @@ using TCPServer.Utils;
 using Protocols.Game;
 using Google.Protobuf.WellKnownTypes;
 using Google.Protobuf;
+using Protocols;
 
 namespace TCPServer.Core.Services
 {
@@ -52,7 +53,6 @@ namespace TCPServer.Core.Services
         }
 
 
-        // 登录验证
         // 登录验证
         public static async Task<(OperationResult, string, byte[])> LoginAsync(string userAccount, string userPassword)
         {
@@ -141,67 +141,114 @@ namespace TCPServer.Core.Services
         }
 
 
-        //更新用户任意属性
-        public static async Task<(OperationResult Result, Dictionary<string, object> UpdatedValues)> UpdateUserPropertyAsync(string userUuid, Dictionary<string, string> updatedAttrs)
+        //查询用户属性
+        public static async Task<(OperationResult Result, Dictionary<string, object> UserProperties)> GetUserPropertiesAsync(string userUuid, List<string> propertiesToQuery, bool isInGameData = true)
         {
+            // 参数验证
+            if (propertiesToQuery == null || propertiesToQuery.Count == 0)
+                return (OperationResult.Failed, null);
+
+            // 验证属性是否存在于 GameSaveData 中（如果需要）
+            if (isInGameData && !GlobalUtils.ValidateKey<GameSaveData>(propertiesToQuery.ToDictionary(p => p, p => "")))
+                return (OperationResult.PropertyNotFound, null);
+
+            // 构建查询的字段部分
+            var queryParts = propertiesToQuery.Select(p => ConvertToColumnName(p)).ToList();
+            if (queryParts.Count == 0)
+                return (OperationResult.Failed, null);
+
+            // 构建 SQL 查询语句
+            string selectQuery = $"SELECT {string.Join(", ", queryParts)} FROM {SqlTable.GameSaveData} WHERE user_uuid = @user_uuid";
+            var parameters = new Dictionary<string, object> { { "@user_uuid", userUuid } };
+
+            try
+            {
+                // 执行查询
+                var queryResult = await SqlManager.Instance.ExecuteQueryAsync(selectQuery, parameters);
+
+                // 判断查询结果
+                if (queryResult?.Count > 0)
+                {
+                    // 返回查询结果
+                    return (OperationResult.Success, queryResult[0]);
+                }
+                else
+                {
+                    // 未查询到数据
+                    return (OperationResult.Failed, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                // 记录错误并返回失败
+                Console.WriteLine($"Error querying user properties: {ex.Message}");
+                return (OperationResult.Failed, null);
+            }
+        }
+
+        //更新用户属性
+        public static async Task<(OperationResult Result, Dictionary<string, object> UpdatedValues)> UpdateUserPropertyAsync(string userUuid, Dictionary<string, string> updatedAttrs, bool isInGameData = true)
+        {
+            // 参数验证：如果 updatedAttrs 为空或没有任何字段，则返回失败
             if (updatedAttrs == null || updatedAttrs.Count == 0)
                 return (OperationResult.Failed, null);
 
-            if (!GlobalUtils.ValidateKey<GameSaveData>(updatedAttrs))
+            // 如果需要验证属性是否存在于 GameSaveData 中
+            if (isInGameData && !GlobalUtils.ValidateKey<GameSaveData>(updatedAttrs))
                 return (OperationResult.PropertyNotFound, null);
+
+            // 获取当前时间戳
             int currentTime = (int)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
-            var queryParts = new List<string>();
-            var parameters = new Dictionary<string, object> { 
-                { "@user_uuid", userUuid },
-                { "@save_time", currentTime},
-            };
-            queryParts.Add("save_time = @save_time");
-            // 遍历传入的字段
+            var queryParts = new List<string> { "save_time = @save_time" };
+            var parameters = new Dictionary<string, object>
+    {
+        { "@user_uuid", userUuid },
+        { "@save_time", currentTime }
+    };
+
+            // 生成 SQL 更新语句的字段部分
             foreach (var kvp in updatedAttrs)
             {
                 string propertyName = kvp.Key;
                 object value = kvp.Value;
-                // 转换成数据库中的列名
-                string columnName = ConvertToColumnName(propertyName);
 
-                // 生成 SQL 更新语句
+                string columnName = ConvertToColumnName(propertyName);
                 queryParts.Add($"{columnName} = @{columnName}");
 
-                if(columnName == "save_data")
+                // 针对特定字段进行转换
+                if (columnName == "save_data")
                 {
-                    parameters.Add($"@{columnName}", Convert.FromBase64String(value as string));
+                    parameters[$"@{columnName}"] = Convert.FromBase64String(value as string);
                 }
                 else
                 {
-                    parameters.Add($"@{columnName}", value);
+                    parameters[$"@{columnName}"] = value;
                 }
-
-
-                Console.WriteLine($"===============>更新键: {columnName} === 更新值: {value}"); // 调试输出
             }
 
-            if (queryParts.Count == 0)
-                return (OperationResult.Failed, null);
+            // 如果没有需要更新的字段
+            if (queryParts.Count == 1) return (OperationResult.Failed, null);
 
             // 构建 SQL 更新查询语句
             string updateQuery = $"UPDATE {SqlTable.GameSaveData} SET {string.Join(", ", queryParts)} WHERE user_uuid = @user_uuid";
 
             try
             {
-                // 执行更新
+                // 执行更新操作
                 int rowsAffected = await SqlManager.Instance.ExecuteNonQueryAsync(updateQuery, parameters);
                 if (rowsAffected <= 0) return (OperationResult.Failed, null);
 
                 // 查询更新后的数据
                 string selectQuery = $"SELECT {string.Join(", ", updatedAttrs.Keys.Select(ConvertToColumnName))} FROM {SqlTable.GameSaveData} WHERE user_uuid = @user_uuid";
                 var updatedValues = await SqlManager.Instance.ExecuteQueryAsync(selectQuery, parameters);
-                Console.WriteLine("更新成功");
+
                 // 返回更新结果和新数据
                 return (OperationResult.Success, updatedValues.Count > 0 ? updatedValues[0] : null);
             }
             catch (Exception ex)
             {
+                // 错误处理
                 Console.WriteLine($"Error updating user properties: {ex.Message}");
                 return (OperationResult.Failed, null);
             }
@@ -214,12 +261,17 @@ namespace TCPServer.Core.Services
             if (string.IsNullOrEmpty(propertyName))
                 return null;
 
+            // 如果已经是下划线分隔的命名格式，直接返回原名称
+            if (propertyName.Contains("_") && propertyName.All(c => char.IsLower(c) || c == '_'))
+                return propertyName;
+
             // 将驼峰命名转换为下划线分隔的小写命名（例如 UserUuid -> user_uuid）
             var columnName = string.Concat(propertyName
                 .Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + char.ToLower(x) : char.ToLower(x).ToString()));
 
             return columnName;
         }
+
 
         //添加好友
         public static async Task<OperationResult> AddFriendAsync(string userUuid, string friendUuid)
@@ -597,30 +649,48 @@ VALUES (@user_uuid, @friend_uuid, 1, 1),  -- 发送请求的玩家, is_invitor =
             { "suspend_time_start", ((int)DateTimeOffset.UtcNow.ToUnixTimeSeconds()).ToString() }
         };
 
-            var result = await UpdateUserPropertyAsync(userUuid, updatedAttrs);
+            var result = await UpdateUserPropertyAsync(userUuid, updatedAttrs,false);
             return result.Result;
         }
 
-
-        // 获取 suspend_time_start
-        public static async Task<int> GetSuspendTimeInHoursAsync(string userUuid)
+        // 更新快速领取奖励索引
+        public static async Task<OperationResult> UpdateQuickGetSuspendRewardIndexAsync(string userUuid,int nowIndex)
         {
-            string query = $"SELECT suspend_time_start FROM {SqlTable.GameSaveData} WHERE user_uuid = @user_uuid";
-            var parameters = new Dictionary<string, object>
+            var updatedAttrs = new Dictionary<string, string>
         {
-            { "@user_uuid", userUuid }
+            { "quick_get_suspend_reward_index", $"{nowIndex + 1}" }
         };
-            var result = await SqlManager.Instance.ExecuteQueryAsync(query, parameters);
-            if (result.Count > 0)
-            {
-                var suspendTimeStart = Convert.ToInt32(result[0]["suspend_time_start"]);
-                return suspendTimeStart;
-            }
-            return 0;  // 没有找到用户，返回 0
+
+            var result = await UpdateUserPropertyAsync(userUuid, updatedAttrs,false);
+            return result.Result;
         }
 
+        // 获取 suspend_time_start, quick_get_suspend_reward_index 和 quick_get_suspend_reward_limit
+        public static async Task<(int suspendTimeStart, int quickGetRewardIndex, int quickGetRewardLimit)> GetSuspendTimeParamsAsync(string userUuid)
+        {
+
+            (OperationResult result1, Dictionary< string, object> dic) = await GetUserPropertiesAsync(userUuid,new List<string>
+            {
+                "suspend_time_start","quick_get_suspend_reward_index","quick_get_suspend_reward_limit"
+            },false);
+            foreach (var item in dic)
+            {
+                Console.WriteLine($"查询信息{item.Key}==={Convert.ToInt32(item.Value)}");
+            }
+            if (dic.Count > 0)
+            {
+                var suspendTimeStart = Convert.ToInt32(dic["suspend_time_start"]);
+                var quickGetRewardIndex = Convert.ToInt32(dic["quick_get_suspend_reward_index"]);
+                var quickGetRewardLimit = Convert.ToInt32(dic["quick_get_suspend_reward_limit"]);
+
+                return (suspendTimeStart, quickGetRewardIndex, quickGetRewardLimit);
+            }
+            return (0, 0, 0);
+        }
+
+
         // 判断用户是否可以领取奖励
-        public static async Task<(OperationResult,int)> CanClaimRewardAsync(string userUuid, int rewardType)
+        public static async Task<(OperationResult,SuspendTimeMsg)> CanClaimRewardAsync(string userUuid, int rewardType)
         {
             // 获取当前时间（秒级）
             int currentTime = (int)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
@@ -642,14 +712,13 @@ VALUES (@user_uuid, @friend_uuid, 1, 1),  -- 发送请求的玩家, is_invitor =
             if (result.Count == 0)
             {
                 Console.WriteLine("User not found.");
-                return (OperationResult.UserNotFound, 0);
+                return (OperationResult.UserNotFound, null);
             }
 
             var userData = result[0];
             int suspendTimeStart = Convert.ToInt32(userData["suspend_time_start"]);
             int quickGetRewardIndex = Convert.ToInt32(userData["quick_get_suspend_reward_index"]);
             int quickGetRewardLimit = Convert.ToInt32(userData["quick_get_suspend_reward_limit"]);
-
             switch (rewardType)
             {
                 case 1: // 类型1：根据挂机时间来领取奖励
@@ -659,38 +728,39 @@ VALUES (@user_uuid, @friend_uuid, 1, 1),  -- 发送请求的玩家, is_invitor =
 
                         if (hoursDifference > 0)  // 如果小时差大于0，则可以领取
                         {
-                            var updateResult = await UpdateSuspendTimeStartAsync(userUuid);
-                            if (updateResult == OperationResult.Success)
+                            await UpdateSuspendTimeStartAsync(userUuid);
+                            return (OperationResult.Success, new SuspendTimeMsg()
                             {
-                                Console.WriteLine("Updated suspend_time_start to current time.");
-                            }
-                            else
-                            {
-                                Console.WriteLine("Failed to update suspend_time_start.");
-                            }
-                            return (OperationResult.Success,hoursDifference);
+                                CanGetReward = true,
+                                Hour = hoursDifference
+                            });
                         }
                         else
                         {
                             Console.WriteLine("Insufficient hours to claim reward.");
-                            return (OperationResult.Failed, 0);
+                            return (OperationResult.Failed, null);
                         }
                     }
                 case 2: // 类型2：根据索引和限制来领取奖励
                     {
                         if (quickGetRewardIndex < quickGetRewardLimit)  // 如果 quick_get_suspend_reward_index 小于 quick_get_suspend_reward_limit
                         {
-                            return (OperationResult.Success, 0);
+                            Console.WriteLine($"类型2：根据索引和限制来领取奖励{quickGetRewardIndex}======{quickGetRewardLimit}");
+                            await UpdateQuickGetSuspendRewardIndexAsync(userUuid,quickGetRewardIndex);
+                            return (OperationResult.Success, new SuspendTimeMsg()
+                            {
+                                CanGetReward = true
+                            });
                         }
                         else
                         {
                             Console.WriteLine("Cannot claim reward. Limit reached.");
-                            return (OperationResult.Failed, 0);
+                            return (OperationResult.Failed, null);
                         }
                     }
                 default:
                     Console.WriteLine("Invalid reward type.");
-                    return (OperationResult.Failed, 0);
+                    return (OperationResult.Failed, null);
             }
         }
 

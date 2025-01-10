@@ -44,7 +44,7 @@ public class RequestHandler
         BaseMessage message = new BaseMessage();
         string typeName = typeof(T).Name;
         message.Type = typeName;
-        message.Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds(); // 获取当前时间戳
+        message.Timestamp = ServerSocket.CurrentServerTimestamp;
         message.Data = ByteString.CopyFrom(byteArrayData); // 直接将序列化后的字节数组放入 Data
         string messageJson = JsonConvert.SerializeObject(message);
         ServerSocket.Logger.LogMessage(socket, $"发送内容{messageJson}");
@@ -74,13 +74,8 @@ public class RequestHandler
         SendMessage(data);
     }
 
-    public async void c2s_request_get_suspend_reward(int type,bool canGetReward,int hour,int timeStamp = 0)
+    public async void c2s_request_get_suspend_reward(SuspendTimeMsg data)
     {
-        SuspendTimeMsg data = new SuspendTimeMsg();
-        data.Type = type;
-        data.CanGetReward = canGetReward;
-        data.Hour = hour;
-        data.Timestamp = timeStamp;
         SendMessage(data);
     }
 

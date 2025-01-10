@@ -29,15 +29,17 @@ namespace YouYou
 
         }
 
-        public void InitNetTime()
+        public void InitNetTime(long time)
         {
-            string url = "https://www.baidu.com";
-            GetServerTime(url, 30, null, onComplete: (DateTime serverTime) =>
-            {
-                long time = GameEntry.Time.DateTimeToUnixTimeStamp(serverTime);
-                netTime = time;
-                RefreshNetTime();
-            });
+            netTime = time;
+            RefreshNetTime();
+            // string url = "https://www.baidu.com";
+            // GetServerTime(url, 30, null, onComplete: (DateTime serverTime) =>
+            // {
+            //     long time = GameEntry.Time.DateTimeToUnixTimeStamp(serverTime);
+            //     netTime = time;
+            //     RefreshNetTime();
+            // });
         }
 
         public async void GetServerTime(string url, int tryRequestCount, Action onUpdate, Action<DateTime> onComplete)

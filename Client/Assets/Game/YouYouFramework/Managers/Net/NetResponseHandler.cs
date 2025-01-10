@@ -97,6 +97,8 @@ public class NetResponseHandler
                 GameEntry.Data.InitGameData(binaryData);//data.SaveData.ToByteArray());
                 GameEntry.Net.Token = data.Token;
                 GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);
+                GameEntry.Time.InitNetTime(message.Timestamp);
+                GameUtil.LogError(GameEntry.Time.UnixTimeStampToDateTime(message.Timestamp));
                 Constants.IsLoginGame = true;
             }
             else
@@ -158,7 +160,7 @@ public class NetResponseHandler
     {
         ProtocolHelper.UnpackData<SuspendTimeMsg>(message, (data) =>
         {
-            GameEntry.Data.Dispatch(Constants.EventName.GetSuspendReward,data);                
+            GameEntry.Event.Dispatch(Constants.EventName.GetSuspendReward,data);                
         });
     }
     

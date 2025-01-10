@@ -22,14 +22,31 @@ public static class ServerSocket
     private static Task acceptClientTask;
     private static Task receiveClientTask;
 
+    // 记录服务器启动时的时间戳（单位：秒）
+    private static long serverStartTimestamp;
+
+    // 获取当前服务器时间戳（单位：秒）
+    public static long CurrentServerTimestamp
+    {
+        get
+        {
+            // 计算当前时间戳（服务器启动时间戳 + 运行的秒数）
+            return serverStartTimestamp + (DateTimeOffset.UtcNow.ToUnixTimeSeconds() - serverStartTimestamp);
+        }
+    }
+
+
     public static async Task Start(string ip, int port, int clientNum)
     {
         isClose = false;
+        // 初始化服务器启动时间戳
+        serverStartTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         Logger = new NetLogger(TimeSpan.FromSeconds(10));
         IPEndPoint iPEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
         socket.Bind(iPEndPoint);
         Logger.LogMessage(socket, $"服务器启动成功...IP:{ip},端口:{port}");
+        Logger.LogMessage(socket, $"服务器启动时间戳: {serverStartTimestamp}");
         Logger.LogMessage(socket, "开始监听客户端连接...");
         socket.Listen(clientNum);
 

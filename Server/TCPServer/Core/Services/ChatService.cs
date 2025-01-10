@@ -231,5 +231,31 @@ namespace TCPServer.Core.Services
             OperationResult result = await SendMessageAsync(data.SenderId, data.ReceiverId, data.Message, data.ChannelType);
             return result;
         }
+
+        // 清理公共频道聊天记录
+        public static async Task<OperationResult> ClearPublicChannelMessagesAsync()
+        {
+            // 定义删除查询语句
+            string query = $"DELETE FROM {SqlTable.ChatMessages} WHERE channel_type = 4";
+
+            try
+            {
+                // 异步执行删除操作
+                int rowsAffected = await SqlManager.Instance.ExecuteNonQueryAsync(query);
+
+                // 打印删除的行数
+                Console.WriteLine($"Deleted {rowsAffected} rows from public channel messages.");
+
+                // 判断是否成功
+                return rowsAffected > 0 ? OperationResult.Success : OperationResult.Failed;
+            }
+            catch (Exception ex)
+            {
+                // 捕获并打印异常
+                Console.WriteLine($"Error clearing public channel messages: {ex.Message}");
+                return OperationResult.Failed;
+            }
+        }
+
     }
 }

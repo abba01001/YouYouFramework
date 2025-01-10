@@ -77,4 +77,6 @@ message SuspendTimeMsg{
     bool canGetReward = 3;
     int32 hour = 4;
     int32 timestamp = 5;
+    int32 quickGetSuspendRewardIndex = 6;
+    int32 quickGetSuspendRewardLimit = 7;
 }

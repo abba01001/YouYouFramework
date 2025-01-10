@@ -41,11 +41,12 @@ namespace Protocols {
             "aGF0TXNnEgoKAmlkGAEgASgJEhEKCXNlbmRlcl9pZBgCIAEoCRITCgtyZWNl",
             "aXZlcl9pZBgDIAEoCRIPCgdtZXNzYWdlGAQgASgJEhQKDGNoYW5uZWxfdHlw",
             "ZRgFIAEoBRIRCgl0aW1lc3RhbXAYBiABKAkSDwoHaXNfcmVhZBgHIAEoCBIU",
-            "CgxtZXNzYWdlX3R5cGUYCCABKAUSEgoKaXNfZGVsZXRlZBgJIAEoCCJoCg5T",
-            "dXNwZW5kVGltZU1zZxIRCgl1c2VyX3V1aWQYASABKAkSDAoEdHlwZRgCIAEo",
-            "BRIUCgxjYW5HZXRSZXdhcmQYAyABKAgSDAoEaG91chgEIAEoBRIRCgl0aW1l",
-            "c3RhbXAYBSABKAUqIgoHTXNnVHlwZRINCglIZWFydEJlYXQQABIICgRFWElU",
-            "EAFiBnByb3RvMw=="));
+            "CgxtZXNzYWdlX3R5cGUYCCABKAUSEgoKaXNfZGVsZXRlZBgJIAEoCCKwAQoO",
+            "U3VzcGVuZFRpbWVNc2cSEQoJdXNlcl91dWlkGAEgASgJEgwKBHR5cGUYAiAB",
+            "KAUSFAoMY2FuR2V0UmV3YXJkGAMgASgIEgwKBGhvdXIYBCABKAUSEQoJdGlt",
+            "ZXN0YW1wGAUgASgFEiIKGnF1aWNrR2V0U3VzcGVuZFJld2FyZEluZGV4GAYg",
+            "ASgFEiIKGnF1aWNrR2V0U3VzcGVuZFJld2FyZExpbWl0GAcgASgFKiIKB01z",
+            "Z1R5cGUSDQoJSGVhcnRCZWF0EAASCAoERVhJVBABYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Protocols.MsgType), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -56,7 +57,7 @@ namespace Protocols {
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.RegisterMsg), global::Protocols.RegisterMsg.Parser, new[]{ "UserAccount", "UserPassword", "State", "UserUuid", "Token" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.EmailMsg), global::Protocols.EmailMsg.Parser, new[]{ "EmailId", "SenderId", "ReceiverId", "Subject", "Content", "SendTime", "IsRead", "IsGet", "IsDeleted" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.ChatMsg), global::Protocols.ChatMsg.Parser, new[]{ "Id", "SenderId", "ReceiverId", "Message", "ChannelType", "Timestamp", "IsRead", "MessageType", "IsDeleted" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.SuspendTimeMsg), global::Protocols.SuspendTimeMsg.Parser, new[]{ "UserUuid", "Type", "CanGetReward", "Hour", "Timestamp" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.SuspendTimeMsg), global::Protocols.SuspendTimeMsg.Parser, new[]{ "UserUuid", "Type", "CanGetReward", "Hour", "Timestamp", "QuickGetSuspendRewardIndex", "QuickGetSuspendRewardLimit" }, null, null, null, null)
           }));
     }
     #endregion
@@ -2654,6 +2655,8 @@ namespace Protocols {
       canGetReward_ = other.canGetReward_;
       hour_ = other.hour_;
       timestamp_ = other.timestamp_;
+      quickGetSuspendRewardIndex_ = other.quickGetSuspendRewardIndex_;
+      quickGetSuspendRewardLimit_ = other.quickGetSuspendRewardLimit_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -2723,6 +2726,30 @@ namespace Protocols {
       }
     }
 
+    /// <summary>Field number for the "quickGetSuspendRewardIndex" field.</summary>
+    public const int QuickGetSuspendRewardIndexFieldNumber = 6;
+    private int quickGetSuspendRewardIndex_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int QuickGetSuspendRewardIndex {
+      get { return quickGetSuspendRewardIndex_; }
+      set {
+        quickGetSuspendRewardIndex_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "quickGetSuspendRewardLimit" field.</summary>
+    public const int QuickGetSuspendRewardLimitFieldNumber = 7;
+    private int quickGetSuspendRewardLimit_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int QuickGetSuspendRewardLimit {
+      get { return quickGetSuspendRewardLimit_; }
+      set {
+        quickGetSuspendRewardLimit_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -2743,6 +2770,8 @@ namespace Protocols {
       if (CanGetReward != other.CanGetReward) return false;
       if (Hour != other.Hour) return false;
       if (Timestamp != other.Timestamp) return false;
+      if (QuickGetSuspendRewardIndex != other.QuickGetSuspendRewardIndex) return false;
+      if (QuickGetSuspendRewardLimit != other.QuickGetSuspendRewardLimit) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -2755,6 +2784,8 @@ namespace Protocols {
       if (CanGetReward != false) hash ^= CanGetReward.GetHashCode();
       if (Hour != 0) hash ^= Hour.GetHashCode();
       if (Timestamp != 0) hash ^= Timestamp.GetHashCode();
+      if (QuickGetSuspendRewardIndex != 0) hash ^= QuickGetSuspendRewardIndex.GetHashCode();
+      if (QuickGetSuspendRewardLimit != 0) hash ^= QuickGetSuspendRewardLimit.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -2793,6 +2824,14 @@ namespace Protocols {
         output.WriteRawTag(40);
         output.WriteInt32(Timestamp);
       }
+      if (QuickGetSuspendRewardIndex != 0) {
+        output.WriteRawTag(48);
+        output.WriteInt32(QuickGetSuspendRewardIndex);
+      }
+      if (QuickGetSuspendRewardLimit != 0) {
+        output.WriteRawTag(56);
+        output.WriteInt32(QuickGetSuspendRewardLimit);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -2823,6 +2862,14 @@ namespace Protocols {
         output.WriteRawTag(40);
         output.WriteInt32(Timestamp);
       }
+      if (QuickGetSuspendRewardIndex != 0) {
+        output.WriteRawTag(48);
+        output.WriteInt32(QuickGetSuspendRewardIndex);
+      }
+      if (QuickGetSuspendRewardLimit != 0) {
+        output.WriteRawTag(56);
+        output.WriteInt32(QuickGetSuspendRewardLimit);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -2847,6 +2894,12 @@ namespace Protocols {
       }
       if (Timestamp != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(Timestamp);
+      }
+      if (QuickGetSuspendRewardIndex != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(QuickGetSuspendRewardIndex);
+      }
+      if (QuickGetSuspendRewardLimit != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(QuickGetSuspendRewardLimit);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -2874,6 +2927,12 @@ namespace Protocols {
       }
       if (other.Timestamp != 0) {
         Timestamp = other.Timestamp;
+      }
+      if (other.QuickGetSuspendRewardIndex != 0) {
+        QuickGetSuspendRewardIndex = other.QuickGetSuspendRewardIndex;
+      }
+      if (other.QuickGetSuspendRewardLimit != 0) {
+        QuickGetSuspendRewardLimit = other.QuickGetSuspendRewardLimit;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -2914,6 +2973,14 @@ namespace Protocols {
             Timestamp = input.ReadInt32();
             break;
           }
+          case 48: {
+            QuickGetSuspendRewardIndex = input.ReadInt32();
+            break;
+          }
+          case 56: {
+            QuickGetSuspendRewardLimit = input.ReadInt32();
+            break;
+          }
         }
       }
     #endif
@@ -2951,6 +3018,14 @@ namespace Protocols {
           }
           case 40: {
             Timestamp = input.ReadInt32();
+            break;
+          }
+          case 48: {
+            QuickGetSuspendRewardIndex = input.ReadInt32();
+            break;
+          }
+          case 56: {
+            QuickGetSuspendRewardLimit = input.ReadInt32();
             break;
           }
         }
