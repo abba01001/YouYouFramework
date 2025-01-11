@@ -22,21 +22,6 @@ public class RequestHandler
     {
         this.socket = socket;
     }
-    //public void SendMessage<T>(T data) where T : IMessage<T>
-    //{
-    //    byte[] byteArrayData = data.ToByteArray();
-    //    BaseMessage message = new BaseMessage();
-    //    string typeName = typeof(T).Name;
-    //    message.Type = typeof(T).Name;
-    //    message.Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();// 获取当前时间戳
-    //    message.Data = ByteString.CopyFrom(byteArrayData); // 直接将序列化后的字节数组放入 Data
-    //    string messageJson = JsonConvert.SerializeObject(message);
-    //    ServerSocket.Logger.LogMessage(socket,$"发送内容{messageJson}");
-    //    if (socket == null) return;
-    //    message.SenderId = socket.RemoteEndPoint.ToString(); // 设置发送者ID
-    //    byte[] messageBytes = message.ToByteArray();
-    //    socket.Send(messageBytes);
-    //}
 
     public async Task SendMessage<T>(T data) where T : IMessage<T>
     {
@@ -47,7 +32,7 @@ public class RequestHandler
         message.Timestamp = ServerSocket.CurrentServerTimestamp;
         message.Data = ByteString.CopyFrom(byteArrayData); // 直接将序列化后的字节数组放入 Data
         string messageJson = JsonConvert.SerializeObject(message);
-        ServerSocket.Logger.LogMessage(socket, $"发送内容{messageJson}");
+        Console.WriteLine($"发送内容{messageJson}");
 
         if (socket == null) return;
 

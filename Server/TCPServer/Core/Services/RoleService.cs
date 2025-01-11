@@ -688,6 +688,28 @@ VALUES (@user_uuid, @friend_uuid, 1, 1),  -- 发送请求的玩家, is_invitor =
             return (0, 0, 0);
         }
 
+        // 重置quick_get_suspend_reward_index为0
+        public static async Task<OperationResult> ResetSuspendParams()
+        {
+            // 定义更新 quick_get_suspend_reward_index 的查询语句
+            string updateQuery = $"UPDATE {SqlTable.GameSaveData} SET quick_get_suspend_reward_index = 0 WHERE quick_get_suspend_reward_index != 0";
+            try
+            {
+                // 异步执行更新操作
+                int rowsUpdated = await SqlManager.Instance.ExecuteNonQueryAsync(updateQuery);
+                Console.WriteLine($"Reset {rowsUpdated} rows for quick_get_suspend_reward_index to 0.");
+                // 判断操作是否成功
+                return rowsUpdated > 0 ? OperationResult.Success : OperationResult.Failed;
+            }
+            catch (Exception ex)
+            {
+                // 捕获并打印异常
+                Console.WriteLine($"Error resetting suspend params: {ex.Message}");
+                return OperationResult.Failed;
+            }
+        }
+
+
 
         // 判断用户是否可以领取奖励
         public static async Task<(OperationResult,SuspendTimeMsg)> CanClaimRewardAsync(string userUuid, int rewardType)

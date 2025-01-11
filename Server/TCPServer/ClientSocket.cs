@@ -57,7 +57,6 @@ public class ClientSocket
     // 发送消息
     public async Task SendMessage<T>(MsgType messageType, T data) where T : IMessage<T>
     {
-        ServerSocket.Logger.LogMessage(this.socket, $"{data.ToString()}");
         // 将数据对象序列化为字节数组
         byte[] byteArrayData = data.ToByteArray();
         var message = new BaseMessage
@@ -130,7 +129,7 @@ public class ClientSocket
         {
             if ((DateTime.UtcNow - LastHeartbeatTime).TotalSeconds > heartbeatTimeout)
             {
-                ServerSocket.Logger.LogMessage(this.socket, $"客户端{socket.RemoteEndPoint.ToString()}超时断开");
+                Console.WriteLine($"客户端{socket.RemoteEndPoint.ToString()}超时断开");
                 Close();
             }
         }
