@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Sockets;
+using System.Text;
 using Google.Protobuf;
 using Protocols;
 using Protocols.Guild;
 using Protocols.Item;
 using Protocols.Player;
+using Sirenix.Utilities;
 using UnityEngine;
 using YouYou;
 
@@ -32,6 +35,7 @@ public class NetResponseHandler
         RegisterHandler(nameof(RegisterMsg), s2c_handle_request_register);
         RegisterHandler(nameof(UpdateUserResponse), s2c_handle_request_update_role_info);
         RegisterHandler(nameof(ChatMsg), s2c_handle_chat_msg);
+        RegisterHandler(nameof(ChatMsgList), s2c_handle_request_public_channel_chat);
         RegisterHandler(nameof(SuspendTimeMsg), s2c_handle_get_suspend_time_msg);
     }
     
@@ -96,9 +100,8 @@ public class NetResponseHandler
                 byte[] binaryData = data.SaveData.ToByteArray();
                 GameEntry.Data.InitGameData(binaryData);//data.SaveData.ToByteArray());
                 GameEntry.Net.Token = data.Token;
-                GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);
                 GameEntry.Time.InitNetTime(message.Timestamp);
-                GameUtil.LogError(GameEntry.Time.UnixTimeStampToDateTime(message.Timestamp));
+                GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);
                 Constants.IsLoginGame = true;
             }
             else
@@ -152,7 +155,32 @@ public class NetResponseHandler
     {
         ProtocolHelper.UnpackData<ChatMsg>(message, (data) =>
         {
+            if (data.ChannelType == (int) ChatChannelType.World)
+            {
+                GameEntry.Event.Dispatch(Constants.EventName.UpdateChatText,new ChatMsg()
+                {
+                    ChannelType = data.ChannelType,
+                    Message = data.Message
+                });
+            }
             GameUtil.LogError($"收到服务器下发消息:=====>{data.Message}");
+        });
+    }
+
+    private void s2c_handle_request_public_channel_chat(BaseMessage message)
+    {
+        ProtocolHelper.UnpackData<ChatMsgList>(message, (data) =>
+        {
+            var t1 = data.PublicChat.OrderByDescending(msg => msg.Timestamp).ToList();
+            GameEntry.Data.TempChatMsgs.Add(t1);
+            if (t1.Count > 0)
+            {
+                GameEntry.Event.Dispatch(Constants.EventName.UpdateChatText,new ChatMsg()
+                {
+                    ChannelType = t1[0].ChannelType,
+                    Message = t1[0].Message
+                });
+            }
         });
     }
 

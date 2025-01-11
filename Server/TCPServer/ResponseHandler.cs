@@ -12,11 +12,11 @@ using TCPServer.Utils;
 
 public class ResponseHandler
 {
-    private Socket socket;
+    private ClientSocket socket;
     private RequestHandler request;
     private readonly Dictionary<string, Action<BaseMessage>> _handlers = new Dictionary<string, Action<BaseMessage>>();
 
-    public ResponseHandler(Socket socket, RequestHandler request)
+    public ResponseHandler(ClientSocket socket, RequestHandler request)
     {
         this.socket = socket;
         this.request = request;
@@ -46,6 +46,8 @@ public class ResponseHandler
     // 处理响应的分发逻辑
     public void HandleResponse(BaseMessage message)
     {
+        if (message == null) return;
+        if (message.MsgType == MsgType.Server) return;
         //验证token
         if (NeedValidateMessage(message.Type) && JwtHelper.ValidateToken(message.Token) == null)
         {
@@ -69,9 +71,10 @@ public class ResponseHandler
     {
         ProtocolHelper.UnpackData<ItemData>(message, (itemData) =>
         {
+            socket.LastHeartbeatTime = DateTime.UtcNow;
             //NetManager.Instance.Logger.LogMessage(socket,$"解包成功: Item ID: {itemData.ItemId}, Item Name: {itemData.ItemName}");
         });
-        request.c2s_request_heart_beat();
+        //request.c2s_request_heart_beat();
     }
 
     private void s2c_handle_request_guild_list(BaseMessage message)
@@ -109,10 +112,20 @@ public class ResponseHandler
         ProtocolHelper.UnpackData<ChatMsg>(message, async (data) =>
         {
             Console.WriteLine($"{nameof(ChatMsg)}: {data}");
-            OperationResult state = await ChatService.HandleChatMsg(data);
-            if(state == OperationResult.Success)
+            if(data.IsRequestPublic)
             {
-                ServerSocket.BroadcastMsg<ChatMsg>(data);
+                ChatMsgList msgList = new ChatMsgList();
+                msgList.PublicChat.AddRange(await ChatService.GetChatMessages(true, data.SenderId, 1, 1, 200));
+                request.c2s_request_public_channel_chat(msgList);
+
+            }
+            else
+            {
+                OperationResult state = await ChatService.HandleChatMsg(data);
+                if (state == OperationResult.Success)
+                {
+                    await ServerSocket.BroadcastMsg<ChatMsg>(data);
+                }
             }
         });
     }

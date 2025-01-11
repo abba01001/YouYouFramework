@@ -43,6 +43,7 @@ public class NetRequestHandler
     {
         byte[] byteArrayData = data.ToByteArray();
         BaseMessage message = new BaseMessage();
+        message.MsgType = MsgType.Client;
         message.Type = typeof(T).Name;
         message.Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();// 获取当前时间戳
         message.SenderId = this.senderId; // 设置发送者ID
@@ -79,13 +80,14 @@ public class NetRequestHandler
         
     }
 
-    public void c2s_request_chat(int channel_type,string content,string user_uuid = "")
+    public void c2s_request_chat(int channel_type,string content = "",string receive_user_uuid = "",bool requestPublic = false)
     {
         ChatMsg data = MainEntry.ClassObjectPool.Dequeue<ChatMsg>();//new ChatMsg();
         data.Message = content;
         data.ChannelType = channel_type;
-        data.ReceiverId = user_uuid;
+        data.ReceiverId = receive_user_uuid;
         data.SenderId = GameEntry.Data.UserId;
+        data.IsRequestPublic = requestPublic;
         SendMessage(data);
     }
 

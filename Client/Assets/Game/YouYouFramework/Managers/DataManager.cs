@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Google.Protobuf;
 using MessagePack.Resolvers;
 using Newtonsoft.Json;
+using Protocols;
 using UnityEngine;
 using YouYou;
 
@@ -67,6 +68,8 @@ public class DataManager : Observable<DataManager>, IDataManager
     [IgnoreMember] public int SuspendStartTime { get; set; } = -1;//挂机奖励开始时间点
     [IgnoreMember] public int SuspendQuickGetRewardIndex { get; set; } = -1;//挂机奖励开始时间点
     [IgnoreMember] public int SuspendQuickGetRewardLimit { get; set; } = -1;//挂机奖励开始时间点
+    [IgnoreMember] public bool RequestPublicChat { get; set; } = false;//挂机奖励开始时间点
+    [IgnoreMember] public List<List<ChatMsg>> TempChatMsgs { get; set; } = new List<List<ChatMsg>>();
     #endregion
 
     #region 临时private数据

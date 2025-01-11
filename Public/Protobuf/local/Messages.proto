@@ -4,9 +4,8 @@ package Protocols;
 
 // 消息类型的枚举
 enum MsgType {
-    HeartBeat = 0;
-    EXIT = 1;
-    // 添加其他消息类型
+    Client = 0;
+    Server = 1;
 }
 
 // 基本消息结构
@@ -64,11 +63,17 @@ message ChatMsg {
     string sender_id = 2;        // 发送者ID
     string receiver_id = 3;      // 接收者ID（公告频道为 NULL）
     string message = 4;          // 消息内容
-    int32 channel_type = 5;      // 消息频道类型 (1 - 公共频道, 2 - 私聊, 3 - 系统消息, 4 - 公告)
-    string timestamp = 6;        // 消息时间戳（Unix 时间戳）
+    int32 channel_type = 5;      // 发送消息频道类型 (1 - 公共频道, 2 - 私聊, 3 - 系统消息, 4 - 公告)
+    int32 timestamp = 6;        // 消息时间戳（Unix 时间戳）
     bool is_read = 7;            // 消息是否已读，针对私聊消息
-    int32 message_type = 8;      // 消息类型 (1 - 文本, 2 - 图片, 3 - 文件)
-    bool is_deleted = 9;         // 是否已删除，方便实现软删除
+    bool is_deleted = 8;         // 是否已删除，方便实现软删除
+    bool is_request_public = 9;         // 是否已删除，方便实现软删除
+    int32 message_type = 10;      // 消息类型 (1 - 文本, 2 - 图片, 3 - 文件)
+}
+
+message ChatMsgList {
+    repeated ChatMsg public_chat = 1;  // 公共频道聊天信息
+    repeated ChatMsg private_chat = 2; //私聊
 }
 
 message SuspendTimeMsg{

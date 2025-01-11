@@ -103,6 +103,29 @@ public class GameUtil
         return number;
     }
 
+    public static string TruncateText(Text textComponent, string inputText)
+    {
+        if (textComponent == null) return inputText;
+        float maxWidth = textComponent.rectTransform.rect.width;
+        textComponent.text = inputText;
+        float textWidth = textComponent.preferredWidth;
+        if (textWidth <= maxWidth)
+        {
+            return inputText;
+        }
+        stringBuilder.Clear();
+        stringBuilder.Append(inputText);
+        const int maxTries = 50;
+        int attempts = 0;
+        while (textComponent.preferredWidth > maxWidth && attempts < maxTries)
+        {
+            stringBuilder.Length -= 1;
+            textComponent.text = stringBuilder.ToString() + "..";
+            attempts++;
+        }
+        return stringBuilder.ToString() + "..";
+    }
+    
     //调整中心点
     public static void AdjustPivot(RectTransform rectTransform, Vector2 newPivot)
     {

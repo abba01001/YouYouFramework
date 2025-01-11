@@ -37,16 +37,19 @@ namespace Protocols {
             "CghFbWFpbE1zZxIQCghlbWFpbF9pZBgBIAEoBRIRCglzZW5kZXJfaWQYAiAB",
             "KAkSEwoLcmVjZWl2ZXJfaWQYAyABKAkSDwoHc3ViamVjdBgEIAEoCRIPCgdj",
             "b250ZW50GAUgASgJEhEKCXNlbmRfdGltZRgGIAEoAxIPCgdpc19yZWFkGAcg",
-            "ASgIEg4KBmlzX2dldBgIIAEoCBISCgppc19kZWxldGVkGAkgASgIIrIBCgdD",
+            "ASgIEg4KBmlzX2dldBgIIAEoCBISCgppc19kZWxldGVkGAkgASgIIs0BCgdD",
             "aGF0TXNnEgoKAmlkGAEgASgJEhEKCXNlbmRlcl9pZBgCIAEoCRITCgtyZWNl",
             "aXZlcl9pZBgDIAEoCRIPCgdtZXNzYWdlGAQgASgJEhQKDGNoYW5uZWxfdHlw",
-            "ZRgFIAEoBRIRCgl0aW1lc3RhbXAYBiABKAkSDwoHaXNfcmVhZBgHIAEoCBIU",
-            "CgxtZXNzYWdlX3R5cGUYCCABKAUSEgoKaXNfZGVsZXRlZBgJIAEoCCKwAQoO",
-            "U3VzcGVuZFRpbWVNc2cSEQoJdXNlcl91dWlkGAEgASgJEgwKBHR5cGUYAiAB",
-            "KAUSFAoMY2FuR2V0UmV3YXJkGAMgASgIEgwKBGhvdXIYBCABKAUSEQoJdGlt",
-            "ZXN0YW1wGAUgASgFEiIKGnF1aWNrR2V0U3VzcGVuZFJld2FyZEluZGV4GAYg",
-            "ASgFEiIKGnF1aWNrR2V0U3VzcGVuZFJld2FyZExpbWl0GAcgASgFKiIKB01z",
-            "Z1R5cGUSDQoJSGVhcnRCZWF0EAASCAoERVhJVBABYgZwcm90bzM="));
+            "ZRgFIAEoBRIRCgl0aW1lc3RhbXAYBiABKAUSDwoHaXNfcmVhZBgHIAEoCBIS",
+            "Cgppc19kZWxldGVkGAggASgIEhkKEWlzX3JlcXVlc3RfcHVibGljGAkgASgI",
+            "EhQKDG1lc3NhZ2VfdHlwZRgKIAEoBSJgCgtDaGF0TXNnTGlzdBInCgtwdWJs",
+            "aWNfY2hhdBgBIAMoCzISLlByb3RvY29scy5DaGF0TXNnEigKDHByaXZhdGVf",
+            "Y2hhdBgCIAMoCzISLlByb3RvY29scy5DaGF0TXNnIrABCg5TdXNwZW5kVGlt",
+            "ZU1zZxIRCgl1c2VyX3V1aWQYASABKAkSDAoEdHlwZRgCIAEoBRIUCgxjYW5H",
+            "ZXRSZXdhcmQYAyABKAgSDAoEaG91chgEIAEoBRIRCgl0aW1lc3RhbXAYBSAB",
+            "KAUSIgoacXVpY2tHZXRTdXNwZW5kUmV3YXJkSW5kZXgYBiABKAUSIgoacXVp",
+            "Y2tHZXRTdXNwZW5kUmV3YXJkTGltaXQYByABKAUqIQoHTXNnVHlwZRIKCgZD",
+            "bGllbnQQABIKCgZTZXJ2ZXIQAWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Protocols.MsgType), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -56,7 +59,8 @@ namespace Protocols {
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.LoginMsg), global::Protocols.LoginMsg.Parser, new[]{ "UserAccount", "UserPassword", "State", "UserUuid", "Token", "SaveData" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.RegisterMsg), global::Protocols.RegisterMsg.Parser, new[]{ "UserAccount", "UserPassword", "State", "UserUuid", "Token" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.EmailMsg), global::Protocols.EmailMsg.Parser, new[]{ "EmailId", "SenderId", "ReceiverId", "Subject", "Content", "SendTime", "IsRead", "IsGet", "IsDeleted" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.ChatMsg), global::Protocols.ChatMsg.Parser, new[]{ "Id", "SenderId", "ReceiverId", "Message", "ChannelType", "Timestamp", "IsRead", "MessageType", "IsDeleted" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.ChatMsg), global::Protocols.ChatMsg.Parser, new[]{ "Id", "SenderId", "ReceiverId", "Message", "ChannelType", "Timestamp", "IsRead", "IsDeleted", "IsRequestPublic", "MessageType" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.ChatMsgList), global::Protocols.ChatMsgList.Parser, new[]{ "PublicChat", "PrivateChat" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.SuspendTimeMsg), global::Protocols.SuspendTimeMsg.Parser, new[]{ "UserUuid", "Type", "CanGetReward", "Hour", "Timestamp", "QuickGetSuspendRewardIndex", "QuickGetSuspendRewardLimit" }, null, null, null, null)
           }));
     }
@@ -68,11 +72,8 @@ namespace Protocols {
   /// 消息类型的枚举
   /// </summary>
   public enum MsgType {
-    [pbr::OriginalName("HeartBeat")] HeartBeat = 0,
-    /// <summary>
-    /// 添加其他消息类型
-    /// </summary>
-    [pbr::OriginalName("EXIT")] Exit = 1,
+    [pbr::OriginalName("Client")] Client = 0,
+    [pbr::OriginalName("Server")] Server = 1,
   }
 
   #endregion
@@ -179,7 +180,7 @@ namespace Protocols {
 
     /// <summary>Field number for the "msgType" field.</summary>
     public const int MsgTypeFieldNumber = 4;
-    private global::Protocols.MsgType msgType_ = global::Protocols.MsgType.HeartBeat;
+    private global::Protocols.MsgType msgType_ = global::Protocols.MsgType.Client;
     /// <summary>
     /// 消息类型
     /// </summary>
@@ -263,7 +264,7 @@ namespace Protocols {
       if (MessageId != 0) hash ^= MessageId.GetHashCode();
       if (Timestamp != 0L) hash ^= Timestamp.GetHashCode();
       if (SenderId.Length != 0) hash ^= SenderId.GetHashCode();
-      if (MsgType != global::Protocols.MsgType.HeartBeat) hash ^= MsgType.GetHashCode();
+      if (MsgType != global::Protocols.MsgType.Client) hash ^= MsgType.GetHashCode();
       if (Token.Length != 0) hash ^= Token.GetHashCode();
       if (Type.Length != 0) hash ^= Type.GetHashCode();
       if (Data.Length != 0) hash ^= Data.GetHashCode();
@@ -297,7 +298,7 @@ namespace Protocols {
         output.WriteRawTag(26);
         output.WriteString(SenderId);
       }
-      if (MsgType != global::Protocols.MsgType.HeartBeat) {
+      if (MsgType != global::Protocols.MsgType.Client) {
         output.WriteRawTag(32);
         output.WriteEnum((int) MsgType);
       }
@@ -335,7 +336,7 @@ namespace Protocols {
         output.WriteRawTag(26);
         output.WriteString(SenderId);
       }
-      if (MsgType != global::Protocols.MsgType.HeartBeat) {
+      if (MsgType != global::Protocols.MsgType.Client) {
         output.WriteRawTag(32);
         output.WriteEnum((int) MsgType);
       }
@@ -370,7 +371,7 @@ namespace Protocols {
       if (SenderId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(SenderId);
       }
-      if (MsgType != global::Protocols.MsgType.HeartBeat) {
+      if (MsgType != global::Protocols.MsgType.Client) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) MsgType);
       }
       if (Token.Length != 0) {
@@ -403,7 +404,7 @@ namespace Protocols {
       if (other.SenderId.Length != 0) {
         SenderId = other.SenderId;
       }
-      if (other.MsgType != global::Protocols.MsgType.HeartBeat) {
+      if (other.MsgType != global::Protocols.MsgType.Client) {
         MsgType = other.MsgType;
       }
       if (other.Token.Length != 0) {
@@ -2136,8 +2137,9 @@ namespace Protocols {
       channelType_ = other.channelType_;
       timestamp_ = other.timestamp_;
       isRead_ = other.isRead_;
-      messageType_ = other.messageType_;
       isDeleted_ = other.isDeleted_;
+      isRequestPublic_ = other.isRequestPublic_;
+      messageType_ = other.messageType_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -2211,7 +2213,7 @@ namespace Protocols {
     public const int ChannelTypeFieldNumber = 5;
     private int channelType_;
     /// <summary>
-    /// 消息频道类型 (1 - 公共频道, 2 - 私聊, 3 - 系统消息, 4 - 公告)
+    /// 发送消息频道类型 (1 - 公共频道, 2 - 私聊, 3 - 系统消息, 4 - 公告)
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2224,16 +2226,16 @@ namespace Protocols {
 
     /// <summary>Field number for the "timestamp" field.</summary>
     public const int TimestampFieldNumber = 6;
-    private string timestamp_ = "";
+    private int timestamp_;
     /// <summary>
     /// 消息时间戳（Unix 时间戳）
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Timestamp {
+    public int Timestamp {
       get { return timestamp_; }
       set {
-        timestamp_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        timestamp_ = value;
       }
     }
 
@@ -2252,23 +2254,8 @@ namespace Protocols {
       }
     }
 
-    /// <summary>Field number for the "message_type" field.</summary>
-    public const int MessageTypeFieldNumber = 8;
-    private int messageType_;
-    /// <summary>
-    /// 消息类型 (1 - 文本, 2 - 图片, 3 - 文件)
-    /// </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int MessageType {
-      get { return messageType_; }
-      set {
-        messageType_ = value;
-      }
-    }
-
     /// <summary>Field number for the "is_deleted" field.</summary>
-    public const int IsDeletedFieldNumber = 9;
+    public const int IsDeletedFieldNumber = 8;
     private bool isDeleted_;
     /// <summary>
     /// 是否已删除，方便实现软删除
@@ -2279,6 +2266,36 @@ namespace Protocols {
       get { return isDeleted_; }
       set {
         isDeleted_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "is_request_public" field.</summary>
+    public const int IsRequestPublicFieldNumber = 9;
+    private bool isRequestPublic_;
+    /// <summary>
+    /// 是否已删除，方便实现软删除
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool IsRequestPublic {
+      get { return isRequestPublic_; }
+      set {
+        isRequestPublic_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "message_type" field.</summary>
+    public const int MessageTypeFieldNumber = 10;
+    private int messageType_;
+    /// <summary>
+    /// 消息类型 (1 - 文本, 2 - 图片, 3 - 文件)
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int MessageType {
+      get { return messageType_; }
+      set {
+        messageType_ = value;
       }
     }
 
@@ -2304,8 +2321,9 @@ namespace Protocols {
       if (ChannelType != other.ChannelType) return false;
       if (Timestamp != other.Timestamp) return false;
       if (IsRead != other.IsRead) return false;
-      if (MessageType != other.MessageType) return false;
       if (IsDeleted != other.IsDeleted) return false;
+      if (IsRequestPublic != other.IsRequestPublic) return false;
+      if (MessageType != other.MessageType) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -2318,10 +2336,11 @@ namespace Protocols {
       if (ReceiverId.Length != 0) hash ^= ReceiverId.GetHashCode();
       if (Message.Length != 0) hash ^= Message.GetHashCode();
       if (ChannelType != 0) hash ^= ChannelType.GetHashCode();
-      if (Timestamp.Length != 0) hash ^= Timestamp.GetHashCode();
+      if (Timestamp != 0) hash ^= Timestamp.GetHashCode();
       if (IsRead != false) hash ^= IsRead.GetHashCode();
-      if (MessageType != 0) hash ^= MessageType.GetHashCode();
       if (IsDeleted != false) hash ^= IsDeleted.GetHashCode();
+      if (IsRequestPublic != false) hash ^= IsRequestPublic.GetHashCode();
+      if (MessageType != 0) hash ^= MessageType.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -2360,21 +2379,25 @@ namespace Protocols {
         output.WriteRawTag(40);
         output.WriteInt32(ChannelType);
       }
-      if (Timestamp.Length != 0) {
-        output.WriteRawTag(50);
-        output.WriteString(Timestamp);
+      if (Timestamp != 0) {
+        output.WriteRawTag(48);
+        output.WriteInt32(Timestamp);
       }
       if (IsRead != false) {
         output.WriteRawTag(56);
         output.WriteBool(IsRead);
       }
-      if (MessageType != 0) {
-        output.WriteRawTag(64);
-        output.WriteInt32(MessageType);
-      }
       if (IsDeleted != false) {
-        output.WriteRawTag(72);
+        output.WriteRawTag(64);
         output.WriteBool(IsDeleted);
+      }
+      if (IsRequestPublic != false) {
+        output.WriteRawTag(72);
+        output.WriteBool(IsRequestPublic);
+      }
+      if (MessageType != 0) {
+        output.WriteRawTag(80);
+        output.WriteInt32(MessageType);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -2406,21 +2429,25 @@ namespace Protocols {
         output.WriteRawTag(40);
         output.WriteInt32(ChannelType);
       }
-      if (Timestamp.Length != 0) {
-        output.WriteRawTag(50);
-        output.WriteString(Timestamp);
+      if (Timestamp != 0) {
+        output.WriteRawTag(48);
+        output.WriteInt32(Timestamp);
       }
       if (IsRead != false) {
         output.WriteRawTag(56);
         output.WriteBool(IsRead);
       }
-      if (MessageType != 0) {
-        output.WriteRawTag(64);
-        output.WriteInt32(MessageType);
-      }
       if (IsDeleted != false) {
-        output.WriteRawTag(72);
+        output.WriteRawTag(64);
         output.WriteBool(IsDeleted);
+      }
+      if (IsRequestPublic != false) {
+        output.WriteRawTag(72);
+        output.WriteBool(IsRequestPublic);
+      }
+      if (MessageType != 0) {
+        output.WriteRawTag(80);
+        output.WriteInt32(MessageType);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -2447,17 +2474,20 @@ namespace Protocols {
       if (ChannelType != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(ChannelType);
       }
-      if (Timestamp.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Timestamp);
+      if (Timestamp != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Timestamp);
       }
       if (IsRead != false) {
         size += 1 + 1;
       }
-      if (MessageType != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(MessageType);
-      }
       if (IsDeleted != false) {
         size += 1 + 1;
+      }
+      if (IsRequestPublic != false) {
+        size += 1 + 1;
+      }
+      if (MessageType != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(MessageType);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -2486,17 +2516,20 @@ namespace Protocols {
       if (other.ChannelType != 0) {
         ChannelType = other.ChannelType;
       }
-      if (other.Timestamp.Length != 0) {
+      if (other.Timestamp != 0) {
         Timestamp = other.Timestamp;
       }
       if (other.IsRead != false) {
         IsRead = other.IsRead;
       }
-      if (other.MessageType != 0) {
-        MessageType = other.MessageType;
-      }
       if (other.IsDeleted != false) {
         IsDeleted = other.IsDeleted;
+      }
+      if (other.IsRequestPublic != false) {
+        IsRequestPublic = other.IsRequestPublic;
+      }
+      if (other.MessageType != 0) {
+        MessageType = other.MessageType;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -2537,8 +2570,8 @@ namespace Protocols {
             ChannelType = input.ReadInt32();
             break;
           }
-          case 50: {
-            Timestamp = input.ReadString();
+          case 48: {
+            Timestamp = input.ReadInt32();
             break;
           }
           case 56: {
@@ -2546,11 +2579,15 @@ namespace Protocols {
             break;
           }
           case 64: {
-            MessageType = input.ReadInt32();
+            IsDeleted = input.ReadBool();
             break;
           }
           case 72: {
-            IsDeleted = input.ReadBool();
+            IsRequestPublic = input.ReadBool();
+            break;
+          }
+          case 80: {
+            MessageType = input.ReadInt32();
             break;
           }
         }
@@ -2592,8 +2629,8 @@ namespace Protocols {
             ChannelType = input.ReadInt32();
             break;
           }
-          case 50: {
-            Timestamp = input.ReadString();
+          case 48: {
+            Timestamp = input.ReadInt32();
             break;
           }
           case 56: {
@@ -2601,11 +2638,234 @@ namespace Protocols {
             break;
           }
           case 64: {
-            MessageType = input.ReadInt32();
+            IsDeleted = input.ReadBool();
             break;
           }
           case 72: {
-            IsDeleted = input.ReadBool();
+            IsRequestPublic = input.ReadBool();
+            break;
+          }
+          case 80: {
+            MessageType = input.ReadInt32();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class ChatMsgList : pb::IMessage<ChatMsgList>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<ChatMsgList> _parser = new pb::MessageParser<ChatMsgList>(() => new ChatMsgList());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<ChatMsgList> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Protocols.MessagesReflection.Descriptor.MessageTypes[7]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ChatMsgList() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ChatMsgList(ChatMsgList other) : this() {
+      publicChat_ = other.publicChat_.Clone();
+      privateChat_ = other.privateChat_.Clone();
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ChatMsgList Clone() {
+      return new ChatMsgList(this);
+    }
+
+    /// <summary>Field number for the "public_chat" field.</summary>
+    public const int PublicChatFieldNumber = 1;
+    private static readonly pb::FieldCodec<global::Protocols.ChatMsg> _repeated_publicChat_codec
+        = pb::FieldCodec.ForMessage(10, global::Protocols.ChatMsg.Parser);
+    private readonly pbc::RepeatedField<global::Protocols.ChatMsg> publicChat_ = new pbc::RepeatedField<global::Protocols.ChatMsg>();
+    /// <summary>
+    /// 公共频道聊天信息
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<global::Protocols.ChatMsg> PublicChat {
+      get { return publicChat_; }
+    }
+
+    /// <summary>Field number for the "private_chat" field.</summary>
+    public const int PrivateChatFieldNumber = 2;
+    private static readonly pb::FieldCodec<global::Protocols.ChatMsg> _repeated_privateChat_codec
+        = pb::FieldCodec.ForMessage(18, global::Protocols.ChatMsg.Parser);
+    private readonly pbc::RepeatedField<global::Protocols.ChatMsg> privateChat_ = new pbc::RepeatedField<global::Protocols.ChatMsg>();
+    /// <summary>
+    ///私聊
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<global::Protocols.ChatMsg> PrivateChat {
+      get { return privateChat_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as ChatMsgList);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(ChatMsgList other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if(!publicChat_.Equals(other.publicChat_)) return false;
+      if(!privateChat_.Equals(other.privateChat_)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      hash ^= publicChat_.GetHashCode();
+      hash ^= privateChat_.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      publicChat_.WriteTo(output, _repeated_publicChat_codec);
+      privateChat_.WriteTo(output, _repeated_privateChat_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      publicChat_.WriteTo(ref output, _repeated_publicChat_codec);
+      privateChat_.WriteTo(ref output, _repeated_privateChat_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      size += publicChat_.CalculateSize(_repeated_publicChat_codec);
+      size += privateChat_.CalculateSize(_repeated_privateChat_codec);
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(ChatMsgList other) {
+      if (other == null) {
+        return;
+      }
+      publicChat_.Add(other.publicChat_);
+      privateChat_.Add(other.privateChat_);
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            publicChat_.AddEntriesFrom(input, _repeated_publicChat_codec);
+            break;
+          }
+          case 18: {
+            privateChat_.AddEntriesFrom(input, _repeated_privateChat_codec);
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            publicChat_.AddEntriesFrom(ref input, _repeated_publicChat_codec);
+            break;
+          }
+          case 18: {
+            privateChat_.AddEntriesFrom(ref input, _repeated_privateChat_codec);
             break;
           }
         }
@@ -2630,7 +2890,7 @@ namespace Protocols {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Protocols.MessagesReflection.Descriptor.MessageTypes[7]; }
+      get { return global::Protocols.MessagesReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

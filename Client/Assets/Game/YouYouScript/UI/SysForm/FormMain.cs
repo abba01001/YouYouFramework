@@ -24,7 +24,6 @@ public class HomePanelButtonData
     [HideInInspector] public GameObject panelObj;
     [HideInInspector] public ShowType showType;
     public GameObject btn;
-    public bool IsTogglePanel = false;
 }
 
 // "主"界面
@@ -32,7 +31,6 @@ public class FormMain : UIFormBase
 {
     private bool isLoadingPanel = false;
     
-    [SerializeField] private GameObject MoreDetail;
     [SerializeField] private List<HomePanelButtonData> btnList = new List<HomePanelButtonData>();
     private Dictionary<string, HomePanelButtonData> btnDic = new Dictionary<string, HomePanelButtonData>();
     protected override void Awake()
@@ -46,7 +44,6 @@ public class FormMain : UIFormBase
             data.btn.GetComponent<Button>().SetButtonClick(() =>
             {
                 if(isLoadingPanel) return;
-                HandleSelectPanel(data);
                 HandleBtnEvent(data);
             });
             if (data.btn.transform.Find("BarSelect"))
@@ -54,11 +51,6 @@ public class FormMain : UIFormBase
                 data.selectObj = data.btn.transform.Find("BarSelect").gameObject;
             }
 
-            if (data.BtnType == "BattleBtn")
-            {
-                data.panelObj = transform.Find("MainPanel").gameObject;
-                data.showType = ShowType.HomePanel;
-            }
             btnDic[data.BtnType] = data;
         }
         InitPanelObj(Constants.ItemPath.GoldPanel);
@@ -87,7 +79,7 @@ public class FormMain : UIFormBase
         else if (data.BtnType == "HeroBtn") InitPanelObj(Constants.ItemPath.HeroPanel, data);
         else if (data.BtnType == "LordBtn") InitPanelObj(Constants.ItemPath.LordPanel, data, ShowType.LordPanel);
         else if (data.BtnType == "RankBtn") InitPanelObj(Constants.ItemPath.RankPanel, data);
-        else if (data.BtnType == "ChatBtn") InitPanelObj(Constants.ItemPath.ChatPanel, data);
+        else if (data.BtnType == "BattleBtn") InitPanelObj(Constants.ItemPath.MainPanel, data,ShowType.HomePanel);
     }
 
     private void HandleSelectPanel(HomePanelButtonData data)
@@ -96,28 +88,26 @@ public class FormMain : UIFormBase
         {
             if (pair.Value.selectObj != null)
             {
-                if (data.IsTogglePanel)
+                if (pair.Value.panelObj != null)
                 {
-                    if (pair.Value.panelObj != null)
-                    {
-                        pair.Value.panelObj.MSetActive(data.BtnType == pair.Key);
-                    }
-                    else
-                    {
-                        if (data.BtnType == pair.Key) InitPanel(pair.Value);
-                    }
-                    if (data.BtnType == pair.Key)
-                    {
-                        GoldPanel.Instance.RefreshPos(data.showType);
-                    }
-                    pair.Value.selectObj.MSetActive(data.BtnType == pair.Key);
+                    pair.Value.panelObj.MSetActive(data.BtnType == pair.Key);
                 }
+                else
+                {
+                    if (data.BtnType == pair.Key) InitPanel(pair.Value);
+                }
+                if (data.BtnType == pair.Key)
+                {
+                    GoldPanel.Instance.RefreshPos(data.showType);
+                }
+                pair.Value.selectObj.MSetActive(data.BtnType == pair.Key);
             }
         }
     }
 
     private void HandleBtnEvent(HomePanelButtonData data)
     {
+        HandleSelectPanel(data);
         switch (data.BtnType)
         {
             case "ShopBtn":
@@ -134,14 +124,6 @@ public class FormMain : UIFormBase
                 break;
             case "LordBtn":
                 // 处理 LordBtn 的逻辑
-                break;
-            case "ChatBtn":
-                // 处理 ChatBtn 的逻辑
-                InitPanel(data);
-                data.panelObj.gameObject.MSetActive(true);
-                break;
-            case "MoreBtn":
-                MoreDetail.gameObject.MSetActive(!MoreDetail.gameObject.activeSelf);
                 break;
             case "GuildBtn":
                 //GameEntry.Net.Requset.c2s_request_guild_list(1,10);

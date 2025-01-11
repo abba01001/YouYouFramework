@@ -1,4 +1,6 @@
-﻿static partial class Constants
+﻿using System.Collections.Generic;
+
+static partial class Constants
 {
 #if TestMode
     public const string ResVersion = "0.0.1";
@@ -67,8 +69,15 @@
 
 
         public const string GetSuspendReward = "GetSuspendReward";
+        public const string UpdateChatText = "UpdateChatText";
     }
-    
+
+    public static Dictionary<int, string> ChatChannel = new Dictionary<int, string>()
+    {
+        {(int) ChatChannelType.World,"世界"},
+        {(int) ChatChannelType.Private,"私聊"}
+    };
+
     public struct ItemPath
     {
         public const string CardObj = "Assets/Game/Download/Prefab/Item/Card.prefab";
@@ -78,8 +87,8 @@
         public const string HeroPanel = "Assets/Game/Download/Prefab/UI/Panel/HeroPanel.prefab";
         public const string LordPanel = "Assets/Game/Download/Prefab/UI/Panel/LordPanel.prefab";
         public const string RankPanel = "Assets/Game/Download/Prefab/UI/Panel/RankPanel.prefab";
+        public const string MainPanel = "Assets/Game/Download/Prefab/UI/Panel/MainPanel.prefab";
         public const string ShopPanel = "Assets/Game/Download/Prefab/UI/Panel/ShopPanel.prefab";
-        public const string ChatPanel = "Assets/Game/Download/Prefab/UI/Panel/ChatPanel.prefab";
     }
 
     public struct TexturePath

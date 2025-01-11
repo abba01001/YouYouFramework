@@ -76,10 +76,25 @@ class Program
                 //RoleService.GetFriendListAsync("b23673d6-831f-4263-a1c6-5b6ade37f3ea");
                 //EmailService.SendEmail("root", "b23673d6-831f-4263-a1c6-5b6ade37f3ea", "测试标题", "测试内容");
                 //EmailService.SendEmailToAllPlayersAsync("root", "测试全服邮件标题", "全服测试内容123124125151254");
-                //ChatService.SendMessageToAllPlayersAsync("root", "测试全服消息", 4);
+
                 //ChatService.GetAnnouncementMessages(1, 200); // 获取公告频道的最新30条消息
-                ChatService.ClearPublicChannelMessagesAsync();
+                //ChatService.ClearPublicChannelMessagesAsync();
+
+                TestAsync1();
             }
+        }
+    }
+
+    private static async Task TestAsync1()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            ChatMsg chatMsg1 = new ChatMsg();
+            chatMsg1.ReceiverId = "870d7675-ca81-11ef-848d-20906fc57f0e";
+            chatMsg1.SenderId = "b23673d6-831f-4263-a1c6-5b6ade37f3ea";
+            chatMsg1.Message = $"Hello========={i}";
+            chatMsg1.ChannelType = 2;
+            await ChatService.HandleChatMsg(chatMsg1);
         }
     }
 

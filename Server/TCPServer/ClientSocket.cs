@@ -10,8 +10,8 @@ public class ClientSocket
     public static int CLIENT_BEGIN_ID = 1;
     public static int CLIENT_COUNT = 0;
     public int clientID;
-    private Socket socket;
-    public DateTime LastHeartbeatTime { get; private set; } = DateTime.UtcNow;
+    public Socket socket;
+    public DateTime LastHeartbeatTime { get; set; } = DateTime.UtcNow;
     public RequestHandler Request;
     public ResponseHandler Response;
     public int heartbeatTimeout = 60;
@@ -24,7 +24,7 @@ public class ClientSocket
         this.socket = clientSocket;
         this.msgBytes = new byte[512 * BufferSize]; // 初始化缓冲区
         this.Request = new RequestHandler(socket);
-        this.Response = new ResponseHandler(socket, this.Request);
+        this.Response = new ResponseHandler(this, this.Request);
         this.clientID = CLIENT_BEGIN_ID++;
         CLIENT_COUNT++;
 
@@ -103,11 +103,6 @@ public class ClientSocket
                 try
                 {
                     BaseMessage receivedMsg = BaseMessage.Parser.ParseFrom(tempMsg); // 解析收到的消息
-                    if (receivedMsg.MsgType == MsgType.HeartBeat)
-                    {
-                        LastHeartbeatTime = DateTime.UtcNow; // 更新心跳时间
-                        //return; // 心跳消息无需进一步处理
-                    }
                     Response.HandleResponse(receivedMsg);
                 }
                 catch (Exception e)

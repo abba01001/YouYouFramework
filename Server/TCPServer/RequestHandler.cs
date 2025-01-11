@@ -28,6 +28,7 @@ public class RequestHandler
         byte[] byteArrayData = data.ToByteArray();
         BaseMessage message = new BaseMessage();
         string typeName = typeof(T).Name;
+        message.MsgType = MsgType.Server;
         message.Type = typeName;
         message.Timestamp = ServerSocket.CurrentServerTimestamp;
         message.Data = ByteString.CopyFrom(byteArrayData); // 直接将序列化后的字节数组放入 Data
@@ -38,7 +39,6 @@ public class RequestHandler
 
         message.SenderId = socket.RemoteEndPoint.ToString(); // 设置发送者ID
         byte[] messageBytes = message.ToByteArray();
-
         // 异步发送数据
         await Task.Run(() => socket.Send(messageBytes)); // 使用 Task.Run 包装同步的 Send 操作
     }
@@ -60,6 +60,11 @@ public class RequestHandler
     }
 
     public async void c2s_request_get_suspend_reward(SuspendTimeMsg data)
+    {
+        SendMessage(data);
+    }
+
+    public async void c2s_request_public_channel_chat(ChatMsgList data)
     {
         SendMessage(data);
     }

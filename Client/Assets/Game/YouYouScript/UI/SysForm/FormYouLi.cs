@@ -67,13 +67,13 @@ public class FormYouLi : UIFormBase
                 if (msg.CanGetReward && msg.Hour > 0)
                 {
                     GameUtil.LogError($"挂机时间{msg.Hour}");
-                    //GameEntry.Net.Requset.c2s_request_get_suspend_reward(0);
+                    GameEntry.Net.Requset.c2s_request_get_suspend_reward(0);
                 }
                 break;
             case 2:
                 if (msg.CanGetReward)
                 {
-                    //GameEntry.Net.Requset.c2s_request_get_suspend_reward(0);
+                    GameEntry.Net.Requset.c2s_request_get_suspend_reward(0);
                 }
                 break;
         }

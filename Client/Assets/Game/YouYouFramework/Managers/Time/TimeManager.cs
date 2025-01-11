@@ -33,6 +33,7 @@ namespace YouYou
         {
             netTime = time;
             RefreshNetTime();
+            MainEntry.Log(MainEntry.LogCategory.NetWork,$"初始化服务器时间{GameEntry.Time.UnixTimeStampToDateTime(time)}");
             // string url = "https://www.baidu.com";
             // GetServerTime(url, 30, null, onComplete: (DateTime serverTime) =>
             // {
