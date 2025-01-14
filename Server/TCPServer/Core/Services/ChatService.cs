@@ -224,7 +224,7 @@ namespace TCPServer.Core.Services
         public static async Task<OperationResult> ClearPublicChannelMessagesAsync()
         {
             // 定义删除查询语句
-            string query = $"DELETE FROM {SqlTable.ChatMessages} WHERE channel_type = 4";
+            string query = $"DELETE FROM {SqlTable.ChatMessages} WHERE channel_type = 1";
 
             try
             {

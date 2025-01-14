@@ -94,7 +94,11 @@ class Program
             chatMsg1.SenderId = "b23673d6-831f-4263-a1c6-5b6ade37f3ea";
             chatMsg1.Message = $"Hello========={i}";
             chatMsg1.ChannelType = 2;
-            await ChatService.HandleChatMsg(chatMsg1);
+            OperationResult state = await ChatService.HandleChatMsg(chatMsg1);
+            if (state == OperationResult.Success)
+            {
+                await ServerSocket.BroadcastMsg<ChatMsg>(chatMsg1);
+            }
         }
     }
 

@@ -155,14 +155,11 @@ public class NetResponseHandler
     {
         ProtocolHelper.UnpackData<ChatMsg>(message, (data) =>
         {
-            if (data.ChannelType == (int) ChatChannelType.World)
+            GameEntry.Event.Dispatch(Constants.EventName.UpdateChatText,new ChatMsg()
             {
-                GameEntry.Event.Dispatch(Constants.EventName.UpdateChatText,new ChatMsg()
-                {
-                    ChannelType = data.ChannelType,
-                    Message = data.Message
-                });
-            }
+                ChannelType = data.ChannelType,
+                Message = data.Message
+            });
             GameUtil.LogError($"收到服务器下发消息:=====>{data.Message}");
         });
     }

@@ -23,7 +23,7 @@ public class ClientSocket
     {
         this.socket = clientSocket;
         this.msgBytes = new byte[512 * BufferSize]; // 初始化缓冲区
-        this.Request = new RequestHandler(socket);
+        this.Request = new RequestHandler(this);
         this.Response = new ResponseHandler(this, this.Request);
         this.clientID = CLIENT_BEGIN_ID++;
         CLIENT_COUNT++;

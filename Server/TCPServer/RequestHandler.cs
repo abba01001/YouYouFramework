@@ -17,10 +17,10 @@ using TCPServer.Utils;
 
 public class RequestHandler
 {
-    private Socket socket;
-    public RequestHandler(Socket socket)
+    private ClientSocket clinetSocket;
+    public RequestHandler(ClientSocket socket)
     {
-        this.socket = socket;
+        this.clinetSocket = socket;
     }
 
     public async Task SendMessage<T>(T data) where T : IMessage<T>
@@ -35,12 +35,16 @@ public class RequestHandler
         string messageJson = JsonConvert.SerializeObject(message);
         Console.WriteLine($"发送内容{messageJson}");
 
-        if (socket == null) return;
-
-        message.SenderId = socket.RemoteEndPoint.ToString(); // 设置发送者ID
+        if (clinetSocket == null || clinetSocket.socket == null) return;
+        if(!clinetSocket.socket.Connected)
+        {
+            clinetSocket.Close();
+            return;
+        }
+        message.SenderId = clinetSocket.socket.RemoteEndPoint.ToString(); // 设置发送者ID
         byte[] messageBytes = message.ToByteArray();
         // 异步发送数据
-        await Task.Run(() => socket.Send(messageBytes)); // 使用 Task.Run 包装同步的 Send 操作
+        await Task.Run(() => clinetSocket.socket.Send(messageBytes)); // 使用 Task.Run 包装同步的 Send 操作
     }
 
 
