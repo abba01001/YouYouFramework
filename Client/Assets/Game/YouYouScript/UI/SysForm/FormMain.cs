@@ -127,7 +127,7 @@ public class FormMain : UIFormBase
                 break;
             case "GuildBtn":
                 //GameEntry.Net.Requset.c2s_request_guild_list(1,10);
-                GameEntry.Net.Requset.c2s_request_chat(4, "大家好啊！！！！");
+                GameEntry.Net.Requset.c2s_request_chat(1, "大家好啊！！！！");
                 break;
             case "LoginBtn":
                 // GameEntry.Net.Requset.c2s_request_update_role_info(new Dictionary<string, string>()

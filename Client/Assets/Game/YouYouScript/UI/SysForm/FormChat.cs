@@ -25,6 +25,8 @@ public class FormChat : UIFormBase
     [SerializeField] private Button closeBtn;
     [SerializeField] private Button sendBtn;
     [SerializeField] private TMP_InputField input;
+    [SerializeField] private EfficientScrollRect _scrollRect;
+    [SerializeField] private ChatItem itemPrefab;
     protected override void Awake()
     {
         base.Awake();
@@ -33,8 +35,33 @@ public class FormChat : UIFormBase
             GameEntry.UI.CloseUIForm<FormYouLi>();
         });
         sendBtn.SetButtonClick(SendChat);
+
+        itemPrefab.gameObject.MSetActive(false);
+        var data = GetData();
+        _scrollRect.Init(itemPrefab.gameObject, data);
+        _scrollRect.SetScrollPos(data.Length - 1);
     }
 
+    object[] GetData()
+    {
+        List<ChatMsg> infos = new List<ChatMsg>();
+        if (GameEntry.Data.TempChatMsgs != null)
+        {
+            foreach (var list in GameEntry.Data.TempChatMsgs)
+            {
+                foreach (var chatMsg in list)
+                {
+                    if (chatMsg.ChannelType == (int) ChatChannelType.World)
+                    {
+                        infos = list;
+                        break;
+                    }
+                }
+            }
+        }
+        return infos.ToArray();
+    }
+    
     private void SendChat()
     {
         if (String.IsNullOrEmpty(input.text)) return;

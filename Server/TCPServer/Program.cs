@@ -90,10 +90,10 @@ class Program
         for (int i = 0; i < 10; i++)
         {
             ChatMsg chatMsg1 = new ChatMsg();
-            chatMsg1.ReceiverId = "870d7675-ca81-11ef-848d-20906fc57f0e";
+            //chatMsg1.ReceiverId = "870d7675-ca81-11ef-848d-20906fc57f0e";
             chatMsg1.SenderId = "b23673d6-831f-4263-a1c6-5b6ade37f3ea";
-            chatMsg1.Message = $"Hello========={i}";
-            chatMsg1.ChannelType = 2;
+            chatMsg1.Message = $"噶尔挨个tsetse商业热带水果条幅放突发========={i}";
+            chatMsg1.ChannelType = 1;
             OperationResult state = await ChatService.HandleChatMsg(chatMsg1);
             if (state == OperationResult.Success)
             {

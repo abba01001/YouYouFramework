@@ -168,14 +168,14 @@ public class NetResponseHandler
     {
         ProtocolHelper.UnpackData<ChatMsgList>(message, (data) =>
         {
-            var t1 = data.PublicChat.OrderByDescending(msg => msg.Timestamp).ToList();
+            var t1 = data.PublicChat.OrderBy(msg => msg.Timestamp).ToList();
             GameEntry.Data.TempChatMsgs.Add(t1);
             if (t1.Count > 0)
             {
                 GameEntry.Event.Dispatch(Constants.EventName.UpdateChatText,new ChatMsg()
                 {
-                    ChannelType = t1[0].ChannelType,
-                    Message = t1[0].Message
+                    ChannelType = t1[^1].ChannelType,
+                    Message = t1[^1].Message
                 });
             }
         });

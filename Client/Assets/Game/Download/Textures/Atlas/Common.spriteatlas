@@ -67,12 +67,14 @@ SpriteAtlas:
   - {fileID: 21300000, guid: d483bfc3232a2b04a96134380558d503, type: 3}
   - {fileID: 21300000, guid: 7cbc7f640ab1b344ebbde7287fd67de0, type: 3}
   - {fileID: 21300000, guid: bb129f0554ce5482e97e81f0688f3a7a, type: 3}
+  - {fileID: 21300000, guid: a59be006e85498642a6053679762e1e7, type: 3}
   - {fileID: 21300000, guid: d014a536371f14741a8517ee247a3e1e, type: 3}
   - {fileID: 21300000, guid: b68bcc1756c9006459f52b9124ac2a44, type: 3}
   - {fileID: 21300000, guid: 50d6c647774352147b8a301712001b84, type: 3}
   - {fileID: 21300000, guid: 26760be7e6ff4ce4bb0d937c61b9c66b, type: 3}
   - {fileID: 21300000, guid: 411e52282c9e091428d383a40c54928b, type: 3}
   - {fileID: 21300000, guid: f9e47d48ae68e48eab6bcdcc8fcac328, type: 3}
+  - {fileID: 21300000, guid: 55d64858ed522e04f9accdf74504c34b, type: 3}
   - {fileID: 21300000, guid: 91f0f698723cbc144a2f2ad7f9abd725, type: 3}
   - {fileID: 21300000, guid: 9ac193d899493254393c5e8bfcfa966a, type: 3}
   - {fileID: 21300000, guid: 4f0a2ed8094ab004bb0e7160b9415215, type: 3}
@@ -118,12 +120,14 @@ SpriteAtlas:
   - huobi_06
   - shop_tab_uns
   - Loading_Bg
+  - fight_touxiang_zhezhao
   - fight_huobi_09
   - huobi_10
   - ty_tab_selected
   - Popup_00_Glow_white
   - ty_btn_C3
   - Slider17_Frame
+  - fight_touxiangdi
   - huobi_05
   - huobi_03
   - ty_btn_back
