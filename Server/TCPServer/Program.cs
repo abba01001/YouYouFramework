@@ -124,18 +124,13 @@ class Program
 
             // 模拟查询玩家数据（此处根据需求进行替换）
             var result = RoleService.GetUserByAccountAsync(playerAccount);
-            LoggerHelper.Instance.Debug($"查询请求已发出，正在等待结果...");
-
-            // 等待查询完成（假设你会从 RoleService 返回查询结果）
             if (result != null)
             {
                 LoggerHelper.Instance.Debug($"玩家 {playerAccount} 的数据查询成功。");
-                Console.WriteLine($"玩家 {playerAccount} 的数据查询成功。");
             }
             else
             {
                 LoggerHelper.Instance.Debug($"未找到该玩家的数据: {playerAccount}");
-                Console.WriteLine("未找到该玩家数据。");
             }
 
             // 提问用户是否继续查询

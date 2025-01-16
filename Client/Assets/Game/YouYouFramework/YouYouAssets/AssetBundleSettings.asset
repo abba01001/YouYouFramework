@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01aecc1a1ad5afc4f9289263945c2a5d, type: 3}
   m_Name: AssetBundleSettings
   m_EditorClassIdentifier: 
-  AssetVersion: 12.0.0
+  AssetVersion: 13.0.0
   CurrBuildTarget: 1
   Options: 272
   PublishPath: C:/Users/A1-0990/AppData/LocalLow/DefaultCompany/YFYouYou/OutPut
-  IsUploadAsset: 0
+  IsUploadAsset: 1
   IsForceUploadAsset: 0
   IsUploadAPK: 0
   AssetBundleSavePath: AssetBundles
@@ -80,6 +80,7 @@ MonoBehaviour:
     - Game/Download/Textures/LoginEntry
     - Game/Download/Textures/Map
     - Game/Download/Textures/HeroPanel
+    - Game/Download/Textures/Atlas
   - Name: "\u6A21\u578B\u7EB9\u7406\u8D44\u6E90"
     IsBuild: 1
     Overall: 1

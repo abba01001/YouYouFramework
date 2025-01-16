@@ -216,34 +216,28 @@ namespace TCPServer.Core.Services
             {
                 // 执行查询
                 var result = await SqlManager.Instance.ExecuteQueryAsync(query, parameters);
-
-                Console.WriteLine($"查询用户 {userAccount} 的结果：");
-
+                LoggerHelper.Instance.Debug($"查询用户 {userAccount} 的结果：");
                 // 如果查询结果有数据，打印所有的键值对
                 if (result.Count > 0)
                 {
                     var userData = result[0];  // 获取第一个结果
                     foreach (var kvp in userData)
                     {
-                        Console.WriteLine($"列名: {kvp.Key} === 值: {kvp.Value}");
+                        LoggerHelper.Instance.Debug($"列名: {kvp.Key} === 值: {kvp.Value}");
                     }
-
                     return userData;
                 }
                 else
                 {
-                    Console.WriteLine("没有找到符合条件的用户数据。");
+                    LoggerHelper.Instance.Debug("没有找到符合条件的用户数据。");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"查询出错: {ex.Message}");
+                LoggerHelper.Instance.Debug($"查询出错: {ex.Message}");
             }
-
             return null;
         }
-
-
 
         //查询用户属性
         public static async Task<(OperationResult Result, Dictionary<string, object> UserProperties)> GetUserPropertiesAsync(string userUuid, List<string> propertiesToQuery, bool isInGameData = true)
