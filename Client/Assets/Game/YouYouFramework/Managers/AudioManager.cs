@@ -50,9 +50,6 @@ namespace YouYou
             // GameEntry.Player.AddEventListener(Constants.StorgeKey.AudioVolume, RefreshAudio);
             // GameEntry.Player.AddEventListener(Constants.StorgeKey.GamePause, OnGamePause);
 
-            RefreshMasterVolume(null);
-            RefreshBGM(null);
-            RefreshAudio(null);
         }
         public void OnUpdate()
         {
@@ -258,18 +255,13 @@ namespace YouYou
 
         #endregion
 
-        private void RefreshMasterVolume(object userData)
+        public void InitVolume()
         {
-            //SetMasterVolume(GameEntry.Player.GetFloat(Constants.StorgeKey.MasterVolume));
+            SetMasterVolume(GameEntry.Data.PlayerRoleData.masterVolume);
+            SetAudioVolume(GameEntry.Data.PlayerRoleData.audioVolume);
+            SetBGMVolume(GameEntry.Data.PlayerRoleData.bgmVolume);
         }
-        private void RefreshAudio(object userData)
-        {
-            //SetAudioVolume(GameEntry.Player.GetFloat(Constants.StorgeKey.AudioVolume));
-        }
-        private void RefreshBGM(object userData)
-        {
-            //SetBGMVolume(GameEntry.Player.GetFloat(Constants.StorgeKey.BGMVolume));
-        }
+
         private void OnGamePause(object userData)
         {
             int GamePause = userData.ToInt();

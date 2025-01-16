@@ -521,7 +521,7 @@ namespace TCPServer.Core.Services
                 if (t != null)
                 {
                     _ = RoleService.UpdateUserOnlineStatus(t.UserUUID, false);
-                    LoggerHelper.Instance.Info($"用户 {user_account} 断开连接服务器==当前连接用户数{OnlineUserCount}");
+                    LoggerHelper.Instance.Info($"用户 {user_account} 断开连接服务器==当前连接用户数{OnlineUserCount - 1}");
                 }
                 OnlineUsers.Remove(user_account);
             }

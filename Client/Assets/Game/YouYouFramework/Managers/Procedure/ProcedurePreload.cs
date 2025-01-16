@@ -26,6 +26,7 @@ namespace YouYou
             m_CurrProgress = 0;
             m_loadFinish = false;
             BeginTask();
+            CheckHasRelogin();
             GameEntry.Event.AddEventListener(Constants.EventName.LoginSuccess, userdata => 
             {
                 _ = OnLoginSuccess(userdata); // 忽略返回值，直接运行异步任务
@@ -33,6 +34,15 @@ namespace YouYou
 
         }
 
+        //是否重登
+        private void CheckHasRelogin()
+        {
+            if (Constants.HasLoadAllAsset)
+            {
+                
+            }
+        }
+        
         internal override void OnLeave()
         {
             base.OnLeave();
@@ -86,7 +96,11 @@ namespace YouYou
             {
                 GameEntry.Data.IsFirstLoginTime = false;
             }
-            GameEntry.SDK.InitTalkingData();
+            if (!Constants.HasLoadAllAsset)
+            {
+                GameEntry.SDK.InitTalkingData();
+            }
+            GameEntry.Audio.InitVolume();
             GameEntry.Data.SaveData(true,true,true,true);
             GameEntry.Procedure.ChangeState(ProcedureState.Game);
         }

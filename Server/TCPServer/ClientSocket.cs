@@ -136,10 +136,7 @@ public class ClientSocket
         {
             if ((DateTime.UtcNow - LastHeartbeatTime).TotalSeconds > heartbeatTimeout)
             {
-                if(socket != null)
-                {
-                    Console.WriteLine($"客户端{socket.RemoteEndPoint.ToString()}超时断开");
-                }
+                if(socket != null) LoggerHelper.Instance.Info($"客户端{socket.RemoteEndPoint.ToString()}超时断开");
                 Close(); // 超时处理时关闭连接
                 heartbeatTimer.Stop(); // 停止定时器
                 heartbeatTimer.Dispose(); // 释放定时器资源

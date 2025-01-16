@@ -21,11 +21,14 @@ public class PlayerRoleData
     public string name;
     public int totalOnlineDuration;
     public int todayOnlineDuration;
+    public float masterVolume;
+    public float audioVolume;
+    public float bgmVolume;
     public Dictionary<int,int> dialogueIds;
     public Dictionary<int, int> equipLevels;//装备栏等级信息
+    public Dictionary<string, int> roleAttr;//角色属性
     public List<EqiupItemData> equipWareHouse;//装备仓库
     public List<BagItemData> bagWareHouse;//背包仓库
-    public Dictionary<string, int> roleAttr;//角色属性
     public PlayerRoleData()
     {
         equipLevels = new Dictionary<int, int>()
@@ -38,6 +41,9 @@ public class PlayerRoleData
         roleAttr = new Dictionary<string, int>();
         totalOnlineDuration = 0;
         todayOnlineDuration = 0;
+        masterVolume = 0.5f;
+        audioVolume = 0.5f;
+        bgmVolume = 0.5f;
         name = "";
     }
 }
