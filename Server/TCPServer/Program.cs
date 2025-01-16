@@ -57,19 +57,19 @@ class Program
             else if (inputStr == "Q") {
 
                 //RoleService.LoginAsync("a123", "99999");
-                RoleService.AddFriendAsync("50a757cd-932e-4338-b0ae-1d3eb2ed9530", "b23673d6-831f-4263-a1c6-5b6ade37f3ea");
+                FriendService.AddFriendAsync("50a757cd-932e-4338-b0ae-1d3eb2ed9530", "b23673d6-831f-4263-a1c6-5b6ade37f3ea");
                 //TestAsync();
                 //RoleService.CreateUserAsync("a123", "123456");
                 //RoleService.ChangePasswordAsync("a123", "123456","66666");
             }
             else if (inputStr == "W")
             {
-                RoleService.AcceptFriendRequestAsync("50a757cd-932e-4338-b0ae-1d3eb2ed9530", "b23673d6-831f-4263-a1c6-5b6ade37f3ea");
+                FriendService.AcceptFriendRequestAsync("50a757cd-932e-4338-b0ae-1d3eb2ed9530", "b23673d6-831f-4263-a1c6-5b6ade37f3ea");
             }
             else if (inputStr == "E")
             {
                 //RoleService.DeleteFriendAsync("50a757cd-932e-4338-b0ae-1d3eb2ed9530", "b23673d6-831f-4263-a1c6-5b6ade37f3ea");
-                RoleService.BlockFriendAsync("b23673d6-831f-4263-a1c6-5b6ade37f3ea", "50a757cd-932e-4338-b0ae-1d3eb2ed9530",true);
+                FriendService.BlockFriendAsync("b23673d6-831f-4263-a1c6-5b6ade37f3ea", "50a757cd-932e-4338-b0ae-1d3eb2ed9530",true);
             }
             else if (inputStr == "R")
             {

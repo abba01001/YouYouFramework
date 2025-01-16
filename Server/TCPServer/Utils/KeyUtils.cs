@@ -21,7 +21,6 @@ namespace TCPServer.Utils
             {
                 string projectDirectory = AppContext.BaseDirectory;
                 string filePath = Path.Combine(projectDirectory, "Key", "SqlKey.bytes");
-                Console.WriteLine(filePath);
                 if (!File.Exists(filePath))
                 {
                     throw new FileNotFoundException($"The file at {filePath} does not exist.");
@@ -40,7 +39,6 @@ namespace TCPServer.Utils
             {
                 string projectDirectory = AppContext.BaseDirectory;
                 string filePath = Path.Combine(projectDirectory, "Key", "TokenKey.bytes");
-                Console.WriteLine(filePath);
                 if (!File.Exists(filePath))
                 {
                     throw new FileNotFoundException($"The file at {filePath} does not exist.");

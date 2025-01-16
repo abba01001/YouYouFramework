@@ -9,6 +9,7 @@ using TCPServer.Core;
 using TCPServer.Core.DataAccess;
 using TCPServer.Core.Services;
 using TCPServer.Utils;
+using static Google.Protobuf.Reflection.FieldOptions.Types;
 
 public class ResponseHandler
 {
@@ -48,7 +49,6 @@ public class ResponseHandler
     {
         if (message == null) return;
         if (message.MsgType == MsgType.Server) return;
-        //验证token
         if (NeedValidateMessage(message.Type) && JwtHelper.ValidateToken(message.Token) == null)
         {
             Console.WriteLine($"用户Token验证失败========{message.Type}");
@@ -72,6 +72,10 @@ public class ResponseHandler
         ProtocolHelper.UnpackData<ItemData>(message, (itemData) =>
         {
             socket.LastHeartbeatTime = DateTime.UtcNow;
+            if (socket.UserAccount != string.Empty)
+            {
+                RoleService.RefreshOnlineUsers(3,socket.UserAccount);
+            }
             //NetManager.Instance.Logger.LogMessage(socket,$"解包成功: Item ID: {itemData.ItemId}, Item Name: {itemData.ItemName}");
         });
         //request.c2s_request_heart_beat();
@@ -91,8 +95,11 @@ public class ResponseHandler
     {
         ProtocolHelper.UnpackData<LoginMsg>(message, async (data) =>
         {
-            Console.WriteLine($"{nameof(LoginMsg)}: {data}");
             (OperationResult state,string user_uuid, byte[] save_data) = await RoleService.LoginAsync(data.UserAccount, data.UserPassword);
+            if (state == OperationResult.Success)
+            {
+                socket.UserAccount = data.UserAccount;
+            }
             request.c2s_request_login((int)state, user_uuid, save_data);
         });
     }

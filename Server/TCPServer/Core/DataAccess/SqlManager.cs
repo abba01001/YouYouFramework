@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace TCPServer.Core.DataAccess
@@ -60,14 +61,13 @@ namespace TCPServer.Core.DataAccess
             try
             {
                 var connection = new MySqlConnection(_connectionString);
-                Console.WriteLine("Connecting with: " + connection.ConnectionString);
+                Console.WriteLine("开启一个sql连接: " + connection.ConnectionString);
                 connection.Open();
                 return connection;
             }
             catch (MySqlException ex)
             {
-                Console.WriteLine("MySQL Error: " + ex.Message);
-                Console.WriteLine("Error Code: " + ex.Number);
+                Console.WriteLine("MySQL 异常: " + ex.Message + "\n异常 Code: " + ex.Number);
                 throw;
             }
         }
@@ -165,7 +165,6 @@ namespace TCPServer.Core.DataAccess
                 {
                     foreach (var param in parameters)
                     {
-                        Console.WriteLine($"{param.Key}====={param.Value}");
                         command.Parameters.AddWithValue(param.Key, param.Value);
                     }
                 }
@@ -197,10 +196,13 @@ namespace TCPServer.Core.DataAccess
             {
                 if (parameters != null)
                 {
+                    string parameterInfo = string.Empty;
                     foreach (var param in parameters)
                     {
+                        parameterInfo = string.Join(", ", parameters.Select(p => $"{p.Key}: {p.Value}"));
                         command.Parameters.AddWithValue(param.Key, param.Value);
                     }
+                    Console.WriteLine($"执行异步非查询操作（例如：INSERT, UPDATE, DELETE）== {parameterInfo}");
                 }
 
                 return await command.ExecuteNonQueryAsync();

@@ -6,7 +6,7 @@ using TMPro;
 public class FontTextureExtractor : Editor
 {
     // 右键菜单项：右键点击 FontAsset 文件时会显示 "Extract Texture"
-    [MenuItem("Assets/Extract Font Texture")]
+    [MenuItem("Assets/工具/优化tmp字体纹理")]
     public static void ExtractTexture()
     {
         // 获取选中的字体文件

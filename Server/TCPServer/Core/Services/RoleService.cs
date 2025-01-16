@@ -11,12 +11,30 @@ using Protocols.Game;
 using Google.Protobuf.WellKnownTypes;
 using Google.Protobuf;
 using Protocols;
+using System.Net.Sockets;
 
 namespace TCPServer.Core.Services
 {
 
     public class RoleService
     {
+        //更新在线状态
+        public static async Task UpdateUserOnlineStatus(string userUuid, bool isOnline)
+        {
+            // 定义 SQL 更新语句
+            string query = $"UPDATE {SqlTable.GameSaveData} SET is_online = @IsOnline WHERE user_uuid = @UserUuid";
+
+            // 设置参数
+            var parameters = new Dictionary<string, object>
+    {
+        { "@IsOnline", isOnline},
+        { "@UserUuid", userUuid }  // 使用 user_uuid 更新
+    };
+
+            // 执行更新操作
+            await SqlManager.Instance.ExecuteNonQueryAsync(query, parameters);
+        }
+
         // 创建账号
         public static async Task<(OperationResult, string)> CreateUserAsync(string userAccount, string userPassword)
         {
@@ -53,21 +71,44 @@ namespace TCPServer.Core.Services
         }
 
 
-        // 登录验证
         public static async Task<(OperationResult, string, byte[])> LoginAsync(string userAccount, string userPassword)
         {
             int currentTime = (int)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
+            // 1. 先检查用户是否已经在线
+
+            var user = RoleService.GetOnlineUsers(userAccount);
+            if (user != null)
+            {
+                // 如果用户已经在线，检查是否断线重连
+
+                // 假设我们定义10分钟内的心跳包未更新的玩家为掉线用户
+                if (user.IsDropUser)
+                {
+                    // 玩家断线超过10分钟，认为是掉线用户，允许重连
+                    Console.WriteLine($"用户 {userAccount} 已在线，但超时断线，允许重连！");
+                    // 重新登录，更新在线状态
+                    user.RefreshIsOffLine(false);
+                    user.RefreshHeartBeatTime();  // 重置心跳时间
+                    return await ProcessLogin(userAccount, userPassword, currentTime);  // 调用登录处理逻辑
+                }
+
+                // 如果用户没有超时断线，防止多次登录
+                Console.WriteLine($"用户 {userAccount} 已经在线，拒绝登录！");
+                return (OperationResult.UserAlreadyOnline, string.Empty, new byte[0]);
+            }
+
+            // 2. 查询数据库，验证用户账号和密码
             string query = $@"
-        UPDATE {SqlTable.GameSaveData}
-        SET is_online = 1, 
-            suspend_time_start = IF(suspend_time_start = 0, @current_time, suspend_time_start)
-        WHERE user_account = @user_account AND user_password = @user_password;
-        
-        SELECT user_uuid, save_data, suspend_time_start
-        FROM {SqlTable.GameSaveData}
-        WHERE user_account = @user_account AND user_password = @user_password;
-    ";
+    UPDATE {SqlTable.GameSaveData}
+    SET is_online = 1, 
+        suspend_time_start = IF(suspend_time_start = 0, @current_time, suspend_time_start)
+    WHERE user_account = @user_account AND user_password = @user_password;
+    
+    SELECT user_uuid, save_data, suspend_time_start
+    FROM {SqlTable.GameSaveData}
+    WHERE user_account = @user_account AND user_password = @user_password;
+";
 
             var parameters = new Dictionary<string, object>
     {
@@ -84,11 +125,61 @@ namespace TCPServer.Core.Services
                 return (OperationResult.UserNotFound, string.Empty, new byte[0]);
             }
 
+            // 3. 获取用户的 user_uuid 和存档数据
             string userUuid = result[0]["user_uuid"].ToString();
             byte[] saveData = result[0]["save_data"] as byte[] ?? new byte[0];
             int suspendTimeStart = Convert.ToInt32(result[0]["suspend_time_start"]);
 
-            // 登录成功，返回用户信息
+            // 4. 将用户添加到在线用户列表
+            RoleService.RefreshOnlineUsers(1,userAccount, new OnlineUser
+            {
+                UserAccount = userAccount,
+                UserUUID = userUuid,
+                IsOffline = false,  // 设置为在线
+                LastHeartbeatTime = DateTime.UtcNow,  // 设置心跳时间
+                Socket = null  // 这里可以放置连接的 Socket 对象，取决于如何管理连接
+            });
+
+            // 5. 登录成功，返回用户信息
+            Console.WriteLine($"用户 {userAccount} 登录成功，UUID: {userUuid}");
+            return (OperationResult.Success, userUuid, saveData);
+        }
+
+        // 登录处理逻辑
+        private static async Task<(OperationResult, string, byte[])> ProcessLogin(string userAccount, string userPassword, int currentTime)
+        {
+            // 这里是登录数据库验证和返回处理的核心逻辑
+            string query = $@"
+    UPDATE {SqlTable.GameSaveData}
+    SET is_online = 1, 
+        suspend_time_start = IF(suspend_time_start = 0, @current_time, suspend_time_start)
+    WHERE user_account = @user_account AND user_password = @user_password;
+    
+    SELECT user_uuid, save_data, suspend_time_start
+    FROM {SqlTable.GameSaveData}
+    WHERE user_account = @user_account AND user_password = @user_password;
+";
+
+            var parameters = new Dictionary<string, object>
+    {
+        { "@user_account", userAccount },
+        { "@user_password", userPassword },
+        { "@current_time", currentTime }
+    };
+
+            var result = await SqlManager.Instance.ExecuteQueryAsync(query, parameters);
+
+            if (result.Count == 0)
+            {
+                Console.WriteLine("User not found or invalid credentials.");
+                return (OperationResult.UserNotFound, string.Empty, new byte[0]);
+            }
+
+            // 3. 获取用户的 user_uuid 和存档数据
+            string userUuid = result[0]["user_uuid"].ToString();
+            byte[] saveData = result[0]["save_data"] as byte[] ?? new byte[0];
+            int suspendTimeStart = Convert.ToInt32(result[0]["suspend_time_start"]);
+
             return (OperationResult.Success, userUuid, saveData);
         }
 
@@ -272,375 +363,7 @@ namespace TCPServer.Core.Services
             return columnName;
         }
 
-
-        //添加好友
-        public static async Task<OperationResult> AddFriendAsync(string userUuid, string friendUuid)
-        {
-            // 1. 检查当前用户是否已经是好友，或是否有其他状态（如已拒绝、已删除）
-            string checkQuery = $@"
-SELECT status FROM friend_list 
-WHERE (user_uuid = @user_uuid AND friend_uuid = @friend_uuid) 
-OR (user_uuid = @friend_uuid AND friend_uuid = @user_uuid)
-";
-
-            var checkParameters = new Dictionary<string, object>
-    {
-        { "@user_uuid", userUuid },
-        { "@friend_uuid", friendUuid }
-    };
-
-            var checkResult = await SqlManager.Instance.ExecuteQueryAsync(checkQuery, checkParameters);
-
-            // 如果已经是好友或者有其他状态（如已拒绝、已删除），返回相应的错误
-            if (checkResult.Count > 0)
-            {
-                var status = (int)checkResult[0]["status"];
-                if (status == 2) // 2 - 已同意
-                {
-                    Console.WriteLine("已经是好友了");
-                    return OperationResult.Success;
-                }
-                else if (status == 3) // 3 - 已拒绝
-                {
-                    Console.WriteLine("好友请求已被拒绝");
-                    return OperationResult.Failed;
-                }
-                else if (status == 4) // 4 - 已删除
-                {
-                    Console.WriteLine("好友关系已删除");
-                    return OperationResult.Failed;
-                }
-            }
-
-            // 2. 检查是否被对方拉黑
-            string checkBlacklistQuery = @"
-SELECT status 
-FROM friend_list
-WHERE (user_uuid = @friend_uuid AND friend_uuid = @user_uuid) 
-AND status = 5
-";
-
-            var checkBlacklistParameters = new Dictionary<string, object>
-    {
-        { "@user_uuid", userUuid },
-        { "@friend_uuid", friendUuid }
-    };
-
-            var blacklistResult = await SqlManager.Instance.ExecuteQueryAsync(checkBlacklistQuery, checkBlacklistParameters);
-
-            // 如果存在 status = 5 记录，表示被对方拉黑，不能继续添加好友
-            if (blacklistResult.Count > 0)
-            {
-                Console.WriteLine("您已被对方拉黑，无法添加好友");
-                return OperationResult.Failed;  // 或者返回其他适合的错误码
-            }
-
-            // 3. 如果没有被拉黑且没有其他好友关系，创建两条好友请求数据
-            string insertQuery = $@"
-INSERT INTO friend_list (user_uuid, friend_uuid, status, is_invitor) 
-VALUES (@user_uuid, @friend_uuid, 1, 1),  -- 发送请求的玩家, is_invitor = 1
-       (@friend_uuid, @user_uuid, 1, 0);  -- 接收请求的玩家, is_invitor = 0
-";
-
-            var insertParameters = new Dictionary<string, object>
-    {
-        { "@user_uuid", userUuid },
-        { "@friend_uuid", friendUuid }
-    };
-
-            try
-            {
-                int rowsAffected = await SqlManager.Instance.ExecuteNonQueryAsync(insertQuery, insertParameters);
-                if (rowsAffected > 0)
-                {
-                    Console.WriteLine("好友请求已发送");
-                    return OperationResult.Success;
-                }
-                else
-                {
-                    Console.WriteLine("添加好友失败");
-                    return OperationResult.Failed;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error adding friend: {ex.Message}");
-                return OperationResult.Failed;
-            }
-        }
-
-
-        // 同意好友请求
-        public static async Task<OperationResult> AcceptFriendRequestAsync(string userUuid, string friendUuid)
-        {
-            string updateQuery = $@"
-    UPDATE friend_list 
-    SET status = 2  -- 2 - 已同意
-    WHERE 
-        (user_uuid = @user_uuid AND friend_uuid = @friend_uuid OR user_uuid = @friend_uuid AND friend_uuid = @user_uuid) 
-        AND status = 1  -- 只更新状态为请求中的记录
-";
-
-            var updateParameters = new Dictionary<string, object>
-    {
-        { "@user_uuid", userUuid },
-        { "@friend_uuid", friendUuid }
-    };
-
-            try
-            {
-                int rowsAffected = await SqlManager.Instance.ExecuteNonQueryAsync(updateQuery, updateParameters);
-                if (rowsAffected > 0)
-                {
-                    Console.WriteLine("好友请求已接受");
-                    return OperationResult.Success;
-                }
-                else
-                {
-                    Console.WriteLine("接受好友请求失败");
-                    return OperationResult.Failed;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error accepting friend request: {ex.Message}");
-                return OperationResult.Failed;
-            }
-        }
-
-        // 删除好友
-        public static async Task<OperationResult> DeleteFriendAsync(string userUuid, string friendUuid)
-        {
-            // 删除好友关系，删除两方记录
-            string deleteQuery = $@"
-    DELETE FROM friend_list 
-    WHERE (user_uuid = @user_uuid AND friend_uuid = @friend_uuid) 
-    OR (user_uuid = @friend_uuid AND friend_uuid = @user_uuid)
-";
-
-            var deleteParameters = new Dictionary<string, object>
-    {
-        { "@user_uuid", userUuid },
-        { "@friend_uuid", friendUuid }
-    };
-
-            try
-            {
-                int rowsAffected = await SqlManager.Instance.ExecuteNonQueryAsync(deleteQuery, deleteParameters);
-                if (rowsAffected > 0)
-                {
-                    Console.WriteLine("好友已删除");
-                    return OperationResult.Success;
-                }
-                else
-                {
-                    Console.WriteLine("删除好友失败");
-                    return OperationResult.Failed;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error deleting friend: {ex.Message}");
-                return OperationResult.Failed;
-            }
-        }
-
-        //获取好友列表
-        public static async Task<OperationResult> GetFriendListAsync(string userUuid)
-        {
-            // 查询用户的所有已同意的好友列表，去重，并且获取状态
-            string query = @"
-    SELECT DISTINCT 
-        CASE
-            WHEN user_uuid = @user_uuid THEN friend_uuid
-            ELSE user_uuid
-        END AS friend_uuid,
-        is_online, 
-        status
-    FROM friend_list
-    WHERE (user_uuid = @user_uuid OR friend_uuid = @user_uuid) 
-    ";
-
-            var parameters = new Dictionary<string, object>
-    {
-        { "@user_uuid", userUuid }
-    };
-
-            try
-            {
-                var result = await SqlManager.Instance.ExecuteQueryAsync(query, parameters);
-
-                if (result.Count > 0)
-                {
-                    // 使用 StringBuilder 来构建批量输出
-                    var friendList = new List<FriendInfo>();
-                    var stringBuilder = new StringBuilder();
-
-                    foreach (var row in result)
-                    {
-                        var friendUuid = (string)row["friend_uuid"]; // 处理唯一好友 ID
-                        var isOnline = Convert.ToBoolean(row["is_online"]); // 使用 Convert.ToBoolean 来处理布尔类型
-                        var status = Convert.ToInt32(row["status"]);
-
-                        // 添加到好友列表
-                        friendList.Add(new FriendInfo
-                        {
-                            FriendUuid = friendUuid,
-                            IsOnline = isOnline,
-                            Status = status
-                        });
-
-                        // 累积好友信息到 StringBuilder
-                        stringBuilder.AppendLine($"Friend UUID: {friendUuid}, Is Online: {isOnline}, Status: {status}");
-                    }
-
-                    // 一次性打印所有好友列表信息
-                    Console.WriteLine($"玩家{userUuid}获取好友列表成功:\n" + stringBuilder.ToString());
-
-                    // 返回成功
-                    return OperationResult.Success;
-                }
-                else
-                {
-                    Console.WriteLine("没有找到好友");
-                    return OperationResult.PropertyNotFound;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error getting friend list: {ex.Message}");
-                return OperationResult.PropertyNotFound;
-            }
-        }
-
-        // 拉黑或解除拉黑好友
-        public static async Task<OperationResult> BlockFriendAsync(string userUuid, string friendUuid, bool isBlock)
-        {
-            // 1. 检查是否已经有好友关系
-            string checkQuery = @"
-        SELECT status
-        FROM friend_list
-        WHERE (user_uuid = @user_uuid AND friend_uuid = @friend_uuid)
-           OR (user_uuid = @friend_uuid AND friend_uuid = @user_uuid)
-    ";
-
-            var checkParameters = new Dictionary<string, object>
-    {
-        { "@user_uuid", userUuid },
-        { "@friend_uuid", friendUuid }
-    };
-
-            try
-            {
-                // 执行查询
-                var checkResult = await SqlManager.Instance.ExecuteQueryAsync(checkQuery, checkParameters);
-
-                // 如果没有找到记录，表示没有好友关系
-                if (checkResult.Count == 0)
-                {
-                    // 如果 isBlock 为 true，可以插入一条拉黑记录
-                    if (isBlock)
-                    {
-                        string insertQuery = @"
-                    INSERT INTO friend_list (user_uuid, friend_uuid, status, is_invitor)
-                    VALUES (@user_uuid, @friend_uuid, 5, 1)  -- user_uuid 是拉黑者，status = 5 表示拉黑
-                ";
-
-                        int rowsAffected = await SqlManager.Instance.ExecuteNonQueryAsync(insertQuery, checkParameters);
-                        if (rowsAffected > 0)
-                        {
-                            Console.WriteLine("已成功拉黑好友（尚未建立好友关系）");
-                            return OperationResult.Success;
-                        }
-                        else
-                        {
-                            Console.WriteLine("创建拉黑记录失败");
-                            return OperationResult.Failed;
-                        }
-                    }
-                    else
-                    {
-                        // 如果 isBlock 为 false 且没有建立好友关系，无法解除拉黑
-                        Console.WriteLine("无法解除拉黑，尚未建立好友关系");
-                        return OperationResult.NotFound;
-                    }
-                }
-                else
-                {
-                    // 获取当前的状态
-                    int currentStatus = Convert.ToInt32(checkResult[0]["status"]);
-
-                    // 2. 根据 isBlock 来决定是拉黑还是解除拉黑
-                    if (isBlock)
-                    {
-                        // 拉黑操作，更新为拉黑状态（status = 5）
-                        if (currentStatus != 5)  // 如果不是拉黑状态，则执行拉黑
-                        {
-                            string updateQuery = @"
-                        UPDATE friend_list
-                        SET status = 5  -- 5表示拉黑状态
-                        WHERE (user_uuid = @user_uuid AND friend_uuid = @friend_uuid)
-                           OR (user_uuid = @friend_uuid AND friend_uuid = @user_uuid)
-                    ";
-
-                            int rowsAffected = await SqlManager.Instance.ExecuteNonQueryAsync(updateQuery, checkParameters);
-                            if (rowsAffected > 0)
-                            {
-                                Console.WriteLine("已成功拉黑好友");
-                                return OperationResult.Success;
-                            }
-                            else
-                            {
-                                Console.WriteLine("拉黑失败");
-                                return OperationResult.Failed;
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("该好友已经处于拉黑状态");
-                            return OperationResult.AlreadyBlocked;
-                        }
-                    }
-                    else
-                    {
-                        // 解除拉黑操作，更新为已同意好友状态（status = 2）
-                        if (currentStatus == 5)  // 只有当前状态是拉黑状态（status = 5）时才能解除拉黑
-                        {
-                            string updateQuery = @"
-                        UPDATE friend_list
-                        SET status = 2  -- 2表示已同意好友
-                        WHERE (user_uuid = @user_uuid AND friend_uuid = @friend_uuid)
-                           OR (user_uuid = @friend_uuid AND friend_uuid = @user_uuid)
-                    ";
-
-                            int rowsAffected = await SqlManager.Instance.ExecuteNonQueryAsync(updateQuery, checkParameters);
-                            if (rowsAffected > 0)
-                            {
-                                Console.WriteLine("已成功解除拉黑好友");
-                                return OperationResult.Success;
-                            }
-                            else
-                            {
-                                Console.WriteLine("解除拉黑失败");
-                                return OperationResult.Failed;
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("好友当前未处于拉黑状态，无法解除拉黑");
-                            return OperationResult.NotBlocked;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error toggling block status for friend: {ex.Message}");
-                return OperationResult.Failed;
-            }
-        }
-
-
+      
         // 更新挂机时间为当前时间点
         public static async Task<OperationResult> UpdateSuspendTimeStartAsync(string userUuid)
         {
@@ -708,8 +431,6 @@ VALUES (@user_uuid, @friend_uuid, 1, 1),  -- 发送请求的玩家, is_invitor =
                 return OperationResult.Failed;
             }
         }
-
-
 
         // 判断用户是否可以领取奖励
         public static async Task<(OperationResult,SuspendTimeMsg)> CanClaimRewardAsync(string userUuid, int rewardType)
@@ -787,14 +508,60 @@ VALUES (@user_uuid, @friend_uuid, 1, 1),  -- 发送请求的玩家, is_invitor =
         }
 
 
-        // 定义好友信息模型类
-        public class FriendInfo
+        // 维护一个字典，记录每个在线用户
+        public static int OnlineUserCount() => OnlineUsers.Count;
+        private static Dictionary<string, OnlineUser> OnlineUsers { get; set; } = new();
+        public static void RefreshOnlineUsers(int operate, string user_account, OnlineUser user = null)
         {
-            public string FriendUuid { get; set; }
-            public bool IsOnline { get; set; }
-            public int Status { get; set; }
+            if (operate == 1)
+            {
+                OnlineUsers.TryAdd(user_account, user);
+            }
+            else if (operate == 2)
+            {
+                var t = GetOnlineUsers(user_account);
+                if (t != null)
+                {
+                    _ = RoleService.UpdateUserOnlineStatus(t.UserUUID, false);
+                }
+                OnlineUsers.Remove(user_account);
+            }
+            else if (operate == 3)
+            {
+                if (OnlineUsers.ContainsKey(user_account))
+                {
+                    OnlineUsers[user_account].RefreshHeartBeatTime();
+                }
+            }
         }
+        public static OnlineUser GetOnlineUsers(string user_account)
+        {
+            if (OnlineUsers.ContainsKey(user_account)) return OnlineUsers[user_account];
+            return null;
+        }
+        public class OnlineUser
+        {
+            public string UserAccount { get; set; }       // 玩家账号
+            public string UserUUID { get; set; }
+            public bool IsOffline { get; set; }            // 玩家是否离线
+            public DateTime LastOfflineTime { get; set; }  // 玩家断线时间
+            public DateTime LastHeartbeatTime { get; set; } // 玩家最后一次发送心跳包的时间
+            public Socket Socket { get; set; }             // 玩家连接的Socket
 
+            public void RefreshHeartBeatTime()
+            {
+                LastHeartbeatTime = DateTime.Now;
+            }
+
+            public void RefreshIsOffLine(bool isOnline)
+            {
+                IsOffline = isOnline;
+            }
+
+            // 假设我们定义10分钟内的心跳包未更新的玩家为掉线用户
+            public bool IsDropUser => (DateTime.UtcNow - LastHeartbeatTime).TotalMinutes > 10;
+
+        }
 
     }
 }

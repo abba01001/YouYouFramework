@@ -33,7 +33,6 @@ public class RequestHandler
         message.Timestamp = ServerSocket.CurrentServerTimestamp;
         message.Data = ByteString.CopyFrom(byteArrayData); // 直接将序列化后的字节数组放入 Data
         string messageJson = JsonConvert.SerializeObject(message);
-        Console.WriteLine($"发送内容{messageJson}");
 
         if (clinetSocket == null || clinetSocket.socket == null) return;
         if(!clinetSocket.socket.Connected)
@@ -83,7 +82,6 @@ public class RequestHandler
             data.Token = JwtHelper.GenerateToken(data.UserUuid, "测试");
         }
         data.SaveData = ByteString.CopyFrom(save_data);
-        Console.WriteLine($"返回数据{Convert.ToBase64String(save_data)}");
         SendMessage(data);
     }
 

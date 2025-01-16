@@ -14,6 +14,7 @@ using TCPServer.Core;
 using TCPServer.Core.Services;
 using TCPServer.Utils;
 
+
 public static class ServerSocket
 {
     private static Socket socket;
@@ -78,9 +79,13 @@ public static class ServerSocket
 
     private static async void PerformMidnightTask(object state)
     {
+        //这里每天做一些清理事件
         Console.WriteLine("到达0点，执行定时任务...");
         DateTime executedTime = DateTime.UtcNow;
         await UpdateTaskExecutionTimeAsync(executedTime);
+        await ChatService.ClearPublicChannelMessagesAsync();
+        await RoleService.ResetSuspendParams();
+        Console.WriteLine("检测到新的一天，任务已执行并记录。");
     }
 
     private static async void HandleDailyTasks()
@@ -89,16 +94,8 @@ public static class ServerSocket
         DateTime lastExecuted = taskState.ExecutionHistory.LastOrDefault();
         DateTime now = DateTime.UtcNow;
 
-        if (lastExecuted.Date < now.Date)
-        {
-            await UpdateTaskExecutionTimeAsync(now);
-            //这里每天做一些清理事件
-            await ChatService.ClearPublicChannelMessagesAsync();
-            await RoleService.ResetSuspendParams();
-            Console.WriteLine("检测到新的一天，任务已执行并记录。");
-        }
+        if (lastExecuted.Date < now.Date) PerformMidnightTask(null);
 
-        // 定时器：每日零点触发
         TimeSpan timeUntilMidnight = DateTime.Today.AddDays(1) - now;
         midnightTimer = new Timer(PerformMidnightTask, null, timeUntilMidnight, TimeSpan.FromDays(1));
     }

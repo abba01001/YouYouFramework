@@ -15,7 +15,8 @@ namespace TCPServer.Core
         PropertyNotFound = 4,
         NotFound = 5,
         NotBlocked = 6,
-        AlreadyBlocked = 7
+        AlreadyBlocked = 7,
+        UserAlreadyOnline = 8,
     }
 
 

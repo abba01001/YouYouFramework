@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using System;
 using System.Timers;
+using TCPServer.Core.Services;
 
 public class ClientSocket
 {
@@ -14,11 +15,11 @@ public class ClientSocket
     public DateTime LastHeartbeatTime { get; set; } = DateTime.UtcNow;
     public RequestHandler Request;
     public ResponseHandler Response;
-    public int heartbeatTimeout = 60;
+    public int heartbeatTimeout = 15;
     private byte[] msgBytes; // 将缓冲区作为类的成员变量
     private const int BufferSize = 1024; // 定义缓冲区大小
     private Timer heartbeatTimer; // 定时器
-
+    public string UserAccount { get; set; } = string.Empty;
     public ClientSocket(Socket clientSocket)
     {
         this.socket = clientSocket;
@@ -46,11 +47,11 @@ public class ClientSocket
         }
         catch (SocketException e)
         {
-            Console.WriteLine($"SendMsg SocketException: {e.Message}");
+            Console.WriteLine($"发送消息异常: {e.Message}");
         }
         catch (Exception e)
         {
-            Console.WriteLine($"SendMsg Exception: {e.Message}");
+            Console.WriteLine($"发送消息异常: {e.Message}");
         }
     }
 
@@ -71,19 +72,31 @@ public class ClientSocket
         await SendMsg(messageBytes);
     }
 
+    // 关闭连接时移除用户
     public void Close()
     {
         try
         {
             CLIENT_COUNT--;
-            Console.WriteLine("IP:{0}断开...已连接IP数{1}", socket.RemoteEndPoint.ToString(), CLIENT_COUNT);
-            socket.Shutdown(SocketShutdown.Both);
+            // 从 OnlineUsers 中移除玩家信息
+            if (!string.IsNullOrEmpty(UserAccount))
+            {
+                RoleService.RefreshOnlineUsers(2, UserAccount);
+                Console.WriteLine($"用户 {UserAccount} 已离线");
+            }
+            if(socket != null)
+            {
+                socket.Shutdown(SocketShutdown.Both);
+            }
         }
         catch (SocketException) { /* 处理已关闭的socket */ }
         finally
         {
-            socket.Close();
-            socket = null;
+            if(socket != null)
+            {
+                socket.Close();
+                socket = null;
+            }
         }
     }
 
@@ -107,25 +120,41 @@ public class ClientSocket
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"ReceiveClientMsg Exception: {e.Message}");
+                    Console.WriteLine($"接收消息异常: {e.Message}");
                 }
             }
         }
         catch (Exception e)
         {
-            Console.WriteLine($"ReceiveMsg Exception: {e.Message}");
+            Console.WriteLine($"接收消息异常: {e.Message}");
         }
     }
 
     public void CheckConnect()
     {
-        if (socket == null || !socket.Connected) return;
+        //if (socket == null || !socket.Connected)
+        //{
+        //    //if(!socket.Connected)
+        //    //{
+        //    //    Console.WriteLine($"客户端{socket?.RemoteEndPoint.ToString()}已断开，关闭连接...");
+        //    //    Close(); // 关闭连接
+        //    //    heartbeatTimer.Stop(); // 停止定时器
+        //    //    heartbeatTimer.Dispose(); // 释放定时器资源
+        //    //}
+        //    return;
+        //}
+
         lock (this)
         {
             if ((DateTime.UtcNow - LastHeartbeatTime).TotalSeconds > heartbeatTimeout)
             {
-                Console.WriteLine($"客户端{socket.RemoteEndPoint.ToString()}超时断开");
-                Close();
+                if(socket != null)
+                {
+                    Console.WriteLine($"客户端{socket.RemoteEndPoint.ToString()}超时断开");
+                }
+                Close(); // 超时处理时关闭连接
+                heartbeatTimer.Stop(); // 停止定时器
+                heartbeatTimer.Dispose(); // 释放定时器资源
             }
         }
     }
