@@ -12,6 +12,7 @@ using Google.Protobuf.WellKnownTypes;
 using Google.Protobuf;
 using Protocols;
 using System.Net.Sockets;
+using Newtonsoft.Json;
 
 namespace TCPServer.Core.Services
 {
@@ -202,7 +203,6 @@ namespace TCPServer.Core.Services
             return res;
         }
 
-
         // 获取用户信息
         public static async Task<Dictionary<string, object>> GetUserByAccountAsync(string userAccount)
         {
@@ -212,21 +212,37 @@ namespace TCPServer.Core.Services
         { "@user_account", userAccount }
     };
 
-            var result = await SqlManager.Instance.ExecuteQueryAsync(query, parameters);
-
-            // 如果查询结果有数据，打印所有的键值对
-            if (result.Count > 0)
+            try
             {
-                var userData = result[0];  // 获取第一个结果
-                foreach (var kvp in userData)
-                {
-                    Console.WriteLine($"列名: {kvp.Key} === 值: {kvp.Value}");
-                }
+                // 执行查询
+                var result = await SqlManager.Instance.ExecuteQueryAsync(query, parameters);
 
-                return userData;
+                Console.WriteLine($"查询用户 {userAccount} 的结果：");
+
+                // 如果查询结果有数据，打印所有的键值对
+                if (result.Count > 0)
+                {
+                    var userData = result[0];  // 获取第一个结果
+                    foreach (var kvp in userData)
+                    {
+                        Console.WriteLine($"列名: {kvp.Key} === 值: {kvp.Value}");
+                    }
+
+                    return userData;
+                }
+                else
+                {
+                    Console.WriteLine("没有找到符合条件的用户数据。");
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"查询出错: {ex.Message}");
+            }
+
             return null;
         }
+
 
 
         //查询用户属性

@@ -14,11 +14,6 @@ public class LoggerHelper
     private static LoggerHelper _obj;
     public static LoggerHelper Instance => _obj ?? (_obj = new LoggerHelper());
 
-    private LoggerHelper()
-    {
-        Info("日志框架启动");
-    }
-
     #region Debug，调试
     public void Debug(string msg) => _logger.Debug(msg);
     public void Debug(string msg, Exception err) => _logger.Debug(err, msg);

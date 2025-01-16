@@ -16,73 +16,139 @@ class Program
     static void Main(string[] args)
     {
         NLog.LogManager.Configuration = new NLog.Config.XmlLoggingConfiguration("nlog.config");
-        ServerSocket.Start("0.0.0.0", 17888, 1024);//10.0.28.15
 
+        // 提供功能选择
+        while (true)
+        {
+            LoggerHelper.Instance.Debug("请选择操作:");
+            LoggerHelper.Instance.Debug("1. 开启服务器");
+            LoggerHelper.Instance.Debug("2. 查询某个玩家的游戏数据");
+            LoggerHelper.Instance.Debug("请输入数字选择操作（或者输入Quit退出）：");
+
+            string inputStr = Console.ReadLine();
+            if (inputStr == "Quit")
+            {
+                break;
+            }
+            else if (inputStr == "1")
+            {
+                StartServer();
+            }
+            else if (inputStr == "2")
+            {
+                SqlManager.Initialize($"Server={KeyUtils.GetSqlKey(SqlKey.Server)};Database={KeyUtils.GetSqlKey(SqlKey.Database)};" +
+  $"UserId={KeyUtils.GetSqlKey(SqlKey.UserId)};Password={KeyUtils.GetSqlKey(SqlKey.Password)};Port = {KeyUtils.GetSqlKey(SqlKey.Port)}");
+                QueryPlayerData();
+            }
+            else
+            {
+                LoggerHelper.Instance.Debug("无效的选择，请重新输入。");
+            }
+        }
+    }
+
+    // 开启服务器
+    private static void StartServer()
+    {
+        ServerSocket.Start("0.0.0.0", 17888, 1024); //10.0.28.15
+        LoggerHelper.Instance.Info("服务器已启动，输入Quit以退出服务器。");
+
+        // 持续监听服务器指令
         while (true)
         {
             string inputStr = Console.ReadLine();
             if (inputStr == "Quit")
             {
                 ServerSocket.Close();
+                LoggerHelper.Instance.Info("服务器已关闭。");
                 break;
             }
-            else if (inputStr == "K")
+            else
             {
-                HotUpdateMsg msg = new HotUpdateMsg();
-                ServerSocket.BroadcastMsg(msg);
+                HandleServerCommand(inputStr);
             }
-            else if (inputStr == "A")
-            {
-                PlayerData data = new PlayerData();
+        }
+    }
 
-                //            RoleService.UpdateUserPropertyAsync("a123", new Dictionary<string, object>
-                //{
-                //    { nameof(data.IsOnline), false },      // 更新 IsOnline 属性为 false
-                //    { nameof(data.ChargeMoney), 200 }      // 更新 ChargeMoney 属性为 100
-                //});
+    // 处理服务器命令
+    private static void HandleServerCommand(string inputStr)
+    {
+        if (inputStr == "K")
+        {
+            HotUpdateMsg msg = new HotUpdateMsg();
+            ServerSocket.BroadcastMsg(msg);
+        }
+        else if (inputStr == "A")
+        {
+            PlayerData data = new PlayerData();
+            LoggerHelper.Instance.Info(JwtHelper.GenerateToken("a123", "测试人"));
+        }
+        else if (inputStr == "Z")
+        {
+            RoleService.CreateUserAsync("a1", "132");
+            RoleService.CreateUserAsync("a2", "132");
+            RoleService.CreateUserAsync("a3", "132");
+            RoleService.CreateUserAsync("a4", "132");
+        }
+        else if (inputStr == "B")
+        {
+            GuildService.CreateGuild("6816a8da-12d5-412d-a484-329250dc059a", "测试公会", "测试名字", "测试描述");
+        }
+        else if (inputStr == "Q")
+        {
+            FriendService.AddFriendAsync("50a757cd-932e-4338-b0ae-1d3eb2ed9530", "b23673d6-831f-4263-a1c6-5b6ade37f3ea");
+        }
+        else if (inputStr == "W")
+        {
+            FriendService.AcceptFriendRequestAsync("50a757cd-932e-4338-b0ae-1d3eb2ed9530", "b23673d6-831f-4263-a1c6-5b6ade37f3ea");
+        }
+        else if (inputStr == "E")
+        {
+            FriendService.BlockFriendAsync("b23673d6-831f-4263-a1c6-5b6ade37f3ea", "50a757cd-932e-4338-b0ae-1d3eb2ed9530", true);
+        }
+        else if (inputStr == "R")
+        {
+            TestAsync1();
+        }
+    }
 
+    // 查询某个玩家的游戏数据
+    private static void QueryPlayerData()
+    {
+        while (true)
+        {
+            Console.WriteLine("请输入玩家账号查询游戏数据：");
+            string playerAccount = Console.ReadLine();
 
-                LoggerHelper.Instance.Info(JwtHelper.GenerateToken("a123", "测试人"));
-            }
-            else if(inputStr == "Z")
-            {
-                //RoleService.GetUserByAccountAsync("a123");
-                RoleService.CreateUserAsync("a1", "132");
-                RoleService.CreateUserAsync("a2", "132");
-                RoleService.CreateUserAsync("a3", "132");
-                RoleService.CreateUserAsync("a4", "132");
-            }
-            else if (inputStr == "B")
-            {
-                GuildService.CreateGuild("6816a8da-12d5-412d-a484-329250dc059a", "测试公会", "测试名字", "测试描述");
-            }
-            else if (inputStr == "Q") {
+            LoggerHelper.Instance.Debug($"开始查询玩家 {playerAccount} 的游戏数据");
 
-                //RoleService.LoginAsync("a123", "99999");
-                FriendService.AddFriendAsync("50a757cd-932e-4338-b0ae-1d3eb2ed9530", "b23673d6-831f-4263-a1c6-5b6ade37f3ea");
-                //TestAsync();
-                //RoleService.CreateUserAsync("a123", "123456");
-                //RoleService.ChangePasswordAsync("a123", "123456","66666");
-            }
-            else if (inputStr == "W")
-            {
-                FriendService.AcceptFriendRequestAsync("50a757cd-932e-4338-b0ae-1d3eb2ed9530", "b23673d6-831f-4263-a1c6-5b6ade37f3ea");
-            }
-            else if (inputStr == "E")
-            {
-                //RoleService.DeleteFriendAsync("50a757cd-932e-4338-b0ae-1d3eb2ed9530", "b23673d6-831f-4263-a1c6-5b6ade37f3ea");
-                FriendService.BlockFriendAsync("b23673d6-831f-4263-a1c6-5b6ade37f3ea", "50a757cd-932e-4338-b0ae-1d3eb2ed9530",true);
-            }
-            else if (inputStr == "R")
-            {
-                //RoleService.GetFriendListAsync("b23673d6-831f-4263-a1c6-5b6ade37f3ea");
-                //EmailService.SendEmail("root", "b23673d6-831f-4263-a1c6-5b6ade37f3ea", "测试标题", "测试内容");
-                //EmailService.SendEmailToAllPlayersAsync("root", "测试全服邮件标题", "全服测试内容123124125151254");
+            // 模拟查询玩家数据（此处根据需求进行替换）
+            var result = RoleService.GetUserByAccountAsync(playerAccount);
+            LoggerHelper.Instance.Debug($"查询请求已发出，正在等待结果...");
 
-                //ChatService.GetAnnouncementMessages(1, 200); // 获取公告频道的最新30条消息
-                //ChatService.ClearPublicChannelMessagesAsync();
+            // 等待查询完成（假设你会从 RoleService 返回查询结果）
+            if (result != null)
+            {
+                LoggerHelper.Instance.Debug($"玩家 {playerAccount} 的数据查询成功。");
+                Console.WriteLine($"玩家 {playerAccount} 的数据查询成功。");
+            }
+            else
+            {
+                LoggerHelper.Instance.Debug($"未找到该玩家的数据: {playerAccount}");
+                Console.WriteLine("未找到该玩家数据。");
+            }
 
-                TestAsync1();
+            // 提问用户是否继续查询
+            Console.WriteLine("是否继续查询其他玩家数据？(Y/N)");
+            string continueChoice = Console.ReadLine();
+            if (continueChoice.ToUpper() != "Y")
+            {
+                LoggerHelper.Instance.Debug("停止查询，返回主菜单。");
+                break; // 退出查询循环，返回主菜单
+            }
+            else
+            {
+                LoggerHelper.Instance.Debug("用户选择继续查询。");
             }
         }
     }
@@ -92,7 +158,6 @@ class Program
         for (int i = 0; i < 10; i++)
         {
             ChatMsg chatMsg1 = new ChatMsg();
-            //chatMsg1.ReceiverId = "870d7675-ca81-11ef-848d-20906fc57f0e";
             chatMsg1.SenderId = "b23673d6-831f-4263-a1c6-5b6ade37f3ea";
             chatMsg1.Message = $"噶尔挨个tsetse商业热带水果条幅放突发========={i}";
             chatMsg1.ChannelType = 1;
@@ -103,38 +168,4 @@ class Program
             }
         }
     }
-
-    private static async Task TestAsync()
-    {
-        int numPlayers = 100;  // 假设模拟 50 名玩家
-
-        List<Task> tasks = new List<Task>();
-        // 记录整个测试的开始时间
-        DateTime testStartTime = DateTime.Now;
-        LoggerHelper.Instance.Info($"测试开始时间: {testStartTime:HH:mm:ss.fff}");
-
-        for (int i = 0; i < numPlayers; i++)
-        {
-            string userUuid = Guid.NewGuid().ToString();
-            string token = JwtHelper.GenerateToken(userUuid, "测试");
-
-            // 在每个请求开始时记录开始时间
-            DateTime requestStartTime = DateTime.Now;
-
-            // 模拟登录请求
-            tasks.Add(RoleService.LoginAsync("a123", "123456"));
-        }
-
-        // 等待所有任务完成
-        await Task.WhenAll(tasks);
-
-        // 记录整个测试的结束时间
-        DateTime testEndTime = DateTime.Now;
-        TimeSpan testDuration = testEndTime - testStartTime;
-        LoggerHelper.Instance.Info($"测试结束时间: {testEndTime:HH:mm:ss.fff}");
-        LoggerHelper.Instance.Info($"整个测试持续时间: {testDuration.TotalSeconds} 秒");
-
-        LoggerHelper.Instance.Info("所有登录请求已完成");
-    }
-
 }
