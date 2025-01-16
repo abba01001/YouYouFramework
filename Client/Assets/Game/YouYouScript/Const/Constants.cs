@@ -9,6 +9,7 @@ static partial class Constants
 #endif
 
     // 全局可变变量
+    public static bool HasLoadAllAsset = false; //已经加载过资源
     public static float MainRoleJumpHeight = 1.5f;//主角跳跃高度
     public static float MainRoleMoveSpeed = 4f;//玩家移动速度
     public static bool IsLoadDataTable = false;

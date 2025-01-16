@@ -23,6 +23,10 @@ message HotUpdateMsg{
 
 }
 
+message ExitGameMsg{
+
+}
+
 message HeartBeatMsg {
 
 }

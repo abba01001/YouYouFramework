@@ -28,6 +28,7 @@ public class NetResponseHandler
     // 注册响应
     public void InitializeHandlers()
     {
+        RegisterHandler(nameof(ExitGameMsg), s2c_handle_exit_game);
         RegisterHandler(nameof(HotUpdateMsg), s2c_handle_hot_update);
         RegisterHandler(nameof(HeartBeatMsg), s2c_handle_request_heart_beat);
         RegisterHandler(nameof(GuildListMsg), s2c_handle_request_guild_list);
@@ -83,7 +84,15 @@ public class NetResponseHandler
         });
     }
     
-    
+    //服务器下发退出游戏
+    private void s2c_handle_exit_game(BaseMessage message)
+    {
+        ProtocolHelper.UnpackData<ExitGameMsg>(message, (data) =>
+        {
+            GameUtil.LogError($"服务器下发资源信息");
+            GameEntry.Procedure.ChangeState(ProcedureState.Preload);
+        });
+    }
 
     //登录
     private void s2c_handle_request_login(BaseMessage message)
@@ -98,7 +107,7 @@ public class NetResponseHandler
             {
                 GameEntry.Data.UserId = data.UserUuid;
                 byte[] binaryData = data.SaveData.ToByteArray();
-                GameEntry.Data.InitGameData(binaryData);//data.SaveData.ToByteArray());
+                GameEntry.Data.InitGameData(binaryData);
                 GameEntry.Net.Token = data.Token;
                 GameEntry.Time.InitNetTime(message.Timestamp);
                 GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);

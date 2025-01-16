@@ -99,6 +99,7 @@ public class ResponseHandler
             if (state == OperationResult.Success)
             {
                 socket.UserAccount = data.UserAccount;
+                socket.UserUUID = user_uuid;
             }
             request.c2s_request_login((int)state, user_uuid, save_data);
         });
@@ -108,7 +109,6 @@ public class ResponseHandler
     {
         ProtocolHelper.UnpackData<RegisterMsg>(message, async (data) =>
         {
-            Console.WriteLine($"{nameof(RegisterMsg)}: {data}");
             (OperationResult state,string uuid) = await RoleService.CreateUserAsync(data.UserAccount, data.UserPassword);
             request.c2s_request_register((int)state, uuid);
         });
@@ -118,7 +118,6 @@ public class ResponseHandler
     {
         ProtocolHelper.UnpackData<ChatMsg>(message, async (data) =>
         {
-            Console.WriteLine($"{nameof(ChatMsg)}: {data}");
             if(data.IsRequestPublic)
             {
                 ChatMsgList msgList = new ChatMsgList();

@@ -49,7 +49,7 @@ public static class ServerSocket
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"读取任务状态时发生错误: {ex.Message}");
+                LoggerHelper.Instance.Error($"读取任务状态时发生错误: {ex.Message}");
             }
         }
         return new TaskState();
@@ -69,23 +69,23 @@ public static class ServerSocket
             string jsonContent = JsonConvert.SerializeObject(taskState, Formatting.Indented);
             await File.WriteAllTextAsync(FilePath, jsonContent);
 
-            Console.WriteLine($"任务执行时间已更新: {executedTime}");
+            LoggerHelper.Instance.Info($"任务执行时间已更新: {executedTime}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"更新任务状态时发生错误: {ex.Message}");
+            LoggerHelper.Instance.Error($"更新任务状态时发生错误: {ex.Message}");
         }
     }
 
     private static async void PerformMidnightTask(object state)
     {
         //这里每天做一些清理事件
-        Console.WriteLine("到达0点，执行定时任务...");
+        LoggerHelper.Instance.Info("到达0点，执行定时任务...");
         DateTime executedTime = DateTime.UtcNow;
         await UpdateTaskExecutionTimeAsync(executedTime);
         await ChatService.ClearPublicChannelMessagesAsync();
         await RoleService.ResetSuspendParams();
-        Console.WriteLine("检测到新的一天，任务已执行并记录。");
+        LoggerHelper.Instance.Info("任务已执行并记录。");
     }
 
     private static async void HandleDailyTasks()
@@ -104,13 +104,13 @@ public static class ServerSocket
     {
         isClose = false;
         serverStartTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-
+        LoggerHelper.Instance.Info("开启服务器...");
         socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         socket.Bind(new IPEndPoint(IPAddress.Parse(ip), port));
         socket.Listen(clientNum);
         SqlManager.Initialize($"Server={KeyUtils.GetSqlKey(SqlKey.Server)};Database={KeyUtils.GetSqlKey(SqlKey.Database)};" +
           $"UserId={KeyUtils.GetSqlKey(SqlKey.UserId)};Password={KeyUtils.GetSqlKey(SqlKey.Password)};Port = {KeyUtils.GetSqlKey(SqlKey.Port)}");
-        Console.WriteLine($"服务器启动成功: IP={ip}, 端口={port}");
+        LoggerHelper.Instance.Info($"服务器启动成功: IP={ip}, 端口={port}");
 
         cancellationTokenSource = new CancellationTokenSource();
         acceptClientTask = AcceptClientConnectAsync(cancellationTokenSource.Token);
@@ -121,7 +121,7 @@ public static class ServerSocket
 
     private static async Task AcceptClientConnectAsync(CancellationToken cancellationToken)
     {
-        Console.WriteLine("等待客户端连接...");
+        LoggerHelper.Instance.Info("等待客户端连接...");
         while (!cancellationToken.IsCancellationRequested)
         {
             try
@@ -129,22 +129,22 @@ public static class ServerSocket
                 Socket clientSocket = await Task.Factory.FromAsync(socket.BeginAccept, socket.EndAccept, null);
                 var client = new ClientSocket(clientSocket);
                 clientList.Add(client);
-                Console.WriteLine($"新客户端连接: {clientSocket.RemoteEndPoint}, 当前连接数: {clientList.Count}");
+                LoggerHelper.Instance.Info($"新客户端连接: {clientSocket.RemoteEndPoint}, 当前连接数: {clientList.Count}");
             }
             catch (SocketException ex)
             {
-                Console.WriteLine($"SocketException: {ex.Message}");
+                LoggerHelper.Instance.Error($"SocketException: {ex.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"AcceptClientConnectAsync Exception: {ex.Message}");
+                LoggerHelper.Instance.Error($"AcceptClientConnectAsync Exception: {ex.Message}");
             }
         }
     }
 
     private static async Task ReceiveClientMsgAsync(CancellationToken cancellationToken)
     {
-        Console.WriteLine("开始接收客户端消息...");
+        LoggerHelper.Instance.Info("开始接收客户端消息...");
         while (!isClose && !cancellationToken.IsCancellationRequested)
         {
             var tasks = clientList.Select(client => Task.Run(async () =>
@@ -155,7 +155,7 @@ public static class ServerSocket
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"消息接收异常: {ex.Message}");
+                    LoggerHelper.Instance.Error($"消息接收异常: {ex.Message}");
                 }
             })).ToList();
 
@@ -170,7 +170,7 @@ public static class ServerSocket
 
         var tasks = clientList.Select(client => client.Request.SendMessage(data));
         await Task.WhenAll(tasks);
-        Console.WriteLine("消息广播完成");
+        LoggerHelper.Instance.Info("消息广播完成");
     }
 
     public static void Close()
@@ -184,7 +184,7 @@ public static class ServerSocket
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"关闭时发生错误: {ex.Message}");
+            LoggerHelper.Instance.Error($"关闭时发生错误: {ex.Message}");
         }
 
         foreach (var client in clientList)
@@ -193,6 +193,6 @@ public static class ServerSocket
         }
 
         socket?.Close();
-        Console.WriteLine("服务器已关闭");
+        LoggerHelper.Instance.Info("服务器已关闭");
     }
 }

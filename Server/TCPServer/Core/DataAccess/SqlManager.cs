@@ -49,7 +49,7 @@ namespace TCPServer.Core.DataAccess
                     if (_instance == null)
                     {
                         _instance = new SqlManager(connectionString);
-                        Console.WriteLine("Sql管理器初始化成功...");
+                        LoggerHelper.Instance.Info("Sql管理器初始化成功...");
                     }
                 }
             }
@@ -61,13 +61,12 @@ namespace TCPServer.Core.DataAccess
             try
             {
                 var connection = new MySqlConnection(_connectionString);
-                Console.WriteLine("开启一个sql连接: " + connection.ConnectionString);
                 connection.Open();
                 return connection;
             }
             catch (MySqlException ex)
             {
-                Console.WriteLine("MySQL 异常: " + ex.Message + "\n异常 Code: " + ex.Number);
+                LoggerHelper.Instance.Error("MySQL 异常: " + ex.Message + "\n异常 Code: " + ex.Number);
                 throw;
             }
         }
@@ -202,7 +201,7 @@ namespace TCPServer.Core.DataAccess
                         parameterInfo = string.Join(", ", parameters.Select(p => $"{p.Key}: {p.Value}"));
                         command.Parameters.AddWithValue(param.Key, param.Value);
                     }
-                    Console.WriteLine($"执行异步非查询操作（例如：INSERT, UPDATE, DELETE）== {parameterInfo}");
+                    LoggerHelper.Instance.Info($"执行语句{command.CommandText}");
                 }
 
                 return await command.ExecuteNonQueryAsync();

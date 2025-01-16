@@ -46,7 +46,7 @@ namespace TCPServer.Core.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error sending message: " + ex.Message);
+                LoggerHelper.Instance.Error("Error sending message: " + ex.Message);
                 return OperationResult.Failed;
             }
         }
@@ -60,7 +60,7 @@ namespace TCPServer.Core.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error sending messages to all players: " + ex.Message);
+                LoggerHelper.Instance.Error("Error sending messages to all players: " + ex.Message);
                 return OperationResult.Failed;
             }
         }
@@ -108,21 +108,12 @@ namespace TCPServer.Core.Services
                     MessageType = Convert.ToInt32(row["message_type"]),
                     IsDeleted = Convert.ToBoolean(row["is_deleted"])
                 }).ToList();
-
-                // 输出日志
-                foreach (var msg in messages)
-                {
-                    Console.WriteLine($"====频道{msg.ChannelType}====Id: {msg.Id}, SenderId: {msg.SenderId}, ReceiverId: {msg.ReceiverId}, " +
-                        $"Message: {msg.Message}, ChannelType: {msg.ChannelType}, Timestamp: {msg.Timestamp}, IsRead: {msg.IsRead}, " +
-                        $"MessageType: {msg.MessageType}, IsDeleted: {msg.IsDeleted}");
-                }
-
                 return messages;
             }
             catch (Exception ex)
             {
                 // 记录日志并抛出异常
-                Console.WriteLine("Error fetching user messages: " + ex.Message);
+                LoggerHelper.Instance.Error("Error fetching user messages: " + ex.Message);
                 throw;  // 如果发生错误，可以让异常向上传递，让调用者处理
             }
         }
@@ -172,7 +163,7 @@ namespace TCPServer.Core.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error fetching messages by channel type: " + ex.Message);
+                LoggerHelper.Instance.Error("Error fetching messages by channel type: " + ex.Message);
                 return new List<ChatMsg>();
             }
         }
@@ -208,7 +199,7 @@ namespace TCPServer.Core.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error updating message status: " + ex.Message);
+                LoggerHelper.Instance.Error("Error updating message status: " + ex.Message);
                 return false;
             }
         }

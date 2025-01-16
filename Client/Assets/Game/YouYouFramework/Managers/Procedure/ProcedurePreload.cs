@@ -17,15 +17,14 @@ namespace YouYou
         /// 当前进度(模拟进度)
         /// </summary>
         private float m_CurrProgress;
-
-        private bool ShowLoginPanel = false;
+        private bool m_loadFinish = false;
         internal override void OnEnter()
         {
             base.OnEnter();
             MainEntry.Instance.PreloadBegin();
 
             m_CurrProgress = 0;
-
+            m_loadFinish = false;
             BeginTask();
             GameEntry.Event.AddEventListener(Constants.EventName.LoginSuccess, userdata => 
             {
@@ -62,10 +61,11 @@ namespace YouYou
                 m_CurrProgress = Mathf.Min(m_CurrProgress, m_TargetProgress);//这里是为了防止进度超过100%， 比如完成了显示102%
                 MainEntry.Instance.PreloadUpdate(m_CurrProgress);
             }
-
-            if (m_CurrProgress == 1 && !ShowLoginPanel)
+            
+            if (m_CurrProgress == 1 && !m_loadFinish)
             {
-                ShowLoginPanel = true;
+                Constants.HasLoadAllAsset = true;
+                m_loadFinish = true;
                 MainEntry.Instance.PreloadComplete();
 
 #if UNITY_EDITOR
@@ -102,6 +102,11 @@ namespace YouYou
         /// </summary>
         private void BeginTask()
         {
+            if (Constants.HasLoadAllAsset)
+            {
+                m_TargetProgress = 1;
+                return;
+            }
             TaskGroup taskGroup = GameEntry.Task.CreateTaskGroup();
 #if ASSETBUNDLE
             //初始化资源信息

@@ -1,4 +1,5 @@
-﻿using Protocols;
+﻿using NLog;
+using Protocols;
 using Protocols.Player;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ class Program
 {
     static void Main(string[] args)
     {
+        NLog.LogManager.Configuration = new NLog.Config.XmlLoggingConfiguration("nlog.config");
         ServerSocket.Start("0.0.0.0", 17888, 1024);//10.0.28.15
 
         while (true)
@@ -40,7 +42,7 @@ class Program
                 //});
 
 
-                Console.WriteLine(JwtHelper.GenerateToken("a123", "测试人"));
+                LoggerHelper.Instance.Info(JwtHelper.GenerateToken("a123", "测试人"));
             }
             else if(inputStr == "Z")
             {
@@ -109,7 +111,7 @@ class Program
         List<Task> tasks = new List<Task>();
         // 记录整个测试的开始时间
         DateTime testStartTime = DateTime.Now;
-        Console.WriteLine($"测试开始时间: {testStartTime:HH:mm:ss.fff}");
+        LoggerHelper.Instance.Info($"测试开始时间: {testStartTime:HH:mm:ss.fff}");
 
         for (int i = 0; i < numPlayers; i++)
         {
@@ -129,10 +131,10 @@ class Program
         // 记录整个测试的结束时间
         DateTime testEndTime = DateTime.Now;
         TimeSpan testDuration = testEndTime - testStartTime;
-        Console.WriteLine($"测试结束时间: {testEndTime:HH:mm:ss.fff}");
-        Console.WriteLine($"整个测试持续时间: {testDuration.TotalSeconds} 秒");
+        LoggerHelper.Instance.Info($"测试结束时间: {testEndTime:HH:mm:ss.fff}");
+        LoggerHelper.Instance.Info($"整个测试持续时间: {testDuration.TotalSeconds} 秒");
 
-        Console.WriteLine("所有登录请求已完成");
+        LoggerHelper.Instance.Info("所有登录请求已完成");
     }
 
 }

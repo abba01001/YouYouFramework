@@ -44,7 +44,7 @@ namespace TCPServer.Core.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error sending email: " + ex.Message);
+                LoggerHelper.Instance.Error("Error sending email: " + ex.Message);
                 return OperationResult.Failed;  // 异常时返回失败
             }
         }
@@ -112,7 +112,7 @@ namespace TCPServer.Core.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error marking email as read: " + ex.Message);
+                LoggerHelper.Instance.Error("Error marking email as read: " + ex.Message);
                 return OperationResult.Failed;
             }
         }
@@ -134,7 +134,7 @@ namespace TCPServer.Core.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error deleting email: " + ex.Message);
+                LoggerHelper.Instance.Error("Error deleting email: " + ex.Message);
                 return OperationResult.Failed;
             }
         }
@@ -156,7 +156,7 @@ namespace TCPServer.Core.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error deleting emails for user {userId}: {ex.Message}");
+                LoggerHelper.Instance.Error($"Error deleting emails for user {userId}: {ex.Message}");
                 return OperationResult.Failed;
             }
         }
@@ -187,7 +187,7 @@ namespace TCPServer.Core.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error sending emails to all players: " + ex.Message);
+                LoggerHelper.Instance.Error("Error sending emails to all players: " + ex.Message);
                 return OperationResult.Failed;
             }
         }

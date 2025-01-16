@@ -248,7 +248,7 @@ public static class ProtocolHelper
         }
         catch (InvalidProtocolBufferException ex)
         {
-            Console.WriteLine($"解包失败: {ex.Message}");
+            LoggerHelper.Instance.Error($"解包失败: {ex.Message}");
         }
     }
 

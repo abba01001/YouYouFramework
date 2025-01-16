@@ -60,12 +60,12 @@ namespace TCPServer.Core.Services
             try
             {
                 int rowsAffected = await SqlManager.Instance.ExecuteNonQueryAsync(query, parameters);
-                Console.WriteLine($"玩家{userAccount}注册成功:{rowsAffected > 0}");
+                LoggerHelper.Instance.Info($"玩家{userAccount}注册成功:{rowsAffected > 0}");
                 return (rowsAffected > 0 ? OperationResult.Success : OperationResult.Failed, uuid);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error creating user: {ex.Message}");
+                LoggerHelper.Instance.Error($"Error creating user: {ex.Message}");
                 return (OperationResult.Failed, string.Empty);
             }
         }
@@ -139,9 +139,6 @@ namespace TCPServer.Core.Services
                 LastHeartbeatTime = DateTime.UtcNow,  // 设置心跳时间
                 Socket = null  // 这里可以放置连接的 Socket 对象，取决于如何管理连接
             });
-
-            // 5. 登录成功，返回用户信息
-            Console.WriteLine($"用户 {userAccount} 登录成功，UUID: {userUuid}");
             return (OperationResult.Success, userUuid, saveData);
         }
 
@@ -272,7 +269,7 @@ namespace TCPServer.Core.Services
             catch (Exception ex)
             {
                 // 记录错误并返回失败
-                Console.WriteLine($"Error querying user properties: {ex.Message}");
+                LoggerHelper.Instance.Error($"Error querying user properties: {ex.Message}");
                 return (OperationResult.Failed, null);
             }
         }
@@ -340,7 +337,7 @@ namespace TCPServer.Core.Services
             catch (Exception ex)
             {
                 // 错误处理
-                Console.WriteLine($"Error updating user properties: {ex.Message}");
+                LoggerHelper.Instance.Error($"Error updating user properties: {ex.Message}");
                 return (OperationResult.Failed, null);
             }
         }
@@ -427,7 +424,7 @@ namespace TCPServer.Core.Services
             catch (Exception ex)
             {
                 // 捕获并打印异常
-                Console.WriteLine($"Error resetting suspend params: {ex.Message}");
+                LoggerHelper.Instance.Error($"Error resetting suspend params: {ex.Message}");
                 return OperationResult.Failed;
             }
         }
@@ -502,20 +499,21 @@ namespace TCPServer.Core.Services
                         }
                     }
                 default:
-                    Console.WriteLine("Invalid reward type.");
+                    LoggerHelper.Instance.Error("Invalid reward type.");
                     return (OperationResult.Failed, null);
             }
         }
 
 
         // 维护一个字典，记录每个在线用户
-        public static int OnlineUserCount() => OnlineUsers.Count;
+        public static int OnlineUserCount => OnlineUsers.Count;
         private static Dictionary<string, OnlineUser> OnlineUsers { get; set; } = new();
         public static void RefreshOnlineUsers(int operate, string user_account, OnlineUser user = null)
         {
             if (operate == 1)
             {
                 OnlineUsers.TryAdd(user_account, user);
+                LoggerHelper.Instance.Info($"用户 {user_account} 成功连接服务器==当前连接用户数{OnlineUserCount}");
             }
             else if (operate == 2)
             {
@@ -523,6 +521,7 @@ namespace TCPServer.Core.Services
                 if (t != null)
                 {
                     _ = RoleService.UpdateUserOnlineStatus(t.UserUUID, false);
+                    LoggerHelper.Instance.Info($"用户 {user_account} 断开连接服务器==当前连接用户数{OnlineUserCount}");
                 }
                 OnlineUsers.Remove(user_account);
             }

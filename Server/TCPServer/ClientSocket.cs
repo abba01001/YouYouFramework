@@ -20,6 +20,7 @@ public class ClientSocket
     private const int BufferSize = 1024; // 定义缓冲区大小
     private Timer heartbeatTimer; // 定时器
     public string UserAccount { get; set; } = string.Empty;
+    public string UserUUID { get; set; } = string.Empty;
     public ClientSocket(Socket clientSocket)
     {
         this.socket = clientSocket;
@@ -47,11 +48,11 @@ public class ClientSocket
         }
         catch (SocketException e)
         {
-            Console.WriteLine($"发送消息异常: {e.Message}");
+            LoggerHelper.Instance.Error($"发送消息异常: {e.Message}");
         }
         catch (Exception e)
         {
-            Console.WriteLine($"发送消息异常: {e.Message}");
+            LoggerHelper.Instance.Error($"发送消息异常: {e.Message}");
         }
     }
 
@@ -82,7 +83,6 @@ public class ClientSocket
             if (!string.IsNullOrEmpty(UserAccount))
             {
                 RoleService.RefreshOnlineUsers(2, UserAccount);
-                Console.WriteLine($"用户 {UserAccount} 已离线");
             }
             if(socket != null)
             {
@@ -120,30 +120,18 @@ public class ClientSocket
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"接收消息异常: {e.Message}");
+                    LoggerHelper.Instance.Error($"接收消息异常: {e.Message}");
                 }
             }
         }
         catch (Exception e)
         {
-            Console.WriteLine($"接收消息异常: {e.Message}");
+            LoggerHelper.Instance.Error($"接收消息异常: {e.Message}");
         }
     }
 
     public void CheckConnect()
     {
-        //if (socket == null || !socket.Connected)
-        //{
-        //    //if(!socket.Connected)
-        //    //{
-        //    //    Console.WriteLine($"客户端{socket?.RemoteEndPoint.ToString()}已断开，关闭连接...");
-        //    //    Close(); // 关闭连接
-        //    //    heartbeatTimer.Stop(); // 停止定时器
-        //    //    heartbeatTimer.Dispose(); // 释放定时器资源
-        //    //}
-        //    return;
-        //}
-
         lock (this)
         {
             if ((DateTime.UtcNow - LastHeartbeatTime).TotalSeconds > heartbeatTimeout)

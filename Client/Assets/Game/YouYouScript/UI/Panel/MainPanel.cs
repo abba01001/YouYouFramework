@@ -19,7 +19,10 @@ public class MainPanel : MonoBehaviour
     {
         YouLiBtn.SetButtonClick(() =>
         {
-            GameEntry.UI.OpenUIForm<FormYouLi>();
+            GameEntry.UI.CloseUIForm<FormMain>();
+            GameEntry.Scene.UnLoadCurrScene();
+            GameEntry.Procedure.ChangeState(ProcedureState.Preload);
+            //GameEntry.UI.OpenUIForm<FormYouLi>();
         });
         MoreBtn.SetButtonClick(() =>
         {
