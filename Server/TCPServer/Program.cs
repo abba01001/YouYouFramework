@@ -51,7 +51,7 @@ class Program
     private static void StartServer()
     {
         ServerSocket.Start("0.0.0.0", 17888, 1024); //10.0.28.15
-        LoggerHelper.Instance.Info("服务器已启动，输入Quit以退出服务器。");
+        LoggerHelper.Instance.Debug("服务器已启动，输入Quit以退出服务器。");
 
         // 持续监听服务器指令
         while (true)
@@ -81,7 +81,7 @@ class Program
         else if (inputStr == "A")
         {
             PlayerData data = new PlayerData();
-            LoggerHelper.Instance.Info(JwtHelper.GenerateToken("a123", "测试人"));
+            LoggerHelper.Instance.Debug(JwtHelper.GenerateToken("a123", "测试人"));
         }
         else if (inputStr == "Z")
         {
