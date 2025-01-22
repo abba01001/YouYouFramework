@@ -8,10 +8,15 @@ public class FormItemInfo : UIFormBase
 {
     private int curSelectEquipType;
     [SerializeField] private Button closeBtn;
+    [SerializeField] private Button maskBtn;
     protected override void Awake()
     {
         base.Awake();
         closeBtn.SetButtonClick(() =>
+        {
+            GameEntry.UI.CloseUIForm<FormItemInfo>();
+        });
+        maskBtn.SetButtonClick(() =>
         {
             GameEntry.UI.CloseUIForm<FormItemInfo>();
         });

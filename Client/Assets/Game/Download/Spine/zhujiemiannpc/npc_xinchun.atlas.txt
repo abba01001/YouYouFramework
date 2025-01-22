@@ -1,0 +1,111 @@
+
+npc_xinchun.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+biyan
+  rotate: false
+  xy: 2, 806
+  size: 39, 25
+  orig: 39, 25
+  offset: 0, 0
+  index: -1
+biyan2
+  rotate: false
+  xy: 2, 469
+  size: 30, 25
+  orig: 30, 25
+  offset: 0, 0
+  index: -1
+bizi
+  rotate: false
+  xy: 2, 833
+  size: 50, 41
+  orig: 50, 41
+  offset: 0, 0
+  index: -1
+dianzan
+  rotate: false
+  xy: 796, 455
+  size: 139, 213
+  orig: 139, 213
+  offset: 0, 0
+  index: -1
+dipan0
+  rotate: false
+  xy: 2, 40
+  size: 544, 343
+  orig: 564, 366
+  offset: 12, 7
+  index: -1
+facai
+  rotate: false
+  xy: 741, 294
+  size: 152, 159
+  orig: 152, 159
+  offset: 0, 0
+  index: -1
+lignzi
+  rotate: false
+  xy: 605, 514
+  size: 208, 229
+  orig: 208, 229
+  offset: 0, 0
+  index: -1
+maozi_xc
+  rotate: false
+  xy: 548, 3
+  size: 262, 121
+  orig: 262, 121
+  offset: 0, 0
+  index: -1
+qianbi
+  rotate: false
+  xy: 720, 126
+  size: 147, 165
+  orig: 147, 165
+  offset: 0, 0
+  index: -1
+shangbi
+  rotate: false
+  xy: 548, 293
+  size: 191, 219
+  orig: 191, 219
+  offset: 0, 0
+  index: -1
+shenti
+  rotate: false
+  xy: 2, 385
+  size: 576, 489
+  orig: 576, 489
+  offset: 0, 0
+  index: -1
+shou
+  rotate: false
+  xy: 548, 122
+  size: 170, 169
+  orig: 170, 169
+  offset: 0, 0
+  index: -1
+tou
+  rotate: false
+  xy: 460, 624
+  size: 284, 250
+  orig: 284, 250
+  offset: 0, 0
+  index: -1
+yanjing
+  rotate: false
+  xy: 219, 830
+  size: 32, 44
+  orig: 33, 45
+  offset: 0, 0
+  index: -1
+yanjing2
+  rotate: false
+  xy: 2, 496
+  size: 34, 41
+  orig: 34, 41
+  offset: 0, 0
+  index: -1

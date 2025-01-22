@@ -22,12 +22,11 @@ public class YouYouEditor : OdinMenuEditorWindow
     protected override OdinMenuTree BuildMenuTree()
     {
         var tree = new OdinMenuTree(true);
-
-        //宏设置
-        tree.AddAssetAtPath("MacroSettings", "Game/YouYouFramework/YouYouAssets/MacroSettings.asset");
-
         //参数设置
         tree.AddAssetAtPath("ParamsSettings", "Game/YouYouFramework/YouYouAssets/ParamsSettings.asset");
+        
+        //宏设置
+        tree.AddAssetAtPath("MacroSettings", "Game/YouYouFramework/YouYouAssets/MacroSettings.asset");
 
         //AssetBundle打包管理
         tree.AddAssetAtPath("AssetBundleSettings", "Game/YouYouFramework/YouYouAssets/AssetBundleSettings.asset");

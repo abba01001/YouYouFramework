@@ -18,24 +18,9 @@ namespace YouYou
         public int Type;
 
         /// <summary>
-        /// 品质
+        /// 对应Icon
         /// </summary>
-        public int Quality;
-
-        /// <summary>
-        /// 阶数
-        /// </summary>
-        public int Stage;
-
-        /// <summary>
-        /// 名字
-        /// </summary>
-        public string Name;
-
-        /// <summary>
-        /// 描述文本
-        /// </summary>
-        public string Desc;
+        public string Icon;
 
     }
 }

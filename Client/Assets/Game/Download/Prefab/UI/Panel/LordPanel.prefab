@@ -68,7 +68,6 @@ GameObject:
   - component: {fileID: 8913338348386391964}
   - component: {fileID: 805896605023220098}
   - component: {fileID: 3105040129456701314}
-  - component: {fileID: 5789810060947949921}
   m_Layer: 5
   m_Name: Spine GameObject (10001_nanzhujue)
   m_TagString: Untagged
@@ -84,15 +83,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 165016276100763863}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 28.7, y: 179.6, z: 0}
+  m_LocalPosition: {x: 84.92702, y: -167.75003, z: 0}
   m_LocalScale: {x: 1.3, y: 1.3, z: 1.3}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4643624417903354794}
   - {fileID: 3759614374564386272}
   - {fileID: 7326536252352074607}
-  m_Father: {fileID: 2611565335006705548}
-  m_RootOrder: 10
+  m_Father: {fileID: 2947057741894176881}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5165667573982032131
 MeshFilter:
@@ -218,17 +217,6 @@ MonoBehaviour:
   partsRenderers:
   - {fileID: 376485118329297303}
   - {fileID: 2093770291166540272}
---- !u!210 &5789810060947949921
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 165016276100763863}
-  m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 338
 --- !u!1 &183865105786564695
 GameObject:
   m_ObjectHideFlags: 0
@@ -1199,7 +1187,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2611565335006705548}
-  m_RootOrder: 11
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -1738,6 +1726,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2947057741894176881}
   - component: {fileID: 7014600219295821151}
+  - component: {fileID: 6401178103768908122}
   m_Layer: 5
   m_Name: HeroSpine
   m_TagString: Untagged
@@ -1756,14 +1745,16 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7394746833390714378}
+  - {fileID: 7659939839111940586}
   m_Father: {fileID: 2611565335006705548}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -113.35, y: 347.35}
-  m_SizeDelta: {x: 226.7, y: 404.7}
+  m_AnchoredPosition: {x: -56.227, y: 347.35}
+  m_SizeDelta: {x: 340.95, y: 404.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7014600219295821151
 CanvasRenderer:
@@ -1773,6 +1764,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1048723911323618545}
   m_CullTransparentMesh: 1
+--- !u!210 &6401178103768908122
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1048723911323618545}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
 --- !u!1 &1100264365744810362
 GameObject:
   m_ObjectHideFlags: 0
@@ -4946,8 +4948,6 @@ RectTransform:
   - {fileID: 3355390914675783025}
   - {fileID: 3207232313336355345}
   - {fileID: 298463237109552495}
-  - {fileID: 7394746833390714378}
-  - {fileID: 7659939839111940586}
   - {fileID: 5307725883482679671}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -4969,8 +4969,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a330d13379e4d46af7dec89f2cc1b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _scrollRect: {fileID: 6825735087738854643}
-  itemPrefab: {fileID: 6571985443132998255}
   equipBtnList:
   - frame: {fileID: 0}
     icon: {fileID: 0}
@@ -5014,6 +5012,12 @@ MonoBehaviour:
     strengthenText: {fileID: 0}
     equipType: 6
     btn: {fileID: 7033567455395749527}
+  EquipBtn: {fileID: 1890478752104138186}
+  BagBtn: {fileID: 2438786675630919552}
+  BigHeroSpine: {fileID: 4858803259757219943}
+  SmallHeroSpine: {fileID: 8913338348386391964}
+  _scrollRect: {fileID: 6825735087738854643}
+  itemPrefab: {fileID: 6571985443132998255}
 --- !u!114 &1994802583625119232
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9182,7 +9186,6 @@ GameObject:
   - component: {fileID: 4858803259757219943}
   - component: {fileID: 7909227708632332627}
   - component: {fileID: 9184066328211026101}
-  - component: {fileID: 3155915925685191852}
   m_Layer: 5
   m_Name: Spine GameObject (10001_yuanpi_nan_jw)
   m_TagString: Untagged
@@ -9198,7 +9201,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5784054112215464176}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -112, y: 185, z: 0}
+  m_LocalPosition: {x: -55.773, y: -162.35, z: 0}
   m_LocalScale: {x: 0.24, y: 0.24, z: 0.24}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -9206,8 +9209,8 @@ Transform:
   - {fileID: 4510109685304870452}
   - {fileID: 3832817315157995540}
   - {fileID: 8990151371486338205}
-  m_Father: {fileID: 2611565335006705548}
-  m_RootOrder: 9
+  m_Father: {fileID: 2947057741894176881}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &9206489866498314575
 MeshFilter:
@@ -9335,17 +9338,6 @@ MonoBehaviour:
   - {fileID: 2855730722250937012}
   - {fileID: 6269519423145639806}
   - {fileID: 302614907787171814}
---- !u!210 &3155915925685191852
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5784054112215464176}
-  m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 338
 --- !u!1 &5927779210512938077
 GameObject:
   m_ObjectHideFlags: 0

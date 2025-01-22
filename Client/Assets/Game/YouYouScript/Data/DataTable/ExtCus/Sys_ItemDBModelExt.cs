@@ -21,7 +21,7 @@ namespace YouYou
                 }
                 else
                 {
-                    GameEntry.LogError(LogCategory.Framework, "RoleAttr���ñ����! DialogueId==" + entity.Id);
+                    GameEntry.LogError(LogCategory.Framework, "RoleAttr????????! DialogueId==" + entity.Id);
                 }
             }
         }
@@ -32,7 +32,7 @@ namespace YouYou
             {
                 return IdByDic[modelId];
             }
-            YouYou.GameEntry.LogError(LogCategory.Framework, "û���ҵ��Ի�, DialogueId==" + modelId);
+            YouYou.GameEntry.LogError(LogCategory.Framework, "?????????, DialogueId==" + modelId);
             return null;
         }
     }

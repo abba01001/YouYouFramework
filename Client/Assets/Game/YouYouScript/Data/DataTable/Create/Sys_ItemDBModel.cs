@@ -29,10 +29,7 @@ namespace YouYou
                 entity.Id = ms.ReadInt();
                 entity.ItemId = ms.ReadInt();
                 entity.Type = ms.ReadInt();
-                entity.Quality = ms.ReadInt();
-                entity.Stage = ms.ReadInt();
-                entity.Name = ms.ReadUTF8String();
-                entity.Desc = ms.ReadUTF8String();
+                entity.Icon = ms.ReadUTF8String();
 
                 m_List.Add(entity);
                 m_Dic[entity.Id] = entity;

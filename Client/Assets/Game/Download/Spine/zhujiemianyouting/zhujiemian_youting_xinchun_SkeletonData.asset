@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f1b3b4b945939a54ea0b23d3396115fb, type: 3}
-  m_Name: zhujiemian_youting_SkeletonData
+  m_Name: zhujiemian_youting_xinchun_SkeletonData
   m_EditorClassIdentifier: 
   atlasAssets:
-  - {fileID: 11400000, guid: 548b09b6555a681438a877d4642f563f, type: 2}
+  - {fileID: 11400000, guid: 4c7312dee3d5cf1438d33573c2009aa5, type: 2}
   scale: 1
-  skeletonJSON: {fileID: 4900000, guid: 100382b2a6b48474c914ea5230209a4a, type: 3}
+  skeletonJSON: {fileID: 4900000, guid: 4d156714afe99c943b394dea003b953c, type: 3}
   skeletonDataModifiers: []
   fromAnimation: []
   toAnimation: []

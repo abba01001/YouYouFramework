@@ -10,7 +10,7 @@ namespace YouYou
     public class UILayer
     {
         private Dictionary<byte, ushort> m_UILayerDic;
-
+        private ushort PerAddLayer = 10;
         public UILayer()
         {
             m_UILayerDic = new Dictionary<byte, ushort>();
@@ -41,13 +41,13 @@ namespace YouYou
 
             if (isAdd)
             {
-                m_UILayerDic[formBase.SysUIForm.UIGroupId] += 10;
+                m_UILayerDic[formBase.SysUIForm.UIGroupId] += PerAddLayer;
             }
             else
             {
                 if (formBase.CurrCanvas.sortingOrder == m_UILayerDic[formBase.SysUIForm.UIGroupId])
                 {
-                    m_UILayerDic[formBase.SysUIForm.UIGroupId] -= 10;
+                    m_UILayerDic[formBase.SysUIForm.UIGroupId] -= PerAddLayer;
                 }
             }
 

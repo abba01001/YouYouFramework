@@ -1,0 +1,104 @@
+
+zhujiemian_youting_xinchun.png
+size: 128,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+chuanti
+  rotate: false
+  xy: 2, 23
+  size: 65, 31
+  orig: 65, 31
+  offset: 0, 0
+  index: -1
+dongli-chunjie
+  rotate: true
+  xy: 2, 56
+  size: 66, 73
+  orig: 66, 73
+  offset: 0, 0
+  index: -1
+jiangpian 1
+  rotate: false
+  xy: 87, 124
+  size: 19, 25
+  orig: 20, 25
+  offset: 1, 0
+  index: -1
+jiangpian 2
+  rotate: false
+  xy: 97, 27
+  size: 19, 17
+  orig: 20, 17
+  offset: 1, 0
+  index: -1
+jiangpian3
+  rotate: false
+  xy: 87, 151
+  size: 19, 25
+  orig: 20, 25
+  offset: 1, 0
+  index: -1
+piaoxue1
+  rotate: false
+  xy: 53, 114
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+shengsuo1
+  rotate: false
+  xy: 94, 76
+  size: 24, 47
+  orig: 24, 47
+  offset: 0, 0
+  index: -1
+shengsuo2
+  rotate: true
+  xy: 2, 10
+  size: 11, 43
+  orig: 11, 43
+  offset: 0, 0
+  index: -1
+shengsuo3
+  rotate: false
+  xy: 108, 112
+  size: 8, 43
+  orig: 8, 43
+  offset: 0, 0
+  index: -1
+shengsuo4
+  rotate: true
+  xy: 69, 3
+  size: 20, 43
+  orig: 20, 43
+  offset: 0, 0
+  index: -1
+shengsuo5
+  rotate: true
+  xy: 76, 54
+  size: 68, 16
+  orig: 68, 16
+  offset: 0, 0
+  index: -1
+shizitou
+  rotate: false
+  xy: 2, 124
+  size: 83, 53
+  orig: 83, 53
+  offset: 0, 0
+  index: -1
+weibu
+  rotate: true
+  xy: 69, 22
+  size: 31, 26
+  orig: 31, 26
+  offset: 0, 0
+  index: -1
+yanhua1
+  rotate: false
+  xy: 97, 46
+  size: 20, 18
+  orig: 20, 18
+  offset: 0, 0
+  index: -1

@@ -23,6 +23,7 @@ public enum ChatChannelType
 public class FormChat : UIFormBase
 {
     [SerializeField] private Button closeBtn;
+    [SerializeField] private Button maskBtn;
     [SerializeField] private Button sendBtn;
     [SerializeField] private TMP_InputField input;
     [SerializeField] private EfficientScrollRect _scrollRect;
@@ -30,10 +31,8 @@ public class FormChat : UIFormBase
     protected override void Awake()
     {
         base.Awake();
-        closeBtn.SetButtonClick(() =>
-        {
-            GameEntry.UI.CloseUIForm<FormYouLi>();
-        });
+        closeBtn.SetButtonClick(() => { GameEntry.UI.CloseUIForm<FormChat>(); });
+        maskBtn.SetButtonClick(() => { GameEntry.UI.CloseUIForm<FormChat>(); });
         sendBtn.SetButtonClick(SendChat);
 
         itemPrefab.gameObject.MSetActive(false);

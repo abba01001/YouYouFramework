@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Spine.Unity;
 using Unity.Collections;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 using YouYou;
@@ -31,14 +33,31 @@ public class LordPanel : MonoBehaviour
     [SerializeField] private List<LordPanelEquip> equipBtnList = new List<LordPanelEquip>();
     [SerializeField] private Button EquipBtn;
     [SerializeField] private Button BagBtn;
-    
+    [SerializeField] private SkeletonAnimation BigHeroSpine;
+    [SerializeField] private SkeletonAnimation SmallHeroSpine;
     public EfficientScrollRect _scrollRect;
     public LordPanelItem itemPrefab;
     private SelectItemType curType = SelectItemType.Bag;
     public bool IsEquipType => curType == SelectItemType.Equip;
     private Dictionary<int, (Sys_EquipEntity,EqiupItemData)> wearEquipList = new Dictionary<int, (Sys_EquipEntity,EqiupItemData)>();
+
+    private int SortingOrder
+    {
+        get
+        {
+            int layer = 0;
+            if (transform.parent != null && transform.parent.GetComponent<UIFormBase>())
+            {
+                layer = transform.parent.GetComponent<UIFormBase>().CurrCanvas.sortingOrder;
+                GameUtil.LogError(layer);
+            }
+            return layer;
+        }
+    }
     private void Awake()
     {
+
+
         BagBtn.SetButtonClick(() =>
         {
             HandleSelect(SelectItemType.Bag);
@@ -70,21 +89,18 @@ public class LordPanel : MonoBehaviour
 
     private void HandleSelect(SelectItemType type)
     {
-        curType = SelectItemType.Bag;
+        curType = type;
         EquipBtn.GetComponent<Image>().SetSpriteByAtlas(Constants.AtlasPath.Common, type == SelectItemType.Equip ? "ty_tab_selected" :"ty_tab_unselected");
         BagBtn.GetComponent<Image>().SetSpriteByAtlas(Constants.AtlasPath.Common, type == SelectItemType.Bag ? "ty_tab_selected" :"ty_tab_unselected");
-        if (type == SelectItemType.Equip)
-        {
-        }
-        else
-        {
-            
-        }
+        _scrollRect.UpdateDatas(GetData(),true);
     }
     
     private void OnEnable()
     {
-
+        GameEntry.Time.Yield(() =>
+        {
+            BigHeroSpine.transform.parent.GetComponent<SortingGroup>().sortingOrder = SortingOrder + 1;
+        });
     }
 
     private void RefreshEquipInfo()
@@ -128,28 +144,12 @@ public class LordPanel : MonoBehaviour
     {
         if (curType == SelectItemType.Equip)
         {
-            List<EqiupItemData> infos = GameEntry.Data.PlayerRoleData.equipWareHouse;//new List<EqiupItemData>();
-            // for (int i = 0; i < 20; i++)
-            // {
-            //     infos.Add(new EqiupItemData()
-            //     {
-            //         equipId = GameUtil.RandomRange(101,120),
-            //         quality = GameUtil.RandomRange(1,8)
-            //     });
-            // }
-            // infos.Sort((a, b) =>
-            // {
-            //     int equipIdComparison = b.equipId.CompareTo(a.equipId);  // equipId 由大到小
-            //     if (equipIdComparison != 0) return equipIdComparison;
-            //     return b.quality.CompareTo(a.quality);  // 如果 equipId 相同，按 quality 由大到小
-            // });
-            // GameEntry.Data.PlayerRoleData.equipWareHouse = infos;
-            // GameEntry.Data.SaveData(true);
+            List<EqiupItemData> infos = GameEntry.Data.PlayerRoleData.equipWareHouse;
             return infos.ToArray();
         }
         else
         {
-            List<BagItemData> infos = new List<BagItemData>();
+            List<BagItemData> infos = GameEntry.Data.PlayerRoleData.bagWareHouse;
             return infos.ToArray();
         }
     }

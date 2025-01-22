@@ -17,7 +17,6 @@ public class LordPanelItem : ScrollItem
     public override void OnDataUpdate(object data, int index)
     {
         base.OnDataUpdate(data, index);
-
         if (curData != data)
         {
             curData = data;
@@ -57,7 +56,7 @@ public class LordPanelItem : ScrollItem
             NumText.text = data.itemCount.ToString();
             if (entity != null)
             {
-                //Icon.SetSpriteByAtlas(Constants.AtlasPath.Daoju,$"icon_zhuangbei0{entity.Type}_{entity.Stage}", true);
+                Icon.SetSpriteByAtlas(Constants.AtlasPath.Daoju,entity.Icon.ToString(), true);
             }
             //NumText.text = da
         }
