@@ -116,10 +116,6 @@ namespace YouYou
             List<string> dependsAssetList = assetEntity.DependsAssetBundleList;
             for (int i = 0; i < dependsAssetList.Count; i++)
             {
-                if (assetFullName == "Assets/Game/Download/Prefab/UI/Panel/MainPanel.prefab")
-                {
-                    GameUtil.LogError($"++++++=>>>>{dependsAssetList[i]}");
-                }
                 await GameEntry.Loader.LoadAssetBundleAsync(dependsAssetList[i]);
             }
 
@@ -142,10 +138,6 @@ namespace YouYou
             List<string> dependsAssetList = assetEntity.DependsAssetBundleList;
             for (int i = 0; i < dependsAssetList.Count; i++)
             {
-                if (assetFullName == "Assets/Game/Download/Prefab/UI/SysForm/FormMain.prefab")
-                {
-                    GameUtil.LogError($"依赖资源名你:===={dependsAssetList[i]}");
-                }
                 GameEntry.Loader.LoadAssetBundle(dependsAssetList[i]);
             }
 
@@ -278,7 +270,6 @@ namespace YouYou
         /// </summary>
         public async UniTask<AssetReferenceEntity> LoadMainAssetAsync(string assetFullPath, Action<float> onUpdate = null, Action<float> onDownloadUpdate = null)
         {
-            GameUtil.LogError($"11111========{assetFullPath}");
             //从分类资源池(AssetPool)中查找主资源
             AssetReferenceEntity referenceEntity = GameEntry.Pool.AssetPool.Spawn(assetFullPath);
             if (referenceEntity != null)
@@ -286,7 +277,6 @@ namespace YouYou
                 //GameEntry.Log(LogCategory.Loader, "从分类资源池加载" + referenceEntity.AssetFullPath);
                 return referenceEntity;
             }
-            GameUtil.LogError($"22222========{assetFullPath}");
 #if EDITORLOAD && UNITY_EDITOR
             referenceEntity = AssetReferenceEntity.Create(assetFullPath, UnityEditor.AssetDatabase.LoadAssetAtPath<Object>(assetFullPath));
 #else

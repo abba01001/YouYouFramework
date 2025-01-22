@@ -17,6 +17,8 @@ message BaseMessage {
     string token = 5;
     string type = 6;
     bytes data = 7;        // 消息内容
+    int32 packet_index = 8;// 当前包的序号
+    int32 total_packets = 9;// 总包数
 }
 
 message HotUpdateMsg{

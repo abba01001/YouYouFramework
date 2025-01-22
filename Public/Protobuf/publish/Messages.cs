@@ -24,11 +24,12 @@ namespace Protocols {
     static MessagesReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg5NZXNzYWdlcy5wcm90bxIJUHJvdG9jb2xzIpcBCgtCYXNlTWVzc2FnZRIS",
+            "Cg5NZXNzYWdlcy5wcm90bxIJUHJvdG9jb2xzIsQBCgtCYXNlTWVzc2FnZRIS",
             "CgptZXNzYWdlX2lkGAEgASgFEhEKCXRpbWVzdGFtcBgCIAEoAxIRCglzZW5k",
             "ZXJfaWQYAyABKAkSIwoHbXNnVHlwZRgEIAEoDjISLlByb3RvY29scy5Nc2dU",
             "eXBlEg0KBXRva2VuGAUgASgJEgwKBHR5cGUYBiABKAkSDAoEZGF0YRgHIAEo",
-            "DCIOCgxIb3RVcGRhdGVNc2ciDQoLRXhpdEdhbWVNc2ciDgoMSGVhcnRCZWF0",
+            "DBIUCgxwYWNrZXRfaW5kZXgYCCABKAUSFQoNdG90YWxfcGFja2V0cxgJIAEo",
+            "BSIOCgxIb3RVcGRhdGVNc2ciDQoLRXhpdEdhbWVNc2ciDgoMSGVhcnRCZWF0",
             "TXNnInsKCExvZ2luTXNnEhQKDHVzZXJfYWNjb3VudBgBIAEoCRIVCg11c2Vy",
             "X3Bhc3N3b3JkGAIgASgJEg0KBXN0YXRlGAMgASgFEhEKCXVzZXJfdXVpZBgE",
             "IAEoCRINCgV0b2tlbhgFIAEoCRIRCglzYXZlX2RhdGEYBiABKAwiawoLUmVn",
@@ -53,7 +54,7 @@ namespace Protocols {
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Protocols.MsgType), }, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.BaseMessage), global::Protocols.BaseMessage.Parser, new[]{ "MessageId", "Timestamp", "SenderId", "MsgType", "Token", "Type", "Data" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.BaseMessage), global::Protocols.BaseMessage.Parser, new[]{ "MessageId", "Timestamp", "SenderId", "MsgType", "Token", "Type", "Data", "PacketIndex", "TotalPackets" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.HotUpdateMsg), global::Protocols.HotUpdateMsg.Parser, null, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.ExitGameMsg), global::Protocols.ExitGameMsg.Parser, null, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.HeartBeatMsg), global::Protocols.HeartBeatMsg.Parser, null, null, null, null, null),
@@ -125,6 +126,8 @@ namespace Protocols {
       token_ = other.token_;
       type_ = other.type_;
       data_ = other.data_;
+      packetIndex_ = other.packetIndex_;
+      totalPackets_ = other.totalPackets_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -233,6 +236,36 @@ namespace Protocols {
       }
     }
 
+    /// <summary>Field number for the "packet_index" field.</summary>
+    public const int PacketIndexFieldNumber = 8;
+    private int packetIndex_;
+    /// <summary>
+    /// 当前包的序号
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int PacketIndex {
+      get { return packetIndex_; }
+      set {
+        packetIndex_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "total_packets" field.</summary>
+    public const int TotalPacketsFieldNumber = 9;
+    private int totalPackets_;
+    /// <summary>
+    /// 总包数
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int TotalPackets {
+      get { return totalPackets_; }
+      set {
+        totalPackets_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -255,6 +288,8 @@ namespace Protocols {
       if (Token != other.Token) return false;
       if (Type != other.Type) return false;
       if (Data != other.Data) return false;
+      if (PacketIndex != other.PacketIndex) return false;
+      if (TotalPackets != other.TotalPackets) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -269,6 +304,8 @@ namespace Protocols {
       if (Token.Length != 0) hash ^= Token.GetHashCode();
       if (Type.Length != 0) hash ^= Type.GetHashCode();
       if (Data.Length != 0) hash ^= Data.GetHashCode();
+      if (PacketIndex != 0) hash ^= PacketIndex.GetHashCode();
+      if (TotalPackets != 0) hash ^= TotalPackets.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -315,6 +352,14 @@ namespace Protocols {
         output.WriteRawTag(58);
         output.WriteBytes(Data);
       }
+      if (PacketIndex != 0) {
+        output.WriteRawTag(64);
+        output.WriteInt32(PacketIndex);
+      }
+      if (TotalPackets != 0) {
+        output.WriteRawTag(72);
+        output.WriteInt32(TotalPackets);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -353,6 +398,14 @@ namespace Protocols {
         output.WriteRawTag(58);
         output.WriteBytes(Data);
       }
+      if (PacketIndex != 0) {
+        output.WriteRawTag(64);
+        output.WriteInt32(PacketIndex);
+      }
+      if (TotalPackets != 0) {
+        output.WriteRawTag(72);
+        output.WriteInt32(TotalPackets);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -383,6 +436,12 @@ namespace Protocols {
       }
       if (Data.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeBytesSize(Data);
+      }
+      if (PacketIndex != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(PacketIndex);
+      }
+      if (TotalPackets != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(TotalPackets);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -416,6 +475,12 @@ namespace Protocols {
       }
       if (other.Data.Length != 0) {
         Data = other.Data;
+      }
+      if (other.PacketIndex != 0) {
+        PacketIndex = other.PacketIndex;
+      }
+      if (other.TotalPackets != 0) {
+        TotalPackets = other.TotalPackets;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -464,6 +529,14 @@ namespace Protocols {
             Data = input.ReadBytes();
             break;
           }
+          case 64: {
+            PacketIndex = input.ReadInt32();
+            break;
+          }
+          case 72: {
+            TotalPackets = input.ReadInt32();
+            break;
+          }
         }
       }
     #endif
@@ -509,6 +582,14 @@ namespace Protocols {
           }
           case 58: {
             Data = input.ReadBytes();
+            break;
+          }
+          case 64: {
+            PacketIndex = input.ReadInt32();
+            break;
+          }
+          case 72: {
+            TotalPackets = input.ReadInt32();
             break;
           }
         }

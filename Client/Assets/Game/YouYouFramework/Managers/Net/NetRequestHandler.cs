@@ -61,7 +61,10 @@ public class NetRequestHandler
     // 示例：心跳包请求，处理心跳数据的逻辑，返回消息对象
     public void c2s_request_heart_beat()
     {
-        SendMessage(new HeartBeatMsg());
+        if (Constants.IsLoginGame)
+        {
+            SendMessage(new HeartBeatMsg());
+        }
     }
 
     //请求公会列表

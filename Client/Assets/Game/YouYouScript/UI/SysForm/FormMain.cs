@@ -65,7 +65,7 @@ public class FormMain : UIFormBase
         if (data != null)
         {
             data.panelObj = t.gameObject;
-            data.panelObj.transform.SetSiblingIndex(1);
+            data.panelObj.transform.SetSiblingIndex(0);
             data.showType = type;
         }
         isLoadingPanel = false;
@@ -143,7 +143,7 @@ public class FormMain : UIFormBase
                 return;
                 GameUtil.LogError("111111");
                 GameEntry.Audio.PlayBGM("maintheme1");
-                GameEntry.Instance.ShowBackGround(BGType.Main, "Assets/Game/Download/Textures/BackGround/Home/home_map_1.png");
+                GameEntry.Instance.ShowBackGround(BGType.Main, "Assets/Game/Download/BackGround/Home/home_map_1.png");
                 GameEntry.Procedure.ChangeState(ProcedureState.Battle);
                 GameEntry.UI.CloseUIForm<FormMain>();
                 break;

@@ -1,0 +1,130 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Login
+  serializedVersion: 2
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: Android
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 50
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: fe81972acf2003644a0cb724be78d362, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: c3d73510849eb0843b73d12c7e7d1998, type: 3}
+  - {fileID: 21300000, guid: f3858ac04b5c3514b8630ddcce2df47b, type: 3}
+  - {fileID: 21300000, guid: 211a38215bf237748903de590c6fb041, type: 3}
+  - {fileID: 21300000, guid: 8f392ba1cac32bf4ea081cb0b5a610da, type: 3}
+  - {fileID: 21300000, guid: 76e0489252ea2d34c887a0bc3f0fc1f8, type: 3}
+  - {fileID: 21300000, guid: 02779a33853e0c545920946d56764600, type: 3}
+  - {fileID: 21300000, guid: 148e90735c12bd24ea6c95312c8024d1, type: 3}
+  - {fileID: 21300000, guid: 694b62e4fa32be84b8efde320e699b48, type: 3}
+  - {fileID: 21300000, guid: 62297025f359f634ba801a7fcd37e03b, type: 3}
+  - {fileID: 21300000, guid: cd2d1f850f22ebe419825d53647d65f4, type: 3}
+  - {fileID: 21300000, guid: 35d332a5e4ad09743af48401c123cabd, type: 3}
+  - {fileID: 21300000, guid: 84322dd59bc43ee48be5bbd860cc2c5b, type: 3}
+  - {fileID: 21300000, guid: 230d5e1605561f14c95b9e524f302c1b, type: 3}
+  - {fileID: 21300000, guid: 9d633436eb4a6aa44b8934a8df581f21, type: 3}
+  - {fileID: 21300000, guid: c6a1d5e63d5f7b846ba5c52da50df9b3, type: 3}
+  - {fileID: 21300000, guid: a4520607681b96e498948a19cba3749d, type: 3}
+  - {fileID: 21300000, guid: fa968c07f9778bc44a5d2bfe1860d418, type: 3}
+  - {fileID: 21300000, guid: 6a719467de2a3264895c256dd676703f, type: 3}
+  - {fileID: 21300000, guid: 8b5d2197b59206e4f840c494837f050f, type: 3}
+  - {fileID: 21300000, guid: 89af43587e925ec4ba607b8b8e6f35e8, type: 3}
+  - {fileID: 21300000, guid: 276ace29f88ba694c82a337a25a3618f, type: 3}
+  - {fileID: 21300000, guid: ebcd21590bb39504a9d2b333063db9d5, type: 3}
+  - {fileID: 21300000, guid: d278ac2a9c32b134e95336ee8bafc0ab, type: 3}
+  - {fileID: 21300000, guid: 7471c73a63239d44a9c44fbeff8c765d, type: 3}
+  - {fileID: 21300000, guid: c9c8598a36d571f42b45ff4c564d29fe, type: 3}
+  - {fileID: 21300000, guid: 1fc9623b97da4cb4b9c36d056d2b3773, type: 3}
+  - {fileID: 21300000, guid: 8e9f6f8b02f95134c8dc6f5c334b399f, type: 3}
+  - {fileID: 21300000, guid: 584756ebef430104bb7f817828225510, type: 3}
+  - {fileID: 21300000, guid: c809c9ac0cafffc499a1d29871b39c93, type: 3}
+  - {fileID: 21300000, guid: a25d6dcc1314621419a68ae9a9efeffe, type: 3}
+  - {fileID: 21300000, guid: 62283c5eae5ea47428def008b92491b1, type: 3}
+  - {fileID: 21300000, guid: ac4dc46ee7e89cc4485feb10f0e58a1e, type: 3}
+  - {fileID: 21300000, guid: fbb506aec60066742997191d10fb3bab, type: 3}
+  - {fileID: 21300000, guid: c6971baef0786ea43b3bcd3e32d3d6a2, type: 3}
+  - {fileID: 21300000, guid: 895d5d1f6480aa14f922c4d6321c0ae0, type: 3}
+  - {fileID: 21300000, guid: c57234bf2027fb044b82deef68046839, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - User_Player1_Frame2
+  - User_Picture_Empty
+  - InputField_Icon_Email_1
+  - StatusBarIcon_Gem
+  - User_Picture_Sample
+  - Toggle_Switch_On_Frame
+  - Notify_Count_Red_l
+  - StatusBarBtn_Add_Green
+  - InputField_Icon_Email_0
+  - InputField_Icon_Account_1
+  - InputField_Frame01_n
+  - Toggle_Check_Orange
+  - User_Player2_Frame2
+  - Notify_Count_Green_s
+  - InputField_Icon_Pw_0
+  - Toggle_CheckBox_Off
+  - Toggle_CheckBox_On
+  - InputField_Icon_Account_0
+  - InputField_Frame02
+  - Popup_Frame02
+  - User_Player2_Frame1
+  - Notify_Count_Red_s
+  - Toggle_Switch_Off_Handle
+  - Toggle_Check_Green
+  - InputField_icon_Pw_1
+  - Notify_Count_Green_l
+  - User_Player1_Frame1
+  - StatusBarBtn_Add_Purple
+  - Toggle_Switch_Off_Frame
+  - InputField_Frame01_d
+  - StatusBarIcon_Gold
+  - Toggle_Switch_On_Handle
+  - StatusBarIcon_Energy
+  - StatusBarBtn_Add_Yellow
+  - StatusBarFrame_White
+  - InputField_Frame03
+  m_RenderDataMap: {}
+  m_Tag: Login
+  m_IsVariant: 0
+  m_IsPlaceholder: 0

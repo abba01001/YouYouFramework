@@ -19,7 +19,7 @@ namespace YouYou
         internal override void OnEnter()
         {
             base.OnEnter();
-            GameEntry.Instance.ShowBackGround(BGType.Battle,"Assets/Game/Download/Textures/BackGround/Battle/single_map_1.png");
+            GameEntry.Instance.ShowBackGround(BGType.Battle,"Assets/Game/Download/BackGround/Battle/single_map_1.png");
             BattleCtrl.Instance.Init();
             GameEntry.UI.OpenUIForm<FormLoading>();
             GameEntry.Scene.LoadSceneAction(SceneGroupName.MapEditor, 1,LoadSceneFinish);

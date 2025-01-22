@@ -1,0 +1,88 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: HeroPanelDetail
+  serializedVersion: 2
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: Android
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 50
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 06e627b27a5008d42ac2dc59a81b9c2f, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: e1f300d0347fd1f42bdeb7469182bf6a, type: 3}
+  - {fileID: 21300000, guid: a7329bd151555f64282e835feadf9c98, type: 3}
+  - {fileID: 21300000, guid: c95b570256dcfa04196c0c846a1d98ca, type: 3}
+  - {fileID: 21300000, guid: 8a141f42a0fb9bf418a8942b9ac2ee7c, type: 3}
+  - {fileID: 21300000, guid: 0d7eab844a184ab42bf9f6f901ddbcaa, type: 3}
+  - {fileID: 21300000, guid: c3e05435a6060d340b4af701e59e3ca7, type: 3}
+  - {fileID: 21300000, guid: 1c4d1835b1d660c449c3aa7a707ba302, type: 3}
+  - {fileID: 21300000, guid: 5e75d3a6cedfb5e45adf1cd7359509c8, type: 3}
+  - {fileID: 21300000, guid: 174f98d6dd44cc74e95ef2fed21efa62, type: 3}
+  - {fileID: 21300000, guid: 615bc9e6866799645a966aab35dd34da, type: 3}
+  - {fileID: 21300000, guid: fb5cda08974b77a4b98ffc991e900426, type: 3}
+  - {fileID: 21300000, guid: 6967a14806c89494f9e808a066561cc3, type: 3}
+  - {fileID: 21300000, guid: 13d5197950673e84b9c9d9644b4bb9b9, type: 3}
+  - {fileID: 21300000, guid: 62bf4089e36cb314b978a462937f99ba, type: 3}
+  - {fileID: 21300000, guid: 6c7f460f94fe108458f8a9c6abd2bcc1, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - yx_bg_yxxq_bingshuang
+  - yx_bg_yxpf_huoyan
+  - yx_bg_yxxq_ziran
+  - yx_bg_yxxq_huoyan
+  - yxpf_bg_01
+  - yx_bg_yxxq_shandian
+  - yx_bg_yxpf_shandian
+  - yx_bg_yxpf_ziran
+  - yx_bg_yxxq_shenhua
+  - yx_bg_yxintro
+  - yx_bg_yxpf_wuli
+  - yxpf_bg_02
+  - yx_bg_yxxq_wuli
+  - yx_bg_yxpf_bingshuang
+  - yxpf_bg_03
+  m_RenderDataMap: {}
+  m_Tag: HeroPanelDetail
+  m_IsVariant: 0
+  m_IsPlaceholder: 0

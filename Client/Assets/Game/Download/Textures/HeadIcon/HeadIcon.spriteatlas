@@ -1,0 +1,128 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: HeadIcon
+  serializedVersion: 2
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: Android
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 50
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 5a33bfbc6625faf4091d9a11f7ae00f1, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 33053110f5346ca43b18f1f2b652296b, type: 3}
+  - {fileID: 21300000, guid: 5a2a8690a862ffa45b27cbaf146144fc, type: 3}
+  - {fileID: 21300000, guid: b7c29990e716ebd449ffbb505e50fee1, type: 3}
+  - {fileID: 21300000, guid: 241322e01ecfe6d44bb914385cd3baa7, type: 3}
+  - {fileID: 21300000, guid: ef86c321565e330428e7905fe75f278b, type: 3}
+  - {fileID: 21300000, guid: 80d25421bbc25de419c9c19e566fb691, type: 3}
+  - {fileID: 21300000, guid: 1694a941bf31a2f49bfb2ea9d3376b84, type: 3}
+  - {fileID: 21300000, guid: d72640a1ff1362f438779f2f9c8a8751, type: 3}
+  - {fileID: 21300000, guid: e607e9f1d1332be47a5601ad6821ce20, type: 3}
+  - {fileID: 21300000, guid: 7b722cf1083cc70489d50029571ba4f5, type: 3}
+  - {fileID: 21300000, guid: dc3bd4227fce7ef468b1eb7731f84e47, type: 3}
+  - {fileID: 21300000, guid: f5ebc732e7d1b5442a073d76aaedb5c3, type: 3}
+  - {fileID: 21300000, guid: 43ed6652c4bac6c46bd0f6c9c62c245e, type: 3}
+  - {fileID: 21300000, guid: 46c60a439cc8a834ba1bc109ff9e1d21, type: 3}
+  - {fileID: 21300000, guid: facde514bc741c64ba30298daf25c3b0, type: 3}
+  - {fileID: 21300000, guid: 501cd6b5709b0194bba23b14e6f9945b, type: 3}
+  - {fileID: 21300000, guid: d66130f5a9edddc41b320003b0094f24, type: 3}
+  - {fileID: 21300000, guid: 147fe106ffd8cb242bc57f724bc5a8a7, type: 3}
+  - {fileID: 21300000, guid: fe6808a6622c2ce409a3946cff1f6d09, type: 3}
+  - {fileID: 21300000, guid: 5986cff657d13ef44b33a153a5eb61a8, type: 3}
+  - {fileID: 21300000, guid: 4458fc277be8ebc48b35faaf009f4d59, type: 3}
+  - {fileID: 21300000, guid: 2fa3dd47e09289d49baf3a3b227acd32, type: 3}
+  - {fileID: 21300000, guid: 2d630c387f303c74b80598e001317dc4, type: 3}
+  - {fileID: 21300000, guid: df75509911917004eb4a0d4c694cf1f0, type: 3}
+  - {fileID: 21300000, guid: 53f8fe0a5401a2144aefbea968531237, type: 3}
+  - {fileID: 21300000, guid: 5fa5118bb1716034394438994745c0b2, type: 3}
+  - {fileID: 21300000, guid: 1ec7ab1cdeed21f4b92bb11361927e91, type: 3}
+  - {fileID: 21300000, guid: e9e74a2c05f3efe48bf51280b9e38490, type: 3}
+  - {fileID: 21300000, guid: 365f786ce76398a498a7fa6149fac69c, type: 3}
+  - {fileID: 21300000, guid: 70cd6eecbf06cc34f8de1fed6c7d3806, type: 3}
+  - {fileID: 21300000, guid: 8cd887de41a65ef4ab594148cfb539e8, type: 3}
+  - {fileID: 21300000, guid: 3e85021f09812f04c8f1ffd2d0944908, type: 3}
+  - {fileID: 21300000, guid: f693ca3f6adde634ab772e97bf6c8869, type: 3}
+  - {fileID: 21300000, guid: 6895a25fd5b550b43b365f5f61279067, type: 3}
+  - {fileID: 21300000, guid: 616c80af4f70dc84fa296b08ed38a58c, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - head_img_28
+  - head_img_30
+  - head_img_35
+  - head_img_15
+  - head_img_17
+  - head_img_36
+  - head_img_20
+  - head_img_zlg_1
+  - head_img_04
+  - head_img_33
+  - head_img_23
+  - head_img_16
+  - head_img_03
+  - head_img_18
+  - head_img_10
+  - head_img_21
+  - head_img_29
+  - head_img_22
+  - head_img_24
+  - head_img_09
+  - head_img_08
+  - head_img_26
+  - head_img_27
+  - head_img_11
+  - head_img_14
+  - head_img_01
+  - head_img_25
+  - head_img_02
+  - head_img_19
+  - head_0
+  - head_img_13
+  - head_img_05
+  - head_img_12
+  - head_img_06
+  - head_img_07
+  m_RenderDataMap: {}
+  m_Tag: HeadIcon
+  m_IsVariant: 0
+  m_IsPlaceholder: 0

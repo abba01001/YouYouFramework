@@ -1,0 +1,126 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Map
+  serializedVersion: 2
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: Android
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 50
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: f0b92d19823e4604389ee294ba7fc954, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: fa253b01f5c605e498b242ce1ed36836, type: 3}
+  - {fileID: 21300000, guid: 61961b3164876214ca53d9a3afd64a22, type: 3}
+  - {fileID: 21300000, guid: a3ec77e126b7d584a83ee75da3dd20e8, type: 3}
+  - {fileID: 21300000, guid: 6f38c7f1a918a8e47bf5f2f9a7aeb14f, type: 3}
+  - {fileID: 21300000, guid: a48b16229d5157b4183d352b88726575, type: 3}
+  - {fileID: 21300000, guid: 549eba52f05e26f4790b1c03c6871527, type: 3}
+  - {fileID: 21300000, guid: 852d5d6263e730c41bef898f99e5f613, type: 3}
+  - {fileID: 21300000, guid: 1a8e0313922231e41969f758d1c84ecb, type: 3}
+  - {fileID: 21300000, guid: 28711a432e6a3034f82275a2b1d8094c, type: 3}
+  - {fileID: 21300000, guid: b5ec68c3349f0654c80e5d991811d183, type: 3}
+  - {fileID: 21300000, guid: da220c84c1dfaf5498f463d531a82266, type: 3}
+  - {fileID: 21300000, guid: d852a14523e97214099f35101e1635d2, type: 3}
+  - {fileID: 21300000, guid: 76fea195298e269468f6f97b80f26666, type: 3}
+  - {fileID: 21300000, guid: 2e1817067fbfc0d4597739713b547fd9, type: 3}
+  - {fileID: 21300000, guid: a88a5e07ede46c64c908e82038e8143c, type: 3}
+  - {fileID: 21300000, guid: 7ac3af87984c2ee4483027468433c11c, type: 3}
+  - {fileID: 21300000, guid: 9de38c09c50b8f54c931d48ee4e80b41, type: 3}
+  - {fileID: 21300000, guid: 42f18769bc3414d42879e00b5ad3998c, type: 3}
+  - {fileID: 21300000, guid: c1b2f8b95db28b3498e9c8adcfa8a1e3, type: 3}
+  - {fileID: 21300000, guid: fa0069e94569d90458cc779969708704, type: 3}
+  - {fileID: 21300000, guid: 32b157da9837f994f9e7006d59a6d24c, type: 3}
+  - {fileID: 21300000, guid: 6849f8ea21b1e324ab22f89788e17b3c, type: 3}
+  - {fileID: 21300000, guid: 649e76fadc0431a4285919211e8e8dd6, type: 3}
+  - {fileID: 21300000, guid: d97a04fb927c29548872420f2053ad6d, type: 3}
+  - {fileID: 21300000, guid: 3506585c07147a443b0a348d45f5a521, type: 3}
+  - {fileID: 21300000, guid: 185fb07ce6b888649ba9259a3b00a238, type: 3}
+  - {fileID: 21300000, guid: 1101d0fc0925b0347a31e129d08123a2, type: 3}
+  - {fileID: 21300000, guid: 0a5f1d3d9f0737947b4de616802f766e, type: 3}
+  - {fileID: 21300000, guid: 333a6bbd6f67c5a428e493aacf4f5a2c, type: 3}
+  - {fileID: 21300000, guid: 91a48bedb76c31f4f9adef2a22cf3d99, type: 3}
+  - {fileID: 21300000, guid: 2e6e2fed8c5183b4c9648455aa670526, type: 3}
+  - {fileID: 21300000, guid: 9dca7a8f65455374f81ffa2f245aa3f4, type: 3}
+  - {fileID: 21300000, guid: 20b15e9fcfc61cb46b3d005d0647ab93, type: 3}
+  - {fileID: 21300000, guid: a8e88eafc7286e745b37647edcfb9205, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - 2674_legend2
+  - 5888_collector
+  - 2670_elite
+  - 2672_event
+  - 5887_champ
+  - 2686_rest
+  - 2664_circle1
+  - 2673_eventOutline
+  - 2676_mapBlend2
+  - 2669_dot1
+  - 2689_shop
+  - 2666_circle3
+  - 2691_shop_blood
+  - 2690_shopOutline
+  - 2678_mapCompleteIcon
+  - 2675_mapBlend
+  - 2688_selectBox
+  - 2665_circle2
+  - 2668_circle5
+  - 2662_chest
+  - 2680_mapMid2
+  - 2685_purgeWellIcon
+  - 2682_mapTop
+  - 2683_monster
+  - 5886_awakened
+  - 2679_mapMid
+  - 2687_restOutline
+  - 2684_monsterOutline
+  - 2671_eliteOutline
+  - 2681_mapShrineIcon
+  - 2663_chestOutline
+  - 2667_circle4
+  - 2677_mapBot
+  - 5885_automaton
+  m_RenderDataMap: {}
+  m_Tag: Map
+  m_IsVariant: 0
+  m_IsPlaceholder: 0
