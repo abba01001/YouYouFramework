@@ -35,8 +35,8 @@ using UnityEngine.UI;
     public class EfficientScrollRect : ScrollRect
     {
         //Item之间的距离
-        private int lineSpace = 0;
-        private int colSpace = 0;
+        public int lineSpace = 0;
+        public int colSpace = 0;
 
         //Item的宽高
         private Vector2 cellSize = Vector2.zero;

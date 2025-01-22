@@ -16,6 +16,7 @@ public interface IDataManager
     PlayerRoleData PlayerRoleData { get; set; }
     int DataUpdateTime { get; set; }
     void InitPlayData();
+    List<EqiupItemData> GetWearEquip();
 }
 
 [MessagePackObject(keyAsPropertyName: true)]
@@ -73,10 +74,24 @@ public class DataManager : Observable<DataManager>, IDataManager
     [IgnoreMember] private float lastUploadTime = 0f; // 上次上传时间
     [IgnoreMember] private float writeCooldown = 5f; // 写入的冷却时间（5秒）
     [IgnoreMember] private float uploadCooldown = 10f; // 上传的冷却时间（10秒）
-    
+    [IgnoreMember] private List<EqiupItemData> wearEquipList = new List<EqiupItemData>();
     #endregion
 
     #region Public方法
+
+    public List<EqiupItemData> GetWearEquip()
+    {
+        wearEquipList.Clear();
+        foreach (var item in _playerRoleData.equipWareHouse)
+        {
+            if (item.isWear)
+            {
+                wearEquipList.Add(item);
+            }
+        }
+        return wearEquipList;
+    }
+    
     public string PrintUserData()
     {
         var str = MessagePackSerializer.SerializeToJson(this, MessagePackSerializer.DefaultOptions);

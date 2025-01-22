@@ -54,6 +54,7 @@ public class EqiupItemData
 {
     public int equipId;
     public int quality;
+    public bool isWear;
     public Dictionary<int, int> extraAttr = new Dictionary<int, int>();
 }
 

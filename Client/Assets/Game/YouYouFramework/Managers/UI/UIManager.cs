@@ -101,7 +101,7 @@ namespace YouYou
                 m_OpenUIFormList.AddLast(formBase);
                 CheckReverseChange(sys_UIForm, formBase, true);
 
-                formBase.ToOpen();
+                formBase.ToOpen(userData);
                 return formBase as T;
             }
 
@@ -121,7 +121,7 @@ namespace YouYou
             CheckReverseChange(sys_UIForm, formBase, true);
 
             formBase.Init(sys_UIForm);
-            formBase.ToOpen();
+            formBase.ToOpen(userData);
 
             return formBase as T;
         }

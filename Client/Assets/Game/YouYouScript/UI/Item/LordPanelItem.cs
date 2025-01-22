@@ -12,6 +12,7 @@ public class LordPanelItem : ScrollItem
     [SerializeField] private GameObject LevelObj;
     [SerializeField] private Text LevelText;
     [SerializeField] private Text NumText;
+    [SerializeField] private Button btn;
     private object curData;
     public override void OnDataUpdate(object data, int index)
     {
@@ -60,6 +61,12 @@ public class LordPanelItem : ScrollItem
             }
             //NumText.text = da
         }
+        btn.SetButtonClick(() =>
+        {
+
+            GameEntry.UI.OpenUIForm<FormItemInfo>((Parent.IsEquipType ? SelectItemType.Equip : SelectItemType.Bag,
+                curData));
+        });
         //HeroIcon.SetSpriteByAtlas(Constants.AtlasPath.HeroPanel, curEntity.HeroPanelIcon, true);
 
     }

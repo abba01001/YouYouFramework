@@ -26,7 +26,7 @@ namespace YouYou
         //是否活跃
         internal bool IsActive = true;
 
-
+        protected object userData;
         protected virtual void Awake()
         {
             Name = transform.name;
@@ -49,14 +49,20 @@ namespace YouYou
         }
         protected virtual void OnEnable()
         {
-
+            GameEntry.Time.Yield(OnShow);
         } 
+        
         protected virtual void OnDisable()
         {
 
         }
         protected virtual void OnDestroy()
         {
+        }
+
+        protected virtual void OnShow()
+        {
+            
         }
 
         public void Close()
@@ -68,8 +74,9 @@ namespace YouYou
         {
             SysUIForm = sysUIForm;
         }
-        internal void ToOpen()
+        internal void ToOpen(object user_data)
         {
+            this.userData = user_data;
             //设置UI层级
             if (SysUIForm.DisableUILayer != 1) GameEntry.UI.UILayer.SetSortingOrder(this, true);
 

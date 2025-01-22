@@ -427,7 +427,7 @@ namespace TCPServer.Core.Services
             {
                 // 异步执行更新操作
                 int rowsUpdated = await SqlManager.Instance.ExecuteNonQueryAsync(updateQuery);
-                Console.WriteLine($"Reset {rowsUpdated} rows for quick_get_suspend_reward_index to 0.");
+                LoggerHelper.Instance.Info($"Reset {rowsUpdated} rows for quick_get_suspend_reward_index to 0.");
                 // 判断操作是否成功
                 return rowsUpdated > 0 ? OperationResult.Success : OperationResult.Failed;
             }

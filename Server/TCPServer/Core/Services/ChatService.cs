@@ -223,7 +223,7 @@ namespace TCPServer.Core.Services
                 int rowsAffected = await SqlManager.Instance.ExecuteNonQueryAsync(query);
 
                 // 打印删除的行数
-                Console.WriteLine($"Deleted {rowsAffected} rows from public channel messages.");
+                LoggerHelper.Instance.Info($"Deleted {rowsAffected} rows from public channel messages.");
 
                 // 判断是否成功
                 return rowsAffected > 0 ? OperationResult.Success : OperationResult.Failed;
@@ -231,7 +231,7 @@ namespace TCPServer.Core.Services
             catch (Exception ex)
             {
                 // 捕获并打印异常
-                Console.WriteLine($"Error clearing public channel messages: {ex.Message}");
+                LoggerHelper.Instance.Error($"Error clearing public channel messages: {ex.Message}");
                 return OperationResult.Failed;
             }
         }

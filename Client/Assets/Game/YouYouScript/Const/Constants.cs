@@ -103,6 +103,7 @@ static partial class Constants
         public const string LordPanel = "Assets/Game/Download/Textures/Atlas/LordPanel.spriteatlas";
         public const string Equip = "Assets/Game/Download/Textures/Atlas/Equip.spriteatlas";
         public const string Daoju = "Assets/Game/Download/Textures/Atlas/Daoju.spriteatlas";
+        public const string Common = "Assets/Game/Download/Textures/Atlas/Common.spriteatlas";
     }
     
     public struct ModelPath

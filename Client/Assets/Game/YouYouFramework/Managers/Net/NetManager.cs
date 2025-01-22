@@ -81,7 +81,7 @@ public class NetManager
     public async Task ConnectServerAsync(Action action = null)
     {
         #if UNITY_EDITOR
-            string url = Main.MainEntry.ParamsSettings.TestWebAccountUrl;
+            string url = Main.MainEntry.ParamsSettings.WebAccountUrl;
         #else
             string url = Main.MainEntry.ParamsSettings.WebAccountUrl;
         #endif
