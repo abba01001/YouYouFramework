@@ -40,6 +40,7 @@ public class RequestHandler
             clinetSocket.Close();
             return;
         }
+        clinetSocket.socket.SendBufferSize = 10240; // 设置为 10KB
         message.SenderId = clinetSocket.socket.RemoteEndPoint.ToString(); // 设置发送者ID
         byte[] messageBytes = message.ToByteArray();
         // 异步发送数据
