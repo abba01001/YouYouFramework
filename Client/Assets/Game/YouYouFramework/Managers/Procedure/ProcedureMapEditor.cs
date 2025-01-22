@@ -1,4 +1,3 @@
-#if EDITORLOAD
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -12,6 +11,8 @@ namespace YouYou
     /// </summary>
     public class ProcedureMapEditor : ProcedureBase
     {
+#if EDITORLOAD && UNITY_EDITOR
+
         private GameObject MapParent = null;
         private const string DefaultBasePath = "Assets/Game/Download/MapLevel/"; // 默认的保存路径
         
@@ -74,6 +75,6 @@ namespace YouYou
         {
             base.OnDestroy();
         }
+#endif
     }
 }
-#endif

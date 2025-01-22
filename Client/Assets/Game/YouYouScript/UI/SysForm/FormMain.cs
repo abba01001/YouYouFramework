@@ -98,7 +98,10 @@ public class FormMain : UIFormBase
                 }
                 if (data.BtnType == pair.Key)
                 {
-                    GoldPanel.Instance.RefreshPos(data.showType);
+                    if (GoldPanel.Instance != null)
+                    {
+                        GoldPanel.Instance.RefreshPos(data.showType);
+                    }
                 }
                 pair.Value.selectObj.MSetActive(data.BtnType == pair.Key);
             }

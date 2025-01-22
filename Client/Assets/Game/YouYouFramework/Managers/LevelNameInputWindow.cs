@@ -1,4 +1,4 @@
-#if EDITORLOAD
+#if EDITORLOAD && UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 

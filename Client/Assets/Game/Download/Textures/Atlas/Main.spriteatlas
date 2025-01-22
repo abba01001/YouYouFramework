@@ -80,7 +80,6 @@ SpriteAtlas:
   - {fileID: 21300000, guid: ec9842d38f591d5408f81cf44666662d, type: 3}
   - {fileID: 21300000, guid: 7bd8b3d3a64b511429c426c9ee4c821e, type: 3}
   - {fileID: 21300000, guid: 4f3410e30d87b9d4295315844e1591e2, type: 3}
-  - {fileID: 21300000, guid: b55d93f367805b04d904b6caa62084a3, type: 3}
   - {fileID: 21300000, guid: cf7e4f145d60af446b098c523a5d9102, type: 3}
   - {fileID: 21300000, guid: bbddda74ea6cafe4a8deffa7b3406777, type: 3}
   - {fileID: 21300000, guid: d32f19841a340ca429674b6fb8e25cb5, type: 3}
@@ -179,7 +178,6 @@ SpriteAtlas:
   - btn_yl
   - main_btn_kaituo
   - main__gk_arrow
-  - main_btn_hover #128558
   - main_jindutiao1
   - btn_huodong_sjzl
   - main_cjdw_di

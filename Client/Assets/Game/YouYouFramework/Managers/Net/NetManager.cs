@@ -206,6 +206,7 @@ public class NetManager
         if (msgLength > 0)
         {
             byte[] tempMsg = new byte[msgLength];
+            MainEntry.Log(MainEntry.LogCategory.NetWork,$"解析协议长度===={msgLength}");
             Array.Copy(msgBytes, tempMsg, msgLength); // 将接收到的数据复制到 tempMsg
             try
             {

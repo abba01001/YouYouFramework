@@ -435,6 +435,11 @@ public class AssetBundleSettings : ScriptableObject
             {
                 if (!str.IsSuffix(".cs") && tempDic.ContainsKey(str))
                 {
+                    if (entity.AssetFullPath == "Assets/Game/Download/Prefab/UI/Panel/MainPanel.prefab")
+                    {
+                        GameUtil.LogError($"路径===={str}===={tempDic[str].AssetBundleFullPath}");
+                    }
+                    
                     //把多余的依赖AB包剔除掉，比如依赖AB包==主AB包， 或者依赖AB包已经存在于DependsAssetBundleList内
                     if (!newEntity.AssetBundleFullPath.Equals(tempDic[str].AssetBundleFullPath) && 
                         !newEntity.DependsAssetBundleList.Contains(tempDic[str].AssetBundleFullPath))

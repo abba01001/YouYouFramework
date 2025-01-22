@@ -49,7 +49,6 @@ public class LordPanel : MonoBehaviour
             if (transform.parent != null && transform.parent.GetComponent<UIFormBase>())
             {
                 layer = transform.parent.GetComponent<UIFormBase>().CurrCanvas.sortingOrder;
-                GameUtil.LogError(layer);
             }
             return layer;
         }

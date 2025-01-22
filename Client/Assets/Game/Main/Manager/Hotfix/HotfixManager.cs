@@ -21,7 +21,7 @@ namespace Main
         }
         public void Init()
         {
-#if EDITORLOAD
+#if EDITORLOAD && UNITY_EDITOR
             GameObject gameEntry = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Game/Download/Hotfix/GameEntry.prefab");
             UnityEngine.Object.Instantiate(gameEntry);
             return;
