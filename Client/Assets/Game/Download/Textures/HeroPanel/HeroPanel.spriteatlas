@@ -99,7 +99,6 @@ SpriteAtlas:
   - {fileID: 21300000, guid: f612bf535ab4e29438ea4e181b406493, type: 3}
   - {fileID: 21300000, guid: c1ccd363500a6e448aa3ba77353d154e, type: 3}
   - {fileID: 21300000, guid: ab0e5c63c00553844989a9f9bbe49724, type: 3}
-  - {fileID: 21300000, guid: 92adee73d487f4842973d590a12bb94e, type: 3}
   - {fileID: 21300000, guid: 42044e836189cc84399c2ad185d67fc4, type: 3}
   - {fileID: 21300000, guid: 0cd4de83a51a2864da8304cfe692d5b0, type: 3}
   - {fileID: 21300000, guid: a75724a3693b2264e88682120c58ca38, type: 3}
@@ -311,7 +310,6 @@ SpriteAtlas:
   - yxhz_E_silingwuzhu
   - yxkp_E_toubijixie
   - yxkp_A_youxia
-  - yx_frame_skill_dk #128105
   - yx_light_00 #128126
   - yxhz_B_guiwuzhe
   - yxpf_icon_biaoqian_04

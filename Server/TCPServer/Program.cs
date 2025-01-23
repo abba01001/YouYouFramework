@@ -184,6 +184,17 @@ class Program
             var result = RoleService.GetUserByAccountAsync(playerAccount);
             if (result != null)
             {
+                byte[] datas = new byte[0];
+                foreach (var kvp in result.Result)
+                {
+                    LoggerHelper.Instance.Debug($"列名: {kvp.Key} === 值: {kvp.Value}");
+                    if(kvp.Key == "save_data")
+                    {
+                        datas = (byte[])kvp.Value;
+                    }
+                }
+                //ServerSocket.handleSubPack.DecompressData(datas);
+                DataManager.Instance.InitGameData(datas);
                 LoggerHelper.Instance.Debug($"玩家 {playerAccount} 的数据查询成功。");
             }
             else

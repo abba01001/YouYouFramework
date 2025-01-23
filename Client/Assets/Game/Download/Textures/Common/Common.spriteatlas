@@ -69,6 +69,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: bb129f0554ce5482e97e81f0688f3a7a, type: 3}
   - {fileID: 21300000, guid: a59be006e85498642a6053679762e1e7, type: 3}
   - {fileID: 21300000, guid: d014a536371f14741a8517ee247a3e1e, type: 3}
+  - {fileID: 21300000, guid: d51750c65f94e3b43a716d0e691953e6, type: 3}
   - {fileID: 21300000, guid: b68bcc1756c9006459f52b9124ac2a44, type: 3}
   - {fileID: 21300000, guid: 50d6c647774352147b8a301712001b84, type: 3}
   - {fileID: 21300000, guid: 26760be7e6ff4ce4bb0d937c61b9c66b, type: 3}
@@ -122,6 +123,7 @@ SpriteAtlas:
   - Loading_Bg
   - fight_touxiang_zhezhao
   - fight_huobi_09
+  - fight_frame_xuanxiu
   - huobi_10
   - ty_tab_selected
   - Popup_00_Glow_white

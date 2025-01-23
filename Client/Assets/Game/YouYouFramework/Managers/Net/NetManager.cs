@@ -196,6 +196,7 @@ public class NetManager
 
     private void SendHeartbeat(int second)
     {
+        if (!Constants.IsLoginGame) return;
         if (second % HeartInterval == 0)
         {
             Requset.c2s_request_heart_beat();
@@ -210,7 +211,7 @@ public class NetManager
     public async Task ConnectServerAsync(Action action = null)
     {
 #if UNITY_EDITOR
-        string url = Main.MainEntry.ParamsSettings.TestWebAccountUrl;
+        string url = Main.MainEntry.ParamsSettings.WebAccountUrl;
 #else
             string url = Main.MainEntry.ParamsSettings.WebAccountUrl;
 #endif
@@ -224,7 +225,6 @@ public class NetManager
         try
         {
             await socket.ConnectAsync(new IPEndPoint(IPAddress.Parse(urls[0]), int.Parse(urls[1]))); // 异步连接
-            GameEntry.Log(LogCategory.NetWork, $"连接服务器成功{socket.RemoteEndPoint}");
             Requset.UpdateSenderId();
             connectionStatus = ConnectionStatus.Connected;
             CurReconnectCount = 0;
@@ -233,6 +233,7 @@ public class NetManager
             heartbeatAction?.Stop();
             heartbeatAction = GameEntry.Time.CreateTimerLoop(this, 1f, -1, SendHeartbeat);
             action?.Invoke();
+            GameEntry.Log(LogCategory.NetWork, $"连接服务器成功{socket.RemoteEndPoint}");
         }
         catch (SocketException e)
         {

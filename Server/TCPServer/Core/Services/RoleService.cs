@@ -221,10 +221,6 @@ namespace TCPServer.Core.Services
                 if (result.Count > 0)
                 {
                     var userData = result[0];  // 获取第一个结果
-                    foreach (var kvp in userData)
-                    {
-                        LoggerHelper.Instance.Debug($"列名: {kvp.Key} === 值: {kvp.Value}");
-                    }
                     return userData;
                 }
                 else

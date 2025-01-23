@@ -55,8 +55,38 @@ public class LordPanel : MonoBehaviour
     }
     private void Awake()
     {
-
-
+        // List<EqiupItemData> infos = GameEntry.Data.PlayerRoleData.equipWareHouse;
+        //     
+        // for (int i = 0; i < 40; i++)
+        // {
+        //     infos.Add(new EqiupItemData()
+        //     {
+        //         equipId = GameUtil.RandomRange(101,120),
+        //         quality = GameUtil.RandomRange(1,8)
+        //     });
+        // }
+        // infos.Sort((a, b) =>
+        // {
+        //     int equipIdComparison = b.equipId.CompareTo(a.equipId);  // equipId 由大到小
+        //     if (equipIdComparison != 0) return equipIdComparison;
+        //     return b.quality.CompareTo(a.quality);  // 如果 equipId 相同，按 quality 由大到小
+        // });
+        // GameEntry.Data.PlayerRoleData.equipWareHouse = infos;
+        // GameEntry.Data.SaveData(true);
+        //
+        // List<BagItemData> infos1 = GameEntry.Data.PlayerRoleData.bagWareHouse;
+        // for (int i = 0; i < 40; i++)
+        // {
+        //     infos1.Add(new BagItemData()
+        //     {
+        //         itemId = 10001 + i,
+        //         itemCount = GameUtil.RandomRange(1,200)
+        //     });
+        // }
+        // GameEntry.Data.PlayerRoleData.bagWareHouse = infos1;
+        // GameEntry.Data.SaveData(true);
+        //
+        
         BagBtn.SetButtonClick(() =>
         {
             HandleSelect(SelectItemType.Bag);

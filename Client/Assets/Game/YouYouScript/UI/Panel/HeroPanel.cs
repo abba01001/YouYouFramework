@@ -11,9 +11,19 @@ public class HeroPanel : MonoBehaviour
 {
     public EfficientScrollRect _scrollRect;
     public HeroPanelItem itemPrefab;
+    public Button heroBtn;
+    public Button bookBtn;
     private void Awake()
     {
         itemPrefab.gameObject.MSetActive(false);
+        heroBtn.SetButtonClick(() =>
+        {
+            
+        });
+        bookBtn.SetButtonClick(() =>
+        {
+            
+        });
         _scrollRect.Init(itemPrefab.gameObject,GetData());
     }
 

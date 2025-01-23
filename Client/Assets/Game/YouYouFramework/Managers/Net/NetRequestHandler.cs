@@ -94,10 +94,7 @@ public class NetRequestHandler
     // 示例：心跳包请求，处理心跳数据的逻辑，返回消息对象
     public void c2s_request_heart_beat()
     {
-        if (Constants.IsLoginGame)
-        {
-            SendMessage(new HeartBeatMsg());
-        }
+        SendMessage(new HeartBeatMsg());
     }
 
     //请求公会列表
@@ -144,7 +141,7 @@ public class NetRequestHandler
     //请求登录
     public void c2s_request_login(string account, string password)
     {
-        account = "a123";
+        account = "a1234";
         password = "99999";
         LoginMsg data = new LoginMsg()
         {

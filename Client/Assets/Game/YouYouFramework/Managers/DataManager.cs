@@ -170,7 +170,8 @@ public class DataManager : Observable<DataManager>, IDataManager
     {
         SaveData(true, true, forceWriteCloud, true);
     }
-    
+
+    private TimeAction SaveAction = null;
     /// <summary>
     /// 
     /// </summary>
@@ -200,9 +201,13 @@ public class DataManager : Observable<DataManager>, IDataManager
             MainEntry.Log(MainEntry.LogCategory.GameData,$"上传云端?{Time.time - lastUploadTime >= uploadCooldown || ignoreCloudTime}");
             if (Time.time - lastUploadTime >= uploadCooldown || ignoreCloudTime)
             {
-                MainEntry.Log(MainEntry.LogCategory.GameData,$"上传数据=={str}");
-                GameEntry.SDK.UploadGameData(UserId, str);
-                lastUploadTime = Time.time;  // 更新上传的时间
+                if (SaveAction != null) SaveAction.Stop();
+                SaveAction = GameEntry.Time.CreateTimer(this, 0.02f, () =>
+                {
+                    MainEntry.Log(MainEntry.LogCategory.GameData,$"上传数据=={str}");
+                    GameEntry.SDK.UploadGameData(UserId, str);
+                    lastUploadTime = Time.time;  // 更新上传的时间
+                });
             }
         }
     }

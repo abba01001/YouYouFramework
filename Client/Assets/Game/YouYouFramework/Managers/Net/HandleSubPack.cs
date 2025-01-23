@@ -41,7 +41,7 @@ public class HandleSubPack
     public byte[] CompressData(byte[] data)
     {
         using (MemoryStream output = new MemoryStream())
-        using (GZipStream gzip = new GZipStream(output, CompressionLevel.Optimal))
+        using (GZipStream gzip = new GZipStream(output, CompressionMode.Compress))
         {
             gzip.Write(data, 0, data.Length);
             gzip.Close();
