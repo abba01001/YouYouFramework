@@ -140,7 +140,7 @@ namespace TCPServer.Core.Services
                 LastHeartbeatTime = DateTime.UtcNow,  // 设置心跳时间
                 Socket = null  // 这里可以放置连接的 Socket 对象，取决于如何管理连接
             });
-            return (OperationResult.Success, userUuid, saveData);
+            return (OperationResult.Success, userUuid, ServerSocket.handleSubPack.DecompressData(saveData));
         }
 
         // 登录处理逻辑
@@ -178,7 +178,7 @@ namespace TCPServer.Core.Services
             byte[] saveData = result[0]["save_data"] as byte[] ?? new byte[0];
             int suspendTimeStart = Convert.ToInt32(result[0]["suspend_time_start"]);
 
-            return (OperationResult.Success, userUuid, saveData);
+            return (OperationResult.Success, userUuid, ServerSocket.handleSubPack.DecompressData(saveData));
         }
 
 
@@ -317,7 +317,7 @@ namespace TCPServer.Core.Services
                 // 针对特定字段进行转换
                 if (columnName == "save_data")
                 {
-                    parameters[$"@{columnName}"] = Convert.FromBase64String(value as string);
+                    parameters[$"@{columnName}"] = ServerSocket.handleSubPack.CompressData(Convert.FromBase64String(value as string));
                 }
                 else
                 {
