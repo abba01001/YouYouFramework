@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.IO.Compression;
+using System.IO;
 using System.Reflection.Metadata;
 using Protocols;
 using TCPServer.Core;
@@ -31,11 +33,33 @@ public class HandleSubPack
         {
             byte[] completeMessage = receiver.GetCompleteMessage();
             // 解析为 finalMessage
-            return BaseMessage.Parser.ParseFrom(completeMessage);
+            return BaseMessage.Parser.ParseFrom(DecompressData(completeMessage));
         }
 
         // 如果还没有接收完整消息，返回 null
         return null;
+    }
+
+    public byte[] CompressData(byte[] data)
+    {
+        using (MemoryStream output = new MemoryStream())
+        using (GZipStream gzip = new GZipStream(output, CompressionLevel.Optimal))
+        {
+            gzip.Write(data, 0, data.Length);
+            gzip.Close();
+            return output.ToArray();
+        }
+    }
+
+    public byte[] DecompressData(byte[] data)
+    {
+        using (MemoryStream input = new MemoryStream(data))
+        using (GZipStream gzip = new GZipStream(input, CompressionMode.Decompress))
+        using (MemoryStream output = new MemoryStream())
+        {
+            gzip.CopyTo(output);
+            return output.ToArray();
+        }
     }
 }
 

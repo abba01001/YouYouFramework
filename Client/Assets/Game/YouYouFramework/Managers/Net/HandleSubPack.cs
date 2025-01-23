@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using Protocols;
 
 public class HandleSubPack
@@ -10,7 +12,7 @@ public class HandleSubPack
     {
         string messageId = receivedMsg.MessageId;
         byte[] dataBytes = receivedMsg.Data.ToByteArray();
-        
+
         // 如果是第一次接收到这个 messageId，初始化接收器
         if (!messageReceivers.ContainsKey(messageId))
         {
@@ -29,11 +31,33 @@ public class HandleSubPack
         {
             byte[] completeMessage = receiver.GetCompleteMessage();
             // 解析为 finalMessage
-            return BaseMessage.Parser.ParseFrom(completeMessage);
+            return BaseMessage.Parser.ParseFrom(DecompressData(completeMessage));
         }
 
         // 如果还没有接收完整消息，返回 null
         return null;
+    }
+
+    public byte[] CompressData(byte[] data)
+    {
+        using (MemoryStream output = new MemoryStream())
+        using (GZipStream gzip = new GZipStream(output, CompressionLevel.Optimal))
+        {
+            gzip.Write(data, 0, data.Length);
+            gzip.Close();
+            return output.ToArray();
+        }
+    }
+
+    public byte[] DecompressData(byte[] data)
+    {
+        using (MemoryStream input = new MemoryStream(data))
+        using (GZipStream gzip = new GZipStream(input, CompressionMode.Decompress))
+        using (MemoryStream output = new MemoryStream())
+        {
+            gzip.CopyTo(output);
+            return output.ToArray();
+        }
     }
 }
 
@@ -49,7 +73,9 @@ public class MessageReceiver
     {
         MessageId = messageId;
         PacketTotal = packetTotal;
-        completeMessage = new byte[packetTotal * (Constants.ProtocalTotalLength - Constants.ProtocalHeadLength)]; // 假设每包最大数据大小为 1024 - 42
+        completeMessage =
+            new byte[packetTotal *
+                     (Constants.ProtocalTotalLength - Constants.ProtocalHeadLength)]; // 假设每包最大数据大小为 1024 - 42
         packetsReceived = new Dictionary<int, byte[]>();
     }
 
@@ -73,7 +99,7 @@ public class MessageReceiver
         {
             message.AddRange(packetsReceived[i]);
         }
+        
         return message.ToArray();
     }
 }
-

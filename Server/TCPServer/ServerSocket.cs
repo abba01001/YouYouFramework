@@ -13,6 +13,7 @@ using TCPServer.Core.DataAccess;
 using TCPServer.Core;
 using TCPServer.Core.Services;
 using TCPServer.Utils;
+using Protocols;
 
 
 public static class ServerSocket
@@ -24,12 +25,13 @@ public static class ServerSocket
     private static Task acceptClientTask;
     private static Task receiveClientTask;
     private static Timer midnightTimer;
-    public static HandleSubPack handleSubPack = new HandleSubPack();
     private static readonly string FilePath = Path.Combine(AppContext.BaseDirectory, "Key", "task_state.json");
     private static readonly string DirectoryPath = Path.GetDirectoryName(FilePath) ?? AppContext.BaseDirectory;
-
     private static long serverStartTimestamp;
 
+
+    public static readonly ObjectPool<Protocol> ProtocolPool = new ObjectPool<Protocol>();
+    public static HandleSubPack handleSubPack = new HandleSubPack();
     public static long CurrentServerTimestamp =>
         serverStartTimestamp + (DateTimeOffset.UtcNow.ToUnixTimeSeconds() - serverStartTimestamp);
 

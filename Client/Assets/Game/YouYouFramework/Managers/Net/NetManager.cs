@@ -57,7 +57,7 @@ public class NetManager
     public NetLogger Logger;
     public NetRequestHandler Requset;
     public NetResponseHandler NetResponse;
-    private HandleSubPack handleSubPack = new HandleSubPack();
+    public HandleSubPack handleSubPack = new HandleSubPack();
 
     public void Init()
     {

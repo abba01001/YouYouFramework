@@ -59,11 +59,12 @@ public class NetRequestHandler
         return HandleSubPakce(messageBytes);
     }
 
-    private List<byte[]> HandleSubPakce(byte[] datas)
+    private List<byte[]> HandleSubPakce(byte[] data)
     {
+        byte[] tempDatas = GameEntry.Net.handleSubPack.CompressData(data);
         string messageId = Guid.NewGuid().ToString("N");
         int realMaxPacketSize = Constants.ProtocalTotalLength - Constants.ProtocalHeadLength;
-        int packetTotal = Math.Max((int)Math.Ceiling((double)datas.Length / realMaxPacketSize), 1);
+        int packetTotal = Math.Max((int)Math.Ceiling((double)tempDatas.Length / realMaxPacketSize), 1);
 
         byte[] packetData = new byte[realMaxPacketSize];
         List<byte[]> allPackets = new List<byte[]>();
@@ -75,10 +76,10 @@ public class NetRequestHandler
         for (int packetIndex = 1; packetIndex <= packetTotal; packetIndex++)
         {
             int startIndex = (packetIndex - 1) * realMaxPacketSize;
-            int length = Math.Min(realMaxPacketSize, datas.Length - startIndex);
+            int length = Math.Min(realMaxPacketSize, tempDatas.Length - startIndex);
 
             // 复制数据到当前包
-            Array.Copy(datas, startIndex, packetData, 0, length);
+            Array.Copy(tempDatas, startIndex, packetData, 0, length);
 
             protocol.PacketIndex = packetIndex;
             protocol.Data = ByteString.CopyFrom(packetData, 0, length);

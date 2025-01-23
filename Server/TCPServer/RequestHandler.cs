@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Sockets;
@@ -47,27 +48,32 @@ public class RequestHandler
         await HandleSubPakce(messageBytes);
     }
 
-    private async Task HandleSubPakce(byte[] datas)
+    private async Task HandleSubPakce(byte[] data)
     {
+        byte[] tempDatas = ServerSocket.handleSubPack.CompressData(data);
         string messageId = Guid.NewGuid().ToString("N");
         int realMaxPacketSize = Constants.ProtocalTotalLength - Constants.ProtocalHeadLength;
-        int packetTotal = Math.Max((int)Math.Ceiling((double)datas.Length / realMaxPacketSize), 1);
+        int packetTotal = Math.Max((int)Math.Ceiling((double)tempDatas.Length / realMaxPacketSize), 1);
 
-        byte[] packetData = new byte[realMaxPacketSize];
+        MemoryPool<byte> memoryPool = MemoryPool<byte>.Shared;
+        IMemoryOwner<byte> memoryOwner = memoryPool.Rent(realMaxPacketSize);
+        byte[] packetData = memoryOwner.Memory.Slice(0, realMaxPacketSize).Span.ToArray();
+
+
         List<byte[]> allPackets = new List<byte[]>();
 
         // 创建 Protocol 消息
-        Protocol protocol = new Protocol();
+        Protocol protocol = ServerSocket.ProtocolPool.Rent();
         protocol.MessageId = messageId;
         protocol.PacketTotal = packetTotal;
 
         for (int packetIndex = 1; packetIndex <= packetTotal; packetIndex++)
         {
             int startIndex = (packetIndex - 1) * realMaxPacketSize;
-            int length = Math.Min(realMaxPacketSize, datas.Length - startIndex);
+            int length = Math.Min(realMaxPacketSize, tempDatas.Length - startIndex);
 
             // 复制数据到当前包
-            Array.Copy(datas, startIndex, packetData, 0, length);
+            Array.Copy(tempDatas, startIndex, packetData, 0, length);
 
             protocol.PacketIndex = packetIndex;
             protocol.Data = ByteString.CopyFrom(packetData, 0, length);
@@ -75,11 +81,9 @@ public class RequestHandler
             byte[] protocolBytes = protocol.ToByteArray();
 
             LoggerHelper.Instance.Info($"发送消息id==={messageId}==包索引{packetIndex}==包数{packetTotal}==协议长度{protocolBytes.Length}");
-            // 异步发送数据
-            await Task.Run(() => clinetSocket.socket.Send(protocolBytes)); // 使用 Task.Run 包装同步的 Send 操作
-
-            allPackets.Add(protocolBytes);
+            await clinetSocket.socket.SendAsync(new ArraySegment<byte>(protocolBytes), SocketFlags.None);// 异步发送数据
         }
+        ServerSocket.ProtocolPool.Return(protocol);
     }
     #region 发送协议
 
