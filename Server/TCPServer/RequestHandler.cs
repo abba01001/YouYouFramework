@@ -25,6 +25,8 @@ public class RequestHandler
 
     public async Task SendMessage<T>(T data) where T : IMessage<T>
     {
+
+
         byte[] byteArrayData = data.ToByteArray();
         BaseMessage message = new BaseMessage();
         string typeName = typeof(T).Name;
@@ -40,14 +42,45 @@ public class RequestHandler
             clinetSocket.Close();
             return;
         }
-        clinetSocket.socket.SendBufferSize = 10240; // 设置为 10KB
         message.SenderId = clinetSocket.socket.RemoteEndPoint.ToString(); // 设置发送者ID
         byte[] messageBytes = message.ToByteArray();
-        // 异步发送数据
-        await Task.Run(() => clinetSocket.socket.Send(messageBytes)); // 使用 Task.Run 包装同步的 Send 操作
+        await HandleSubPakce(messageBytes);
     }
 
+    private async Task HandleSubPakce(byte[] datas)
+    {
+        string messageId = Guid.NewGuid().ToString("N");
+        int realMaxPacketSize = Constants.ProtocalTotalLength - Constants.ProtocalHeadLength;
+        int packetTotal = Math.Max((int)Math.Ceiling((double)datas.Length / realMaxPacketSize), 1);
 
+        byte[] packetData = new byte[realMaxPacketSize];
+        List<byte[]> allPackets = new List<byte[]>();
+
+        // 创建 Protocol 消息
+        Protocol protocol = new Protocol();
+        protocol.MessageId = messageId;
+        protocol.PacketTotal = packetTotal;
+
+        for (int packetIndex = 1; packetIndex <= packetTotal; packetIndex++)
+        {
+            int startIndex = (packetIndex - 1) * realMaxPacketSize;
+            int length = Math.Min(realMaxPacketSize, datas.Length - startIndex);
+
+            // 复制数据到当前包
+            Array.Copy(datas, startIndex, packetData, 0, length);
+
+            protocol.PacketIndex = packetIndex;
+            protocol.Data = ByteString.CopyFrom(packetData, 0, length);
+
+            byte[] protocolBytes = protocol.ToByteArray();
+
+            LoggerHelper.Instance.Info($"发送消息id==={messageId}==包索引{packetIndex}==包数{packetTotal}==协议长度{protocolBytes.Length}");
+            // 异步发送数据
+            await Task.Run(() => clinetSocket.socket.Send(protocolBytes)); // 使用 Task.Run 包装同步的 Send 操作
+
+            allPackets.Add(protocolBytes);
+        }
+    }
     #region 发送协议
 
     // 示例：心跳包请求，处理心跳数据的逻辑，返回消息对象

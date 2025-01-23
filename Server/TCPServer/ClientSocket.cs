@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using System;
 using System.Timers;
 using TCPServer.Core.Services;
+using System.Net;
+using TCPServer.Core;
 
 public class ClientSocket
 {
@@ -17,14 +19,13 @@ public class ClientSocket
     public ResponseHandler Response;
     public int heartbeatTimeout = 15;
     private byte[] msgBytes; // 将缓冲区作为类的成员变量
-    private const int BufferSize = 1024; // 定义缓冲区大小
     private Timer heartbeatTimer; // 定时器
     public string UserAccount { get; set; } = string.Empty;
     public string UserUUID { get; set; } = string.Empty;
     public ClientSocket(Socket clientSocket)
     {
         this.socket = clientSocket;
-        this.msgBytes = new byte[512 * BufferSize]; // 初始化缓冲区
+        this.msgBytes = new byte[Constants.ProtocalTotalLength]; // 初始化缓冲区
         this.Request = new RequestHandler(this);
         this.Response = new ResponseHandler(this, this.Request);
         this.clientID = CLIENT_BEGIN_ID++;
@@ -112,11 +113,15 @@ public class ClientSocket
             {
                 byte[] tempMsg = new byte[msgLength];
                 Array.Copy(msgBytes, tempMsg, msgLength);
-
                 try
                 {
-                    BaseMessage receivedMsg = BaseMessage.Parser.ParseFrom(tempMsg); // 解析收到的消息
-                    Response.HandleResponse(receivedMsg);
+                    Protocol receivedMsg = Protocol.Parser.ParseFrom(tempMsg); // 解析收到的消息
+                    BaseMessage finalMessage = ServerSocket.handleSubPack.ProcessSubPack(receivedMsg);
+                    LoggerHelper.Instance.Info($"接收消息id==={receivedMsg.MessageId}==包索引{receivedMsg.PacketIndex}==包数{receivedMsg.PacketTotal}==协议长度{msgLength}");
+                    if (finalMessage != null)
+                    {
+                        Response.HandleResponse(finalMessage); // 处理完整的消息
+                    }
                 }
                 catch (Exception e)
                 {

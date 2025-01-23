@@ -28,18 +28,24 @@ public class NetRequestHandler
     private void SendMessage<T>(T data) where T : IMessage<T>
     {
         // 检查连接是否有效
-        byte[] messageBytes = HandleMessage(data);
+        List<byte[]> list = HandleMessage(data);
         if (socket == null || !socket.Connected)
         {
             GameUtil.LogError("服务器已断开,无法发送心跳包");
             GameEntry.Net.HandleDisconnected(); // 处理连接断开
-            GameEntry.Net.EnqueueMsg(messageBytes);
+            foreach (var messageBytes in list)
+            {
+                GameEntry.Net.EnqueueMsg(messageBytes);
+            }
             return; // 退出心跳发送循环
         }
-        GameEntry.Net.EnqueueMsg(messageBytes);
+        foreach (var messageBytes in list)
+        {
+            GameEntry.Net.EnqueueMsg(messageBytes);
+        }
     }
 
-    private byte[] HandleMessage<T>(T data) where T : IMessage<T>
+    private List<byte[]> HandleMessage<T>(T data) where T : IMessage<T>
     {
         byte[] byteArrayData = data.ToByteArray();
         BaseMessage message = new BaseMessage();
@@ -49,13 +55,39 @@ public class NetRequestHandler
         message.SenderId = this.senderId; // 设置发送者ID
         message.Data = ByteString.CopyFrom(byteArrayData); // 直接将序列化后的字节数组放入 Data
         message.Token = GameEntry.Net.Token;
-        
-        MainEntry.Log(MainEntry.LogCategory.NetWork,$"发送服务器{message.Type}=============>\n" +
-                                                    $"{message.ToJson()}");
         byte[] messageBytes = message.ToByteArray();
-        return messageBytes;
+        return HandleSubPakce(messageBytes);
     }
 
+    private List<byte[]> HandleSubPakce(byte[] datas)
+    {
+        string messageId = Guid.NewGuid().ToString("N");
+        int realMaxPacketSize = Constants.ProtocalTotalLength - Constants.ProtocalHeadLength;
+        int packetTotal = Math.Max((int)Math.Ceiling((double)datas.Length / realMaxPacketSize), 1);
+
+        byte[] packetData = new byte[realMaxPacketSize];
+        List<byte[]> allPackets = new List<byte[]>();
+
+        // 创建 Protocol 消息
+        Protocol protocol = new Protocol();
+        protocol.MessageId = messageId;
+        protocol.PacketTotal = packetTotal;
+        for (int packetIndex = 1; packetIndex <= packetTotal; packetIndex++)
+        {
+            int startIndex = (packetIndex - 1) * realMaxPacketSize;
+            int length = Math.Min(realMaxPacketSize, datas.Length - startIndex);
+
+            // 复制数据到当前包
+            Array.Copy(datas, startIndex, packetData, 0, length);
+
+            protocol.PacketIndex = packetIndex;
+            protocol.Data = ByteString.CopyFrom(packetData, 0, length);
+            byte[] protocolBytes = protocol.ToByteArray();
+            GameUtil.LogError($"发送消息id==={messageId}==包索引{packetIndex}==包数{packetTotal}==协议长度{protocolBytes.Length}");
+            allPackets.Add(protocolBytes);
+        }
+        return allPackets;
+    }
     #region 发送协议
 
     // 示例：心跳包请求，处理心跳数据的逻辑，返回消息对象

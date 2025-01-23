@@ -20,7 +20,10 @@ static partial class Constants
     public const string CASTLEPATH = "Assets/Game/Download/DunGenMap/Dungeon/Castle/Tiles/";
     public const string GRAVEYARDPATH = "Assets/Game/Download/DunGenMap/Dungeon/Graveyard/Tiles/";
     public const string ENCRYPTEDKEY = "ENCRYPTED:";
-
+    public const int ProtocalHeadLength = 41;
+    public const int ProtocalTotalLength = 1024;
+    
+    
 
     public const string TalkingDataAppid = "0F4749337D034F9B9F80E2B0DD31851D";
     public const float GroundCheckDistance = 0.1f; // 地面检测距离

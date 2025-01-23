@@ -24,15 +24,8 @@ namespace TCPServer.Core
     {
         public static string SECURITYKEY = "3ZkPqF9hDjW8q2Z7";//钥匙
         public static int BLOCK_SIZE = 16; // AES块大小
-        //public struct SqlKey
-        //{
-        //    public string SqlServer = "Server";
-        //    public string SqlDatabase = "Database";
-        //    public string SqlUserId = "User ID";
-        //    public string SqlPassword = "Password";
-        //    public string SqlPort = "Port";
-        //}
-
+        public const int ProtocalHeadLength = 41;
+        public const int ProtocalTotalLength = 1024;
 
 
     }

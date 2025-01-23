@@ -24,7 +24,7 @@ public static class ServerSocket
     private static Task acceptClientTask;
     private static Task receiveClientTask;
     private static Timer midnightTimer;
-
+    public static HandleSubPack handleSubPack = new HandleSubPack();
     private static readonly string FilePath = Path.Combine(AppContext.BaseDirectory, "Key", "task_state.json");
     private static readonly string DirectoryPath = Path.GetDirectoryName(FilePath) ?? AppContext.BaseDirectory;
 

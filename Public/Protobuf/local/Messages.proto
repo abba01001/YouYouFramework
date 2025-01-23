@@ -8,6 +8,15 @@ enum MsgType {
     Server = 1;
 }
 
+// 协议消息结构
+message Protocol {
+    int32 packet_index = 1;    // 包的序号
+    int32 packet_total = 2;    // 总包数
+    string message_id = 3;      // 消息ID
+    bytes data = 4;            // 数据内容 (bytes)
+}
+
+
 // 基本消息结构
 message BaseMessage {
     int32 message_id = 1; // 消息ID
@@ -17,8 +26,6 @@ message BaseMessage {
     string token = 5;
     string type = 6;
     bytes data = 7;        // 消息内容
-    int32 packet_index = 8;// 当前包的序号
-    int32 total_packets = 9;// 总包数
 }
 
 message HotUpdateMsg{
