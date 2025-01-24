@@ -10,7 +10,7 @@ using YouYou;
 public class BattleCtrl : Singleton<BattleCtrl>
 {
     public BattleGridManager GridManager { get; set; }
-    
+    public int EnemyLayer { get; set; }
     public int MaxEnemyCount => 100; //最大敌人数
     private TimeAction TimeAction { get; set; }
     public  LevelData CurLevelData { get; set; }
@@ -90,18 +90,47 @@ public class BattleCtrl : Singleton<BattleCtrl>
     private async void InstantiateEnemy(LevelStage data)
     {
         int count = 0;
+        int baseLayer = BattleCtrl.Instance.EnemyLayer + 90;
         while (count < data.enemy.enemyCount)
         {
             PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync(GameUtil.GetModelPath(data.enemy.modelId));
             obj.GetComponent<EnemyBase>().WayPoints = Waypoints;
             obj.GetComponent<EnemyBase>().StartRun();
-            obj.GetComponent<SortingGroup>().sortingOrder -= count;
+            obj.GetComponent<SortingGroup>().sortingOrder = baseLayer - count;
             count++;
             GameEntry.Event.Dispatch(Constants.EventName.UpdateEnemyCount,new UpdateEnemyCountEvent(1));
             await UniTask.Delay(TimeSpan.FromSeconds(data.enemy.interval));
         }
     }
 
+    public void HideAllModel(bool bo)
+    {
+        if (bo)
+        {
+            BlockSceneLayer(18);
+        }
+        else
+        {
+            RestoreSceneLayer(18);
+        }
+    }
+    
+    // 屏蔽渲染某个层
+    public void BlockSceneLayer(int layer)
+    {
+        if (GameEntry.Instance.SceneCamera != null)
+        {
+            GameEntry.Instance.SceneCamera.cullingMask &= ~(1 << layer);
+        }
+    }
 
+    // 恢复渲染某个层
+    public void RestoreSceneLayer(int layer)
+    {
+        if (GameEntry.Instance.SceneCamera != null)
+        {
+            GameEntry.Instance.SceneCamera.cullingMask |= (1 << layer);
+        }
+    }
 
 }

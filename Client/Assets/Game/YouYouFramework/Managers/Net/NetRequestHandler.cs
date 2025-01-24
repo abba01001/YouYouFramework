@@ -84,7 +84,6 @@ public class NetRequestHandler
             protocol.PacketIndex = packetIndex;
             protocol.Data = ByteString.CopyFrom(packetData, 0, length);
             byte[] protocolBytes = protocol.ToByteArray();
-            MainEntry.Log(MainEntry.LogCategory.NetWork,$"发送消息id==={messageId}==包索引{packetIndex}==包数{packetTotal}==协议长度{protocolBytes.Length}");
             allPackets.Add(protocolBytes);
         }
         return allPackets;

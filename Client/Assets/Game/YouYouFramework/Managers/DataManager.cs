@@ -153,7 +153,6 @@ public class DataManager : Observable<DataManager>, IDataManager
                 
                 string json = MessagePackSerializer.SerializeToJson(this, MessagePackSerializer.DefaultOptions);
                 logBuilder.AppendLine(json);
-                MainEntry.Log(MainEntry.LogCategory.GameData,logBuilder.ToString());
             }
             catch (MessagePackSerializationException ex)
             {

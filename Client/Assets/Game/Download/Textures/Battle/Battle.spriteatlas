@@ -51,12 +51,14 @@ SpriteAtlas:
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: 21300000, guid: b2d9ed00413ee854d99e822594a5b75f, type: 3}
   - {fileID: 21300000, guid: 587b27b1262bd074ca9c5c3bf6bc3633, type: 3}
   - {fileID: 21300000, guid: e68218b1884c6d444afeac41e0fe1138, type: 3}
   - {fileID: 21300000, guid: 7b34f702111a2964f8938d4f7d5049de, type: 3}
   - {fileID: 21300000, guid: 6ff2054247beac74b9493d6a874fba5f, type: 3}
   - {fileID: 21300000, guid: 7d7d7552d7487a14cacd18b520cdb93b, type: 3}
   - {fileID: 21300000, guid: 749aae82a2da9f548a3852e85cbfefb4, type: 3}
+  - {fileID: 21300000, guid: b76ee4a2a7ad7c04196e9a474a6047ff, type: 3}
   - {fileID: 21300000, guid: f409a0f243b8984479e821e2d0538c48, type: 3}
   - {fileID: 21300000, guid: 49e20cd359bd2a9439ed5b81c3b630db, type: 3}
   - {fileID: 21300000, guid: 18d5755451c01fc4d832973bdedb0697, type: 3}
@@ -74,10 +76,14 @@ SpriteAtlas:
   - {fileID: 21300000, guid: c02989c6f096d834987a8cc32d0935f8, type: 3}
   - {fileID: 21300000, guid: d912520731f5fbe42a620868dc4a170a, type: 3}
   - {fileID: 21300000, guid: 675892c7b04d5a94aa2e1ae1be1cd9eb, type: 3}
+  - {fileID: 21300000, guid: cd491ec708c5fe24984297f1a7739452, type: 3}
   - {fileID: 21300000, guid: 2572cb18e92f87846963d5f605a361e3, type: 3}
   - {fileID: 21300000, guid: ebd14928157b781409990b6300e3e329, type: 3}
+  - {fileID: 21300000, guid: ce63438822359fa4c9e43def1fe05be2, type: 3}
+  - {fileID: 21300000, guid: 8893788857c18eb458bc1406ad904d57, type: 3}
   - {fileID: 21300000, guid: 451f12b8055ea2247be67b5a021b3ae7, type: 3}
   - {fileID: 21300000, guid: d3765909e3b13d849b9c40b6ee5275d1, type: 3}
+  - {fileID: 21300000, guid: e56d2419b471e6c429c7e77a43ac409f, type: 3}
   - {fileID: 21300000, guid: 3b50f6394f7a4994289b527e9b48b5e1, type: 3}
   - {fileID: 21300000, guid: 0cdcf87976efc8847888f4d67a936372, type: 3}
   - {fileID: 21300000, guid: f6fd257a73307224bad3f4c715e5d0a9, type: 3}
@@ -86,21 +92,27 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 952f04dbf0dbf9943918f6d99c873147, type: 3}
   - {fileID: 21300000, guid: e09fe9db684089b4cb345a3d72526c47, type: 3}
   - {fileID: 21300000, guid: 770c082c18ea1474f898ed391481c5f7, type: 3}
+  - {fileID: 21300000, guid: 27c92c5cb0fcc8843a2306e6d44ee75b, type: 3}
   - {fileID: 21300000, guid: 3b1ca79ca9658e04b8ddae5819d344e1, type: 3}
   - {fileID: 21300000, guid: b846157dd3c01f341acbbb2eba172c9a, type: 3}
+  - {fileID: 21300000, guid: 122dce9d8bcc4424d82293887d99238c, type: 3}
+  - {fileID: 21300000, guid: d1eba4dd729ff3845bf929298eb57466, type: 3}
   - {fileID: 21300000, guid: 4065b7dd61fdc4943965ab506ecefb25, type: 3}
+  - {fileID: 21300000, guid: 67e2656e110e87940a69c659b5134e4d, type: 3}
   - {fileID: 21300000, guid: 2dfb3e8e1ad604142abb2fa8b3fe89c9, type: 3}
   - {fileID: 21300000, guid: 8e3df8ae4dd5ae5469a180d91992820a, type: 3}
   - {fileID: 21300000, guid: 2863cd3f67411f84d8a80a6731db5d71, type: 3}
   - {fileID: 21300000, guid: 6222a14fab783fd4f99f842f891ab88d, type: 3}
   - {fileID: 21300000, guid: 5f7fc4ef6f10f194aa6225f2bd48fa88, type: 3}
   m_PackedSpriteNamesToIndex:
+  - fight_icon_beishu
   - fight_icon_shuju
   - fight_frame_boss1
   - fight_fanwei1
   - fight_blood_7
   - fight_icon_more
   - fight_blood_4
+  - fight_js_zt
   - fight_icon_niudanji
   - yx_light_04
   - fight_xiaoguai_di
@@ -118,10 +130,14 @@ SpriteAtlas:
   - fight_fanwei3
   - fight_bingge
   - fight_btn_A1
+  - fight_js_di2
   - fight_blood_6
   - fight_blood_xiaoguai_1
+  - fight_icon_tishi
+  - fight_btn_B2
   - fight_xiaoguai
   - fight_xiaoguai1
+  - fight_js_gth
   - fight_icon_renshu
   - fight_img_di4
   - fight_blood_xiaoguai
@@ -130,9 +146,13 @@ SpriteAtlas:
   - fight_btn_B1
   - fight_img_quan
   - fight_fanwei2
+  - fight_btn_xiala
   - fight_blood_2
   - fight_icon_stop
+  - fight_js_di9
+  - fight_js_diban_A1
   - fight_blood_5
+  - fight_frame_tishi
   - fight_icon_music_01
   - fight_blood_1
   - fight_img_mubiao

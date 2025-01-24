@@ -27,6 +27,9 @@ namespace YouYou
 
         private void LoadSceneFinish()
         {
+            var scene_camera = GameObject.FindWithTag("SceneCamera");
+            if (scene_camera != null) GameEntry.Instance.SceneCamera = scene_camera.GetComponent<Camera>();
+            
             //初始化界面
             GameEntry.UI.OpenUIForm<FormBattle>();
 

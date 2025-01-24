@@ -9,6 +9,7 @@ TagManager:
   - soldier
   - Door
   - Spine
+  - SceneCamera
   layers:
   - Default
   - TransparentFX

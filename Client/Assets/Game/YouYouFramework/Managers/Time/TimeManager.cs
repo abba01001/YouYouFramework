@@ -153,7 +153,7 @@ namespace YouYou
                     netTime = newTime;
                     if (CheckNewDay()) ExcuteNewDay();
                 }
-            });
+            },null,true);
         }
 
         /// <summary>
@@ -309,6 +309,11 @@ namespace YouYou
         public void SetTimeScale(float scale)
         {
             Time.timeScale = scale;
+        }
+
+        public void PauseTime(bool bo)
+        {
+            SetTimeScale(bo ? 0f : 1f);
         }
         
         public string ConvertSecondsToTimeFormat(int totalSeconds)

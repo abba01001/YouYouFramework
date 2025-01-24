@@ -10,7 +10,7 @@ namespace YouYou
     public class UILayer
     {
         private Dictionary<byte, ushort> m_UILayerDic;
-        private ushort PerAddLayer = 10;
+        private ushort PerAddLayer = 100;
         public UILayer()
         {
             m_UILayerDic = new Dictionary<byte, ushort>();

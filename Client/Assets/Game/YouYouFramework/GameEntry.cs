@@ -25,7 +25,7 @@ namespace YouYou
         [FoldoutGroup("UIGroup")]
         [Header("UI摄像机")]
         public Camera UICamera;
-
+        
         [FoldoutGroup("UIGroup")]
         [Header("根画布的缩放")]
         public CanvasScaler UIRootCanvasScaler;
@@ -80,7 +80,7 @@ namespace YouYou
         public static SDKManager SDK { get; private set; }
         public static DialogueManager Dialogue { get; private set; }
         public static GuideManager Guide { get; private set; }
-
+        public Camera SceneCamera { get; set; }
         /// <summary>
         /// 单例
         /// </summary>
@@ -156,7 +156,7 @@ namespace YouYou
             Time.CreateTimerLoop(this, 15f, -1, (t) =>
             {
                 Data.SaveData(true);
-            });
+            },null,true);
         }
 
         public void ShowBlockMask(bool state)

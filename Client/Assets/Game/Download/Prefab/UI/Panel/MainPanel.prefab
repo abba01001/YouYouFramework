@@ -3652,6 +3652,7 @@ MonoBehaviour:
   ChatBtn: {fileID: 6246016512369188360}
   MoreDetail: {fileID: 877916071586325327}
   ChatText: {fileID: 1553742710170749454}
+  QuickFightBtn: {fileID: 812282706385102242}
 --- !u!1 &6694558082992503446
 GameObject:
   m_ObjectHideFlags: 0

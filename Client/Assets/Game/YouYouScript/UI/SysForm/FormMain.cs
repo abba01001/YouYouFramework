@@ -36,8 +36,11 @@ public class FormMain : UIFormBase
     protected override void Awake()
     {
         base.Awake();
-        GameEntry.Audio.PlayBGM("Home");
-        
+    }
+
+    protected override void OnShow()
+    {
+        base.OnShow();
         foreach (var data in btnList)
         {
             data.BtnType = data.btn.gameObject.name;
@@ -50,7 +53,7 @@ public class FormMain : UIFormBase
             {
                 data.selectObj = data.btn.transform.Find("BarSelect").gameObject;
             }
-
+        
             btnDic[data.BtnType] = data;
         }
         InitPanelObj(Constants.ItemPath.GoldPanel);

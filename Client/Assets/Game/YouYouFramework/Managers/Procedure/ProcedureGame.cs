@@ -32,7 +32,7 @@ namespace YouYou
             // }
             
             GameEntry.UI.OpenUIForm<FormMain>();
-            
+            GameEntry.Audio.PlayBGM("Home");
             // var mapParent = GameObject.Find("Map");
             // if (mapParent != null)
             // {
@@ -112,6 +112,7 @@ namespace YouYou
         {
             //清理一些资源
             base.OnLeave();
+            GameEntry.UI.CloseUIForm<FormMain>();
         }
         internal override void OnDestroy()
         {

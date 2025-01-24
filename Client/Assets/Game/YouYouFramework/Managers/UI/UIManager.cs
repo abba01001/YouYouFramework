@@ -81,9 +81,10 @@ namespace YouYou
         #region OpenUIForm 打开UI窗口
         public T OpenUIForm<T>(object userData = null) where T : UIFormBase
         {
-            Dictionary<string,object> dic = new Dictionary<string,object>();
-            dic.Add("Form",typeof(T).Name);
-            TalkingDataSDK.OnEvent("显示Form",dic,null);
+            // Dictionary<string,object> dic = new Dictionary<string,object>();
+            // dic.Add("Form",typeof(T).Name);
+            // TalkingDataSDK.OnEvent("显示Form",dic,null);
+            TalkingDataSDK.OnPageBegin($"{typeof(T).Name}");
             return OpenUIForm<T>(typeof(T).Name, userData);
         }
         public T OpenUIForm<T>(string uiFormName, object userData = null) where T : UIFormBase
@@ -209,9 +210,10 @@ namespace YouYou
         /// </summary>
         public void CloseUIForm<T>() where T : UIFormBase
         {
-            Dictionary<string,object> dic = new Dictionary<string,object>();
-            dic.Add("Form",typeof(T).Name);
-            TalkingDataSDK.OnEvent("关闭Form",dic,null);
+            // Dictionary<string,object> dic = new Dictionary<string,object>();
+            // dic.Add("Form",typeof(T).Name);
+            // TalkingDataSDK.OnEvent("关闭Form",dic,null);
+            TalkingDataSDK.OnPageEnd($"{typeof(T).Name}");
             CloseUIForm(typeof(T).Name);
         }
         public void CloseUIForm(string uiFormName)

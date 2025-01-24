@@ -15,7 +15,7 @@ public class MainPanel : PanelBase
     [SerializeField] private Button ChatBtn;
     [SerializeField] private GameObject MoreDetail;
     [SerializeField] private Text ChatText;
-
+    [SerializeField] private Button QuickFightBtn;
     protected override void OnAwake()
     {
         base.OnAwake();
@@ -35,7 +35,10 @@ public class MainPanel : PanelBase
         {
             GameEntry.UI.OpenUIForm<FormChat>();
         });
-                
+        QuickFightBtn.SetButtonClick(() =>
+        {
+            GameEntry.Procedure.ChangeState(ProcedureState.Battle);
+        });   
         
         if (!GameEntry.Data.RequestPublicChat)
         {

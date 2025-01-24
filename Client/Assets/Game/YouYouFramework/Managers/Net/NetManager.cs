@@ -179,7 +179,6 @@ public class NetManager
             try
             {
                 Protocol receivedMsg = Protocol.Parser.ParseFrom(tempMsg); // 解析收到的消息
-                MainEntry.Log(MainEntry.LogCategory.NetWork,$"接收消息id==={receivedMsg.MessageId}==包索引{receivedMsg.PacketIndex}==包数{receivedMsg.PacketTotal}==协议长度{msgLength}");
                 // 处理接收到的消息并返回最终的完整消息
                 BaseMessage finalMessage = handleSubPack.ProcessSubPack(receivedMsg);
                 if (finalMessage != null)
@@ -230,7 +229,7 @@ public class NetManager
             Task.Run(SendMessagesAsync);
             Task.Run(ReceiveMessagesAsync);
             heartbeatAction?.Stop();
-            heartbeatAction = GameEntry.Time.CreateTimerLoop(this, 1f, -1, SendHeartbeat);
+            heartbeatAction = GameEntry.Time.CreateTimerLoop(this, 1f, -1, SendHeartbeat,null,true);
             action?.Invoke();
             GameEntry.Log(LogCategory.NetWork, $"连接服务器成功{socket.RemoteEndPoint}");
         }

@@ -43,9 +43,10 @@ public class PanelBase : MonoBehaviour
     {
         if (CurPanelName != string.Empty)
         {
-            Dictionary<string,object> dic = new Dictionary<string,object>();
-            dic.Add("Panel",CurPanelName);
-            TalkingDataSDK.OnEvent("显示Panel",dic,null);
+            // Dictionary<string,object> dic = new Dictionary<string,object>();
+            // dic.Add("Panel",CurPanelName);
+            // TalkingDataSDK.OnEvent("显示Panel",dic,null);
+            TalkingDataSDK.OnPageBegin($"{CurPanelName}");
         }
     }
 
@@ -53,9 +54,10 @@ public class PanelBase : MonoBehaviour
     {
         if (CurPanelName != string.Empty)
         {
-            Dictionary<string,object> dic = new Dictionary<string,object>();
-            dic.Add("Panel",CurPanelName);
-            TalkingDataSDK.OnEvent("关闭Panel",dic,null);
+            // Dictionary<string,object> dic = new Dictionary<string,object>();
+            // dic.Add("Panel",CurPanelName);
+            // TalkingDataSDK.OnEvent("关闭Panel",dic,null);
+            TalkingDataSDK.OnPageEnd($"{CurPanelName}");
         }
     }
 }

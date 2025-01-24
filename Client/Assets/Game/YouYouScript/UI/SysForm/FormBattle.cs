@@ -10,7 +10,7 @@ using YouYou;
 public class FormBattle : UIFormBase
 {
     [SerializeField] private Button exitBtn;
-    [SerializeField] private Button testBtn;
+    [SerializeField] private Button stopBtn;
     [SerializeField] private Button callBtn;
     [SerializeField] private Button settingBtn;
     [SerializeField] private RectTransform settingRect;
@@ -35,12 +35,19 @@ public class FormBattle : UIFormBase
         {
             BattleCtrl.Instance.GridManager.CallHero();
         });
+        stopBtn.SetButtonClick(() =>
+        {
+            GameEntry.Time.PauseTime(true);
+            BattleCtrl.Instance.HideAllModel(true);
+            GameEntry.UI.OpenUIForm<FormBattleStop>();
+        });
         enermyImage.fillAmount = 0;
         enermyCount.text = "";
         round.text = "";
         timer.text = "00:00";
         settingBtn.SetButtonClick(ShowSetting);
         settingRect.transform.localScale = new Vector3(1, 0, 1);
+        BattleCtrl.Instance.EnemyLayer = CurrCanvas.sortingOrder + 1;
         BattleCtrl.Instance.GridManager.InitParams(transform.Find("GridLayout"),transform.Find("Line").GetComponent<RectTransform>());
     }
 
@@ -78,6 +85,11 @@ public class FormBattle : UIFormBase
         UpdateBattleTimerEvent t = userdata as UpdateBattleTimerEvent;
         string str = GameEntry.Time.ConvertSecondsToTimeFormat(t.Interval);
         timer.text = str;
+    }
+
+    protected override void OnShow()
+    {
+        base.OnShow();
     }
 
     private void UpdateEnemy(object userdata)
