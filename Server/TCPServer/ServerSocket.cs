@@ -14,6 +14,7 @@ using TCPServer.Core;
 using TCPServer.Core.Services;
 using TCPServer.Utils;
 using Protocols;
+using MySql.Data.MySqlClient.Memcached;
 
 
 public static class ServerSocket
@@ -131,7 +132,7 @@ public static class ServerSocket
                 Socket clientSocket = await Task.Factory.FromAsync(socket.BeginAccept, socket.EndAccept, null);
                 var client = new ClientSocket(clientSocket);
                 clientList.Add(client);
-                LoggerHelper.Instance.Info($"新客户端连接: {clientSocket.RemoteEndPoint}, 当前连接数: {clientList.Count}");
+                LoggerHelper.Instance.Info($"新客户端连接: {clientSocket.RemoteEndPoint}, 当前ClientSocket连接数: {clientList.Count}");
             }
             catch (SocketException ex)
             {
@@ -140,6 +141,25 @@ public static class ServerSocket
             catch (Exception ex)
             {
                 LoggerHelper.Instance.Error($"AcceptClientConnectAsync Exception: {ex.Message}");
+            }
+        }
+    }
+
+    public static void CleanClient(ClientSocket clientSocket)
+    {
+        if(clientSocket != null)
+        {
+            if (clientSocket.socket == null || !clientSocket.socket.Connected)
+            {
+                var updatedList = new ConcurrentBag<ClientSocket>(clientList.Where(c => c != clientSocket));
+
+                // 替换原来的 list
+                clientList.Clear();
+                foreach (var item in updatedList)
+                {
+                    clientList.Add(item);
+                }
+                LoggerHelper.Instance.Info($"当前ClientSocket连接数: {clientList.Count}");
             }
         }
     }

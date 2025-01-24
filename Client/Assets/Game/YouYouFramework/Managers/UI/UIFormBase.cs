@@ -62,7 +62,7 @@ namespace YouYou
 
         protected virtual void OnShow()
         {
-            
+
         }
 
         public void Close()

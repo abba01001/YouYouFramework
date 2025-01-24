@@ -7,7 +7,11 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 using YouYou;
 
-public class ChatPanel : MonoBehaviour
+public class ChatPanel : PanelBase
 {
-
+    protected override void OnAwake()
+    {
+        base.OnAwake();
+        CurPanelName = "ChatPanel";
+    }
 }

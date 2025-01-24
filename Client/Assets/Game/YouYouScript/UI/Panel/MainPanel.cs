@@ -8,15 +8,18 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 using YouYou;
 
-public class MainPanel : MonoBehaviour
+public class MainPanel : PanelBase
 {
     [SerializeField] private Button YouLiBtn;
     [SerializeField] private Button MoreBtn;
     [SerializeField] private Button ChatBtn;
     [SerializeField] private GameObject MoreDetail;
     [SerializeField] private Text ChatText;
-    private void Awake()
+
+    protected override void OnAwake()
     {
+        base.OnAwake();
+        CurPanelName = "MainPanel";
         YouLiBtn.SetButtonClick(() =>
         {
             GameEntry.UI.CloseUIForm<FormMain>();
@@ -47,14 +50,16 @@ public class MainPanel : MonoBehaviour
         ChatMsg msg = data as ChatMsg;
         ChatText.text = GameUtil.TruncateText(ChatText,$"<color=yellow>【{Constants.ChatChannel[msg.ChannelType]}】</color>{msg.Message}");
     }
-    
-    private void OnDisable()
+
+    protected override void OnShow()
     {
+        base.OnShow();
         GameEntry.Event.RemoveEventListener(Constants.EventName.UpdateChatText,OnUpdateChatText);
     }
 
-    private void OnEnable()
+    protected override void OnHide()
     {
+        base.OnHide();
         GameEntry.Event.AddEventListener(Constants.EventName.UpdateChatText,OnUpdateChatText);
     }
 }

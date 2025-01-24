@@ -245,7 +245,6 @@ public static class TalkingDataSDK
     {
         if (Application.platform != RuntimePlatform.OSXEditor && Application.platform != RuntimePlatform.WindowsEditor)
         {
-            Debug.Log("TalkingData Unity SDK.");
 #if UNITY_ANDROID
             using (AndroidJavaClass dz = new AndroidJavaClass("com.tendcloud.tenddata.dz"))
             {
@@ -415,65 +414,65 @@ public static class TalkingDataSDK
         }
     }
 
-//     public static void OnRegister(string profileId, TalkingDataProfile profile, string invitationCode, Dictionary<string, object> eventValue)
-//     {
-//         if (Application.platform != RuntimePlatform.OSXEditor && Application.platform != RuntimePlatform.WindowsEditor)
-//         {
-// #if UNITY_ANDROID
-//             if (talkingdataClass != null)
-//             {
-//                 AndroidJavaObject eventValueMap = DictionaryToAndroidMap(eventValue);
-//                 talkingdataClass.CallStatic("onRegister", profileId, profile.javaObj, invitationCode, eventValueMap);
-//                 if (eventValueMap != null)
-//                 {
-//                     eventValueMap.Dispose();
-//                 }
-//             }
-// #endif
-// #if UNITY_IPHONE
-//             string eventValueJson = DictionaryToJSONString(eventValue);
-//             TDOnRegister(profileId, profile.ToString(), invitationCode, eventValueJson);
-// #endif
-//         }
-//     }
+    public static void OnRegister(string profileId, TalkingDataProfile profile, string invitationCode, Dictionary<string, object> eventValue)
+    {
+        if (Application.platform != RuntimePlatform.OSXEditor && Application.platform != RuntimePlatform.WindowsEditor)
+        {
+#if UNITY_ANDROID
+            if (talkingdataClass != null)
+            {
+                AndroidJavaObject eventValueMap = DictionaryToAndroidMap(eventValue);
+                talkingdataClass.CallStatic("onRegister", profileId, profile.javaObj, invitationCode, eventValueMap);
+                if (eventValueMap != null)
+                {
+                    eventValueMap.Dispose();
+                }
+            }
+#endif
+#if UNITY_IPHONE
+            string eventValueJson = DictionaryToJSONString(eventValue);
+            TDOnRegister(profileId, profile.ToString(), invitationCode, eventValueJson);
+#endif
+        }
+    }
 
-//     public static void OnLogin(string profileId, TalkingDataProfile profile, Dictionary<string, object> eventValue)
-//     {
-//         if (Application.platform != RuntimePlatform.OSXEditor && Application.platform != RuntimePlatform.WindowsEditor)
-//         {
-// #if UNITY_ANDROID
-//             if (talkingdataClass != null)
-//             {
-//                 AndroidJavaObject eventValueMap = DictionaryToAndroidMap(eventValue);
-//                 talkingdataClass.CallStatic("onLogin", profileId, profile.javaObj, eventValueMap);
-//                 if (eventValueMap != null)
-//                 {
-//                     eventValueMap.Dispose();
-//                 }
-//             }
-// #endif
-// #if UNITY_IPHONE
-//             string eventValueJson = DictionaryToJSONString(eventValue);
-//             TDOnLogin(profileId, profile.ToString(), eventValueJson);
-// #endif
-//         }
-//     }
+    public static void OnLogin(string profileId, TalkingDataProfile profile, Dictionary<string, object> eventValue)
+    {
+        if (Application.platform != RuntimePlatform.OSXEditor && Application.platform != RuntimePlatform.WindowsEditor)
+        {
+#if UNITY_ANDROID
+            if (talkingdataClass != null)
+            {
+                AndroidJavaObject eventValueMap = DictionaryToAndroidMap(eventValue);
+                talkingdataClass.CallStatic("onLogin", profileId, profile.javaObj, eventValueMap);
+                if (eventValueMap != null)
+                {
+                    eventValueMap.Dispose();
+                }
+            }
+#endif
+#if UNITY_IPHONE
+            string eventValueJson = DictionaryToJSONString(eventValue);
+            TDOnLogin(profileId, profile.ToString(), eventValueJson);
+#endif
+        }
+    }
 
-//     public static void OnProfileUpdate(TalkingDataProfile profile)
-//     {
-//         if (Application.platform != RuntimePlatform.OSXEditor && Application.platform != RuntimePlatform.WindowsEditor)
-//         {
-// #if UNITY_ANDROID
-//             if (talkingdataClass != null)
-//             {
-//                 talkingdataClass.CallStatic("onProfileUpdate", profile.javaObj);
-//             }
-// #endif
-// #if  UNITY_IPHONE
-//             TDOnProfileUpdate(profile.ToString());
-// #endif
-//         }
-//     }
+    public static void OnProfileUpdate(TalkingDataProfile profile)
+    {
+        if (Application.platform != RuntimePlatform.OSXEditor && Application.platform != RuntimePlatform.WindowsEditor)
+        {
+#if UNITY_ANDROID
+            if (talkingdataClass != null)
+            {
+                talkingdataClass.CallStatic("onProfileUpdate", profile.javaObj);
+            }
+#endif
+#if  UNITY_IPHONE
+            TDOnProfileUpdate(profile.ToString());
+#endif
+        }
+    }
     public static void OnCreateCard(string profileId, string method, string content)
     {
         if (Application.platform != RuntimePlatform.OSXEditor && Application.platform != RuntimePlatform.WindowsEditor)

@@ -7,14 +7,17 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 using YouYou;
 
-public class HeroPanel : MonoBehaviour
+public class HeroPanel : PanelBase
 {
     public EfficientScrollRect _scrollRect;
     public HeroPanelItem itemPrefab;
     public Button heroBtn;
     public Button bookBtn;
-    private void Awake()
+    
+    protected override void OnAwake()
     {
+        base.OnAwake();
+        CurPanelName = "HeroPanel";
         itemPrefab.gameObject.MSetActive(false);
         heroBtn.SetButtonClick(() =>
         {
@@ -25,11 +28,6 @@ public class HeroPanel : MonoBehaviour
             
         });
         _scrollRect.Init(itemPrefab.gameObject,GetData());
-    }
-
-    private void OnEnable()
-    {
-
     }
 
     object[] GetData()

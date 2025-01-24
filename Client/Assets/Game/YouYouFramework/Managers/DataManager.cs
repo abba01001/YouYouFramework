@@ -193,7 +193,7 @@ public class DataManager : Observable<DataManager>, IDataManager
                 PlayerPrefs.SetString(GameEntry.Data.UserId, str);
                 string json = MessagePackSerializer.SerializeToJson(this, MessagePackSerializer.DefaultOptions);
                 lastWriteTime = Time.time;  // 更新写入的时间
-                MainEntry.Log(MainEntry.LogCategory.GameData,$"保存本地数据=={json}");
+                //MainEntry.Log(MainEntry.LogCategory.GameData,$"保存本地数据=={json}");
             }
         }
         if (writeCloud)
@@ -204,7 +204,7 @@ public class DataManager : Observable<DataManager>, IDataManager
                 if (SaveAction != null) SaveAction.Stop();
                 SaveAction = GameEntry.Time.CreateTimer(this, 0.02f, () =>
                 {
-                    MainEntry.Log(MainEntry.LogCategory.GameData,$"上传数据=={str}");
+                    //MainEntry.Log(MainEntry.LogCategory.GameData,$"上传数据=={str}");
                     GameEntry.SDK.UploadGameData(UserId, str);
                     lastUploadTime = Time.time;  // 更新上传的时间
                 });

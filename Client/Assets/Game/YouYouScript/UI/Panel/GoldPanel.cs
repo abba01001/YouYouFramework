@@ -23,7 +23,7 @@ public class GoldPanelButtonData
     [HideInInspector] public Text tx;
 }
 
-public class GoldPanel : MonoBehaviour
+public class GoldPanel : PanelBase
 {
     [SerializeField] private HorizontalLayoutGroup layoutGroup;
     [SerializeField] private RectTransform btnParentRect;
@@ -31,13 +31,16 @@ public class GoldPanel : MonoBehaviour
     private Dictionary<string, GoldPanelButtonData> btnDic = new Dictionary<string, GoldPanelButtonData>();
     public static GoldPanel Instance { get; private set; }
     private ShowType _curShowType = ShowType.Default;
-    private void Awake()
+    protected override void OnAwake()
     {
+        base.OnAwake();
+        CurPanelName = "ChatPanel";
         Instance = this;
     }
 
-    private void Start()
+    protected override void OnStart()
     {
+        base.OnStart();
         foreach (var data in btnList)
         {
             data.HuoBiType = data.btn.gameObject.name;

@@ -8,7 +8,11 @@ using UnityEngine.UI;
 using YouYou;
 
 
-public class ShopPanel : MonoBehaviour
+public class ShopPanel : PanelBase
 {
-    
+    protected override void OnAwake()
+    {
+        base.OnAwake();
+        CurPanelName = "ShopPanel";
+    }
 }

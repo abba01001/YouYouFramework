@@ -97,6 +97,7 @@ public class ClientSocket
             {
                 socket.Close();
                 socket = null;
+                ServerSocket.CleanClient(this);
             }
         }
     }

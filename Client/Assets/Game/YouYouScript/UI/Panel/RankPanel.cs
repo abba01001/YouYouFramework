@@ -8,7 +8,11 @@ using UnityEngine.UI;
 using YouYou;
 
 
-public class RankPanel : MonoBehaviour
+public class RankPanel : PanelBase
 {
-
+    protected override void OnAwake()
+    {
+        base.OnAwake();
+        CurPanelName = "RankPanel";
+    }
 }

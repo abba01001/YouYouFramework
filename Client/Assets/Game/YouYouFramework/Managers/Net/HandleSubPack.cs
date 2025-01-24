@@ -40,13 +40,11 @@ public class HandleSubPack
 
     public byte[] CompressData(byte[] data)
     {
-        GameUtil.LogError($"原始数据大小: {data.Length} 字节");
         using (MemoryStream output = new MemoryStream())
         using (GZipStream gzip = new GZipStream(output, CompressionMode.Compress))
         {
             gzip.Write(data, 0, data.Length);
             gzip.Close();
-            GameUtil.LogError($"压缩后数据大小: {output.ToArray().Length} 字节");
             return output.ToArray();
         }
     }

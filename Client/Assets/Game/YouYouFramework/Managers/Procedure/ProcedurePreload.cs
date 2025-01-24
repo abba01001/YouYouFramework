@@ -1,6 +1,9 @@
+using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Main;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace YouYou
 {
@@ -27,6 +30,7 @@ namespace YouYou
             m_loadFinish = false;
             BeginTask();
             CheckHasRelogin();
+            GameEntry.SDK.InitTalkingData();
             GameEntry.Event.AddEventListener(Constants.EventName.LoginSuccess, userdata => 
             {
                 _ = OnLoginSuccess(userdata); // 忽略返回值，直接运行异步任务
@@ -92,17 +96,33 @@ namespace YouYou
         private async UniTask OnLoginSuccess(object userdata)
         {
             GameEntry.UI.CloseUIForm<FormLogin>();
-            if (GameEntry.Data.IsFirstLoginTime)
-            {
-                GameEntry.Data.IsFirstLoginTime = false;
-            }
-            if (!Constants.HasLoadAllAsset)
-            {
-                GameEntry.SDK.InitTalkingData();
-            }
+            if (GameEntry.Data.IsFirstLoginTime) GameEntry.Data.IsFirstLoginTime = false;
             GameEntry.Audio.InitVolume();
             GameEntry.Data.SaveData(true,true,true,true);
             GameEntry.Procedure.ChangeState(ProcedureState.Game);
+            
+            
+            TalkingDataProfile profile = TalkingDataProfile.CreateProfile();
+            profile.SetName($"{GameEntry.Data.PlayerRoleData.name}");
+            profile.SetType(TalkingDataProfileType.WEIXIN);
+            profile.SetGender(TalkingDataGender.MALE);
+            profile.SetAge(18);
+            profile.SetProperty1("value1");
+            profile.SetProperty2("value2");
+            profile.SetProperty3("value3");
+            profile.SetProperty4("value4");
+            profile.SetProperty5("value5");
+            profile.SetProperty6(0.01);
+            profile.SetProperty7(99.8);
+            profile.SetProperty8(100);
+            profile.SetProperty9(10000);
+            profile.SetProperty10(100000000000L);
+            Dictionary<string, object> eventValue = new Dictionary<string, object>
+            {
+                {"key01", "value01"},
+                {"key02", 0.1}
+            };
+            TalkingDataSDK.OnLogin($"{GameEntry.Data.UserId}", profile,eventValue);
         }
 
         private void OnConnectServerSuccess(object userdata)

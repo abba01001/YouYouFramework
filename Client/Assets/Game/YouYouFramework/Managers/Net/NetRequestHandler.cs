@@ -27,7 +27,7 @@ public class NetRequestHandler
     
     private void SendMessage<T>(T data) where T : IMessage<T>
     {
-        // 检查连接是否有效
+        if (typeof(T).Name != "LoginMsg" && !GameEntry.Net.IsLoginGame) return;
         List<byte[]> list = HandleMessage(data);
         if (socket == null || !socket.Connected)
         {
@@ -84,7 +84,7 @@ public class NetRequestHandler
             protocol.PacketIndex = packetIndex;
             protocol.Data = ByteString.CopyFrom(packetData, 0, length);
             byte[] protocolBytes = protocol.ToByteArray();
-            GameUtil.LogError($"发送消息id==={messageId}==包索引{packetIndex}==包数{packetTotal}==协议长度{protocolBytes.Length}");
+            MainEntry.Log(MainEntry.LogCategory.NetWork,$"发送消息id==={messageId}==包索引{packetIndex}==包数{packetTotal}==协议长度{protocolBytes.Length}");
             allPackets.Add(protocolBytes);
         }
         return allPackets;

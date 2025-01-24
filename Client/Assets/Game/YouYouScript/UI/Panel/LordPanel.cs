@@ -28,7 +28,7 @@ public enum SelectItemType
     Bag
 }
 
-public class LordPanel : MonoBehaviour
+public class LordPanel : PanelBase
 {    
     [SerializeField] private List<LordPanelEquip> equipBtnList = new List<LordPanelEquip>();
     [SerializeField] private Button EquipBtn;
@@ -53,8 +53,11 @@ public class LordPanel : MonoBehaviour
             return layer;
         }
     }
-    private void Awake()
+
+    protected override void OnAwake()
     {
+        base.OnAwake();
+        CurPanelName = "LordPanel";
         // List<EqiupItemData> infos = GameEntry.Data.PlayerRoleData.equipWareHouse;
         //     
         // for (int i = 0; i < 40; i++)
@@ -123,13 +126,11 @@ public class LordPanel : MonoBehaviour
         BagBtn.GetComponent<Image>().SetSpriteByAtlas(Constants.AtlasPath.Common, type == SelectItemType.Bag ? "ty_tab_selected" :"ty_tab_unselected");
         _scrollRect.UpdateDatas(GetData(),true);
     }
-    
-    private void OnEnable()
+
+    protected override void OnShow()
     {
-        GameEntry.Time.Yield(() =>
-        {
-            BigHeroSpine.transform.parent.GetComponent<SortingGroup>().sortingOrder = SortingOrder + 1;
-        });
+        base.OnShow();
+        BigHeroSpine.transform.parent.GetComponent<SortingGroup>().sortingOrder = SortingOrder + 1;
     }
 
     private void RefreshEquipInfo()

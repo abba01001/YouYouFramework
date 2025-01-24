@@ -39,7 +39,7 @@ public class Debugger : MonoBehaviour
         }
 
         // 自动滚动到最新日志
-        scrollPosition.y = Mathf.Max(scrollPosition.y + scrollSpeed, float.MaxValue); // 使滚动条自动滚动到最底部
+        //scrollPosition.y = Mathf.Max(scrollPosition.y + scrollSpeed, float.MaxValue); // 使滚动条自动滚动到最底部
     }
 
     void OnGUI()

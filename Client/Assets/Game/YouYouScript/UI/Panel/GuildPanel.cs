@@ -7,7 +7,11 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 using YouYou;
 
-public class GuildPanel : MonoBehaviour
+public class GuildPanel : PanelBase
 {
-    
+    protected override void OnAwake()
+    {
+        base.OnAwake();
+        CurPanelName = "GuildPanel";
+    }
 }
