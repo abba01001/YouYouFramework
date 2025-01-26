@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,7 +19,11 @@ public class FormBattle : UIFormBase
     [SerializeField] private Text round;
     [SerializeField] private Text enermyCount;
     [SerializeField] private Image enermyImage;
-    
+    [SerializeField] private GameObject gridPrefab;
+    [SerializeField] private GameObject linePrefab;
+    [SerializeField] private Transform gridParent;
+
+    private readonly List<GameObject> gridList = new List<GameObject>();
     private int curEnemyCount;
     private bool isShowSetting;
     protected override void Awake()
@@ -41,14 +46,6 @@ public class FormBattle : UIFormBase
             BattleCtrl.Instance.HideAllModel(true);
             GameEntry.UI.OpenUIForm<FormBattleStop>();
         });
-        enermyImage.fillAmount = 0;
-        enermyCount.text = "";
-        round.text = "";
-        timer.text = "00:00";
-        settingBtn.SetButtonClick(ShowSetting);
-        settingRect.transform.localScale = new Vector3(1, 0, 1);
-        BattleCtrl.Instance.EnemyLayer = CurrCanvas.sortingOrder + 1;
-        BattleCtrl.Instance.GridManager.InitParams(transform.Find("GridLayout"),transform.Find("Line").GetComponent<RectTransform>());
     }
 
     private void ShowSetting()
@@ -75,6 +72,11 @@ public class FormBattle : UIFormBase
     protected override void OnDisable()
     {
         base.OnDisable();
+        foreach (var go in gridList)
+        {
+            Destroy(go);
+        }
+        gridList.Clear();
         GameEntry.Event.RemoveEventListener(Constants.EventName.UpdateBattleTimer,UpdateTimer);
         GameEntry.Event.RemoveEventListener(Constants.EventName.UpdateBattleRound,UpdateRound);
         GameEntry.Event.RemoveEventListener(Constants.EventName.UpdateEnemyCount,UpdateEnemy);
@@ -90,8 +92,40 @@ public class FormBattle : UIFormBase
     protected override void OnShow()
     {
         base.OnShow();
+        GenerateGrid();
+        curEnemyCount = 0;
+        enermyImage.fillAmount = 0;
+        enermyCount.text = "";
+        round.text = "";
+        timer.text = "00:00";
+        settingBtn.SetButtonClick(ShowSetting);
+        settingRect.transform.localScale = new Vector3(1, 0, 1);
     }
-
+    
+    private void GenerateGrid()
+    {
+        StartCoroutine(BatchObjectCreator.CreateObjectsInBatches(
+            totalCount: 18,
+            objectFactory: (i) => Instantiate(gridPrefab),
+            initializeObject: (obj, i) =>
+            {
+                obj.transform.SetParent(gridParent);
+                obj.SetActive(true);
+                obj.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+                obj.transform.localScale = Vector3.one;
+                gridList.Add(obj);
+                int tempIndex = i;
+                //gridList.Add(obj);
+            },
+            batchSize: 9, // 每次创建20个对象
+            onComplete: () =>
+            {
+                BattleCtrl.Instance.GridManager.InitParams(gridParent,linePrefab.GetComponent<RectTransform>());
+                // 完成后执行的操作
+            }
+        ));
+    }
+    
     private void UpdateEnemy(object userdata)
     {
         UpdateEnemyCountEvent t = userdata as UpdateEnemyCountEvent;

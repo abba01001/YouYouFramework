@@ -65,6 +65,7 @@ namespace YouYou
 
         }
 
+
         public void Close()
         {
             GameEntry.UI.CloseUIForm(this);

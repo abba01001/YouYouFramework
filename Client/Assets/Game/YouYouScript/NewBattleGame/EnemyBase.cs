@@ -28,9 +28,15 @@ public class EnemyBase : CharacterBase, IDamageable
         blood.gameObject.SetActive(false);
         defense.gameObject.SetActive(false);
     }
-    
+
+    private void OnDisable()
+    {
+        StopCoroutine(FollowPath());
+    }
+
     public void StartRun()
     {
+        if(!BattleCtrl.Instance.IsInGaming) return;
         if (WayPoints is {Count: > 0})
         {
             modelRoot.transform.localScale = Vector3.one * 2;
@@ -145,7 +151,7 @@ public class EnemyBase : CharacterBase, IDamageable
         animator.SetBool("Die",true);
         // 进行死亡逻辑处理（如销毁敌人对象等）
         await UniTask.Delay(2000);
-        GameEntry.Pool.GameObjectPool.Despawn(transform);
+        transform.gameObject.MSetActive(false);
     }
 
     private void UpdateHealthBar()

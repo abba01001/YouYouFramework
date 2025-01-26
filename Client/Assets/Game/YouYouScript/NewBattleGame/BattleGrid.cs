@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
+using YouYou;
 
 public class BattleGrid : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler,IPointerUpHandler,IDragHandler
 {
@@ -32,7 +33,7 @@ public class BattleGrid : MonoBehaviour, IPointerEnterHandler, IPointerDownHandl
         ShowOrignSelect(false);
         InitGridCharacter();
     }
-
+    
     public bool CanDropCharacter(int model)
     {
         if (OccupiedCharacters.Count > 0)

@@ -474,4 +474,8 @@ public class SDKManager : Observable<SDKManager>
     }
 
     #endregion
+    
+    #region 安卓sdk
+    
+    #endregion
 }

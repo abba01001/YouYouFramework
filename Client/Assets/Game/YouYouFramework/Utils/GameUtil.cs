@@ -211,6 +211,24 @@ public class GameUtil
         return $"Assets/Game/Download/Prefab/Model/{modelId}.prefab";
     }
 
+    // 屏蔽渲染某个层
+    public static void BlockSceneLayer(Camera camera,int layer)
+    {
+        if (camera != null)
+        {
+            camera.cullingMask &= ~(1 << layer);
+        }
+    }
+
+    // 恢复渲染某个层
+    public static void RestoreSceneLayer(Camera camera,int layer)
+    {
+        if (camera != null)
+        {
+            camera.cullingMask |= (1 << layer);
+        }
+    }
+
     public static void PlayAnimation(Animator animator, string animName, int layer, Action endCall = null,
         bool disableAnimator = true)
     {
