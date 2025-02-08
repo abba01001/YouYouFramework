@@ -13,11 +13,6 @@ namespace YouYou
         public int DialogueId;
 
         /// <summary>
-        /// 类型
-        /// </summary>
-        public string Type;
-
-        /// <summary>
         /// 内容
         /// </summary>
         public string Content;
@@ -33,9 +28,9 @@ namespace YouYou
         public string DisableBlock;
 
         /// <summary>
-        /// 触发条件
+        /// 点击方式Disabled0,ClickAnywhere1,ClickOnDialog2,ClickOnButton3
         /// </summary>
-        public string TriggerCondition;
+        public int ClickMode;
 
         /// <summary>
         /// 对话类型

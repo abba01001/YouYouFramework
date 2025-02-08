@@ -12,7 +12,6 @@ public interface IDataManager
 {
     void SaveData(bool writeLocal = true,bool ignoreLocalTime = false,bool writeCloud = false,bool ignoreCloudTime = false);
     void SaveData(bool forceWriteCloud);
-    void SaveDialogueId(int type, int id);
     PlayerRoleData PlayerRoleData { get; set; }
     int DataUpdateTime { get; set; }
     void InitPlayData();
@@ -58,12 +57,6 @@ public class DataManager : Observable<DataManager>, IDataManager
         set => _playerRoleData = value;
     }
 
-    private GuideEntity _guideEntity;
-    public GuideEntity GuideEntity
-    {
-        get => _guideEntity;
-        set => _guideEntity = value;
-    }
     #endregion
 
     #region 临时public数据
@@ -105,21 +98,8 @@ public class DataManager : Observable<DataManager>, IDataManager
         return str;
     }
     
-    public void SaveDialogueId(int type, int id)
-    {
-        if (PlayerRoleData.dialogueIds.ContainsKey(type))
-        {
-            PlayerRoleData.dialogueIds[type] = id;
-        }
-        else
-        {
-            PlayerRoleData.dialogueIds.Add(type, id);
-        }
-    }
-
     public void InitPlayData()
     {
-        _guideEntity = new GuideEntity();
         _playerRoleData = new PlayerRoleData();
         _playerRoleData.roleAttr.Add("HuoBi1",0);
         _playerRoleData.roleAttr.Add("HuoBi3",2000);

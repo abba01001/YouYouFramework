@@ -274,7 +274,6 @@ namespace Fungus
                     if (prefab != null)
                     {
                         GameObject go = Instantiate(prefab) as GameObject;
-                        //go.transform.SetParent(GameEntry);
                         go.SetActive(false);
                         go.name = "SayDialog";
                         ActiveSayDialog = go.GetComponent<SayDialog>();
@@ -322,6 +321,12 @@ namespace Fungus
             gameObject.SetActive(state);
         }
 
+        public virtual void SetParent(Transform _parent)
+        {
+            gameObject.transform.SetParent(_parent,false);
+            gameObject.transform.localScale = Vector3.one;
+        }
+        
         /// <summary>
         /// Sets the active speaking character.
         /// </summary>

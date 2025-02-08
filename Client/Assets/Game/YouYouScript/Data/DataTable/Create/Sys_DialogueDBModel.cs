@@ -28,11 +28,10 @@ namespace YouYou
                 Sys_DialogueEntity entity = new Sys_DialogueEntity();
                 entity.Id = ms.ReadInt();
                 entity.DialogueId = ms.ReadInt();
-                entity.Type = ms.ReadUTF8String();
                 entity.Content = ms.ReadUTF8String();
                 entity.EnableBlock = ms.ReadUTF8String();
                 entity.DisableBlock = ms.ReadUTF8String();
-                entity.TriggerCondition = ms.ReadUTF8String();
+                entity.ClickMode = ms.ReadInt();
                 entity.DialogueType = ms.ReadInt();
 
                 m_List.Add(entity);

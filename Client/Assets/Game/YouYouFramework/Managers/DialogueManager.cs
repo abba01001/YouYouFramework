@@ -6,6 +6,10 @@ using Newtonsoft.Json;
 using UnityEngine;
 using YouYou;
 
+public enum DialogueConfigId
+{
+    FirstEntryGame = 1
+}
 
 public class DialogueManager : Observable<DialogueManager>
 {
@@ -33,73 +37,88 @@ public class DialogueManager : Observable<DialogueManager>
         CharacterDic = new Dictionary<int, Character>();
         BlockDic = new Dictionary<string, Block>();
         BlcokBranchDic = new Dictionary<string, List<string>>();
-        GameEntry.Time.CreateTimerLoop(this, 1f, -1, (int loop) =>
+        // GameEntry.Time.CreateTimerLoop(this, 1f, -1, (int loop) =>
+        // {
+        //     ParseDialogueTable();
+        // });
+        GameEntry.Event.AddEventListener(Constants.EventName.TriggerDialogue,OnTriggerDialogue);
+    }
+
+    private void OnTriggerDialogue(object user_data)
+    {
+        dialogueModel = user_data as DialogueModel;
+        if (dialogueModel.delay != default)
+        {
+            GameEntry.Time.CreateTimer(this, dialogueModel.delay, ParseDialogueTable);
+        }
+        else
         {
             ParseDialogueTable();
-        });
+        }
     }
 
     //解析对话配置表
     private void ParseDialogueTable()
     {
         if(!Constants.IsLoadDataTable || IsHandleIng || !Constants.IsLoginGame) return;
-        PlayerRoleData playerRoleData = GameEntry.Data.PlayerRoleData;
+        if (dialogueModel == null) return;
+        if (GameEntry.Data.PlayerRoleData.dialogueIds.Contains(dialogueModel.dialogueId))
+        {
+            dialogueModel.finishAction?.Invoke();
+            return;
+        }
+        
         foreach (var pair in GameEntry.DataTable.Sys_DialogueDBModel.IdByDic)
         {
-            int dialogueType = pair.Value.DialogueType;
-            if (playerRoleData.dialogueIds.TryGetValue(dialogueType, out int dialogueId) && dialogueId == pair.Value.DialogueId)
+            if (dialogueModel.dialogueId == pair.Value.DialogueId)
             {
                 HandleDialogue(pair.Value);
-            }
-            else
-            {
-                GameEntry.Data.SaveDialogueId(dialogueType,1);
             }
         }
     }
 
+    private DialogueModel dialogueModel = null;
+
     private void HandleDialogue(Sys_DialogueEntity entity)
     {
-        bool canTrigger = true;
-        if (canTrigger)
+        curDialogueEntity = entity;
+        IsHandleIng = true;
+
+        List<DialogueCommand> commands = JsonConvert.DeserializeObject<List<DialogueCommand>>(entity.Content);
+        foreach (var command in commands)
         {
-            curDialogueEntity = entity;
-            IsHandleIng = true;
-            
-            List<DialogueCommand> commands = JsonConvert.DeserializeObject<List<DialogueCommand>>(entity.Content);
-            foreach (var command in commands)
+            switch (command.type)
             {
-                switch (command.type)
-                {
-                    case "say":
-                        // 调用对话命令逻辑
-                        AddSayCommand(command.fromBlock, command.text);
-                        break;
-                    case "wait":
-                        // 调用等待命令逻辑
-                        AddWaitCommand(command.fromBlock, command.duration);
-                        break;
-                    case "jump":
-                        // 调用跳转命令逻辑
-                        AddJumpCommand(command.fromBlock, command.toBlock);
-                        break;
-                    case "finish":
-                        AddFinishDialogueCommand(entity.DisableBlock);
-                        break;
-                }
+                case "say":
+                    // 调用对话命令逻辑
+                    AddSayCommand(command.fromBlock, command.text, entity.ClickMode);
+                    break;
+                case "wait":
+                    // 调用等待命令逻辑
+                    AddWaitCommand(command.fromBlock, command.duration);
+                    break;
+                case "jump":
+                    // 调用跳转命令逻辑
+                    AddJumpCommand(command.fromBlock, command.toBlock);
+                    break;
+                case "finish":
+                    AddFinishDialogueCommand(entity.DisableBlock);
+                    break;
             }
-            EnableBlock(entity.EnableBlock);
         }
+
+        EnableBlock(entity.EnableBlock);
     }
         
     private void OnDialogueComplete()
     {
-        GameUtil.LogError("完成回调");
-        // PlayerRoleData playerRoleData = GameEntry.Player.GetPlayerRoleData();
-        // playerRoleData.dialogueIds.TryGetValue(entity.DialogueType, out int dialogueId);
-        // GameEntry.Player.SaveDialogueId(entity.DialogueType, dialogueId + 1);
-        //IsHandleIng = false;
+        //保存数据
+        GameEntry.Data.PlayerRoleData.dialogueIds.Add(dialogueModel.dialogueId);
+        dialogueModel.finishAction?.Invoke();
+        dialogueModel = null;
+        IsHandleIng = false;
         RemoveAllBlocks();
+        GameUtil.LogError("完成回调");
     }
 
     public void OnUpdate()
@@ -126,10 +145,11 @@ public class DialogueManager : Observable<DialogueManager>
     /// <param name="character">角色</param>
     /// <param name="sprite">角色精灵</param>
     /// <returns></returns>
-    public Say AddSayCommand(string blockName,string sayText = "默认文本",Character character = null,Sprite sprite = null)
+    public Say AddSayCommand(string blockName,string sayText = "默认文本",int clickMode = 1,Character character = null,Sprite sprite = null)
     {
         Block block = GetBlockByName(blockName);
         Say say = block.gameObject.AddComponent<Say>();
+        say.SetParams(GameEntry.Instance.GetSayItemParent(),clickMode);
         say.SetStandardText(sayText);
         say.SetCharacter(character);
         say.SetCharacterImage(sprite);

@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine.UI;
 
 namespace YouYou
 {
-    public class Guide_NewUser1 : Singleton<Guide_NewUser1>
+    public interface IGuideClass
+    {
+        void PlayGuide(Action cb,string method);
+    }
+    
+    public class Guide_NewUser1 : Singleton<Guide_NewUser1>,IGuideClass
     {
         private GuideGroup GuideGroup;
 
@@ -82,6 +83,11 @@ namespace YouYou
                 //多个小步骤全部做完了， 网络存档
                 GameEntry.Guide.GuideCompleteOne(GuideState.FirstEntryMain);
             });
+        }
+
+        public void PlayGuide(Action cb,string method)
+        {
+            MethodMapper.CallMethodByName(this, method);
         }
     }
 }

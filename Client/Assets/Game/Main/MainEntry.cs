@@ -109,7 +109,6 @@ namespace Main
             ClassObjectPool = new ClassObjectPool();
             Hotfix = new HotfixManager();
             Reporter = gameObject.GetComponentInChildren<ReporterManager>();
-            
             Download.Init();
             Assets.Init();
             Hotfix.Init();

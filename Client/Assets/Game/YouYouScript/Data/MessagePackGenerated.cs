@@ -53,10 +53,10 @@ namespace MessagePack.Resolvers
                 { typeof(global::System.Collections.Generic.Dictionary<string, int>), 1 },
                 { typeof(global::System.Collections.Generic.List<global::BagItemData>), 2 },
                 { typeof(global::System.Collections.Generic.List<global::EqiupItemData>), 3 },
-                { typeof(global::BagItemData), 4 },
-                { typeof(global::DataManager), 5 },
-                { typeof(global::EqiupItemData), 6 },
-                { typeof(global::GuideEntity), 7 },
+                { typeof(global::System.Collections.Generic.List<int>), 4 },
+                { typeof(global::BagItemData), 5 },
+                { typeof(global::DataManager), 6 },
+                { typeof(global::EqiupItemData), 7 },
                 { typeof(global::PlayerRoleData), 8 },
             };
         }
@@ -75,10 +75,10 @@ namespace MessagePack.Resolvers
                 case 1: return new global::MessagePack.Formatters.DictionaryFormatter<string, int>();
                 case 2: return new global::MessagePack.Formatters.ListFormatter<global::BagItemData>();
                 case 3: return new global::MessagePack.Formatters.ListFormatter<global::EqiupItemData>();
-                case 4: return new MessagePack.Formatters.BagItemDataFormatter();
-                case 5: return new MessagePack.Formatters.DataManagerFormatter();
-                case 6: return new MessagePack.Formatters.EqiupItemDataFormatter();
-                case 7: return new MessagePack.Formatters.GuideEntityFormatter();
+                case 4: return new global::MessagePack.Formatters.ListFormatter<int>();
+                case 5: return new MessagePack.Formatters.BagItemDataFormatter();
+                case 6: return new MessagePack.Formatters.DataManagerFormatter();
+                case 7: return new MessagePack.Formatters.EqiupItemDataFormatter();
                 case 8: return new MessagePack.Formatters.PlayerRoleDataFormatter();
                 default: return null;
             }
@@ -188,8 +188,6 @@ namespace MessagePack.Formatters
         private static global::System.ReadOnlySpan<byte> GetSpan_LastRefreshTime() => new byte[1 + 15] { 175, 76, 97, 115, 116, 82, 101, 102, 114, 101, 115, 104, 84, 105, 109, 101 };
         // PlayerRoleData
         private static global::System.ReadOnlySpan<byte> GetSpan_PlayerRoleData() => new byte[1 + 14] { 174, 80, 108, 97, 121, 101, 114, 82, 111, 108, 101, 68, 97, 116, 97 };
-        // GuideEntity
-        private static global::System.ReadOnlySpan<byte> GetSpan_GuideEntity() => new byte[1 + 11] { 171, 71, 117, 105, 100, 101, 69, 110, 116, 105, 116, 121 };
 
         public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::DataManager value, global::MessagePack.MessagePackSerializerOptions options)
         {
@@ -200,7 +198,7 @@ namespace MessagePack.Formatters
             }
 
             var formatterResolver = options.Resolver;
-            writer.WriteMapHeader(6);
+            writer.WriteMapHeader(5);
             writer.WriteRaw(GetSpan_UserId());
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.UserId, options);
             writer.WriteRaw(GetSpan_IsFirstLoginTime());
@@ -211,8 +209,6 @@ namespace MessagePack.Formatters
             writer.Write(value.LastRefreshTime);
             writer.WriteRaw(GetSpan_PlayerRoleData());
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PlayerRoleData>(formatterResolver).Serialize(ref writer, value.PlayerRoleData, options);
-            writer.WriteRaw(GetSpan_GuideEntity());
-            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::GuideEntity>(formatterResolver).Serialize(ref writer, value.GuideEntity, options);
         }
 
         public global::DataManager Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -267,11 +263,6 @@ namespace MessagePack.Formatters
                         if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_LastRefreshTime().Slice(1))) { goto FAIL; }
 
                         ____result.LastRefreshTime = reader.ReadInt32();
-                        continue;
-                    case 11:
-                        if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_GuideEntity().Slice(1))) { goto FAIL; }
-
-                        ____result.GuideEntity = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::GuideEntity>(formatterResolver).Deserialize(ref reader, options);
                         continue;
 
                 }
@@ -364,60 +355,10 @@ namespace MessagePack.Formatters
         }
     }
 
-    public sealed class GuideEntityFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::GuideEntity>
-    {
-        // CurrGuide
-        private static global::System.ReadOnlySpan<byte> GetSpan_CurrGuide() => new byte[1 + 9] { 169, 67, 117, 114, 114, 71, 117, 105, 100, 101 };
-
-        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::GuideEntity value, global::MessagePack.MessagePackSerializerOptions options)
-        {
-            if (value is null)
-            {
-                writer.WriteNil();
-                return;
-            }
-
-            writer.WriteMapHeader(1);
-            writer.WriteRaw(GetSpan_CurrGuide());
-            writer.Write(value.CurrGuide);
-        }
-
-        public global::GuideEntity Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
-        {
-            if (reader.TryReadNil())
-            {
-                return null;
-            }
-
-            options.Security.DepthStep(ref reader);
-            var length = reader.ReadMapHeader();
-            var ____result = new global::GuideEntity();
-
-            for (int i = 0; i < length; i++)
-            {
-                var stringKey = global::MessagePack.Internal.CodeGenHelpers.ReadStringSpan(ref reader);
-                switch (stringKey.Length)
-                {
-                    default:
-                    FAIL:
-                      reader.Skip();
-                      continue;
-                    case 9:
-                        if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_CurrGuide().Slice(1))) { goto FAIL; }
-
-                        ____result.CurrGuide = reader.ReadInt32();
-                        continue;
-
-                }
-            }
-
-            reader.Depth--;
-            return ____result;
-        }
-    }
-
     public sealed class PlayerRoleDataFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::PlayerRoleData>
     {
+        // level
+        private static global::System.ReadOnlySpan<byte> GetSpan_level() => new byte[1 + 5] { 165, 108, 101, 118, 101, 108 };
         // name
         private static global::System.ReadOnlySpan<byte> GetSpan_name() => new byte[1 + 4] { 164, 110, 97, 109, 101 };
         // totalOnlineDuration
@@ -432,6 +373,10 @@ namespace MessagePack.Formatters
         private static global::System.ReadOnlySpan<byte> GetSpan_bgmVolume() => new byte[1 + 9] { 169, 98, 103, 109, 86, 111, 108, 117, 109, 101 };
         // dialogueIds
         private static global::System.ReadOnlySpan<byte> GetSpan_dialogueIds() => new byte[1 + 11] { 171, 100, 105, 97, 108, 111, 103, 117, 101, 73, 100, 115 };
+        // guideIds
+        private static global::System.ReadOnlySpan<byte> GetSpan_guideIds() => new byte[1 + 8] { 168, 103, 117, 105, 100, 101, 73, 100, 115 };
+        // curGuide
+        private static global::System.ReadOnlySpan<byte> GetSpan_curGuide() => new byte[1 + 8] { 168, 99, 117, 114, 71, 117, 105, 100, 101 };
         // equipLevels
         private static global::System.ReadOnlySpan<byte> GetSpan_equipLevels() => new byte[1 + 11] { 171, 101, 113, 117, 105, 112, 76, 101, 118, 101, 108, 115 };
         // roleAttr
@@ -450,7 +395,9 @@ namespace MessagePack.Formatters
             }
 
             var formatterResolver = options.Resolver;
-            writer.WriteMapHeader(11);
+            writer.WriteMapHeader(14);
+            writer.WriteRaw(GetSpan_level());
+            writer.Write(value.level);
             writer.WriteRaw(GetSpan_name());
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.name, options);
             writer.WriteRaw(GetSpan_totalOnlineDuration());
@@ -464,7 +411,11 @@ namespace MessagePack.Formatters
             writer.WriteRaw(GetSpan_bgmVolume());
             writer.Write(value.bgmVolume);
             writer.WriteRaw(GetSpan_dialogueIds());
-            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<int, int>>(formatterResolver).Serialize(ref writer, value.dialogueIds, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<int>>(formatterResolver).Serialize(ref writer, value.dialogueIds, options);
+            writer.WriteRaw(GetSpan_guideIds());
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<int>>(formatterResolver).Serialize(ref writer, value.guideIds, options);
+            writer.WriteRaw(GetSpan_curGuide());
+            writer.Write(value.curGuide);
             writer.WriteRaw(GetSpan_equipLevels());
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<int, int>>(formatterResolver).Serialize(ref writer, value.equipLevels, options);
             writer.WriteRaw(GetSpan_roleAttr());
@@ -496,6 +447,11 @@ namespace MessagePack.Formatters
                     FAIL:
                       reader.Skip();
                       continue;
+                    case 5:
+                        if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 465558725996UL) { goto FAIL; }
+
+                        ____result.level = reader.ReadInt32();
+                        continue;
                     case 4:
                         if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 1701667182UL) { goto FAIL; }
 
@@ -548,7 +504,7 @@ namespace MessagePack.Formatters
                             case 7310863298363222372UL:
                                 if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 7562313UL) { goto FAIL; }
 
-                                ____result.dialogueIds = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<int, int>>(formatterResolver).Deserialize(ref reader, options);
+                                ____result.dialogueIds = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<int>>(formatterResolver).Deserialize(ref reader, options);
                                 continue;
 
                             case 8531309114812625253UL:
@@ -564,10 +520,19 @@ namespace MessagePack.Formatters
                         ____result.bgmVolume = reader.ReadSingle();
                         continue;
                     case 8:
-                        if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 8247344641845522290UL) { goto FAIL; }
-
-                        ____result.roleAttr = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, int>>(formatterResolver).Deserialize(ref reader, options);
-                        continue;
+                        switch (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey))
+                        {
+                            default: goto FAIL;
+                            case 8314851511857935719UL:
+                                ____result.guideIds = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.List<int>>(formatterResolver).Deserialize(ref reader, options);
+                                continue;
+                            case 7306080447932560739UL:
+                                ____result.curGuide = reader.ReadInt32();
+                                continue;
+                            case 8247344641845522290UL:
+                                ____result.roleAttr = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, int>>(formatterResolver).Deserialize(ref reader, options);
+                                continue;
+                        }
                     case 14:
                         if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_equipWareHouse().Slice(1))) { goto FAIL; }
 

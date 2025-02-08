@@ -44,5 +44,5 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Origin: {r: 0, g: 0, b: 0, a: 0}
-    - _TopOri: {r: 0, g: 0, b: 2000, a: 0}
+    - _TopOri: {r: 113.299995, g: -589.89996, b: 100, a: 0}
   m_BuildTextureStacks: []

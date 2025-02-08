@@ -15,13 +15,13 @@ namespace YouYou
             for (int i = 0; i < m_List.Count; i++)
             {
                 Sys_GuideEntity entity = m_List[i];
-                if (!IdByDic.ContainsKey(entity.TaskId))
+                if (!IdByDic.ContainsKey(entity.GuideId))
                 {
-                    IdByDic.Add(entity.TaskId, entity);
+                    IdByDic.Add(entity.GuideId, entity);
                 }
                 else
                 {
-                    GameEntry.LogError(LogCategory.Framework, "GuideÅäÖÃ±í´íÎó! TaskId==" + entity.TaskId);
+                    GameEntry.LogError(LogCategory.Framework, "GuideÅäÖÃ±í´íÎó! TaskId==" + entity.GuideId);
                 }
             }
         }

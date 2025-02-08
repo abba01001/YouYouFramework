@@ -56,8 +56,9 @@ namespace Fungus
         [Tooltip("Sets the active Say dialog with a reference to a Say Dialog object in the scene. All story text will now display using this Say Dialog.")]
         [SerializeField] protected SayDialog setSayDialog;
 
+        private Transform parent;
+        private int clickMode;
         protected int executionCount;
-
         #region Public members
 
         /// <summary>
@@ -105,8 +106,9 @@ namespace Fungus
     
             var flowchart = GetFlowchart();
 
+            sayDialog.GetComponent<DialogInput>().SetClickMode((ClickMode)clickMode);
             sayDialog.SetActive(true);
-
+            sayDialog.SetParent(parent);
             sayDialog.SetCharacter(character);
             sayDialog.SetCharacterImage(portrait);
 
@@ -177,6 +179,12 @@ namespace Fungus
         public virtual void SetStandardText(string standardText)
         {
             storyText = standardText;
+        }
+
+        public virtual void SetParams(Transform _parent = null,int _clickMode = 1)
+        {
+            parent = _parent;
+            clickMode = _clickMode;
         }
 
         public virtual string GetDescription()

@@ -14,25 +14,27 @@ public class TestModel
     public long version;
 }
 
-[Serializable]
-[MessagePackObject(keyAsPropertyName: true)]
-public class GuideEntity
+public class DialogueModel
 {
-    //当前已完成的新手引导
-    public int CurrGuide = 1;
+    public int dialogueId;
+    public float delay = default;
+    public Action finishAction;
 }
 
 [Serializable]
 [MessagePackObject(keyAsPropertyName: true)]
 public class PlayerRoleData
 {
+    public int level = 0;
     public string name;
     public int totalOnlineDuration;
     public int todayOnlineDuration;
     public float masterVolume;
     public float audioVolume;
     public float bgmVolume;
-    public Dictionary<int,int> dialogueIds;
+    public List<int> dialogueIds;
+    public List<int> guideIds;
+    public int curGuide;
     public Dictionary<int, int> equipLevels;//装备栏等级信息
     public Dictionary<string, int> roleAttr;//角色属性
     public List<EqiupItemData> equipWareHouse;//装备仓库
@@ -43,7 +45,8 @@ public class PlayerRoleData
         {
             {1,0},{2,0},{3,0},{4,0},{5,0},{6,0},
         };
-        dialogueIds = new Dictionary<int, int>();
+        guideIds = new List<int>();
+        dialogueIds = new List<int>();
         equipWareHouse = new List<EqiupItemData>();
         bagWareHouse = new List<BagItemData>();
         roleAttr = new Dictionary<string, int>();

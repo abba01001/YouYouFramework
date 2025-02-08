@@ -173,7 +173,7 @@ namespace YouYou
         
         private void Test1()
         {
-            GameUtil.LogError(GameEntry.Data.GuideEntity.CurrGuide);
+            GameUtil.LogError(GameEntry.Data.PlayerRoleData.curGuide);
             //QueueManager.Instance.AddEventTask("Hello","CloseHello");
         }
         
@@ -216,6 +216,7 @@ namespace YouYou
             Dialogue.OnUpdate();
             Input.OnUpdate();
             Task.OnUpdate();
+            Guide.OnUpdate();
             GameEntry.Event.Dispatch(Constants.EventName.GameEntryOnUpdate);
         }
 

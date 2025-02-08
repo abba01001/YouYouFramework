@@ -27,12 +27,12 @@ namespace YouYou
             {
                 Sys_GuideEntity entity = new Sys_GuideEntity();
                 entity.Id = ms.ReadInt();
-                entity.TaskId = ms.ReadInt();
-                entity.Path = ms.ReadUTF8String();
-                entity.CheckBtn = ms.ReadInt();
-                entity.CheckToggle = ms.ReadInt();
-                entity.CheckEvent = ms.ReadInt();
-                entity.NextTaskId = ms.ReadInt();
+                entity.GuideId = ms.ReadInt();
+                entity.GuideType = ms.ReadInt();
+                entity.ToLevelTrigger = ms.ReadInt();
+                entity.CompleteEvent = ms.ReadUTF8String();
+                entity.DetailMethod = ms.ReadUTF8String();
+                entity.DialogueId = ms.ReadInt();
                 entity.Progress = ms.ReadUTF8String();
 
                 m_List.Add(entity);

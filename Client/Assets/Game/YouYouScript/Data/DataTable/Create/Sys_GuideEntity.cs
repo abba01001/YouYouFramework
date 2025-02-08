@@ -8,34 +8,34 @@ namespace YouYou
     public partial class Sys_GuideEntity : DataTableEntityBase
     {
         /// <summary>
-        /// 任务Id
+        /// 引导ID
         /// </summary>
-        public int TaskId;
+        public int GuideId;
 
         /// <summary>
-        /// 路径（按钮/开关在UI里的位置）
+        /// 引导类型(1对话)(2点击遮罩)
         /// </summary>
-        public string Path;
+        public int GuideType;
 
         /// <summary>
-        /// 是否监听按钮点击
+        /// 达到X级触发(-1不是)
         /// </summary>
-        public int CheckBtn;
+        public int ToLevelTrigger;
 
         /// <summary>
-        /// 是否监听开关激活
+        /// 完成对话后派发事件
         /// </summary>
-        public int CheckToggle;
+        public string CompleteEvent;
 
         /// <summary>
-        /// 是否监听事件
+        /// 引导类具体方法
         /// </summary>
-        public int CheckEvent;
+        public string DetailMethod;
 
         /// <summary>
-        /// 下一个任务ID
+        /// 触发对话ID(-1不是)
         /// </summary>
-        public int NextTaskId;
+        public int DialogueId;
 
         /// <summary>
         /// 策划备注全部任务流程

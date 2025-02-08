@@ -65,6 +65,7 @@ static partial class Constants
         public const string FinishLoadDataTable = "FinishLoadDataTable";
         public const string LoginSuccess = "LoginSuccess";
 
+        public const string TriggerDialogue = "TriggerDialogue";
         public const string InitBattleData = "InitBattleData";
         public const string UpdateBattleTimer = "UpdateBattleTimer";
         public const string UpdateBattleRound = "UpdateBattleRound";

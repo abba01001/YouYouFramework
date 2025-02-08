@@ -479,6 +479,24 @@ public class GameUtil
         return buttonGInCanvasB;
     }
 
+    public static GameObject FindObjectByPath(Transform parent, string path)
+    {
+        string[] parts = path.Split('/'); // 按 '/' 分割路径
+        Transform currentTransform = parent;
+        // 遍历路径的每一层
+        foreach (string part in parts)
+        {
+            currentTransform = currentTransform.Find(part);
+
+            if (currentTransform == null)
+            {
+                Debug.LogError("找不到物体: " + part);
+                return null;
+            }
+        }
+        return currentTransform.gameObject;
+    }
+    
     public static Vector3 GetCenterPosFromTrans(Transform startTrans, Transform targetTrans)
     {
         RectTransform rectTransform = startTrans.GetComponent<RectTransform>();
@@ -486,5 +504,50 @@ public class GameUtil
         Vector3 worldPosition = rectTransform.TransformPoint(localCenter);
         Vector3 localPositionInTarget = targetTrans.InverseTransformPoint(worldPosition);
         return localPositionInTarget;
+    }
+}
+
+public class ClassMapper
+{
+    // 创建字典，手动注册类名和对应的类型
+    private static Dictionary<string, Func<IGuideClass>> classMap = new Dictionary<string, Func<IGuideClass>>()
+    {
+        { "Guide_NewUser1", () => new Guide_NewUser1() },
+    };
+
+    // 根据字符串获取相应的类实例
+    public static IGuideClass GetInstance(string className)
+    {
+        if (classMap.ContainsKey(className))
+        {
+            return classMap[className]();  // 返回对应的类实例
+        }
+        else
+        {
+            Console.WriteLine($"类 {className} 未找到.");
+            return null;
+        }
+    }
+}
+
+public class MethodMapper
+{
+    public static void CallMethodByName(object obj, string methodName)
+    {
+        // 获取目标类型
+        Type type = obj.GetType();
+        
+        // 查找方法
+        MethodInfo method = type.GetMethod(methodName);
+        
+        // 如果找到方法，调用它
+        if (method != null)
+        {
+            method.Invoke(obj, null);
+        }
+        else
+        {
+            Console.WriteLine($"未找到方法: {methodName}");
+        }
     }
 }
