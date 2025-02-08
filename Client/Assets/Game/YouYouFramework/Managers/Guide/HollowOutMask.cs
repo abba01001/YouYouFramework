@@ -49,6 +49,7 @@ public class HollowOutMask : Graphic, ICanvasRaycastFilter
 		//刷新
 		SetAllDirty();
 	}
+	
 	protected override void OnPopulateMesh(VertexHelper vh)
 	{
 		if (inner_trans == null)
@@ -56,12 +57,12 @@ public class HollowOutMask : Graphic, ICanvasRaycastFilter
 			base.OnPopulateMesh(vh);
 			return;
 		}
-
+	
 		vh.Clear();
-
+	
 		UIVertex vertex = UIVertex.simpleVert;
 		vertex.color = color;
-
+	
 		//0 outer左下角
 		vertex.position = new Vector3(outer_lb.x, outer_lb.y);
 		vh.AddVert(vertex);
@@ -86,7 +87,7 @@ public class HollowOutMask : Graphic, ICanvasRaycastFilter
 		//7 inner右下角
 		vertex.position = new Vector3(inner_rt.x, inner_lb.y);
 		vh.AddVert(vertex);
-
+	
 		//绘制三角形
 		vh.AddTriangle(0, 1, 4);
 		vh.AddTriangle(1, 4, 5);

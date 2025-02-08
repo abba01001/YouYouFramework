@@ -133,13 +133,13 @@ namespace YouYou
             LinkedListNode<TaskRoutine> curr = m_TaskRoutineList.First;
             if (curr != null)
             {
-                curr.Value.OnComplete += () =>
+                curr.Value.OnCompleteStack.Push(() =>
                 {
                     CurrCount++;
                     OnCompleteOne?.Invoke();
                     m_TaskRoutineList.Remove(curr);
                     CheckTask();
-                };
+                });
                 curr.Value.Enter();
             }
             else
@@ -157,12 +157,12 @@ namespace YouYou
             while (routine != null)
             {
                 LinkedListNode<TaskRoutine> next = routine.Next;
-                routine.Value.OnComplete += () =>
+                routine.Value.OnCompleteStack.Push(() =>
                 {
                     CurrCount++;
                     OnCompleteOne?.Invoke();
                     if (CurrCount == TotalCount) Dispose();
-                };
+                });
                 routine.Value.Enter();
                 routine = next;
             }

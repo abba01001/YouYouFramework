@@ -57,6 +57,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 9ac29ed05261e8049a5a554ca8c51d0d, type: 3}
   - {fileID: 21300000, guid: 45c3f6e0e0b2f3e42a91162b2a59af51, type: 3}
   - {fileID: 21300000, guid: 59ab2ef08f2f3fe4b99e8f2496e6a379, type: 3}
+  - {fileID: 21300000, guid: 2cb668b1447786849993a57ed24bab3d, type: 3}
   - {fileID: 21300000, guid: 6596aac1422b4984388473e2174eb3a0, type: 3}
   - {fileID: 21300000, guid: 58a828e191feb1f44bb93cab3ce50df0, type: 3}
   - {fileID: 21300000, guid: c63bb402cf5095a4aad5150c9eb2a226, type: 3}
@@ -113,6 +114,7 @@ SpriteAtlas:
   - ty_btn_B1_nmb
   - ty_jiahao_A1
   - ty_btn_B3
+  - tiparrow
   - huobi_11
   - huobi_12
   - cardline

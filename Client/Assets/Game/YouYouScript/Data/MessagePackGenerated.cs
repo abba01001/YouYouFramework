@@ -47,7 +47,7 @@ namespace MessagePack.Resolvers
 
         static GeneratedResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(8)
+            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(9)
             {
                 { typeof(global::System.Collections.Generic.Dictionary<int, int>), 0 },
                 { typeof(global::System.Collections.Generic.Dictionary<string, int>), 1 },
@@ -56,7 +56,8 @@ namespace MessagePack.Resolvers
                 { typeof(global::BagItemData), 4 },
                 { typeof(global::DataManager), 5 },
                 { typeof(global::EqiupItemData), 6 },
-                { typeof(global::PlayerRoleData), 7 },
+                { typeof(global::GuideEntity), 7 },
+                { typeof(global::PlayerRoleData), 8 },
             };
         }
 
@@ -77,7 +78,8 @@ namespace MessagePack.Resolvers
                 case 4: return new MessagePack.Formatters.BagItemDataFormatter();
                 case 5: return new MessagePack.Formatters.DataManagerFormatter();
                 case 6: return new MessagePack.Formatters.EqiupItemDataFormatter();
-                case 7: return new MessagePack.Formatters.PlayerRoleDataFormatter();
+                case 7: return new MessagePack.Formatters.GuideEntityFormatter();
+                case 8: return new MessagePack.Formatters.PlayerRoleDataFormatter();
                 default: return null;
             }
         }
@@ -186,6 +188,8 @@ namespace MessagePack.Formatters
         private static global::System.ReadOnlySpan<byte> GetSpan_LastRefreshTime() => new byte[1 + 15] { 175, 76, 97, 115, 116, 82, 101, 102, 114, 101, 115, 104, 84, 105, 109, 101 };
         // PlayerRoleData
         private static global::System.ReadOnlySpan<byte> GetSpan_PlayerRoleData() => new byte[1 + 14] { 174, 80, 108, 97, 121, 101, 114, 82, 111, 108, 101, 68, 97, 116, 97 };
+        // GuideEntity
+        private static global::System.ReadOnlySpan<byte> GetSpan_GuideEntity() => new byte[1 + 11] { 171, 71, 117, 105, 100, 101, 69, 110, 116, 105, 116, 121 };
 
         public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::DataManager value, global::MessagePack.MessagePackSerializerOptions options)
         {
@@ -196,7 +200,7 @@ namespace MessagePack.Formatters
             }
 
             var formatterResolver = options.Resolver;
-            writer.WriteMapHeader(5);
+            writer.WriteMapHeader(6);
             writer.WriteRaw(GetSpan_UserId());
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.UserId, options);
             writer.WriteRaw(GetSpan_IsFirstLoginTime());
@@ -207,6 +211,8 @@ namespace MessagePack.Formatters
             writer.Write(value.LastRefreshTime);
             writer.WriteRaw(GetSpan_PlayerRoleData());
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::PlayerRoleData>(formatterResolver).Serialize(ref writer, value.PlayerRoleData, options);
+            writer.WriteRaw(GetSpan_GuideEntity());
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::GuideEntity>(formatterResolver).Serialize(ref writer, value.GuideEntity, options);
         }
 
         public global::DataManager Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -262,6 +268,11 @@ namespace MessagePack.Formatters
 
                         ____result.LastRefreshTime = reader.ReadInt32();
                         continue;
+                    case 11:
+                        if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_GuideEntity().Slice(1))) { goto FAIL; }
+
+                        ____result.GuideEntity = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::GuideEntity>(formatterResolver).Deserialize(ref reader, options);
+                        continue;
 
                 }
             }
@@ -277,6 +288,8 @@ namespace MessagePack.Formatters
         private static global::System.ReadOnlySpan<byte> GetSpan_equipId() => new byte[1 + 7] { 167, 101, 113, 117, 105, 112, 73, 100 };
         // quality
         private static global::System.ReadOnlySpan<byte> GetSpan_quality() => new byte[1 + 7] { 167, 113, 117, 97, 108, 105, 116, 121 };
+        // isWear
+        private static global::System.ReadOnlySpan<byte> GetSpan_isWear() => new byte[1 + 6] { 166, 105, 115, 87, 101, 97, 114 };
         // extraAttr
         private static global::System.ReadOnlySpan<byte> GetSpan_extraAttr() => new byte[1 + 9] { 169, 101, 120, 116, 114, 97, 65, 116, 116, 114 };
 
@@ -289,11 +302,13 @@ namespace MessagePack.Formatters
             }
 
             var formatterResolver = options.Resolver;
-            writer.WriteMapHeader(3);
+            writer.WriteMapHeader(4);
             writer.WriteRaw(GetSpan_equipId());
             writer.Write(value.equipId);
             writer.WriteRaw(GetSpan_quality());
             writer.Write(value.quality);
+            writer.WriteRaw(GetSpan_isWear());
+            writer.Write(value.isWear);
             writer.WriteRaw(GetSpan_extraAttr());
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<int, int>>(formatterResolver).Serialize(ref writer, value.extraAttr, options);
         }
@@ -330,10 +345,67 @@ namespace MessagePack.Formatters
                                 ____result.quality = reader.ReadInt32();
                                 continue;
                         }
+                    case 6:
+                        if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 125762637624169UL) { goto FAIL; }
+
+                        ____result.isWear = reader.ReadBoolean();
+                        continue;
                     case 9:
                         if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_extraAttr().Slice(1))) { goto FAIL; }
 
                         ____result.extraAttr = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<int, int>>(formatterResolver).Deserialize(ref reader, options);
+                        continue;
+
+                }
+            }
+
+            reader.Depth--;
+            return ____result;
+        }
+    }
+
+    public sealed class GuideEntityFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::GuideEntity>
+    {
+        // CurrGuide
+        private static global::System.ReadOnlySpan<byte> GetSpan_CurrGuide() => new byte[1 + 9] { 169, 67, 117, 114, 114, 71, 117, 105, 100, 101 };
+
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::GuideEntity value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (value is null)
+            {
+                writer.WriteNil();
+                return;
+            }
+
+            writer.WriteMapHeader(1);
+            writer.WriteRaw(GetSpan_CurrGuide());
+            writer.Write(value.CurrGuide);
+        }
+
+        public global::GuideEntity Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (reader.TryReadNil())
+            {
+                return null;
+            }
+
+            options.Security.DepthStep(ref reader);
+            var length = reader.ReadMapHeader();
+            var ____result = new global::GuideEntity();
+
+            for (int i = 0; i < length; i++)
+            {
+                var stringKey = global::MessagePack.Internal.CodeGenHelpers.ReadStringSpan(ref reader);
+                switch (stringKey.Length)
+                {
+                    default:
+                    FAIL:
+                      reader.Skip();
+                      continue;
+                    case 9:
+                        if (!global::System.MemoryExtensions.SequenceEqual(stringKey, GetSpan_CurrGuide().Slice(1))) { goto FAIL; }
+
+                        ____result.CurrGuide = reader.ReadInt32();
                         continue;
 
                 }

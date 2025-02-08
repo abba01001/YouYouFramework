@@ -23,8 +23,8 @@ namespace YouYou
         /// <summary>
         /// 任务完成
         /// </summary>
-        public event Action OnComplete;
-
+        public readonly Stack<Action> OnCompleteStack = new Stack<Action>();
+        
         /// <summary>
         /// 停止任务
         /// </summary>
@@ -53,10 +53,12 @@ namespace YouYou
         /// </summary>
         public void Leave()
         {
-            if (OnComplete != null)
+            if (OnCompleteStack.Count > 0)
             {
-                OnComplete();
-                OnComplete = null;
+                while (OnCompleteStack.Count > 0)
+                {
+                    OnCompleteStack.Pop()();
+                }
                 CurrTask = null;
             }
         }

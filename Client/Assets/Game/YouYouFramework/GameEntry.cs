@@ -36,10 +36,6 @@ namespace YouYou
         public UIGroup[] UIGroups;
 
         [FoldoutGroup("UIGroup")]
-        [Header("屏幕阻挡遮罩")]
-        public GameObject BlockMask;
-        
-        [FoldoutGroup("UIGroup")]
         [Header("主页背景")]
         public Image MainBg;
         
@@ -90,8 +86,6 @@ namespace YouYou
         {
             Log(LogCategory.Procedure, "GameEntry.OnAwake()");
             Instance = this;
-            BlockMask.gameObject.SetActive(false);
-            ShowBlockMask(false);
             UIRootRectTransform = UIRootCanvasScaler.GetComponent<RectTransform>();
             if(MainEntry.Reporter != null) MainEntry.Reporter.ShowLogPanel(false);
             CurrLanguage = m_CurrLanguage;
@@ -159,12 +153,6 @@ namespace YouYou
             },null,true);
         }
 
-        public void ShowBlockMask(bool state)
-        {
-            return;
-            BlockMask.SetActive(state);
-        }
-        
         private void Initialize()
         {
             StaticCompositeResolver.Instance.Register(
@@ -185,18 +173,20 @@ namespace YouYou
         
         private void Test1()
         {
-            QueueManager.Instance.AddEventTask("Hello","CloseHello");
+            GameUtil.LogError(GameEntry.Data.GuideEntity.CurrGuide);
+            //QueueManager.Instance.AddEventTask("Hello","CloseHello");
         }
         
         private void Test2()
         {
-            QueueManager.Instance.AddTimeTask(1f, () =>
-            {
-                GameUtil.LogError("你好");
-            }, () =>
-            {
-                GameUtil.LogError("结束，跳转下一个队列");
-            });
+            FormMask.CloseCircleMask();
+            // QueueManager.Instance.AddTimeTask(1f, () =>
+            // {
+            //     GameUtil.LogError("你好");
+            // }, () =>
+            // {
+            //     GameUtil.LogError("结束，跳转下一个队列");
+            // });
         }
         
         private void Test3()
@@ -253,6 +243,10 @@ namespace YouYou
             }
         }
 
+        public Transform GetSayItemParent()
+        {
+            return UIGroups[4].Group;
+        }
 
         public async void ShowBackGround(BGType _type,string _bgName)
         {

@@ -471,4 +471,20 @@ public class GameUtil
             onError?.Invoke($"Error decompressing file: {ex.Message}");
         }
     }
+
+    public static Vector3 GetPosFromTrans(Transform startTrans, Transform targetTrans)
+    {
+        Vector3 buttonGWorldPosition = startTrans.GetComponent<RectTransform>().position;
+        Vector3 buttonGInCanvasB = targetTrans.InverseTransformPoint(buttonGWorldPosition);
+        return buttonGInCanvasB;
+    }
+
+    public static Vector3 GetCenterPosFromTrans(Transform startTrans, Transform targetTrans)
+    {
+        RectTransform rectTransform = startTrans.GetComponent<RectTransform>();
+        Vector3 localCenter = rectTransform.rect.center;
+        Vector3 worldPosition = rectTransform.TransformPoint(localCenter);
+        Vector3 localPositionInTarget = targetTrans.InverseTransformPoint(worldPosition);
+        return localPositionInTarget;
+    }
 }

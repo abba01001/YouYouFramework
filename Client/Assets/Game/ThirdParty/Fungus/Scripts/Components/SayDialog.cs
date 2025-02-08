@@ -274,6 +274,7 @@ namespace Fungus
                     if (prefab != null)
                     {
                         GameObject go = Instantiate(prefab) as GameObject;
+                        //go.transform.SetParent(GameEntry);
                         go.SetActive(false);
                         go.name = "SayDialog";
                         ActiveSayDialog = go.GetComponent<SayDialog>();

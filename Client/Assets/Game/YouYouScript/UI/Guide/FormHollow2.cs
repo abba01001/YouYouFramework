@@ -38,9 +38,9 @@ public class FormHollow2 : UIFormBase
         });
     }
 
-    protected override void OnEnable()
+    protected override void OnShow()
     {
-        base.OnEnable();
+        base.OnShow();
         //强制玩家看一会儿
         if (DelayTime > 0)
         {

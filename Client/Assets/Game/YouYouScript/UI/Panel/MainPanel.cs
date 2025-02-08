@@ -22,6 +22,10 @@ public class MainPanel : PanelBase
         CurPanelName = "MainPanel";
         YouLiBtn.SetButtonClick(() =>
         {
+            GameEntry.Data.GuideEntity.CurrGuide = 0;
+            Guide_NewUser1.Instance.FirstEntryMain(QuickFightBtn,MoreBtn);
+            return;
+            
             GameEntry.UI.CloseUIForm<FormMain>();
             GameEntry.Scene.UnLoadCurrScene();
             GameEntry.Procedure.ChangeState(ProcedureState.Preload);
@@ -37,6 +41,7 @@ public class MainPanel : PanelBase
         });
         QuickFightBtn.SetButtonClick(() =>
         {
+            return;
             GameEntry.Procedure.ChangeState(ProcedureState.Battle);
         });   
         

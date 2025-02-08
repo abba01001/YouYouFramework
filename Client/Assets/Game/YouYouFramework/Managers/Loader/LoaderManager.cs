@@ -258,10 +258,10 @@ namespace YouYou
                 return null;
             }
             //这里屏蔽点击
-            GameEntry.Instance.ShowBlockMask(true);
+            FormMask.ShowBlockMask(true);
             AssetReferenceEntity referenceEntity = await LoadMainAssetAsync(assetFullPath, onUpdate, onDownloadUpdate);
             AutoReleaseHandle.Add(referenceEntity, target);
-            GameEntry.Instance.ShowBlockMask(false);
+            FormMask.ShowBlockMask(false);
             //还原点击
             return referenceEntity.Target as T;
         }

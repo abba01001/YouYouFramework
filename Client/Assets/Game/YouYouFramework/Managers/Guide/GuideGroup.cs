@@ -26,11 +26,13 @@ namespace YouYou
         {
             TaskGroup.AddTask(taskRoutine =>
             {
-                taskRoutine.OnComplete += () =>
+                taskRoutine.OnCompleteStack.Push(() =>
                 {
+                    GameUtil.LogError($"完成===={guideRoutine.GuideName}");
                     guideRoutine.OnExit?.Invoke();
-                };
+                });
                 guideRoutine.OnEnter?.Invoke();
+                GameUtil.LogError($"开始===={guideRoutine.GuideName}");
             });
         }
 

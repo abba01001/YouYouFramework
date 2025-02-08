@@ -16,6 +16,14 @@ public class TestModel
 
 [Serializable]
 [MessagePackObject(keyAsPropertyName: true)]
+public class GuideEntity
+{
+    //当前已完成的新手引导
+    public int CurrGuide = 1;
+}
+
+[Serializable]
+[MessagePackObject(keyAsPropertyName: true)]
 public class PlayerRoleData
 {
     public string name;

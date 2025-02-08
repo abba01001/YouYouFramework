@@ -14,10 +14,12 @@ public enum GuideState
     /// 未触发引导
     /// </summary>
     None,
+
     /// <summary>
     /// 第一关,局外
     /// </summary>
-    Battle1,
+    FirstEntryMain,
+
     /// <summary>
     /// 结束
     /// </summary>
@@ -29,7 +31,7 @@ public enum GuideState
 /// </summary>
 public class GuideManager
 {
-    public GuideState CurrentState { get; private set; }       //当前处于哪个状态
+    public GuideState CurrentState { get; private set; } //当前处于哪个状态
 
     public event Action<GuideState, GuideState> OnStateChange;
 
@@ -43,15 +45,15 @@ public class GuideManager
 
     public bool OnStateEnter(GuideState state)
     {
+        int index = (int) state;
         if (Main.MainEntry.ParamsSettings.GetGradeParamData("ActiveGuide") == 0) return false;
-
         if (CurrentState == state) return false;
-
+        if (GameEntry.Data.GuideEntity.CurrGuide == index) return false;
         switch (state)
         {
             //只触发一次的引导
-            case GuideState.Battle1:
-                if (GuideModel.Instance.NextGuide != state) return false;
+            case GuideState.FirstEntryMain:
+                if (NextGuide != index) return false;
                 break;
 
             //每次引导结束
@@ -77,10 +79,26 @@ public class GuideManager
             OnNextOne = null;
             onNextOne();
         }
-        GuideGroup.TaskGroup.LeaveCurrTask();
 
-        //GameEntry.Log(LogCategory.Hollow, "NextGroup:" + descGroup);
+        GuideGroup.TaskGroup.LeaveCurrTask();
         return true;
     }
 
+    public int NextGuide => GameEntry.Data.GuideEntity.CurrGuide + 1;
+
+
+    /// <summary>
+    /// 新手引导 完成1个模块 存档
+    /// </summary>
+    public void GuideCompleteOne(GuideState guideState)
+    {
+        int index = (int) guideState;
+        //只能保存后面的引导
+        if (index >= GameEntry.Data.GuideEntity.CurrGuide + 1)
+        {
+            GameEntry.Data.GuideEntity.CurrGuide = index;
+            GameEntry.Data.SaveData(true);
+            GameEntry.LogError(LogCategory.Guide, "GuideCompleteOne:" + guideState.ToString() + "===" + guideState.ToInt());
+        }
+    }
 }

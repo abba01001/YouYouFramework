@@ -8,6 +8,13 @@ namespace YouYou
 {
     public static class GuideUtil
     {
+        public static void CheckDirectNext(Action onNext = null)
+        {
+            GameEntry.Log(LogCategory.Guide, "CheckDirectNext");
+            onNext?.Invoke();
+            GameEntry.Guide.NextGroup(GameEntry.Guide.CurrentState);
+        }
+        
         /// <summary>
         /// 监听按钮点击, 触发下一步
         /// </summary>

@@ -11,6 +11,6 @@ namespace YouYou
         public Action OnExit;
 
         public string GuideKey;
-
+        public string GuideName;
     }
 }

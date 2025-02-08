@@ -33,16 +33,16 @@ public class DialogueManager : Observable<DialogueManager>
         CharacterDic = new Dictionary<int, Character>();
         BlockDic = new Dictionary<string, Block>();
         BlcokBranchDic = new Dictionary<string, List<string>>();
-        // GameEntry.Time.CreateTimerLoop(this, 1f, -1, (int loop) =>
-        // {
-        //     ParseDialogueTable();
-        // });
+        GameEntry.Time.CreateTimerLoop(this, 1f, -1, (int loop) =>
+        {
+            ParseDialogueTable();
+        });
     }
 
     //解析对话配置表
     private void ParseDialogueTable()
     {
-        if(!Constants.IsLoadDataTable || IsHandleIng) return;
+        if(!Constants.IsLoadDataTable || IsHandleIng || !Constants.IsLoginGame) return;
         PlayerRoleData playerRoleData = GameEntry.Data.PlayerRoleData;
         foreach (var pair in GameEntry.DataTable.Sys_DialogueDBModel.IdByDic)
         {
