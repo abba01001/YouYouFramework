@@ -22,18 +22,8 @@ public class MainPanel : PanelBase
         CurPanelName = "MainPanel";
         YouLiBtn.SetButtonClick(() =>
         {
-            GameEntry.Data.PlayerRoleData.dialogueIds.Clear();
-            GameEntry.Event.Dispatch(Constants.EventName.TriggerDialogue,new DialogueModel()
-            {
-                dialogueId = (int)DialogueConfigId.FirstEntryGame,
-                finishAction = () =>
-                {
-                    GameEntry.Data.PlayerRoleData.curGuide = 0;
-                    Guide_NewUser1.Instance.FirstEntryMain(QuickFightBtn,MoreBtn);
-                }
-            });
+            GameEntry.Event.Dispatch(Constants.EventName.TriggerGuideEvent,"ListenTest");
             return;
-            
             GameEntry.UI.CloseUIForm<FormMain>();
             GameEntry.Scene.UnLoadCurrScene();
             GameEntry.Procedure.ChangeState(ProcedureState.Preload);
@@ -71,13 +61,17 @@ public class MainPanel : PanelBase
     {
         base.OnShow();
         GameEntry.Event.RemoveEventListener(Constants.EventName.UpdateChatText,OnUpdateChatText);
-        GameObject obj = GameUtil.FindObjectByPath(GameEntry.Instance.transform,"UI/UIRoot/UIDefaultGroup/FormMain(Clone)/MainPanel(Clone)002/LianHeZuoZhan");
-        GameUtil.LogError($"物体{obj == null}");
     }
 
     protected override void OnHide()
     {
         base.OnHide();
         GameEntry.Event.AddEventListener(Constants.EventName.UpdateChatText,OnUpdateChatText);
+    }
+
+    protected override void OnUpdateBtnStatus(object user_data)
+    {
+        base.OnUpdateBtnStatus(user_data);
+        
     }
 }

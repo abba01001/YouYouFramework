@@ -29,9 +29,12 @@ namespace YouYou
                 entity.Id = ms.ReadInt();
                 entity.GuideId = ms.ReadInt();
                 entity.GuideType = ms.ReadInt();
+                entity.EventTrigger = ms.ReadUTF8String();
                 entity.ToLevelTrigger = ms.ReadInt();
-                entity.CompleteEvent = ms.ReadUTF8String();
-                entity.DetailMethod = ms.ReadUTF8String();
+                entity.NextGuideId = ms.ReadInt();
+                entity.ClickWidth = ms.ReadUTF8String();
+                entity.TimeToClose = ms.ReadFloat();
+                entity.ClickArrow = ms.ReadUTF8String();
                 entity.DialogueId = ms.ReadInt();
                 entity.Progress = ms.ReadUTF8String();
 

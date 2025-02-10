@@ -54,15 +54,20 @@ namespace YouYou
         
         protected virtual void OnDisable()
         {
-
+            GameEntry.Event.RemoveEventListener(Constants.EventName.UpdateBtnUnlockStatus,OnUpdateBtnStatus);
         }
         protected virtual void OnDestroy()
         {
         }
+        
+        protected virtual void OnUpdateBtnStatus(object user_data = null)
+        {
+        
+        }
 
         protected virtual void OnShow()
         {
-
+            GameEntry.Event.AddEventListener(Constants.EventName.UpdateBtnUnlockStatus,OnUpdateBtnStatus);
         }
 
 

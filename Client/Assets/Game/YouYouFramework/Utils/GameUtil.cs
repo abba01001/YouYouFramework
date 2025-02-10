@@ -479,6 +479,57 @@ public class GameUtil
         return buttonGInCanvasB;
     }
 
+    public static bool CheckFuncUnlock(string funcName)
+    {
+        foreach (var pair in GameEntry.DataTable.Sys_UnlockFuncDBModel.IdByDic)
+        {
+            if (pair.Value.FuncName == funcName)
+            {
+                return GameEntry.Data.RoleLevel >= pair.Value.UnlockLevel;
+            }
+        }
+        GameUtil.LogError($"配置表未配置功能{funcName}");
+        return false;
+    }
+    
+    public static bool CheckFuncCanShow(string funcName)
+    {
+        foreach (var pair in GameEntry.DataTable.Sys_UnlockFuncDBModel.IdByDic)
+        {
+            if (pair.Value.FuncName == funcName)
+            {
+                return GameEntry.Data.RoleLevel >= pair.Value.ShowLevel;
+            }
+        }
+        GameUtil.LogError($"配置表未配置功能{funcName}");
+        return false;
+    }
+
+    public static void SetBtnLock(GameObject obj,bool set)
+    {
+        if (obj == null) return;
+        GameObject unlock = GameUtil.FindObjectByPath(obj.transform, "Lock");
+        if (unlock != null)
+        {
+            unlock.gameObject.MSetActive(set);
+        }
+    }
+    
+    public static void SetBtnGray(GameObject obj,bool set)
+    {
+        if (obj == null) return;
+        foreach (var t in obj.GetComponentsInChildren<Image>())
+        {
+            if (t.name == "Lock") continue;
+            t.color = set ? Color.gray : Color.white;
+        }
+        foreach (var t in obj.GetComponentsInChildren<Text>())
+        {
+            if (t.name == "Lock") continue;
+            t.color = set ? Color.gray : Color.white;
+        }
+    }
+
     public static GameObject FindObjectByPath(Transform parent, string path)
     {
         string[] parts = path.Split('/'); // 按 '/' 分割路径
@@ -490,7 +541,7 @@ public class GameUtil
 
             if (currentTransform == null)
             {
-                Debug.LogError("找不到物体: " + part);
+                MainEntry.LogError(MainEntry.LogCategory.Framework,"找不到物体: " + part);
                 return null;
             }
         }
@@ -504,50 +555,5 @@ public class GameUtil
         Vector3 worldPosition = rectTransform.TransformPoint(localCenter);
         Vector3 localPositionInTarget = targetTrans.InverseTransformPoint(worldPosition);
         return localPositionInTarget;
-    }
-}
-
-public class ClassMapper
-{
-    // 创建字典，手动注册类名和对应的类型
-    private static Dictionary<string, Func<IGuideClass>> classMap = new Dictionary<string, Func<IGuideClass>>()
-    {
-        { "Guide_NewUser1", () => new Guide_NewUser1() },
-    };
-
-    // 根据字符串获取相应的类实例
-    public static IGuideClass GetInstance(string className)
-    {
-        if (classMap.ContainsKey(className))
-        {
-            return classMap[className]();  // 返回对应的类实例
-        }
-        else
-        {
-            Console.WriteLine($"类 {className} 未找到.");
-            return null;
-        }
-    }
-}
-
-public class MethodMapper
-{
-    public static void CallMethodByName(object obj, string methodName)
-    {
-        // 获取目标类型
-        Type type = obj.GetType();
-        
-        // 查找方法
-        MethodInfo method = type.GetMethod(methodName);
-        
-        // 如果找到方法，调用它
-        if (method != null)
-        {
-            method.Invoke(obj, null);
-        }
-        else
-        {
-            Console.WriteLine($"未找到方法: {methodName}");
-        }
     }
 }

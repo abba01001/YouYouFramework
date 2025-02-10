@@ -18,19 +18,34 @@ namespace YouYou
         public int GuideType;
 
         /// <summary>
+        /// 通过事件进行触发
+        /// </summary>
+        public string EventTrigger;
+
+        /// <summary>
         /// 达到X级触发(-1不是)
         /// </summary>
         public int ToLevelTrigger;
 
         /// <summary>
-        /// 完成对话后派发事件
+        /// 下一个引导id
         /// </summary>
-        public string CompleteEvent;
+        public int NextGuideId;
 
         /// <summary>
-        /// 引导类具体方法
+        /// 点击遮罩组件
         /// </summary>
-        public string DetailMethod;
+        public string ClickWidth;
+
+        /// <summary>
+        /// X时间后关闭遮罩
+        /// </summary>
+        public float TimeToClose;
+
+        /// <summary>
+        /// 点击是否需要箭头
+        /// </summary>
+        public string ClickArrow;
 
         /// <summary>
         /// 触发对话ID(-1不是)

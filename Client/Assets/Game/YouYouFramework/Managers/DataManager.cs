@@ -74,6 +74,10 @@ public class DataManager : Observable<DataManager>, IDataManager
     [IgnoreMember] private float writeCooldown = 5f; // 写入的冷却时间（5秒）
     [IgnoreMember] private float uploadCooldown = 10f; // 上传的冷却时间（10秒）
     [IgnoreMember] private List<EqiupItemData> wearEquipList = new List<EqiupItemData>();
+
+    [IgnoreMember]
+    public int RoleLevel => _playerRoleData.roleAttr["role_level"];
+
     #endregion
 
     #region Public方法

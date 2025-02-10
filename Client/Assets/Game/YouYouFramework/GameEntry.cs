@@ -132,6 +132,7 @@ namespace YouYou
             Dialogue.Init();
             Task.Init();
             Time.Init();
+            Guide.Init();
             //进入第一个流程
             Procedure.ChangeState(ProcedureState.Launch);
             

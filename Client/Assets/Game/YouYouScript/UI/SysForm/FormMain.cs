@@ -47,17 +47,21 @@ public class FormMain : UIFormBase
             data.btn.GetComponent<Button>().SetButtonClick(() =>
             {
                 if(isLoadingPanel) return;
+                if (!GameUtil.CheckFuncUnlock(data.BtnType))
+                {
+                    return;
+                }
                 HandleBtnEvent(data);
             });
             if (data.btn.transform.Find("BarSelect"))
             {
                 data.selectObj = data.btn.transform.Find("BarSelect").gameObject;
             }
-        
             btnDic[data.BtnType] = data;
         }
         InitPanelObj(Constants.ItemPath.GoldPanel);
         HandleSelectPanel(btnDic["BattleBtn"]);
+        OnUpdateBtnStatus();
     }
 
     private async UniTask InitPanelObj(string panelPath,HomePanelButtonData data = null,ShowType type = ShowType.Default)
@@ -155,14 +159,20 @@ public class FormMain : UIFormBase
                 break;
         }
     }
-    
-    private void Start()
-    {
 
-    }
-    
-    protected override void OnEnable()
+    protected override void OnUpdateBtnStatus(object user_data = null)
     {
-        base.OnEnable();
+        base.OnUpdateBtnStatus(user_data);
+        foreach (var data in btnList)
+        {
+            bool show = GameUtil.CheckFuncCanShow(data.BtnType);
+            bool unlock = GameUtil.CheckFuncUnlock(data.BtnType);
+            data.btn.gameObject.MSetActive(show);
+            if (show)
+            {
+                GameUtil.SetBtnGray(data.btn,!unlock);
+                GameUtil.SetBtnLock(data.btn,unlock);
+            }
+        }
     }
 }

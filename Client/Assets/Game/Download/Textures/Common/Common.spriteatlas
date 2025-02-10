@@ -104,6 +104,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 6021c66ea8415bf4993ab63675ea648e, type: 3}
   - {fileID: 21300000, guid: 59c4b4ee32c9e284d9d72557231e9848, type: 3}
   - {fileID: 21300000, guid: a36b7ffeb8bff584b991a0528bb829af, type: 3}
+  - {fileID: 21300000, guid: 93fb504f438dbfd4e81706d0d84090f3, type: 3}
   - {fileID: 21300000, guid: 4403d35fd3796e54cb5c6a8139107c7b, type: 3}
   - {fileID: 21300000, guid: 56d5647f3964f2d46bf4e93983f5cadb, type: 3}
   - {fileID: 21300000, guid: 35643edf58fa8ac44b0b04619bae21ab, type: 3}
@@ -161,6 +162,7 @@ SpriteAtlas:
   - ty_btn_A1_nmb
   - ty_tab_unselected
   - huobi_14
+  - ty_grsz_icon_lock
   - ty_btn_A3
   - huobi_01
   - JoyBg

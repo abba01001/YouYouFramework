@@ -17,8 +17,8 @@ public class JsonDisplay : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             jsonString = GameEntry.Data.PrintUserData();
-            GameEntry.Data.InitGameData(null);
-            GameEntry.Data.SaveData(true);
+            // GameEntry.Data.InitGameData(null);
+            // GameEntry.Data.SaveData(true);
         }
     }
 }

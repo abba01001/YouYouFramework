@@ -357,8 +357,6 @@ namespace MessagePack.Formatters
 
     public sealed class PlayerRoleDataFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::PlayerRoleData>
     {
-        // level
-        private static global::System.ReadOnlySpan<byte> GetSpan_level() => new byte[1 + 5] { 165, 108, 101, 118, 101, 108 };
         // name
         private static global::System.ReadOnlySpan<byte> GetSpan_name() => new byte[1 + 4] { 164, 110, 97, 109, 101 };
         // totalOnlineDuration
@@ -395,9 +393,7 @@ namespace MessagePack.Formatters
             }
 
             var formatterResolver = options.Resolver;
-            writer.WriteMapHeader(14);
-            writer.WriteRaw(GetSpan_level());
-            writer.Write(value.level);
+            writer.WriteMapHeader(13);
             writer.WriteRaw(GetSpan_name());
             global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.name, options);
             writer.WriteRaw(GetSpan_totalOnlineDuration());
@@ -447,11 +443,6 @@ namespace MessagePack.Formatters
                     FAIL:
                       reader.Skip();
                       continue;
-                    case 5:
-                        if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 465558725996UL) { goto FAIL; }
-
-                        ____result.level = reader.ReadInt32();
-                        continue;
                     case 4:
                         if (global::MessagePack.Internal.AutomataKeyGen.GetKey(ref stringKey) != 1701667182UL) { goto FAIL; }
 

@@ -25,6 +25,7 @@ namespace YouYou
         public Sys_ModelDBModel Sys_ModelDBModel { get; private set; }
         public Sys_EquipDBModel Sys_EquipDBModel { get; private set; }
         public Sys_ItemDBModel Sys_ItemDBModel { get; private set; }
+        public Sys_UnlockFuncDBModel Sys_UnlockFuncDBModel { get; private set; }
         /// <summary>
         /// 加载表格
         /// </summary>
@@ -66,6 +67,9 @@ namespace YouYou
 
             Sys_ItemDBModel = new Sys_ItemDBModel();
             Sys_ItemDBModel.LoadData(m_TaskGroup);
+
+            Sys_UnlockFuncDBModel = new Sys_UnlockFuncDBModel();
+            Sys_UnlockFuncDBModel.LoadData(m_TaskGroup);
             
             m_TaskGroup.OnComplete += OnLoadDataTableComplete;
             m_TaskGroup.OnComplete += () =>

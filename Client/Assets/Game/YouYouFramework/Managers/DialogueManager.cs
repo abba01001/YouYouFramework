@@ -118,7 +118,6 @@ public class DialogueManager : Observable<DialogueManager>
         dialogueModel = null;
         IsHandleIng = false;
         RemoveAllBlocks();
-        GameUtil.LogError("完成回调");
     }
 
     public void OnUpdate()

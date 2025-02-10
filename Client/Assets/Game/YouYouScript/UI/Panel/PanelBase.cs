@@ -48,6 +48,7 @@ public class PanelBase : MonoBehaviour
             // TalkingDataSDK.OnEvent("显示Panel",dic,null);
             TalkingDataSDK.OnPageBegin($"{CurPanelName}");
         }
+        GameEntry.Event.AddEventListener(Constants.EventName.UpdateBtnUnlockStatus,OnUpdateBtnStatus);
     }
 
     protected virtual void OnHide()
@@ -59,5 +60,11 @@ public class PanelBase : MonoBehaviour
             // TalkingDataSDK.OnEvent("关闭Panel",dic,null);
             TalkingDataSDK.OnPageEnd($"{CurPanelName}");
         }
+        GameEntry.Event.RemoveEventListener(Constants.EventName.UpdateBtnUnlockStatus,OnUpdateBtnStatus);
+    }
+
+    protected virtual void OnUpdateBtnStatus(object user_data)
+    {
+        
     }
 }

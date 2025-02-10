@@ -1,8 +1,16 @@
 using UnityEngine;
 using UnityEditor;
+using YouYou;
 
 public class ObjectPathPrinter : MonoBehaviour
 {
+    [MenuItem("Tools/删除数据")]
+    public static void DeleteData()
+    {
+        GameEntry.Data.InitGameData(null);
+        GameEntry.Data.SaveData(true);
+    }
+    
     [MenuItem("Tools/打印窗口物体路径")]
     public static void PrintSelectedObjectPath()
     {

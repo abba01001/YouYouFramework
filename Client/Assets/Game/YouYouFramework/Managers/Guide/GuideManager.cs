@@ -5,6 +5,7 @@ using Unity;
 using System;
 using YouYou;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine.UI;
 
 
@@ -33,7 +34,6 @@ public class GuideManager
 {
     public GuideState CurrentState { get; private set; } //当前处于哪个状态
 
-    public event Action<GuideState, GuideState> OnStateChange;
 
     /// <summary>
     /// 触发下一步
@@ -41,49 +41,162 @@ public class GuideManager
     public event Action OnNextOne;
 
     public GuideGroup GuideGroup;
-
+    private readonly Queue<string> TriggerEventQueue = new Queue<string>();
+    private string CurTriggerEvent = string.Empty;
     private bool IsGuiding = false;
+
+    public void Init()
+    {
+        GameEntry.Event.AddEventListener(Constants.EventName.TriggerGuideEvent,OnTriggerGuideEvent);
+    }
+
+    private void OnTriggerGuideEvent(object user_data)
+    {
+        string e = user_data as string;
+        if (!GameEntry.Data.PlayerRoleData.guideEvent.Contains(e))
+        {
+            TriggerEventQueue.Enqueue(e);
+        }
+    }
+    
     public void OnUpdate()
     {
         if (!GameEntry.Net.IsLoginGame) return;
         if (IsGuiding) return;
+        if (TriggerEventQueue.Count > 0 && CurTriggerEvent == String.Empty)
+        {
+            CurTriggerEvent = TriggerEventQueue.Dequeue();
+        }
         foreach (var pair in GameEntry.DataTable.Sys_GuideDBModel.IdByDic)
         {
-            if (pair.Value.GuideType == 1)
-            {
-                if (GameEntry.Data.PlayerRoleData.level >= pair.Value.ToLevelTrigger && !GameEntry.Data.PlayerRoleData.guideIds.Contains(pair.Value.GuideId))
-                {
-                    GameEntry.Event.Dispatch(Constants.EventName.TriggerDialogue,new DialogueModel()
-                    {
-                        dialogueId = pair.Value.DialogueId,
-                        finishAction = () =>
-                        {
-                            if (pair.Value.CompleteEvent != String.Empty)
-                            {
-                                IGuideClass guideClass = ClassMapper.GetInstance(pair.Value.CompleteEvent);
-                                guideClass?.PlayGuide(() =>
-                                {
-                                    FinishCurGuide(pair.Value.GuideId);
-                                },pair.Value.DetailMethod);
-                            }
-                            else
-                            {
-                                FinishCurGuide(pair.Value.GuideId);
-                            }
-                            //Guide_NewUser1.Instance.FirstEntryMain(QuickFightBtn,MoreBtn);
-                        }
-                    });
-                    IsGuiding = true;
-                }
-            }
+            HandleGuideDetail(pair.Value);
+            if (IsGuiding) break;
         }
     }
 
+    private bool CheckCompleteGuideId(int guideId)
+    {
+        return GameEntry.Data.PlayerRoleData.guideIds.Contains(guideId);
+    }
+
+    private bool CheckCompletePreGuide(int guideId)
+    {
+        foreach (var pair in GameEntry.DataTable.Sys_GuideDBModel.IdByDic)
+        {
+            if (guideId == pair.Value.NextGuideId)
+            {
+                return CheckCompleteGuideId(pair.Value.GuideId);
+            }
+        }
+        return true;
+    }
+
+    private async UniTask HandleGuideDetail(Sys_GuideEntity entity)
+    {
+        bool isEventGuide = !string.IsNullOrEmpty(entity.EventTrigger);
+
+        // 验证引导是否可以继续
+        if (GameEntry.Data.RoleLevel < entity.ToLevelTrigger) return; // 未达到等级
+        if (isEventGuide && CurTriggerEvent != entity.EventTrigger) return; // 事件未触发
+        if (CheckCompleteGuideId(entity.GuideId)) return; // 引导已完成
+        if (!CheckCompletePreGuide(entity.GuideId)) return; // 前置引导未完成
+
+        IsGuiding = true;
+
+        // 根据引导类型执行相应操作
+        switch (entity.GuideType)
+        {
+            case 1:
+                PlayDialogueGuide(entity);
+                break;
+            case 2:
+                PlayClickGuide(entity);
+                break;
+            default:
+                break;
+        }
+    }
+    
+    private void PlayDialogueGuide(Sys_GuideEntity entity)
+    {
+        GameEntry.Event.Dispatch(Constants.EventName.TriggerDialogue, new DialogueModel()
+        {
+            dialogueId = entity.DialogueId,
+            finishAction = () =>
+            {
+                FinishCurGuide(entity.GuideId);
+            }
+        });
+    }
+
+    private async Task PlayClickGuide(Sys_GuideEntity entity)
+    {
+        bool hasWidth = false;
+        int maxRetries = 30;  // 最大尝试次数
+        int retries = 0;
+        GameObject width = GameUtil.FindObjectByPath(GameEntry.Instance.transform,entity.ClickWidth);
+        while (width == null && retries < maxRetries)
+        {
+            await GameEntry.Time.Delay(this, 0.5f); 
+            width = GameUtil.FindObjectByPath(GameEntry.Instance.transform,entity.ClickWidth);
+            retries++;
+        }
+        GameEntry.Guide.GuideGroup = new GuideGroup();
+        GuideRoutine guideRoutine = null;
+        guideRoutine = new GuideRoutine();
+        guideRoutine.GuideName = "第一步";
+        guideRoutine.OnEnter = () =>
+        {
+            FormMask.ShowCircleMsak(width, () =>
+            {
+                CheckShowClickArrow(entity.ClickArrow, width);
+            });
+            
+            if (entity.TimeToClose != 0)
+            {
+                GameEntry.Time.CreateTimer(this, entity.TimeToClose, () =>
+                {
+                    GuideUtil.CheckDirectNext();
+                });
+            }
+            else
+            {
+                GuideUtil.CheckBtnNext(width);
+            }
+        };
+        guideRoutine.OnExit = () =>
+        {
+            FormMask.CloseCircleMask();
+        };
+        GuideGroup.AddGuide(guideRoutine);
+        GuideGroup.Run(() =>
+        {
+            FinishCurGuide(entity.GuideId);
+        });
+    }
+
+    private void CheckShowClickArrow(string direction,GameObject obj)
+    {
+        if (direction == "down")
+        {
+            FormMask.ShowArrow(obj, ArrowDirection.down);
+        }
+    }
+    
     private void FinishCurGuide(int guidId)
     {
-        IsGuiding = false;
         GameEntry.Data.PlayerRoleData.curGuide = guidId;
         GameEntry.Data.PlayerRoleData.guideIds.Add(guidId);
+        GameEntry.Time.CreateTimer(this, 0.1f, () =>
+        {
+            IsGuiding = false;
+            if (CurTriggerEvent != string.Empty)
+            {
+                GameEntry.Data.PlayerRoleData.guideEvent.Add(CurTriggerEvent);
+                CurTriggerEvent = String.Empty;
+            }
+            GameEntry.Data.SaveData(true);
+        });
     }
 
     public bool OnStateEnter(GuideState state)
@@ -94,18 +207,11 @@ public class GuideManager
         if (GameEntry.Data.PlayerRoleData.curGuide == index) return false;
         switch (state)
         {
-            //只触发一次的引导
-            case GuideState.FirstEntryMain:
-                if (NextGuide != index) return false;
-                break;
-
             //每次引导结束
             case GuideState.None:
                 GameEntry.Guide.GuideGroup = null;
                 break;
         }
-
-        OnStateChange?.Invoke(CurrentState, state);
         CurrentState = state;
         return true;
     }
@@ -125,24 +231,5 @@ public class GuideManager
 
         GuideGroup.TaskGroup.LeaveCurrTask();
         return true;
-    }
-
-    public int NextGuide => GameEntry.Data.PlayerRoleData.curGuide + 1;
-
-
-    /// <summary>
-    /// 新手引导 完成1个模块 存档
-    /// </summary>
-    public void GuideCompleteOne(GuideState guideState)
-    {
-        int index = (int) guideState;
-        //只能保存后面的引导
-        if (index >= GameEntry.Data.PlayerRoleData.curGuide + 1)
-        {
-            IsGuiding = false;
-            GameEntry.Data.PlayerRoleData.curGuide = index;
-            GameEntry.Data.SaveData(true);
-            GameEntry.LogError(LogCategory.Guide, "GuideCompleteOne:" + guideState.ToString() + "===" + guideState.ToInt());
-        }
     }
 }

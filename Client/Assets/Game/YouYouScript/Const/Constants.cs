@@ -65,6 +65,7 @@ static partial class Constants
         public const string FinishLoadDataTable = "FinishLoadDataTable";
         public const string LoginSuccess = "LoginSuccess";
 
+        public const string TriggerGuideEvent = "TriggerGuideEvent";
         public const string TriggerDialogue = "TriggerDialogue";
         public const string InitBattleData = "InitBattleData";
         public const string UpdateBattleTimer = "UpdateBattleTimer";
@@ -75,6 +76,7 @@ static partial class Constants
 
         public const string GetSuspendReward = "GetSuspendReward";
         public const string UpdateChatText = "UpdateChatText";
+        public const string UpdateBtnUnlockStatus = "UpdateBtnUnlockStatus";
     }
 
     public static Dictionary<int, string> ChatChannel = new Dictionary<int, string>()

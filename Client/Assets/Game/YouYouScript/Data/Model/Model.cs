@@ -25,7 +25,6 @@ public class DialogueModel
 [MessagePackObject(keyAsPropertyName: true)]
 public class PlayerRoleData
 {
-    public int level = 0;
     public string name;
     public int totalOnlineDuration;
     public int todayOnlineDuration;
@@ -34,6 +33,7 @@ public class PlayerRoleData
     public float bgmVolume;
     public List<int> dialogueIds;
     public List<int> guideIds;
+    public List<string> guideEvent;
     public int curGuide;
     public Dictionary<int, int> equipLevels;//装备栏等级信息
     public Dictionary<string, int> roleAttr;//角色属性
@@ -46,6 +46,7 @@ public class PlayerRoleData
             {1,0},{2,0},{3,0},{4,0},{5,0},{6,0},
         };
         guideIds = new List<int>();
+        guideEvent = new List<string>();
         dialogueIds = new List<int>();
         equipWareHouse = new List<EqiupItemData>();
         bagWareHouse = new List<BagItemData>();

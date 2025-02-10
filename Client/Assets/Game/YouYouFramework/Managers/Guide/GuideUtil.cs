@@ -18,14 +18,15 @@ namespace YouYou
         /// <summary>
         /// 监听按钮点击, 触发下一步
         /// </summary>
-        public static void CheckBtnNext(Button button, Action onNext = null)
+        public static void CheckBtnNext(GameObject button, Action onNext = null)
         {
-            button.onClick.AddListener(OnNext);
+            if (button == null) return;
+            button.GetComponent<Button>().onClick.AddListener(OnNext);
             GameEntry.Log(LogCategory.Guide, "CheckBtnNext");
             void OnNext()
             {
                 GameEntry.Log(LogCategory.Guide, "CheckBtnNext-OnNext");
-                button.onClick.RemoveListener(OnNext);
+                button.GetComponent<Button>().onClick.RemoveListener(OnNext);
 
                 onNext?.Invoke();
                 GameEntry.Guide.NextGroup(GameEntry.Guide.CurrentState);
