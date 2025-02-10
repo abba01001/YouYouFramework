@@ -135,7 +135,7 @@ public class GuideManager
         int maxRetries = 30;  // 最大尝试次数
         int retries = 0;
         GameObject width = GameUtil.FindObjectByPath(GameEntry.Instance.transform,entity.ClickWidth);
-        while (width == null && retries < maxRetries)
+        while (width == null && retries < maxRetries && (width != null && width.activeInHierarchy))
         {
             await GameEntry.Time.Delay(this, 0.5f); 
             width = GameUtil.FindObjectByPath(GameEntry.Instance.transform,entity.ClickWidth);
