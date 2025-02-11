@@ -30,6 +30,7 @@ namespace YouYou
                 entity.FuncName = ms.ReadUTF8String();
                 entity.UnlockLevel = ms.ReadInt();
                 entity.ShowLevel = ms.ReadInt();
+                entity.FuncDetailName = ms.ReadUTF8String();
 
                 m_List.Add(entity);
                 m_Dic[entity.Id] = entity;

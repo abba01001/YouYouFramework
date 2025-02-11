@@ -363,7 +363,7 @@ MonoBehaviour:
     BaseOrder: 3000
     Group: {fileID: 4719996667817288573}
   - Id: 5
-    BaseOrder: 4000
+    BaseOrder: 30000
     Group: {fileID: 5621571779540293347}
   MainBg: {fileID: 3730262260690074501}
   BattleBg: {fileID: 8278232762922097267}

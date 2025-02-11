@@ -112,9 +112,21 @@ public class GuideManager
             case 2:
                 PlayClickGuide(entity);
                 break;
+            case 3:
+                PlayClickDialogueGuide(entity);
+                break;
             default:
                 break;
         }
+    }
+
+    private void PlayClickDialogueGuide(Sys_GuideEntity entity)
+    {
+        GameEntry.Event.Dispatch(Constants.EventName.TriggerDialogue, new DialogueModel()
+        {
+            dialogueId = entity.DialogueId,
+        });
+        PlayClickGuide(entity);
     }
     
     private void PlayDialogueGuide(Sys_GuideEntity entity)
@@ -135,11 +147,17 @@ public class GuideManager
         int maxRetries = 30;  // 最大尝试次数
         int retries = 0;
         GameObject width = GameUtil.FindObjectByPath(GameEntry.Instance.transform,entity.ClickWidth);
-        while (width == null && retries < maxRetries && (width != null && width.activeInHierarchy))
+        while (width == null && retries < maxRetries)
         {
             await GameEntry.Time.Delay(this, 0.5f); 
             width = GameUtil.FindObjectByPath(GameEntry.Instance.transform,entity.ClickWidth);
             retries++;
+        }
+
+        if (!width.activeInHierarchy)
+        {
+            await GameEntry.Time.Delay(this, 0.5f); 
+            GameUtil.LogError($"挂起引导状态，等待{width.transform.name}激活");
         }
         GameEntry.Guide.GuideGroup = new GuideGroup();
         GuideRoutine guideRoutine = null;

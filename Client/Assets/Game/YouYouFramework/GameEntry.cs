@@ -174,7 +174,8 @@ namespace YouYou
         
         private void Test1()
         {
-            GameUtil.LogError(GameEntry.Data.PlayerRoleData.curGuide);
+            GameEntry.Data.PlayerRoleData.roleAttr["role_level"]++;
+            GameEntry.Event.Dispatch(Constants.EventName.UpdateBtnUnlockStatus);
             //QueueManager.Instance.AddEventTask("Hello","CloseHello");
         }
         
@@ -197,8 +198,7 @@ namespace YouYou
         
         private void Test4()
         {
-            Data.PlayerRoleData.name = "按任意多个";
-            Data.SaveData(true);
+            GameUtil.ShowTip("测试文本哈哈哈哈哈哈！！！");
         }
 
         void Update()

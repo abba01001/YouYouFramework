@@ -491,6 +491,18 @@ public class GameUtil
         GameUtil.LogError($"配置表未配置功能{funcName}");
         return false;
     }
+
+    public static Sys_UnlockFuncEntity GetFuncEntity(string funcName)
+    {
+        foreach (var pair in GameEntry.DataTable.Sys_UnlockFuncDBModel.IdByDic)
+        {
+            if (pair.Value.FuncName == funcName)
+            {
+                return pair.Value;
+            }
+        }
+        return null;
+    }
     
     public static bool CheckFuncCanShow(string funcName)
     {
@@ -503,6 +515,13 @@ public class GameUtil
         }
         GameUtil.LogError($"配置表未配置功能{funcName}");
         return false;
+    }
+    
+    
+    public static void ShowUnlockTip(string btnType)
+    {
+        Sys_UnlockFuncEntity entity = GameUtil.GetFuncEntity(btnType);
+        GameUtil.ShowTip($"达到{entity.UnlockLevel}级开放该功能~");
     }
 
     public static void SetBtnLock(GameObject obj,bool set)
@@ -555,5 +574,13 @@ public class GameUtil
         Vector3 worldPosition = rectTransform.TransformPoint(localCenter);
         Vector3 localPositionInTarget = targetTrans.InverseTransformPoint(worldPosition);
         return localPositionInTarget;
+    }
+
+    public static void ShowTip(string text)
+    {
+        TipModel model = MainEntry.ClassObjectPool.Dequeue<TipModel>();
+        model.text = text;
+        GameEntry.UI.OpenUIForm<FormTip>("FormTip",model);
+        MainEntry.ClassObjectPool.Enqueue(model);
     }
 }

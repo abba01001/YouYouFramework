@@ -115,7 +115,8 @@ namespace YouYou
             { typeof(AssetBundleReferenceEntity), 10 },
             { typeof(HeartBeatMsg), 3 },
             { typeof(GuildListMsg), 3 },
-            { typeof(UpdateUserResponse), 3 }
+            { typeof(UpdateUserResponse), 3 },
+            { typeof(TipModel), 3 },
         };
         #region 变量对象池
 

@@ -49,6 +49,7 @@ public class FormMain : UIFormBase
                 if(isLoadingPanel) return;
                 if (!GameUtil.CheckFuncUnlock(data.BtnType))
                 {
+                    GameUtil.ShowUnlockTip(data.BtnType);
                     return;
                 }
                 HandleBtnEvent(data);
@@ -171,8 +172,9 @@ public class FormMain : UIFormBase
             if (show)
             {
                 GameUtil.SetBtnGray(data.btn,!unlock);
-                GameUtil.SetBtnLock(data.btn,unlock);
+                GameUtil.SetBtnLock(data.btn,!unlock);
             }
         }
     }
+
 }

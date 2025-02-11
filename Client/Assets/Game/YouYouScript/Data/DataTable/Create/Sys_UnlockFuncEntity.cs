@@ -22,5 +22,10 @@ namespace YouYou
         /// </summary>
         public int ShowLevel;
 
+        /// <summary>
+        /// 功能具体名字
+        /// </summary>
+        public string FuncDetailName;
+
     }
 }

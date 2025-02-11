@@ -13,7 +13,7 @@ namespace YouYou
         public int GuideId;
 
         /// <summary>
-        /// 引导类型(1对话)(2点击遮罩)
+        /// 引导类型(1对话)(2点击遮罩)(3点击+遮罩)
         /// </summary>
         public int GuideType;
 
