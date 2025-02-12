@@ -31,7 +31,7 @@ distributionBase=GRADLE_USER_HOME
 distributionPath=wrapper/dists
 zipStorePath=wrapper/dists
 zipStoreBase=GRADLE_USER_HOME
-distributionUrl=https\://services.gradle.org/distributions/gradle-6.1.1-bin.zip";
+distributionUrl=https\://mirrors.cloud.tencent.com/gradle/gradle-6.1.1-bin.zip";
 
                 // 将内容写入文件
                 File.WriteAllText(wrapperFilePath, content);

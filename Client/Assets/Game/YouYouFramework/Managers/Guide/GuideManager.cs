@@ -125,6 +125,7 @@ public class GuideManager
         GameEntry.Event.Dispatch(Constants.EventName.TriggerDialogue, new DialogueModel()
         {
             dialogueId = entity.DialogueId,
+            delay = 0.5f
         });
         PlayClickGuide(entity);
     }
