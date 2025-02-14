@@ -1,18 +1,6 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
 using Cysharp.Threading.Tasks;
-using Main;
-using MessagePack;
-using MessagePack.Resolvers;
-using Protocols.Player;
-using TMPro;
-using Unity.Collections;
 using UnityEngine;
-using UnityEngine.Networking;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using YouYou;
 
@@ -30,7 +18,8 @@ public class HomePanelButtonData
 public class FormMain : UIFormBase
 {
     private bool isLoadingPanel = false;
-    
+    [SerializeField] private EfficientScrollRect _scrollRect;
+    [SerializeField] private MainChallengeItem _challengeItem;
     [SerializeField] private List<HomePanelButtonData> btnList = new List<HomePanelButtonData>();
     private Dictionary<string, HomePanelButtonData> btnDic = new Dictionary<string, HomePanelButtonData>();
     protected override void Awake()
@@ -73,7 +62,7 @@ public class FormMain : UIFormBase
         if (data != null)
         {
             data.panelObj = t.gameObject;
-            data.panelObj.transform.SetSiblingIndex(0);
+            data.panelObj.transform.SetSiblingIndex(1);
             data.showType = type;
         }
         isLoadingPanel = false;
