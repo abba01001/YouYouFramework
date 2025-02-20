@@ -77,7 +77,8 @@ public class DataManager : Observable<DataManager>, IDataManager
 
     [IgnoreMember]
     public int RoleLevel => _playerRoleData.roleAttr["role_level"];
-
+    public int MapLevel => _playerRoleData.roleAttr["map_level"];
+    public int MapLevelNum => _playerRoleData.roleAttr["map_level_num"];
     #endregion
 
     #region Public方法
@@ -111,6 +112,8 @@ public class DataManager : Observable<DataManager>, IDataManager
         _playerRoleData.roleAttr.Add("role_level",1);
         _playerRoleData.roleAttr.Add("role_exp", 0);
         _playerRoleData.roleAttr.Add("role_liveness", 0);
+        _playerRoleData.roleAttr.Add("map_level",1);
+        _playerRoleData.roleAttr.Add("map_level_num",1);
     }
     
     public void OnUpdate()

@@ -42,6 +42,7 @@ public class FormLogin : UIFormBase
         //loginBtn.GetComponent<Image>().SetImage("Assets/Game/Download/Atlas/Textures/Common","JoyBg.png",true);
         
          await GameEntry.Net.ConnectServerAsync();
+         //GameEntry.Net.Requset.c2s_request_register(account.text,password.text);
          GameEntry.Net.Requset.c2s_request_login(account.text,password.text);
         
         return;

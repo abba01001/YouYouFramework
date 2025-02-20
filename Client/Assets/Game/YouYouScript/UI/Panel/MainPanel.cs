@@ -39,7 +39,6 @@ public class MainPanel : PanelBase
         });
         QuickFightBtn.SetButtonClick(() =>
         {
-            return;
             GameEntry.Procedure.ChangeState(ProcedureState.Battle);
         });   
         

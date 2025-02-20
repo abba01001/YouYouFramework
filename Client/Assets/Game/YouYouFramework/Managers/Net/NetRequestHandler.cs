@@ -27,7 +27,16 @@ public class NetRequestHandler
     
     private void SendMessage<T>(T data) where T : IMessage<T>
     {
-        if (typeof(T).Name != "LoginMsg" && !GameEntry.Net.IsLoginGame) return;
+        bool canSend = false;
+        if (typeof(T).Name == "LoginMsg" || typeof(T).Name == "RegisterMsg")
+        {
+            canSend = true;
+        }
+        else
+        {
+            canSend = GameEntry.Net.IsLoginGame;
+        }
+        if (!canSend) return;
         List<byte[]> list = HandleMessage(data);
         if (socket == null || !socket.Connected)
         {

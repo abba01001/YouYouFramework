@@ -52,7 +52,56 @@ public class FormMain : UIFormBase
         InitPanelObj(Constants.ItemPath.GoldPanel);
         HandleSelectPanel(btnDic["BattleBtn"]);
         OnUpdateBtnStatus();
+        InitChallangeItem();
+
     }
+
+    private MainChallengeItem preSelectItem = null;
+    private void InitChallangeItem()
+    {
+        _scrollRect.Init(_challengeItem.gameObject, GetData());
+        _scrollRect.SetScrollPos(GameEntry.Data.MapLevelNum);
+        foreach (var item in _scrollRect.content.GetComponentsInChildren<MainChallengeItem>())
+        {
+            LevelModel data = item.Data as LevelModel;
+            if (data.levelNum == GameEntry.Data.MapLevelNum)
+            {
+                item.RefreshSelectIndex(true);
+                item.SelectObj(true);
+                preSelectItem = item;
+            }
+            item._button.SetButtonClick(() =>
+            {
+                if (preSelectItem != null)
+                {
+                    preSelectItem.RefreshSelectIndex(false);
+                    preSelectItem.SelectObj(false);
+                }
+                item.RefreshSelectIndex(true);
+                item.SelectObj(true);
+                preSelectItem = item;
+            });
+        }
+    }
+
+    object[] GetData()
+    {
+        List<LevelModel> infos = new List<LevelModel>();
+        foreach (var pair in GameEntry.DataTable.Sys_LevelDBModel.IdByDic)
+        {
+            if (pair.Value.mapLevel == GameEntry.Data.MapLevel)
+            {
+                infos.Add(pair.Value);
+            }
+        }
+// 按照 levelId 排序（升序）
+        //infos.Sort((x, y) => x.levelNum.CompareTo(y.levelNum));
+
+// 如果需要降序排序，可以使用：
+        infos.Sort((x, y) => y.levelNum.CompareTo(x.levelNum));
+        return infos.ToArray();
+    }
+    
 
     private async UniTask InitPanelObj(string panelPath,HomePanelButtonData data = null,ShowType type = ShowType.Default)
     {

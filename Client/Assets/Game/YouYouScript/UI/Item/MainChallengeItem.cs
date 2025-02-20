@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Protocols;
@@ -11,7 +12,18 @@ public class MainChallengeItem : ScrollItem
     [SerializeField] private LordPanel Parent;
     [SerializeField] private TMP_InputField content;
     [SerializeField] private RectTransform bgRect;
+    [SerializeField] private Text LevelNum;
+    [SerializeField] public Button _button;
+    [SerializeField] private Image bgImage;
+    [SerializeField] private GameObject model;
+    [SerializeField] private GameObject enemyModel;
     private object curData;
+    private int selectIndex = -1;
+    private void Awake()
+    {
+        bgImage.color = Color.clear;
+    }
+
     public override void OnDataUpdate(object data, int index)
     {
         base.OnDataUpdate(data, index);
@@ -33,11 +45,28 @@ public class MainChallengeItem : ScrollItem
         //HeroIcon.SetImage(Constants.TexturePath.HeroPanel,entity.HeroPanelIcon,true);
     }
 
+    public void RefreshSelectIndex(bool bo)
+    {
+        selectIndex = bo ? Index : -1;
+    }
+    
+    public void SelectObj(bool bo)
+    {
+        bgImage.color = bo ? Color.white : Color.clear;
+        model.gameObject.MSetActive(bo);
+    }
+    
     private void RefreshData()
     {
-        ChatMsg data = curData as ChatMsg;;
-        content.text = data.Message;
-        GameEntry.Time.CreateTimer(this,0.02f, AdaptTextBg);
+        LevelModel data = curData as LevelModel;
+        if (data.levelNum == 0 || data.levelNum == 6666)
+        {
+            transform.localScale = Vector3.zero;
+            return;
+        }
+        SelectObj(selectIndex == Index);
+        LevelNum.text = data.levelNum.ToString();
+        // GameEntry.Time.CreateTimer(this,0.02f, AdaptTextBg);
         //content.text = data.Message;
         // LevelObj.gameObject.MSetActive(Parent.IsEquipType);
         // NumText.text = "";
