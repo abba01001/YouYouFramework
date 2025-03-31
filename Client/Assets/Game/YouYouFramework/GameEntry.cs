@@ -198,6 +198,8 @@ namespace YouYou
         
         private void Test4()
         {
+            GameEntry.Data.InitGameData(null);
+            GameEntry.Data.SaveData(true);
             GameUtil.ShowTip("测试文本哈哈哈哈哈哈！！！");
         }
 

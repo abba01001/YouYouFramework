@@ -61,6 +61,7 @@ public class GuideManager
     
     public void OnUpdate()
     {
+        return;//TODO 屏蔽引导
         if (!GameEntry.Net.IsLoginGame) return;
         if (IsGuiding) return;
         if (TriggerEventQueue.Count > 0 && CurTriggerEvent == String.Empty)

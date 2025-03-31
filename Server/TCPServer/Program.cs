@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using TCPServer.Core;
 using TCPServer.Core.DataAccess;
@@ -232,4 +233,21 @@ class Program
             }
         }
     }
+
+
+
+
+
+
+
+
 }
+
+// 定义一个类来存放每条房源信息
+public class HouseInfo
+{
+    public string Column1 { get; set; }
+    public string Column2 { get; set; }
+    // 根据实际的表格列数和含义添加更多字段
+}
+
