@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,6 +20,11 @@ public class RangeDetection : MonoBehaviour
     private void Awake()
     {
 
+    }
+
+    private void LateUpdate()
+    {
+        transform.localPosition = Vector3.zero;
     }
 
     public void SetRadious(float _radius)

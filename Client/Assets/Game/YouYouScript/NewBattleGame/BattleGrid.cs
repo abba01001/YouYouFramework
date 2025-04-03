@@ -128,6 +128,7 @@ public class BattleGrid : MonoBehaviour, IPointerEnterHandler, IPointerDownHandl
         {
             
         }
+        //显示UI
     }
     
     public void ShowGrid(bool state)
@@ -177,7 +178,7 @@ public class BattleGrid : MonoBehaviour, IPointerEnterHandler, IPointerDownHandl
     public void OnPointerDown(PointerEventData eventData)
     {
         if (OccupiedCharacters.Count <= 0) return;
-        //ShowRange(true);
+        ShowRange(true);
     }
     
     public void OnPointerEnter(PointerEventData eventData)

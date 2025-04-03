@@ -78,7 +78,7 @@ public class GridCharacterBase : CharacterBase
 
         animator.SetBool("Run",false);
         transform.position = endPosition;
-
+        moveCoroutine = null;
         onComplete?.Invoke();
     }
     
@@ -94,6 +94,7 @@ public class GridCharacterBase : CharacterBase
 
     private void HandleStayInRange(List<Collider2D> colliders)
     {
+        if (moveCoroutine != null) return;
         if (timer >= attackCd)
         {
             timer = 0;
