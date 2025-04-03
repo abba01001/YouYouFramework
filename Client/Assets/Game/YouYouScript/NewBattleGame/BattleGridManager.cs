@@ -82,7 +82,7 @@ public class BattleGridManager
             GameEntry.Time.CreateTimerLoop(this, 0.8f, 1, null, () =>
             {
                 obj.gameObject.SetActive(true);
-                obj.GetComponent<GridCharacterBase>().PlayBornAnim();
+                obj.GetComponent<GridCharacterBase>().Born();
             });
         }
     }

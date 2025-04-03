@@ -8,38 +8,53 @@ using YouYou;
 
 public class EnemyBase : CharacterBase, IDamageable
 {
-    [HideInInspector] protected int healthValue = 100;
-    [HideInInspector] protected int defenseValue = 0;
-    [HideInInspector] public bool isAlive => healthValue > 0;
+    public int healthValue { get; private set; }
+    public int defenseValue { get; private set; }
+    public int priority { get; set; }
+    public bool isAlive => healthValue > 0;
 
-    [HideInInspector] private float totalTime = 15f; // 总共走完路径所需的时间（单位秒）
-    [HideInInspector] private float moveSpeed = 0f; // 计算出的每秒移动距离
-    [HideInInspector] private int currentWaypointIndex = 0; // 当前目标路径点的索引
+    private float totalTime = 15f; // 总共走完路径所需的时间（单位秒）
+    private float moveSpeed = 0f; // 计算出的每秒移动距离
+    private int currentWaypointIndex = 0; // 当前目标路径点的索引
     private float totalPathLength = 0f; // 总路径长度
     private float speedFactor = 1f; // 速度因子（默认 1，增速时 > 1，减速时 < 1）
 
-    
-    public List<Transform> WayPoints { get; set; } // 存储路径点
+
+    private HealthBar _healthBar;
+    private List<Transform> WayPoints => BattleCtrl.Instance.Waypoints; // 存储路径点
+
     private void OnEnable()
     {
-        healthValue = 100;
         currentWaypointIndex = 0;
-        modelDi.gameObject.SetActive(false);
-        blood.gameObject.SetActive(false);
-        defense.gameObject.SetActive(false);
+
     }
 
     private void OnDisable()
     {
         StopCoroutine(FollowPath());
+        if (_healthBar != null)
+        {
+            Destroy(_healthBar.gameObject);
+        }
     }
 
+    public async UniTask Init(EnemyData data,Sys_ModelEntity conf)
+    {
+        config = conf;
+        modelRoot.transform.localScale = Vector3.one * 2;
+        UpdateInitScale();
+        healthValue = config.Hp;
+        if (_healthBar != null) Destroy(_healthBar.gameObject);
+        PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync($"Assets/Game/Download/Prefab/Item/HealthBar.prefab");
+        _healthBar = obj.GetComponent<HealthBar>();
+        _healthBar.Init(data,this);
+    }
+    
     public void StartRun()
     {
         if(!BattleCtrl.Instance.IsInGaming) return;
         if (WayPoints is {Count: > 0})
         {
-            modelRoot.transform.localScale = Vector3.one * 2;
             // 计算路径总长度
             totalPathLength = CalculateTotalPathLength();
             moveSpeed = totalPathLength / totalTime; // 每秒需要移动的距离
@@ -122,9 +137,8 @@ public class EnemyBase : CharacterBase, IDamageable
 
     public void TakeNormalDamage(int damage)
     {
-        // 减少血量
         healthValue -= damage;
-        // 如果血量小于等于零，则死亡
+        _healthBar.OnUpdateHealth();
         if (healthValue <= 0)
         {
             StopCoroutine(FollowPath());

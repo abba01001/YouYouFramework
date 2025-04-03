@@ -24,6 +24,8 @@ static partial class Constants
     public const int ProtocalTotalLength = 1024;
     
     
+    public const string ProvinceUrl = "https://api.live.bilibili.com/client/v1/Ip/getInfoNew";
+    
 
     public const string TalkingDataAppid = "0F4749337D034F9B9F80E2B0DD31851D";
     public const float GroundCheckDistance = 0.1f; // 地面检测距离
@@ -71,7 +73,6 @@ static partial class Constants
         public const string UpdateBattleTimer = "UpdateBattleTimer";
         public const string UpdateBattleRound = "UpdateBattleRound";
         public const string UpdateEnemyCount = "UpdateEnemyCount";
-
 
 
         public const string GetSuspendReward = "GetSuspendReward";

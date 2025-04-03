@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using YouYou;
 
 public interface IDamageable
 {
@@ -18,28 +19,36 @@ public class CharacterBase : MonoBehaviour
     [HideInInspector] protected GameObject defense;
     
     [HideInInspector] private Image bloodValue;
+    [HideInInspector] protected RangeDetection rangeDetection;
+    
+    public Sys_ModelEntity config { get; set; }
     public virtual void Awake()
     {
-        initScale = transform.localScale;
         animator = transform.GetComponentInChildren<Animator>();
         modelRoot = transform.Find("Root");
-        modelDi = transform.Find("Content/Di").gameObject;
-        blood = transform.Find("Content/Blood").gameObject;
-        bloodValue = blood.transform.Find("Value").GetComponent<Image>();
-        defense = transform.Find("Content/Defense").gameObject;
-        
-        modelDi.gameObject.SetActive(false);
-        blood.gameObject.SetActive(false);
-        defense.gameObject.SetActive(false);
+        initScale = modelRoot.localScale;
+        // modelDi = transform.Find("Content/Di").gameObject;
+        // blood = transform.Find("Content/Blood").gameObject;
+        // bloodValue = blood.transform.Find("Value").GetComponent<Image>();
+        // defense = transform.Find("Content/Defense").gameObject;
+        //
+        // modelDi.gameObject.SetActive(false);
+        // blood.gameObject.SetActive(false);
+        // defense.gameObject.SetActive(false);
     }
 
     public void SetBloodValue(float value,bool needAnim = false)
     {
-        bloodValue.fillAmount = value;
+        //bloodValue.fillAmount = value;
+    }
+
+    public void UpdateInitScale()
+    {
+        initScale = modelRoot.localScale;
     }
 
     public void SetFace(int face)
     {
-        transform.localScale = new Vector3(face * initScale.x, initScale.y, initScale.z);
+        modelRoot.localScale = new Vector3(face * initScale.x, initScale.y, initScale.z);
     }
 }

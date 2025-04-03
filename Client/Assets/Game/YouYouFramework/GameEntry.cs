@@ -168,8 +168,9 @@ namespace YouYou
         private bool isOpen = false;
         private void Test0()
         {
-            isOpen = !isOpen;
-            MainEntry.Reporter.ShowLogPanel(isOpen);
+            // isOpen = !isOpen;
+            // MainEntry.Reporter.ShowLogPanel(isOpen);
+            StartCoroutine(GameUtil.LocationInfoCoroutine(null));
         }
         
         private void Test1()

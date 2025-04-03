@@ -15,7 +15,6 @@ public class GridCharacterBase : CharacterBase
     public float attackCd = 0.75f;
     public float timer = 0.75f;
     private Transform detection;
-    public Sys_ModelEntity config { get; set; }
     public void InitParams(Sys_ModelEntity _config)
     {
         config = _config;
@@ -25,15 +24,18 @@ public class GridCharacterBase : CharacterBase
     {
         base.Awake();
         detection = transform.Find("Detection");
-        RangeDetection rangeDetection = GetComponentInChildren<RangeDetection>();
+        rangeDetection = GetComponentInChildren<RangeDetection>();
         rangeDetection.OnObjectsEnterRange += HandleEnterRange;
         rangeDetection.OnObjectsStayInRange += HandleStayInRange;
         rangeDetection.OnObjectsExitRange += HandleExitRange;
     }
 
-    public void PlayBornAnim()
+    public void Born()
     {
         animator.Play("born");
+        animator.SetBool("Run",false);
+        rangeDetection.SetRadious(config.AttackRange);
+        attackCd = config.AttackInterval;
     }
 
     public void SetTargetPos(Vector2 endPosition)
@@ -67,7 +69,6 @@ public class GridCharacterBase : CharacterBase
         float moveSpeed = 81f;
         float duration = distance / moveSpeed;
         float time = 0f;
-        
         while (time < duration)
         {
             time += Time.deltaTime;
@@ -97,7 +98,7 @@ public class GridCharacterBase : CharacterBase
         {
             timer = 0;
             GameObject enemy = GetNearEnemy(colliders);
-            if (enemy != null)
+            if (enemy != null && enemy.GetComponentInParent<EnemyBase>().isAlive)
             {
                 SetFace(transform.position.x > enemy.transform.position.x ? 1 : -1);
                 enemy.GetComponentInParent<EnemyBase>().TakeNormalDamage(5);
@@ -109,16 +110,21 @@ public class GridCharacterBase : CharacterBase
 
     private GameObject GetNearEnemy(List<Collider2D> colliders)
     {
-        float d1 = 999999999999;
+        EnemyBase lastEnemy = null;
         GameObject obj = null;
         foreach (var col in colliders)
         {
-            var d2 = Mathf.Abs(Vector3.Distance(col.gameObject.transform.position, transform.position));
-            if (d2 <= d1)
+            var enemy = col.GetComponentInParent<EnemyBase>();
+            if (enemy != null)
             {
-                d1 = d2;
-                obj = col.gameObject;
+                if (lastEnemy != null && enemy.priority > lastEnemy.priority && enemy.isAlive)
+                {
+                    obj = col.gameObject;
+                }
+                lastEnemy = enemy;
+                if (obj == null && enemy.isAlive) obj = col.gameObject;
             }
+
         }
         return obj;
     }

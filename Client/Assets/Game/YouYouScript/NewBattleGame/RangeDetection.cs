@@ -18,7 +18,13 @@ public class RangeDetection : MonoBehaviour
 
     private void Awake()
     {
-        // 获取 CircleCollider2D 组件，如果没有则添加一个
+
+    }
+
+    public void SetRadious(float _radius)
+    {
+        radius = _radius;
+        rangeColor = Color.red;
         circleCollider2D = GetComponent<CircleCollider2D>();
         if (circleCollider2D == null)
         {
@@ -29,7 +35,7 @@ public class RangeDetection : MonoBehaviour
         circleCollider2D.radius = radius;
         circleCollider2D.isTrigger = true;
     }
-
+    
     private void OnDrawGizmos()
     {
         // 绘制圆圈范围

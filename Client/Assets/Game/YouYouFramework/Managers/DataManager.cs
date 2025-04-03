@@ -191,7 +191,9 @@ public class DataManager : Observable<DataManager>, IDataManager
         }
         if (writeCloud)
         {
+            string json = MessagePackSerializer.SerializeToJson(this, MessagePackSerializer.DefaultOptions);
             MainEntry.Log(MainEntry.LogCategory.GameData,$"上传云端?{Time.time - lastUploadTime >= uploadCooldown || ignoreCloudTime}");
+            MainEntry.Log(MainEntry.LogCategory.GameData,$"数据====>{json}");
             if (Time.time - lastUploadTime >= uploadCooldown || ignoreCloudTime)
             {
                 if (SaveAction != null) SaveAction.Stop();

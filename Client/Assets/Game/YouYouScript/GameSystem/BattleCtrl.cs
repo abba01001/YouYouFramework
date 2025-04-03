@@ -8,23 +8,22 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using YouYou;
 
+//用来操作战斗数据
 public class BattleCtrl : Singleton<BattleCtrl>
 {
     public BattleGridManager GridManager { get; set; }
     public int MaxEnemyCount => 100; //最大敌人数
     private TimeAction TimeAction { get; set; }
     public  LevelData CurLevelData { get; set; }
-    private List<Transform> Waypoints { get; set; } = new List<Transform>();
+    public List<Transform> Waypoints { get; set; } = new List<Transform>();
     private List<EnemyBase> EnemyList { get; set; } = new List<EnemyBase>();
     public bool IsInGaming = false;
     
     private int timer = 0;
-    private string fullSavePath;
     private LevelStage stageData;
-    private int curStageIndex;
-    private bool canGenerateEnemy;
-
-    private bool isGeneratingEnemies = false;  // 控制是否生成敌人
+    private int CurStageIndex { get; set; }//阶段索引
+    private bool CanGenerateEnemyFlag { get; set; }//能否生成敌人标记
+    private bool IsGeneratingEnemies { get; set; }//敌人是否正在生成
     private CancellationTokenSource cancellationTokenSource;  // 用来取消敌人生成的操作
     private TimeAction generateEnemyTimeAction;
     //注册事件
@@ -53,8 +52,8 @@ public class BattleCtrl : Singleton<BattleCtrl>
     public void InitBattleData(object userData)
     {
         timer = 0;
-        curStageIndex = 0;
-        canGenerateEnemy = false;
+        CurStageIndex = 0;
+        CanGenerateEnemyFlag = false;
         Waypoints.Clear();
         EnemyList.Clear();    
         
@@ -84,18 +83,18 @@ public class BattleCtrl : Singleton<BattleCtrl>
     private void CheckGenerateEnemy()
     {
         if(CurLevelData == null) return;
-        if(curStageIndex >= CurLevelData.stages.Count) return;
-        stageData = CurLevelData.stages[curStageIndex];
+        if(CurStageIndex >= CurLevelData.stages.Count) return;
+        stageData = CurLevelData.stages[CurStageIndex];
         if (timer >= stageData.startTime)
         {
-            canGenerateEnemy = true;
-            curStageIndex++;
+            CanGenerateEnemyFlag = true;
+            CurStageIndex++;
             GameEntry.Event.Dispatch(Constants.EventName.UpdateBattleRound,new UpdateBattleRoundEvent(stageData,CurLevelData.stages.Count));
         }
         GameEntry.Event.Dispatch(Constants.EventName.UpdateBattleTimer,new UpdateBattleTimerEvent(stageData.startTime - timer));
-        if (canGenerateEnemy)
+        if (CanGenerateEnemyFlag)
         {
-            canGenerateEnemy = false;
+            CanGenerateEnemyFlag = false;
             InstantiateEnemy(stageData);
         }
     }
@@ -103,10 +102,9 @@ public class BattleCtrl : Singleton<BattleCtrl>
     private async void InstantiateEnemy(LevelStage data)
     {
         int count = 0;
-        if (isGeneratingEnemies)
-            return;
+        if (IsGeneratingEnemies) return;
         // 设置取消标志
-        isGeneratingEnemies = true;
+        IsGeneratingEnemies = true;
         cancellationTokenSource = new CancellationTokenSource();
         
         try
@@ -116,21 +114,22 @@ public class BattleCtrl : Singleton<BattleCtrl>
                 // 如果生成被取消，则退出循环
                 if (cancellationTokenSource.Token.IsCancellationRequested) break;
                 PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync(GameUtil.GetModelPath(data.enemy.modelId));
+                Sys_ModelEntity entity = GameEntry.DataTable.Sys_ModelDBModel.GetEntity(data.enemy.modelId);
                 EnemyBase enemyBase = obj.GetComponent<EnemyBase>();
-                enemyBase.WayPoints = Waypoints;
+                await enemyBase.Init(data.enemy,entity);
                 enemyBase.StartRun();
-                obj.GetComponent<SortingGroup>().sortingOrder -= count;
+                obj.GetComponent<SortingGroup>().sortingOrder += count;
+                enemyBase.priority = 1000 - count;
                 count++;
                 GameEntry.Event.Dispatch(Constants.EventName.UpdateEnemyCount, new UpdateEnemyCountEvent(1));
                 EnemyList.Add(enemyBase);
-                // 使用 cancellationToken 来处理延时
                 await UniTask.Delay(TimeSpan.FromSeconds(data.enemy.interval), cancellationToken: cancellationTokenSource.Token);
             }
         }
         finally
         {
             // 生成结束后重置标志位
-            isGeneratingEnemies = false;
+            IsGeneratingEnemies = false;
         }
     }
 

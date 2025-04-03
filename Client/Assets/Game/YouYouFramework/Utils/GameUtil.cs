@@ -9,7 +9,9 @@ using YouYou;
 using Cysharp.Threading.Tasks;
 using ICSharpCode.SharpZipLib.Zip;
 using Main;
+using Newtonsoft.Json;
 using Unity.VisualScripting;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class GameUtil
@@ -582,5 +584,20 @@ public class GameUtil
         model.text = text;
         GameEntry.UI.OpenUIForm<FormTip>("FormTip",model);
         MainEntry.ClassObjectPool.Enqueue(model);
+    }
+    
+    public static IEnumerator LocationInfoCoroutine(Action<string> callback)
+    {
+        var publicIpReq = new UnityWebRequest(Constants.ProvinceUrl, UnityWebRequest.kHttpVerbGET);
+        publicIpReq.downloadHandler = new DownloadHandlerBuffer();
+
+        yield return publicIpReq.SendWebRequest();
+        if (!string.IsNullOrEmpty(publicIpReq.error))
+        {
+            Debug.Log($"获取省份信息失败：{publicIpReq.error}");
+            yield break;
+        }
+        var res = publicIpReq.downloadHandler.text;
+        GameUtil.LogError(res);
     }
 }

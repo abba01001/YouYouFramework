@@ -13,8 +13,9 @@
             "stageIndex": "1",
             "startTime": 3,
             "enemy": {
-                "modelId": 21003,
+                "modelId": 21001,
                 "enemyCount": 10,
+                "hp": 30,
                 "interval": 0.5,
                 "rewards": []
             },
@@ -25,8 +26,9 @@
             "stageIndex": "2",
             "startTime": 25,
             "enemy": {
-                "modelId": 21001,
+                "modelId": 21003,
                 "enemyCount": 15,
+                "hp": 70,
                 "interval": 0.5,
                 "rewards": []
             },
