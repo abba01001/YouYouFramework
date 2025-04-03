@@ -41,7 +41,6 @@ public class EnemyData
 {
     [LabelText("模型ID")] public int modelId; // 模型ID
     [LabelText("怪物数量")] public int enemyCount; // 敌人数量
-    [LabelText("怪物血量")] public int hp;//怪物血量
     [LabelText("产生间隔")] public float interval; // 生成间隔
     [LabelText("奖励")] public List<ItemData> rewards; // 使用 List<RewardData> 替代 Dictionary
 }

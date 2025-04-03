@@ -22,7 +22,7 @@ public class HealthBar : MonoBehaviour
         enemyData = data;
         enemyParent = parent;
 
-        maxHp = enemyData.hp;
+        maxHp = parent.config.Hp;
         bloodValue.size = Vector2.one;
         defenseValue.size = Vector2.one;
     }
