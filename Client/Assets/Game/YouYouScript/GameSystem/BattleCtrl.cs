@@ -34,6 +34,12 @@ public class BattleCtrl : Singleton<BattleCtrl>
         GridManager = new BattleGridManager();
     }
 
+    public void StartEntryBattle()
+    {
+        // GameEntry.Data.TempSelectMapLvNum
+        GameEntry.Procedure.ChangeState(ProcedureState.Battle);
+    }
+    
     //卸载事件
     public void End()
     {

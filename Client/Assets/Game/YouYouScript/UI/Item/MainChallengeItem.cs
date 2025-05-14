@@ -17,11 +17,13 @@ public class MainChallengeItem : ScrollItem
     [SerializeField] private Image bgImage;
     [SerializeField] private GameObject model;
     [SerializeField] private GameObject enemyModel;
+    [SerializeField] private GameObject tipObj;
     private object curData;
     private int selectIndex = -1;
     private void Awake()
     {
         bgImage.color = Color.clear;
+        tipObj.MSetActive(false);
     }
 
     public override void OnDataUpdate(object data, int index)

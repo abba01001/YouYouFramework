@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Main;
 using UnityEngine;
 using UnityEngine.UI;
 using YouYou;
@@ -59,29 +60,39 @@ public class FormMain : UIFormBase
     private MainChallengeItem preSelectItem = null;
     private void InitChallangeItem()
     {
-        _scrollRect.Init(_challengeItem.gameObject, GetData());
-        _scrollRect.SetScrollPos(GameEntry.Data.MapLevelNum);
-        foreach (var item in _scrollRect.content.GetComponentsInChildren<MainChallengeItem>())
+        _scrollRect.SetInitCompleteCb(() =>
         {
-            LevelModel data = item.Data as LevelModel;
-            if (data.levelNum == GameEntry.Data.MapLevelNum)
+            _scrollRect.SetScrollPos(Constants.MapMaxLevelCount - GameEntry.Data.MapLevelNum);
+            GameEntry.Time.Yield(() =>
             {
-                item.RefreshSelectIndex(true);
-                item.SelectObj(true);
-                preSelectItem = item;
-            }
-            item._button.SetButtonClick(() =>
-            {
-                if (preSelectItem != null)
+                foreach (var item in _scrollRect.content.GetComponentsInChildren<MainChallengeItem>(true))
                 {
-                    preSelectItem.RefreshSelectIndex(false);
-                    preSelectItem.SelectObj(false);
+                    LevelModel data = item.Data as LevelModel;
+                    if (data != null && data.levelNum == GameEntry.Data.MapLevelNum)
+                    {
+                        GameEntry.Data.TempSelectMapLvNum = data.levelNum;
+                        item.RefreshSelectIndex(true);
+                        item.SelectObj(true);
+                        preSelectItem = item;
+                    }
+
+                    item._button.SetButtonClick(() =>
+                    {
+                        if (preSelectItem != null)
+                        {
+                            preSelectItem.RefreshSelectIndex(false);
+                            preSelectItem.SelectObj(false);
+                        }
+
+                        item.RefreshSelectIndex(true);
+                        item.SelectObj(true);
+                        GameEntry.Data.TempSelectMapLvNum = (item.Data as LevelModel).levelNum;
+                        preSelectItem = item;
+                    });
                 }
-                item.RefreshSelectIndex(true);
-                item.SelectObj(true);
-                preSelectItem = item;
             });
-        }
+        });
+        _scrollRect.Init(_challengeItem.gameObject, GetData());
     }
 
     object[] GetData()

@@ -22,7 +22,7 @@ static partial class Constants
     public const string ENCRYPTEDKEY = "ENCRYPTED:";
     public const int ProtocalHeadLength = 41;
     public const int ProtocalTotalLength = 1024;
-    
+    public const int MapMaxLevelCount = 10;
     
     public const string ProvinceUrl = "https://api.live.bilibili.com/client/v1/Ip/getInfoNew";
     

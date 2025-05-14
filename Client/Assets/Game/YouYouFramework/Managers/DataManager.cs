@@ -61,6 +61,8 @@ public class DataManager : Observable<DataManager>, IDataManager
 
     #region 临时public数据
     [IgnoreMember] public long Coin { get; }
+    [IgnoreMember] public int TempSelectMapLvNum { get; set; } = 1;
+    [IgnoreMember] public int TempSelectMapLv { get; set; } = 1;
     [IgnoreMember] public int SuspendStartTime { get; set; } = -1;//挂机奖励开始时间点
     [IgnoreMember] public int SuspendQuickGetRewardIndex { get; set; } = -1;//挂机奖励开始时间点
     [IgnoreMember] public int SuspendQuickGetRewardLimit { get; set; } = -1;//挂机奖励开始时间点
@@ -106,9 +108,9 @@ public class DataManager : Observable<DataManager>, IDataManager
     public void InitPlayData()
     {
         _playerRoleData = new PlayerRoleData();
-        _playerRoleData.roleAttr.Add("HuoBi1",0);
-        _playerRoleData.roleAttr.Add("HuoBi3",2000);
-        _playerRoleData.roleAttr.Add("HuoBi4",0);
+        _playerRoleData.roleAttr.Add("huo_bi_1",0);
+        _playerRoleData.roleAttr.Add("huo_bi_3",2000);
+        _playerRoleData.roleAttr.Add("huo_bi_4",0);
         _playerRoleData.roleAttr.Add("role_level",1);
         _playerRoleData.roleAttr.Add("role_exp", 0);
         _playerRoleData.roleAttr.Add("role_liveness", 0);

@@ -1323,7 +1323,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 18.940094, y: 32}
+  m_AnchoredPosition: {x: 4.3, y: 32}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2579964481338581573
@@ -6871,6 +6871,7 @@ MonoBehaviour:
   bgImage: {fileID: 7340844633243327672}
   model: {fileID: 6778252315455357153}
   enemyModel: {fileID: 2556683713662099020}
+  tipObj: {fileID: 3517219426830934983}
 --- !u!1 &9105690091424169417
 GameObject:
   m_ObjectHideFlags: 0

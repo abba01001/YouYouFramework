@@ -39,7 +39,7 @@ public class MainPanel : PanelBase
         });
         QuickFightBtn.SetButtonClick(() =>
         {
-            GameEntry.Procedure.ChangeState(ProcedureState.Battle);
+            BattleCtrl.Instance.StartEntryBattle();
         });   
         
         if (!GameEntry.Data.RequestPublicChat)

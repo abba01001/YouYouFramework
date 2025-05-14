@@ -36,7 +36,7 @@ namespace YouYou
             
             //初始化界面
             GameEntry.UI.OpenUIForm<FormBattle>();
-            LevelData data = await LoadCurrentLevelAsync("1");
+            LevelData data = await LoadCurrentLevelAsync($"{GameEntry.Data.TempSelectMapLv}_{GameEntry.Data.TempSelectMapLvNum}");
             //初始化关卡数据
             GameEntry.Event.Dispatch(Constants.EventName.InitBattleData,data);
         }
