@@ -101,15 +101,14 @@ public class GuideManager
     private async UniTask HandleGuideDetail(Sys_GuideEntity entity)
     {
         bool isEventGuide = !string.IsNullOrEmpty(entity.EventTrigger);
-        GameUtil.LogError(entity.GuideId,"=====",entity.GuideType);
         // 验证引导是否可以继续
+        if (!CheckGuideIsEnable(entity)) return;//引导是否启用
         if (!CheckInTriggerScene(entity)) return;//是否在触发场景里
         if (!Constants.IsEntryFormMain) return;//是否进入主界面
         if (GameEntry.Data.RoleLevel < entity.ToLevelTrigger) return; // 未达到等级
         if (isEventGuide && CurTriggerEvent != entity.EventTrigger) return; // 事件未触发
         if (CheckCompleteGuideId(entity.GuideId)) return; // 引导已完成
         if (!CheckCompletePreGuide(entity.GuideId)) return; // 前置引导未完成
-        if (!CheckGuideIsEnable(entity)) return;//引导是否启用
         IsGuiding = true;
 
         // 根据引导类型执行相应操作
@@ -145,7 +144,10 @@ public class GuideManager
     {
         if (entity.ShowForm != "")
         {
-            GameEntry.UI.OpenUIFormByName(entity.ShowForm);
+            GameEntry.UI.OpenUIFormByName(entity.ShowForm,null,()=>
+            {
+                FinishCurGuide(entity.GuideId);
+            });
         }
     }
     

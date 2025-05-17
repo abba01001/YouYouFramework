@@ -25,7 +25,7 @@ public class FormChangeName : UIFormBase
             }
             GameEntry.Data.PlayerRoleData.name = _inputField.text;
             GameEntry.UI.CloseUIForm<FormChangeName>();
-            GameEntry.Event.Dispatch(Constants.EventName.TriggerGuideEvent,"ListenTest");
+            GameEntry.Event.Dispatch(Constants.EventName.TriggerGuideEvent,Constants.EventName.FinishInputName);
         });
     }
 

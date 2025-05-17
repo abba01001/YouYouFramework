@@ -326,7 +326,7 @@ namespace YouYou
             return false;
         }
         
-        public void OpenUIFormByName(string className, object userData = null)
+        public void OpenUIFormByName(string className, object userData = null,Action cb = null)
         {
             Type type = Type.GetType(className);
             if (type == null)
@@ -348,6 +348,7 @@ namespace YouYou
 
             var genericMethod = methods[0].MakeGenericMethod(type);
             genericMethod.Invoke(GameEntry.UI, new object[] { userData });
+            cb?.Invoke();
         }
 
     }
