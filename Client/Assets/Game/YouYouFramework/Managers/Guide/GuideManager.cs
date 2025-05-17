@@ -114,16 +114,16 @@ public class GuideManager
         // 根据引导类型执行相应操作
         switch (entity.GuideType)
         {
-            case 1:
+            case 1://对话引导
                 PlayDialogueGuide(entity);
                 break;
-            case 2:
+            case 2://点击引导
                 PlayClickGuide(entity);
                 break;
-            case 3:
+            case 3://对话+点击引导
                 PlayClickDialogueGuide(entity);
                 break;
-            case 4:
+            case 4://弹窗引导
                 PlayFormGuide(entity);
                 break;
             default:
