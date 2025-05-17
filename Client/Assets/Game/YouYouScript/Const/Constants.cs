@@ -14,6 +14,8 @@ static partial class Constants
     public static float MainRoleMoveSpeed = 4f;//玩家移动速度
     public static bool IsLoadDataTable = false;
     public static bool IsLoginGame = false;
+    public static bool IsShieldGuide = true;
+    public static bool IsEntryFormMain = false;
     
     // 定义全局常量，常量值不可修改
     public const float GRAVITY = -9.81f;//重力
@@ -67,6 +69,7 @@ static partial class Constants
         public const string FinishLoadDataTable = "FinishLoadDataTable";
         public const string LoginSuccess = "LoginSuccess";
 
+        public const string FinishInputName = "FinishInputName";
         public const string TriggerGuideEvent = "TriggerGuideEvent";
         public const string TriggerDialogue = "TriggerDialogue";
         public const string InitBattleData = "InitBattleData";

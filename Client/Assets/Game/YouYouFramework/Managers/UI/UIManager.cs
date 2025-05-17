@@ -4,6 +4,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using System.Linq;
 using Object = UnityEngine.Object;
 
 namespace YouYou
@@ -323,6 +324,30 @@ namespace YouYou
                 if (curr.Value.SysUIForm.Id == uiFormId) return true;
             }
             return false;
+        }
+        
+        public void OpenUIFormByName(string className, object userData = null)
+        {
+            Type type = Type.GetType(className);
+            if (type == null)
+            {
+                Debug.LogError($"找不到类：{className}");
+                return;
+            }
+
+            // 获取泛型方法 OpenUIForm<T>(object userData)
+            var methods = typeof(UIManager).GetMethods()
+                .Where(m => m.Name == "OpenUIForm" && m.IsGenericMethod && m.GetParameters().Length == 1)
+                .ToList();
+
+            if (methods.Count == 0)
+            {
+                Debug.LogError("找不到 OpenUIForm<T>() 方法");
+                return;
+            }
+
+            var genericMethod = methods[0].MakeGenericMethod(type);
+            genericMethod.Invoke(GameEntry.UI, new object[] { userData });
         }
 
     }

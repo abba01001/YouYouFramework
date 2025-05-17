@@ -26,6 +26,7 @@ public class FormMain : UIFormBase
     protected override void Awake()
     {
         base.Awake();
+        Constants.IsEntryFormMain = true;
     }
 
     protected override void OnShow()

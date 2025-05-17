@@ -13,7 +13,7 @@ namespace YouYou
         public int GuideId;
 
         /// <summary>
-        /// 引导类型(1对话)(2点击遮罩)(3点击+遮罩)
+        /// 引导类型(1对话)(2点击)(3点击+对话)(4弹窗)
         /// </summary>
         public int GuideType;
 
@@ -43,9 +43,19 @@ namespace YouYou
         public float TimeToClose;
 
         /// <summary>
+        /// 弹出界面
+        /// </summary>
+        public string ShowForm;
+
+        /// <summary>
         /// 点击是否需要箭头
         /// </summary>
         public string ClickArrow;
+
+        /// <summary>
+        /// 触发场景(1,Launch 2,CheckVersion  3,Preload  4,Game  5,Battle  6,MapEditor)
+        /// </summary>
+        public int TriggerScene;
 
         /// <summary>
         /// 触发对话ID(-1不是)
@@ -56,6 +66,11 @@ namespace YouYou
         /// 策划备注全部任务流程
         /// </summary>
         public string Progress;
+
+        /// <summary>
+        /// 引导是否启用
+        /// </summary>
+        public int IsEnable;
 
     }
 }

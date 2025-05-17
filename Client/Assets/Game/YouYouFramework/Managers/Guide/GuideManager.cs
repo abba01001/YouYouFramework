@@ -61,7 +61,7 @@ public class GuideManager
     
     public void OnUpdate()
     {
-        return;//TODO 屏蔽引导
+        // if(Constants.IsShieldGuide) return;屏蔽引导系统
         if (!GameEntry.Net.IsLoginGame) return;
         if (IsGuiding) return;
         if (TriggerEventQueue.Count > 0 && CurTriggerEvent == String.Empty)
@@ -92,16 +92,24 @@ public class GuideManager
         return true;
     }
 
+    private bool CheckGuideIsEnable(Sys_GuideEntity entity)
+    {
+        if (entity.IsEnable == 1) return true;
+        return true;
+    }
+
     private async UniTask HandleGuideDetail(Sys_GuideEntity entity)
     {
         bool isEventGuide = !string.IsNullOrEmpty(entity.EventTrigger);
-
+        GameUtil.LogError(entity.GuideId,"=====",entity.GuideType);
         // 验证引导是否可以继续
+        if (!CheckInTriggerScene(entity)) return;//是否在触发场景里
+        if (!Constants.IsEntryFormMain) return;//是否进入主界面
         if (GameEntry.Data.RoleLevel < entity.ToLevelTrigger) return; // 未达到等级
         if (isEventGuide && CurTriggerEvent != entity.EventTrigger) return; // 事件未触发
         if (CheckCompleteGuideId(entity.GuideId)) return; // 引导已完成
         if (!CheckCompletePreGuide(entity.GuideId)) return; // 前置引导未完成
-
+        if (!CheckGuideIsEnable(entity)) return;//引导是否启用
         IsGuiding = true;
 
         // 根据引导类型执行相应操作
@@ -116,11 +124,31 @@ public class GuideManager
             case 3:
                 PlayClickDialogueGuide(entity);
                 break;
+            case 4:
+                PlayFormGuide(entity);
+                break;
             default:
                 break;
         }
     }
+    
+    
 
+    private bool CheckInTriggerScene(Sys_GuideEntity entity)
+    {
+        if (entity.TriggerScene == 0) return true;
+        if (entity.TriggerScene == (int) GameEntry.Procedure.CurrProcedureState) return true;
+        return false;
+    }
+
+    private void PlayFormGuide(Sys_GuideEntity entity)
+    {
+        if (entity.ShowForm != "")
+        {
+            GameEntry.UI.OpenUIFormByName(entity.ShowForm);
+        }
+    }
+    
     private void PlayClickDialogueGuide(Sys_GuideEntity entity)
     {
         GameEntry.Event.Dispatch(Constants.EventName.TriggerDialogue, new DialogueModel()

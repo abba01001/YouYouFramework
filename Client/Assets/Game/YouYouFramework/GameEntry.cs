@@ -199,6 +199,9 @@ namespace YouYou
         
         private void Test4()
         {
+            GameUtil.LogError(typeof(FormMain).FullName);
+            GameEntry.UI.OpenUIFormByName("FormChangeName");
+            return;
             GameEntry.Data.InitGameData(null);
             GameEntry.Data.SaveData(true);
             GameUtil.ShowTip("测试文本哈哈哈哈哈哈！！！");

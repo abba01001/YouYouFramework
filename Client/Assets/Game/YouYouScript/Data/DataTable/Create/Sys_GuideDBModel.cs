@@ -34,9 +34,12 @@ namespace YouYou
                 entity.NextGuideId = ms.ReadInt();
                 entity.ClickWidth = ms.ReadUTF8String();
                 entity.TimeToClose = ms.ReadFloat();
+                entity.ShowForm = ms.ReadUTF8String();
                 entity.ClickArrow = ms.ReadUTF8String();
+                entity.TriggerScene = ms.ReadInt();
                 entity.DialogueId = ms.ReadInt();
                 entity.Progress = ms.ReadUTF8String();
+                entity.IsEnable = ms.ReadInt();
 
                 m_List.Add(entity);
                 m_Dic[entity.Id] = entity;
