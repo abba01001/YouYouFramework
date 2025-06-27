@@ -122,7 +122,7 @@ public class BattleCtrl : Singleton<BattleCtrl>
                 PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync(GameUtil.GetModelPath(data.enemy.modelId));
                 Sys_ModelEntity entity = GameEntry.DataTable.Sys_ModelDBModel.GetEntity(data.enemy.modelId);
                 EnemyBase enemyBase = obj.GetComponent<EnemyBase>();
-                await enemyBase.Init(data.enemy,entity);
+                await enemyBase.Init(data.enemy,entity,count,obj.GetComponent<SortingGroup>());
                 enemyBase.StartRun();
                 obj.GetComponent<SortingGroup>().sortingOrder += count;
                 enemyBase.priority = 1000 - count;

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Rendering;
 using YouYou;
 
 public class EnemyBase : CharacterBase, IDamageable
@@ -13,6 +14,8 @@ public class EnemyBase : CharacterBase, IDamageable
     public int priority { get; set; }
     public bool isAlive => healthValue > 0;
 
+    private SortingGroup sortingGroup;
+    private int id = -1;
     private float totalTime = 15f; // 总共走完路径所需的时间（单位秒）
     private float moveSpeed = 0f; // 计算出的每秒移动距离
     private int currentWaypointIndex = 0; // 当前目标路径点的索引
@@ -38,9 +41,11 @@ public class EnemyBase : CharacterBase, IDamageable
         }
     }
 
-    public async UniTask Init(EnemyData data,Sys_ModelEntity conf)
+    public async UniTask Init(EnemyData data,Sys_ModelEntity conf,int index,SortingGroup sortG)
     {
         config = conf;
+        id = index;
+        sortingGroup = sortG;
         modelRoot.transform.localScale = Vector3.one * 2;
         UpdateInitScale();
         healthValue = config.Hp;
@@ -111,6 +116,7 @@ public class EnemyBase : CharacterBase, IDamageable
 
             if (Vector3.Distance(transform.position, targetWaypoint.position) <= 0.1f)
             {
+                GameUtil.LogError(currentWaypointIndex);
                 currentWaypointIndex++;
                 if (currentWaypointIndex is 3 or 4)
                 {
