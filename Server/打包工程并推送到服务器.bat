@@ -1,4 +1,10 @@
 @echo off
+:: 设置脚本所在目录为当前工作目录
+cd /d %~dp0
+
+:: 输出当前路径
+echo Current directory: %cd%
+
 chcp 65001
 setlocal
 
@@ -16,7 +22,10 @@ IF %ERRORLEVEL% NEQ 0 (
     echo 发布失败，请检查项目设置或错误信息。
 ) ELSE (
     echo 发布成功，输出文件在当前目录的 Server 文件夹中。
+   "C:\Program Files (x86)\WinSCP\winscp.com" /script="%cd%\upload_script.txt"
 )
+
+
 
 pause
 发布前判断下有没有打包这个文件夹，如果有要先删除

@@ -1,0 +1,5 @@
+open sftp://Administrator:Ww6221905%40qq.com@159.75.164.29/ -hostkey=*
+lcd Server
+cd /C:/Server
+put *
+exit
