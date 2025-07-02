@@ -111,8 +111,12 @@ public static class ServerSocket
         socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         socket.Bind(new IPEndPoint(IPAddress.Parse(ip), port));
         socket.Listen(clientNum);
-        SqlManager.Initialize($"Server={KeyUtils.GetSqlKey(SqlKey.Server)};Database={KeyUtils.GetSqlKey(SqlKey.Database)};" +
-          $"UserId={KeyUtils.GetSqlKey(SqlKey.UserId)};Password={KeyUtils.GetSqlKey(SqlKey.Password)};Port = {KeyUtils.GetSqlKey(SqlKey.Port)}");
+
+        SqlManager.Initialize($"Server={"159.75.164.29"};Database={"unitygamedata"};" +
+$"UserId={"pengjunwei"};Password={"pengjunwei"};Port = {"5001"}");
+
+        //SqlManager.Initialize($"Server={KeyUtils.GetSqlKey(SqlKey.Server)};Database={KeyUtils.GetSqlKey(SqlKey.Database)};" +
+        //  $"UserId={KeyUtils.GetSqlKey(SqlKey.UserId)};Password={KeyUtils.GetSqlKey(SqlKey.Password)};Port = {KeyUtils.GetSqlKey(SqlKey.Port)}");
         LoggerHelper.Instance.Info($"服务器启动成功: IP={ip}, 端口={port}");
 
         cancellationTokenSource = new CancellationTokenSource();

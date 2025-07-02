@@ -26,6 +26,7 @@ class Program
             LoggerHelper.Instance.Debug("请选择操作:");
             LoggerHelper.Instance.Debug("1. 开启服务器");
             LoggerHelper.Instance.Debug("2. 查询某个玩家的游戏数据");
+            LoggerHelper.Instance.Debug("3. 测试服务端mysql");
             LoggerHelper.Instance.Debug("请输入数字选择操作（或者输入Quit退出）：");
 
             string inputStr = Console.ReadLine();
@@ -41,6 +42,12 @@ class Program
             {
                 SqlManager.Initialize($"Server={KeyUtils.GetSqlKey(SqlKey.Server)};Database={KeyUtils.GetSqlKey(SqlKey.Database)};" +
   $"UserId={KeyUtils.GetSqlKey(SqlKey.UserId)};Password={KeyUtils.GetSqlKey(SqlKey.Password)};Port = {KeyUtils.GetSqlKey(SqlKey.Port)}");
+                QueryPlayerData();
+            }
+            else if (inputStr == "3")
+            {
+                SqlManager.Initialize($"Server={"159.75.164.29"};Database={"unitygamedata"};" +
+$"UserId={"pengjunwei"};Password={"pengjunwei"};Port = {"5001"}");
                 QueryPlayerData();
             }
             else
@@ -192,10 +199,13 @@ class Program
                     if(kvp.Key == "save_data")
                     {
                         datas = (byte[])kvp.Value;
+
+                        string hex = BitConverter.ToString(datas).Replace("-", " ");
+                        LoggerHelper.Instance.Debug($"玩家数据==={BitConverter.ToString(datas)}");
                     }
                 }
-                //ServerSocket.handleSubPack.DecompressData(datas);
-                DataManager.Instance.InitGameData(datas);
+                byte[] d = ServerSocket.handleSubPack.DecompressData(datas);
+                DataManager.Instance.InitGameData(d);
                 LoggerHelper.Instance.Debug($"玩家 {playerAccount} 的数据查询成功。");
             }
             else

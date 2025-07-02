@@ -74,33 +74,65 @@ public partial class DataManager
         var str = MessagePackSerializer.SerializeToJson(this, MessagePackSerializer.DefaultOptions);
         return str;
     }
-    
+
+    private void InitializeWithDefaultData()
+    {
+        // 为每个属性设置默认值
+        // 这里只是示例，具体的默认值根据你的需求设置
+        InitPlayData();
+
+        // 继续为其他属性初始化默认值
+        // ...
+    }
+
+    public void InitPlayData()
+    {
+        _playerRoleData = new PlayerRoleData();
+        _playerRoleData.roleAttr.Add("huo_bi_1", 0);
+        _playerRoleData.roleAttr.Add("huo_bi_3", 2000);
+        _playerRoleData.roleAttr.Add("huo_bi_4", 0);
+        _playerRoleData.roleAttr.Add("role_level", 1);
+        _playerRoleData.roleAttr.Add("role_exp", 0);
+        _playerRoleData.roleAttr.Add("role_liveness", 0);
+        _playerRoleData.roleAttr.Add("map_level", 1);
+        _playerRoleData.roleAttr.Add("map_level_num", 1);
+    }
+
     public void InitGameData(byte[] datas)
     {
-        if (datas is {Length: > 0})
+        InitializeWithDefaultData();
+        if (datas is { Length: > 0 })
         {
             try
             {
                 StringBuilder logBuilder = new StringBuilder();
                 DataManager mc2 = MessagePackSerializer.Deserialize<DataManager>(datas);
 
+
                 PropertyInfo[] properties = mc2.GetType().GetProperties();
-                logBuilder.AppendLine($"========玩家GameData数据========");
+                LoggerHelper.Instance.Info($"========初始化GameData========");
                 foreach (var property in properties)
                 {
                     var value = property.GetValue(mc2);
                     var targetProperty = this.GetType().GetProperty(property.Name);
-                    //logBuilder.AppendLine($"设置 {property.Name} =======> {value}");
+                    LoggerHelper.Instance.Info($"设置 {property.Name} =======> {value}");
                     if (targetProperty != null && targetProperty.CanWrite && value != null)
                     {
                         targetProperty.SetValue(this, value);
                     }
                 }
+
                 string json = MessagePackSerializer.SerializeToJson(this, MessagePackSerializer.DefaultOptions);
-                logBuilder.AppendLine(json);
-                LoggerHelper.Instance.Debug(logBuilder.ToString());
+                LoggerHelper.Instance.Info(json);
             }
-            catch (Exception ex) { }
+            catch (MessagePackSerializationException ex)
+            {
+                LoggerHelper.Instance.Error($"初始化失败 {ex.Message}===>使用默认值初始化");
+            }
+        }
+        else
+        {
+            LoggerHelper.Instance.Error($"数据库没有数据====>使用默认值初始化");
         }
     }
 }

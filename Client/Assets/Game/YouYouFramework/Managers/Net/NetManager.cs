@@ -208,11 +208,11 @@ public class NetManager
 
     public async Task ConnectServerAsync(Action action = null)
     {
-#if UNITY_EDITOR
         string url = Main.MainEntry.ParamsSettings.WebAccountUrl;
-#else
-            string url = Main.MainEntry.ParamsSettings.WebAccountUrl;
-#endif
+        if (Main.MainEntry.ParamsSettings.IsTestMode)
+        {
+            url = Main.MainEntry.ParamsSettings.TestWebAccountUrl;
+        }
         string[] urls = url.Split(StringUtil.FourthSeparator);
 
         if (connectionStatus == ConnectionStatus.Connected) return;
