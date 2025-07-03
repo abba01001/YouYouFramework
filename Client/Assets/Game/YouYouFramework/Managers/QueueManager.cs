@@ -69,7 +69,7 @@ public class QueueManager : MonoBehaviour
     {
         //IConfigService configService = MainContainer.Container.Resolve<IConfigService>();
         //if (popupName == Constants.DoozyView.RewardPopup) isInsert = true;
-        var task = new TaskData(TaskData.TaskType.Popup, () => ViewQueueManager.Instance.AddWaitPopupClose(popupName, action,isInsert,isCanTouch), inputPriority);
+        var task = new TaskData(TaskData.TaskType.Popup, () => ViewQueueManager.Instance.EnqueuePopup(popupName, action,isInsert,isCanTouch), inputPriority);
         // // 检查优先级
         // if (configService.PopupPriorityConfig.TryGetValue(popupName, out PopupPriorityModel model))
         // {
@@ -81,21 +81,21 @@ public class QueueManager : MonoBehaviour
     //添加Time任务
     public void AddTimeTask(float time,Action action = null,Action endAction = null,int priority = 999, bool isInsert = false,bool isCanTouch = true)
     {
-        var task = new TaskData(TaskData.TaskType.Time, () => ViewQueueManager.Instance.AddWaitTime(time,action,endAction,isInsert,isCanTouch), priority);
+        var task = new TaskData(TaskData.TaskType.Time, () => ViewQueueManager.Instance.EnqueueTime(time,action,endAction,isInsert,isCanTouch), priority);
         readyAddTaskList.Add(task);
     }
 
     //添加Tween任务
     public void AddTweenTask(Func<Tween> tweenFunc, int priority = 999,bool isInsert = false,bool isCanTouch = true)
     {
-        var task = new TaskData(TaskData.TaskType.Tween, () => ViewQueueManager.Instance.AddWaitTween(tweenFunc,isInsert,isCanTouch), priority);
+        var task = new TaskData(TaskData.TaskType.Tween, () => ViewQueueManager.Instance.EnqueueTween(tweenFunc,isInsert,isCanTouch), priority);
         readyAddTaskList.Add(task);
     }
 
     //添加Event任务
     public void AddEventTask(string eventName, string closeEventName, int priority = 999, bool isInsert = false,bool isCanTouch = true)
     {
-        var task = new TaskData(TaskData.TaskType.Event, () => ViewQueueManager.Instance.AddEventNameClose(eventName,closeEventName,isInsert,isCanTouch), priority);
+        var task = new TaskData(TaskData.TaskType.Event, () => ViewQueueManager.Instance.EnqueueEvent(eventName,closeEventName,isInsert,isCanTouch), priority);
         readyAddTaskList.Add(task);
     }
 
@@ -154,7 +154,7 @@ public class ViewQueueManager : MonoBehaviour
     }
     
     [Serializable]
-    private class ViewQueueParamBase
+    private class QueueParamBase
     {
         [HideIf("@IsWatting()")]
         public bool isWaitting = false;
@@ -183,27 +183,27 @@ public class ViewQueueManager : MonoBehaviour
     
     private int ParamID = -1;
 
-    private class WaitTime : ViewQueueParamBase
+    private class TimeTaskParam : QueueParamBase
     {
         public float time;
         public Action startAction;
         public Action endAction;
     }
 
-    private class WaitEventName : ViewQueueParamBase
+    private class EventTaskParam : QueueParamBase
     {
     }
     
-    private class WaitViewClose : ViewQueueParamBase
+    private class ViewTaskParam : QueueParamBase
     {
     }
 
-    private class WaitPopupClose : ViewQueueParamBase
+    private class PopupTaskParam : QueueParamBase
     {
         public Action openAction;
     }
 
-    private class SequenceEnd : ViewQueueParamBase
+    private class SequenceTaskParam : QueueParamBase
     {
         public Func<Tween> tweenCall;
     }
@@ -224,8 +224,8 @@ public class ViewQueueManager : MonoBehaviour
         }
     }
 
-    [SerializeField] private List<ViewQueueParamBase> queueList = new List<ViewQueueParamBase>();
-    private ViewQueueParamBase nowParamBase;
+    [SerializeField] private List<QueueParamBase> queueList = new List<QueueParamBase>();
+    private QueueParamBase currentParam;
 
     public void RegisterEvents()
     {
@@ -251,7 +251,7 @@ public class ViewQueueManager : MonoBehaviour
     {
         EventMessage t = userData as EventMessage;
         GameUtil.LogError(t.EventName);
-        if (nowParamBase != null && nowParamBase is WaitEventName waitEventParam)
+        if (currentParam != null && currentParam is EventTaskParam waitEventParam)
         {
             if (waitEventParam.closeEventName == t.EventName)
                 TurnToNextParam();
@@ -263,69 +263,69 @@ public class ViewQueueManager : MonoBehaviour
         PopupActionEvent t = userData as PopupActionEvent;
         if (t.UIActionType == UIActionType.HideUI)
         {
-            if (nowParamBase is WaitPopupClose popupCloseParam && popupCloseParam.name == t.Name)
+            if (currentParam is PopupTaskParam popupCloseParam && popupCloseParam.name == t.Name)
             {
                 TurnToNextParam();
             }
         }
     }
 
-    private IEnumerator WaitTimeParam()
+    private IEnumerator DoTimeTaskAction()
     {
-        if (nowParamBase == null) yield break;
-        if (!(nowParamBase is WaitTime waitTimeParam))
+        if (currentParam == null) yield break;
+        if (!(currentParam is TimeTaskParam timeParam))
         {
             TurnToNextParam();
             yield break;
         }
 
-        waitTimeParam.startAction?.Invoke();
-        yield return new WaitForSeconds(waitTimeParam.time);
-        waitTimeParam.endAction?.Invoke();
+        timeParam.startAction?.Invoke();
+        yield return new WaitForSeconds(timeParam.time);
+        timeParam.endAction?.Invoke();
         TurnToNextParam();
     }
 
-    public void AddEventNameClose(string eventName, string closeEventName, bool isInsert = false,
+    public void EnqueueEvent(string eventName, string closeEventName, bool isInsert = false,
         bool isCanTouch = true)
     {
-        ViewQueueParamBase paramBase = new WaitEventName()
+        QueueParamBase paramBase = new EventTaskParam()
         {
             eventName = eventName,
             closeEventName = closeEventName,
             canTouch = isCanTouch,
             paramType = ViewParamType.WaitEventName
         };
-        AddViewQueueParam(paramBase, isInsert);
+        EnqueueParam(paramBase, isInsert);
     }
 
-    public void AddWaitViewClose(string eventName, string closeEventName, bool isInsert = false, bool isCanTouch = true)
+    public void EnqueueView(string eventName, string closeEventName, bool isInsert = false, bool isCanTouch = true)
     {
-        ViewQueueParamBase paramBase = new WaitViewClose()
+        QueueParamBase paramBase = new ViewTaskParam()
         {
             eventName = eventName,
             closeEventName = closeEventName,
             canTouch = isCanTouch,
             paramType = ViewParamType.WaitViewClose
         };
-        AddViewQueueParam(paramBase, isInsert);
+        EnqueueParam(paramBase, isInsert);
     }
 
     
-    public void AddWaitPopupClose(string popupName, Action openAction, bool isInsert = false, bool isCanTouch = true)
+    public void EnqueuePopup(string popupName, Action openAction, bool isInsert = false, bool isCanTouch = true)
     {
-        ViewQueueParamBase paramBase = new WaitPopupClose()
+        QueueParamBase paramBase = new PopupTaskParam()
         {
             openAction = openAction,
             canTouch = isCanTouch,
             name = popupName,
             paramType = ViewParamType.WaitPopupClose
         };
-        AddViewQueueParam(paramBase, isInsert);
+        EnqueueParam(paramBase, isInsert);
     }
 
-    public void AddWaitTime(float time, Action action, Action endAction = null, bool isInsert = false,bool isCanTouch = true)
+    public void EnqueueTime(float time, Action action, Action endAction = null, bool isInsert = false,bool isCanTouch = true)
     {
-        ViewQueueParamBase paramBase = new WaitTime()
+        QueueParamBase paramBase = new TimeTaskParam()
         {
             time = time,
             startAction = action,
@@ -333,44 +333,44 @@ public class ViewQueueManager : MonoBehaviour
             canTouch = isCanTouch,
             paramType = ViewParamType.WaitTime
         };
-        AddViewQueueParam(paramBase, isInsert);
+        EnqueueParam(paramBase, isInsert);
     }
 
-    public void AddWaitTween(Func<Tween> tweenCall, bool isInsert = false, bool isCanTouch = true)
+    public void EnqueueTween(Func<Tween> tweenCall, bool isInsert = false, bool isCanTouch = true)
     {
-        ViewQueueParamBase paramBase = new SequenceEnd()
+        QueueParamBase paramBase = new SequenceTaskParam()
         {
             tweenCall = tweenCall,
             canTouch = isCanTouch,
             paramType = ViewParamType.SequenceEnd
         };
-        AddViewQueueParam(paramBase, isInsert);
+        EnqueueParam(paramBase, isInsert);
     }
 
     public void ClearQueue()
     {
-        nowParamBase = null;
+        currentParam = null;
         queueList.Clear();
     }
 
-    private void AddViewQueueParam(ViewQueueParamBase param, bool isInsert = false)
+    private void EnqueueParam(QueueParamBase param, bool isInsert = false)
     {
         if (param == null || CheckPopupHasAdd(param)) return;
 
         param.paramId = ++ParamID;
-        if (isInsert) queueList.Insert(nowParamBase == null ? 0 : 1, param);
+        if (isInsert) queueList.Insert(currentParam == null ? 0 : 1, param);
         else queueList.Add(param);
 
-        if (nowParamBase == null) TurnToNextParam();
+        if (currentParam == null) TurnToNextParam();
     }
 
     //Popup是否加入队列
-    bool CheckPopupHasAdd(ViewQueueParamBase paramBase)
+    bool CheckPopupHasAdd(QueueParamBase paramBase)
     {
         bool isAdd = false;
         if (paramBase.paramType == ViewParamType.WaitPopupClose)
         {
-            WaitPopupClose t = paramBase as WaitPopupClose;
+            PopupTaskParam t = paramBase as PopupTaskParam;
             foreach (var pair in queueList)
             {
                 if (t.name == pair.name)
@@ -393,8 +393,8 @@ public class ViewQueueManager : MonoBehaviour
     private void TurnToNextParam()
     {
         SetCanTouch(true);
-        if (nowParamBase != null) queueList.Remove(nowParamBase);
-        nowParamBase = queueList.Count > 0 ? queueList[0] : null;
+        if (currentParam != null) queueList.Remove(currentParam);
+        currentParam = queueList.Count > 0 ? queueList[0] : null;
         RunNowParam();
     }
 
@@ -411,21 +411,21 @@ public class ViewQueueManager : MonoBehaviour
 
     private void RunNowParam()
     {
-        if (nowParamBase?.isWaitting != false) return;
-        nowParamBase.isWaitting = true;
-        SetCanTouch(nowParamBase.canTouch);
-        switch (nowParamBase)
+        if (currentParam?.isWaitting != false) return;
+        currentParam.isWaitting = true;
+        SetCanTouch(currentParam.canTouch);
+        switch (currentParam)
         {
-            case WaitTime param:
-                StartCoroutine(WaitTimeParam());
+            case TimeTaskParam param:
+                StartCoroutine(DoTimeTaskAction());
                 break;
-            case WaitEventName param:
+            case EventTaskParam param:
                 GameEntry.Time.Yield(() => { GameEntry.Event.Dispatch(param.eventName); });
                 break;
-            case WaitPopupClose param:
+            case PopupTaskParam param:
                 param.openAction();
                 break;
-            case SequenceEnd param:
+            case SequenceTaskParam param:
                 try
                 {
                     Tween tween = param.tweenCall?.Invoke();
