@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TestWebAccountUrl: 127.0.0.1:17888
   WebAccountUrl: 159.75.164.29:17888
-  IsTestMode: 1
+  IsTestMode: 0
   IsMapEditorMode: 0
   PostIsEncrypt: 0
   PostContentType: 

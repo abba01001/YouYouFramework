@@ -1,0 +1,21 @@
+Sys_ModelEntity = { Id = 0, ModelId = 0, Type = 0, AttackRange = 0, GridContain = 0, AttackInterval = 0, Hp = 0, Mp = 0, InHeroPanel = 0, HeroPanelIcon = "" }
+
+Sys_ModelEntity.__index = Sys_ModelEntity;
+
+function Sys_ModelEntity.New(Id, ModelId, Type, AttackRange, GridContain, AttackInterval, Hp, Mp, InHeroPanel, HeroPanelIcon)
+    local self = { };
+    setmetatable(self, Sys_ModelEntity);
+
+    self.Id = Id;
+    self.ModelId = ModelId;
+    self.Type = Type;
+    self.AttackRange = AttackRange;
+    self.GridContain = GridContain;
+    self.AttackInterval = AttackInterval;
+    self.Hp = Hp;
+    self.Mp = Mp;
+    self.InHeroPanel = InHeroPanel;
+    self.HeroPanelIcon = HeroPanelIcon;
+
+    return self;
+end

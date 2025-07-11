@@ -162,7 +162,7 @@ public class NetRequestHandler
     //请求注册
     public void c2s_request_register(string account, string password)
     {
-        account = "a1234";
+        account = "a12345";
         password = "99999";
         RegisterMsg data = new RegisterMsg()
         {

@@ -1,0 +1,13 @@
+Sys_AtlasEntity = { Id = 0, AssetFullPath = "" }
+
+Sys_AtlasEntity.__index = Sys_AtlasEntity;
+
+function Sys_AtlasEntity.New(Id, AssetFullPath)
+    local self = { };
+    setmetatable(self, Sys_AtlasEntity);
+
+    self.Id = Id;
+    self.AssetFullPath = AssetFullPath;
+
+    return self;
+end

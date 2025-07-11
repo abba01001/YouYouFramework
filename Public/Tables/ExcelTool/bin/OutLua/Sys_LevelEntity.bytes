@@ -1,0 +1,15 @@
+Sys_LevelEntity = { Id = 0, LevelId = 0, MapLevel = 0, LevelNumber = 0 }
+
+Sys_LevelEntity.__index = Sys_LevelEntity;
+
+function Sys_LevelEntity.New(Id, LevelId, MapLevel, LevelNumber)
+    local self = { };
+    setmetatable(self, Sys_LevelEntity);
+
+    self.Id = Id;
+    self.LevelId = LevelId;
+    self.MapLevel = MapLevel;
+    self.LevelNumber = LevelNumber;
+
+    return self;
+end

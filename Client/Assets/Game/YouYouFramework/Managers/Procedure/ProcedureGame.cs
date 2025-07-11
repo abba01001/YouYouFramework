@@ -14,14 +14,14 @@ namespace YouYou
         internal override void OnEnter()
         {
             base.OnEnter();
-            GameEntry.Instance.ShowBackGround(BGType.Main, "Assets/Game/Download/BackGround/Home/home_map_1.png");
+            // GameEntry.Instance.ShowBackGround(BGType.Main, "Assets/Game/Download/BackGround/Home/home_map_1.png");
             GameEntry.UI.OpenUIForm<FormLoading>();
-            GameEntry.Scene.LoadSceneAction(SceneGroupName.Main, 1,Init);
+            GameEntry.Scene.LoadSceneAction(SceneGroupName.Game, 1,Init);
         }
 
         private void Init()
         {
-            Scene targetScene = SceneManager.GetSceneByName("Main");
+            Scene targetScene = SceneManager.GetSceneByName("Game");
             SceneManager.SetActiveScene(targetScene);
             // Material main3Skybox = Resources.Load<Material>("CloudyNight"); // 确保路径正确
             // // 更新渲染设置中的天空盒

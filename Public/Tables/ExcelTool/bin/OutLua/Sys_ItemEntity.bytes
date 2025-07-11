@@ -1,0 +1,15 @@
+Sys_ItemEntity = { Id = 0, ItemId = 0, Type = 0, Icon = "" }
+
+Sys_ItemEntity.__index = Sys_ItemEntity;
+
+function Sys_ItemEntity.New(Id, ItemId, Type, Icon)
+    local self = { };
+    setmetatable(self, Sys_ItemEntity);
+
+    self.Id = Id;
+    self.ItemId = ItemId;
+    self.Type = Type;
+    self.Icon = Icon;
+
+    return self;
+end

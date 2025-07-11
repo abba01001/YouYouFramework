@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
@@ -50,3 +51,4 @@ public class VideoPlayerUIUtility
         Undo.RegisterCreatedObjectUndo(rawImageGO, "Create VideoPlayer UI");
     }
 }
+#endif

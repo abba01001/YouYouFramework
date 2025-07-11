@@ -84,6 +84,8 @@ namespace YouYou
 
         private void Awake()
         {
+            var tmp1 = typeof(MeshCollider);
+            var tmp2 = typeof(CapsuleCollider);
             Log(LogCategory.Procedure, "GameEntry.OnAwake()");
             Instance = this;
             UIRootRectTransform = UIRootCanvasScaler.GetComponent<RectTransform>();

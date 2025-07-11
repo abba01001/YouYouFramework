@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01aecc1a1ad5afc4f9289263945c2a5d, type: 3}
   m_Name: AssetBundleSettings
   m_EditorClassIdentifier: 
-  AssetVersion: 13.0.0
+  AssetVersion: 1.0.0
   CurrBuildTarget: 1
   Options: 272
-  PublishPath: C:/Users/A1-0990/AppData/LocalLow/DefaultCompany/YFYouYou/OutPut
+  PublishPath: C:/Users/Administrator/AppData/LocalLow/DefaultCompany/YFYouYou/OutPut
   IsUploadAsset: 1
   IsForceUploadAsset: 0
   IsUploadAPK: 0
@@ -78,7 +78,8 @@ MonoBehaviour:
     - Game/Download/Shader
     - Game/Download/Font
     - Game/Download/Material
-    - Game/Download/Anim
+    - Game/Download/Animations
+    - Game/Download/Animator
   - Name: "\u573A\u666F"
     IsBuild: 1
     Overall: 0
@@ -99,8 +100,7 @@ MonoBehaviour:
     IsFirstData: 0
     IsEncrypt: 0
     Path:
-    - Game/Download/BackGround/Home
-    - Game/Download/BackGround/Battle
+    - Game/Download/BackGround
   - Name: "\u5BC6\u94A5"
     IsBuild: 1
     Overall: 1
@@ -115,3 +115,10 @@ MonoBehaviour:
     IsEncrypt: 1
     Path:
     - Game/Download/MapLevel
+  - Name: "\u63D0\u53D6\u8D44\u6E90"
+    IsBuild: 1
+    Overall: 1
+    IsFirstData: 0
+    IsEncrypt: 0
+    Path:
+    - Game/Download/RestaurantAsse

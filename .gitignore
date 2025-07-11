@@ -6,7 +6,6 @@ Client/AssetBundles/
 Client/*.sln
 Client/*.csproj
 Client/.vsconfig
-bin/
 obj/
 .vs/
 Client/HybridCLRData/
@@ -14,3 +13,4 @@ Client/Assets/HybridCLRData/
 APK/
 Package/test.apk
 Server/Server
+/Server/TCPServer/bin

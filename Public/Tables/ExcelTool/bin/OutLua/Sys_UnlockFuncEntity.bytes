@@ -1,0 +1,16 @@
+Sys_UnlockFuncEntity = { Id = 0, FuncName = "", UnlockLevel = 0, ShowLevel = 0, FuncDetailName = "" }
+
+Sys_UnlockFuncEntity.__index = Sys_UnlockFuncEntity;
+
+function Sys_UnlockFuncEntity.New(Id, FuncName, UnlockLevel, ShowLevel, FuncDetailName)
+    local self = { };
+    setmetatable(self, Sys_UnlockFuncEntity);
+
+    self.Id = Id;
+    self.FuncName = FuncName;
+    self.UnlockLevel = UnlockLevel;
+    self.ShowLevel = ShowLevel;
+    self.FuncDetailName = FuncDetailName;
+
+    return self;
+end
