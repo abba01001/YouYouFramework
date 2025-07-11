@@ -4,12 +4,17 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Box
-  - Road
-  - soldier
-  - Door
-  - Spine
-  - SceneCamera
+  - Shelf
+  - Customer
+  - Food
+  - BillingDeskCollider
+  - Exit
+  - CustomerPoint
+  - BuyPoint
+  - HelperSpawner
+  - Chicken
+  - Sauce
+  - TrashBin
   layers:
   - Default
   - TransparentFX
@@ -18,22 +23,22 @@ TagManager:
   - Water
   - UI
   - 
-  - 
+  - MainPlayer
+  - Player
+  - PickUpObject
+  - MatInput
+  - MatOutput
+  - Customer
+  - Cashier
+  - ManualFactory_Unused
+  - Thief
   - Ground
-  - Role
-  - Item
-  - Wall
-  - Door
-  - RegionMask
-  - Trans
+  - MatFillUp
+  - MatSafe
   - 
   - 
   - 
-  - Enemy
   - 
-  - 
-  - 
-  - Joystick
   - 
   - 
   - 
@@ -46,13 +51,4 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
-    locked: 0
-  - name: Background
-    uniqueID: 305201417
-    locked: 0
-  - name: Character
-    uniqueID: 542396647
-    locked: 0
-  - name: Front
-    uniqueID: 2184692959
     locked: 0

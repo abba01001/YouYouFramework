@@ -2,6 +2,7 @@ using UnityEngine;
 using RDG;
 using TMPro;
 using DG.Tweening;
+using YouYou;
 
 public class BuyPoint : MonoBehaviour
 {
@@ -11,19 +12,19 @@ public class BuyPoint : MonoBehaviour
     private float animDuration = 0.5f;
     private TextMeshPro moneyAmountText;
     public GameObject objectToUnlock;
-    private PlayerController _PlayerController;
 
     private void Awake()
     {
         if (PlayerPrefs.HasKey(srNo + "Unlocked"))
         {
             if (objectToUnlock.GetComponent<FoodPlaceManager>())
+            {
                 objectToUnlock.GetComponent<BoxCollider>().enabled = true;
-
-            UnlockObject();
+            }
+            objectToUnlock.SetActive(true);
+            Destroy(this.gameObject);
         }
 
-        _PlayerController = FindObjectOfType<PlayerController>();
         _GameManager = FindObjectOfType<GameManager>();
 
         purchaseAmount = PlayerPrefs.GetInt(srNo+"PurchaseAmount", purchaseAmount);
@@ -33,6 +34,15 @@ public class BuyPoint : MonoBehaviour
         ShowPurchaseAmount();
     }
 
+    public void OnEnable()
+    {
+        
+    }
+    public void OnDisable()
+    {
+        
+    }
+    
     private void ShowPurchaseAmount()
     {
         moneyAmountText.text = purchaseAmount.ToString();
@@ -65,10 +75,9 @@ public class BuyPoint : MonoBehaviour
             {
                 PlayerPrefs.SetString(srNo + "Unlocked", "True");
 
-                _PlayerController.SidePos();
+                GameEntry.Instance.PlayerController.SidePos();
                 objectToUnlock.transform.DOPunchScale(new Vector3(0.1f, 1, 0.1f), animDuration, 7).OnComplete(() => Destroy(this.gameObject)); ;
-                UnlockObject();
-
+                objectToUnlock.SetActive(true);
                 CustomerSpawner[] custSawners = FindObjectsOfType<CustomerSpawner>();
                 custSawners[Random.Range(0, custSawners.Length)].SpawnCustomer();
 
@@ -82,13 +91,6 @@ public class BuyPoint : MonoBehaviour
         {
             CancelInvoke("Spend");
         }
-    }
-
-    private void UnlockObject()
-    {
-        objectToUnlock.SetActive(true);
-        DOTween.Kill(this.gameObject);      
-        Destroy(this.gameObject);
     }
 
     public void StopSpend()

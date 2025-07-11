@@ -8,20 +8,19 @@ public class CameraFollow : MonoBehaviour
     public float height;
     public float smoothness;
 
-    public Transform camTarget;
     public Vector3 offset;
 
     Vector3 velocity;
 
     void LateUpdate()
     {
-        if (!camTarget)
+        if (!GameEntry.Instance.PlayerController)
             return;
 
         Vector3 pos = Vector3.zero;
-        pos.x = camTarget.position.x;
-        pos.y = camTarget.position.y + height;
-        pos.z = camTarget.position.z - distance;
+        pos.x = GameEntry.Instance.PlayerController.transform.position.x;
+        pos.y = GameEntry.Instance.PlayerController.transform.position.y + height;
+        pos.z = GameEntry.Instance.PlayerController.transform.position.z - distance;
 
         transform.position = Vector3.SmoothDamp(transform.position, pos+offset, ref velocity, smoothness);
     }
@@ -40,18 +39,5 @@ public class CameraFollow : MonoBehaviour
     //    m.renderQueue = 3000;
 
     //}
-    
-    public void OnEnable()
-    {
-        GameEntry.Event.AddEventListener(Constants.EventName.SetCameraPlayer,SetCameraPlayer);
-    }
-    public void OnDisable()
-    {
-        GameEntry.Event.RemoveEventListener(Constants.EventName.SetCameraPlayer,SetCameraPlayer);
-    }
 
-    public void SetCameraPlayer(object userdata)
-    {
-        camTarget =  (Transform)userdata;
-    }
 }

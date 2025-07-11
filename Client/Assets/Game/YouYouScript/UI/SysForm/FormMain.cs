@@ -35,7 +35,7 @@ public class FormMain : UIFormBase
             SceneManager.MoveGameObjectToScene(obj.gameObject, targetScene);
         }
         GameEntry.Event.Dispatch(Constants.EventName.UpdateFoodPlayerCarry,obj.GetComponent<PlayerManager>().maxFoodPlayerCarry);
-        GameEntry.Event.Dispatch(Constants.EventName.SetCameraPlayer,obj.transform);
+        GameEntry.Instance.PlayerController = obj.GetComponent<PlayerController>();
     }
     
     public Joystick joystick;

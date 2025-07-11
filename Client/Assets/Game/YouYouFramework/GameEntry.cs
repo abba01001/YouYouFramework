@@ -52,6 +52,7 @@ namespace YouYou
         private YouYouLanguage m_CurrLanguage;
         public static YouYouLanguage CurrLanguage;
 
+        public PlayerController PlayerController;
         
         //管理器属性
         public static LoggerManager Logger { get; private set; }

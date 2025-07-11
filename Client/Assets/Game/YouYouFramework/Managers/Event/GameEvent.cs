@@ -34,16 +34,6 @@ public class EventMessage : GameEvent
     }
 }
 
-public class SetMoneyTextEvent : GameEvent
-{
-    public int Count;
-
-    public SetMoneyTextEvent(int count)
-    {
-        Count = count;
-    }
-}
-
 public class UpdateBattleTimerEvent : GameEvent
 {
     public int Interval;

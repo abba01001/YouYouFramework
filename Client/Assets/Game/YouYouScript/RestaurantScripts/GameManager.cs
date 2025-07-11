@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         collectedMoney = PlayerPrefs.GetInt("MoneyAmount", 0);
-        GameEntry.Event.Dispatch(Constants.EventName.SetMoneyText,new SetMoneyTextEvent(collectedMoney));
+        GameEntry.Event.Dispatch(Constants.EventName.SetMoneyText,collectedMoney);
         Application.targetFrameRate = 120; 
     }
 
@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour
 
     public void ShowAndSave()
     {
-        GameEntry.Event.Dispatch(Constants.EventName.SetMoneyText,new SetMoneyTextEvent(collectedMoney));
+        GameEntry.Event.Dispatch(Constants.EventName.SetMoneyText,collectedMoney);
         PlayerPrefs.SetInt("MoneyAmount", collectedMoney);
     }
 }

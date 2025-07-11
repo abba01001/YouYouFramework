@@ -169,8 +169,8 @@ public class Outline : MonoBehaviour
     void OnDestroy()
     {
         // Destroy material instances
-        Destroy(outlineMaskMaterial);
-        Destroy(outlineFillMaterial);
+        DestroyImmediate(outlineMaskMaterial, true);  // 第二个参数 true 表示销毁时会释放内存
+        DestroyImmediate(outlineFillMaterial, true);
     }
 
     void Bake()

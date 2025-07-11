@@ -80,7 +80,6 @@ static partial class Constants
 
         public const string SetMoneyText = "SetMoneyText";
         public const string UpdateFoodPlayerCarry = "UpdateFoodPlayerCarry";
-        public const string SetCameraPlayer = "SetCameraPlayer";
         public const string GetSuspendReward = "GetSuspendReward";
         public const string UpdateChatText = "UpdateChatText";
         public const string UpdateBtnUnlockStatus = "UpdateBtnUnlockStatus";
