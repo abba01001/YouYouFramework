@@ -28,10 +28,12 @@ namespace YouYou
                 Sys_BuildingsEntity entity = new Sys_BuildingsEntity();
                 entity.Id = ms.ReadInt();
                 entity.BuildingId = ms.ReadInt();
+                entity.BuildingType = ms.ReadUTF8String();
                 entity.BuildingName = ms.ReadUTF8String();
                 entity.Cost = ms.ReadInt();
                 entity.IsInit = ms.ReadInt();
                 entity.Position = ms.ReadUTF8String();
+                entity.Rotation = ms.ReadUTF8String();
                 entity.RegionId = ms.ReadInt();
                 entity.isVisible = ms.ReadInt();
                 entity.Dependencies = ms.ReadUTF8String();

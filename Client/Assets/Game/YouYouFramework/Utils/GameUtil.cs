@@ -213,6 +213,18 @@ public class GameUtil
         return $"Assets/Game/Download/Prefab/Model/{modelId}.prefab";
     }
 
+    public static Vector3 ParseCoordinates(string coordinateString)
+    {
+        // 按照逗号分隔字符串并转换为坐标
+        string[] parts = coordinateString.Split(',');
+
+        // 转换为浮动类型的 X, Y, Z，并返回一个 Vector3 对象
+        float x = float.Parse(parts[0]);
+        float y = float.Parse(parts[1]);
+        float z = float.Parse(parts[2]);
+        return new Vector3(x, y, z);
+    }
+    
     // 屏蔽渲染某个层
     public static void BlockSceneLayer(Camera camera,int layer)
     {

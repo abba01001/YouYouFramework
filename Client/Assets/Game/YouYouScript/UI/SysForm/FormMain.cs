@@ -23,7 +23,7 @@ public class FormMain : UIFormBase
         InitPlayer();
         
     }
-
+    
     async UniTask InitPlayer()
     {
         PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync($"Assets/Game/Download/Prefab/Role/Player.prefab");
@@ -36,6 +36,8 @@ public class FormMain : UIFormBase
         }
         GameEntry.Event.Dispatch(Constants.EventName.UpdateFoodPlayerCarry,obj.GetComponent<PlayerManager>().maxFoodPlayerCarry);
         GameEntry.Instance.PlayerController = obj.GetComponent<PlayerController>();
+
+        BuildingSystem.Instance.Init();
     }
     
     public Joystick joystick;
@@ -48,6 +50,11 @@ public class FormMain : UIFormBase
         {
             PlayerPrefs.SetString("DragWindow","");
             Destroy(dragToMoveWindow);
+        }
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            BuildingSystem.Instance.Test();
         }
     }
 

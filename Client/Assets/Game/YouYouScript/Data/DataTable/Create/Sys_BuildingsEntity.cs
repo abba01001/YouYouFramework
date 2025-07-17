@@ -13,6 +13,11 @@ namespace YouYou
         public int BuildingId;
 
         /// <summary>
+        /// 建筑类型
+        /// </summary>
+        public string BuildingType;
+
+        /// <summary>
         /// 建筑名
         /// </summary>
         public string BuildingName;
@@ -31,6 +36,11 @@ namespace YouYou
         /// 坐标
         /// </summary>
         public string Position;
+
+        /// <summary>
+        /// 角度
+        /// </summary>
+        public string Rotation;
 
         /// <summary>
         /// 区域Id

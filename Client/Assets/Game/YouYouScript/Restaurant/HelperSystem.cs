@@ -5,20 +5,20 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using YouYou;
 
-public class HelperManager
+public class HelperSystem
 {
     private List<Helper> helpers = new List<Helper>();
-    private static HelperManager _instance;
+    private static HelperSystem _instance;
 
-    private HelperManager() { }
+    private HelperSystem() { }
 
-    public static HelperManager Instance
+    public static HelperSystem Instance
     {
         get
         {
             if (_instance == null)
             {
-                _instance = new HelperManager();
+                _instance = new HelperSystem();
             }
             return _instance;
         }

@@ -5,20 +5,20 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using YouYou;
 
-public class CustomerManager
+public class CustomerSystem
 {
     private List<Customer> customers = new List<Customer>();
-    private static CustomerManager _instance;
+    private static CustomerSystem _instance;
 
-    private CustomerManager() { }
+    private CustomerSystem() { }
 
-    public static CustomerManager Instance
+    public static CustomerSystem Instance
     {
         get
         {
             if (_instance == null)
             {
-                _instance = new CustomerManager();
+                _instance = new CustomerSystem();
             }
             return _instance;
         }
