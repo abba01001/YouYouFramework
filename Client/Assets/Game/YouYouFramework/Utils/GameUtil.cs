@@ -225,6 +225,27 @@ public class GameUtil
         return new Vector3(x, y, z);
     }
     
+    public static List<int> ParseNumbers(string input)
+    {
+        List<int> parsedNumbers = new List<int>();
+        if (string.IsNullOrEmpty(input)) return parsedNumbers;
+        // 使用 Split() 分割字符串，如果没有逗号，结果依然是一个单一元素数组
+        string[] numbers = input.Split(',');
+        foreach (string num in numbers)
+        {
+            // 尝试解析每个数字
+            if (int.TryParse(num, out int parsedNumber))
+            {
+                parsedNumbers.Add(parsedNumber);
+            }
+            else
+            {
+                LogError($"Invalid number: {num}");
+            }
+        }
+        return parsedNumbers;
+    }
+    
     // 屏蔽渲染某个层
     public static void BlockSceneLayer(Camera camera,int layer)
     {

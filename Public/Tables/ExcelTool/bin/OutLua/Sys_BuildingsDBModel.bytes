@@ -24,6 +24,7 @@ function Sys_BuildingsDBModel.LoadFormMS(ms)
                 ms:ReadInt(),
                 ms:ReadUTF8String(),
                 ms:ReadUTF8String(),
+                ms:ReadUTF8String(),
                 ms:ReadInt(),
                 ms:ReadInt(),
                 ms:ReadUTF8String()

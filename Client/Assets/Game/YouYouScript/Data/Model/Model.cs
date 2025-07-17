@@ -96,6 +96,7 @@ public class RestaurantData
     public List<CustomerData> customers = new List<CustomerData>();
     public List<HelperData> helpers = new List<HelperData>();
     public List<BuildingData> buildings = new List<BuildingData>();
+    public Dictionary<int, int> readyUnlocks = new Dictionary<int, int>();
 }
 
 [Serializable]
@@ -103,6 +104,7 @@ public class RestaurantData
 public class BuildingData
 {
     public int buildingId;
+    
 }
 
 [Serializable]

@@ -43,6 +43,11 @@ namespace YouYou
         public string Rotation;
 
         /// <summary>
+        /// 坐标
+        /// </summary>
+        public string BuyPoinrPos;
+
+        /// <summary>
         /// 区域Id
         /// </summary>
         public int RegionId;

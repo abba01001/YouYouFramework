@@ -34,6 +34,7 @@ namespace Hotfix
                 entity.IsInit = ms.ReadInt();
                 entity.Position = ms.ReadUTF8String();
                 entity.Rotation = ms.ReadUTF8String();
+                entity.BuyPoinrPos = ms.ReadUTF8String();
                 entity.RegionId = ms.ReadInt();
                 entity.isVisible = ms.ReadInt();
                 entity.Dependencies = ms.ReadUTF8String();
