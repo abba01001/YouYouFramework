@@ -17,6 +17,7 @@ namespace YouYou
         public Sys_UIFormDBModel Sys_UIFormDBModel { get; private set; }
         public Sys_PrefabDBModel Sys_PrefabDBModel { get; private set; }
         public Sys_BGMDBModel Sys_BGMDBModel { get; private set; }
+        public Sys_BuildingsDBModel Sys_BuildingsDBModel { get; private set; }
         public Sys_AudioDBModel Sys_AudioDBModel { get; private set; }
         public Sys_SceneDBModel Sys_SceneDBModel { get; private set; }
         public Sys_GuideDBModel Sys_GuideDBModel { get; private set; }
@@ -48,6 +49,9 @@ namespace YouYou
             Sys_BGMDBModel = new Sys_BGMDBModel();
             Sys_BGMDBModel.LoadData(m_TaskGroup);
 
+            Sys_BuildingsDBModel =  new Sys_BuildingsDBModel();
+            Sys_BuildingsDBModel.LoadData(m_TaskGroup);
+            
             Sys_SceneDBModel = new Sys_SceneDBModel();
             Sys_SceneDBModel.LoadData(m_TaskGroup);
 

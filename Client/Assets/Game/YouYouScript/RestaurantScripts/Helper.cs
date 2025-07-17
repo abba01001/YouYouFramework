@@ -18,6 +18,17 @@ public class Helper : MonoBehaviour
     private Transform trashBin;
     private GameObject[] shelfs;
 
+    public HelperData HelperData
+    {
+        get;
+        set;
+    }
+    public bool IsActive
+    {
+        get;
+        set;
+    }
+    
     private void Start()
     {
         trashBin = GameObject.FindGameObjectWithTag("TrashBin").transform;

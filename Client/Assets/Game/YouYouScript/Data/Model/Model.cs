@@ -48,8 +48,10 @@ public class PlayerRoleData
     public Dictionary<string, int> roleAttr;//角色属性
     public List<EqiupItemData> equipWareHouse;//装备仓库
     public List<BagItemData> bagWareHouse;//背包仓库
+    public RestaurantData restaurantData;
     public PlayerRoleData()
     {
+        restaurantData = new RestaurantData();
         equipLevels = new Dictionary<int, int>()
         {
             {1,0},{2,0},{3,0},{4,0},{5,0},{6,0},
@@ -87,6 +89,45 @@ public class BagItemData
     public int itemCount;
 }
 
+[Serializable]
+[MessagePackObject(keyAsPropertyName: true)]
+public class RestaurantData
+{
+    public List<CustomerData> customers = new List<CustomerData>();
+    public List<HelperData> helpers = new List<HelperData>();
+    public List<BuildingData> buildings = new List<BuildingData>();
+}
+
+[Serializable]
+[MessagePackObject(keyAsPropertyName: true)]
+public class BuildingData
+{
+    public int buildingId;
+}
+
+[Serializable]
+[MessagePackObject(keyAsPropertyName: true)]
+public class CustomerData
+{
+    public int customerId;
+    public int type;//类型
+    public string name;
+    public List<int> needFoodList =  new List<int>();//所需食物列表
+    public List<int> hasFoodList =  new List<int>();//拥有实物列表
+    public int hatColorIndex;//帽子颜色索引
+    public int meshColorIndex;//网格颜色索引
+}
+
+[Serializable]
+[MessagePackObject(keyAsPropertyName: true)]
+public class HelperData
+{
+    public int helperId;
+    public int type;//类型
+    public string name;
+    public int maxFoodCarry;//食物容量
+    public int speed;//速度
+}
 
 public class DialogueCommand
 {

@@ -26,6 +26,17 @@ public class Customer : MonoBehaviour
     Vector3 targetShelfPos;
     private CustomerPoints _CustomerPoints;
 
+    public CustomerData CustomerData
+    {
+        get;
+        set;
+    }
+    public bool IsActive
+    {
+        get;
+        set;
+    }
+    
     private void Start()
     {
         GameManager _GameManager = FindObjectOfType<GameManager>();
@@ -34,7 +45,7 @@ public class Customer : MonoBehaviour
 
         billingDesk = FindObjectOfType<BillingDesk>();
 
-        buyFoodCapacity = Random.Range(1, 4);
+        buyFoodCapacity = Random.Range(7, 13);
 
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = true;
