@@ -194,6 +194,22 @@ namespace YouYou
             return Spawn(prefab, panent, entity.PoolId, entity.CullDespawned == 1, entity.CullAbove, entity.CullDelay, entity.CullMaxPerPass);
         }
 
+        public PoolObj SpawnSynchronous(string prefabPath, Transform panent = null)
+        {
+            AssetReferenceEntity referenceEntity = GameEntry.Loader.LoadMainAsset(prefabPath);
+            GameObject retObj = referenceEntity.Target as GameObject;
+            if (retObj == null)
+            {
+                YouYou.GameEntry.LogError(LogCategory.Loader, "找不到Prefab, AssetFullName==" + prefabPath);
+                return null;
+            }
+
+            Transform prefab = retObj.transform;
+            int prefabId = prefab.gameObject.GetInstanceID();
+            m_PrefabAssetDic[prefabId] = referenceEntity;
+            return Spawn(prefab, panent);
+        }
+        
         public PoolObj Spawn(Transform prefab, Transform parent = null, byte poolId = 1, bool cullDespawned = true, int cullAbove = 0, int cullDelay = 10, int cullMaxPerPass = 0)
         {
             if (prefab == null)

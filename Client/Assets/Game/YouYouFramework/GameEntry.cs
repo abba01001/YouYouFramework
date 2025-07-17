@@ -52,7 +52,6 @@ namespace YouYou
         private YouYouLanguage m_CurrLanguage;
         public static YouYouLanguage CurrLanguage;
 
-        public PlayerController PlayerController;
         public Color[] customerColors;
         public Mesh[] customerHats;
 

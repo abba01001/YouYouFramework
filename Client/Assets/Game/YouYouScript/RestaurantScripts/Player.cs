@@ -98,10 +98,10 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("BuyPoint"))
-        {
-            other.GetComponent<BuyPoint>().StartSpend();
-        }
+        // if (other.gameObject.CompareTag("BuyPoint"))
+        // {
+        //     other.GetComponent<BuyPoint>().StartSpend();
+        // }
 
         if (other.gameObject.CompareTag("HelperSpawner"))
         {
@@ -111,8 +111,8 @@ public class Player : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("BuyPoint"))
-            other.GetComponent<BuyPoint>().StopSpend();
+        // if (other.gameObject.CompareTag("BuyPoint"))
+        //     other.GetComponent<BuyPoint>().StopSpend();
 
         if (other.gameObject.CompareTag("HelperSpawner"))
         {

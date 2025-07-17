@@ -47,6 +47,19 @@ public class SpawnCustomerEvent : GameEvent
     }
 }
 
+public class UpdateBuildingSpendEvent : GameEvent
+{
+    public int BuildingId;
+    public int AddCount;
+    public bool Unlock;
+    public void Init(int id,int count,bool unlock)
+    {
+        BuildingId = id;
+        AddCount = count;
+        Unlock = unlock;
+    }
+}
+
 public class UpdateBattleTimerEvent : GameEvent
 {
     public int Interval;

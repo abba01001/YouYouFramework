@@ -14,13 +14,13 @@ public class CameraFollow : MonoBehaviour
 
     void LateUpdate()
     {
-        if (!GameEntry.Instance.PlayerController)
+        if (!BuildingSystem.Instance.PlayerController)
             return;
 
         Vector3 pos = Vector3.zero;
-        pos.x = GameEntry.Instance.PlayerController.transform.position.x;
-        pos.y = GameEntry.Instance.PlayerController.transform.position.y + height;
-        pos.z = GameEntry.Instance.PlayerController.transform.position.z - distance;
+        pos.x = BuildingSystem.Instance.PlayerController.transform.position.x;
+        pos.y = BuildingSystem.Instance.PlayerController.transform.position.y + height;
+        pos.z = BuildingSystem.Instance.PlayerController.transform.position.z - distance;
 
         transform.position = Vector3.SmoothDamp(transform.position, pos+offset, ref velocity, smoothness);
     }

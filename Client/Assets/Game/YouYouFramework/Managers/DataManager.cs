@@ -95,6 +95,7 @@ public class DataManager : Observable<DataManager>, IDataManager
     
     public void LessMoney(int count = 1)
     {
+        if (_playerRoleData.roleAttr["coin"] == 0) return;
         _playerRoleData.roleAttr["coin"] -= count;
         GameEntry.Event.Dispatch(Constants.EventName.SetMoneyText,_playerRoleData.roleAttr["coin"]);
     }

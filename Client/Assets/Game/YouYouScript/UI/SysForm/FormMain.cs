@@ -14,25 +14,25 @@ public class FormMain : UIFormBase
     {
         base.Awake();
         Constants.IsEntryFormMain = true;
-        testBtn.SetButtonClick(() =>
-        {
-            GameEntry.Data.AddMoney(500);
-        });
-        testBt1.SetButtonClick(() =>
-        {
-            PlayerPrefs.DeleteAll();
-            Application.Quit(); 
-        });
-        testBt2.SetButtonClick(() =>
-        {
-            GameEntry.UI.OpenUIForm<FormUpgrade>();
-        });
+        // testBtn.SetButtonClick(() =>
+        // {
+        //     GameEntry.Data.AddMoney(500);
+        // });
+        // testBt1.SetButtonClick(() =>
+        // {
+        //     PlayerPrefs.DeleteAll();
+        //     Application.Quit(); 
+        // });
+        // testBt2.SetButtonClick(() =>
+        // {
+        //     GameEntry.UI.OpenUIForm<FormUpgrade>();
+        // });
     }
 
     protected override void OnShow()
     {
         base.OnShow();
-        GameEntry.Instance.PlayerController.joystick = joystick;
+        BuildingSystem.Instance.PlayerController.joystick = joystick;
     }
     
     async UniTask InitPlayer()
@@ -41,14 +41,13 @@ public class FormMain : UIFormBase
         obj.GetComponent<PlayerController>().joystick = joystick;
         obj.gameObject.MSetActive(true);
         Scene targetScene = SceneManager.GetSceneByName("Main");
-        if (targetScene.IsValid())
-        {
-            SceneManager.MoveGameObjectToScene(obj.gameObject, targetScene);
-        }
+        // if (targetScene.IsValid())
+        // {
+        //     SceneManager.MoveGameObjectToScene(obj.gameObject, targetScene);
+        // }
         GameEntry.Event.Dispatch(Constants.EventName.UpdateFoodPlayerCarry,obj.GetComponent<PlayerManager>().maxFoodPlayerCarry);
-        GameEntry.Instance.PlayerController = obj.GetComponent<PlayerController>();
+        BuildingSystem.Instance.PlayerController = obj.GetComponent<PlayerController>();
 
-        BuildingSystem.Instance.Init();
     }
     
     public Joystick joystick;
@@ -65,7 +64,8 @@ public class FormMain : UIFormBase
 
         if (Input.GetKeyDown(KeyCode.D))
         {
-            BuildingSystem.Instance.Test();
+            // BuildingSystem.Instance.Test();
+            GameEntry.Data.AddMoney(2000);
         }
     }
 

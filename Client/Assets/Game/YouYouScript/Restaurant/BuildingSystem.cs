@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using Main;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using YouYou;
 
 public class BuildingSystem
@@ -29,35 +31,59 @@ public class BuildingSystem
 
     private Dictionary<int, List<Sys_BuildingsEntity>> Regions = new Dictionary<int, List<Sys_BuildingsEntity>>();
     private List<BuildingBase> _buildings = new List<BuildingBase>();
+    private List<BuyBuildingPoint> _buyBuildingPoints = new List<BuyBuildingPoint>();
     public IReadOnlyList<BuildingBase> Buildings => _buildings;
     private Dictionary<int, GameObject> RegionMap = new Dictionary<int, GameObject>();
-    private HashSet<int> UnlockRegionIds = new HashSet<int> { 1 };  // ³õÊ¼»¯Ê±¼ÓÈëÄ¬ÈÏµÄÇøÓò 1
+    private HashSet<int> UnlockRegionIds = new HashSet<int> { 1 };  // åˆå§‹åŒ–æ—¶åŠ å…¥é»˜è®¤çš„åŒºåŸŸ 1
     private HashSet<int> _buildingIdsCache = new HashSet<int>();
     private HashSet<int> _buyPointIdsCache = new HashSet<int>();
-    
+    public PlayerController PlayerController;
+
+    public Transform Root { get; private set; }
     public async UniTask Init()
     {
+        Scene targetScene = SceneManager.GetSceneByName("Game");
+        if (targetScene.IsValid())
+        {
+            Root = new GameObject("Root").transform;
+            SceneManager.MoveGameObjectToScene(Root.gameObject, targetScene);
+        }
+        
         InitConfig();
-        await GenRegionMap();  // Éú³ÉµØÍ¼
-        await GenInitBuildings();  // Éú³É³õÊ¼½¨Öş
-        await GenHasBuildings();  // Éú³ÉÒÑ¾­¹ºÂòµÄ½¨Öş
-        await GenBuyBuildingPoint(); //Éú³É¹ºÂò½¨Öşµã
-        await CustomerSystem.Instance.Init(); // Éú³É¹Ë¿Í
-        await HelperSystem.Instance.Init(); // Éú³ÉĞ­ÖúÕß
-        await GenPlayer(); // Éú³ÉÍæ¼Ò
+        await GenRegionMap();  // ç”Ÿæˆåœ°å›¾
+        await GenInitBuildings();  // ç”Ÿæˆåˆå§‹å»ºç­‘
+        await GenHasBuildings();  // ç”Ÿæˆå·²ç»è´­ä¹°çš„å»ºç­‘
+        await GenBuyBuildingPoint(); //ç”Ÿæˆè´­ä¹°å»ºç­‘ç‚¹
+        await CustomerSystem.Instance.Init(); // ç”Ÿæˆé¡¾å®¢
+        await HelperSystem.Instance.Init(); // ç”ŸæˆååŠ©è€…
+        await GenPlayer(); // ç”Ÿæˆç©å®¶
     }
 
     private async UniTask GenPlayer()
     {
-        // Íæ¼ÒÉú³ÉÂß¼­
+        // ç©å®¶ç”Ÿæˆé€»è¾‘
+        PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync($"Assets/Game/Download/Prefab/Role/Player.prefab",Root);
+        obj.gameObject.MSetActive(true);
+        // Scene targetScene = SceneManager.GetSceneByName("Main");
+        // if (targetScene.IsValid())
+        // {
+        //     SceneManager.MoveGameObjectToScene(obj.gameObject, targetScene);
+        // }
+        GameEntry.Event.Dispatch(Constants.EventName.UpdateFoodPlayerCarry,obj.GetComponent<PlayerManager>().maxFoodPlayerCarry);
+        PlayerController = obj.GetComponent<PlayerController>();
+            
+                        
+        GameEntry.UI.OpenUIForm<FormMain>();
+        GameEntry.Audio.PlayBGM("Home");
     }
 
+    
     private async UniTask GenRegionMap()
     {
         foreach (var id in UnlockRegionIds)
         {
             if (RegionMap.ContainsKey(id)) continue;
-            PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync($"Assets/Game/Download/Prefab/Regions/Area{id}.prefab");
+            PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync($"Assets/Game/Download/Prefab/Regions/Area{id}.prefab",Root);
             obj.gameObject.MSetActive(true);
             RegionMap.Add(id, obj.gameObject);
         }
@@ -79,7 +105,7 @@ public class BuildingSystem
             if (!UnlockRegionIds.Contains(kv.Key)) continue;
             foreach (var entity in kv.Value)
             {
-                if (entity.IsInit == 1)
+                if (entity.IsInit == 1 && entity.Cost == 0)
                 {
                     await CreateBuilding(entity);
                 }
@@ -95,6 +121,10 @@ public class BuildingSystem
             foreach (var parent in kv.Value)
             {
                 List<int> dependenCies = GameUtil.ParseNumbers(parent.Dependencies);
+                if (!IsUnlockBuilding(parent.BuildingId) && dependenCies.Count > 0)
+                {
+                    await CreateBuyPoint(parent);
+                }
                 foreach (var id in dependenCies)
                 {
                     Sys_BuildingsEntity child = GetBuildingEntity(id);
@@ -104,31 +134,30 @@ public class BuildingSystem
                         {
                             if (!IsUnlockBuilding(child.BuildingId))
                             {
-                                CreateBuyPoint(child);
+                                await CreateBuyPoint(child);
                             }
                         }
                         else
                         {
                             if (IsUnlockBuilding(parent.BuildingId) && !IsUnlockBuilding(child.BuildingId))
                             {
-                                CreateBuyPoint(child);
+                                await CreateBuyPoint(child);
                             }
                         }
                     }
                 }
-                
             }
         }
     }
     
-    private async UniTask GenHasBuildings()
+    private async UniTask GenHasBuildings(bool unlock = false)
     {
         foreach (var data in GameEntry.Data.PlayerRoleData.restaurantData.buildings)
         {
             Sys_BuildingsEntity entity = GetBuildingEntity(data.buildingId);
             if (entity != null)
             {
-                await CreateBuilding(entity);
+                await CreateBuilding(entity,unlock);
             }
         }
     }
@@ -145,14 +174,14 @@ public class BuildingSystem
         obj.transform.position = GameUtil.ParseCoordinates(entity.Position);
         obj.transform.rotation = Quaternion.Euler(GameUtil.ParseCoordinates(entity.Rotation));
         _buildings.Add(building);
-        _buildingIdsCache.Add(entity.BuildingId); // »º´æ½¨ÖşID£¬±ÜÃâÖØ¸´´´½¨
+        _buildingIdsCache.Add(entity.BuildingId); // ç¼“å­˜å»ºç­‘IDï¼Œé¿å…é‡å¤åˆ›å»º
         if (isUnlock)
         {
             building.PlayUnlockAnim();
+            BuildingSystem.Instance.PlayerController.SidePos();
         }
     }
 
-    //TODO ´´½¨¹ºÂòµã
     private async UniTask CreateBuyPoint(Sys_BuildingsEntity entity)
     {
         if (CheckHasBuyPoint(entity.BuildingId)) return;
@@ -160,11 +189,11 @@ public class BuildingSystem
         
         PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync($"Assets/Game/Download/Prefab/Regions/BuyBuildingPoint.prefab", RegionMap[entity.RegionId].transform);
         BuyBuildingPoint building = obj.GetComponent<BuyBuildingPoint>();
-        // building.Init(entity);
+        building.Init(entity);
         obj.gameObject.MSetActive(true);
         obj.transform.position = GameUtil.ParseCoordinates(entity.BuyPoinrPos);
-        // _buildings.Add(building);
-        // _buildingIdsCache.Add(entity.BuildingId); // »º´æ½¨ÖşID£¬±ÜÃâÖØ¸´´´½¨
+        _buyBuildingPoints.Add(building);
+        _buyPointIdsCache.Add(entity.BuildingId); // ç¼“å­˜å»ºç­‘IDï¼Œé¿å…é‡å¤åˆ›å»º
     }
     
     private bool CheckHasBuildingObj(int buildingId)
@@ -179,7 +208,7 @@ public class BuildingSystem
 
     private void InitConfig()
     {
-        // ³õÊ¼»¯½¨ÖşÇøÓòÊı¾İ
+        // åˆå§‹åŒ–å»ºç­‘åŒºåŸŸæ•°æ®
         foreach (var kv in GameEntry.DataTable.Sys_BuildingsDBModel.IdByDic)
         {
             Sys_BuildingsEntity entity = kv.Value;
@@ -193,17 +222,17 @@ public class BuildingSystem
             }
         }
 
-        // ¸üĞÂ½âËøµÄÇøÓò ID
+        // æ›´æ–°è§£é”çš„åŒºåŸŸ ID
         foreach (var data in GameEntry.Data.PlayerRoleData.restaurantData.buildings)
         {
             int regionId = GetBuildingRegion(data.buildingId);
-            UnlockRegionIds.Add(regionId);  // HashSet »á×Ô¶¯È¥ÖØ
+            UnlockRegionIds.Add(regionId);  // HashSet ä¼šè‡ªåŠ¨å»é‡
         }
     }
 
     public int GetBuildingRegion(int buildingId)
     {
-        return GetBuildingEntity(buildingId)?.RegionId ?? 1;  // Èç¹ûÃ»ÓĞÕÒµ½£¬·µ»ØÄ¬ÈÏÇøÓò ID
+        return GetBuildingEntity(buildingId)?.RegionId ?? 1;  // å¦‚æœæ²¡æœ‰æ‰¾åˆ°ï¼Œè¿”å›é»˜è®¤åŒºåŸŸ ID
     }
 
     public Sys_BuildingsEntity GetBuildingEntity(int buildingId)
@@ -212,7 +241,7 @@ public class BuildingSystem
         return entity;
     }
 
-    // ÊÇ·ñ½âËø½¨Öş
+    // æ˜¯å¦è§£é”å»ºç­‘
     public bool IsUnlockBuilding(int buildingId)
     {
         if (GetBuildingEntity(buildingId).IsInit == 1) return true;
@@ -220,25 +249,59 @@ public class BuildingSystem
         return buildingIds.Contains(buildingId);
     }
 
+    private float countAnimSpeed = 0.1f;
+    private TimeAction spendAction;
     public void SpendCoinToUnlock(int buildingId)
     {
         if (IsUnlockBuilding(buildingId)) return;
         Sys_BuildingsEntity entity = GetBuildingEntity(buildingId);
-        if (GameEntry.Data.PlayerRoleData.restaurantData.readyUnlocks.TryGetValue(entity.BuildingId, out int currentCount))
+        if (entity == null) return;
+        
+        if (!GameEntry.Data.PlayerRoleData.restaurantData.readyUnlocks.ContainsKey(buildingId))
         {
-            if(currentCount >= entity.Cost) return;
+            GameEntry.Data.PlayerRoleData.restaurantData.readyUnlocks.Add(entity.BuildingId, 0);
+        }
+
+        long hasMoney = GameEntry.Data.Coin;
+        if (hasMoney > 100)
+            countAnimSpeed = 0.05f;
+        else if (hasMoney > 500)
+            countAnimSpeed = 0.01f;
+        
+        spendAction?.Stop();
+        spendAction = GameEntry.Time.CreateTimerLoop(this, countAnimSpeed, -1, (_) =>
+        {
+            if (GameEntry.Data.Coin == 0)
+            {
+                StopSpend();
+                GameUtil.ShowTip("é‡‘å¸ä¸è¶³~");
+                return;
+            }
+            GameEntry.Data.PlayerRoleData.restaurantData.readyUnlocks.TryGetValue(entity.BuildingId, out int currentCount);
             GameEntry.Data.PlayerRoleData.restaurantData.readyUnlocks[entity.BuildingId] = currentCount + 1;
+            GameEntry.Data.LessMoney(1);
+            UpdateBuildingSpendEvent e = MainEntry.ClassObjectPool.Dequeue<UpdateBuildingSpendEvent>();
+            e.Init(entity.BuildingId,1,currentCount == entity.Cost);
+            GameEntry.Event.Dispatch(Constants.EventName.UpdateBuildingSpend,e);
             if (currentCount == entity.Cost)
             {
-                UnlockBuilding(buildingId);
+                UnlockBuilding(entity.BuildingId);
+                StopSpend();
+                return;
             }
-        }
-        else
-        {
-            GameEntry.Data.PlayerRoleData.restaurantData.readyUnlocks.Add(entity.BuildingId, 1);
-        }
+        });
+    }
+
+    public void RemoveBuyBuildingPoint(BuyBuildingPoint point)
+    {
+        point.gameObject.MSetActive(false);
     }
     
+    public void StopSpend()
+    {
+        spendAction?.Stop();
+    }
+
     public async UniTask UnlockBuilding(int buildingId)
     {
         var buildingIds = new HashSet<int>(GameEntry.Data.PlayerRoleData.restaurantData.buildings.Select(b => b.buildingId));
@@ -247,19 +310,16 @@ public class BuildingSystem
         {
             BuildingData data = new BuildingData { buildingId = buildingId };
             GameEntry.Data.PlayerRoleData.restaurantData.buildings.Add(data);
+            await GenHasBuildings(true);  // ç”Ÿæˆå·²ç»è´­ä¹°çš„å»ºç­‘
 
-            //ÕâÀïÏú»Ù¹ºÂò½¨Öşµã
-            
-            // ¸üĞÂ½âËøµÄÇøÓò
+            // æ›´æ–°è§£é”çš„åŒºåŸŸ
             if (!UnlockRegionIds.Contains(entity.RegionId))
             {
                 UnlockRegionIds.Add(entity.RegionId);
-                await GenRegionMap();  // Éú³ÉµØÍ¼
-                await GenInitBuildings();  // Éú³É³õÊ¼½¨Öş
-                await GenHasBuildings();  // Éú³ÉÒÑ¾­¹ºÂòµÄ½¨Öş
+                await GenRegionMap();  // ç”Ÿæˆåœ°å›¾
+                await GenInitBuildings();  // ç”Ÿæˆåˆå§‹å»ºç­‘
             }
-            await CreateBuilding(entity);
-            await GenBuyBuildingPoint(); //Éú³É¹ºÂò½¨Öşµã
+            await GenBuyBuildingPoint(); //ç”Ÿæˆè´­ä¹°å»ºç­‘ç‚¹
         }
     }
 }

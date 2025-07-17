@@ -2,99 +2,82 @@ using UnityEngine;
 using RDG;
 using TMPro;
 using DG.Tweening;
+using Main;
 using YouYou;
 
 public class BuyBuildingPoint : MonoBehaviour
 {
+    public Sys_BuildingsEntity Entity;
+    
+    
     public int srNo, purchaseAmount;
     private GameManager _GameManager;
     private float countAnimSpeed = 0.1f;
     private float animDuration = 0.5f;
     private TextMeshPro moneyAmountText;
-    public GameObject objectToUnlock;
 
     private void Awake()
     {
-        if (PlayerPrefs.HasKey(srNo + "Unlocked"))
-        {
-            if (objectToUnlock.GetComponent<FoodPlaceManager>())
-            {
-                objectToUnlock.GetComponent<BoxCollider>().enabled = true;
-            }
-            objectToUnlock.SetActive(true);
-            Destroy(this.gameObject);
-        }
-
-        _GameManager = FindObjectOfType<GameManager>();
-
-        purchaseAmount = PlayerPrefs.GetInt(srNo+"PurchaseAmount", purchaseAmount);
-
-        moneyAmountText = GetComponentInChildren<TextMeshPro>();
-
-        ShowPurchaseAmount();
+        OnUpdateBuildingSpend(null);
+    }
+    
+    public void Init(Sys_BuildingsEntity entity)
+    {
+        Entity =  entity;
     }
 
     public void OnEnable()
     {
-        
+        GameEntry.Event.AddEventListener(Constants.EventName.UpdateBuildingSpend,OnUpdateBuildingSpend);
     }
     public void OnDisable()
     {
-        
+        GameEntry.Event.RemoveEventListener(Constants.EventName.UpdateBuildingSpend,OnUpdateBuildingSpend);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            BuildingSystem.Instance.SpendCoinToUnlock(Entity.BuildingId);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            BuildingSystem.Instance.StopSpend();
+        }
     }
     
-    private void ShowPurchaseAmount()
+    private void OnUpdateBuildingSpend(object userdata)
     {
-        moneyAmountText.text = purchaseAmount.ToString();
-    }
-
-    public void StartSpend()
-    {
-        if (purchaseAmount > 100)
-            countAnimSpeed = 0.05f;
-         else if (purchaseAmount > 500)
-            countAnimSpeed = 0.01f;
-
-        InvokeRepeating("Spend", countAnimSpeed, countAnimSpeed);
-    }
-
-    private void Spend()
-    {
-        if (_GameManager.collectedMoney > 0)
-        {       
-            AudioManager.Instance.Play("BuyPoint");
-
-            Vibration.Vibrate(30);
-            purchaseAmount--;
-            PlayerPrefs.SetInt(srNo + "PurchaseAmount", purchaseAmount);
-
-            _GameManager.LessMoney();
-            ShowPurchaseAmount();
-
-            if (purchaseAmount == 0)
-            {
-                PlayerPrefs.SetString(srNo + "Unlocked", "True");
-
-                GameEntry.Instance.PlayerController.SidePos();
-                objectToUnlock.transform.DOPunchScale(new Vector3(0.1f, 1, 0.1f), animDuration, 7).OnComplete(() => Destroy(this.gameObject)); ;
-                objectToUnlock.SetActive(true);
-                CustomerSpawner[] custSawners = FindObjectsOfType<CustomerSpawner>();
-                custSawners[Random.Range(0, custSawners.Length)].SpawnCustomer();
-
-                AudioManager.Instance.Play("Unlock");
-                ParticleSystem particle = GetComponentInChildren<ParticleSystem>();
-                particle.transform.parent = null;
-                particle.Play();
-            }
-        }
-        else
+        if (userdata == null)
         {
-            CancelInvoke("Spend");
+            
+            return;
         }
-    }
-
-    public void StopSpend()
-    {
-        CancelInvoke("Spend");
+        UpdateBuildingSpendEvent e = (UpdateBuildingSpendEvent) userdata;
+        if (e.BuildingId != Entity.BuildingId) return;
+        // GameEntry.Data.PlayerRoleData.restaurantData.readyUnlocks[Entity.BuildingId]
+        
+        AudioManager.Instance.Play("BuyPoint");
+        Vibration.Vibrate(30);
+        purchaseAmount--;
+        
+        if (e.Unlock)
+        {
+            AudioManager.Instance.Play("Unlock");
+            PoolObj obj = GameEntry.Pool.GameObjectPool.SpawnSynchronous($"Assets/Game/Download/Prefab/Regions/UnlockBuildingEf.prefab",transform);
+            obj.gameObject.MSetActive(true);
+            obj.transform.localPosition = Vector3.zero;
+            obj.transform.parent = null;
+            ParticleSystem particle = obj.GetComponentInChildren<ParticleSystem>(true);
+            particle.Play();
+            Destroy(obj,2f);
+            BuildingSystem.Instance.RemoveBuyBuildingPoint(this);
+        }
+        MainEntry.ClassObjectPool.Enqueue(e);
     }
 }

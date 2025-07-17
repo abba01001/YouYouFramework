@@ -88,10 +88,14 @@ public class NavMeshBakeEditor : MonoBehaviour
 
         foreach (BuyPoint buyPoint in buyPoints)
         {
-            if(activeObjects)
-                buyPoint.objectToUnlock.SetActive(true);
+            if (activeObjects)
+            {
+                buyPoint.objectToUnlock.MSetActive(true);
+            }
             else
-                buyPoint.objectToUnlock.SetActive(false);
+            {
+                buyPoint.objectToUnlock.MSetActive(false);
+            }
 
             buyPoint.gameObject.name = "BuyPoint " + i;
             i++;

@@ -1,8 +1,10 @@
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.AI;
 using DG.Tweening;
 using YouYou;
+using Random = UnityEngine.Random;
 
 public class Customer : MonoBehaviour
 {
@@ -46,7 +48,7 @@ public class Customer : MonoBehaviour
         hat.mesh = mesh;
         billingDesk = FindObjectOfType<BillingDesk>();
 
-        buyFoodCapacity = Random.Range(7, 13);
+        buyFoodCapacity = Random.Range(1, 13);
 
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = true;
@@ -60,8 +62,6 @@ public class Customer : MonoBehaviour
     private Vector3 FindShelf()
     {
         int randVal = Random.Range(0, availableShelfs.Length);
-
-        GameUtil.LogError(gameObject.name);
         foreach (CustomerPoints customerPoint in availableShelfs[randVal].GetComponent<FoodPlaceManager>().customerPoints)
         {
             if (!customerPoint.fill)
@@ -116,9 +116,10 @@ public class Customer : MonoBehaviour
 
     public void GoToExit()
     {
-        
         billingDesk.customersForBilling.Remove(this);
-        agent.SetDestination(exitTransform.position);
+        int index = GameUtil.RandomRange(0, CustomerSystem.Instance.bornPos.Count);
+        agent.SetDestination( CustomerSystem.Instance.bornPos[index]);
+        //TODO 到达目标点销毁
         billingDesk.ArrangeCustomersInQue();
     }
 
@@ -183,8 +184,14 @@ public class Customer : MonoBehaviour
        canCollect = true;       
     }
 
+    private void OnEnable()
+    {
+        IsActive = true;
+    }
+
     private void Update()
     {
+        if (!IsActive) return;
         if (agent == null) return;
         if (counterLook)
         {

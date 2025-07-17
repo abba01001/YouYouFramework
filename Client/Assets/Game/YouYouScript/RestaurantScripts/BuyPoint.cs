@@ -14,6 +14,7 @@ public class BuyPoint : TriggetBase
 
     private void Awake()
     {
+        return;
         if (PlayerPrefs.HasKey(srNo + "Unlocked"))
         {
             if (objectToUnlock.GetComponent<FoodPlaceManager>())
@@ -77,7 +78,7 @@ public class BuyPoint : TriggetBase
             {
                 PlayerPrefs.SetString(srNo + "Unlocked", "True");
 
-                GameEntry.Instance.PlayerController.SidePos();
+                BuildingSystem.Instance.PlayerController.SidePos();
                 objectToUnlock.transform.DOPunchScale(new Vector3(0.1f, 1, 0.1f), animDuration, 7).OnComplete(() => Destroy(this.gameObject)); ;
                 UnlockObject();
                 CustomerSpawner[] custSawners = FindObjectsOfType<CustomerSpawner>();

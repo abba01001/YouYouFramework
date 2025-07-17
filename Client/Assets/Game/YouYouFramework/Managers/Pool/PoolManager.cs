@@ -104,7 +104,7 @@ namespace YouYou
             }
         }
 
-        //常用类池表
+        //常用类池缓存表
         private Dictionary<Type, int> CommonUseTypeDic = new Dictionary<Type, int>()
         {
             { typeof(HttpRoutine), 3 },
@@ -117,6 +117,7 @@ namespace YouYou
             { typeof(GuildListMsg), 3 },
             { typeof(UpdateUserResponse), 3 },
             { typeof(TipModel), 3 },
+            { typeof(UpdateBuildingSpendEvent), 10 },
         };
         #region 变量对象池
 

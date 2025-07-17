@@ -24,8 +24,7 @@ namespace YouYou
         {
             Scene targetScene = SceneManager.GetSceneByName("Game");
             SceneManager.SetActiveScene(targetScene);
-
-            InitPlayer();
+            BuildingSystem.Instance.Init();
             
             // Material main3Skybox = Resources.Load<Material>("CloudyNight"); // 确保路径正确
             // // 更新渲染设置中的天空盒
@@ -49,23 +48,7 @@ namespace YouYou
             
         }
         
-        private async UniTask InitPlayer()
-        {
-            PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync($"Assets/Game/Download/Prefab/Role/Player.prefab");
-            obj.gameObject.MSetActive(true);
-            Scene targetScene = SceneManager.GetSceneByName("Main");
-            if (targetScene.IsValid())
-            {
-                SceneManager.MoveGameObjectToScene(obj.gameObject, targetScene);
-            }
-            GameEntry.Event.Dispatch(Constants.EventName.UpdateFoodPlayerCarry,obj.GetComponent<PlayerManager>().maxFoodPlayerCarry);
-            GameEntry.Instance.PlayerController = obj.GetComponent<PlayerController>();
-            
-                        
-            GameEntry.UI.OpenUIForm<FormMain>();
-            GameEntry.Audio.PlayBGM("Home");
-        }
-        
+
         private async void InitPlayer11()
         {
             // var parent = new GameObject("Player");
