@@ -369,6 +369,37 @@ MonoBehaviour:
   BattleBg: {fileID: 8278232762922097267}
   MonsterMixer: {fileID: 24100000, guid: b2cf29e1378929c43b3632019690086b, type: 2}
   m_CurrLanguage: 0
+  PlayerController: {fileID: 0}
+  customerColors:
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 0, g: 0.08817577, b: 1, a: 1}
+  - {r: 0, g: 0.9706273, b: 1, a: 1}
+  - {r: 0.092196584, g: 1, b: 0, a: 1}
+  - {r: 1, g: 0.40945286, b: 0, a: 1}
+  - {r: 0.5283019, g: 0.21546432, b: 0, a: 1}
+  - {r: 1, g: 0.0047169924, b: 0.8967857, a: 1}
+  customerHats:
+  - {fileID: 4300000, guid: f11392325ebae0c44b011d108fb7f6c0, type: 2}
+  - {fileID: 4300000, guid: 86589483d2b486f4b8ca40d6abdd15c4, type: 2}
+  - {fileID: 4300000, guid: 0415e833b7877774f92f6218bee57d83, type: 2}
+  - {fileID: 4300000, guid: 7227ef92f4048584a862ec5691198072, type: 2}
+  - {fileID: 4300000, guid: 5f46f6e03e1c2854ca79714f4f085e31, type: 2}
+  - {fileID: 4300000, guid: b5b04bf2db4e5be489254badf08920f0, type: 2}
+  - {fileID: 4300000, guid: 771ff53c135db6645ab5a0990423ebb1, type: 2}
+  - {fileID: 4300000, guid: 66aba7f69fc0b454cbbf1979c0b5b18d, type: 2}
+  - {fileID: 4300000, guid: 5131e3a33ddac8645999cb7d526063a4, type: 2}
+  - {fileID: 4300000, guid: a88095b7fbba30741a64178605bc0e24, type: 2}
+  - {fileID: 4300000, guid: f5665c8f1ea48c444ab2d8984d996470, type: 2}
+  - {fileID: 4300000, guid: 0fa59b296a8247a46a4ec122506ff372, type: 2}
+  - {fileID: 4300000, guid: 60924826fe7a53645a3d372de44ef239, type: 2}
+  - {fileID: 4300000, guid: a865a019e9e8f694ebe99ff78d426ace, type: 2}
+  - {fileID: 4300000, guid: b4944a184d6070e47a5130b8b18323f8, type: 2}
+  - {fileID: 4300000, guid: 3e633da5f69b69b41abe56f80237f916, type: 2}
+  - {fileID: 4300000, guid: 905a15fcc2c60fe4781e744d1bec0c01, type: 2}
+  - {fileID: 4300000, guid: cb2095989b504274e8e0d55c24d0f975, type: 2}
+  - {fileID: 4300000, guid: 3c8bb15f2306be14fb9cbfb2a06ef06c, type: 2}
+  - {fileID: 4300000, guid: 730ebe3b04a88c348be54bb461e610b0, type: 2}
+  - {fileID: 4300000, guid: e97825527774ed94b854684949702d7e, type: 2}
 --- !u!1 &4719996667742643965
 GameObject:
   m_ObjectHideFlags: 0

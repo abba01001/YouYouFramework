@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Helper : MonoBehaviour
+public class Helper : Worker
 {
     public Transform foodCollectPos;
     private Vector3 initialFoodCollectPos;

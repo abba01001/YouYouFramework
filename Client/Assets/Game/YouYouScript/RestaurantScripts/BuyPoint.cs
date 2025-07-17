@@ -4,10 +4,9 @@ using TMPro;
 using DG.Tweening;
 using YouYou;
 
-public class BuyPoint : MonoBehaviour
+public class BuyPoint : TriggetBase
 {
     public int srNo, purchaseAmount;
-    private GameManager _GameManager;
     private float countAnimSpeed = 0.1f;
     private float animDuration = 0.5f;
     private TextMeshPro moneyAmountText;
@@ -24,8 +23,11 @@ public class BuyPoint : MonoBehaviour
             objectToUnlock.SetActive(true);
             Destroy(this.gameObject);
         }
+        else
+        {
+            objectToUnlock.SetActive(false);
+        }
 
-        _GameManager = FindObjectOfType<GameManager>();
 
         purchaseAmount = PlayerPrefs.GetInt(srNo+"PurchaseAmount", purchaseAmount);
 
@@ -60,7 +62,7 @@ public class BuyPoint : MonoBehaviour
 
     private void Spend()
     {
-        if (_GameManager.collectedMoney > 0)
+        if (GameEntry.Data.Coin > 0)
         {       
             AudioManager.Instance.Play("BuyPoint");
 
@@ -68,7 +70,7 @@ public class BuyPoint : MonoBehaviour
             purchaseAmount--;
             PlayerPrefs.SetInt(srNo + "PurchaseAmount", purchaseAmount);
 
-            _GameManager.LessMoney();
+            GameEntry.Data.LessMoney();
             ShowPurchaseAmount();
 
             if (purchaseAmount == 0)
@@ -77,7 +79,7 @@ public class BuyPoint : MonoBehaviour
 
                 GameEntry.Instance.PlayerController.SidePos();
                 objectToUnlock.transform.DOPunchScale(new Vector3(0.1f, 1, 0.1f), animDuration, 7).OnComplete(() => Destroy(this.gameObject)); ;
-                objectToUnlock.SetActive(true);
+                UnlockObject();
                 CustomerSpawner[] custSawners = FindObjectsOfType<CustomerSpawner>();
                 custSawners[Random.Range(0, custSawners.Length)].SpawnCustomer();
 
@@ -91,6 +93,13 @@ public class BuyPoint : MonoBehaviour
         {
             CancelInvoke("Spend");
         }
+    }
+    
+    private void UnlockObject()
+    {
+        objectToUnlock.SetActive(true);
+        DOTween.Kill(this.gameObject);      
+        Destroy(this.gameObject);
     }
 
     public void StopSpend()

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Cashier : MonoBehaviour
+public class Cashier : Worker
 {
     private Transform cashierPos;
     private NavMeshAgent agent;

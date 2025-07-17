@@ -95,8 +95,8 @@ public class Outline : MonoBehaviour
     void Init()
     {
         // Instantiate outline materials
-        outlineMaskMaterial = GameEntry.Loader.LoadMainAsset<Material>(@"Assets/Game/Download/Material/OutlineMask.mat",this.gameObject);
-        outlineFillMaterial = GameEntry.Loader.LoadMainAsset<Material>(@"Assets/Game/Download/Material/OutlineFill.mat",this.gameObject);
+        outlineMaskMaterial = new Material(GameEntry.Loader.LoadMainAsset<Material>(@"Assets/Game/Download/Material/OutlineMask.mat",this.gameObject));
+        outlineFillMaterial = new Material(GameEntry.Loader.LoadMainAsset<Material>(@"Assets/Game/Download/Material/OutlineFill.mat",this.gameObject));
 
         outlineMaskMaterial.name = "OutlineMask (Instance)";
         outlineFillMaterial.name = "OutlineFill (Instance)";

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Farmer : MonoBehaviour
+public class Farmer : Worker
 {
     private Vector3 initialFoodCollectPos;
     public Transform foodCollectPos;
@@ -20,7 +20,7 @@ public class Farmer : MonoBehaviour
 
     private void Start()
     {
-        standPos = GameObject.Find("StandPos").transform;
+        standPos = GameObject.Find("FarmerStandPos").transform;
 
         initialFoodCollectPos = foodCollectPos.transform.localPosition;
 

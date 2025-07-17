@@ -53,7 +53,9 @@ namespace YouYou
         public static YouYouLanguage CurrLanguage;
 
         public PlayerController PlayerController;
-        
+        public Color[] customerColors;
+        public Mesh[] customerHats;
+
         //管理器属性
         public static LoggerManager Logger { get; private set; }
         public static EventManager Event { get; private set; }
@@ -77,6 +79,7 @@ namespace YouYou
         public static SDKManager SDK { get; private set; }
         public static DialogueManager Dialogue { get; private set; }
         public static GuideManager Guide { get; private set; }
+        public static RestaurantManager RestaurantManager { get; private set; }
         public Camera SceneCamera { get; set; }
         /// <summary>
         /// 单例
@@ -85,13 +88,12 @@ namespace YouYou
 
         private void Awake()
         {
-            var tmp1 = typeof(MeshCollider);
-            var tmp2 = typeof(CapsuleCollider);
             Log(LogCategory.Procedure, "GameEntry.OnAwake()");
             Instance = this;
             UIRootRectTransform = UIRootCanvasScaler.GetComponent<RectTransform>();
             if(MainEntry.Reporter != null) MainEntry.Reporter.ShowLogPanel(false);
             CurrLanguage = m_CurrLanguage;
+            Application.targetFrameRate = 120; 
         }
         private void Start()
         {
@@ -118,7 +120,7 @@ namespace YouYou
             SDK = new SDKManager();
             Dialogue = new DialogueManager();
             Guide = new GuideManager();
-
+            RestaurantManager = new RestaurantManager();
             Logger.Init();
             Procedure.Init();
             DataTable.Init();
@@ -136,6 +138,7 @@ namespace YouYou
             Task.Init();
             Time.Init();
             Guide.Init();
+            RestaurantManager.Init();
             //进入第一个流程
             Procedure.ChangeState(ProcedureState.Launch);
             
@@ -209,7 +212,7 @@ namespace YouYou
             GameEntry.Data.SaveData(true);
             GameUtil.ShowTip("测试文本哈哈哈哈哈哈！！！");
         }
-
+        
         void Update()
         {
             Time.OnUpdate();
@@ -227,6 +230,7 @@ namespace YouYou
             Input.OnUpdate();
             Task.OnUpdate();
             Guide.OnUpdate();
+            RestaurantManager.OnUpdate();
             GameEntry.Event.Dispatch(Constants.EventName.GameEntryOnUpdate);
         }
 

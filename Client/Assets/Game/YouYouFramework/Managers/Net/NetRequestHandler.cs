@@ -149,8 +149,6 @@ public class NetRequestHandler
     //请求登录
     public void c2s_request_login(string account, string password)
     {
-        account = "a12345";
-        password = "99999";
         LoginMsg data = new LoginMsg()
         {
             UserAccount = account,
@@ -162,8 +160,6 @@ public class NetRequestHandler
     //请求注册
     public void c2s_request_register(string account, string password)
     {
-        account = "a12345";
-        password = "99999";
         RegisterMsg data = new RegisterMsg()
         {
             UserAccount = account,

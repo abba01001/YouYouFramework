@@ -14,14 +14,25 @@ public class FormMain : UIFormBase
     {
         base.Awake();
         Constants.IsEntryFormMain = true;
+        testBtn.SetButtonClick(() =>
+        {
+            GameEntry.Data.AddMoney(500);
+        });
+        testBt1.SetButtonClick(() =>
+        {
+            PlayerPrefs.DeleteAll();
+            Application.Quit(); 
+        });
+        testBt2.SetButtonClick(() =>
+        {
+            GameEntry.UI.OpenUIForm<FormUpgrade>();
+        });
     }
 
     protected override void OnShow()
     {
         base.OnShow();
-
-        InitPlayer();
-        
+        GameEntry.Instance.PlayerController.joystick = joystick;
     }
     
     async UniTask InitPlayer()
@@ -61,6 +72,7 @@ public class FormMain : UIFormBase
     private void Start()
     {
         if(PlayerPrefs.HasKey("DragWindow")) Destroy(dragToMoveWindow);
+        collectedMoney.text = GameEntry.Data.Coin.ToString();
 
     }
 

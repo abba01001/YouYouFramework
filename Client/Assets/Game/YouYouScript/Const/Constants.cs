@@ -77,7 +77,8 @@ static partial class Constants
         public const string UpdateBattleRound = "UpdateBattleRound";
         public const string UpdateEnemyCount = "UpdateEnemyCount";
 
-
+        public const string SpawnCustomer = "SpawnCustomer";
+        
         public const string SetMoneyText = "SetMoneyText";
         public const string UpdateFoodPlayerCarry = "UpdateFoodPlayerCarry";
         public const string GetSuspendReward = "GetSuspendReward";

@@ -60,7 +60,9 @@ public class DataManager : Observable<DataManager>, IDataManager
     #endregion
 
     #region 临时public数据
-    [IgnoreMember] public long Coin { get; }
+
+    [IgnoreMember]
+    public long Coin => _playerRoleData.roleAttr["coin"];
     [IgnoreMember] public int TempSelectMapLvNum { get; set; } = 1;
     [IgnoreMember] public int TempSelectMapLv { get; set; } = 1;
     [IgnoreMember] public int SuspendStartTime { get; set; } = -1;//挂机奖励开始时间点
@@ -85,6 +87,18 @@ public class DataManager : Observable<DataManager>, IDataManager
 
     #region Public方法
 
+    public void AddMoney(int count)
+    {
+        _playerRoleData.roleAttr["coin"] += count;
+        GameEntry.Event.Dispatch(Constants.EventName.SetMoneyText,_playerRoleData.roleAttr["coin"]);
+    }
+    
+    public void LessMoney(int count = 1)
+    {
+        _playerRoleData.roleAttr["coin"] -= count;
+        GameEntry.Event.Dispatch(Constants.EventName.SetMoneyText,_playerRoleData.roleAttr["coin"]);
+    }
+    
     public List<EqiupItemData> GetWearEquip()
     {
         wearEquipList.Clear();
@@ -108,6 +122,7 @@ public class DataManager : Observable<DataManager>, IDataManager
     public void InitPlayData()
     {
         _playerRoleData = new PlayerRoleData();
+        _playerRoleData.roleAttr.Add("coin",0);
         _playerRoleData.roleAttr.Add("huo_bi_1",0);
         _playerRoleData.roleAttr.Add("huo_bi_3",2000);
         _playerRoleData.roleAttr.Add("huo_bi_4",0);

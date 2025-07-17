@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using YouYou;
 
 public class Player : MonoBehaviour
 {
-    private GameManager _GameManager;
     private BillingDesk _BillingDesk;
     private bool removedAnyFood;
     public PlayerManager _PlayerManager;
@@ -19,7 +19,6 @@ public class Player : MonoBehaviour
         playerCapacityBuyAmount = PlayerPrefs.GetInt("PlayerCapacityBuyAmount", playerCapacityBuyAmount);
         // playerCapaciyTest.text = playerCapacityBuyAmount.ToString();
 
-        _GameManager = FindObjectOfType<GameManager>();
         _BillingDesk = FindObjectOfType<BillingDesk>();
     }
 
@@ -80,7 +79,7 @@ public class Player : MonoBehaviour
                     money.transform.DOJump(transform.position, 4, 1, .4f)
                     .OnComplete(delegate ()
                     {
-                        _GameManager.AddMoney(5);
+                        GameEntry.Data.AddMoney(5);
                         AudioManager.Instance.Play("MoneyCollect");
                         Destroy(money);
                     });
@@ -123,7 +122,7 @@ public class Player : MonoBehaviour
 
     public void IncreasePlayerCapacity()
     {
-        if (_GameManager.collectedMoney >= playerCapacityBuyAmount)
+        if (GameEntry.Data.Coin >= playerCapacityBuyAmount)
         {
             AudioManager.Instance.Play("Upgrade");
 

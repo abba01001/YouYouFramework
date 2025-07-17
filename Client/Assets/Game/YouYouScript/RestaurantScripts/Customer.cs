@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.AI;
 using DG.Tweening;
+using YouYou;
 
 public class Customer : MonoBehaviour
 {
@@ -39,10 +40,10 @@ public class Customer : MonoBehaviour
     
     private void Start()
     {
-        GameManager _GameManager = FindObjectOfType<GameManager>();
-        skin.material.color = _GameManager.customerColors[Random.Range(0, _GameManager.customerColors.Length)];
-        hat.mesh = _GameManager.customerHats[Random.Range(0, _GameManager.customerHats.Length)];
-
+        var color =  GameEntry.Instance.customerColors[Random.Range(0,  GameEntry.Instance.customerColors.Length)];
+        var mesh = GameEntry.Instance.customerHats[Random.Range(0, GameEntry.Instance.customerHats.Length)];
+        skin.material.color = color;
+        hat.mesh = mesh;
         billingDesk = FindObjectOfType<BillingDesk>();
 
         buyFoodCapacity = Random.Range(7, 13);
@@ -51,7 +52,6 @@ public class Customer : MonoBehaviour
         agent.updateRotation = true;
 
         availableShelfs = GameObject.FindGameObjectsWithTag("Shelf");
-
         targetShelfPos = FindShelf();
 
         agent.SetDestination(targetShelfPos);
@@ -61,6 +61,7 @@ public class Customer : MonoBehaviour
     {
         int randVal = Random.Range(0, availableShelfs.Length);
 
+        GameUtil.LogError(gameObject.name);
         foreach (CustomerPoints customerPoint in availableShelfs[randVal].GetComponent<FoodPlaceManager>().customerPoints)
         {
             if (!customerPoint.fill)
@@ -184,6 +185,7 @@ public class Customer : MonoBehaviour
 
     private void Update()
     {
+        if (agent == null) return;
         if (counterLook)
         {
             if (ReachedDestinationOrGaveUp())

@@ -1,3 +1,4 @@
+using UnityEngine;
 using YouYou;
 
 public class GameEvent { }
@@ -31,6 +32,18 @@ public class EventMessage : GameEvent
     public EventMessage(string eventName)
     {
         EventName = eventName;
+    }
+}
+
+public class SpawnCustomerEvent : GameEvent
+{
+    public Transform bornPoint;
+    public Transform exitPoint;
+
+    public SpawnCustomerEvent(Transform bp, Transform ep)
+    {
+        bornPoint = bp;
+        exitPoint = ep;
     }
 }
 
