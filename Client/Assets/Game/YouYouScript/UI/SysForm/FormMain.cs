@@ -65,7 +65,7 @@ public class FormMain : UIFormBase
         if (Input.GetKeyDown(KeyCode.D))
         {
             // BuildingSystem.Instance.Test();
-            GameEntry.Data.AddMoney(2000);
+            // GameEntry.Data.AddMoney(2000);
         }
     }
 

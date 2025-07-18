@@ -54,9 +54,9 @@ public class BuildingSystem
         await GenInitBuildings();  // 生成初始建筑
         await GenHasBuildings();  // 生成已经购买的建筑
         await GenBuyBuildingPoint(); //生成购买建筑点
-        await CustomerSystem.Instance.Init(); // 生成顾客
-        await HelperSystem.Instance.Init(); // 生成协助者
         await GenPlayer(); // 生成玩家
+        
+        GameEntry.Event.Dispatch(Constants.EventName.UpdateBuildingsObj,null);
     }
 
     private async UniTask GenPlayer()
@@ -167,7 +167,7 @@ public class BuildingSystem
         if (CheckHasBuildingObj(entity.BuildingId)) return;
         if (entity == null) return;
 
-        PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync($"Assets/Game/Download/Prefab/Regions/{entity.BuildingType}.prefab", RegionMap[entity.RegionId].transform);
+        PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync($"Assets/Game/Download/Prefab/Regions/{entity.BuildingName}.prefab", RegionMap[entity.RegionId].transform);
         BuildingBase building = obj.GetComponent<BuildingBase>();
         building.Init(entity);
         obj.gameObject.MSetActive(true);
@@ -320,6 +320,52 @@ public class BuildingSystem
                 await GenInitBuildings();  // 生成初始建筑
             }
             await GenBuyBuildingPoint(); //生成购买建筑点
+            GameEntry.Event.Dispatch(Constants.EventName.UpdateBuildingsObj,null);
         }
+    }
+    
+    
+    //获取货架建筑
+    public GameObject GetShelfBuilding(string food)
+    {
+        foreach (var build in _buildings)
+        {
+            if (build.Entity.BuildingType == "Shelf" && build.Entity.Consume == food)
+            {
+                return build.gameObject;
+            }
+        }
+        return null;
+    }
+    
+    public List<BuildingBase> GetShelfBuilding()
+    {
+        List<BuildingBase> list = new List<BuildingBase>();
+        foreach (var build in _buildings)
+        {
+            if (build.Entity.BuildingType == "Shelf")
+            {
+                list.Add(build);
+            }
+        }
+        return list;
+    }
+    
+    public List<BuildingBase> GetpProduceBuilding()
+    {
+        List<BuildingBase> list = new List<BuildingBase>();
+        foreach (var build in _buildings)
+        {
+            if (build.Entity.BuildingType == "Produce")
+            {
+                list.Add(build);
+            }
+        }
+        return list;
+    }
+
+    public bool HasPromotionActivity()
+    {
+        return false;
     }
 }

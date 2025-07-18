@@ -40,6 +40,11 @@ namespace Main
         private ParamsSettings m_ParamsSettings;
         public static ParamsSettings ParamsSettings { get; private set; }
 
+        [FoldoutGroup("MacroSettings")]
+        [SerializeField]
+        public MacroSettings m_MacroSettings;
+        public static MacroSettings MacroSettings { get; private set; }
+        
         //当前设备等级
         [FoldoutGroup("ParamsSettings")]
         [SerializeField]
@@ -84,7 +89,15 @@ namespace Main
         /// 单例
         /// </summary>
         public static MainEntry Instance { get; private set; }
-
+        
+        void OnValidate()
+        {
+            if (MacroSettings == null)
+            {
+                MacroSettings = m_MacroSettings;
+            }
+        }
+        
         private void Awake()
         {
             Instance = this;
@@ -95,7 +108,7 @@ namespace Main
             //此处以后判断如果不是编辑器模式 要根据设备信息判断等级
             CurrDeviceGrade = m_CurrDeviceGrade;
             ParamsSettings = m_ParamsSettings;
-
+            MacroSettings = m_MacroSettings;
             //初始化系统参数
             HttpRetry = ParamsSettings.GetGradeParamData(YFConstDefine.Http_Retry, CurrDeviceGrade);
             HttpRetryInterval = ParamsSettings.GetGradeParamData(YFConstDefine.Http_RetryInterval, CurrDeviceGrade);

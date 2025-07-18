@@ -12,6 +12,7 @@ namespace YouYou
     public class ProcedureGame : ProcedureBase
     {
         private GameObject MapParent = null;
+        private bool initScene;
         internal override void OnEnter()
         {
             base.OnEnter();
@@ -25,7 +26,9 @@ namespace YouYou
             Scene targetScene = SceneManager.GetSceneByName("Game");
             SceneManager.SetActiveScene(targetScene);
             BuildingSystem.Instance.Init();
-            
+            CustomerSystem.Instance.Init(); // 生成顾客
+            WorkerSystem.Instance.Init(); // 生成协助者
+            initScene = true;
             // Material main3Skybox = Resources.Load<Material>("CloudyNight"); // 确保路径正确
             // // 更新渲染设置中的天空盒
             // if (main3Skybox != null)
@@ -114,6 +117,10 @@ namespace YouYou
         internal override void OnUpdate()
         {
             base.OnUpdate();
+            if(!initScene) return;
+            BuildingSystem.Instance.Update();
+            CustomerSystem.Instance.Update();
+            WorkerSystem.Instance.Update();
         }
         internal override void OnLeave()
         {

@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using YouYou;
 
 public class FoodPlaceManager : MonoBehaviour
 {
@@ -10,20 +12,36 @@ public class FoodPlaceManager : MonoBehaviour
     public Transform shelfTopTransform;
     public List<CustomerPoints> customerPoints;
 
-    [HideInInspector]
-    public List<Food> collectedFoods;
+    [HideInInspector] public List<Food> collectedFoods;
     public List<Transform> shelfPos;
-    public FoodSpawner[] availableFoodSpawners;
+    public List<FoodSpawner> foodSpawners =  new List<FoodSpawner>();
 
-    private void Awake()
-    {
-        if (PlayerPrefs.HasKey("Unlocked"))
-            gameObject.SetActive(true);
-    }
 
     public void MoveShelfTopTransform()
     {
-        if(collectedFoods.Count < collectFoodCapacity)
-        shelfTopTransform.position = shelfPos[collectedFoods.Count].position;
+        if (collectedFoods.Count < collectFoodCapacity)
+            shelfTopTransform.position = shelfPos[collectedFoods.Count].position;
+    }
+
+    private void OnEnable()
+    {
+        GameEntry.Event.AddEventListener(Constants.EventName.UpdateBuildingsObj, OnUpdateBuildingsObj);
+    }
+
+    private void OnUpdateBuildingsObj(object userdata)
+    {
+        foodSpawners.Clear();
+        foreach (BuildingBase building in BuildingSystem.Instance.GetpProduceBuilding())
+        {
+            if (building.Entity.Produce == shelfFoodName)
+            {
+                foodSpawners.Add(building.GetComponentInChildren<FoodSpawner>(true));
+            }
+        }
+    }
+
+    private void OnDisable()
+    {
+        GameEntry.Event.RemoveEventListener(Constants.EventName.UpdateBuildingsObj, null);
     }
 }

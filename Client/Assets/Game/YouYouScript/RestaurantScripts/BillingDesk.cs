@@ -27,8 +27,7 @@ public class BillingDesk : MonoBehaviour
         if (other.CompareTag("Customer") && isCounterEmpty)
         {
             currentCustomer = other.gameObject.GetComponent<Customer>();
-
-            if (currentCustomer.collectedFoods.Count > 0)
+            if (CustomerSystem.Instance.CheckIsFullCollect(currentCustomer.CustomerData))
             {
                 isCounterEmpty = false;
                 customer = true;
@@ -80,7 +79,6 @@ public class BillingDesk : MonoBehaviour
         else
         {
             packageBox.GetComponent<Animator>().SetTrigger("StartProduction");
-
             Invoke("DeliverBox", .6f);          
         }
     }

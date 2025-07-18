@@ -106,6 +106,17 @@ public class AssetBundleSettings : ScriptableObject
     [LabelText("输出AB包资源到本地")]
     public void BuildAssetBundle()
     {
+        if (CurrBuildTarget == CusBuildTarget.Android &&
+            MainEntry.MacroSettings.CurrAssetLoadTarget != MacroSettings.AssetLoadTarget.ASSETBUNDLE)
+        {
+            EditorUtility.DisplayDialog(
+                "提示",
+                $"请先切换到{MacroSettings.AssetLoadTarget.ASSETBUNDLE}模式",
+                "确定"
+            );
+            return;
+        }
+        
         CopyHofixDll();
 
         builds.Clear();

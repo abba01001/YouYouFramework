@@ -524,7 +524,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2485913834509209679
 Transform:
   m_ObjectHideFlags: 0
@@ -581,15 +581,7 @@ MonoBehaviour:
   - {fileID: 2485913834509209445}
   - {fileID: 2485913834509209444}
   - {fileID: 2485913834509209453}
-  availableFoodSpawners:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  availableFoodSpawners: []
 --- !u!65 &2485913834509212175
 BoxCollider:
   m_ObjectHideFlags: 0

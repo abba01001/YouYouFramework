@@ -18,60 +18,38 @@ public class Helper : Worker
     private Transform trashBin;
     private GameObject[] shelfs;
 
-    public HelperData HelperData
+    public override void Init(WorkerData data)
     {
-        get;
-        set;
-    }
-    public bool IsActive
-    {
-        get;
-        set;
-    }
-    
-    private void Start()
-    {
-        trashBin = GameObject.FindGameObjectWithTag("TrashBin").transform;
-
-        _PlayerManager.maxFoodPlayerCarry = PlayerPrefs.GetInt("CapacityVal", _PlayerManager.maxFoodPlayerCarry);
-
-        GetComponent<NavMeshAgent>().speed = PlayerPrefs.GetFloat("SpeedVal", GetComponent<NavMeshAgent>().speed);
-
+        base.Init(data);
+        // trashBin = GameObject.FindGameObjectWithTag("TrashBin").transform;
+        _PlayerManager.maxFoodPlayerCarry = WorkerData.maxFoodCarry;
+        GetComponent<NavMeshAgent>().speed = WorkerData.speed;
         initialFoodCollectPos = foodCollectPos.transform.localPosition;
-
         agent.updateRotation = true;
-
         FindShelf();
     }
 
     private void FindShelf()
     {
-        shelfs = GameObject.FindGameObjectsWithTag("Shelf");
-
-        foreach (GameObject shelf in shelfs)
+        foreach (BuildingBase shelf in BuildingSystem.Instance.GetShelfBuilding())
         {
             FoodPlaceManager _FoodPlaceManager = shelf.GetComponent<FoodPlaceManager>();
-
+            if (!WorkerData.collectFood.Contains(_FoodPlaceManager.shelfFoodName)) continue;
             int i = _FoodPlaceManager.collectFoodCapacity / 2;
-
             if (_FoodPlaceManager.collectedFoods.Count < i)
             {
                 targetShelfPos = _FoodPlaceManager.HelperPos;
-
-                foreach (FoodSpawner foodSpawner in _FoodPlaceManager.availableFoodSpawners)
+                foreach (FoodSpawner foodSpawner in _FoodPlaceManager.foodSpawners)
                 {
                     if (foodSpawner.food.foodName == _FoodPlaceManager.shelfFoodName)
                     {
-
                         if (foodSpawner.foodObj != null)
                         {
                             _PlayerManager.currentFoodName = _FoodPlaceManager.shelfFoodName;
-
-                            Goto(foodSpawner.transform.position);
+                            Goto(foodSpawner.transform.position + new Vector3(GameUtil.RandomRange(0f,1f),0,GameUtil.RandomRange(0f,1f)));
                             return;
                         }
                     }
-
                 }
             }
         }
@@ -85,12 +63,14 @@ public class Helper : Worker
         canCheck = true;
     }
 
-    private void Update()
+    public override void OnUpdate()
     {
-
+        base.OnUpdate();
+        if (!IsActive) return;
+        
         if (ReachedDestinationOrGaveUp() && canCheck)
         {
-            if (_PlayerManager.collectedFood.Count >= _PlayerManager.minimumFoodPlayerCarry)
+            if (_PlayerManager.collectedFood.Count >= _PlayerManager.maxFoodPlayerCarry)
             {
                 Goto(targetShelfPos.position);
                 checkReachedShelf = true;
@@ -180,15 +160,12 @@ public class Helper : Worker
 
     public void IncreaseCapacity(int increaseVal)
     {
-        _PlayerManager.maxFoodPlayerCarry += increaseVal;
-
-        PlayerPrefs.SetInt("CapacityVal", _PlayerManager.maxFoodPlayerCarry);
+        WorkerData.maxFoodCarry += increaseVal;
     }
 
     public void IncreaseSpeed(int increaseVal)
     {
         GetComponent<NavMeshAgent>().speed += increaseVal;
-
-        PlayerPrefs.SetFloat("SpeedVal", GetComponent<NavMeshAgent>().speed);
+        WorkerData.speed = GetComponent<NavMeshAgent>().speed;
     }
 }

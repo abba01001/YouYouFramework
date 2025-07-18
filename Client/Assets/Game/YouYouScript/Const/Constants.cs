@@ -79,6 +79,7 @@ static partial class Constants
 
         public const string SpawnCustomer = "SpawnCustomer";
 
+        public const string UpdateBuildingsObj = "UpdateBuildingsObj";
         public const string UpdateBuildingSpend = "UpdateBuildingSpend";
         public const string SetMoneyText = "SetMoneyText";
         public const string UpdateFoodPlayerCarry = "UpdateFoodPlayerCarry";

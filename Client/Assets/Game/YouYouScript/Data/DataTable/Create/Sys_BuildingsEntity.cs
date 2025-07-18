@@ -13,14 +13,24 @@ namespace YouYou
         public int BuildingId;
 
         /// <summary>
-        /// 建筑类型
+        /// 建筑名字
+        /// </summary>
+        public string BuildingName;
+
+        /// <summary>
+        /// 类型
         /// </summary>
         public string BuildingType;
 
         /// <summary>
-        /// 建筑名
+        /// 生成
         /// </summary>
-        public string BuildingName;
+        public string Produce;
+
+        /// <summary>
+        /// 消耗
+        /// </summary>
+        public string Consume;
 
         /// <summary>
         /// 解锁金币

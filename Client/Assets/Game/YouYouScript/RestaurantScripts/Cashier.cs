@@ -9,20 +9,26 @@ public class Cashier : Worker
     private NavMeshAgent agent;
     public Animator anim;
 
-    void Start()
+    public override void Init(WorkerData data)
     {
+        base.Init(data);
         agent = GetComponent<NavMeshAgent>();
         cashierPos = FindObjectOfType<BillingDesk>().cashierPos;
         agent.SetDestination(cashierPos.position);
+        
+    
     }
 
-    private void Update()
+    private bool isReachedDestination = false;
+    public override void OnUpdate()
     {
+        base.OnUpdate();
+        if (!IsActive) return;
+        if (isReachedDestination) return;
         if (ReachedDestination())
         {
             transform.rotation = Quaternion.Euler(0, 0, 0);
-
-            Destroy(this);
+            isReachedDestination = true;
         }
 
         if (agent.remainingDistance <= agent.stoppingDistance)

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using RDG;
 using DG.Tweening;
@@ -105,7 +106,7 @@ public class Food : MonoBehaviour
         foodCollectPos.position = new Vector3(foodCollectPos.transform.position.x, foodCollectPos.transform.position.y - foodCollectPlayerYVal, foodCollectPos.transform.position.z);
     }
 
-    public void GotoCustomer(Transform target, Customer customer)
+    public void GotoCustomer(Transform target, Action action)
     {
         goToPlayer = false;
 
@@ -115,8 +116,7 @@ public class Food : MonoBehaviour
             goToCustomer = false;
             transform.parent = target;
             transform.position = target.position;
-            customer.FoodColected();
-
+            action?.Invoke();
         });
     }
 

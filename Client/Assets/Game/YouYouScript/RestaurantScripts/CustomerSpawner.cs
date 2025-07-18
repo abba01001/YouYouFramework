@@ -37,6 +37,5 @@ public class CustomerSpawner : MonoBehaviour
         customer.transform.position = transform.position;
         customer.transform.rotation = transform.rotation;
         customer.transform.SetParent(this.transform);
-        customer.GetComponent<Customer>().exitTransform = exitTransform;
     }
 }

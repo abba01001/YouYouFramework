@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.AI;
@@ -6,103 +7,143 @@ using DG.Tweening;
 using YouYou;
 using Random = UnityEngine.Random;
 
+public enum CustomerMood
+{
+    Happy,   // 高兴的顾客，购物效率高，买得更多
+    Neutral, // 中立的顾客，购物行为正常
+    Annoyed, // 不满的顾客，购物效率低，可能放弃购物
+    Anxious,  // 焦虑的顾客，购物效率低，反复挑选商品
+    Angry //愤怒的顾客，离开购物
+}
+
 public class Customer : MonoBehaviour
 {
-    private GameObject[] availableShelfs;
-    public Transform[] trollyPoses;
-    //[HideInInspector]
-    public List<Food>collectedFoods;
-    public int buyFoodCapacity, trollyPoseCount = 0;
+    private List<Transform> slotList = new List<Transform>();
+    private int tempSlotId = 0;
+    
     private bool goToBillingCounter, canCollect = true;
-    [HideInInspector]
     public bool counterLook;
     private BillingDesk billingDesk;
     public Transform handPos, target;
-    [HideInInspector]
-    public Transform exitTransform;
     public GameObject moneyPrefab, trolly;
     public MeshFilter hat;
     public SkinnedMeshRenderer skin;
-    [HideInInspector]
     public NavMeshAgent agent;
     public Animator anim;
-    Vector3 targetShelfPos;
     private CustomerPoints _CustomerPoints;
-
-    public CustomerData CustomerData
+    private bool hasChangeNeutral;
+    public bool IsExit { get; set; }
+    public CustomerData CustomerData{ get; set; }
+    public bool IsActive{ get; set; }
+    private int ShoppingTime { get; set; }
+    private TimeAction modTimeAction;
+    public CustomerMood currentMood; // 默认情绪是中立
+    public List<Food>collectedFoods;
+    private bool isCollecting;
+    public void Init(CustomerData data)
     {
-        get;
-        set;
-    }
-    public bool IsActive
-    {
-        get;
-        set;
-    }
-    
-    private void Start()
-    {
-        var color =  GameEntry.Instance.customerColors[Random.Range(0,  GameEntry.Instance.customerColors.Length)];
-        var mesh = GameEntry.Instance.customerHats[Random.Range(0, GameEntry.Instance.customerHats.Length)];
-        skin.material.color = color;
-        hat.mesh = mesh;
+        CustomerData = data;
+        foreach (Transform child in transform.Find("TrolleySlots"))
+        {
+            slotList.Add(child);
+        }
+        
+        skin.material.color = GameEntry.Instance.customerColors[data.hatColorIndex];
+        hat.mesh = GameEntry.Instance.customerHats[data.meshColorIndex];
+        currentMood = data.mood;
         billingDesk = FindObjectOfType<BillingDesk>();
-
-        buyFoodCapacity = Random.Range(1, 13);
 
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = true;
 
-        availableShelfs = GameObject.FindGameObjectsWithTag("Shelf");
-        targetShelfPos = FindShelf();
-
-        agent.SetDestination(targetShelfPos);
+        IsActive = true;
     }
 
-    private Vector3 FindShelf()
-    {
-        int randVal = Random.Range(0, availableShelfs.Length);
-        foreach (CustomerPoints customerPoint in availableShelfs[randVal].GetComponent<FoodPlaceManager>().customerPoints)
-        {
-            if (!customerPoint.fill)
-            {
-                customerPoint.fill = true;
-                _CustomerPoints = customerPoint;
-                return customerPoint.transform.position;
-            }
-        }
 
-        return FindShelf();
-    }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Exit"))
-        {
-            other.GetComponentInParent<CustomerSpawner>().SpawnCustomer();
-            Destroy(this.gameObject);
-        }
-
         if (other.CompareTag("CustomerPoint") && !goToBillingCounter)
         {
             if (other.gameObject == _CustomerPoints.gameObject)
             {
                 agent.updateRotation = false;
-                transform.rotation = other.transform.rotation;
+                StartCoroutine(SmoothRotate(other.transform.rotation));
+                modTimeAction ??= GameEntry.Time.CreateTimerLoop(this, 1, -1, (_) => { ShoppingTime += 1; });
             }
         }
     }
+    
+    private IEnumerator SmoothRotate(Quaternion targetRotation)
+    {
+        float timeElapsed = 0f;
+        float rotationDuration = .2f; // 旋转的时间，单位为秒
+        Quaternion initialRotation = transform.rotation;
+        while (timeElapsed < rotationDuration)
+        {
+            transform.rotation = Quaternion.Lerp(initialRotation, targetRotation, timeElapsed / rotationDuration);
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+        transform.rotation = targetRotation; // 最终确保旋转到目标值
+    }
+    
+    private void UpdateMoodBasedOnTime()
+    {
+        if (modTimeAction == null) return;
+        if (ShoppingTime <= CustomerData.happyTime)
+        {
+            currentMood = CustomerMood.Happy;
+        }
+        else if (ShoppingTime <= CustomerData.neutralTime && !hasChangeNeutral)
+        {
+            currentMood = CustomerMood.Neutral;
+            hasChangeNeutral = true;
+        }
+        else if (ShoppingTime <= CustomerData.annoyedTime)
+        {
+            currentMood = CustomerMood.Annoyed;
+        }
+        else if (ShoppingTime <= CustomerData.anxiousTime)
+        {
+            currentMood = CustomerMood.Anxious;
+        }
+        else if (ShoppingTime <= CustomerData.angryTime)
+        {
+            currentMood = CustomerMood.Angry;
+        }
+    }
 
-    //private void OnTriggerExit(Collider other)
-    //{
-    //    if (other.CompareTag("CustomerPoint"))
-    //    {
-    //        print("Name  " + other.gameObject);
-
-    //        if (other.gameObject == _CustomerPoints.gameObject)
-    //            _CustomerPoints.fill = false;
-    //    }
-    //}
+    private void CheckModChange()
+    {
+        if (modTimeAction == null) return;
+        UpdateMoodBasedOnTime();
+        UpdateMoodBasedOnStoreConditions();
+        if (currentMood == CustomerMood.Anxious)
+        {
+        }
+        if (currentMood == CustomerMood.Angry)
+        {
+            GoToExit();
+        }
+    }
+    
+    // 更新顾客情绪基于商店条件（只在 Neutral 时生效）
+    private void UpdateMoodBasedOnStoreConditions()
+    {
+        if (modTimeAction == null) return;
+        if (currentMood == CustomerMood.Neutral)
+        {
+            if (CustomerSystem.Instance.IsStoreBusy())
+            {
+                currentMood = CustomerMood.Anxious; // 商店拥挤导致焦虑
+            }
+            else if (BuildingSystem.Instance.HasPromotionActivity())
+            {
+                currentMood = CustomerMood.Happy; // 促销活动导致高兴
+            }
+        }
+    }
 
     public void GoToBillingCounter()
     {
@@ -116,16 +157,23 @@ public class Customer : MonoBehaviour
 
     public void GoToExit()
     {
+        agent.updateRotation = true;
+        modTimeAction?.Stop();
+        modTimeAction = null;
         billingDesk.customersForBilling.Remove(this);
         int index = GameUtil.RandomRange(0, CustomerSystem.Instance.bornPos.Count);
         agent.SetDestination( CustomerSystem.Instance.bornPos[index]);
-        //TODO 到达目标点销毁
+        _CustomerPoints.fill = false;
+        GameEntry.Time.Yield(() =>
+        {
+            IsExit = true;
+        });
         billingDesk.ArrangeCustomersInQue();
     }
 
     public void PayMoney()
     {
-        int val = buyFoodCapacity * 2;
+        int val = 10 * 2;
 
         for (int i = 0; i < val; i++) 
         {
@@ -145,7 +193,6 @@ public class Customer : MonoBehaviour
 
                 Vector3 vec = billingDesk.moneyPosParent.position;
                 vec.y = vec.y+1;
-
                 billingDesk.moneyPosParent.position = vec;
             }
             else
@@ -155,44 +202,61 @@ public class Customer : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Shelf") && ReachedDestinationOrGaveUp())
+        BuildingBase building = other.gameObject.GetComponent<BuildingBase>();
+        if (building != null && building.Entity.BuildingType == "Shelf" && ReachedDestinationOrGaveUp())
         {
-            FoodPlaceManager shelf = other.GetComponent<FoodPlaceManager>();
-
-            if (shelf.collectedFoods.Count > 0 && canCollect)
+            if (canCollect)
             {
-                Food food = shelf.collectedFoods[shelf.collectedFoods.Count - 1];
-                shelf.collectedFoods.Remove(food);
-                shelf.MoveShelfTopTransform();
+                FoodPlaceManager shelf = other.GetComponent<FoodPlaceManager>();
+                if (shelf.collectedFoods.Count > 0)
+                {
+                    Food food = shelf.collectedFoods[shelf.collectedFoods.Count - 1];
+                    shelf.collectedFoods.Remove(food);
+                    shelf.MoveShelfTopTransform();
 
-                food.GotoCustomer(trollyPoses[trollyPoseCount], this);
-                collectedFoods.Add(food);
-                
-                trollyPoseCount++;
-                canCollect = false;
+                    CollectFood(building.Entity.Consume);
+                    food.GotoCustomer(slotList[tempSlotId], ()=>
+                    {
+                        ResetCanCollect(building.Entity.Consume);
+                    });
+                    collectedFoods.Add(food);
+                    tempSlotId++;
+                    canCollect = false;
+                }
             }
+
         }
     }
 
-    public void FoodColected()
+    private void CollectFood(string name)
     {
-       if (collectedFoods.Count == buyFoodCapacity)
-       {
-           Invoke("GoToBillingCounter", 0.5f);
-           return;
-       }
-       canCollect = true;       
+        foreach (var data in CustomerData.foodList)
+        {
+            if (data.name == name)
+            {
+                data.hasCount += 1;
+                break;
+            }
+        }
+        CustomerSystem.Instance.PrintFoordData(CustomerData);
     }
 
-    private void OnEnable()
+    public void ResetCanCollect(string foodName)
     {
-        IsActive = true;
+        if (CustomerSystem.Instance.CheckIsFullCollect(CustomerData,foodName))
+        {
+            CanCheckGoToCollect = false;
+            return;
+        }
+        canCollect = true;
     }
 
-    private void Update()
+    public void OnUpdate()
     {
         if (!IsActive) return;
         if (agent == null) return;
+        CheckModChange();
+        CheckGoToCollect();
         if (counterLook)
         {
             if (ReachedDestinationOrGaveUp())
@@ -203,9 +267,53 @@ public class Customer : MonoBehaviour
         }
 
         if (agent.remainingDistance <= agent.stoppingDistance)
+        {
             anim.SetBool("Run", false);
+            if (IsExit)
+            {
+                CustomerSystem.Instance.RemoveCustomer(this);
+            }
+        }
         else
+        {
             anim.SetBool("Run", true);
+        }
+    }
+
+    private bool CanCheckGoToCollect = false;
+    private void CheckGoToCollect()
+    {
+        if (!CanCheckGoToCollect)
+        {
+            if (CustomerSystem.Instance.CheckIsFullCollect(CustomerData))
+            {
+                GoToBillingCounter();
+                CanCheckGoToCollect = true;
+                return;
+            }
+
+            foreach (FoodData data in CustomerData.foodList)
+            {
+                if (data.needCount == data.hasCount) continue;
+                GameObject obj = BuildingSystem.Instance.GetShelfBuilding(data.name);
+
+                if (obj != null)
+                {
+                    foreach (var customerPoint in obj.GetComponent<FoodPlaceManager>().customerPoints)
+                    {
+                        if (!customerPoint.fill)
+                        {
+                            customerPoint.fill = true;
+                            _CustomerPoints = customerPoint;
+                            agent.SetDestination(customerPoint.transform.position);
+                            agent.updateRotation = true;
+                            CanCheckGoToCollect = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private bool ReachedDestinationOrGaveUp()
@@ -218,7 +326,6 @@ public class Customer : MonoBehaviour
                     return true;
             }
         }
-
         return false;
     }
 }

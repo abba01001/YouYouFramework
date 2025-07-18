@@ -93,8 +93,10 @@ public class BagItemData
 [MessagePackObject(keyAsPropertyName: true)]
 public class RestaurantData
 {
+    public int maxHelperCount = 1;
+    public int maxCashierCount = 1;
     public List<CustomerData> customers = new List<CustomerData>();
-    public List<HelperData> helpers = new List<HelperData>();
+    public List<WorkerData> workers = new List<WorkerData>();
     public List<BuildingData> buildings = new List<BuildingData>();
     public Dictionary<int, int> readyUnlocks = new Dictionary<int, int>();
 }
@@ -114,21 +116,37 @@ public class CustomerData
     public int customerId;
     public int type;//类型
     public string name;
-    public List<int> needFoodList =  new List<int>();//所需食物列表
-    public List<int> hasFoodList =  new List<int>();//拥有实物列表
+    public List<FoodData> foodList =  new List<FoodData>();//所需食物列表
     public int hatColorIndex;//帽子颜色索引
     public int meshColorIndex;//网格颜色索引
+    public CustomerMood mood = CustomerMood.Neutral;
+    public int happyTime;
+    public int neutralTime;
+    public int annoyedTime;
+    public int anxiousTime;
+    public int angryTime;
+}
+
+
+[Serializable]
+[MessagePackObject(keyAsPropertyName: true)]
+public class WorkerData
+{
+    public int workerId;
+    public string type;//类型
+    public List<string> collectFood = new List<string>();
+    public string name;
+    public int maxFoodCarry = 2;//食物容量
+    public float speed = 10;//速度
 }
 
 [Serializable]
 [MessagePackObject(keyAsPropertyName: true)]
-public class HelperData
+public class FoodData
 {
-    public int helperId;
-    public int type;//类型
     public string name;
-    public int maxFoodCarry;//食物容量
-    public int speed;//速度
+    public int needCount;
+    public int hasCount;
 }
 
 public class DialogueCommand
