@@ -5,7 +5,7 @@ using YouYou;
 
 public class Worker : MonoBehaviour
 {
-    public bool IsActive { get; set; }
+    public bool IsLiving { get; set; }
     public WorkerData WorkerData { get; set; }
     public virtual void OnUpdate()
     {
@@ -15,6 +15,6 @@ public class Worker : MonoBehaviour
     public virtual void Init(WorkerData data)
     {
         WorkerData = data;
-        IsActive = true;
+        IsLiving = true;
     }
 }

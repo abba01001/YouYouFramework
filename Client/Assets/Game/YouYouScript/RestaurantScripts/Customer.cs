@@ -74,6 +74,17 @@ public class Customer : MonoBehaviour
         }
     }
     
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("CustomerPoint") && !goToBillingCounter)
+        {
+            if (other.gameObject == _CustomerPoints.gameObject)
+            {
+                _CustomerPoints.fill = false;
+            }
+        }
+    }
+    
     private IEnumerator SmoothRotate(Quaternion targetRotation)
     {
         float timeElapsed = 0f;
@@ -116,6 +127,7 @@ public class Customer : MonoBehaviour
 
     private void CheckModChange()
     {
+        if (IsExit) return;
         if (modTimeAction == null) return;
         UpdateMoodBasedOnTime();
         UpdateMoodBasedOnStoreConditions();
@@ -162,11 +174,28 @@ public class Customer : MonoBehaviour
         modTimeAction = null;
         billingDesk.customersForBilling.Remove(this);
         int index = GameUtil.RandomRange(0, CustomerSystem.Instance.bornPos.Count);
-        agent.SetDestination( CustomerSystem.Instance.bornPos[index]);
+        Vector3 tarGetPos = CustomerSystem.Instance.bornPos[index];
+        agent.SetDestination(tarGetPos);
         _CustomerPoints.fill = false;
-        GameEntry.Time.Yield(() =>
+        // GameEntry.Time.Yield(() =>
+        // {
+        //     IsExit = true;
+        //     GameUtil.LogError($"剩余距离{agent.remainingDistance}===停止距离{agent.stoppingDistance}");
+        // });
+        // GameEntry.Time.YieldUntil(() => agent.remainingDistance < 0.1f, () =>
+        // {
+        //     Debug.Log("顾客已经接近目的地");
+        // });
+        // GameEntry.Time.YieldUntil(() => !agent.pathPending, () =>
+        // {
+        //     IsExit = true;
+        //     GameUtil.LogError($"剩余距离{agent.remainingDistance}===停止距离{agent.stoppingDistance}");
+        // });
+        // 启动协程等待路径计算完成
+        GameEntry.Time.CreateTimer(this, 1f, () =>
         {
             IsExit = true;
+            GameUtil.LogError($"{transform.name}剩余距离{agent.remainingDistance}===停止距离{agent.stoppingDistance}");
         });
         billingDesk.ArrangeCustomersInQue();
     }
@@ -251,10 +280,21 @@ public class Customer : MonoBehaviour
         canCollect = true;
     }
 
+    private float spawnCooldown = 2f; // 每隔2秒生成一个顾客
+    private float spawnTimer = 0f;
+    // 更新所有顾客
     public void OnUpdate()
     {
         if (!IsActive) return;
         if (agent == null) return;
+        spawnTimer += Time.deltaTime;
+    
+        if (spawnTimer >= spawnCooldown)
+        {
+            spawnTimer = 0f;
+            GameUtil.LogError($"更新状态===={transform.name}=====IsExit状态{IsExit}");
+        }
+        
         CheckModChange();
         CheckGoToCollect();
         if (counterLook)
@@ -265,12 +305,13 @@ public class Customer : MonoBehaviour
                 counterLook = false;
             }
         }
-
+        
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
             anim.SetBool("Run", false);
             if (IsExit)
             {
+                GameUtil.LogError($"OnUpdate==={transform.name}剩余距离{agent.remainingDistance}===停止距离{agent.stoppingDistance}");
                 CustomerSystem.Instance.RemoveCustomer(this);
             }
         }
@@ -283,6 +324,7 @@ public class Customer : MonoBehaviour
     private bool CanCheckGoToCollect = false;
     private void CheckGoToCollect()
     {
+        if (IsExit) return;
         if (!CanCheckGoToCollect)
         {
             if (CustomerSystem.Instance.CheckIsFullCollect(CustomerData))
@@ -303,6 +345,7 @@ public class Customer : MonoBehaviour
                     {
                         if (!customerPoint.fill)
                         {
+                            customerPoint.customerObj = transform.gameObject.name;
                             customerPoint.fill = true;
                             _CustomerPoints = customerPoint;
                             agent.SetDestination(customerPoint.transform.position);
@@ -312,6 +355,7 @@ public class Customer : MonoBehaviour
                         }
                     }
                 }
+                if (CanCheckGoToCollect) break;
             }
         }
     }

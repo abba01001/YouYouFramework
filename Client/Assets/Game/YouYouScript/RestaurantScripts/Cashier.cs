@@ -23,7 +23,7 @@ public class Cashier : Worker
     public override void OnUpdate()
     {
         base.OnUpdate();
-        if (!IsActive) return;
+        if (!IsLiving) return;
         if (isReachedDestination) return;
         if (ReachedDestination())
         {

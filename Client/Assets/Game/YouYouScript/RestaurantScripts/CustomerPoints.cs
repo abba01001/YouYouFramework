@@ -5,4 +5,5 @@ using UnityEngine;
 public class CustomerPoints : MonoBehaviour
 {
     public bool fill;
+    public string customerObj;
 }

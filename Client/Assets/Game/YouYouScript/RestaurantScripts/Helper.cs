@@ -66,7 +66,7 @@ public class Helper : Worker
     public override void OnUpdate()
     {
         base.OnUpdate();
-        if (!IsActive) return;
+        if (!IsLiving) return;
         
         if (ReachedDestinationOrGaveUp() && canCheck)
         {

@@ -306,6 +306,23 @@ namespace YouYou
             }
         }
 
+        /// <summary>
+        /// 等待直到条件成立后再执行回调
+        /// </summary>
+        public void YieldUntil(Func<bool> condition, Action onComplete)
+        {
+            GameEntry.Instance.StartCoroutine(YieldUntilCoroutine());
+            IEnumerator YieldUntilCoroutine()
+            {
+                while (!condition())
+                {
+                    yield return null; // 每帧检查一次
+                }
+                onComplete?.Invoke();
+            }
+        }
+
+        
         public void SetTimeScale(float scale)
         {
             Time.timeScale = scale;

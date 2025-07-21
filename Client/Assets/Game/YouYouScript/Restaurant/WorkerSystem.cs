@@ -25,15 +25,12 @@ public class WorkerSystem
         }
     }
 
-    // ?????
     public async UniTask Init()
     {
-        // ????????????
         if (GameEntry.Data.PlayerRoleData.restaurantData.workers.Count > 0)
         {
             foreach (var workderData in GameEntry.Data.PlayerRoleData.restaurantData.workers)
             {
-                // ??????????§Û???????????????
                 float spawnTime = GameUtil.RandomRange(0f, 4f);
                 GameEntry.Time.CreateTimer(this, spawnTime, () =>
                 {
@@ -70,16 +67,16 @@ public class WorkerSystem
         data.workerId = GameUtil.RandomRange(1, 9999999);
         int index = GameUtil.RandomRange(0, bornPos.Count);
         obj.gameObject.transform.position = bornPos[index];
+        obj.gameObject.MSetActive(true);
     }
 
     private void CheckSpawnWorker()
     {
         if (GetHelperObjCount < GameEntry.Data.PlayerRoleData.restaurantData.maxHelperCount)
         {
-            // ?????????????????????????????
             WorkerData data = new WorkerData();
             data.type = "Helper";
-            List<(string,int)> selectedFoodList = CustomerSystem.Instance.GetRandomFoodCombination(); // ????????????
+            List<(string,int)> selectedFoodList = CustomerSystem.Instance.GetRandomFoodCombination();
             foreach (var item in selectedFoodList)
             {
                 data.collectFood.Add(item.Item1);
@@ -90,7 +87,6 @@ public class WorkerSystem
         }
         if (GetCashierObjCount < GameEntry.Data.PlayerRoleData.restaurantData.maxCashierCount)
         {
-            // ?????????????????????????????
             WorkerData data = new WorkerData();
             data.type = "Cashier";
             GameEntry.Data.PlayerRoleData.restaurantData.workers.Add(data);
@@ -113,7 +109,6 @@ public class WorkerSystem
         GameUtil.LogError(sb.ToString());
     }
 
-    // ??????
     public void RemoveWorker(Worker targetWorker)
     {
         var targetData = GameEntry.Data.PlayerRoleData.restaurantData.workers
@@ -121,14 +116,12 @@ public class WorkerSystem
 
         if (targetData != null)
         {
-            // ???????????????????
             GameEntry.Data.PlayerRoleData.restaurantData.workers.Remove(targetData);
             workers.Remove(targetWorker);
             GameObject.Destroy(targetWorker.gameObject);
         }
     }
 
-    // ???????§Û??
     public void Update()
     {
         CheckSpawnWorker();
@@ -136,10 +129,10 @@ public class WorkerSystem
         {
             var worker = workers[i];
             worker.OnUpdate();
-            if (!worker.IsActive) 
+            if (!worker.IsLiving) 
             {
-                workers.RemoveAt(i);  // ???????????????????????
-                RemoveWorker(worker); // ????????????????
+                workers.RemoveAt(i); 
+                RemoveWorker(worker);
             }
         }
     }

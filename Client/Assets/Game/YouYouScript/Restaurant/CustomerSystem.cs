@@ -38,12 +38,7 @@ public class CustomerSystem
         {
             foreach (var customerData in GameEntry.Data.PlayerRoleData.restaurantData.customers)
             {
-                // 这里假设你有顾客预制体生成的逻辑
-                float spawnTime = GameUtil.RandomRange(0f, 4f);
-                GameEntry.Time.CreateTimer(this, spawnTime, () =>
-                {
-                    GenerateCustomerObj(customerData);
-                });
+                GenerateCustomerObj(customerData);
             }
         }
     }
@@ -140,10 +135,10 @@ public class CustomerSystem
 
     public List<Vector3> bornPos = new List<Vector3>()
     {
-        new Vector3(16, 5, 48),
-        new Vector3(-61, 5, -1),
-        new Vector3(-30,2,61),
-        new Vector3(-60,2,31)
+        new Vector3(16f, 0f, 48f),
+        new Vector3(-61f, 0f, -1f),
+        new Vector3(-30f,0f,61f),
+        new Vector3(-60f,0f,31f)
     };
     private void GenerateCustomerObj(CustomerData data)
     {
@@ -169,19 +164,37 @@ public class CustomerSystem
         }
     }
 
+    private float spawnCooldown = 2f; // 每隔2秒生成一个顾客
+    private float spawnTimer = 0f;
     // 更新所有顾客
     public void Update()
     {
-        CheckSpawnCustomer();
+        spawnTimer += Time.deltaTime;
+    
+        if (spawnTimer >= spawnCooldown)
+        {
+            spawnTimer = 0f;
+            CheckDeleteCustomer();
+            CheckSpawnCustomer();
+        }
         
+        // 继续更新活跃的顾客
+        foreach (var customer in customers)
+        {
+            if(customer.IsActive) customer.OnUpdate();
+        }
+    }
+
+    private void CheckDeleteCustomer()
+    {
+        // 从后往前遍历，删除不活跃的顾客
         for (int i = customers.Count - 1; i >= 0; i--)
         {
             var customer = customers[i];
-            customer.OnUpdate();
-            if (!customer.IsActive) // 如果顾客不再活跃，移除顾客
+            if (!customer.IsActive)
             {
-                customers.RemoveAt(i);  // 从后往前删除，避免索引错乱
-                GameObject.Destroy(customer.gameObject);
+                customers.RemoveAt(i);  // 删除不活跃的顾客
+                GameObject.Destroy(customer.gameObject);  // 销毁对象
             }
         }
     }
