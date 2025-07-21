@@ -21,6 +21,7 @@ public class Customer : MonoBehaviour
     private List<Transform> slotList = new List<Transform>();
     private int tempSlotId = 0;
     
+    private bool isGoToCollect = false;
     private bool goToBillingCounter, canCollect = true;
     public bool counterLook;
     private BillingDesk billingDesk;
@@ -42,7 +43,16 @@ public class Customer : MonoBehaviour
     private bool isCollecting;
     public void Init(CustomerData data)
     {
+        trolly.MSetActive(true);
+        isGoToCollect = false;
+        tempSlotId = 0;
+        goToBillingCounter = false;
+        canCollect = true;
+        _CustomerPoints = null;
+        ShoppingTime = 0;
+        collectedFoods.Clear();
         CustomerData = data;
+        slotList.Clear();
         foreach (Transform child in transform.Find("TrolleySlots"))
         {
             slotList.Add(child);
@@ -55,10 +65,9 @@ public class Customer : MonoBehaviour
 
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = true;
-
+        IsExit = false;
         IsActive = true;
     }
-
 
 
     private void OnTriggerEnter(Collider other)
@@ -274,7 +283,7 @@ public class Customer : MonoBehaviour
     {
         if (CustomerSystem.Instance.CheckIsFullCollect(CustomerData,foodName))
         {
-            CanCheckGoToCollect = false;
+            isGoToCollect = false;
             return;
         }
         canCollect = true;
@@ -321,16 +330,15 @@ public class Customer : MonoBehaviour
         }
     }
 
-    private bool CanCheckGoToCollect = false;
     private void CheckGoToCollect()
     {
         if (IsExit) return;
-        if (!CanCheckGoToCollect)
+        if (!isGoToCollect)
         {
             if (CustomerSystem.Instance.CheckIsFullCollect(CustomerData))
             {
                 GoToBillingCounter();
-                CanCheckGoToCollect = true;
+                isGoToCollect = true;
                 return;
             }
 
@@ -350,12 +358,12 @@ public class Customer : MonoBehaviour
                             _CustomerPoints = customerPoint;
                             agent.SetDestination(customerPoint.transform.position);
                             agent.updateRotation = true;
-                            CanCheckGoToCollect = true;
+                            isGoToCollect = true;
                             break;
                         }
                     }
                 }
-                if (CanCheckGoToCollect) break;
+                if (isGoToCollect) break;
             }
         }
     }

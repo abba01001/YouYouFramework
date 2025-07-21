@@ -194,7 +194,7 @@ public class CustomerSystem
             if (!customer.IsActive)
             {
                 customers.RemoveAt(i);  // 删除不活跃的顾客
-                GameObject.Destroy(customer.gameObject);  // 销毁对象
+                GameEntry.Pool.GameObjectPool.Despawn(customer.GetComponent<PoolObj>());
             }
         }
     }

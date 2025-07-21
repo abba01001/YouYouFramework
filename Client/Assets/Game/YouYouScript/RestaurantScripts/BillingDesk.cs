@@ -87,8 +87,7 @@ public class BillingDesk : MonoBehaviour
     {
         if (currentCustomer != null)
         {
-            Destroy(currentCustomer.trolly);
-
+            currentCustomer.trolly.MSetActive(false);
             if (packageBox)
             {
 
