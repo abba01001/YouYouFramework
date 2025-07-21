@@ -25,15 +25,15 @@ public class WorkerSystem
         }
     }
 
-    // 初始化
+    // ?????
     public async UniTask Init()
     {
-        // 加载已存在的顾客
+        // ????????????
         if (GameEntry.Data.PlayerRoleData.restaurantData.workers.Count > 0)
         {
             foreach (var workderData in GameEntry.Data.PlayerRoleData.restaurantData.workers)
             {
-                // 这里假设你有顾客预制体生成的逻辑
+                // ??????????й???????????????
                 float spawnTime = GameUtil.RandomRange(0f, 4f);
                 GameEntry.Time.CreateTimer(this, spawnTime, () =>
                 {
@@ -76,10 +76,10 @@ public class WorkerSystem
     {
         if (GetHelperObjCount < GameEntry.Data.PlayerRoleData.restaurantData.maxHelperCount)
         {
-            // 如果顾客少于上限，增加一个顾客数据
+            // ?????????????????????????????
             WorkerData data = new WorkerData();
             data.type = "Helper";
-            List<(string,int)> selectedFoodList = CustomerSystem.Instance.GetRandomFoodCombination(); // 获取随机食物组合
+            List<(string,int)> selectedFoodList = CustomerSystem.Instance.GetRandomFoodCombination(); // ????????????
             foreach (var item in selectedFoodList)
             {
                 data.collectFood.Add(item.Item1);
@@ -90,7 +90,7 @@ public class WorkerSystem
         }
         if (GetCashierObjCount < GameEntry.Data.PlayerRoleData.restaurantData.maxCashierCount)
         {
-            // 如果顾客少于上限，增加一个顾客数据
+            // ?????????????????????????????
             WorkerData data = new WorkerData();
             data.type = "Cashier";
             GameEntry.Data.PlayerRoleData.restaurantData.workers.Add(data);
@@ -105,7 +105,7 @@ public class WorkerSystem
     {
         return;
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("收集食物列表:");
+        sb.AppendLine("???????б?:");
         foreach (string str in customerData.collectFood)
         {
             sb.AppendLine($"Food Name: {str}");
@@ -113,7 +113,7 @@ public class WorkerSystem
         GameUtil.LogError(sb.ToString());
     }
 
-    // 移除顾客
+    // ??????
     public void RemoveWorker(Worker targetWorker)
     {
         var targetData = GameEntry.Data.PlayerRoleData.restaurantData.workers
@@ -121,14 +121,14 @@ public class WorkerSystem
 
         if (targetData != null)
         {
-            // 确保数据一致性，删除顾客
+            // ???????????????????
             GameEntry.Data.PlayerRoleData.restaurantData.workers.Remove(targetData);
             workers.Remove(targetWorker);
             GameObject.Destroy(targetWorker.gameObject);
         }
     }
 
-    // 更新所有顾客
+    // ???????й??
     public void Update()
     {
         CheckSpawnWorker();
@@ -138,8 +138,8 @@ public class WorkerSystem
             worker.OnUpdate();
             if (!worker.IsActive) 
             {
-                workers.RemoveAt(i);  // 从后往前删除，避免索引错乱
-                RemoveWorker(worker); // 同时从游戏数据中移除
+                workers.RemoveAt(i);  // ???????????????????????
+                RemoveWorker(worker); // ????????????????
             }
         }
     }

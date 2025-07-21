@@ -26,7 +26,7 @@ public class BuildingSystem
 
     public void Update()
     {
-        
+
     }
 
     private Dictionary<int, List<Sys_BuildingsEntity>> Regions = new Dictionary<int, List<Sys_BuildingsEntity>>();
@@ -39,6 +39,7 @@ public class BuildingSystem
     private HashSet<int> _buyPointIdsCache = new HashSet<int>();
     public PlayerController PlayerController;
 
+    public bool InitFinish { get; set; }
     public Transform Root { get; private set; }
     public async UniTask Init()
     {
@@ -55,8 +56,10 @@ public class BuildingSystem
         await GenHasBuildings();  // 生成已经购买的建筑
         await GenBuyBuildingPoint(); //生成购买建筑点
         await GenPlayer(); // 生成玩家
-        
+        await CustomerSystem.Instance.Init(); // 生成顾客
+        await WorkerSystem.Instance.Init(); // 生成协助者
         GameEntry.Event.Dispatch(Constants.EventName.UpdateBuildingsObj,null);
+        InitFinish = true;
     }
 
     private async UniTask GenPlayer()

@@ -26,8 +26,6 @@ namespace YouYou
             Scene targetScene = SceneManager.GetSceneByName("Game");
             SceneManager.SetActiveScene(targetScene);
             BuildingSystem.Instance.Init();
-            CustomerSystem.Instance.Init(); // 生成顾客
-            WorkerSystem.Instance.Init(); // 生成协助者
             initScene = true;
             // Material main3Skybox = Resources.Load<Material>("CloudyNight"); // 确保路径正确
             // // 更新渲染设置中的天空盒
@@ -118,6 +116,8 @@ namespace YouYou
         {
             base.OnUpdate();
             if(!initScene) return;
+            if (!BuildingSystem.Instance.InitFinish) return;
+            
             BuildingSystem.Instance.Update();
             CustomerSystem.Instance.Update();
             WorkerSystem.Instance.Update();
