@@ -102,7 +102,7 @@ public class BillingDesk : MonoBehaviour
                     packageBox.transform.position = currentCustomer.handPos.position;
                     packageBox.transform.rotation = currentCustomer.handPos.rotation;
                     packageBox.transform.parent = currentCustomer.transform;
-
+                    currentCustomer.packageObj = packageBox;
                     packageBox = null;
                     currentCustomer.PayMoney();
                     GetComponent<AudioSource>().Play();

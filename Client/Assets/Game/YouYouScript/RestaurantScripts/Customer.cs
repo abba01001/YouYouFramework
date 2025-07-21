@@ -31,6 +31,7 @@ public class Customer : MonoBehaviour
     public SkinnedMeshRenderer skin;
     public NavMeshAgent agent;
     public Animator anim;
+    public GameObject packageObj;
     private CustomerPoints _CustomerPoints;
     private bool hasChangeNeutral;
     public bool IsExit { get; set; }
@@ -43,6 +44,7 @@ public class Customer : MonoBehaviour
     private bool isCollecting;
     public void Init(CustomerData data)
     {
+        if(packageObj != null) Destroy(packageObj);
         trolly.MSetActive(true);
         isGoToCollect = false;
         tempSlotId = 0;
