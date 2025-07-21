@@ -291,20 +291,12 @@ public class Customer : MonoBehaviour
         canCollect = true;
     }
 
-    private float spawnCooldown = 2f; // 每隔2秒生成一个顾客
-    private float spawnTimer = 0f;
+
     // 更新所有顾客
     public void OnUpdate()
     {
         if (!IsActive) return;
         if (agent == null) return;
-        spawnTimer += Time.deltaTime;
-    
-        if (spawnTimer >= spawnCooldown)
-        {
-            spawnTimer = 0f;
-            GameUtil.LogError($"更新状态===={transform.name}=====IsExit状态{IsExit}");
-        }
         
         CheckModChange();
         CheckGoToCollect();
@@ -322,7 +314,6 @@ public class Customer : MonoBehaviour
             anim.SetBool("Run", false);
             if (IsExit)
             {
-                GameUtil.LogError($"OnUpdate==={transform.name}剩余距离{agent.remainingDistance}===停止距离{agent.stoppingDistance}");
                 CustomerSystem.Instance.RemoveCustomer(this);
             }
         }
