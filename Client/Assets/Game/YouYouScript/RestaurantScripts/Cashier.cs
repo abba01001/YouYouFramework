@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Cashier : Worker
+public class Cashier : WorkerBase
 {
     private Transform cashierPos;
     private NavMeshAgent agent;
@@ -19,10 +19,8 @@ public class Cashier : Worker
     
     }
 
-    private bool isReachedDestination = false;
-    public override void OnUpdate()
+    public override void Tick()
     {
-        base.OnUpdate();
         if (!IsLiving) return;
         if (isReachedDestination) return;
         if (ReachedDestination())
@@ -36,6 +34,8 @@ public class Cashier : Worker
         else
             anim.SetBool("Run", true);
     }
+    private bool isReachedDestination = false;
+
 
     private bool ReachedDestination()
     {

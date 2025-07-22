@@ -44,7 +44,7 @@ public class Customer : MonoBehaviour
     private bool isCollecting;
     public void Init(CustomerData data)
     {
-        if(packageObj != null) Destroy(packageObj);
+        packageObj.MSetActive(false);
         trolly.MSetActive(true);
         isGoToCollect = false;
         tempSlotId = 0;
@@ -188,25 +188,9 @@ public class Customer : MonoBehaviour
         Vector3 tarGetPos = CustomerSystem.Instance.bornPos[index];
         agent.SetDestination(tarGetPos);
         _CustomerPoints.fill = false;
-        // GameEntry.Time.Yield(() =>
-        // {
-        //     IsExit = true;
-        //     GameUtil.LogError($"剩余距离{agent.remainingDistance}===停止距离{agent.stoppingDistance}");
-        // });
-        // GameEntry.Time.YieldUntil(() => agent.remainingDistance < 0.1f, () =>
-        // {
-        //     Debug.Log("顾客已经接近目的地");
-        // });
-        // GameEntry.Time.YieldUntil(() => !agent.pathPending, () =>
-        // {
-        //     IsExit = true;
-        //     GameUtil.LogError($"剩余距离{agent.remainingDistance}===停止距离{agent.stoppingDistance}");
-        // });
-        // 启动协程等待路径计算完成
         GameEntry.Time.CreateTimer(this, 1f, () =>
         {
             IsExit = true;
-            GameUtil.LogError($"{transform.name}剩余距离{agent.remainingDistance}===停止距离{agent.stoppingDistance}");
         });
         billingDesk.ArrangeCustomersInQue();
     }
@@ -372,5 +356,28 @@ public class Customer : MonoBehaviour
             }
         }
         return false;
+    }
+
+    public void DoPlayPackageAnim(Action cb)
+    {
+                    
+        trolly.MSetActive(false);
+        packageObj.transform.DOJump(handPos.position, 4, 1, .3f)
+            .OnComplete(delegate ()
+            {
+                packageObj.transform.position = handPos.position;
+                packageObj.transform.rotation = handPos.rotation;
+                packageObj.transform.parent = transform;
+                PayMoney();
+                cb?.Invoke();
+            });
+    }
+
+    public void InitPackagBox(Vector3 pos,Quaternion rotation)
+    {
+        packageObj.transform.position = pos;
+        packageObj.transform.rotation = rotation;
+        packageObj.gameObject.MSetActive(true);
+        packageObj.transform.parent = null;
     }
 }

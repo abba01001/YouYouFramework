@@ -93,6 +93,7 @@ public class BagItemData
 [MessagePackObject(keyAsPropertyName: true)]
 public class RestaurantData
 {
+    public int maxFarmerCount = 1;
     public int maxHelperCount = 1;
     public int maxCashierCount = 1;
     public List<CustomerData> customers = new List<CustomerData>();
@@ -133,7 +134,7 @@ public class CustomerData
 public class WorkerData
 {
     public int workerId;
-    public string type;//类型
+    public WorkerType type;//类型
     public List<string> collectFood = new List<string>();
     public string name;
     public int maxFoodCarry = 2;//食物容量

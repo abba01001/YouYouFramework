@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using YouYou;
 
 public class BillingDesk : MonoBehaviour
 {
@@ -49,9 +50,7 @@ public class BillingDesk : MonoBehaviour
     {
         if (customer && player)
         {
-            if (packageBox == null)
-                packageBox = Instantiate(packageBoxPrefab, packageBoxPos.position, packageBoxPos.rotation);
-
+            currentCustomer.InitPackagBox(packageBoxPos.position,packageBoxPos.rotation);
             CollectFoodFromCustomer();
         }
     }
@@ -78,38 +77,16 @@ public class BillingDesk : MonoBehaviour
         }
         else
         {
-            packageBox.GetComponent<Animator>().SetTrigger("StartProduction");
-            Invoke("DeliverBox", .6f);          
-        }
-    }
-
-    private void DeliverBox()
-    {
-        if (currentCustomer != null)
-        {
-            currentCustomer.trolly.MSetActive(false);
-            if (packageBox)
+            currentCustomer.packageObj.GetComponent<Animator>().SetTrigger("StartProduction");
+            GameEntry.Time.CreateTimer(this, 0.6f, () =>
             {
-
-                print(packageBox.gameObject.name);
-                print(currentCustomer.gameObject.name);
-                print(currentCustomer.handPos.gameObject.name);
-
-
-                packageBox.transform.DOJump(currentCustomer.handPos.position, 4, 1, .3f)
-                .OnComplete(delegate ()
+                currentCustomer.DoPlayPackageAnim(() =>
                 {
-                    packageBox.transform.position = currentCustomer.handPos.position;
-                    packageBox.transform.rotation = currentCustomer.handPos.rotation;
-                    packageBox.transform.parent = currentCustomer.transform;
-                    currentCustomer.packageObj = packageBox;
-                    packageBox = null;
-                    currentCustomer.PayMoney();
-                    GetComponent<AudioSource>().Play();
                     customer = false;
-                    Invoke("GotoMyExit", .4f);
+                    GetComponent<AudioSource>().Play();
+                    GameEntry.Time.CreateTimer(this, 0.4f, GotoMyExit);
                 });
-            }
+            });
         }
     }
 

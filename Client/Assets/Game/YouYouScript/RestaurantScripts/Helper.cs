@@ -2,8 +2,9 @@ using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using YouYou;
 
-public class Helper : Worker
+public class Helper : WorkerBase
 {
     public Transform foodCollectPos;
     private Vector3 initialFoodCollectPos;
@@ -27,6 +28,39 @@ public class Helper : Worker
         initialFoodCollectPos = foodCollectPos.transform.localPosition;
         agent.updateRotation = true;
         FindShelf();
+    }
+
+    public override void Tick()
+    {
+        if (!IsLiving) return;
+        
+        if (ReachedDestinationOrGaveUp() && canCheck)
+        {
+            if (_PlayerManager.collectedFood.Count >= _PlayerManager.maxFoodPlayerCarry)
+            {
+                Goto(targetShelfPos.position);
+                checkReachedShelf = true;
+                canCheck = false;
+            }
+        }
+
+        if (ReachedDestinationOrGaveUp() && checkReachedShelf)
+        {
+            if (_PlayerManager.collectedFood.Count == 0)
+            {
+                checkReachedShelf = false;
+                GameEntry.Time.CreateTimer(this, .5f, FindShelf);
+            }
+            else
+            {
+                agent.SetDestination(trashBin.position);
+            }
+        }
+
+        if (agent.remainingDistance <= agent.stoppingDistance)
+            anim.SetBool("Run", false);
+        else
+            anim.SetBool("Run", true);
     }
 
     private void FindShelf()
@@ -53,48 +87,13 @@ public class Helper : Worker
                 }
             }
         }
-
-        Invoke("FindShelf", 2);
+        GameEntry.Time.CreateTimer(this, 2, FindShelf);
     }
 
     private void Goto(Vector3 target)
     {
         agent.SetDestination(target);
         canCheck = true;
-    }
-
-    public override void OnUpdate()
-    {
-        base.OnUpdate();
-        if (!IsLiving) return;
-        
-        if (ReachedDestinationOrGaveUp() && canCheck)
-        {
-            if (_PlayerManager.collectedFood.Count >= _PlayerManager.maxFoodPlayerCarry)
-            {
-                Goto(targetShelfPos.position);
-                checkReachedShelf = true;
-                canCheck = false;
-            }
-        }
-
-        if (ReachedDestinationOrGaveUp() && checkReachedShelf)
-        {
-            if (_PlayerManager.collectedFood.Count == 0)
-            {
-                checkReachedShelf = false;
-                Invoke("FindShelf", .5f);
-            }
-            else
-            {
-                agent.SetDestination(trashBin.position);
-            }
-        }
-
-        if (agent.remainingDistance <= agent.stoppingDistance)
-            anim.SetBool("Run", false);
-        else
-            anim.SetBool("Run", true);
     }
 
     private bool ReachedDestinationOrGaveUp()

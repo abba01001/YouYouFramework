@@ -66,6 +66,7 @@ public class BuildingSystem
     {
         // 玩家生成逻辑
         PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync($"Assets/Game/Download/Prefab/Role/Player.prefab",Root);
+        obj.transform.position = new Vector3(5, 0, 21);
         obj.gameObject.MSetActive(true);
         // Scene targetScene = SceneManager.GetSceneByName("Main");
         // if (targetScene.IsValid())

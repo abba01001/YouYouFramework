@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using YouYou;
 
-public class Farmer : Worker
+public class Farmer : WorkerBase
 {
     private Vector3 initialFoodCollectPos;
     public Transform foodCollectPos;
-    private Transform standPos;
+    private Vector3 standPos = new Vector3(2.43f,0.65f,-36.31f);
     public NavMeshAgent agent;
     private Transform targetChickenPos;
     private bool canCheck = true;
@@ -18,77 +19,19 @@ public class Farmer : Worker
     public PlayerManager _PlayerManager;
     private System.Random _random = new System.Random();
 
-    private void Start()
+    
+    public override void Init(WorkerData data)
     {
-        standPos = GameObject.Find("FarmerStandPos").transform;
-
+        base.Init(data);
         initialFoodCollectPos = foodCollectPos.transform.localPosition;
-
         agent.updateRotation = true;
-
         FindChicken();
     }
 
-    private GameObject[] chickens;
-
-    private void FindChicken()
+    public override void Tick()
     {
-        chickens = GameObject.FindGameObjectsWithTag("Chicken");
-
-        for(int i =0; i< chickens.Length; i++)
-        {
-            FoodPlaceManager chicken = chickens[i].GetComponent<FoodPlaceManager>();
-
-            int j = chicken.collectFoodCapacity / 2;
-
-            if (chicken.collectedFoods.Count < j)
-            {
-                targetChickenPos = chicken.HelperPos;
-                FindFoodSpawner(chicken.shelfFoodName);
-                return;
-            }
-        }
-
-        Invoke("FindChicken", 2);
-    }
-    private void FindFoodSpawner(string _foodName)
-    {
-        FoodSpawner[] availableFoodSpawners = FindObjectsOfType<FoodSpawner>();
-
-        Shuffle(availableFoodSpawners);
-
-        foreach (FoodSpawner foodSpawner in availableFoodSpawners)
-        {
-            if (foodSpawner.food.foodName == _foodName)
-            {
-                Goto(foodSpawner.transform.position);
-                return;
-            }
-        }
-
-        FindChicken();
-    }
-
-    void Shuffle(FoodSpawner[] array)
-    {
-        int p = array.Length;
-        for (int n = p - 1; n > 0; n--)
-        {
-            int r = _random.Next(0, n);
-            FoodSpawner t = array[r];
-            array[r] = array[n];
-            array[n] = t;
-        }
-    }
-
-    private void Goto(Vector3 target)
-    {
-        agent.SetDestination(target);
-        canCheck = true;
-    }
-
-    private void Update()
-    {
+        if (!IsLiving) return;
+        
         if (ReachedDestinationOrGaveUp() && canCheck)
         {
             if (_PlayerManager.collectedFood.Count == _PlayerManager.maxFoodPlayerCarry)
@@ -101,7 +44,7 @@ public class Farmer : Worker
         if (reachedShelf)
         {
             reachedShelf = false;
-            Invoke("FindChicken", 3);
+            GameEntry.Time.CreateTimer(this, 3, FindChicken);
         }
 
         if (agent.remainingDistance <= agent.stoppingDistance)
@@ -109,6 +52,56 @@ public class Farmer : Worker
         else
             anim.SetBool("Run", true);
     }
+
+    private GameObject[] chickens;
+
+    private void FindChicken()
+    {
+        foreach (BuildingBase building in BuildingSystem.Instance.GetpProduceBuilding())
+        {
+            if (building.Entity.Produce == "Egg")
+            {
+                FoodPlaceManager chicken = building.GetComponent<FoodPlaceManager>();
+                int j = chicken.collectFoodCapacity / 2;
+                if (chicken.collectedFoods.Count < j)
+                {
+                    targetChickenPos = chicken.HelperPos;
+                    FindFoodSpawner(chicken.shelfFoodName);
+                    return;
+                }
+            }
+        }
+        GameEntry.Time.CreateTimer(this, 2, FindChicken);
+    }
+    private void FindFoodSpawner(string _foodName)
+    {
+        List<FoodSpawner> availableFoodSpawners = new List<FoodSpawner>();
+        foreach (BuildingBase shelf in BuildingSystem.Instance.GetShelfBuilding())
+        {
+            FoodPlaceManager _FoodPlaceManager = shelf.GetComponent<FoodPlaceManager>();
+            if (_FoodPlaceManager.shelfFoodName != _foodName) continue;
+            foreach (FoodSpawner foodSpawner in _FoodPlaceManager.foodSpawners)
+            {
+                availableFoodSpawners.Add(foodSpawner);
+            }
+        }
+        GameUtil.Shuffle(availableFoodSpawners);
+        foreach (FoodSpawner foodSpawner in availableFoodSpawners)
+        {
+            if (foodSpawner.food.foodName == _foodName)
+            {
+                Goto(foodSpawner.transform.position);
+                return;
+            }
+        }
+    }
+
+    private void Goto(Vector3 target)
+    {
+        agent.SetDestination(target);
+        canCheck = true;
+    }
+
 
     private bool ReachedDestinationOrGaveUp()
     {
@@ -126,8 +119,6 @@ public class Farmer : Worker
 
     private void OnTriggerStay(Collider other)
     {
-        print("Collided  " + other.gameObject.name);
-
         if (other.CompareTag("Chicken"))
         {
             FoodPlaceManager ChickenShelf = other.GetComponent<FoodPlaceManager>();
@@ -172,7 +163,7 @@ public class Farmer : Worker
             }
             else
             {
-                Goto(standPos.position);
+                Goto(standPos);
             }
         }
     }

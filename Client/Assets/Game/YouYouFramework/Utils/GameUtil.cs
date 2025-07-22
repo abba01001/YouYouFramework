@@ -313,6 +313,16 @@ public class GameUtil
         Debug.LogError(combinedMessage);
     }
 
+    public static void Shuffle<T>(List<T> list)
+    {
+        int count = list.Count;
+        for (int i = count - 1; i > 0; i--)
+        {
+            int r = _random.Next(0, i + 1);
+            (list[i], list[r]) = (list[r], list[i]);
+        }
+    }
+    
     public static string GetCosABRoot(string assetVersion)
     {
         RuntimePlatform platform = Application.platform;

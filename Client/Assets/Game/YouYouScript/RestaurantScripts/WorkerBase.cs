@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using YouYou;
 
-public class Worker : MonoBehaviour
+public abstract class WorkerBase : MonoBehaviour
 {
     public bool IsLiving { get; set; }
     public WorkerData WorkerData { get; set; }
@@ -17,4 +17,6 @@ public class Worker : MonoBehaviour
         WorkerData = data;
         IsLiving = true;
     }
+    
+    public abstract void Tick(); // 替代 OnUpdate
 }
