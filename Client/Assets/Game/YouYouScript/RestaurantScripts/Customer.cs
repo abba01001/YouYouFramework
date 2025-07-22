@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine.AI;
 using DG.Tweening;
 using YouYou;
@@ -44,6 +45,11 @@ public class Customer : MonoBehaviour
     private bool isCollecting;
     public void Init(CustomerData data)
     {
+        foreach (var f in collectedFoods.ToList())
+        {
+            Destroy(f);
+        }
+        collectedFoods.Clear();
         packageObj.MSetActive(false);
         trolly.MSetActive(true);
         isGoToCollect = false;
@@ -52,7 +58,6 @@ public class Customer : MonoBehaviour
         canCollect = true;
         _CustomerPoints = null;
         ShoppingTime = 0;
-        collectedFoods.Clear();
         CustomerData = data;
         slotList.Clear();
         foreach (Transform child in transform.Find("TrolleySlots"))
