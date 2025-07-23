@@ -19,6 +19,7 @@ public enum CustomerMood
 
 public class Customer : MonoBehaviour
 {
+    [SerializeField] private Transform panel;
     private List<Transform> slotList = new List<Transform>();
     private int tempSlotId = 0;
     
@@ -47,7 +48,7 @@ public class Customer : MonoBehaviour
     {
         foreach (var f in collectedFoods.ToList())
         {
-            Destroy(f);
+            Destroy(f.gameObject);
         }
         collectedFoods.Clear();
         packageObj.MSetActive(false);
@@ -286,6 +287,10 @@ public class Customer : MonoBehaviour
     {
         if (!IsActive) return;
         if (agent == null) return;
+        
+        Vector3 directionToFace = Camera.main.transform.position - panel.position;
+        directionToFace.y = 0;  // 保持血条在水平面旋转，不上下翻转
+        panel.rotation = Quaternion.LookRotation(-directionToFace);
         
         CheckModChange();
         CheckGoToCollect();

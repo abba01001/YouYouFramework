@@ -10,23 +10,26 @@ using YouYou;
 // "主"界面
 public class FormMain : UIFormBase
 {
+    [SerializeField] private Button testBtn;
+    [SerializeField] private Button testBt1;
+    [SerializeField] private Button testBt2;
     protected override void Awake()
     {
         base.Awake();
         Constants.IsEntryFormMain = true;
-        // testBtn.SetButtonClick(() =>
-        // {
-        //     GameEntry.Data.AddMoney(500);
-        // });
-        // testBt1.SetButtonClick(() =>
-        // {
-        //     PlayerPrefs.DeleteAll();
-        //     Application.Quit(); 
-        // });
-        // testBt2.SetButtonClick(() =>
-        // {
-        //     GameEntry.UI.OpenUIForm<FormUpgrade>();
-        // });
+        testBtn.SetButtonClick(() =>
+        {
+            GameEntry.Data.AddMoney(500);
+        });
+        testBt1.SetButtonClick(() =>
+        {
+            PlayerPrefs.DeleteAll();
+            Application.Quit(); 
+        });
+        testBt2.SetButtonClick(() =>
+        {
+            GameEntry.UI.OpenUIForm<FormUpgrade>();
+        });
     }
 
     protected override void OnShow()

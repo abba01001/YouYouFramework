@@ -20,7 +20,6 @@ namespace YouYou
         {
             base.OnEnter();
             GameEntry.Instance.ShowBackGround(BGType.Battle,"Assets/Game/Download/BackGround/Battle/single_map_1.png");
-            BattleCtrl.Instance.Init();
             GameEntry.UI.OpenUIForm<FormLoading>();
             GameEntry.Scene.LoadSceneAction(SceneGroupName.MapEditor, 1,LoadSceneFinish);
         }
@@ -55,7 +54,6 @@ namespace YouYou
             var curLevelData = JsonUtility.FromJson<LevelData>(json);
 
             //初始化界面
-            GameEntry.UI.OpenUIForm<FormBattle>();
             // 初始化关卡数据
             GameEntry.Event.Dispatch(Constants.EventName.InitBattleData, curLevelData);
         }
@@ -63,12 +61,10 @@ namespace YouYou
         internal override void OnUpdate()
         {
             base.OnUpdate();
-            BattleCtrl.Instance.Update();
         }
         internal override void OnLeave()
         {
             //清理一些资源
-            BattleCtrl.Instance.End();
             base.OnLeave();
         }
         internal override void OnDestroy()

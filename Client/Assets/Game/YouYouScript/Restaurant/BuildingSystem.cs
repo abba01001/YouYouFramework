@@ -109,7 +109,7 @@ public class BuildingSystem
             if (!UnlockRegionIds.Contains(kv.Key)) continue;
             foreach (var entity in kv.Value)
             {
-                if (entity.IsInit == 1 && entity.Cost == 0)
+                if (entity.Cost == 0)
                 {
                     await CreateBuilding(entity);
                 }
@@ -125,9 +125,12 @@ public class BuildingSystem
             foreach (var parent in kv.Value)
             {
                 List<int> dependenCies = GameUtil.ParseNumbers(parent.Dependencies);
-                if (!IsUnlockBuilding(parent.BuildingId) && dependenCies.Count > 0)
+                if (!IsUnlockBuilding(parent.BuildingId))
                 {
-                    await CreateBuyPoint(parent);
+                    if (dependenCies.Count > 0 || parent.isVisible == 1)
+                    {
+                        await CreateBuyPoint(parent);
+                    }
                 }
                 foreach (var id in dependenCies)
                 {
@@ -232,6 +235,14 @@ public class BuildingSystem
             int regionId = GetBuildingRegion(data.buildingId);
             UnlockRegionIds.Add(regionId);  // HashSet 会自动去重
         }
+        
+        //检测是否解锁新区域
+        CheckUnlockNewRegion();
+
+        foreach (var VARIABLE in UnlockRegionIds)
+        {
+            GameUtil.LogError($"解锁区域{VARIABLE}");
+        }
     }
 
     public int GetBuildingRegion(int buildingId)
@@ -248,7 +259,7 @@ public class BuildingSystem
     // 是否解锁建筑
     public bool IsUnlockBuilding(int buildingId)
     {
-        if (GetBuildingEntity(buildingId).IsInit == 1) return true;
+        if (GetBuildingEntity(buildingId).Cost == 0) return true;
         var buildingIds = new HashSet<int>(GameEntry.Data.PlayerRoleData.restaurantData.buildings.Select(b => b.buildingId));
         return buildingIds.Contains(buildingId);
     }
@@ -317,17 +328,64 @@ public class BuildingSystem
             await GenHasBuildings(true);  // 生成已经购买的建筑
 
             // 更新解锁的区域
-            if (!UnlockRegionIds.Contains(entity.RegionId))
+            if (CheckUnlockNewRegion())
             {
-                UnlockRegionIds.Add(entity.RegionId);
-                await GenRegionMap();  // 生成地图
-                await GenInitBuildings();  // 生成初始建筑
+                await GenRegionMap();       // 生成区域地图
+                await GenInitBuildings();   // 生成建筑
             }
             await GenBuyBuildingPoint(); //生成购买建筑点
             GameEntry.Event.Dispatch(Constants.EventName.UpdateBuildingsObj,null);
         }
     }
-    
+
+    private bool CheckUnlockNewRegion()
+    {
+        List<int> hasUnlockRegions = new List<int>() { 1 };
+        bool hasNewRegion = false;
+
+        var builtIds = GameEntry.Data.PlayerRoleData.restaurantData.buildings
+            .Select(b => b.buildingId)
+            .ToHashSet(); // 提高查找效率
+
+        foreach (var kv in Regions)
+        {
+            int regionId = kv.Key;
+            List<Sys_BuildingsEntity> regionBuildings = kv.Value
+                .Where(entity => !(entity.Cost == 0))
+                .ToList();
+            
+            List<int> missingIds = new List<int>();
+            foreach (var entity in regionBuildings)
+            {
+                if (!builtIds.Contains(entity.BuildingId))
+                {
+                    missingIds.Add(entity.BuildingId);
+                }
+            }
+
+            if (missingIds.Count == 0)
+            {
+                hasUnlockRegions.Add(regionId + 1);
+            }
+            else
+            {
+                GameUtil.LogError($"区域 {regionId + 1} 未解锁，缺少建筑 ID：{string.Join(", ", missingIds)}");
+            }
+        }
+
+        foreach (var regionId in hasUnlockRegions)
+        {
+            if (!UnlockRegionIds.Contains(regionId))
+            {
+                UnlockRegionIds.Add(regionId);
+                hasNewRegion = true;
+            }
+        }
+
+        return hasNewRegion;
+    }
+
+
     
     //获取货架建筑
     public GameObject GetShelfBuilding(string food)

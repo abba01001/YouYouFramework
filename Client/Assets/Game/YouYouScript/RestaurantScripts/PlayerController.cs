@@ -11,18 +11,20 @@ public class PlayerController : MonoBehaviour
 
     Vector3 moveDirection;
     bool usingJoystick = false; // 标记当前是否使用遥感控制
-
+    bool usingKeyboard = false;
     void Update()
     {
         // 检查是否有遥感输入，若有则使用遥感控制
         if (joystick != null && joystick.direction != Vector2.zero)
         {
             usingJoystick = true;
+            usingKeyboard = false;
         }
         // 检查是否有键盘输入，若有则使用WSAD控制
         else if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
         {
             usingJoystick = false;
+            usingKeyboard = true;
         }
 
         // 根据当前的控制方式进行移动
@@ -30,7 +32,7 @@ public class PlayerController : MonoBehaviour
         {
             JoystickControl();
         }
-        else
+        if(usingKeyboard)
         {
             KeyboardControl();
         }

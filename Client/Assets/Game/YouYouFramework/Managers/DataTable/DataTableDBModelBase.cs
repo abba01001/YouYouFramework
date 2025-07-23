@@ -65,6 +65,12 @@ namespace YouYou
 				});
 			});
 		}
+
+		public void TestLoad(MMO_MemoryStream ms)
+		{
+			LoadList(ms);
+			OnLoadListComple();
+		}
 		#endregion
 
 		#region GetList 获取子类对应的数据实体List

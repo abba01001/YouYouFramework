@@ -1,166 +1,85 @@
+#if UNITY_EDITOR
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using UnityEditor;
 using UnityEngine;
+using YouYou;
 
 public class MapManager : MonoBehaviour
 {
-    /// <summary>
-    /// 最大层数
-    /// </summary>
-    public int MaxLayer = 10;
-    /// <summary>
-    /// 起点数量
-    /// </summary>
-    public int entranceCount = 3;
-    /// <summary>
-    /// 道具节点
-    /// </summary>
-    public MapItemBase itemBase = null;
-    /// <summary>
-    /// 生成根路径
-    /// </summary>
-    public Transform rootObj;
-    /// <summary>
-    /// 层字典
-    /// </summary>
-    public Dictionary<int, MaplayerItem> layerDic;
-    /// <summary>
-    /// 层字典
-    /// </summary>
-    public List<MaplayerItem> layerList;
-    /// <summary>
-    /// 绘制地图连线
-    /// </summary>
-    public List<PointInfo> PointInfoList;
-
-    public DrawLineManager drawLine;
-
-    private static MapManager instance;
-
-    public static MapManager Instance
+    public Transform Player;
+    private Transform Root;
+    private Sys_BuildingsDBModel Sys_BuildingsDBModel;
+    private Dictionary<int, GameObject> RegionMap = new Dictionary<int, GameObject>();
+    private void Start()
     {
-        get => instance;
-        set => instance = value;
+        Root = new GameObject("Root").transform;
+        InitRegion();
+        InitPlayer();
+        InitConfig();
+        InitBuilding();
     }
 
-    void Start()
+    private void InitConfig()
     {
-        Init();
-    }
-    public void Init()
-    {
-        instance = this;
-        InitData();
-        RefreshLineData();
-        DrawLine();
-    }
+        
+        // 文件路径
+        string filePath = "Assets/Game/Download/DataTable/Sys_Buildings.bytes";
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Clear();
-            Init();
-        }
-    }
+        // 读取文件内容为字节数组
+        byte[] fileData = File.ReadAllBytes(filePath);
 
-    public void InitData()
-    {
-        itemBase.transform.gameObject.SetActive(false);
-        if (layerDic == null)
-        {
-            layerDic = new Dictionary<int, MaplayerItem>();
-        }
-        if (layerList == null)
-        {
-            layerList = new List<MaplayerItem>();
-        }
-        for (int i = 0; i < MaxLayer; i++)
-        {
-            MaplayerItem item = new MaplayerItem(i, entranceCount);
-            ELayerType eLayerType = i == 0 ? ELayerType.Start : i == MaxLayer - 1 ? ELayerType.End : ELayerType.Cent;
-            item.InitData(eLayerType, itemBase, rootObj);
-            layerDic.Add(i, item);
-            layerList.Add(item);
+        // 创建 MMO_MemoryStream 实例（假设它有类似于 MemoryStream 的构造函数）
+        MMO_MemoryStream ms = new MMO_MemoryStream(fileData);
 
-        }
-    }
-    /// <summary>
-    /// 刷新地图路径数据
-    /// </summary>
-    public void RefreshLineData()
-    {
-        if (layerList == null)
-        {
-            return;
-        }
-        int MaxCount = layerList.Count;
-        for (int i = 0; i < layerList.Count; i++)
-        {
-
-            //上层
-            MaplayerItem TopItem = i == MaxCount - 1 ? null : layerList[i + 1];
-            //当前层
-            MaplayerItem nowItem = layerList[i];
-            nowItem.RefreshTopLineData(TopItem == null ? null : TopItem.MapItemDic);
-        }
-        for (int i = 0; i < layerList.Count; i++)
-        {
-            //当前层
-            MaplayerItem nowItem = layerList[i];
-            ////下层
-            MaplayerItem DownItem = i == 0 ? null : layerList[i - 1];
-            if (DownItem != null)
-            {
-                nowItem.TopLineAdditional(DownItem.MapItemDic);
-            }
-        }
-
+        Sys_BuildingsDBModel =  new Sys_BuildingsDBModel();
+        Sys_BuildingsDBModel.TestLoad(ms);
 
     }
-
-    public void DrawLine()
+    
+    private void InitBuilding()
     {
-        if (layerList == null)
+        foreach (var kv in Sys_BuildingsDBModel.IdByDic)
         {
-            return;
+            CreateBuilding(kv.Value);
         }
-
-        if (PointInfoList==null)
+    }
+    
+    private void CreateBuilding(Sys_BuildingsEntity entity)
+    {
+        if (entity == null) return;
+        GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>($"Assets/Game/Download/Prefab/Regions/{entity.BuildingName}.prefab");
+        if (prefab == null)
         {
-            PointInfoList=new  List<PointInfo>();
+            GameUtil.LogError("未找到实例==>",entity.BuildingName);
         }
-        PointInfoList.Clear();
-        for (int i = 0; i < layerList.Count; i++)
+        GameObject obj = Instantiate(prefab, transform.position, Quaternion.identity,RegionMap[entity.RegionId].transform);
+        BuildingBase building = obj.GetComponent<BuildingBase>();
+        building.Init(entity);
+        obj.gameObject.MSetActive(true);
+        obj.transform.position = GameUtil.ParseCoordinates(entity.Position);
+        obj.transform.rotation = Quaternion.Euler(GameUtil.ParseCoordinates(entity.Rotation));
+    }
+    
+    private void InitRegion()
+    {
+        for (int i = 1; i <= 2; i++)
         {
-            if ( layerList[i].MapItemDic!=null)
-            {
-                foreach (var VARIABLE in   layerList[i].MapItemDic)
-                {
-                    MapItemBase item = VARIABLE.Value;
-                    if (item!=null&&item.TopItemList!=null)
-                    {
-                        for (int j = 0; j < item.TopItemList.Count; j++)
-                        {
-                            PointInfo info=new  PointInfo(item.transform.localPosition,item.TopItemList[j].transform.localPosition);
-                            PointInfoList.Add(info);
-                        }
-                    }
-                    
-                }
-            }
+            string path = $"Assets/Game/Download/Prefab/Regions/Area{i}.prefab";
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            GameObject obj = Instantiate(prefab, transform.position, Quaternion.identity,Root);
+            RegionMap.Add(i,obj);
         }
-        drawLine.DrawLine(PointInfoList);
     }
 
-    public void Clear()
+    private void InitPlayer()
     {
-        for (int i = 0; i < layerList.Count; i++)
-        {
-            layerList[i].Clear();
-        }
-        layerList.Clear();
-        layerDic.Clear();
+        Player.gameObject.MSetActive(true);
     }
+    
 }
+#endif
+
+

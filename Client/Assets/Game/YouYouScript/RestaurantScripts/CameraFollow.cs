@@ -9,20 +9,29 @@ public class CameraFollow : MonoBehaviour
     public float smoothness;
 
     public Vector3 offset;
-
+    public Transform inputTrans;
     Vector3 velocity;
 
     void LateUpdate()
     {
-        if (!BuildingSystem.Instance.PlayerController)
-            return;
+        if (BuildingSystem.Instance.PlayerController != null)
+        {
+            Vector3 pos = Vector3.zero;
+            pos.x = BuildingSystem.Instance.PlayerController.transform.position.x;
+            pos.y = BuildingSystem.Instance.PlayerController.transform.position.y + height;
+            pos.z = BuildingSystem.Instance.PlayerController.transform.position.z - distance;
+            transform.position = Vector3.SmoothDamp(transform.position, pos+offset, ref velocity, smoothness);
+        }
 
-        Vector3 pos = Vector3.zero;
-        pos.x = BuildingSystem.Instance.PlayerController.transform.position.x;
-        pos.y = BuildingSystem.Instance.PlayerController.transform.position.y + height;
-        pos.z = BuildingSystem.Instance.PlayerController.transform.position.z - distance;
+        if (inputTrans != null)
+        {
+            Vector3 pos = Vector3.zero;
+            pos.x = inputTrans.transform.position.x;
+            pos.y = inputTrans.position.y + height;
+            pos.z = inputTrans.position.z - distance;
+            transform.position = Vector3.SmoothDamp(transform.position, pos+offset, ref velocity, smoothness);
+        }
 
-        transform.position = Vector3.SmoothDamp(transform.position, pos+offset, ref velocity, smoothness);
     }
 
     //public Material m;

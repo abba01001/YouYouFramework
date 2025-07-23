@@ -37,11 +37,6 @@ public partial class Sys_BuildingsEntity : DataTableEntityBase
     public int Cost;
 
     /// <summary>
-    /// 是否初始存在
-    /// </summary>
-    public int IsInit;
-
-    /// <summary>
     /// 坐标
     /// </summary>
     public string Position;

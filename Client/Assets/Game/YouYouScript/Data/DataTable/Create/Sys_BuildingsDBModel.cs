@@ -33,7 +33,6 @@ namespace YouYou
                 entity.Produce = ms.ReadUTF8String();
                 entity.Consume = ms.ReadUTF8String();
                 entity.Cost = ms.ReadInt();
-                entity.IsInit = ms.ReadInt();
                 entity.Position = ms.ReadUTF8String();
                 entity.Rotation = ms.ReadUTF8String();
                 entity.BuyPoinrPos = ms.ReadUTF8String();

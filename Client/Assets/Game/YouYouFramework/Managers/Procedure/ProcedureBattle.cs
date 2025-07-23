@@ -22,7 +22,6 @@ namespace YouYou
         {
             base.OnEnter();
             GameEntry.Instance.ShowBackGround(BGType.Battle, "Assets/Game/Download/BackGround/Battle/single_map_1.png");
-            BattleCtrl.Instance.Init();
             GameEntry.Scene.LoadSceneAction(SceneGroupName.Battle, 1, () =>
             {
                 LoadSceneFinish();
@@ -35,7 +34,6 @@ namespace YouYou
             if (scene_camera != null) GameEntry.Instance.SceneCamera = scene_camera.GetComponent<Camera>();
             
             //初始化界面
-            GameEntry.UI.OpenUIForm<FormBattle>();
             LevelData data = await LoadCurrentLevelAsync($"{GameEntry.Data.TempSelectMapLv}_{GameEntry.Data.TempSelectMapLvNum}");
             //初始化关卡数据
             GameEntry.Event.Dispatch(Constants.EventName.InitBattleData,data);
@@ -69,12 +67,9 @@ namespace YouYou
         internal override void OnUpdate()
         {
             base.OnUpdate();
-            BattleCtrl.Instance.Update();
         }
         internal override void OnLeave()
         {
-            BattleCtrl.Instance.End();
-            GameEntry.UI.CloseUIForm<FormBattle>();
             base.OnLeave();
         }
         internal override void OnDestroy()
