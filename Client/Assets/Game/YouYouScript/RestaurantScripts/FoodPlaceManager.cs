@@ -9,18 +9,15 @@ public class FoodPlaceManager : MonoBehaviour
     public int collectFoodCapacity;
 
     public string shelfFoodName;
-    public Transform shelfTopTransform;
     public List<CustomerPoints> customerPoints;
 
     [HideInInspector] public List<Food> collectedFoods;
     public List<Transform> shelfPos;
     public List<FoodSpawner> foodSpawners =  new List<FoodSpawner>();
 
-
-    public void MoveShelfTopTransform()
+    public Transform GetIdleFoodTransform()
     {
-        if (collectedFoods.Count < collectFoodCapacity)
-            shelfTopTransform.position = shelfPos[collectedFoods.Count].position;
+        return shelfPos[collectedFoods.Count];
     }
 
     private void OnEnable()
@@ -43,5 +40,22 @@ public class FoodPlaceManager : MonoBehaviour
     private void OnDisable()
     {
         GameEntry.Event.RemoveEventListener(Constants.EventName.UpdateBuildingsObj, null);
+    }
+
+    private readonly object lockObject = new object();
+    public CustomerPoints GetIdlePoint()
+    {
+        lock (lockObject)  // 锁定操作，保证同一时刻只有一个线程能进入
+        {
+            foreach (var point in customerPoints)
+            {
+                if (!point.fill)
+                {
+                    point.fill = true;  // 标记为已填充
+                    return point;  // 返回找到的空闲点
+                }
+            }
+        }
+        return null;  // 如果没有找到空闲点，返回 null
     }
 }

@@ -52,8 +52,6 @@ MonoBehaviour:
   packageBoxPos: {fileID: 3590193685977176604}
   moneyPosParent: {fileID: 3590193685761057122}
   cashierPos: {fileID: 3590193686414473653}
-  packageBoxPrefab: {fileID: 9065499731768883654, guid: 68a313c53845ae34facae01545476700,
-    type: 3}
   customersForBilling: []
   billingQue:
   - {fileID: 3590193685275135161}
@@ -519,7 +517,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3590193685761063173
 Transform:
   m_ObjectHideFlags: 0

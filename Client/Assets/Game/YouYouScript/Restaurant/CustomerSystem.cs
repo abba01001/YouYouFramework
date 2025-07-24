@@ -8,43 +8,26 @@ using YouYou;
 
 public class CustomerSystem
 {
-    private List<Customer> customers = new List<Customer>();
     private static CustomerSystem _instance;
-
-    private CustomerSystem()
-    {
-    }
-
-    public static CustomerSystem Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = new CustomerSystem();
-            }
-
-            return _instance;
-        }
-    }
-
-    private int defaultMaxCustomers = 4;
+    public static CustomerSystem Instance => _instance ??= new CustomerSystem();
+    
+    private List<Customer> customers = new();
+    private readonly Dictionary<int, Customer> idToCustomer = new();
+    private int defaultMaxCustomers = 16;
 
     // 初始化
     public async UniTask Init()
     {
         // 加载已存在的顾客
-        if (GameEntry.Data.PlayerRoleData.restaurantData.customers.Count > 0)
+        var list = GameEntry.Data.PlayerRoleData.restaurantData.customers;
+        foreach (var data in list)
         {
-            foreach (var customerData in GameEntry.Data.PlayerRoleData.restaurantData.customers)
-            {
-                GenerateCustomerObj(customerData);
-            }
+            SpawnCustomer(data);
         }
     }
 
     // 检查是否需要生成新的顾客
-    private void CheckSpawnCustomer()
+    private void AddWorkerIfNeeded()
     {
         if (customers.Count < defaultMaxCustomers)
         {
@@ -58,7 +41,7 @@ public class CustomerSystem
             RandomFood(data);
             GameEntry.Data.PlayerRoleData.restaurantData.customers.Add(data);
             // 创建顾客对象并加入列表
-            GenerateCustomerObj(data);
+            SpawnCustomer(data);
         }
     }
 
@@ -140,29 +123,22 @@ public class CustomerSystem
         new Vector3(-30f,0f,61f),
         new Vector3(-60f,0f,31f)
     };
-    private void GenerateCustomerObj(CustomerData data)
+    private void SpawnCustomer(CustomerData data)
     {
+        if (idToCustomer.ContainsKey(data.customerId)) return; // 防止重复生成
+        
         PoolObj obj = GameEntry.Pool.GameObjectPool.SpawnSynchronous(
             $"Assets/Game/Download/Prefab/Regions/Customer.prefab", BuildingSystem.Instance.Root);
         Customer customer = obj.GetComponent<Customer>();
         customer.Init(data);
-        customers.Add(customer);
         
         int index = GameUtil.RandomRange(0, bornPos.Count);
         obj.gameObject.transform.position = bornPos[index];
+        
+        customers.Add(customer);
+        idToCustomer[data.customerId] = customer;
     }
 
-    // 移除顾客
-    public void RemoveCustomer(Customer targetCustomer)
-    {
-        var targetData = GameEntry.Data.PlayerRoleData.restaurantData.customers
-            .FirstOrDefault(customer => customer.customerId == targetCustomer.CustomerData.customerId);
-        if (targetData != null)
-        {
-            GameEntry.Data.PlayerRoleData.restaurantData.customers.Remove(targetData);
-            targetCustomer.IsActive = false;
-        }
-    }
 
     private float spawnCooldown = 2f; // 每隔2秒生成一个顾客
     private float spawnTimer = 0f;
@@ -171,32 +147,34 @@ public class CustomerSystem
     {
         spawnTimer += Time.deltaTime;
     
-        if (spawnTimer >= spawnCooldown)
-        {
-            spawnTimer = 0f;
-            CheckDeleteCustomer();
-            CheckSpawnCustomer();
-        }
-        
-        // 继续更新活跃的顾客
-        foreach (var customer in customers)
-        {
-            if(customer.IsActive) customer.OnUpdate();
-        }
-    }
-
-    private void CheckDeleteCustomer()
-    {
-        // 从后往前遍历，删除不活跃的顾客
         for (int i = customers.Count - 1; i >= 0; i--)
         {
             var customer = customers[i];
-            if (!customer.IsActive)
+            if (customer.IsLiving)
             {
-                customers.RemoveAt(i);  // 删除不活跃的顾客
-                GameEntry.Pool.GameObjectPool.Despawn(customer.GetComponent<PoolObj>());
+                customer.Tick();
+            }
+            else
+            {
+                RemoveCustomer(customer);
             }
         }
+        
+        if (spawnTimer >= spawnCooldown)
+        {
+            spawnTimer = 0f;
+            AddWorkerIfNeeded();
+        }
+    }
+
+    public void RemoveCustomer(Customer customer)
+    {
+        if (!customers.Contains(customer)) return;
+
+        customers.Remove(customer);
+        idToCustomer.Remove(customer.CustomerData.customerId);
+        GameEntry.Data.PlayerRoleData.restaurantData.customers.Remove(customer.CustomerData);
+        GameObject.Destroy(customer.gameObject);
     }
 
     public bool IsStoreBusy()

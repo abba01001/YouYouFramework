@@ -7,6 +7,27 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using YouYou;
 
+public enum BuildingEnum
+{
+    CashierDesk,
+    Chicken,
+    ShelfEgg,
+    ShelfTomato,
+    PlantSet,
+    ShelfSauce,
+    KitchenCounter,
+    PlantWheat,
+    ShelfWheat,
+    CowAnimal,
+    ShelfFridge,
+    PlantCoffee,
+    ShelfCoffee,
+    BreadMachine,
+    FlourMachine,
+    ShelfBread,
+    ShelfFlour
+}
+
 public class BuildingSystem
 {
     private static BuildingSystem _instance;
@@ -238,11 +259,6 @@ public class BuildingSystem
         
         //检测是否解锁新区域
         CheckUnlockNewRegion();
-
-        foreach (var VARIABLE in UnlockRegionIds)
-        {
-            GameUtil.LogError($"解锁区域{VARIABLE}");
-        }
     }
 
     public int GetBuildingRegion(int buildingId)
@@ -256,6 +272,25 @@ public class BuildingSystem
         return entity;
     }
 
+    public BuildingBase GetBuildingByType(BuildingEnum name)
+    {
+        var n = name.ToString();
+        foreach (var building in _buildings)
+        {
+            if (building.Entity.BuildingName == n)
+            {
+                return building;
+            }
+        }
+        return null;
+    }
+
+    public BillingDesk GetBillingDesk()
+    {
+        BuildingBase building = GetBuildingByType(BuildingEnum.CashierDesk);
+        return building.GetComponentInChildren<BillingDesk>(true);
+    }
+    
     // 是否解锁建筑
     public bool IsUnlockBuilding(int buildingId)
     {
@@ -369,7 +404,7 @@ public class BuildingSystem
             }
             else
             {
-                GameUtil.LogError($"区域 {regionId + 1} 未解锁，缺少建筑 ID：{string.Join(", ", missingIds)}");
+                // GameUtil.LogError($"区域 {regionId + 1} 未解锁，缺少建筑 ID：{string.Join(", ", missingIds)}");
             }
         }
 

@@ -1,18 +1,19 @@
+using System;
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 using YouYou;
 
 public class BillingDesk : MonoBehaviour
 {
-    private bool customer, player, isCounterEmpty = true;
+    private bool customer, player, isIdling = true;
     private Customer currentCustomer;
     public Transform packageBoxPos;
     public Transform moneyPosParent;
     public Transform cashierPos;
-    public GameObject packageBoxPrefab;
     private GameObject packageBox;
     [HideInInspector]
     public List<Customer> customersForBilling;
@@ -22,15 +23,22 @@ public class BillingDesk : MonoBehaviour
     public List<Transform> moneyPos;
     [HideInInspector]
     public int moneyPosCount;
+    private AudioSource audioSource;
+    
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>(); // 缓存 AudioSource
+    }
 
+    
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Customer") && isCounterEmpty)
+        if (other.CompareTag("Customer") && isIdling)
         {
             currentCustomer = other.gameObject.GetComponent<Customer>();
             if (CustomerSystem.Instance.CheckIsFullCollect(currentCustomer.CustomerData))
             {
-                isCounterEmpty = false;
+                isIdling = false;
                 customer = true;
                 CheckPackaging();
             }
@@ -50,7 +58,6 @@ public class BillingDesk : MonoBehaviour
     {
         if (customer && player)
         {
-            currentCustomer.InitPackagBox(packageBoxPos.position,packageBoxPos.rotation);
             CollectFoodFromCustomer();
         }
     }
@@ -59,42 +66,26 @@ public class BillingDesk : MonoBehaviour
     {
         if (other.CompareTag("Customer"))
             customer = false;
-
         if (other.CompareTag("Player")) 
             player = false;
     }
 
-    public void CollectFoodFromCustomer()
+    public async UniTask CollectFoodFromCustomer()
     {
-        int foodCount = currentCustomer.collectedFoods.Count;
-        Food food;
-
-        if (foodCount > 0)
-        {
-            food = currentCustomer.collectedFoods[foodCount - 1];
-            currentCustomer.collectedFoods.Remove(food);
-            food.GotoBillingCounterBox(packageBoxPos);
-        }
-        else
-        {
-            currentCustomer.packageObj.GetComponent<Animator>().SetTrigger("StartProduction");
-            GameEntry.Time.CreateTimer(this, 0.6f, () =>
-            {
-                currentCustomer.DoPlayPackageAnim(() =>
-                {
-                    customer = false;
-                    GetComponent<AudioSource>().Play();
-                    GameEntry.Time.CreateTimer(this, 0.4f, GotoMyExit);
-                });
-            });
-        }
+        if (currentCustomer.IsNullFood()) return;
+        await UniTask.Delay(1000);
+        await currentCustomer.CheckPackageFood();
+        customer = false;
+        audioSource.Play();
+        await UniTask.Delay(400);
+        GotoMyExit();
     }
 
     private void GotoMyExit()
     {
         currentCustomer.GoToExit();
         currentCustomer = null;
-        isCounterEmpty = true;
+        isIdling = true;
     }
 
     public void ArrangeCustomersInQue()
@@ -108,5 +99,17 @@ public class BillingDesk : MonoBehaviour
                 customersForBilling[i].counterLook = true;
             }
         }
+    }
+
+    public void RemoveCustomer(Customer customer)
+    {
+        customersForBilling.Remove(customer);
+        ArrangeCustomersInQue();
+    }
+
+    public void AddCustomer(Customer customer)
+    {
+        customersForBilling.Add(customer);
+        ArrangeCustomersInQue();
     }
 }

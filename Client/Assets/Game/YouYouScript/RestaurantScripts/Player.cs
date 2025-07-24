@@ -39,12 +39,11 @@ public class Player : MonoBehaviour
                         if (_PlayerManager.collectedFood[i].foodName == shelf.shelfFoodName)
                         {
                             removedAnyFood = true;
-                            _PlayerManager.collectedFood[i].PlaceFood(shelf.shelfTopTransform);
+                            _PlayerManager.collectedFood[i].PlaceFood(shelf.GetIdleFoodTransform());
                             AudioManager.Instance.Play("FoodPlace");
 
                             shelf.collectedFoods.Add(_PlayerManager.collectedFood[i]);
                             _PlayerManager.collectedFood[i].transform.parent = shelf.transform;
-                            shelf.MoveShelfTopTransform();
 
                             _PlayerManager.collectedFood[i].goToCustomer = true;
                             _PlayerManager.collectedFood.Remove(_PlayerManager.collectedFood[i]);

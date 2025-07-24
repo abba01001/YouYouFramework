@@ -50,7 +50,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7660226567392275366
 Transform:
   m_ObjectHideFlags: 0
@@ -113,19 +113,7 @@ MonoBehaviour:
   - {fileID: 7660226567392277829}
   - {fileID: 7660226567392277933}
   - {fileID: 7660226567392278103}
-  availableFoodSpawners:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  foodSpawners: []
 --- !u!65 &7660226567392277215
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -223,6 +211,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
+  customerObj: 
 --- !u!1 &7660226567392277426
 GameObject:
   m_ObjectHideFlags: 0
@@ -891,6 +880,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
+  customerObj: 
 --- !u!1 &7660226567392280100
 GameObject:
   m_ObjectHideFlags: 0
@@ -1012,6 +1002,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
+  customerObj: 
 --- !u!1 &7660226567392280252
 GameObject:
   m_ObjectHideFlags: 0
@@ -1133,6 +1124,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
+  customerObj: 
 --- !u!1 &7660226567392280555
 GameObject:
   m_ObjectHideFlags: 0

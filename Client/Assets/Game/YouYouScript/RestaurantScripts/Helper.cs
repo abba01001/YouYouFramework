@@ -49,11 +49,12 @@ public class Helper : WorkerBase
             if (_PlayerManager.collectedFood.Count == 0)
             {
                 checkReachedShelf = false;
-                GameEntry.Time.CreateTimer(this, .5f, FindShelf);
+                GameEntry.Time.CreateTimer(this, 0.5f, FindShelf);
             }
             else
             {
-                agent.SetDestination(trashBin.position);
+                
+                //agent.SetDestination(trashBin.position);
             }
         }
 
@@ -110,32 +111,33 @@ public class Helper : WorkerBase
         return false;
     }
 
-    private void OnTriggerStay(Collider other)
+    //把食物放到架子上
+    public override void HandleOnStay(Collider other)
     {
         if (other.CompareTag("Shelf"))
         {
             FoodPlaceManager shelf = other.GetComponent<FoodPlaceManager>();
-
+            
             if (shelf.collectedFoods.Count < shelf.collectFoodCapacity)
             {
                 int collectedFoodCount = _PlayerManager.collectedFood.Count - 1;
-
+                
                 if (collectedFoodCount >= 0)
                 {
                     for (int i = _PlayerManager.collectedFood.Count - 1; i >= 0; i--)
                     {
-                        if (_PlayerManager.collectedFood[i].foodName == shelf.shelfFoodName)
+                        Food food = _PlayerManager.collectedFood[i];
+                        if (food.foodName == shelf.shelfFoodName)
                         {
                             removedAnyFood = true;
-                            _PlayerManager.collectedFood[i].PlaceFood(shelf.shelfTopTransform);
+                            food.PlaceFood(shelf.GetIdleFoodTransform());
                             FindObjectOfType<AudioManager>().Play("PlaceFood");
 
-                            shelf.collectedFoods.Add(_PlayerManager.collectedFood[i]);
-                            _PlayerManager.collectedFood[i].transform.parent = shelf.transform;
-                            shelf.MoveShelfTopTransform();
+                            shelf.collectedFoods.Add(food);
+                            food.transform.parent = shelf.transform;
 
-                            _PlayerManager.collectedFood[i].goToCustomer = true;
-                            _PlayerManager.collectedFood.Remove(_PlayerManager.collectedFood[i]);
+                            food.goToCustomer = true;
+                            _PlayerManager.collectedFood.Remove(food);
                             break;
                         }
                     }
@@ -149,7 +151,6 @@ public class Helper : WorkerBase
                             food.transform.localPosition = foodCollectPos.localPosition;
                             foodCollectPos.localPosition = new Vector3(foodCollectPos.transform.localPosition.x, foodCollectPos.transform.localPosition.y + 1, foodCollectPos.transform.localPosition.z);
                         }
-
                         removedAnyFood = false;
                     }
                 }

@@ -134,12 +134,11 @@ public class Farmer : WorkerBase
                         if (_PlayerManager.collectedFood[i].foodName == ChickenShelf.shelfFoodName)
                         {
                             removedAnyFood = true;
-                            _PlayerManager.collectedFood[i].PlaceFood(ChickenShelf.shelfTopTransform);
+                            _PlayerManager.collectedFood[i].PlaceFood(ChickenShelf.GetIdleFoodTransform());
                             FindObjectOfType<AudioManager>().Play("PlaceFood");
 
                             ChickenShelf.collectedFoods.Add(_PlayerManager.collectedFood[i]);
                             _PlayerManager.collectedFood[i].transform.parent = ChickenShelf.transform;
-                            ChickenShelf.MoveShelfTopTransform();
 
                             _PlayerManager.collectedFood[i].goToCustomer = true;
                             _PlayerManager.collectedFood.Remove(_PlayerManager.collectedFood[i]);

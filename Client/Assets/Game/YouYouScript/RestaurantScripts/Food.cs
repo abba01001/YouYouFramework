@@ -3,6 +3,7 @@ using UnityEngine;
 using RDG;
 using DG.Tweening;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using YouYou;
 
 public class Food : MonoBehaviour
@@ -106,7 +107,7 @@ public class Food : MonoBehaviour
         foodCollectPos.position = new Vector3(foodCollectPos.transform.position.x, foodCollectPos.transform.position.y - foodCollectPlayerYVal, foodCollectPos.transform.position.z);
     }
 
-    public void GotoCustomer(Transform target, Action action)
+    public void GotoCustomer(Transform target)
     {
         goToPlayer = false;
 
@@ -116,18 +117,13 @@ public class Food : MonoBehaviour
             goToCustomer = false;
             transform.parent = target;
             transform.position = target.position;
-            action?.Invoke();
         });
     }
 
-    public void GotoBillingCounterBox(Transform target)
+    public async UniTask GotoBillingCounterBox(Transform target)
     {
-        transform.DOJump(target.position, 4, 1, .4f)
-        .OnComplete(delegate ()
-        {
-            _BillingDesk.CollectFoodFromCustomer();
-            Destroy(this.gameObject);
-        });
+        transform.DOJump(target.position, 4, 1, .4f);
+        await UniTask.Delay(400);
     }
 
     public void GotoTrashBin(Transform target)

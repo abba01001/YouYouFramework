@@ -41,7 +41,6 @@ public class Animal : MonoBehaviour
 
         Food food = shelf.collectedFoods[shelf.collectedFoods.Count - 1];
         shelf.collectedFoods.Remove(food);
-        MoveShelfTopTransform();
 
         Destroy(food.gameObject, 1);
 
@@ -54,12 +53,6 @@ public class Animal : MonoBehaviour
 
         currentFoodSpawner.Spawn();
         canEat = true;
-    }
-
-    public void MoveShelfTopTransform()
-    {
-        if (shelf.collectedFoods.Count < shelf.collectFoodCapacity)
-            shelf.shelfTopTransform.position = shelf.shelfPos[shelf.collectedFoods.Count].position;
     }
 
     //private void OnTriggerEnter(Collider other)

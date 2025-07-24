@@ -94,7 +94,7 @@ public class BagItemData
 public class RestaurantData
 {
     public int maxFarmerCount = 1;
-    public int maxHelperCount = 1;
+    public int maxHelperCount = 3;
     public int maxCashierCount = 1;
     public List<CustomerData> customers = new List<CustomerData>();
     public List<WorkerData> workers = new List<WorkerData>();
