@@ -553,7 +553,6 @@ MonoBehaviour:
   panel: {fileID: 6368424004327123197}
   counterLook: 0
   handPos: {fileID: 1369365180211051631}
-  target: {fileID: 0}
   moneyPrefab: {fileID: 4211208300143205206, guid: ff0bfebfbde8e3041b4934a1e7bc9be2,
     type: 3}
   trolly: {fileID: 1369365178999021534}
