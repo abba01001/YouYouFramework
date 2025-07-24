@@ -27,7 +27,19 @@ public class Customer : MonoBehaviour
     private bool IsBilling = true;
     public bool counterLook;
     private BillingDesk billingDesk;
-    public Transform handPos, target;
+    public Transform handPos;
+
+    private bool isInCashier;
+    public bool IsInCashier
+    {
+        get => isInCashier;
+        set
+        {
+            isInCashier = value;
+            counterLook = true;
+        }
+    }
+
     public GameObject moneyPrefab, trolly;
     public MeshFilter hat;
     public SkinnedMeshRenderer skin;
@@ -47,6 +59,7 @@ public class Customer : MonoBehaviour
 
     public void Init(CustomerData data)
     {
+        IsInCashier = false;
         if (triggerDetector == null)
         {
             triggerDetector = gameObject.AddComponent<TriggerDetector>();
@@ -297,7 +310,8 @@ public class Customer : MonoBehaviour
         {
             if (ReachedDestinationOrGaveUp())
             {
-                transform.rotation = target.rotation;
+                StartCoroutine(SmoothRotate(Quaternion.Euler(0,-90,0)));
+                // transform.rotation = Quaternion.Euler(0,-90,0);
                 counterLook = false;
             }
         }
@@ -405,5 +419,11 @@ public class Customer : MonoBehaviour
     public bool IsNullFood()
     {
         return collectedFoods.Count == 0;
+    }
+
+    public void CheckGotoBillingDesk(Vector3 pos)
+    {
+        agent.SetDestination(pos);
+        IsInCashier = true;
     }
 }

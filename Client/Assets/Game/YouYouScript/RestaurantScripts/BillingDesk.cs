@@ -18,6 +18,7 @@ public class BillingDesk : MonoBehaviour
     [HideInInspector]
     public List<Customer> customersForBilling;
     public Transform[] billingQue;
+    private Vector3 initIdlePos = new Vector3(8, 0f, 1.5f);
     [HideInInspector]
     public List<GameObject> money;
     public List<Transform> moneyPos;
@@ -92,12 +93,8 @@ public class BillingDesk : MonoBehaviour
     {
         for(int i = 0; i< customersForBilling.Count; i++)
         {
-            if (customersForBilling[i].target == null || customersForBilling[i].target != billingQue[i])
-            {
-                customersForBilling[i].agent.SetDestination(billingQue[i].position);
-                customersForBilling[i].target = billingQue[i];
-                customersForBilling[i].counterLook = true;
-            }
+            int index = i;
+            customersForBilling[index].CheckGotoBillingDesk(initIdlePos + new Vector3(index * 8, 0, 0)); // //billingQue[i].position);
         }
     }
 

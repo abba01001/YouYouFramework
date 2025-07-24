@@ -47,7 +47,7 @@ public class CustomerSystem
 
     public List<string> FoodConfig = new List<string>()
     {
-        "Tomato","Egg"
+        "Tomato","Egg","Wheat","Milk","Beans","Bread","Flour"
     };
 
     public List<(string,int)> GetRandomFoodCombination()
