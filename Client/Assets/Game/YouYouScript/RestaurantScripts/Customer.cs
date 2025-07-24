@@ -219,7 +219,7 @@ public class Customer : MonoBehaviour
         Quaternion initialRotation = transform.rotation;
         while (timeElapsed < rotationDuration)
         {
-            transform.rotation = Quaternion.Lerp(initialRotation, targetRotation, timeElapsed / rotationDuration);
+            transform.rotation = Quaternion.RotateTowards(initialRotation, targetRotation, 360 * Time.deltaTime / rotationDuration);
             timeElapsed += Time.deltaTime;
             yield return null;
         }
