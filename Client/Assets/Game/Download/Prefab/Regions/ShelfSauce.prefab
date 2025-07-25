@@ -152,7 +152,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerName: 
 --- !u!1 &4218916295460323138
 GameObject:
   m_ObjectHideFlags: 0
@@ -513,7 +512,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerName: 
 --- !u!1 &4218916296095559189
 GameObject:
   m_ObjectHideFlags: 0
@@ -954,8 +952,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HelperPos: {fileID: 4218916296594071475}
   collectFoodCapacity: 12
-  foodType: 8
   shelfFoodName: Sauce
+  shelfTopTransform: {fileID: 4218916295273535001}
   customerPoints:
   - {fileID: 4218916295772530630}
   - {fileID: 4218916295413242107}
@@ -974,7 +972,15 @@ MonoBehaviour:
   - {fileID: 4218916296440727840}
   - {fileID: 4218916296246866701}
   - {fileID: 4218916296605407115}
-  foodSpawners: []
+  availableFoodSpawners:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!65 &4218916296982964496
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1072,4 +1078,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerName: 

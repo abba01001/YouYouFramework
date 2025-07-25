@@ -107,8 +107,7 @@ public class RestaurantData
 public class BuildingData
 {
     public int buildingId;
-    public List<FoodData> productions = new List<FoodData>();
-
+    
 }
 
 [Serializable]
@@ -136,7 +135,7 @@ public class WorkerData
 {
     public int workerId;
     public WorkerType type;//类型
-    public List<FoodType> collectFood = new List<FoodType>();
+    public List<string> collectFood = new List<string>();
     public string name;
     public int maxFoodCarry = 2;//食物容量
     public float speed = 10;//速度
@@ -146,11 +145,9 @@ public class WorkerData
 [MessagePackObject(keyAsPropertyName: true)]
 public class FoodData
 {
-    public FoodType foodType;
+    public string name;
     public int needCount;
     public int hasCount;
-    public int remainingTime;
-    public bool produceFinish;
 }
 
 public class DialogueCommand

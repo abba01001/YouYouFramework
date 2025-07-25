@@ -29,18 +29,16 @@ namespace Hotfix
                 entity.Id = ms.ReadInt();
                 entity.BuildingId = ms.ReadInt();
                 entity.BuildingName = ms.ReadUTF8String();
-                entity.Name = ms.ReadUTF8String();
                 entity.BuildingType = ms.ReadUTF8String();
                 entity.Produce = ms.ReadUTF8String();
-                entity.ProduceTime = ms.ReadInt();
                 entity.Consume = ms.ReadUTF8String();
                 entity.Cost = ms.ReadInt();
                 entity.Position = ms.ReadUTF8String();
                 entity.Rotation = ms.ReadUTF8String();
+                entity.BuyPoinrPos = ms.ReadUTF8String();
                 entity.RegionId = ms.ReadInt();
                 entity.isVisible = ms.ReadInt();
                 entity.Dependencies = ms.ReadUTF8String();
-                entity.Cost1 = ms.ReadInt();
 
                 m_List.Add(entity);
                 m_Dic[entity.Id] = entity;

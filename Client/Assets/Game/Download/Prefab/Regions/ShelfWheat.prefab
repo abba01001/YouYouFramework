@@ -542,7 +542,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerName: 
+  customerObj: 
 --- !u!1 &7362083503783783134
 GameObject:
   m_ObjectHideFlags: 0
@@ -627,8 +627,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HelperPos: {fileID: 7362083503725517535}
   collectFoodCapacity: 15
-  foodType: 3
   shelfFoodName: Wheat
+  shelfTopTransform: {fileID: 7362083503198440353}
   customerPoints:
   - {fileID: 7362083503902953008}
   - {fileID: 7362083503748425203}
@@ -795,7 +795,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerName: 
+  customerObj: 
 --- !u!1 &7362083504076921671
 GameObject:
   m_ObjectHideFlags: 0
@@ -1041,7 +1041,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerName: 
+  customerObj: 
 --- !u!1 &7362083504382005625
 GameObject:
   m_ObjectHideFlags: 0
@@ -1216,4 +1216,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerName: 
+  customerObj: 

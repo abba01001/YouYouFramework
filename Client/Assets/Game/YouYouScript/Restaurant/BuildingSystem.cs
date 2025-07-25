@@ -28,26 +28,6 @@ public enum BuildingEnum
     ShelfFlour
 }
 
-public enum FoodType
-{
-    None,
-    Tomato,
-    Egg,
-    Wheat,
-    Milk,
-    Beans,
-    Bread,
-    Flour,
-    Sauce
-}
-
-public static class Tags
-{
-    public const string ChickenAnimal = "ChickenAnimal";
-    public const string Shelf = "Shelf";
-    // 添加其他标签
-}
-
 public class BuildingSystem
 {
     private static BuildingSystem _instance;
@@ -122,13 +102,12 @@ public class BuildingSystem
         GameEntry.Audio.PlayBGM("Home");
     }
 
-    public List<int> noRegionsId = new List<int>() { 3 };
+    
     private async UniTask GenRegionMap()
     {
         foreach (var id in UnlockRegionIds)
         {
             if (RegionMap.ContainsKey(id)) continue;
-            if (noRegionsId.Contains(id)) continue;
             PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync($"Assets/Game/Download/Prefab/Regions/Area{id}.prefab",Root);
             obj.gameObject.MSetActive(true);
             RegionMap.Add(id, obj.gameObject);
@@ -153,11 +132,6 @@ public class BuildingSystem
             {
                 if (entity.Cost == 0)
                 {
-                    if (GetBuildingData(entity.BuildingId) == null)
-                    {
-                        BuildingData data = new BuildingData { buildingId = entity.BuildingId };
-                        GameEntry.Data.PlayerRoleData.restaurantData.buildings.Add(data);
-                    }
                     await CreateBuilding(entity);
                 }
             }
@@ -245,7 +219,7 @@ public class BuildingSystem
         BuyBuildingPoint building = obj.GetComponent<BuyBuildingPoint>();
         building.Init(entity);
         obj.gameObject.MSetActive(true);
-        obj.transform.position = GameUtil.ParseCoordinates(entity.Position);
+        obj.transform.position = GameUtil.ParseCoordinates(entity.BuyPoinrPos);
         _buyBuildingPoints.Add(building);
         _buyPointIdsCache.Add(entity.BuildingId); // 缓存建筑ID，避免重复创建
     }
@@ -298,40 +272,23 @@ public class BuildingSystem
         return entity;
     }
 
-    public BuildingData GetBuildingData(int buildingId)
+    public BuildingBase GetBuildingByType(BuildingEnum name)
     {
-        foreach (var data in GameEntry.Data.PlayerRoleData.restaurantData.buildings)
-        {
-            if (data.buildingId == buildingId)
-            {
-                return data;
-            }
-        }
-
-        return null;
-    }
-    
-    public List<BuildingBase> GetBuildingByType(BuildingEnum name)
-    {
-        List<BuildingBase> list = new List<BuildingBase>();
         var n = name.ToString();
         foreach (var building in _buildings)
         {
             if (building.Entity.BuildingName == n)
             {
-                list.Add(building);
+                return building;
             }
         }
-        return list;
+        return null;
     }
 
-    //获取收银台
     public BillingDesk GetBillingDesk()
     {
-        List<BuildingBase> buildings = GetBuildingByType(BuildingEnum.CashierDesk);
-        int id = GameUtil.RandomRange(0, buildings.Count);
-        
-        return buildings[id].GetComponentInChildren<BillingDesk>(true);
+        BuildingBase building = GetBuildingByType(BuildingEnum.CashierDesk);
+        return building.GetComponentInChildren<BillingDesk>(true);
     }
     
     // 是否解锁建筑
@@ -466,9 +423,8 @@ public class BuildingSystem
 
     
     //获取货架建筑
-    public GameObject GetShelfBuilding(FoodType foodType)
+    public GameObject GetShelfBuilding(string food)
     {
-        var food = foodType.ToString();
         foreach (var build in _buildings)
         {
             if (build.Entity.BuildingType == "Shelf" && build.Entity.Consume == food)
@@ -492,7 +448,7 @@ public class BuildingSystem
         return list;
     }
     
-    public List<BuildingBase> GetProduceBuilding()
+    public List<BuildingBase> GetpProduceBuilding()
     {
         List<BuildingBase> list = new List<BuildingBase>();
         foreach (var build in _buildings)

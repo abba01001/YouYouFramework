@@ -11523,7 +11523,7 @@ GameObject:
   - component: {fileID: 2034012025019816389}
   - component: {fileID: 1632467796750371145}
   m_Layer: 0
-  m_Name: SauceMachine
+  m_Name: KitchenCounter
   m_TagString: Sauce
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11597,8 +11597,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HelperPos: {fileID: 2034012024835026041}
   collectFoodCapacity: 8
-  foodType: 1
   shelfFoodName: Tomato
+  shelfTopTransform: {fileID: 2034012023032453985}
   customerPoints: []
   collectedFoods: []
   shelfPos:
@@ -11610,7 +11610,7 @@ MonoBehaviour:
   - {fileID: 2034012023515146443}
   - {fileID: 2034012023473073064}
   - {fileID: 2034012023439656161}
-  foodSpawners: []
+  availableFoodSpawners: []
 --- !u!65 &2034012025019816389
 BoxCollider:
   m_ObjectHideFlags: 0

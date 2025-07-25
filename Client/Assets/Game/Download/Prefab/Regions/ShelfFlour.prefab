@@ -59,7 +59,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerName: 
+  customerObj: 
 --- !u!1 &6494777327449291453
 GameObject:
   m_ObjectHideFlags: 0
@@ -295,8 +295,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HelperPos: {fileID: 6494777328528176251}
   collectFoodCapacity: 12
-  foodType: 7
   shelfFoodName: Flour
+  shelfTopTransform: {fileID: 6494777328642720697}
   customerPoints:
   - {fileID: 6494777329367578562}
   - {fileID: 6494777328455916421}
@@ -611,7 +611,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerName: 
+  customerObj: 
 --- !u!1 &6494777328456825528
 GameObject:
   m_ObjectHideFlags: 0
@@ -1072,4 +1072,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerName: 
+  customerObj: 

@@ -57,7 +57,7 @@ public class Farmer : WorkerBase
 
     private void FindChicken()
     {
-        foreach (BuildingBase building in BuildingSystem.Instance.GetProduceBuilding())
+        foreach (BuildingBase building in BuildingSystem.Instance.GetpProduceBuilding())
         {
             if (building.Entity.Produce == "Egg")
             {
@@ -66,21 +66,20 @@ public class Farmer : WorkerBase
                 if (chicken.collectedFoods.Count < j)
                 {
                     targetChickenPos = chicken.HelperPos;
-                    FindFoodSpawner(chicken.foodType);
+                    FindFoodSpawner(chicken.shelfFoodName);
                     return;
                 }
             }
         }
         GameEntry.Time.CreateTimer(this, 2, FindChicken);
     }
-    private void FindFoodSpawner(FoodType foodType)
+    private void FindFoodSpawner(string _foodName)
     {
-        var foodName = foodType.ToString();
         List<FoodSpawner> availableFoodSpawners = new List<FoodSpawner>();
         foreach (BuildingBase shelf in BuildingSystem.Instance.GetShelfBuilding())
         {
             FoodPlaceManager _FoodPlaceManager = shelf.GetComponent<FoodPlaceManager>();
-            if (_FoodPlaceManager.foodType != foodType) continue;
+            if (_FoodPlaceManager.shelfFoodName != _foodName) continue;
             foreach (FoodSpawner foodSpawner in _FoodPlaceManager.foodSpawners)
             {
                 availableFoodSpawners.Add(foodSpawner);
@@ -89,7 +88,7 @@ public class Farmer : WorkerBase
         GameUtil.Shuffle(availableFoodSpawners);
         foreach (FoodSpawner foodSpawner in availableFoodSpawners)
         {
-            if (foodSpawner.food.foodName == foodName)
+            if (foodSpawner.food.foodName == _foodName)
             {
                 Goto(foodSpawner.transform.position);
                 return;
@@ -118,30 +117,30 @@ public class Farmer : WorkerBase
         return false;
     }
 
-    //农民把货物放到鸡场去
-    public void OnTriggerStay(Collider other)
+    private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag(Tags.ChickenAnimal))
+        if (other.CompareTag("Chicken"))
         {
-            FoodPlaceManager shelf = other.GetComponent<FoodPlaceManager>();
-            if (shelf.collectedFoods.Count < shelf.collectFoodCapacity)
+            FoodPlaceManager ChickenShelf = other.GetComponent<FoodPlaceManager>();
+
+            if (ChickenShelf.collectedFoods.Count < ChickenShelf.collectFoodCapacity)
             {
                 int collectedFoodCount = _PlayerManager.collectedFood.Count - 1;
 
                 if (collectedFoodCount >= 0)
                 {
-                    var foodName = shelf.foodType.ToString();
                     for (int i = _PlayerManager.collectedFood.Count - 1; i >= 0; i--)
                     {
-                        if (_PlayerManager.collectedFood[i].foodName == foodName)
+                        if (_PlayerManager.collectedFood[i].foodName == ChickenShelf.shelfFoodName)
                         {
                             removedAnyFood = true;
-                            _PlayerManager.collectedFood[i].PlaceFood(shelf.GetIdleFoodTransform());
+                            _PlayerManager.collectedFood[i].PlaceFood(ChickenShelf.GetIdleFoodTransform());
                             FindObjectOfType<AudioManager>().Play("PlaceFood");
 
-                            shelf.collectedFoods.Add(_PlayerManager.collectedFood[i]);
-                            _PlayerManager.collectedFood[i].transform.parent = shelf.transform;
+                            ChickenShelf.collectedFoods.Add(_PlayerManager.collectedFood[i]);
+                            _PlayerManager.collectedFood[i].transform.parent = ChickenShelf.transform;
 
+                            _PlayerManager.collectedFood[i].goToCustomer = true;
                             _PlayerManager.collectedFood.Remove(_PlayerManager.collectedFood[i]);
                             break;
                         }
@@ -170,13 +169,13 @@ public class Farmer : WorkerBase
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag(Tags.ChickenAnimal))
+        if (other.CompareTag("Chicken"))
             reachedShelf = true;
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag(Tags.ChickenAnimal))
+        if (other.CompareTag("Chicken"))
             reachedShelf = false;
     }
 }

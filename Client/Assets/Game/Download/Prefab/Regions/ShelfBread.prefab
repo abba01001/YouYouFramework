@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerName: 
+  customerObj: 
 --- !u!65 &7505732645962604204
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -283,7 +283,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerName: 
+  customerObj: 
 --- !u!65 &7505732646077656060
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -883,7 +883,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerName: 
+  customerObj: 
 --- !u!65 &7505732647502809223
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -954,8 +954,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HelperPos: {fileID: 7505732646064352573}
   collectFoodCapacity: 12
-  foodType: 6
   shelfFoodName: Bread
+  shelfTopTransform: {fileID: 7505732646456350234}
   customerPoints:
   - {fileID: 7505732646077656061}
   - {fileID: 7505732647753572199}
@@ -1091,7 +1091,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerName: 
+  customerObj: 
 --- !u!65 &7505732647753572198
 BoxCollider:
   m_ObjectHideFlags: 0

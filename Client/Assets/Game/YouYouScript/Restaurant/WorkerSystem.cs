@@ -123,7 +123,7 @@ public class WorkerSystem
         if (farmerCount < restaurantData.maxFarmerCount)
         {
             var data = new WorkerData() { type = WorkerType.Farmer, workerId = 0 };
-            data.collectFood.Add(FoodType.Tomato);
+            data.collectFood.Add("Tomato");
             restaurantData.workers.Add(data);
             SpawnWorker(data);
         }

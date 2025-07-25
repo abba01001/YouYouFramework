@@ -11,7 +11,8 @@ public class FoodSpawner : MonoBehaviour
 
     private void Awake()
     {
-
+        if(spawnAtStart)
+            SpawnFood();
     }
 
     public void SpawnFood()

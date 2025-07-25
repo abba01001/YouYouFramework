@@ -505,7 +505,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerName: 
 --- !u!1 &2485913834509212170
 GameObject:
   m_ObjectHideFlags: 0
@@ -564,8 +563,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HelperPos: {fileID: 2485913834509210439}
   collectFoodCapacity: 9
-  foodType: 2
   shelfFoodName: Egg
+  shelfTopTransform: {fileID: 2485913834793771938}
   customerPoints:
   - {fileID: 2485913834509212192}
   - {fileID: 2485913834509212625}
@@ -582,7 +581,7 @@ MonoBehaviour:
   - {fileID: 2485913834509209445}
   - {fileID: 2485913834509209444}
   - {fileID: 2485913834509209453}
-  foodSpawners: []
+  availableFoodSpawners: []
 --- !u!65 &2485913834509212175
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -763,7 +762,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerName: 
 --- !u!1 &2485913834509212391
 GameObject:
   m_ObjectHideFlags: 0
@@ -823,7 +821,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerName: 
 --- !u!1 &2485913834509212654
 GameObject:
   m_ObjectHideFlags: 0
@@ -883,7 +880,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerName: 
 --- !u!1 &2485913834509212889
 GameObject:
   m_ObjectHideFlags: 0

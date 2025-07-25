@@ -27,7 +27,7 @@ public class Player : MonoBehaviour
         if (other.GetComponent<FoodPlaceManager>())
         {
             FoodPlaceManager shelf = other.GetComponent<FoodPlaceManager>();
-            var foodName = shelf.foodType.ToString();
+
             if (shelf.collectedFoods.Count < shelf.collectFoodCapacity)
             {
                 int collectedFoodCount = _PlayerManager.collectedFood.Count - 1;
@@ -36,7 +36,7 @@ public class Player : MonoBehaviour
                 {
                     for (int i = _PlayerManager.collectedFood.Count - 1; i >= 0; i--)
                     {
-                        if (_PlayerManager.collectedFood[i].foodName == foodName)
+                        if (_PlayerManager.collectedFood[i].foodName == shelf.shelfFoodName)
                         {
                             removedAnyFood = true;
                             _PlayerManager.collectedFood[i].PlaceFood(shelf.GetIdleFoodTransform());
@@ -45,6 +45,7 @@ public class Player : MonoBehaviour
                             shelf.collectedFoods.Add(_PlayerManager.collectedFood[i]);
                             _PlayerManager.collectedFood[i].transform.parent = shelf.transform;
 
+                            _PlayerManager.collectedFood[i].goToCustomer = true;
                             _PlayerManager.collectedFood.Remove(_PlayerManager.collectedFood[i]);
                             break;
                         }
