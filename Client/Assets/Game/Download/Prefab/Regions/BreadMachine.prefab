@@ -8938,8 +8938,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HelperPos: {fileID: 1722348838824023981}
   collectFoodCapacity: 8
+  foodType: 7
   shelfFoodName: Flour
-  shelfTopTransform: {fileID: 1722348838853046904}
   customerPoints: []
   collectedFoods: []
   shelfPos:

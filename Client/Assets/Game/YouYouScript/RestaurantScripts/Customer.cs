@@ -55,24 +55,10 @@ public class Customer : MonoBehaviour
     private TimeAction modTimeAction;
     public CustomerMood currentMood; // 默认情绪是中立
     public List<Food>collectedFoods;
-    private TriggerDetector triggerDetector;
 
     public void Init(CustomerData data)
     {
         IsInCashier = false;
-        if (triggerDetector == null)
-        {
-            triggerDetector = gameObject.AddComponent<TriggerDetector>();
-        }
-        else
-        {
-            triggerDetector.UnsubscribeAll();
-        }
-        
-        // 绑定触发器事件
-        triggerDetector.OnEnter += HandleOnEnter;
-        triggerDetector.OnStay += HandleOnStay;
-        triggerDetector.OnExit += HandleOnExit;
         
         foreach (var f in collectedFoods.ToList())
         {
@@ -102,28 +88,14 @@ public class Customer : MonoBehaviour
         IsExit = false;
         IsLiving = true;
     }
-
-
-    private void HandleOnEnter(Collider other)
-    {
-        if (other.CompareTag("CustomerPoint") && !IsBilling)
-        {
-            if (other.gameObject == _CustomerPoints.gameObject)
-            {
-                agent.updateRotation = false;
-                StartCoroutine(SmoothRotate(other.transform.rotation));
-                modTimeAction ??= GameEntry.Time.CreateTimerLoop(this, 1, -1, (_) => { ShoppingTime += 1; });
-            }
-        }
-    }
     
-    private void HandleOnStay(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         BuildingBase building = other.gameObject.GetComponent<BuildingBase>();
         if (building != null && building.Entity.BuildingType == "Shelf" && ReachedDestinationOrGaveUp())
         {
             FoodPlaceManager shelf = other.GetComponent<FoodPlaceManager>();
-            if (CustomerSystem.Instance.CheckIsFullCollect(CustomerData,shelf.shelfFoodName))
+            if (CustomerSystem.Instance.CheckIsFullCollect(CustomerData,shelf.foodType))
             {
                 isCollecting = false;
                 _CustomerPoints?.Clean();
@@ -134,8 +106,8 @@ public class Customer : MonoBehaviour
             {
                 Food food = shelf.collectedFoods[shelf.collectedFoods.Count - 1];
                 shelf.collectedFoods.Remove(food);
-
-                CollectFood(building.Entity.Consume);
+                FoodType foodType = (FoodType)Enum.Parse(typeof(FoodType), building.Entity.Consume);
+                CollectFood(foodType);
                 food.GotoCustomer(slotList[collectedFoods.Count]);
                 collectedFoods.Add(food);
             }
@@ -201,13 +173,26 @@ public class Customer : MonoBehaviour
         }
     }
     
-    private void HandleOnExit(Collider other)
+    private void OnTriggerExit(Collider other)
     {
         if (_CustomerPoints != null && other.CompareTag("CustomerPoint") && !IsBilling)
         {
             if (other.gameObject == _CustomerPoints.gameObject)
             {
                 _CustomerPoints?.Clean();
+            }
+        }
+    }
+    
+    private void OnTriggerEnter(Collider other)
+    {
+        if (_CustomerPoints != null && other.CompareTag("CustomerPoint") && !IsBilling)
+        {
+            if (other.gameObject == _CustomerPoints.gameObject)
+            {
+                agent.updateRotation = false;
+                StartCoroutine(SmoothRotate(other.transform.rotation));
+                modTimeAction ??= GameEntry.Time.CreateTimerLoop(this, 1, -1, (_) => { ShoppingTime += 1; });
             }
         }
     }
@@ -284,11 +269,11 @@ public class Customer : MonoBehaviour
 
 
 
-    private void CollectFood(string name)
+    private void CollectFood(FoodType foodType)
     {
         foreach (var data in CustomerData.foodList)
         {
-            if (data.name == name)
+            if (data.foodType == foodType)
             {
                 data.hasCount += 1;
                 break;
@@ -348,7 +333,7 @@ public class Customer : MonoBehaviour
             foreach (FoodData data in CustomerData.foodList)
             {
                 if (data.needCount == data.hasCount) continue;
-                GameObject obj = BuildingSystem.Instance.GetShelfBuilding(data.name);
+                GameObject obj = BuildingSystem.Instance.GetShelfBuilding(data.foodType);
 
                 if (obj != null)
                 {

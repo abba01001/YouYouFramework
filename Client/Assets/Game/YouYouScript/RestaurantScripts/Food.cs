@@ -12,19 +12,13 @@ public class Food : MonoBehaviour
     private float foodCollectPlayerYVal = 1f;
     private bool goToPlayer = true;
     [HideInInspector]
-    public bool goToCustomer;
     public bool notSpawnAuto;
     public float speed, jumpPower;
     private Transform targetPose;
     public string foodName;
-    private BillingDesk _BillingDesk;
-    [HideInInspector]
-    public int maxFoodPlayerCarry;
+    // [HideInInspector]
+    // public int maxFoodPlayerCarry;
 
-    private void Start()
-    {
-        _BillingDesk = FindObjectOfType<BillingDesk>();
-    }
     
     public void OnEnable()
     {
@@ -37,7 +31,7 @@ public class Food : MonoBehaviour
 
     private void UpdateCarryEvent(object userdata)
     {
-        maxFoodPlayerCarry = (int) userdata;
+        // maxFoodPlayerCarry = (int) userdata;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -97,14 +91,15 @@ public class Food : MonoBehaviour
 
     public void PlaceFood(Transform targetPos)
     {
-        if(transform.parent)
-        transform.parent = null;
+        if (transform.parent)
+            transform.parent = null;
 
         targetPose = targetPos;
 
         transform.DOJump(targetPose.position, 4, 1, .4f);
 
-        foodCollectPos.position = new Vector3(foodCollectPos.transform.position.x, foodCollectPos.transform.position.y - foodCollectPlayerYVal, foodCollectPos.transform.position.z);
+        foodCollectPos.position = new Vector3(foodCollectPos.transform.position.x,
+            foodCollectPos.transform.position.y - foodCollectPlayerYVal, foodCollectPos.transform.position.z);
     }
 
     public void GotoCustomer(Transform target)
@@ -114,7 +109,6 @@ public class Food : MonoBehaviour
         transform.DOJump(target.position, 4, 1, .4f)
         .OnComplete(delegate ()
         {
-            goToCustomer = false;
             transform.parent = target;
             transform.position = target.position;
         });

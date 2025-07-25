@@ -89,8 +89,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HelperPos: {fileID: 7660226568206830738}
   collectFoodCapacity: 15
+  foodType: 1
   shelfFoodName: Tomato
-  shelfTopTransform: {fileID: 7660226568499770633}
   customerPoints:
   - {fileID: 7660226567392277350}
   - {fileID: 7660226567392280097}
@@ -211,7 +211,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerObj: 
+  customerName: 
 --- !u!1 &7660226567392277426
 GameObject:
   m_ObjectHideFlags: 0
@@ -880,7 +880,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerObj: 
+  customerName: 
 --- !u!1 &7660226567392280100
 GameObject:
   m_ObjectHideFlags: 0
@@ -1002,7 +1002,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerObj: 
+  customerName: 
 --- !u!1 &7660226567392280252
 GameObject:
   m_ObjectHideFlags: 0
@@ -1124,7 +1124,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerObj: 
+  customerName: 
 --- !u!1 &7660226567392280555
 GameObject:
   m_ObjectHideFlags: 0

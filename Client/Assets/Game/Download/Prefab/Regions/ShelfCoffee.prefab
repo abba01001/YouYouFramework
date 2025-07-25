@@ -57,8 +57,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HelperPos: {fileID: 6712971401474074692}
   collectFoodCapacity: 12
+  foodType: 5
   shelfFoodName: Beans
-  shelfTopTransform: {fileID: 6712971401089067661}
   customerPoints:
   - {fileID: 6712971401541911859}
   - {fileID: 6712971401209655842}
@@ -358,7 +358,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerObj: 
+  customerName: 
 --- !u!1 &6712971401001224376
 GameObject:
   m_ObjectHideFlags: 0
@@ -606,7 +606,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerObj: 
+  customerName: 
 --- !u!1 &6712971401217234133
 GameObject:
   m_ObjectHideFlags: 0
@@ -759,7 +759,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerObj: 
+  customerName: 
 --- !u!1 &6712971401573835138
 GameObject:
   m_ObjectHideFlags: 0
@@ -1157,7 +1157,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerObj: 
+  customerName: 
 --- !u!1 &6712971402310398474
 GameObject:
   m_ObjectHideFlags: 0

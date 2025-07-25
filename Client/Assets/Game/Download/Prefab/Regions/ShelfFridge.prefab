@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerObj: 
+  customerName: 
 --- !u!65 &4845023482810675445
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -149,8 +149,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HelperPos: {fileID: 4845023483690940238}
   collectFoodCapacity: 12
+  foodType: 4
   shelfFoodName: Milk
-  shelfTopTransform: {fileID: 4845023484229646941}
   customerPoints:
   - {fileID: 4845023484414986350}
   - {fileID: 4845023483219146802}
@@ -330,7 +330,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerObj: 
+  customerName: 
 --- !u!65 &4845023483219146805
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -421,7 +421,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerObj: 
+  customerName: 
 --- !u!65 &4845023483426066487
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1053,7 +1053,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fill: 0
-  customerObj: 
+  customerName: 
 --- !u!65 &4845023484414986337
 BoxCollider:
   m_ObjectHideFlags: 0

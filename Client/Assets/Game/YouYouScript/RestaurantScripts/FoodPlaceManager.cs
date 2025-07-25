@@ -8,7 +8,7 @@ public class FoodPlaceManager : MonoBehaviour
     public Transform HelperPos;
     public int collectFoodCapacity;
 
-    public string shelfFoodName;
+    public FoodType foodType;
     public List<CustomerPoints> customerPoints;
 
     [HideInInspector] public List<Food> collectedFoods;
@@ -28,9 +28,10 @@ public class FoodPlaceManager : MonoBehaviour
     private void OnUpdateBuildingsObj(object userdata)
     {
         foodSpawners.Clear();
-        foreach (BuildingBase building in BuildingSystem.Instance.GetpProduceBuilding())
+        var foodType = this.foodType.ToString();
+        foreach (BuildingBase building in BuildingSystem.Instance.GetProduceBuilding())
         {
-            if (building.Entity.Produce == shelfFoodName)
+            if (building.Entity.Produce == foodType)
             {
                 foodSpawners.Add(building.GetComponentInChildren<FoodSpawner>(true));
             }

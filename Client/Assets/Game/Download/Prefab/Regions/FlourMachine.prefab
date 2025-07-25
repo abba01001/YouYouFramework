@@ -322,8 +322,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HelperPos: {fileID: 3504798085537829489}
   collectFoodCapacity: 8
+  foodType: 3
   shelfFoodName: Wheat
-  shelfTopTransform: {fileID: 3504798085249022724}
   customerPoints: []
   collectedFoods: []
   shelfPos:

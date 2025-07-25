@@ -1641,14 +1641,14 @@ GameObject:
   - component: {fileID: 3840590020505263610}
   - component: {fileID: 3840590020505263611}
   - component: {fileID: 3840590020505263552}
-  - component: {fileID: 3840590020505263559}
   - component: {fileID: 3840590020505263558}
-  - component: {fileID: 3840590020505263556}
   - component: {fileID: 3840590020505263557}
+  - component: {fileID: 3840590020505263556}
+  - component: {fileID: 3840590020505263559}
   - component: {fileID: -8693548032591394060}
   m_Layer: 0
-  m_Name: Chicken
-  m_TagString: Chicken
+  m_Name: ChickenAnimal
+  m_TagString: ChickenAnimal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1710,25 +1710,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.0888588, y: 0.24067539, z: 3.6173055}
   m_Center: {x: -3.2252402, y: 0.55995476, z: -0.06579974}
---- !u!114 &3840590020505263559
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3840590020505263609}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c94d679c496890c419769f91a0968b3b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  anim: {fileID: 3840590020505263611}
-  shelf: {fileID: 3840590020505263556}
-  foodSpawners:
-  - {fileID: 3840590018867110718}
-  - {fileID: 3840590020288937372}
-  - {fileID: 3840590018569109100}
-  - {fileID: 3840590019793158857}
 --- !u!54 &3840590020505263558
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1745,28 +1726,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &3840590020505263556
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3840590020505263609}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8346e4ad3f71bb34c86920f3637dd0bf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HelperPos: {fileID: 3840590018477615974}
-  collectFoodCapacity: 2
-  shelfFoodName: Tomato
-  shelfTopTransform: {fileID: 3840590020058183804}
-  customerPoints: []
-  collectedFoods: []
-  shelfPos:
-  - {fileID: 3840590018820399249}
-  - {fileID: 3840590019510231821}
-  availableFoodSpawners: []
 --- !u!82 &3840590020505263557
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1863,6 +1822,46 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &3840590020505263556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3840590020505263609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8346e4ad3f71bb34c86920f3637dd0bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HelperPos: {fileID: 3840590018477615974}
+  collectFoodCapacity: 2
+  foodType: 1
+  customerPoints: []
+  collectedFoods: []
+  shelfPos:
+  - {fileID: 3840590018820399249}
+  - {fileID: 3840590019510231821}
+  foodSpawners: []
+--- !u!114 &3840590020505263559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3840590020505263609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c94d679c496890c419769f91a0968b3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anim: {fileID: 3840590020505263611}
+  shelf: {fileID: 3840590020505263556}
+  foodSpawners:
+  - {fileID: 3840590018867110718}
+  - {fileID: 3840590020288937372}
+  - {fileID: 3840590018569109100}
+  - {fileID: 3840590019793158857}
 --- !u!114 &-8693548032591394060
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -17,6 +17,11 @@ public partial class Sys_BuildingsEntity : DataTableEntityBase
     public string BuildingName;
 
     /// <summary>
+    /// 名
+    /// </summary>
+    public string Name;
+
+    /// <summary>
     /// 类型
     /// </summary>
     public string BuildingType;
@@ -25,6 +30,11 @@ public partial class Sys_BuildingsEntity : DataTableEntityBase
     /// 生成
     /// </summary>
     public string Produce;
+
+    /// <summary>
+    /// 多少秒生成1个
+    /// </summary>
+    public int ProduceTime;
 
     /// <summary>
     /// 消耗
@@ -47,11 +57,6 @@ public partial class Sys_BuildingsEntity : DataTableEntityBase
     public string Rotation;
 
     /// <summary>
-    /// 坐标
-    /// </summary>
-    public string BuyPoinrPos;
-
-    /// <summary>
     /// 区域Id
     /// </summary>
     public int RegionId;
@@ -65,5 +70,10 @@ public partial class Sys_BuildingsEntity : DataTableEntityBase
     /// 依赖建筑
     /// </summary>
     public string Dependencies;
+
+    /// <summary>
+    /// 解锁金币
+    /// </summary>
+    public int Cost1;
 
 }

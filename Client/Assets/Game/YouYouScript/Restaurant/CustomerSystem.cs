@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,6 +6,7 @@ using System.Text;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using YouYou;
+using Random = UnityEngine.Random;
 
 public class CustomerSystem
 {
@@ -15,6 +17,7 @@ public class CustomerSystem
     private readonly Dictionary<int, Customer> idToCustomer = new();
     private int defaultMaxCustomers = 16;
 
+    public List<FoodType> FoodConfig = new List<FoodType>();
     // 初始化
     public async UniTask Init()
     {
@@ -24,6 +27,11 @@ public class CustomerSystem
         {
             SpawnCustomer(data);
         }
+        FoodConfig = Enum.GetValues(typeof(FoodType))
+            .Cast<FoodType>()
+            .Where(food => food != FoodType.None)  // 排除 None 枚举项
+            .ToList();
+
     }
 
     // 检查是否需要生成新的顾客
@@ -45,18 +53,24 @@ public class CustomerSystem
         }
     }
 
-    public List<string> FoodConfig = new List<string>()
+    public List<(FoodType, int)> GetRandomFoodCombination()
     {
-        "Tomato","Egg"//,"Wheat","Milk","Beans","Bread","Flour"
-    };
+        List<(FoodType, int)> selectedFoods = new List<(FoodType, int)>();
 
-    public List<(string,int)> GetRandomFoodCombination()
-    {
-        List<(string,int)> selectedFoods = new List<(string,int)>();
-        int count = FoodConfig.Count;
+        List<FoodType> flietrFoods = new List<FoodType>();
+        foreach (var building in BuildingSystem.Instance.Buildings)
+        {
+            if (building.Entity.Produce == "") continue;
+            FoodType produce = (FoodType)Enum.Parse(typeof(FoodType), building.Entity.Produce);
+            flietrFoods.Add(produce);
+        }
+        
+        int count = flietrFoods.Count;
 
         int randomSelectionCount = GameUtil.RandomRange(1, count + 1);
         List<int> selectedIndices = new List<int>();
+    
+        // 随机选择索引
         while (selectedIndices.Count < randomSelectionCount)
         {
             int randomIndex = Random.Range(0, count);
@@ -66,27 +80,31 @@ public class CustomerSystem
             }
         }
 
-        int max = GameUtil.RandomRange(1,13);
+        int max = GameUtil.RandomRange(1, 13);
+    
+        // 根据选中的索引，添加食物和数量
         foreach (int index in selectedIndices)
         {
             int value = 0;
-            if (max > 0) value = 1;//GameUtil.RandomRange(1, max);
-            selectedFoods.Add((FoodConfig[index],value));
+            if (max > 0) value = 1; // 可以替换为 GameUtil.RandomRange(1, max);
+            selectedFoods.Add((flietrFoods[index], value));
             max -= value;
         }
+
+        // 移除数量为 0 的食物
         selectedFoods.RemoveAll(item => item.Item2 == 0);
         return selectedFoods;
     }
     
     private void RandomFood(CustomerData customerData)
     {
-        List<(string,int)> selectedFoodList = GetRandomFoodCombination(); // 获取随机食物组合
+        List<(FoodType, int)> selectedFoodList = GetRandomFoodCombination(); // 获取随机食物组合
 
-        foreach ((string _name, int count) in selectedFoodList)
+        foreach ((FoodType _name, int count) in selectedFoodList)
         {
             FoodData foodData = new FoodData
             {
-                name = _name,
+                foodType = _name,
                 needCount = count
             };
             customerData.foodList.Add(foodData);
@@ -101,7 +119,7 @@ public class CustomerSystem
         sb.AppendLine("收集食物列表:");
         foreach (FoodData data in customerData.foodList)
         {
-            sb.AppendLine($"Food Name: {data.name}, Need Count: {data.needCount}");
+            sb.AppendLine($"Food Name: {data.foodType}, Need Count: {data.needCount}");
         }
         GameUtil.LogError(sb.ToString());
     }
@@ -109,11 +127,11 @@ public class CustomerSystem
     
     public void RandomEmotion(CustomerData customerData)
     {
-        customerData.happyTime = 5;//Random.Range(10, 20);
-        customerData.neutralTime = 10;//Random.Range(20, 30);
-        customerData.annoyedTime = 12;//Random.Range(30, 40);
-        customerData.anxiousTime = 13;//Random.Range(40, 45);
-        customerData.angryTime = 15; //Random.Range(45,50);
+        customerData.happyTime = GameUtil.RandomRange(10, 20);
+        customerData.neutralTime = GameUtil.RandomRange(20, 30);
+        customerData.annoyedTime = GameUtil.RandomRange(30, 40);
+        customerData.anxiousTime = GameUtil.RandomRange(40, 45);
+        customerData.angryTime = GameUtil.RandomRange(45,50);
     }
 
     public List<Vector3> bornPos = new List<Vector3>()
@@ -182,13 +200,13 @@ public class CustomerSystem
         return false;
     }
     
-    public bool CheckIsFullCollect(CustomerData data,string foodName = "")
+    public bool CheckIsFullCollect(CustomerData data,FoodType foodType = FoodType.None)
     {
-        if (foodName != "")
+        if (foodType != FoodType.None)
         {
             foreach (var foodData in data.foodList)
             {
-                if (foodData.name == foodName)
+                if (foodData.foodType == foodType)
                 {
                     return foodData.needCount == foodData.hasCount;
                 }

@@ -18,6 +18,11 @@ namespace YouYou
         public string BuildingName;
 
         /// <summary>
+        /// 名
+        /// </summary>
+        public string Name;
+
+        /// <summary>
         /// 类型
         /// </summary>
         public string BuildingType;
@@ -26,6 +31,11 @@ namespace YouYou
         /// 生成
         /// </summary>
         public string Produce;
+
+        /// <summary>
+        /// 多少秒生成1个
+        /// </summary>
+        public int ProduceTime;
 
         /// <summary>
         /// 消耗
@@ -48,11 +58,6 @@ namespace YouYou
         public string Rotation;
 
         /// <summary>
-        /// 坐标
-        /// </summary>
-        public string BuyPoinrPos;
-
-        /// <summary>
         /// 区域Id
         /// </summary>
         public int RegionId;
@@ -66,6 +71,11 @@ namespace YouYou
         /// 依赖建筑
         /// </summary>
         public string Dependencies;
+
+        /// <summary>
+        /// 解锁金币
+        /// </summary>
+        public int Cost1;
 
     }
 }

@@ -15,6 +15,7 @@ TagManager:
   - Chicken
   - Sauce
   - TrashBin
+  - ChickenAnimal
   layers:
   - Default
   - TransparentFX

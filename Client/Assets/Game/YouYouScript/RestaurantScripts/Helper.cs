@@ -6,7 +6,7 @@ using YouYou;
 
 public class Helper : WorkerBase
 {
-    public Transform foodCollectPos;
+    public Vector3 foodCollectPos = new Vector3(0,2.23f,0.93f);
     private Vector3 initialFoodCollectPos;
     private bool removedAnyFood;
     private bool canCheck = true;
@@ -25,7 +25,7 @@ public class Helper : WorkerBase
         // trashBin = GameObject.FindGameObjectWithTag("TrashBin").transform;
         _PlayerManager.maxFoodPlayerCarry = WorkerData.maxFoodCarry;
         GetComponent<NavMeshAgent>().speed = WorkerData.speed;
-        initialFoodCollectPos = foodCollectPos.transform.localPosition;
+        initialFoodCollectPos = foodCollectPos;
         agent.updateRotation = true;
         FindShelf();
     }
@@ -69,18 +69,19 @@ public class Helper : WorkerBase
         foreach (BuildingBase shelf in BuildingSystem.Instance.GetShelfBuilding())
         {
             FoodPlaceManager _FoodPlaceManager = shelf.GetComponent<FoodPlaceManager>();
-            if (!WorkerData.collectFood.Contains(_FoodPlaceManager.shelfFoodName)) continue;
+            if (!WorkerData.collectFood.Contains(_FoodPlaceManager.foodType)) continue;
             int i = _FoodPlaceManager.collectFoodCapacity / 2;
             if (_FoodPlaceManager.collectedFoods.Count < i)
             {
                 targetShelfPos = _FoodPlaceManager.HelperPos;
                 foreach (FoodSpawner foodSpawner in _FoodPlaceManager.foodSpawners)
                 {
-                    if (foodSpawner.food.foodName == _FoodPlaceManager.shelfFoodName)
+                    var foodName = _FoodPlaceManager.foodType.ToString();
+                    if (foodSpawner.food.foodName == foodName)
                     {
                         if (foodSpawner.foodObj != null)
                         {
-                            _PlayerManager.currentFoodName = _FoodPlaceManager.shelfFoodName;
+                            _PlayerManager.currentFoodName = foodName;
                             Goto(foodSpawner.transform.position + new Vector3(GameUtil.RandomRange(0f,1f),0,GameUtil.RandomRange(0f,1f)));
                             return;
                         }
@@ -111,8 +112,8 @@ public class Helper : WorkerBase
         return false;
     }
 
-    //把食物放到架子上
-    public override void HandleOnStay(Collider other)
+    //协助者把食物放到架子上
+    public void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Shelf"))
         {
@@ -127,7 +128,8 @@ public class Helper : WorkerBase
                     for (int i = _PlayerManager.collectedFood.Count - 1; i >= 0; i--)
                     {
                         Food food = _PlayerManager.collectedFood[i];
-                        if (food.foodName == shelf.shelfFoodName)
+                        var foodName = shelf.foodType.ToString();
+                        if (food.foodName == foodName)
                         {
                             removedAnyFood = true;
                             food.PlaceFood(shelf.GetIdleFoodTransform());
@@ -136,7 +138,6 @@ public class Helper : WorkerBase
                             shelf.collectedFoods.Add(food);
                             food.transform.parent = shelf.transform;
 
-                            food.goToCustomer = true;
                             _PlayerManager.collectedFood.Remove(food);
                             break;
                         }
@@ -144,12 +145,12 @@ public class Helper : WorkerBase
 
                     if (removedAnyFood)
                     {
-                        foodCollectPos.localPosition = initialFoodCollectPos;
+                        foodCollectPos = initialFoodCollectPos;
 
                         foreach (Food food in _PlayerManager.collectedFood)
                         {
-                            food.transform.localPosition = foodCollectPos.localPosition;
-                            foodCollectPos.localPosition = new Vector3(foodCollectPos.transform.localPosition.x, foodCollectPos.transform.localPosition.y + 1, foodCollectPos.transform.localPosition.z);
+                            food.transform.localPosition = foodCollectPos;
+                            foodCollectPos = new Vector3(foodCollectPos.x, foodCollectPos.y + 1, foodCollectPos.z);
                         }
                         removedAnyFood = false;
                     }
