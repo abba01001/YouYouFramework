@@ -7,7 +7,6 @@ SpriteAtlas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: YouLi
-  serializedVersion: 2
   m_EditorData:
     serializedVersion: 2
     textureSettings:
@@ -22,7 +21,7 @@ SpriteAtlas:
       crunchedCompression: 0
       sRGB: 1
     platformSettings:
-    - serializedVersion: 3
+    - serializedVersion: 4
       m_BuildTarget: Android
       m_MaxTextureSize: 2048
       m_ResizeAlgorithm: 0
@@ -32,6 +31,7 @@ SpriteAtlas:
       m_CrunchedCompression: 0
       m_AllowsAlphaSplitting: 0
       m_Overridden: 1
+      m_IgnorePlatformSupport: 0
       m_AndroidETC2FallbackOverride: 0
       m_ForceMaximumCompressionQuality_BC6H_BC7: 0
     packingSettings:
@@ -49,6 +49,27 @@ SpriteAtlas:
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
+    packedSpriteRenderDataKeys:
+    - 595c7c80e72a1234680bddf60737c0a6: 21300000
+    - 4dd9fdb055b3c874ca7bec8b857622cf: 21300000
+    - c283bf11ea563fa45ada3e2bf1fe1b58: 21300000
+    - 00d13a51171588a4d9bfc106362d0edf: 21300000
+    - b499ad9261e3e2b41af99e4b4485fd9c: 21300000
+    - 660322032c684f640ac8fc956d2ae6e2: 21300000
+    - 1c42cc4373cf15645a98b555776b1f47: 21300000
+    - c8b97f44d40e391449ff8b33aed05793: 21300000
+    - fbe7dc85f4579f348ad41f82dfc194da: 21300000
+    - 512c4018e42d1ed4a93ef0fa0682a7f5: 21300000
+    - 51d73079b391db046a8b40e8d860d8fc: 21300000
+    - 678622796a9574643b2d483af37b320b: 21300000
+    - 20c55a7b71c0a634d8619d7b8b44ebda: 21300000
+    - cd33ab8bf82530b4b846f93f785d342d: 21300000
+    - 696b416c701b6784bbb4f8a6fe0d6e44: 21300000
+    - a3562bac766ef1049a9c47b9832d71b4: 21300000
+    - 0f128ffc644d4c2428f7280111dda360: 21300000
+    - 6b6ba40dd7959994580b164656f0d70b: 21300000
+    - 7b9b52adab9a3154e846ca3b78cf4bb3: 21300000
+    - ef6157dd2e03ac6419e58488914cdf09: 21300000
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: 595c7c80e72a1234680bddf60737c0a6, type: 3}
@@ -95,4 +116,3 @@ SpriteAtlas:
   m_RenderDataMap: {}
   m_Tag: YouLi
   m_IsVariant: 0
-  m_IsPlaceholder: 0

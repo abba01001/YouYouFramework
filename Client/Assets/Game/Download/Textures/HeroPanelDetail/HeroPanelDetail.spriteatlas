@@ -7,7 +7,6 @@ SpriteAtlas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: HeroPanelDetail
-  serializedVersion: 2
   m_EditorData:
     serializedVersion: 2
     textureSettings:
@@ -22,7 +21,7 @@ SpriteAtlas:
       crunchedCompression: 0
       sRGB: 1
     platformSettings:
-    - serializedVersion: 3
+    - serializedVersion: 4
       m_BuildTarget: Android
       m_MaxTextureSize: 2048
       m_ResizeAlgorithm: 0
@@ -32,6 +31,7 @@ SpriteAtlas:
       m_CrunchedCompression: 0
       m_AllowsAlphaSplitting: 0
       m_Overridden: 1
+      m_IgnorePlatformSupport: 0
       m_AndroidETC2FallbackOverride: 0
       m_ForceMaximumCompressionQuality_BC6H_BC7: 0
     packingSettings:
@@ -49,6 +49,22 @@ SpriteAtlas:
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
+    packedSpriteRenderDataKeys:
+    - e1f300d0347fd1f42bdeb7469182bf6a: 21300000
+    - a7329bd151555f64282e835feadf9c98: 21300000
+    - c95b570256dcfa04196c0c846a1d98ca: 21300000
+    - 8a141f42a0fb9bf418a8942b9ac2ee7c: 21300000
+    - 0d7eab844a184ab42bf9f6f901ddbcaa: 21300000
+    - c3e05435a6060d340b4af701e59e3ca7: 21300000
+    - 1c4d1835b1d660c449c3aa7a707ba302: 21300000
+    - 5e75d3a6cedfb5e45adf1cd7359509c8: 21300000
+    - 174f98d6dd44cc74e95ef2fed21efa62: 21300000
+    - 615bc9e6866799645a966aab35dd34da: 21300000
+    - fb5cda08974b77a4b98ffc991e900426: 21300000
+    - 6967a14806c89494f9e808a066561cc3: 21300000
+    - 13d5197950673e84b9c9d9644b4bb9b9: 21300000
+    - 62bf4089e36cb314b978a462937f99ba: 21300000
+    - 6c7f460f94fe108458f8a9c6abd2bcc1: 21300000
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: e1f300d0347fd1f42bdeb7469182bf6a, type: 3}
@@ -85,4 +101,3 @@ SpriteAtlas:
   m_RenderDataMap: {}
   m_Tag: HeroPanelDetail
   m_IsVariant: 0
-  m_IsPlaceholder: 0

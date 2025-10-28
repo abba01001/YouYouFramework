@@ -7,7 +7,6 @@ SpriteAtlas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Battle
-  serializedVersion: 2
   m_EditorData:
     serializedVersion: 2
     textureSettings:
@@ -22,7 +21,7 @@ SpriteAtlas:
       crunchedCompression: 0
       sRGB: 1
     platformSettings:
-    - serializedVersion: 3
+    - serializedVersion: 4
       m_BuildTarget: Android
       m_MaxTextureSize: 2048
       m_ResizeAlgorithm: 0
@@ -32,6 +31,7 @@ SpriteAtlas:
       m_CrunchedCompression: 0
       m_AllowsAlphaSplitting: 0
       m_Overridden: 1
+      m_IgnorePlatformSupport: 0
       m_AndroidETC2FallbackOverride: 0
       m_ForceMaximumCompressionQuality_BC6H_BC7: 0
     packingSettings:
@@ -49,6 +49,60 @@ SpriteAtlas:
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
+    packedSpriteRenderDataKeys:
+    - b2d9ed00413ee854d99e822594a5b75f: 21300000
+    - 587b27b1262bd074ca9c5c3bf6bc3633: 21300000
+    - e68218b1884c6d444afeac41e0fe1138: 21300000
+    - 7b34f702111a2964f8938d4f7d5049de: 21300000
+    - 6ff2054247beac74b9493d6a874fba5f: 21300000
+    - 7d7d7552d7487a14cacd18b520cdb93b: 21300000
+    - 749aae82a2da9f548a3852e85cbfefb4: 21300000
+    - b76ee4a2a7ad7c04196e9a474a6047ff: 21300000
+    - f409a0f243b8984479e821e2d0538c48: 21300000
+    - 49e20cd359bd2a9439ed5b81c3b630db: 21300000
+    - 18d5755451c01fc4d832973bdedb0697: 21300000
+    - 203aa654bd3914c47a1a7841231a7b08: 21300000
+    - 67de48949d8051f469c73a962ad3322c: 21300000
+    - 42b008b4cf82344488b486efd5510b01: 21300000
+    - ba76c1c45045dc64fbdb43eb81c7007e: 21300000
+    - 38e6d205327a4514fab9da193c7921ff: 21300000
+    - bcaeb405ae5b8234b9b4c86ed189c86a: 21300000
+    - 1b289415adc5dd342a9388fb959ba1d4: 21300000
+    - efb593455b76e094eb2e0f6b01a0f350: 21300000
+    - 98def9a5a9f623c4494bd253592da53c: 21300000
+    - 243c0266d0710b54cab453b9ad2de4c4: 21300000
+    - be7d02c6f2e7acc40a0019084e0e5654: 21300000
+    - c02989c6f096d834987a8cc32d0935f8: 21300000
+    - d912520731f5fbe42a620868dc4a170a: 21300000
+    - 675892c7b04d5a94aa2e1ae1be1cd9eb: 21300000
+    - cd491ec708c5fe24984297f1a7739452: 21300000
+    - 2572cb18e92f87846963d5f605a361e3: 21300000
+    - ebd14928157b781409990b6300e3e329: 21300000
+    - ce63438822359fa4c9e43def1fe05be2: 21300000
+    - 8893788857c18eb458bc1406ad904d57: 21300000
+    - 451f12b8055ea2247be67b5a021b3ae7: 21300000
+    - d3765909e3b13d849b9c40b6ee5275d1: 21300000
+    - e56d2419b471e6c429c7e77a43ac409f: 21300000
+    - 3b50f6394f7a4994289b527e9b48b5e1: 21300000
+    - 0cdcf87976efc8847888f4d67a936372: 21300000
+    - f6fd257a73307224bad3f4c715e5d0a9: 21300000
+    - 10372fcaf13ebe746a38657547d2bf46: 21300000
+    - dde0f0ea9b09ee647a69697c8ec66db4: 21300000
+    - 952f04dbf0dbf9943918f6d99c873147: 21300000
+    - e09fe9db684089b4cb345a3d72526c47: 21300000
+    - 770c082c18ea1474f898ed391481c5f7: 21300000
+    - 27c92c5cb0fcc8843a2306e6d44ee75b: 21300000
+    - 3b1ca79ca9658e04b8ddae5819d344e1: 21300000
+    - b846157dd3c01f341acbbb2eba172c9a: 21300000
+    - 122dce9d8bcc4424d82293887d99238c: 21300000
+    - d1eba4dd729ff3845bf929298eb57466: 21300000
+    - 4065b7dd61fdc4943965ab506ecefb25: 21300000
+    - 67e2656e110e87940a69c659b5134e4d: 21300000
+    - 2dfb3e8e1ad604142abb2fa8b3fe89c9: 21300000
+    - 8e3df8ae4dd5ae5469a180d91992820a: 21300000
+    - 2863cd3f67411f84d8a80a6731db5d71: 21300000
+    - 6222a14fab783fd4f99f842f891ab88d: 21300000
+    - 5f7fc4ef6f10f194aa6225f2bd48fa88: 21300000
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: b2d9ed00413ee854d99e822594a5b75f, type: 3}
@@ -161,4 +215,3 @@ SpriteAtlas:
   m_RenderDataMap: {}
   m_Tag: Battle
   m_IsVariant: 0
-  m_IsPlaceholder: 0

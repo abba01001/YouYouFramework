@@ -7,7 +7,6 @@ SpriteAtlas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ModelPreviewIcon
-  serializedVersion: 2
   m_EditorData:
     serializedVersion: 2
     textureSettings:
@@ -22,7 +21,7 @@ SpriteAtlas:
       crunchedCompression: 0
       sRGB: 1
     platformSettings:
-    - serializedVersion: 3
+    - serializedVersion: 4
       m_BuildTarget: Android
       m_MaxTextureSize: 2048
       m_ResizeAlgorithm: 0
@@ -32,6 +31,7 @@ SpriteAtlas:
       m_CrunchedCompression: 0
       m_AllowsAlphaSplitting: 0
       m_Overridden: 1
+      m_IgnorePlatformSupport: 0
       m_AndroidETC2FallbackOverride: 0
       m_ForceMaximumCompressionQuality_BC6H_BC7: 0
     packingSettings:
@@ -49,6 +49,21 @@ SpriteAtlas:
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
+    packedSpriteRenderDataKeys:
+    - 8877285354dee2442b0acccf7e7ec254: 21300000
+    - b030de73148c9dc49afb74df3c2736a2: 21300000
+    - 77c0cca3d7d84f045b91712cd8571329: 21300000
+    - 8da1232537cce924fb736cb7771632d2: 21300000
+    - 3923d1d69be56d045aedb58d00ba78e7: 21300000
+    - 64934d470231ede4a91235626d07e651: 21300000
+    - 5b1c43886c0982a4e8563ae86f8d33f7: 21300000
+    - d64e3709a75b6cc4abc289cab9b1d6c8: 21300000
+    - 38426cd9f1de599499f0cdbc0baed667: 21300000
+    - 209329fb19d1a9d47a72407586140efe: 21300000
+    - 4b97b3bc8949fec41841bdf588e7c1d8: 21300000
+    - fb8c8dbc75d256046907d6ffc1d8dfac: 21300000
+    - 59da8d5e85d90d84ead0ebdf0b441dcb: 21300000
+    - 8213eaae66e83e44e9e956a7c1c87d6f: 21300000
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: 8877285354dee2442b0acccf7e7ec254, type: 3}
@@ -83,4 +98,3 @@ SpriteAtlas:
   m_RenderDataMap: {}
   m_Tag: ModelPreviewIcon
   m_IsVariant: 0
-  m_IsPlaceholder: 0
