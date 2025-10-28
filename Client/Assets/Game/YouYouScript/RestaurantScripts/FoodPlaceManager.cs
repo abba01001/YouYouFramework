@@ -45,17 +45,17 @@ public class FoodPlaceManager : MonoBehaviour
     private readonly object lockObject = new object();
     public CustomerPoints GetIdlePoint()
     {
-        lock (lockObject)  // 锁定操作，保证同一时刻只有一个线程能进入
+        lock (lockObject) 
         {
             foreach (var point in customerPoints)
             {
                 if (!point.fill)
                 {
-                    point.fill = true;  // 标记为已填充
-                    return point;  // 返回找到的空闲点
+                    point.fill = true;
+                    return point;
                 }
             }
         }
-        return null;  // 如果没有找到空闲点，返回 null
+        return null; 
     }
 }
