@@ -1,13 +1,12 @@
-using Main;
-using Sirenix.OdinInspector;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using HybridCLR.Editor.Commands;
+using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
@@ -21,7 +20,8 @@ public class AssetBundleSettings : ScriptableObject
     {
         Windows,
         Android,
-        IOS
+        IOS,
+        WebGL
     }
 
     #region 打包签名
@@ -53,6 +53,8 @@ public class AssetBundleSettings : ScriptableObject
                 return BuildTarget.Android;
             case CusBuildTarget.IOS:
                 return BuildTarget.iOS;
+            case CusBuildTarget.WebGL:
+                return BuildTarget.WebGL;
         }
     }
 
@@ -69,16 +71,14 @@ public class AssetBundleSettings : ScriptableObject
     private string PublishPath = "";//$"{Application.persistentDataPath}/输出路径";
     
     [VerticalGroup("Common/Left")]
-    [Button(ButtonSizes.Medium)]
-    [LabelText("AB包资源预览")]
+    [Button("AB包资源预览",ButtonSizes.Medium)]
     public void Test()
     {
         AssetComparerWindow.ShowWindow();
     }
     
     [VerticalGroup("Common/Right")]
-    [Button(ButtonSizes.Medium)]
-    [LabelText("清空本地AB包资源")]
+    [Button("清空本地AB包资源",ButtonSizes.Medium)]
     public void ClearAssetBundle()
     {
         if (Directory.Exists(TempPath))
@@ -102,16 +102,15 @@ public class AssetBundleSettings : ScriptableObject
     List<AssetBundleBuild> builds = new List<AssetBundleBuild>();
 
     [VerticalGroup("Common/Right")]
-    [Button(ButtonSizes.Medium)]
-    [LabelText("输出AB包资源到本地")]
+    [Button("输出AB包资源到本地",ButtonSizes.Medium)]
     public void BuildAssetBundle()
     {
-        if (CurrBuildTarget == CusBuildTarget.Android &&
-            MainEntry.MacroSettings.CurrAssetLoadTarget != MacroSettings.AssetLoadTarget.ASSETBUNDLE)
+        MacroSettings MacroSettings = GetMacroSettings();
+        if (CurrBuildTarget == CusBuildTarget.Android && MacroSettings.CurrAssetLoadTarget != MacroSettings.AssetLoadTarget.ASSETBUNDLE)
         {
             EditorUtility.DisplayDialog(
                 "提示",
-                $"请先切换到{MacroSettings.AssetLoadTarget.ASSETBUNDLE}模式",
+                $"安卓平台请先切换到{MacroSettings.AssetLoadTarget.ASSETBUNDLE}模式",
                 "确定"
             );
             return;
@@ -172,6 +171,11 @@ public class AssetBundleSettings : ScriptableObject
 
         }
     }
+    
+    public static MacroSettings GetMacroSettings()
+    {
+        return AssetDatabase.LoadAssetAtPath<MacroSettings>("Assets/Game/YouYouFramework/YouYouAssets/MacroSettings.asset");
+    }
 
     private string GetUploadPath()
     {
@@ -193,19 +197,24 @@ public class AssetBundleSettings : ScriptableObject
 
 
     [VerticalGroup("Common/Right")]
-    [Button(ButtonSizes.Medium)]
-    [LabelText("出包")]
+    [Button("出包",ButtonSizes.Medium)]
     public void PublishAPK()
     {
         SetKeystoreInfo();
-        //这里能不能弹出一个窗口，然后选择添加场景？
         var path = PublishPath + $"/{AssetVersion}.apk";
-        if (Directory.Exists(path))
+        if (File.Exists(path))  // 用 File.Exists 检查文件
         {
             File.Delete(path);
         }
         Directory.CreateDirectory(path);
-        string[] scenes = { "Assets/Game/Scene_Launch.unity" };
+        
+        string[] scenes = SceneSelectionWindow.ShowWindow();
+        if (scenes == null || scenes.Length == 0)
+        {
+            Debug.LogWarning("没有选择场景，已取消打包。");
+            return;
+        }
+        
         BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions
         {
             scenes = scenes,
@@ -222,7 +231,7 @@ public class AssetBundleSettings : ScriptableObject
             EditorUtility.DisplayDialog("打包成功", "APK 已成功生成！", "确定");
             if (IsUploadAPK) COSUploader.UploadAPK(path);
             string directoryPath = Path.GetDirectoryName(path); // 获取文件夹路径
-            System.Diagnostics.Process.Start("explorer.exe", directoryPath);
+            Process.Start("explorer.exe", directoryPath);
         }
         if (summary.result == BuildResult.Failed)
         {
@@ -233,8 +242,7 @@ public class AssetBundleSettings : ScriptableObject
     }
     
     [VerticalGroup("Common/Right")]
-    [Button(ButtonSizes.Medium)]
-    [LabelText("导出Gradle工程")]
+    [Button("导出Gradle工程",ButtonSizes.Medium)]
     public void ExportGradleProject()
     {
         // 设置Keystore信息（如果需要的话）
@@ -254,7 +262,7 @@ public class AssetBundleSettings : ScriptableObject
             scenes = scenes, // 使用当前编辑器中的所有场景
             locationPathName = path, // 导出的路径
             target = BuildTarget.Android, // 构建目标平台
-            options = BuildOptions.AcceptExternalModificationsToPlayer | BuildOptions.Development | BuildOptions.AllowDebugging // 允许外部修改，开发模式等
+            options = BuildOptions.None // 允许外部修改，开发模式等
         };
         
         // 执行导出
@@ -669,7 +677,7 @@ public class AssetBundleSettings : ScriptableObject
     /// </summary>
     public void CopyHofixDll()
     {
-        HybridCLR.Editor.Commands.CompileDllCommand.CompileDll(GetBuildTarget());
+        CompileDllCommand.CompileDll(GetBuildTarget());
 
         string CodeDir = "Assets/Game/Download/Hotfix/";
 
@@ -692,7 +700,6 @@ public class AssetBundleSettings : ScriptableObject
     /// </summary>
     /// <param name="path"></param>
     /// <param name="overall">打成一个资源包</param>
-    /// <param name="subPackageId">分包id</param>
     private void BuildAssetBundleForPath(string path, bool overall)
     {
         string fullPath = Application.dataPath + "/" + path;

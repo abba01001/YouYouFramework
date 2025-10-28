@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ParamsSettings
   m_EditorClassIdentifier: 
   TestWebAccountUrl: 127.0.0.1:17888
-  WebAccountUrl: 159.75.164.29:17888
+  WebAccountUrl: 43.134.133.178:17888
   IsTestMode: 0
   IsMapEditorMode: 0
   PostIsEncrypt: 0

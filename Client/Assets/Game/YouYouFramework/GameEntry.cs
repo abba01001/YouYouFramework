@@ -162,7 +162,6 @@ namespace YouYou
         private void Initialize()
         {
             MessagePackSerializer.DefaultOptions = MessagePackSerializerOptions.Standard.WithResolver(UnityResolver.InstanceWithStandardResolver);
-            GameUtil.LogError($"初始化msgpack");
         }
 
         private bool isOpen = false;
