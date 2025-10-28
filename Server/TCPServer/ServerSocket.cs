@@ -112,7 +112,7 @@ public static class ServerSocket
         socket.Bind(new IPEndPoint(IPAddress.Parse(ip), port));
         socket.Listen(clientNum);
 
-        SqlManager.Initialize($"Server={"159.75.164.29"};Database={"unitygamedata"};" +
+        SqlManager.Initialize($"Server={"43.134.133.178"};Database={"unitygamedata"};" +
 $"UserId={"pengjunwei"};Password={"pengjunwei"};Port = {"5001"};Charset=utf8mb4;");
 
         //SqlManager.Initialize($"Server={KeyUtils.GetSqlKey(SqlKey.Server)};Database={KeyUtils.GetSqlKey(SqlKey.Database)};" +
