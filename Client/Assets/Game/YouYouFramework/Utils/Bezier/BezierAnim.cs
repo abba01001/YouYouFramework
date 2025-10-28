@@ -245,7 +245,7 @@ namespace BezierAnimation
         }
         protected void Update()
         {
-            if (updateMode == AnimatorUpdateMode.AnimatePhysics) return;
+            if (updateMode == AnimatorUpdateMode.Fixed) return;
             if (!IsRunning()) return;
             switch (updateMode)
             {
@@ -259,7 +259,7 @@ namespace BezierAnimation
         }
         protected void FixedUpdate()
         {
-            if (updateMode != AnimatorUpdateMode.AnimatePhysics) return;
+            if (updateMode != AnimatorUpdateMode.Fixed) return;
             if (!IsRunning()) return;
             ProcessSegment(Time.fixedDeltaTime);
         }

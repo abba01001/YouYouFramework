@@ -1,81 +1,81 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
-
-public class ChangeAllAudioImporter
-{
-    [MenuItem("Tools/“Ù∆µ/–ﬁ∏ƒÀ˘”–“Ù∆µ∏Ò Ω")]
-    public static void Change()
-    {
-        var audiosGuids = AssetDatabase.FindAssets("t:audioclip");
-        int i = 0;
-        int total = audiosGuids.Length;
-        foreach (var audioGuid in audiosGuids)
-        {
-            i++;
-
-            var audiopath = AssetDatabase.GUIDToAssetPath(audioGuid);
-            var importer = AssetImporter.GetAtPath(audiopath) as AudioImporter;
-            EditorUtility.DisplayProgressBar("–ﬁ∏ƒ“Ù∆µ", audiopath, (float)i / total);
-
-            AudioClip audioClip = AssetDatabase.LoadAssetAtPath<AudioClip>(audiopath);
-            AudioImporterSampleSettings audioImporterSampleSettingsios = new AudioImporterSampleSettings();
-            AudioImporterSampleSettings audioImporterSampleSettingsAndroid = new AudioImporterSampleSettings();
-
-            //–Ë“™”≈ªØµƒµ„”–
-            //°æÀ´…˘µ¿°ø »´≤ø≤…”√µ•…˘µ¿ƒ£ Ω, »Á≤ª–Ë“™¡¢ÃÂ…˘,ø™∆ÙforceMonoø…“‘ºı…Ÿƒ⁄¥Ê∫Õ¥≈≈Ã’º”√
-            importer.forceToMono = true;
-
-            // ¥Û”⁄10s ±Ì æ BGM/ª∑æ≥“Ù,“Ù–ß≤ªª·≈™’‚√¥≥§
-            if (audioClip.length >= 10)
-            {
-                //≤•∑≈“Ù∆µµƒ ±∫Ú¡˜ Ωº”‘ÿ£¨∫√¥¶ «Œƒº˛≤ª’º”√ƒ⁄¥Ê£¨ªµ¥¶ «º”‘ÿµƒ ±∫Ú∂‘IO°¢CPU∂ºª·”–ø™œ˙°£º¥ π√ª”–º”‘ÿ“Ù∆µŒƒº˛£¨“≤ª·’º”–“ª∏ˆ200KBµƒø’º‰°£
-                // Vorbis / MP3: ”–—πÀı£¨±»PCM÷ ¡ø”–œ¬Ωµ£¨≈‰∫œ Quality ÷µΩ¯––—πÀı°£  ∫œ÷–µ»≥§∂»…˘“Ù°£
-
-                audioImporterSampleSettingsios.loadType = AudioClipLoadType.Streaming;
-                audioImporterSampleSettingsios.compressionFormat = AudioCompressionFormat.Vorbis;
-                audioImporterSampleSettingsios.quality = 65f;
-
-                audioImporterSampleSettingsAndroid.loadType = AudioClipLoadType.Streaming;
-                audioImporterSampleSettingsAndroid.compressionFormat = AudioCompressionFormat.Vorbis;
-                audioImporterSampleSettingsAndroid.quality = 65f;
-
-                importer.loadInBackground = false;
-            }
-            // 3-10s ±Ì æ÷–∂œ“Ù–ß
-            if (audioClip.length >= 2 && audioClip.length < 10)
-            {
-                audioImporterSampleSettingsios.loadType = AudioClipLoadType.CompressedInMemory;
-                audioImporterSampleSettingsAndroid.compressionFormat = AudioCompressionFormat.Vorbis;
-                audioImporterSampleSettingsios.quality = 70f;
-
-                audioImporterSampleSettingsAndroid.loadType = AudioClipLoadType.CompressedInMemory;
-                audioImporterSampleSettingsAndroid.compressionFormat = AudioCompressionFormat.Vorbis;
-                audioImporterSampleSettingsAndroid.quality = 70f;
-
-                importer.loadInBackground = false;
-            }
-            // ∂Œ“Ù–ß
-            if (audioClip.length < 2)
-            {
-                importer.loadInBackground = true;
-
-                audioImporterSampleSettingsios.loadType = AudioClipLoadType.DecompressOnLoad;
-                audioImporterSampleSettingsios.compressionFormat = AudioCompressionFormat.ADPCM;
-
-                audioImporterSampleSettingsAndroid.loadType = AudioClipLoadType.DecompressOnLoad;
-                audioImporterSampleSettingsAndroid.compressionFormat = AudioCompressionFormat.Vorbis;
-            }
-
-            //πÿ±’‘§º”‘ÿ
-            importer.preloadAudioData = false;
-
-            importer.SetOverrideSampleSettings(BuildTargetGroup.iOS.ToString(), audioImporterSampleSettingsios);
-            importer.SetOverrideSampleSettings(BuildTargetGroup.Android.ToString(), audioImporterSampleSettingsAndroid);
-
-        }
-        EditorUtility.ClearProgressBar();
-        AssetDatabase.Refresh();
-    }
-}
+// using System.Collections;
+// using System.Collections.Generic;
+// using UnityEditor;
+// using UnityEngine;
+//
+// public class ChangeAllAudioImporter
+// {
+//     [MenuItem("Tools/ÔøΩÔøΩ∆µ/ÔøΩﬁ∏ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ∆µÔøΩÔøΩ Ω")]
+//     public static void Change()
+//     {
+//         var audiosGuids = AssetDatabase.FindAssets("t:audioclip");
+//         int i = 0;
+//         int total = audiosGuids.Length;
+//         foreach (var audioGuid in audiosGuids)
+//         {
+//             i++;
+//
+//             var audiopath = AssetDatabase.GUIDToAssetPath(audioGuid);
+//             var importer = AssetImporter.GetAtPath(audiopath) as AudioImporter;
+//             EditorUtility.DisplayProgressBar("ÔøΩﬁ∏ÔøΩÔøΩÔøΩ∆µ", audiopath, (float)i / total);
+//
+//             AudioClip audioClip = AssetDatabase.LoadAssetAtPath<AudioClip>(audiopath);
+//             AudioImporterSampleSettings audioImporterSampleSettingsios = new AudioImporterSampleSettings();
+//             AudioImporterSampleSettings audioImporterSampleSettingsAndroid = new AudioImporterSampleSettings();
+//
+//             //ÔøΩÔøΩ“™ÔøΩ≈ªÔøΩÔøΩƒµÔøΩÔøΩÔøΩ
+//             //ÔøΩÔøΩÀ´ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ »´ÔøΩÔøΩÔøΩÔøΩÔøΩ√µÔøΩÔøΩÔøΩÔøΩÔøΩƒ£ Ω, ÔøΩÁ≤ªÔøΩÔøΩ“™ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ,ÔøΩÔøΩÔøΩÔøΩforceMonoÔøΩÔøΩÔøΩ‘ºÔøΩÔøΩÔøΩÔøΩ⁄¥ÔøΩÕ¥ÔøΩÔøΩÔøΩ’ºÔøΩÔøΩ
+//             importer.forceToMono = true;
+//
+//             // ÔøΩÔøΩÔøΩÔøΩ10s ÔøΩÔøΩ æ BGM/ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ,ÔøΩÔøΩ–ßÔøΩÔøΩÔøΩÔøΩ≈™ÔøΩÔøΩ√¥ÔøΩÔøΩ
+//             if (audioClip.length >= 10)
+//             {
+//                 //ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ∆µÔøΩÔøΩ ±ÔøΩÔøΩÔøΩÔøΩ ΩÔøΩÔøΩÔøΩÿ£ÔøΩÔøΩ√¥ÔøΩÔøΩÔøΩÔøΩƒºÔøΩÔøΩÔøΩ’ºÔøΩÔøΩÔøΩ⁄¥Ê£¨ÔøΩÔøΩÔøΩÔøΩÔøΩ«ºÔøΩÔøΩÿµÔøΩ ±ÔøΩÔøΩÔøΩIOÔøΩÔøΩCPUÔøΩÔøΩÔøΩÔøΩÔøΩ–øÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ π√ªÔøΩ–ºÔøΩÔøΩÔøΩÔøΩÔøΩ∆µÔøΩƒºÔøΩÔøΩÔøΩ“≤ÔøΩÔøΩ’ºÔøΩÔøΩ“ªÔøΩÔøΩ200KBÔøΩƒø’º‰°£
+//                 // Vorbis / MP3: ÔøΩÔøΩ—πÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩPCMÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ¬ΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ Quality ÷µÔøΩÔøΩÔøΩÔøΩ—πÔøΩÔøΩÔøΩÔøΩÔøΩ ∫ÔøΩÔøΩ–µ»≥ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ
+//
+//                 audioImporterSampleSettingsios.loadType = AudioClipLoadType.Streaming;
+//                 audioImporterSampleSettingsios.compressionFormat = AudioCompressionFormat.Vorbis;
+//                 audioImporterSampleSettingsios.quality = 65f;
+//
+//                 audioImporterSampleSettingsAndroid.loadType = AudioClipLoadType.Streaming;
+//                 audioImporterSampleSettingsAndroid.compressionFormat = AudioCompressionFormat.Vorbis;
+//                 audioImporterSampleSettingsAndroid.quality = 65f;
+//
+//                 importer.loadInBackground = false;
+//             }
+//             // 3-10s ÔøΩÔøΩ æÔøΩ–∂ÔøΩÔøΩÔøΩ–ß
+//             if (audioClip.length >= 2 && audioClip.length < 10)
+//             {
+//                 audioImporterSampleSettingsios.loadType = AudioClipLoadType.CompressedInMemory;
+//                 audioImporterSampleSettingsAndroid.compressionFormat = AudioCompressionFormat.Vorbis;
+//                 audioImporterSampleSettingsios.quality = 70f;
+//
+//                 audioImporterSampleSettingsAndroid.loadType = AudioClipLoadType.CompressedInMemory;
+//                 audioImporterSampleSettingsAndroid.compressionFormat = AudioCompressionFormat.Vorbis;
+//                 audioImporterSampleSettingsAndroid.quality = 70f;
+//
+//                 importer.loadInBackground = false;
+//             }
+//             // ÔøΩÔøΩÔøΩÔøΩ–ß
+//             if (audioClip.length < 2)
+//             {
+//                 importer.loadInBackground = true;
+//
+//                 audioImporterSampleSettingsios.loadType = AudioClipLoadType.DecompressOnLoad;
+//                 audioImporterSampleSettingsios.compressionFormat = AudioCompressionFormat.ADPCM;
+//
+//                 audioImporterSampleSettingsAndroid.loadType = AudioClipLoadType.DecompressOnLoad;
+//                 audioImporterSampleSettingsAndroid.compressionFormat = AudioCompressionFormat.Vorbis;
+//             }
+//
+//             //ÔøΩÿ±ÔøΩ‘§ÔøΩÔøΩÔøΩÔøΩ
+//             importer.preloadAudioData = false;
+//
+//             importer.SetOverrideSampleSettings(BuildTargetGroup.iOS.ToString(), audioImporterSampleSettingsios);
+//             importer.SetOverrideSampleSettings(BuildTargetGroup.Android.ToString(), audioImporterSampleSettingsAndroid);
+//
+//         }
+//         EditorUtility.ClearProgressBar();
+//         AssetDatabase.Refresh();
+//     }
+// }

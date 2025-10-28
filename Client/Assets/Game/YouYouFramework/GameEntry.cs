@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using System.Collections;
 using Main;
 using MessagePack;
-using MessagePack.Resolvers;
-using Unity.VisualScripting;
+using MessagePack.Unity;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -159,15 +158,11 @@ namespace YouYou
             },null,true);
         }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private void Initialize()
         {
-            StaticCompositeResolver.Instance.Register(
-                MessagePack.Resolvers.GeneratedResolver.Instance,
-                MessagePack.Resolvers.StandardResolver.Instance
-            );
-            var option = MessagePackSerializerOptions.Standard.WithResolver(StaticCompositeResolver.Instance);
-
-            MessagePackSerializer.DefaultOptions = option;
+            MessagePackSerializer.DefaultOptions = MessagePackSerializerOptions.Standard.WithResolver(UnityResolver.InstanceWithStandardResolver);
+            GameUtil.LogError($"初始化msgpack");
         }
 
         private bool isOpen = false;
