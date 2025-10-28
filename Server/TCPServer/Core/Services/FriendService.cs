@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static TCPServer.Core.Services.RoleService;
 using TCPServer.Core.DataAccess;
 
 namespace TCPServer.Core.Services
 {
     internal class FriendService
     {
-
         // 定义好友信息模型类
         public class FriendInfo
         {
@@ -30,10 +27,10 @@ OR (user_uuid = @friend_uuid AND friend_uuid = @user_uuid)
 ";
 
             var checkParameters = new Dictionary<string, object>
-    {
-        { "@user_uuid", userUuid },
-        { "@friend_uuid", friendUuid }
-    };
+            {
+                { "@user_uuid", userUuid },
+                { "@friend_uuid", friendUuid }
+            };
 
             var checkResult = await SqlManager.Instance.ExecuteQueryAsync(checkQuery, checkParameters);
 
@@ -43,17 +40,17 @@ OR (user_uuid = @friend_uuid AND friend_uuid = @user_uuid)
                 var status = (int)checkResult[0]["status"];
                 if (status == 2) // 2 - 已同意
                 {
-                    Console.WriteLine("已经是好友了");
+                    LoggerHelper.Instance.Info("已经是好友了");
                     return OperationResult.Success;
                 }
                 else if (status == 3) // 3 - 已拒绝
                 {
-                    Console.WriteLine("好友请求已被拒绝");
+                    LoggerHelper.Instance.Info("好友请求已被拒绝");
                     return OperationResult.Failed;
                 }
                 else if (status == 4) // 4 - 已删除
                 {
-                    Console.WriteLine("好友关系已删除");
+                    LoggerHelper.Instance.Info("好友关系已删除");
                     return OperationResult.Failed;
                 }
             }
@@ -67,18 +64,19 @@ AND status = 5
 ";
 
             var checkBlacklistParameters = new Dictionary<string, object>
-    {
-        { "@user_uuid", userUuid },
-        { "@friend_uuid", friendUuid }
-    };
+            {
+                { "@user_uuid", userUuid },
+                { "@friend_uuid", friendUuid }
+            };
 
-            var blacklistResult = await SqlManager.Instance.ExecuteQueryAsync(checkBlacklistQuery, checkBlacklistParameters);
+            var blacklistResult =
+                await SqlManager.Instance.ExecuteQueryAsync(checkBlacklistQuery, checkBlacklistParameters);
 
             // 如果存在 status = 5 记录，表示被对方拉黑，不能继续添加好友
             if (blacklistResult.Count > 0)
             {
-                Console.WriteLine("您已被对方拉黑，无法添加好友");
-                return OperationResult.Failed;  // 或者返回其他适合的错误码
+                LoggerHelper.Instance.Info("您已被对方拉黑，无法添加好友");
+                return OperationResult.Failed; // 或者返回其他适合的错误码
             }
 
             // 3. 如果没有被拉黑且没有其他好友关系，创建两条好友请求数据
@@ -89,28 +87,28 @@ VALUES (@user_uuid, @friend_uuid, 1, 1),  -- 发送请求的玩家, is_invitor =
 ";
 
             var insertParameters = new Dictionary<string, object>
-    {
-        { "@user_uuid", userUuid },
-        { "@friend_uuid", friendUuid }
-    };
+            {
+                { "@user_uuid", userUuid },
+                { "@friend_uuid", friendUuid }
+            };
 
             try
             {
                 int rowsAffected = await SqlManager.Instance.ExecuteNonQueryAsync(insertQuery, insertParameters);
                 if (rowsAffected > 0)
                 {
-                    Console.WriteLine("好友请求已发送");
+                    LoggerHelper.Instance.Info("好友请求已发送");
                     return OperationResult.Success;
                 }
                 else
                 {
-                    Console.WriteLine("添加好友失败");
+                    LoggerHelper.Instance.Info("添加好友失败");
                     return OperationResult.Failed;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error adding friend: {ex.Message}");
+                LoggerHelper.Instance.Info($"Error adding friend: {ex.Message}");
                 return OperationResult.Failed;
             }
         }
@@ -128,28 +126,28 @@ VALUES (@user_uuid, @friend_uuid, 1, 1),  -- 发送请求的玩家, is_invitor =
 ";
 
             var updateParameters = new Dictionary<string, object>
-    {
-        { "@user_uuid", userUuid },
-        { "@friend_uuid", friendUuid }
-    };
+            {
+                { "@user_uuid", userUuid },
+                { "@friend_uuid", friendUuid }
+            };
 
             try
             {
                 int rowsAffected = await SqlManager.Instance.ExecuteNonQueryAsync(updateQuery, updateParameters);
                 if (rowsAffected > 0)
                 {
-                    Console.WriteLine("好友请求已接受");
+                    LoggerHelper.Instance.Info("好友请求已接受");
                     return OperationResult.Success;
                 }
                 else
                 {
-                    Console.WriteLine("接受好友请求失败");
+                    LoggerHelper.Instance.Info("接受好友请求失败");
                     return OperationResult.Failed;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error accepting friend request: {ex.Message}");
+                LoggerHelper.Instance.Info($"Error accepting friend request: {ex.Message}");
                 return OperationResult.Failed;
             }
         }
@@ -165,28 +163,28 @@ VALUES (@user_uuid, @friend_uuid, 1, 1),  -- 发送请求的玩家, is_invitor =
 ";
 
             var deleteParameters = new Dictionary<string, object>
-    {
-        { "@user_uuid", userUuid },
-        { "@friend_uuid", friendUuid }
-    };
+            {
+                { "@user_uuid", userUuid },
+                { "@friend_uuid", friendUuid }
+            };
 
             try
             {
                 int rowsAffected = await SqlManager.Instance.ExecuteNonQueryAsync(deleteQuery, deleteParameters);
                 if (rowsAffected > 0)
                 {
-                    Console.WriteLine("好友已删除");
+                    LoggerHelper.Instance.Info("好友已删除");
                     return OperationResult.Success;
                 }
                 else
                 {
-                    Console.WriteLine("删除好友失败");
+                    LoggerHelper.Instance.Info("删除好友失败");
                     return OperationResult.Failed;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error deleting friend: {ex.Message}");
+                LoggerHelper.Instance.Info($"Error deleting friend: {ex.Message}");
                 return OperationResult.Failed;
             }
         }
@@ -208,9 +206,9 @@ VALUES (@user_uuid, @friend_uuid, 1, 1),  -- 发送请求的玩家, is_invitor =
     ";
 
             var parameters = new Dictionary<string, object>
-    {
-        { "@user_uuid", userUuid }
-    };
+            {
+                { "@user_uuid", userUuid }
+            };
 
             try
             {
@@ -241,20 +239,20 @@ VALUES (@user_uuid, @friend_uuid, 1, 1),  -- 发送请求的玩家, is_invitor =
                     }
 
                     // 一次性打印所有好友列表信息
-                    Console.WriteLine($"玩家{userUuid}获取好友列表成功:\n" + stringBuilder.ToString());
+                    LoggerHelper.Instance.Info($"玩家{userUuid}获取好友列表成功:\n" + stringBuilder.ToString());
 
                     // 返回成功
                     return OperationResult.Success;
                 }
                 else
                 {
-                    Console.WriteLine("没有找到好友");
+                    LoggerHelper.Instance.Info("没有找到好友");
                     return OperationResult.PropertyNotFound;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error getting friend list: {ex.Message}");
+                LoggerHelper.Instance.Info($"Error getting friend list: {ex.Message}");
                 return OperationResult.PropertyNotFound;
             }
         }
@@ -271,10 +269,10 @@ VALUES (@user_uuid, @friend_uuid, 1, 1),  -- 发送请求的玩家, is_invitor =
     ";
 
             var checkParameters = new Dictionary<string, object>
-    {
-        { "@user_uuid", userUuid },
-        { "@friend_uuid", friendUuid }
-    };
+            {
+                { "@user_uuid", userUuid },
+                { "@friend_uuid", friendUuid }
+            };
 
             try
             {
@@ -295,19 +293,19 @@ VALUES (@user_uuid, @friend_uuid, 1, 1),  -- 发送请求的玩家, is_invitor =
                         int rowsAffected = await SqlManager.Instance.ExecuteNonQueryAsync(insertQuery, checkParameters);
                         if (rowsAffected > 0)
                         {
-                            Console.WriteLine("已成功拉黑好友（尚未建立好友关系）");
+                            LoggerHelper.Instance.Info("已成功拉黑好友（尚未建立好友关系）");
                             return OperationResult.Success;
                         }
                         else
                         {
-                            Console.WriteLine("创建拉黑记录失败");
+                            LoggerHelper.Instance.Info("创建拉黑记录失败");
                             return OperationResult.Failed;
                         }
                     }
                     else
                     {
                         // 如果 isBlock 为 false 且没有建立好友关系，无法解除拉黑
-                        Console.WriteLine("无法解除拉黑，尚未建立好友关系");
+                        LoggerHelper.Instance.Info("无法解除拉黑，尚未建立好友关系");
                         return OperationResult.NotFound;
                     }
                 }
@@ -320,7 +318,7 @@ VALUES (@user_uuid, @friend_uuid, 1, 1),  -- 发送请求的玩家, is_invitor =
                     if (isBlock)
                     {
                         // 拉黑操作，更新为拉黑状态（status = 5）
-                        if (currentStatus != 5)  // 如果不是拉黑状态，则执行拉黑
+                        if (currentStatus != 5) // 如果不是拉黑状态，则执行拉黑
                         {
                             string updateQuery = @"
                         UPDATE friend_list
@@ -329,28 +327,29 @@ VALUES (@user_uuid, @friend_uuid, 1, 1),  -- 发送请求的玩家, is_invitor =
                            OR (user_uuid = @friend_uuid AND friend_uuid = @user_uuid)
                     ";
 
-                            int rowsAffected = await SqlManager.Instance.ExecuteNonQueryAsync(updateQuery, checkParameters);
+                            int rowsAffected =
+                                await SqlManager.Instance.ExecuteNonQueryAsync(updateQuery, checkParameters);
                             if (rowsAffected > 0)
                             {
-                                Console.WriteLine("已成功拉黑好友");
+                                LoggerHelper.Instance.Info("已成功拉黑好友");
                                 return OperationResult.Success;
                             }
                             else
                             {
-                                Console.WriteLine("拉黑失败");
+                                LoggerHelper.Instance.Info("拉黑失败");
                                 return OperationResult.Failed;
                             }
                         }
                         else
                         {
-                            Console.WriteLine("该好友已经处于拉黑状态");
+                            LoggerHelper.Instance.Info("该好友已经处于拉黑状态");
                             return OperationResult.AlreadyBlocked;
                         }
                     }
                     else
                     {
                         // 解除拉黑操作，更新为已同意好友状态（status = 2）
-                        if (currentStatus == 5)  // 只有当前状态是拉黑状态（status = 5）时才能解除拉黑
+                        if (currentStatus == 5) // 只有当前状态是拉黑状态（status = 5）时才能解除拉黑
                         {
                             string updateQuery = @"
                         UPDATE friend_list
@@ -359,21 +358,22 @@ VALUES (@user_uuid, @friend_uuid, 1, 1),  -- 发送请求的玩家, is_invitor =
                            OR (user_uuid = @friend_uuid AND friend_uuid = @user_uuid)
                     ";
 
-                            int rowsAffected = await SqlManager.Instance.ExecuteNonQueryAsync(updateQuery, checkParameters);
+                            int rowsAffected =
+                                await SqlManager.Instance.ExecuteNonQueryAsync(updateQuery, checkParameters);
                             if (rowsAffected > 0)
                             {
-                                Console.WriteLine("已成功解除拉黑好友");
+                                LoggerHelper.Instance.Info("已成功解除拉黑好友");
                                 return OperationResult.Success;
                             }
                             else
                             {
-                                Console.WriteLine("解除拉黑失败");
+                                LoggerHelper.Instance.Info("解除拉黑失败");
                                 return OperationResult.Failed;
                             }
                         }
                         else
                         {
-                            Console.WriteLine("好友当前未处于拉黑状态，无法解除拉黑");
+                            LoggerHelper.Instance.Info("好友当前未处于拉黑状态，无法解除拉黑");
                             return OperationResult.NotBlocked;
                         }
                     }
@@ -381,11 +381,9 @@ VALUES (@user_uuid, @friend_uuid, 1, 1),  -- 发送请求的玩家, is_invitor =
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error toggling block status for friend: {ex.Message}");
+                LoggerHelper.Instance.Info($"Error toggling block status for friend: {ex.Message}");
                 return OperationResult.Failed;
             }
         }
-
-
     }
 }

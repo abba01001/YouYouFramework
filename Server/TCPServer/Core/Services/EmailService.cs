@@ -9,7 +9,8 @@ namespace TCPServer.Core.Services
     public class EmailService
     {
         // 异步发送邮件
-        public static async Task<OperationResult> SendEmailAsync(string senderId, string receiverId, string subject, string content)
+        public static async Task<OperationResult> SendEmailAsync(string senderId, string receiverId, string subject,
+            string content)
         {
             // 插入邮件数据
             string query = $@"
@@ -22,10 +23,10 @@ namespace TCPServer.Core.Services
                 { "@receiverId", receiverId },
                 { "@subject", subject },
                 { "@content", content },
-                { "@sendTime", DateTimeOffset.Now.ToUnixTimeSeconds() },  // 使用Unix时间戳
-                { "@isRead", false },  // 默认邮件为未读
-                { "@isDeleted", false },  // 默认邮件为未删除
-                { "@isGet", false }  // 默认邮件为未领取
+                { "@sendTime", DateTimeOffset.Now.ToUnixTimeSeconds() }, // 使用Unix时间戳
+                { "@isRead", false }, // 默认邮件为未读
+                { "@isDeleted", false }, // 默认邮件为未删除
+                { "@isGet", false } // 默认邮件为未领取
             };
 
             try
@@ -35,17 +36,17 @@ namespace TCPServer.Core.Services
 
                 if (result > 0)
                 {
-                    return OperationResult.Success;  // 成功发送邮件
+                    return OperationResult.Success; // 成功发送邮件
                 }
                 else
                 {
-                    return OperationResult.Failed;  // 邮件发送失败
+                    return OperationResult.Failed; // 邮件发送失败
                 }
             }
             catch (Exception ex)
             {
                 LoggerHelper.Instance.Error("Error sending email: " + ex.Message);
-                return OperationResult.Failed;  // 异常时返回失败
+                return OperationResult.Failed; // 异常时返回失败
             }
         }
 
@@ -56,7 +57,8 @@ namespace TCPServer.Core.Services
             int offset = (currentPage - 1) * pageSize;
 
             // 查询总数
-            string countQuery = "SELECT COUNT(*) FROM email_list WHERE receiver_id = @receiverId AND is_deleted = FALSE";
+            string countQuery =
+                "SELECT COUNT(*) FROM email_list WHERE receiver_id = @receiverId AND is_deleted = FALSE";
             var countParameters = new Dictionary<string, object> { { "@receiverId", userId } };
             int totalCount = Convert.ToInt32(await SqlManager.Instance.ExecuteScalarAsync(countQuery, countParameters));
 
@@ -82,13 +84,13 @@ namespace TCPServer.Core.Services
             {
                 emails.Add(new EmailMsg
                 {
-                    EmailId = Convert.ToInt32(row["email_id"]),  // 使用数据库中的字段名
-                    SenderId = row["sender_id"]?.ToString(),    // 使用数据库中的字段名
+                    EmailId = Convert.ToInt32(row["email_id"]), // 使用数据库中的字段名
+                    SenderId = row["sender_id"]?.ToString(), // 使用数据库中的字段名
                     Subject = row["subject"]?.ToString(),
                     Content = row["content"]?.ToString(),
-                    SendTime = Convert.ToInt64(row["send_time"]),  // 使用Unix时间戳
+                    SendTime = Convert.ToInt64(row["send_time"]), // 使用Unix时间戳
                     IsRead = Convert.ToBoolean(row["is_read"]),
-                    IsGet = Convert.ToBoolean(row["is_get"])  // 处理邮件是否领取
+                    IsGet = Convert.ToBoolean(row["is_get"]) // 处理邮件是否领取
                 });
             }
 
@@ -162,13 +164,15 @@ namespace TCPServer.Core.Services
         }
 
         // 异步给全服玩家发送邮件
-        public static async Task<OperationResult> SendEmailToAllPlayersAsync(string senderId, string subject, string content)
+        public static async Task<OperationResult> SendEmailToAllPlayersAsync(string senderId, string subject,
+            string content)
         {
             // 查询所有玩家的user_uuid
             string query = $"SELECT user_uuid FROM {SqlTable.GameSaveData}"; // 只给在线玩家发送邮件
             try
             {
-                List<Dictionary<string, object>> result = await SqlManager.Instance.ExecuteQueryAsync(query, new Dictionary<string, object>());
+                List<Dictionary<string, object>> result =
+                    await SqlManager.Instance.ExecuteQueryAsync(query, new Dictionary<string, object>());
 
                 // 遍历所有玩家并发送邮件
                 foreach (var row in result)
@@ -177,12 +181,12 @@ namespace TCPServer.Core.Services
                     var emailResult = await SendEmailAsync(senderId, receiverId, subject, content);
                     if (emailResult != OperationResult.Success)
                     {
-                        Console.WriteLine($"Failed to send email to {receiverId}");
-                        continue;  // 继续发送给其他玩家
+                        LoggerHelper.Instance.Info($"Failed to send email to {receiverId}");
+                        continue; // 继续发送给其他玩家
                     }
                 }
 
-                Console.WriteLine("All emails sent successfully.");
+                LoggerHelper.Instance.Info("All emails sent successfully.");
                 return OperationResult.Success;
             }
             catch (Exception ex)

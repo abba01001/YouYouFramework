@@ -1,24 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using TCPServer.Core.DataAccess;
-using System.Security.Cryptography;
-using Protocols.Player;
 using TCPServer.Utils;
 using Protocols.Game;
-using Google.Protobuf.WellKnownTypes;
-using Google.Protobuf;
 using Protocols;
 using System.Net.Sockets;
-using Newtonsoft.Json;
 
 namespace TCPServer.Core.Services
 {
-
     public class RoleService
     {
+        // 更新公会 ID 方法保持不变，已简洁
+        public static async Task UpdateGuildId(string userUuid, string? guildId)
+        {
+            string query = $"UPDATE {SqlTable.GameSaveData} SET guild_id = @guild_id WHERE user_uuid = @user_uuid";
+            var parameters = new Dictionary<string, object>
+            {
+                { "@guild_id", guildId },
+                { "@user_uuid", userUuid }
+            };
+            await SqlManager.Instance.ExecuteNonQueryAsync(query, parameters);
+        }
+
         //更新在线状态
         public static async Task UpdateUserOnlineStatus(string userUuid, bool isOnline)
         {
@@ -27,10 +32,10 @@ namespace TCPServer.Core.Services
 
             // 设置参数
             var parameters = new Dictionary<string, object>
-    {
-        { "@IsOnline", isOnline},
-        { "@UserUuid", userUuid }  // 使用 user_uuid 更新
-    };
+            {
+                { "@IsOnline", isOnline },
+                { "@UserUuid", userUuid } // 使用 user_uuid 更新
+            };
 
             // 执行更新操作
             await SqlManager.Instance.ExecuteNonQueryAsync(query, parameters);
@@ -39,7 +44,7 @@ namespace TCPServer.Core.Services
         // 创建账号
         public static async Task<(OperationResult, string)> CreateUserAsync(string userAccount, string userPassword)
         {
-            int currentTime = (int)DateTimeOffset.UtcNow.ToUnixTimeSeconds();  // 当前时间戳（秒）
+            int currentTime = (int)DateTimeOffset.UtcNow.ToUnixTimeSeconds(); // 当前时间戳（秒）
             string uuid = Guid.NewGuid().ToString();
             string query = $@"
         INSERT INTO {SqlTable.GameSaveData} 
@@ -49,14 +54,14 @@ namespace TCPServer.Core.Services
     ";
 
             var parameters = new Dictionary<string, object>
-    {
-        { "@user_uuid",uuid },
-        { "@user_account", userAccount },
-        { "@user_password", userPassword },
-        { "@is_online", true },  // 添加在线状态参数
-        { "@register_time", currentTime },  // 注册时间为当前时间
-        { "@login_time", currentTime }  // 登录时间为当前时间
-    };
+            {
+                { "@user_uuid", uuid },
+                { "@user_account", userAccount },
+                { "@user_password", userPassword },
+                { "@is_online", true }, // 添加在线状态参数
+                { "@register_time", currentTime }, // 注册时间为当前时间
+                { "@login_time", currentTime } // 登录时间为当前时间
+            };
 
             try
             {
@@ -87,15 +92,15 @@ namespace TCPServer.Core.Services
                 if (user.IsDropUser)
                 {
                     // 玩家断线超过10分钟，认为是掉线用户，允许重连
-                    Console.WriteLine($"用户 {userAccount} 已在线，但超时断线，允许重连！");
+                    LoggerHelper.Instance.Info($"用户 {userAccount} 已在线，但超时断线，允许重连！");
                     // 重新登录，更新在线状态
                     user.RefreshIsOffLine(false);
-                    user.RefreshHeartBeatTime();  // 重置心跳时间
-                    return await ProcessLogin(userAccount, userPassword, currentTime);  // 调用登录处理逻辑
+                    user.RefreshHeartBeatTime(); // 重置心跳时间
+                    return await ProcessLogin(userAccount, userPassword, currentTime); // 调用登录处理逻辑
                 }
 
                 // 如果用户没有超时断线，防止多次登录
-                Console.WriteLine($"用户 {userAccount} 已经在线，拒绝登录！");
+                LoggerHelper.Instance.Info($"用户 {userAccount} 已经在线，拒绝登录！");
                 return (OperationResult.UserAlreadyOnline, string.Empty, new byte[0]);
             }
 
@@ -112,17 +117,17 @@ namespace TCPServer.Core.Services
 ";
 
             var parameters = new Dictionary<string, object>
-    {
-        { "@user_account", userAccount },
-        { "@user_password", userPassword },
-        { "@current_time", currentTime }
-    };
+            {
+                { "@user_account", userAccount },
+                { "@user_password", userPassword },
+                { "@current_time", currentTime }
+            };
 
             var result = await SqlManager.Instance.ExecuteQueryAsync(query, parameters);
 
             if (result.Count == 0)
             {
-                Console.WriteLine("User not found or invalid credentials.");
+                LoggerHelper.Instance.Info("User not found or invalid credentials.");
                 return (OperationResult.UserNotFound, string.Empty, new byte[0]);
             }
 
@@ -132,19 +137,20 @@ namespace TCPServer.Core.Services
             int suspendTimeStart = Convert.ToInt32(result[0]["suspend_time_start"]);
 
             // 4. 将用户添加到在线用户列表
-            RoleService.RefreshOnlineUsers(1,userAccount, new OnlineUser
+            RoleService.RefreshOnlineUsers(1, userAccount, new OnlineUser
             {
                 UserAccount = userAccount,
                 UserUUID = userUuid,
-                IsOffline = false,  // 设置为在线
-                LastHeartbeatTime = DateTime.UtcNow,  // 设置心跳时间
-                Socket = null  // 这里可以放置连接的 Socket 对象，取决于如何管理连接
+                IsOffline = false, // 设置为在线
+                LastHeartbeatTime = DateTime.UtcNow, // 设置心跳时间
+                Socket = null // 这里可以放置连接的 Socket 对象，取决于如何管理连接
             });
             return (OperationResult.Success, userUuid, ServerSocket.handleSubPack.DecompressData(saveData));
         }
 
         // 登录处理逻辑
-        private static async Task<(OperationResult, string, byte[])> ProcessLogin(string userAccount, string userPassword, int currentTime)
+        private static async Task<(OperationResult, string, byte[])> ProcessLogin(string userAccount,
+            string userPassword, int currentTime)
         {
             // 这里是登录数据库验证和返回处理的核心逻辑
             string query = $@"
@@ -159,17 +165,17 @@ namespace TCPServer.Core.Services
 ";
 
             var parameters = new Dictionary<string, object>
-    {
-        { "@user_account", userAccount },
-        { "@user_password", userPassword },
-        { "@current_time", currentTime }
-    };
+            {
+                { "@user_account", userAccount },
+                { "@user_password", userPassword },
+                { "@current_time", currentTime }
+            };
 
             var result = await SqlManager.Instance.ExecuteQueryAsync(query, parameters);
 
             if (result.Count == 0)
             {
-                Console.WriteLine("User not found or invalid credentials.");
+                LoggerHelper.Instance.Info("User not found or invalid credentials.");
                 return (OperationResult.UserNotFound, string.Empty, new byte[0]);
             }
 
@@ -183,7 +189,8 @@ namespace TCPServer.Core.Services
 
 
         // 改密码功能
-        public static async Task<OperationResult> ChangePasswordAsync(string userAccount, string oldPassword, string newPassword)
+        public static async Task<OperationResult> ChangePasswordAsync(string userAccount, string oldPassword,
+            string newPassword)
         {
             // 先获取用户信息
             var result = await GetUserByAccountAsync(userAccount);
@@ -191,15 +198,15 @@ namespace TCPServer.Core.Services
                 return OperationResult.UserNotFound;
             string storedPassword = result["user_password"].ToString();
             // 验证旧密码是否正确
-            Console.WriteLine($"旧密码{oldPassword}===新密码{newPassword}");
+            LoggerHelper.Instance.Info($"旧密码{oldPassword}===新密码{newPassword}");
             if (storedPassword != oldPassword)
                 return OperationResult.PasswordIncorrect;
             // 创建更新的属性字典
             var updatedAttrs = new Dictionary<string, string>
-    {
-        { "UserPassword", newPassword }  // 更新密码
-    };
-            var(res, _) = await UpdateUserPropertyAsync(userAccount, updatedAttrs);
+            {
+                { "UserPassword", newPassword } // 更新密码
+            };
+            var (res, _) = await UpdateUserPropertyAsync(userAccount, updatedAttrs);
             return res;
         }
 
@@ -208,9 +215,9 @@ namespace TCPServer.Core.Services
         {
             string query = $"SELECT * FROM {SqlTable.GameSaveData} WHERE user_account = @user_account";
             var parameters = new Dictionary<string, object>
-    {
-        { "@user_account", userAccount }
-    };
+            {
+                { "@user_account", userAccount }
+            };
 
             try
             {
@@ -220,7 +227,7 @@ namespace TCPServer.Core.Services
                 // 如果查询结果有数据，打印所有的键值对
                 if (result.Count > 0)
                 {
-                    var userData = result[0];  // 获取第一个结果
+                    var userData = result[0]; // 获取第一个结果
                     return userData;
                 }
                 else
@@ -232,11 +239,13 @@ namespace TCPServer.Core.Services
             {
                 LoggerHelper.Instance.Debug($"查询出错: {ex.Message}");
             }
+
             return null;
         }
 
         //查询用户属性
-        public static async Task<(OperationResult Result, Dictionary<string, object> UserProperties)> GetUserPropertiesAsync(string userUuid, List<string> propertiesToQuery, bool isInGameData = true)
+        public static async Task<(OperationResult Result, Dictionary<string, object> UserProperties)>
+            GetUserPropertiesAsync(string userUuid, List<string> propertiesToQuery, bool isInGameData = true)
         {
             // 参数验证
             if (propertiesToQuery == null || propertiesToQuery.Count == 0)
@@ -252,7 +261,8 @@ namespace TCPServer.Core.Services
                 return (OperationResult.Failed, null);
 
             // 构建 SQL 查询语句
-            string selectQuery = $"SELECT {string.Join(", ", queryParts)} FROM {SqlTable.GameSaveData} WHERE user_uuid = @user_uuid";
+            string selectQuery =
+                $"SELECT {string.Join(", ", queryParts)} FROM {SqlTable.GameSaveData} WHERE user_uuid = @user_uuid";
             var parameters = new Dictionary<string, object> { { "@user_uuid", userUuid } };
 
             try
@@ -281,7 +291,8 @@ namespace TCPServer.Core.Services
         }
 
         //更新用户属性
-        public static async Task<(OperationResult Result, Dictionary<string, object> UpdatedValues)> UpdateUserPropertyAsync(string userUuid, Dictionary<string, string> updatedAttrs, bool isInGameData = true)
+        public static async Task<(OperationResult Result, Dictionary<string, object> UpdatedValues)>
+            UpdateUserPropertyAsync(string userUuid, Dictionary<string, string> updatedAttrs, bool isInGameData = true)
         {
             // 参数验证：如果 updatedAttrs 为空或没有任何字段，则返回失败
             if (updatedAttrs == null || updatedAttrs.Count == 0)
@@ -296,10 +307,10 @@ namespace TCPServer.Core.Services
 
             var queryParts = new List<string> { "save_time = @save_time" };
             var parameters = new Dictionary<string, object>
-    {
-        { "@user_uuid", userUuid },
-        { "@save_time", currentTime }
-    };
+            {
+                { "@user_uuid", userUuid },
+                { "@save_time", currentTime }
+            };
 
             // 生成 SQL 更新语句的字段部分
             foreach (var kvp in updatedAttrs)
@@ -313,7 +324,8 @@ namespace TCPServer.Core.Services
                 // 针对特定字段进行转换
                 if (columnName == "save_data")
                 {
-                    parameters[$"@{columnName}"] = ServerSocket.handleSubPack.CompressData(Convert.FromBase64String(value as string));
+                    parameters[$"@{columnName}"] =
+                        ServerSocket.handleSubPack.CompressData(Convert.FromBase64String(value as string));
                 }
                 else
                 {
@@ -325,7 +337,8 @@ namespace TCPServer.Core.Services
             if (queryParts.Count == 1) return (OperationResult.Failed, null);
 
             // 构建 SQL 更新查询语句
-            string updateQuery = $"UPDATE {SqlTable.GameSaveData} SET {string.Join(", ", queryParts)} WHERE user_uuid = @user_uuid";
+            string updateQuery =
+                $"UPDATE {SqlTable.GameSaveData} SET {string.Join(", ", queryParts)} WHERE user_uuid = @user_uuid";
 
             try
             {
@@ -334,7 +347,8 @@ namespace TCPServer.Core.Services
                 if (rowsAffected <= 0) return (OperationResult.Failed, null);
 
                 // 查询更新后的数据
-                string selectQuery = $"SELECT {string.Join(", ", updatedAttrs.Keys.Select(ConvertToColumnName))} FROM {SqlTable.GameSaveData} WHERE user_uuid = @user_uuid";
+                string selectQuery =
+                    $"SELECT {string.Join(", ", updatedAttrs.Keys.Select(ConvertToColumnName))} FROM {SqlTable.GameSaveData} WHERE user_uuid = @user_uuid";
                 var updatedValues = await SqlManager.Instance.ExecuteQueryAsync(selectQuery, parameters);
 
                 // 返回更新结果和新数据
@@ -366,43 +380,45 @@ namespace TCPServer.Core.Services
             return columnName;
         }
 
-      
+
         // 更新挂机时间为当前时间点
         public static async Task<OperationResult> UpdateSuspendTimeStartAsync(string userUuid)
         {
             var updatedAttrs = new Dictionary<string, string>
-        {
-            { "suspend_time_start", ((int)DateTimeOffset.UtcNow.ToUnixTimeSeconds()).ToString() }
-        };
+            {
+                { "suspend_time_start", ((int)DateTimeOffset.UtcNow.ToUnixTimeSeconds()).ToString() }
+            };
 
-            var result = await UpdateUserPropertyAsync(userUuid, updatedAttrs,false);
+            var result = await UpdateUserPropertyAsync(userUuid, updatedAttrs, false);
             return result.Result;
         }
 
         // 更新快速领取奖励索引
-        public static async Task<OperationResult> UpdateQuickGetSuspendRewardIndexAsync(string userUuid,int nowIndex)
+        public static async Task<OperationResult> UpdateQuickGetSuspendRewardIndexAsync(string userUuid, int nowIndex)
         {
             var updatedAttrs = new Dictionary<string, string>
-        {
-            { "quick_get_suspend_reward_index", $"{nowIndex + 1}" }
-        };
+            {
+                { "quick_get_suspend_reward_index", $"{nowIndex + 1}" }
+            };
 
-            var result = await UpdateUserPropertyAsync(userUuid, updatedAttrs,false);
+            var result = await UpdateUserPropertyAsync(userUuid, updatedAttrs, false);
             return result.Result;
         }
 
         // 获取 suspend_time_start, quick_get_suspend_reward_index 和 quick_get_suspend_reward_limit
-        public static async Task<(int suspendTimeStart, int quickGetRewardIndex, int quickGetRewardLimit)> GetSuspendTimeParamsAsync(string userUuid)
+        public static async Task<(int suspendTimeStart, int quickGetRewardIndex, int quickGetRewardLimit)>
+            GetSuspendTimeParamsAsync(string userUuid)
         {
-
-            (OperationResult result1, Dictionary< string, object> dic) = await GetUserPropertiesAsync(userUuid,new List<string>
-            {
-                "suspend_time_start","quick_get_suspend_reward_index","quick_get_suspend_reward_limit"
-            },false);
+            (OperationResult result1, Dictionary<string, object> dic) = await GetUserPropertiesAsync(userUuid,
+                new List<string>
+                {
+                    "suspend_time_start", "quick_get_suspend_reward_index", "quick_get_suspend_reward_limit"
+                }, false);
             foreach (var item in dic)
             {
-                Console.WriteLine($"查询信息{item.Key}==={Convert.ToInt32(item.Value)}");
+                LoggerHelper.Instance.Info($"查询信息{item.Key}==={Convert.ToInt32(item.Value)}");
             }
+
             if (dic.Count > 0)
             {
                 var suspendTimeStart = Convert.ToInt32(dic["suspend_time_start"]);
@@ -411,6 +427,7 @@ namespace TCPServer.Core.Services
 
                 return (suspendTimeStart, quickGetRewardIndex, quickGetRewardLimit);
             }
+
             return (0, 0, 0);
         }
 
@@ -418,7 +435,8 @@ namespace TCPServer.Core.Services
         public static async Task<OperationResult> ResetSuspendParams()
         {
             // 定义更新 quick_get_suspend_reward_index 的查询语句
-            string updateQuery = $"UPDATE {SqlTable.GameSaveData} SET quick_get_suspend_reward_index = 0 WHERE quick_get_suspend_reward_index != 0";
+            string updateQuery =
+                $"UPDATE {SqlTable.GameSaveData} SET quick_get_suspend_reward_index = 0 WHERE quick_get_suspend_reward_index != 0";
             try
             {
                 // 异步执行更新操作
@@ -436,7 +454,7 @@ namespace TCPServer.Core.Services
         }
 
         // 判断用户是否可以领取奖励
-        public static async Task<(OperationResult,SuspendTimeMsg)> CanClaimRewardAsync(string userUuid, int rewardType)
+        public static async Task<(OperationResult, SuspendTimeMsg)> CanClaimRewardAsync(string userUuid, int rewardType)
         {
             // 获取当前时间（秒级）
             int currentTime = (int)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
@@ -449,15 +467,15 @@ namespace TCPServer.Core.Services
     ";
 
             var parameters = new Dictionary<string, object>
-    {
-        { "@user_uuid", userUuid }
-    };
+            {
+                { "@user_uuid", userUuid }
+            };
 
             var result = await SqlManager.Instance.ExecuteQueryAsync(query, parameters);
 
             if (result.Count == 0)
             {
-                Console.WriteLine("User not found.");
+                LoggerHelper.Instance.Info("User not found.");
                 return (OperationResult.UserNotFound, null);
             }
 
@@ -468,42 +486,43 @@ namespace TCPServer.Core.Services
             switch (rewardType)
             {
                 case 1: // 类型1：根据挂机时间来领取奖励
-                    {
-                        int hoursDifference = (currentTime - suspendTimeStart) / 3600; // 计算小时差
-                        Console.WriteLine($"Hours difference: {hoursDifference}");
+                {
+                    int hoursDifference = (currentTime - suspendTimeStart) / 3600; // 计算小时差
+                    LoggerHelper.Instance.Info($"Hours difference: {hoursDifference}");
 
-                        if (hoursDifference > 0)  // 如果小时差大于0，则可以领取
-                        {
-                            await UpdateSuspendTimeStartAsync(userUuid);
-                            return (OperationResult.Success, new SuspendTimeMsg()
-                            {
-                                CanGetReward = true,
-                                Hour = hoursDifference
-                            });
-                        }
-                        else
-                        {
-                            Console.WriteLine("Insufficient hours to claim reward.");
-                            return (OperationResult.Failed, null);
-                        }
-                    }
-                case 2: // 类型2：根据索引和限制来领取奖励
+                    if (hoursDifference > 0) // 如果小时差大于0，则可以领取
                     {
-                        if (quickGetRewardIndex < quickGetRewardLimit)  // 如果 quick_get_suspend_reward_index 小于 quick_get_suspend_reward_limit
+                        await UpdateSuspendTimeStartAsync(userUuid);
+                        return (OperationResult.Success, new SuspendTimeMsg()
                         {
-                            Console.WriteLine($"类型2：根据索引和限制来领取奖励{quickGetRewardIndex}======{quickGetRewardLimit}");
-                            await UpdateQuickGetSuspendRewardIndexAsync(userUuid,quickGetRewardIndex);
-                            return (OperationResult.Success, new SuspendTimeMsg()
-                            {
-                                CanGetReward = true
-                            });
-                        }
-                        else
-                        {
-                            Console.WriteLine("Cannot claim reward. Limit reached.");
-                            return (OperationResult.Failed, null);
-                        }
+                            CanGetReward = true,
+                            Hour = hoursDifference
+                        });
                     }
+                    else
+                    {
+                        LoggerHelper.Instance.Info("Insufficient hours to claim reward.");
+                        return (OperationResult.Failed, null);
+                    }
+                }
+                case 2: // 类型2：根据索引和限制来领取奖励
+                {
+                    if (quickGetRewardIndex <
+                        quickGetRewardLimit) // 如果 quick_get_suspend_reward_index 小于 quick_get_suspend_reward_limit
+                    {
+                        LoggerHelper.Instance.Info($"类型2：根据索引和限制来领取奖励{quickGetRewardIndex}======{quickGetRewardLimit}");
+                        await UpdateQuickGetSuspendRewardIndexAsync(userUuid, quickGetRewardIndex);
+                        return (OperationResult.Success, new SuspendTimeMsg()
+                        {
+                            CanGetReward = true
+                        });
+                    }
+                    else
+                    {
+                        LoggerHelper.Instance.Info("Cannot claim reward. Limit reached.");
+                        return (OperationResult.Failed, null);
+                    }
+                }
                 default:
                     LoggerHelper.Instance.Error("Invalid reward type.");
                     return (OperationResult.Failed, null);
@@ -514,6 +533,7 @@ namespace TCPServer.Core.Services
         // 维护一个字典，记录每个在线用户
         public static int OnlineUserCount => OnlineUsers.Count;
         private static Dictionary<string, OnlineUser> OnlineUsers { get; set; } = new();
+
         public static void RefreshOnlineUsers(int operate, string user_account, OnlineUser user = null)
         {
             if (operate == 1)
@@ -529,6 +549,7 @@ namespace TCPServer.Core.Services
                     _ = RoleService.UpdateUserOnlineStatus(t.UserUUID, false);
                     LoggerHelper.Instance.Info($"用户 {user_account} 断开连接服务器==当前连接用户数{OnlineUserCount - 1}");
                 }
+
                 OnlineUsers.Remove(user_account);
             }
             else if (operate == 3)
@@ -539,19 +560,21 @@ namespace TCPServer.Core.Services
                 }
             }
         }
+
         public static OnlineUser GetOnlineUsers(string user_account)
         {
             if (OnlineUsers.ContainsKey(user_account)) return OnlineUsers[user_account];
             return null;
         }
+
         public class OnlineUser
         {
-            public string UserAccount { get; set; }       // 玩家账号
+            public string UserAccount { get; set; } // 玩家账号
             public string UserUUID { get; set; }
-            public bool IsOffline { get; set; }            // 玩家是否离线
-            public DateTime LastOfflineTime { get; set; }  // 玩家断线时间
+            public bool IsOffline { get; set; } // 玩家是否离线
+            public DateTime LastOfflineTime { get; set; } // 玩家断线时间
             public DateTime LastHeartbeatTime { get; set; } // 玩家最后一次发送心跳包的时间
-            public Socket Socket { get; set; }             // 玩家连接的Socket
+            public Socket Socket { get; set; } // 玩家连接的Socket
 
             public void RefreshHeartBeatTime()
             {
@@ -565,8 +588,6 @@ namespace TCPServer.Core.Services
 
             // 假设我们定义10分钟内的心跳包未更新的玩家为掉线用户
             public bool IsDropUser => (DateTime.UtcNow - LastHeartbeatTime).TotalMinutes > 10;
-
         }
-
     }
 }

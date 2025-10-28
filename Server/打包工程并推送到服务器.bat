@@ -12,7 +12,7 @@ REM 设置项目文件路径
 set PROJECT_FILE=TCPServer\TCPServer.csproj
 
 REM 设置发布目标
-set TARGET_FRAMEWORK=netcoreapp5.0
+set TARGET_FRAMEWORK=net5.0
 set RUNTIME_IDENTIFIER=win-x64
 
 REM 执行发布
@@ -22,7 +22,7 @@ IF %ERRORLEVEL% NEQ 0 (
     echo 发布失败，请检查项目设置或错误信息。
 ) ELSE (
     echo 发布成功，输出文件在当前目录的 Server 文件夹中。
-   "C:\Program Files (x86)\WinSCP\winscp.com" /script="%cd%\upload_script.txt"
+   "%cd%\WinSCP\winscp.com" /script="%cd%\upload_script.txt"
 )
 
 

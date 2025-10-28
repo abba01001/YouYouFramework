@@ -48,7 +48,11 @@ class Program
             {
                 SqlManager.Initialize($"Server={"159.75.164.29"};Database={"unitygamedata"};" +
 $"UserId={"pengjunwei"};Password={"pengjunwei"};Port = {"5001"}");
-                QueryPlayerData();
+                //QueryPlayerData();
+                //GuildService.GetGuildById("82");
+
+                GuildService.ExitGuild("1c1341de-ac5c-463e-b920-5a072dec40a9", "83");
+
             }
             else
             {
@@ -158,7 +162,8 @@ $"UserId={"pengjunwei"};Password={"pengjunwei"};Port = {"5001"}");
         }
         else if (inputStr == "B")
         {
-            GuildService.CreateGuild("6816a8da-12d5-412d-a484-329250dc059a", "测试公会", "测试名字", "测试描述");
+            //GuildService.CreateGuild("76181cf6-8a74-49e6-af25-5824d98f125f", "测试公会", "测试名字", "测试描述");
+            GuildService.ExitGuild("1c1341de-ac5c-463e-b920-5a072dec40a9", "83");
         }
         else if (inputStr == "Q")
         {
@@ -183,7 +188,7 @@ $"UserId={"pengjunwei"};Password={"pengjunwei"};Port = {"5001"}");
     {
         while (true)
         {
-            Console.WriteLine("请输入玩家账号查询游戏数据：");
+            LoggerHelper.Instance.Info("请输入玩家账号查询游戏数据：");
             string playerAccount = Console.ReadLine();
 
             LoggerHelper.Instance.Debug($"开始查询玩家 {playerAccount} 的游戏数据");
@@ -214,7 +219,7 @@ $"UserId={"pengjunwei"};Password={"pengjunwei"};Port = {"5001"}");
             }
 
             // 提问用户是否继续查询
-            Console.WriteLine("是否继续查询其他玩家数据？(Y/N)");
+            LoggerHelper.Instance.Info("是否继续查询其他玩家数据？(Y/N)");
             string continueChoice = Console.ReadLine();
             if (continueChoice.ToUpper() != "Y")
             {

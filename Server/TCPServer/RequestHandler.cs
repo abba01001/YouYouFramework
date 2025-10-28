@@ -80,7 +80,7 @@ public class RequestHandler
 
             byte[] protocolBytes = protocol.ToByteArray();
 
-            LoggerHelper.Instance.Info($"发送消息id==={messageId}==包索引{packetIndex}==包数{packetTotal}==协议长度{protocolBytes.Length}");
+            LoggerHelper.Instance.Debug($"发送消息id==={messageId}==包索引{packetIndex}==包数{packetTotal}==协议长度{protocolBytes.Length}");
             await clinetSocket.socket.SendAsync(new ArraySegment<byte>(protocolBytes), SocketFlags.None);// 异步发送数据
         }
         ServerSocket.ProtocolPool.Return(protocol);
@@ -98,6 +98,27 @@ public class RequestHandler
         GuildListMsg data = new GuildListMsg();
         data.GuildList = await GuildService.GetGuildList(currentPage, pageSize);
         SendMessage(data);
+    }
+
+    public async void c2s_request_join_guild(string memberId, string guildId)
+    {
+        JoinGuildRequest data = new JoinGuildRequest();
+        data.State = await GuildService.JoinGuild(memberId, "玩家名字",guildId,0,1);
+        SendMessage(data);
+    }
+
+    public async void c2s_request_exit_guild(string memberId, string guildId)
+    {
+        ExitGuildRequest data = new ExitGuildRequest();
+        data.State = await GuildService.ExitGuild(memberId, guildId);
+        SendMessage(data);
+    }
+
+    public async void c2s_request_delete_guild(int currentPage, int pageSize)
+    {
+        //GuildListMsg data = new GuildListMsg();
+        //data.GuildList = await GuildService.GetGuildList(currentPage, pageSize);
+        //SendMessage(data);
     }
 
     public async void c2s_request_get_suspend_reward(SuspendTimeMsg data)

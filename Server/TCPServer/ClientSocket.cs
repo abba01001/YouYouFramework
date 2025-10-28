@@ -118,7 +118,7 @@ public class ClientSocket
                 {
                     Protocol receivedMsg = Protocol.Parser.ParseFrom(tempMsg); // 解析收到的消息
                     BaseMessage finalMessage = ServerSocket.handleSubPack.ProcessSubPack(receivedMsg);
-                    LoggerHelper.Instance.Info($"接收消息id==={receivedMsg.MessageId}==包索引{receivedMsg.PacketIndex}==包数{receivedMsg.PacketTotal}==协议长度{msgLength}");
+                    LoggerHelper.Instance.Debug($"接收消息id==={receivedMsg.MessageId}==包索引{receivedMsg.PacketIndex}==包数{receivedMsg.PacketTotal}==协议长度{msgLength}");
                     if (finalMessage != null)
                     {
                         Response.HandleResponse(finalMessage); // 处理完整的消息

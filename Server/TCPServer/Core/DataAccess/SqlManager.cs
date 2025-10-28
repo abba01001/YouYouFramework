@@ -1,7 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Data;
 using System.Threading.Tasks;
 
 namespace TCPServer.Core.DataAccess
@@ -9,37 +9,31 @@ namespace TCPServer.Core.DataAccess
     public class SqlManager
     {
         private static SqlManager _instance;
-        private static readonly object _lock = new object();  // 用于线程同步
+        private static readonly object _lock = new object();
         private readonly string _connectionString;
 
-        // 私有构造函数，防止外部直接创建实例
         private SqlManager(string connectionString)
         {
             _connectionString = connectionString;
         }
 
-        // 静态属性，获取 SqlManager 实例
         public static SqlManager Instance
         {
             get
             {
-                // 只有在实例未创建时才创建新的实例
                 if (_instance == null)
                 {
-                    lock (_lock) // 确保线程安全
+                    lock (_lock)
                     {
                         if (_instance == null)
-                        {
-                            // 使用连接字符串创建实例
-                            throw new InvalidOperationException("SqlManager instance is not initialized. Please initialize it first.");
-                        }
+                            throw new InvalidOperationException("SqlManager not initialized. Call Initialize first.");
                     }
                 }
+
                 return _instance;
             }
         }
 
-        // 设置 SqlManager 实例（用于初始化）
         public static void Initialize(string connectionString)
         {
             if (_instance == null)
@@ -49,181 +43,183 @@ namespace TCPServer.Core.DataAccess
                     if (_instance == null)
                     {
                         _instance = new SqlManager(connectionString);
-                        LoggerHelper.Instance.Info("Sql管理器初始化成功...");
+                        LoggerHelper.Instance.Info("SqlManager initialized.");
                     }
                 }
             }
         }
 
-        // 获取数据库连接，启用连接池（默认启用）
         private MySqlConnection GetConnection()
         {
+            var conn = new MySqlConnection(_connectionString);
+            conn.Open();
+            return conn;
+        }
+
+        #region 同步操作
+
+        public int ExecuteNonQuery(string query, Dictionary<string, object> parameters = null)
+        {
+            using var conn = GetConnection();
+            using var cmd = new MySqlCommand(query, conn);
+            AddParameters(cmd, parameters);
+            LoggerHelper.Instance.Info("ExecuteNonQuery:\nSQL: " + FormatSqlInline(query, parameters));
+            return cmd.ExecuteNonQuery();
+        }
+
+        public object ExecuteScalar(string query, Dictionary<string, object> parameters = null)
+        {
+            using var conn = GetConnection();
+            using var cmd = new MySqlCommand(query, conn);
+            AddParameters(cmd, parameters);
+
+            //LoggerHelper.Instance.Info($"ExecuteScalar: {query} | Parameters: {FormatParameters(parameters)}");
+            LoggerHelper.Instance.Info("ExecuteScalar:\nSQL: " + FormatSqlInline(query, parameters));
+            return cmd.ExecuteScalar();
+        }
+
+        public List<Dictionary<string, object>> ExecuteQuery(string query, Dictionary<string, object> parameters = null)
+        {
+            using var conn = GetConnection();
+            using var cmd = new MySqlCommand(query, conn);
+            AddParameters(cmd, parameters);
+
+            LoggerHelper.Instance.Info("ExecuteQuery:\nSQL: " + FormatSqlInline(query, parameters));
+
+            var results = new List<Dictionary<string, object>>();
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                results.Add(ReadRow(reader));
+            }
+
+            return results;
+        }
+
+        #endregion
+
+        #region 异步操作
+
+        public async Task<int> ExecuteNonQueryAsync(string query, Dictionary<string, object> parameters,
+            MySqlConnection conn, MySqlTransaction tran)
+        {
+            using var cmd = new MySqlCommand(query, conn, tran);
+            AddParameters(cmd, parameters);
+            return await cmd.ExecuteNonQueryAsync();
+        }
+
+        public async Task<object> ExecuteScalarAsync(string query, Dictionary<string, object> parameters,
+            MySqlConnection conn, MySqlTransaction tran)
+        {
+            using var cmd = new MySqlCommand(query, conn, tran);
+            AddParameters(cmd, parameters);
+            return await cmd.ExecuteScalarAsync();
+        }
+
+        public async Task<int> ExecuteNonQueryAsync(string query, Dictionary<string, object> parameters = null)
+        {
+            using var conn = GetConnection();
+            using var cmd = new MySqlCommand(query, conn);
+            AddParameters(cmd, parameters);
+
+            LoggerHelper.Instance.Info("ExecuteNonQueryAsync:\nSQL: " + FormatSqlInline(query, parameters));
+
+            return await cmd.ExecuteNonQueryAsync();
+        }
+
+        public async Task<object> ExecuteScalarAsync(string query, Dictionary<string, object> parameters = null)
+        {
+            using var conn = GetConnection();
+            using var cmd = new MySqlCommand(query, conn);
+            AddParameters(cmd, parameters);
+            LoggerHelper.Instance.Info("ExecuteScalarAsync:\nSQL: " + FormatSqlInline(query, parameters));
+
+            return await cmd.ExecuteScalarAsync();
+        }
+
+        public async Task<List<Dictionary<string, object>>> ExecuteQueryAsync(string query,
+            Dictionary<string, object> parameters = null)
+        {
+            using var conn = GetConnection();
+            using var cmd = new MySqlCommand(query, conn);
+            AddParameters(cmd, parameters);
+
+            LoggerHelper.Instance.Info("ExecuteQueryAsync:\nSQL: " + FormatSqlInline(query, parameters));
+
+            var results = new List<Dictionary<string, object>>();
+            using var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                results.Add(ReadRow(reader));
+            }
+
+            return results;
+        }
+
+        #endregion
+
+        #region 事务操作
+
+        public async Task<T> ExecuteTransactionAsync<T>(Func<MySqlConnection, MySqlTransaction, Task<T>> action)
+        {
+            using var conn = GetConnection();
+            using var transaction = await conn.BeginTransactionAsync();
             try
             {
-                var connection = new MySqlConnection(_connectionString);
-                connection.Open();
-                return connection;
+                T result = await action(conn, transaction);
+                await transaction.CommitAsync();
+                LoggerHelper.Instance.Info("Transaction committed successfully.");
+                return result;
             }
-            catch (MySqlException ex)
+            catch (Exception ex)
             {
-                LoggerHelper.Instance.Error("MySQL 异常: " + ex.Message + "\n异常 Code: " + ex.Number);
+                await transaction.RollbackAsync();
+                LoggerHelper.Instance.Info($"Transaction rolled back. Error: {ex.Message}");
                 throw;
             }
         }
 
-        // 执行查询并返回结果
-        public List<Dictionary<string, object>> ExecuteQuery(string query, Dictionary<string, object> parameters = null)
+        #endregion
+
+        #region 辅助方法
+
+        private void AddParameters(MySqlCommand cmd, Dictionary<string, object> parameters)
         {
-            var results = new List<Dictionary<string, object>>();
-            using (var connection = GetConnection())
-            using (var command = new MySqlCommand(query, connection))
-            {
-                // 参数化查询
-                if (parameters != null)
-                {
-                    foreach (var param in parameters)
-                    {
-                        command.Parameters.Add(new MySqlParameter(param.Key, param.Value ?? DBNull.Value));
-                    }
-                }
-
-                using (var reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        var row = new Dictionary<string, object>();
-                        for (int i = 0; i < reader.FieldCount; i++)
-                        {
-                            var columnName = reader.GetName(i);
-                            var value = reader[i];
-
-                            // 判断是否是 Guid 类型的列，尝试转换
-                            if (value is string && Guid.TryParse(value.ToString(), out Guid guidValue))
-                            {
-                                row[columnName] = guidValue;
-                            }
-                            else
-                            {
-                                row[columnName] = value;
-                            }
-                        }
-                        results.Add(row);
-                    }
-                }
-            }
-            return results;
+            if (parameters == null) return;
+            foreach (var kv in parameters)
+                cmd.Parameters.AddWithValue(kv.Key, kv.Value ?? DBNull.Value);
         }
 
-        // 执行非查询（例如：INSERT, UPDATE, DELETE）
-        public int ExecuteNonQuery(string query, Dictionary<string, object> parameters = null)
+        private Dictionary<string, object> ReadRow(System.Data.Common.DbDataReader reader)
         {
-            using (var connection = GetConnection())
-            using (var command = new MySqlCommand(query, connection))
-            {
-                // 参数化查询
-                if (parameters != null)
-                {
-                    foreach (var param in parameters)
-                    {
-                        command.Parameters.AddWithValue(param.Key, param.Value);
-                    }
-                }
-
-                return command.ExecuteNonQuery();
-            }
+            var row = new Dictionary<string, object>();
+            for (int i = 0; i < reader.FieldCount; i++)
+                row[reader.GetName(i)] = reader.GetValue(i);
+            return row;
         }
 
-        // 执行查询并返回单一结果（例如：COUNT, MAX 等聚合函数）
-        public object ExecuteScalar(string query, Dictionary<string, object> parameters = null)
+        private string FormatSqlInline(string sql, Dictionary<string, object> parameters)
         {
-            using (var connection = GetConnection())
-            using (var command = new MySqlCommand(query, connection))
+            if (parameters != null)
             {
-                // 参数化查询
-                if (parameters != null)
+                foreach (var kv in parameters)
                 {
-                    foreach (var param in parameters)
+                    string valueStr = kv.Value switch
                     {
-                        command.Parameters.AddWithValue(param.Key, param.Value);
-                    }
-                }
-
-                return command.ExecuteScalar();
-            }
-        }
-
-        // 执行异步查询并返回结果
-        public async Task<List<Dictionary<string, object>>> ExecuteQueryAsync(string query, Dictionary<string, object> parameters = null)
-        {
-            var results = new List<Dictionary<string, object>>();
-
-            using (var connection = GetConnection())
-            using (var command = new MySqlCommand(query, connection))
-            {
-                if (parameters != null)
-                {
-                    foreach (var param in parameters)
-                    {
-                        command.Parameters.AddWithValue(param.Key, param.Value);
-                    }
-                }
-
-                using (var reader = await command.ExecuteReaderAsync())
-                {
-                    while (await reader.ReadAsync())
-                    {
-                        var row = new Dictionary<string, object>();
-                        for (int i = 0; i < reader.FieldCount; i++)
-                        {
-                            var fieldName = reader.GetName(i);
-                            var fieldValue = reader[i];
-                            row[fieldName] = fieldValue;
-                        }
-                        results.Add(row);
-                    }
+                        string s => $"'{s}'",
+                        DateTime dt => $"'{dt:yyyy-MM-dd HH:mm:ss}'",
+                        null => "NULL",
+                        _ => kv.Value.ToString()
+                    };
+                    sql = sql.Replace(kv.Key, valueStr);
                 }
             }
 
-            return results;
+            // 压缩多余空白字符为一个空格
+            var parts = sql.Split(new char[] { ' ', '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+            return string.Join(" ", parts);
         }
 
-        // 执行异步非查询操作（例如：INSERT, UPDATE, DELETE）
-        public async Task<int> ExecuteNonQueryAsync(string query, Dictionary<string, object> parameters = null)
-        {
-            using (var connection = GetConnection())
-            using (var command = new MySqlCommand(query, connection))
-            {
-                if (parameters != null)
-                {
-                    string parameterInfo = string.Empty;
-                    foreach (var param in parameters)
-                    {
-                        parameterInfo = string.Join(", ", parameters.Select(p => $"{p.Key}: {p.Value}"));
-                        command.Parameters.AddWithValue(param.Key, param.Value);
-                    }
-                    LoggerHelper.Instance.Info($"执行语句{command.CommandText}");
-                }
-
-                return await command.ExecuteNonQueryAsync();
-            }
-        }
-
-        // 执行异步查询并返回单一结果（例如：COUNT, MAX 等聚合函数）
-        public async Task<object> ExecuteScalarAsync(string query, Dictionary<string, object> parameters = null)
-        {
-            using (var connection = GetConnection())
-            using (var command = new MySqlCommand(query, connection))
-            {
-                if (parameters != null)
-                {
-                    foreach (var param in parameters)
-                    {
-                        command.Parameters.AddWithValue(param.Key, param.Value);
-                    }
-                }
-
-                return await command.ExecuteScalarAsync();
-            }
-        }
+        #endregion
     }
 }

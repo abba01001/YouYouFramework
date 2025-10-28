@@ -29,6 +29,10 @@ public class ResponseHandler
         // 注册心跳包处理器
         RegisterHandler(nameof(HeartBeatMsg), s2c_handle_request_heart_beat);
         RegisterHandler(nameof(GuildListMsg), s2c_handle_request_guild_list);
+        RegisterHandler(nameof(JoinGuildRequest), s2c_handle_request_join_guild);
+        RegisterHandler(nameof(ExitGuildRequest), s2c_handle_request_exit_guild);
+        RegisterHandler(nameof(DeleteGuildRequest), s2c_handle_request_delete_guild);
+
         RegisterHandler(nameof(LoginMsg), s2c_handle_request_login);
         RegisterHandler(nameof(RegisterMsg), s2c_handle_request_register);
         RegisterHandler(nameof(UpdateUserRequest), s2c_handle_request_update_role_info);
@@ -51,7 +55,7 @@ public class ResponseHandler
         if (message.MsgType == MsgType.Server) return;
         if (NeedValidateMessage(message.Type) && JwtHelper.ValidateToken(message.Token) == null)
         {
-            Console.WriteLine($"用户Token验证失败========{message.Type}");
+            LoggerHelper.Instance.Info($"用户Token验证失败========{message.Type}");
             return;
         }
         if (_handlers.TryGetValue(message.Type, out var handler)) handler(message);
@@ -89,6 +93,33 @@ public class ResponseHandler
             request.c2s_request_guild_list(data.GuildList.CurrentPage,data.GuildList.PageSize);
             //NetManager.Instance.Logger.LogMessage(socket,$"解包成功: Item ID: {itemData.ItemId}, Item Name: {itemData.ItemName}");
         });
+    }
+
+    private void s2c_handle_request_join_guild(BaseMessage message)
+    {
+        //处理业务逻辑
+        ProtocolHelper.UnpackData<Protocols.Guild.JoinGuildRequest>(message, async (data) =>
+        {
+            request.c2s_request_join_guild(data.MemberId, data.GuildId);
+        });
+    }
+
+    private void s2c_handle_request_exit_guild(BaseMessage message)
+    {
+        //处理业务逻辑
+        ProtocolHelper.UnpackData<Protocols.Guild.ExitGuildRequest>(message, async (data) =>
+        {
+            request.c2s_request_exit_guild(data.MemberId, data.GuildId);
+        });
+    }
+
+    private void s2c_handle_request_delete_guild(BaseMessage message)
+    {
+        ////处理业务逻辑
+        //ProtocolHelper.UnpackData<Protocols.Guild.DeleteGuildRequest>(message, async (data) =>
+        //{
+        //    request.c2s_request_delete_guild(data.MemberId, data.GuildId);
+        //});
     }
 
     private void s2c_handle_request_login(BaseMessage message)
@@ -140,7 +171,7 @@ public class ResponseHandler
     {
         ProtocolHelper.UnpackData<SuspendTimeMsg>(message, async (data) =>
         {
-            Console.WriteLine($"{nameof(SuspendTimeMsg)}: {data}");
+            LoggerHelper.Instance.Info($"{nameof(SuspendTimeMsg)}: {data}");
             SuspendTimeMsg s = new SuspendTimeMsg();
             if(data.Type == 0)
             {
@@ -164,7 +195,7 @@ public class ResponseHandler
 
     private void s2c_handle_other(BaseMessage message)
     {
-        Console.WriteLine("处理其他请求...");
+        LoggerHelper.Instance.Info("处理其他请求...");
     }
 
     //修改玩家属性
