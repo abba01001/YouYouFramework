@@ -195,6 +195,70 @@ public class YouYouEditor : OdinMenuEditorWindow
         GameObject.DestroyImmediate(pb_go);
         AssetDatabase.SaveAssets();
     }
+    
+    [MenuItem("Assets/工具/Fbx生成预制体(文件夹)")]
+    public static void GeneratePrefabFromFbxInFolder()
+    {
+        // 获取当前选中的文件夹路径
+        string selectedFolder = AssetDatabase.GetAssetPath(Selection.activeObject);
+        if (string.IsNullOrEmpty(selectedFolder) || !Directory.Exists(selectedFolder))
+        {
+            Debug.LogError("请选择一个有效的文件夹");
+            return;
+        }
+
+        // 检查是否选择的是文件夹
+        if (!AssetDatabase.IsValidFolder(selectedFolder))
+        {
+            Debug.LogError("请选择一个有效的文件夹");
+            return;
+        }
+
+        // 设置预制体存放的新文件夹路径
+        string prefabFolder = selectedFolder + "/Prefabs";
+        
+        // 如果文件夹不存在，就创建它
+        if (!Directory.Exists(prefabFolder))
+        {
+            Directory.CreateDirectory(prefabFolder);
+        }
+
+        // 获取文件夹内所有的 .fbx 文件
+        string[] fbxFiles = Directory.GetFiles(selectedFolder, "*.fbx", SearchOption.AllDirectories);
+        
+        if (fbxFiles.Length == 0)
+        {
+            Debug.LogWarning("没有找到任何 .fbx 文件");
+            return;
+        }
+
+        // 循环遍历每个 .fbx 文件
+        foreach (string fbxFilePath in fbxFiles)
+        {
+            // 获取 .fbx 文件的名称
+            string fbxFileName = Path.GetFileNameWithoutExtension(fbxFilePath);
+
+            // 载入 .fbx 文件
+            GameObject fbxPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(fbxFilePath);
+
+            if (fbxPrefab != null)
+            {
+                // 创建预制体并保存
+                string prefabPath = prefabFolder + "/" + fbxFileName + "_pb.prefab";
+                PrefabUtility.SaveAsPrefabAsset(fbxPrefab, prefabPath);
+                Debug.Log($"成功将 {fbxFileName} 转换为预制体，并保存到 {prefabPath}");
+            }
+            else
+            {
+                Debug.LogWarning($"无法加载 {fbxFileName}，请确保它是一个有效的 .fbx 文件");
+            }
+        }
+
+        // 刷新 AssetDatabase，确保所有资源已保存
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+        Debug.Log("所有 .fbx 文件已成功转换为预制体！");
+    }
     #endregion
 
     #region 优化动画片段
