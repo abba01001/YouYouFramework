@@ -14,11 +14,14 @@ public class Cashier : WorkerBase
         base.Init(data);
         agent = GetComponent<NavMeshAgent>();
         cashierPos = FindObjectOfType<BillingDesk>().cashierPos;
-        agent.SetDestination(cashierPos.position);
-        
-    
     }
 
+    public override void StartWork()
+    {
+        base.StartWork();
+        agent.SetDestination(cashierPos.position);
+    }
+    
     public override void Tick()
     {
         if (!IsLiving) return;
@@ -28,7 +31,6 @@ public class Cashier : WorkerBase
             transform.rotation = Quaternion.Euler(0, 0, 0);
             isReachedDestination = true;
         }
-
         if (agent.remainingDistance <= agent.stoppingDistance)
             anim.SetBool("Run", false);
         else

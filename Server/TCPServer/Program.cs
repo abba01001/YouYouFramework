@@ -46,12 +46,12 @@ class Program
             }
             else if (inputStr == "3")
             {
-                SqlManager.Initialize($"Server={"159.75.164.29"};Database={"unitygamedata"};" +
+                SqlManager.Initialize($"Server={"43.134.133.178"};Database={"unitygamedata"};" +
 $"UserId={"pengjunwei"};Password={"pengjunwei"};Port = {"5001"}");
-                //QueryPlayerData();
+                QueryPlayerData();
                 //GuildService.GetGuildById("82");
 
-                GuildService.ExitGuild("1c1341de-ac5c-463e-b920-5a072dec40a9", "83");
+                //GuildService.ExitGuild("1c1341de-ac5c-463e-b920-5a072dec40a9", "83");
 
             }
             else

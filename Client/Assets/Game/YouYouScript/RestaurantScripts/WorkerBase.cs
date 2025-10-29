@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using YouYou;
 
@@ -24,10 +25,25 @@ public abstract class WorkerBase : MonoBehaviour
         triggerDetector.OnExit += HandleOnExit;
         WorkerData = data;
         IsLiving = true;
+        CheckStartWork();
     }
     
     public abstract void Tick(); // 替代 OnUpdate
 
+
+    private async UniTask CheckStartWork()
+    {
+        while (!BuildingSystem.Instance.InitFinish)
+        {
+            await UniTask.Yield();
+        }
+        StartWork();
+    }
+    public virtual void StartWork()
+    {
+        
+    }
+    
     public virtual void HandleOnEnter(Collider other)
     {
     }

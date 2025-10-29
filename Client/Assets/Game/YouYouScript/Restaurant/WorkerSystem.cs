@@ -36,7 +36,6 @@ public class WorkerSystem
         var list = GameEntry.Data.PlayerRoleData.restaurantData.workers;
         foreach (var data in list)
         {
-            await UniTask.Delay((int)(GameUtil.RandomRange(0f, 4f) * 1000));
             SpawnWorker(data);
         }
     }

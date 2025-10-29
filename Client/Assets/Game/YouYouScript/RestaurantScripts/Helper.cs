@@ -27,13 +27,17 @@ public class Helper : WorkerBase
         GetComponent<NavMeshAgent>().speed = WorkerData.speed;
         initialFoodCollectPos = foodCollectPos.transform.localPosition;
         agent.updateRotation = true;
+    }
+
+    public override void StartWork()
+    {
+        base.StartWork();
         FindShelf();
     }
 
     public override void Tick()
     {
         if (!IsLiving) return;
-        
         if (ReachedDestinationOrGaveUp() && canCheck)
         {
             if (_PlayerManager.collectedFood.Count >= _PlayerManager.maxFoodPlayerCarry)
@@ -111,7 +115,7 @@ public class Helper : WorkerBase
         return false;
     }
 
-    //°ÑÊ³Îï·Åµ½¼Ü×ÓÉÏ
+    //ï¿½ï¿½Ê³ï¿½ï¿½Åµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public override void HandleOnStay(Collider other)
     {
         if (other.CompareTag("Shelf"))

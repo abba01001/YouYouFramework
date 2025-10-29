@@ -79,6 +79,7 @@ public class BuildingSystem
         await GenPlayer(); // 生成玩家
         await CustomerSystem.Instance.Init(); // 生成顾客
         await WorkerSystem.Instance.Init(); // 生成协助者
+        
         GameEntry.Event.Dispatch(Constants.EventName.UpdateBuildingsObj,null);
         InitFinish = true;
     }

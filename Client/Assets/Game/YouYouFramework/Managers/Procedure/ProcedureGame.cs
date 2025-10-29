@@ -115,7 +115,7 @@ namespace YouYou
         internal override void OnUpdate()
         {
             base.OnUpdate();
-            if(!initScene) return;
+            if (!initScene) return;
             if (!BuildingSystem.Instance.InitFinish) return;
             
             BuildingSystem.Instance.Update();

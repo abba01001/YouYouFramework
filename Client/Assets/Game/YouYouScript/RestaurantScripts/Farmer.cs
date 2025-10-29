@@ -25,9 +25,15 @@ public class Farmer : WorkerBase
         base.Init(data);
         initialFoodCollectPos = foodCollectPos.transform.localPosition;
         agent.updateRotation = true;
-        FindChicken();
+        
     }
 
+    public override void StartWork()
+    {
+        base.StartWork();
+        FindChicken();
+    }
+    
     public override void Tick()
     {
         if (!IsLiving) return;
