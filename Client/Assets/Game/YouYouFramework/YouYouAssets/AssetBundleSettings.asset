@@ -80,6 +80,7 @@ MonoBehaviour:
     - Game/Download/Material
     - Game/Download/Animations
     - Game/Download/Animator
+    - Game/Download/Skybox
   - Name: "\u573A\u666F"
     IsBuild: 1
     Overall: 0
