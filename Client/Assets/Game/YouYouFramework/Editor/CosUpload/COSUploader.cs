@@ -124,7 +124,13 @@ namespace YouYou
             if(uploadWindow == null) uploadWindow = new UploadResultWindow(); // 创建上传结果窗口
             uploadWindow.Show(); // 显示窗口
             
-            await GetCloudAssetFiles();
+            bool success = await GetCloudAssetFiles();
+            if (!success)
+            {
+                EditorUtility.DisplayDialog("上传结果", "获取云端版本文件时发生异常,请检查网络", "确定");
+                return;
+            }
+            
             try
             {
                 stopwatch.Start(); // 开始计时
@@ -155,27 +161,37 @@ namespace YouYou
         }
 
         
-        public static async Task GetCloudAssetFiles()
+        public static async Task<bool> GetCloudAssetFiles()
         {
             m_CDNVersionDic.Clear();
             m_LocalAssetsVersionDic.Clear();
+    
+            // 尝试加载本地版本文件
             if (File.Exists(localVersionFilePath))
             {
                 m_LocalAssetsVersionDic = GetAssetBundleVersionList(await File.ReadAllBytesAsync(localVersionFilePath));
             }
-            
+
             StringBuilder sbr = StringHelper.PoolNew();
             string url = sbr.AppendFormatNoGC(cloudVersionFilePath).ToString();
+    
             try
             {
                 using (UnityWebRequest request = UnityWebRequest.Get(url))
                 {
                     request.timeout = 2;
                     await request.SendWebRequest();
+
+                    // 请求成功，解析云端版本文件
                     if (request.result == UnityWebRequest.Result.Success)
                     {
                         m_CDNVersionDic = GetAssetBundleVersionList(request.downloadHandler.data);
-
+                        return true;  // 成功返回 true
+                    }
+                    else
+                    {
+                        GameUtil.LogError($"获取云端版本文件失败，HTTP状态码: {request.responseCode}");
+                        return false;  // 请求失败，返回 false
                     }
                 }
             }
@@ -183,8 +199,8 @@ namespace YouYou
             {
                 // 捕获异常并打印错误信息
                 GameUtil.LogError($"获取云端版本文件时发生异常: {ex.Message}");
+                return false;  // 异常发生，返回 false
             }
-            
         }
 
 

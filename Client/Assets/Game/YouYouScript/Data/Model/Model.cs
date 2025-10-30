@@ -93,10 +93,10 @@ public class BagItemData
 [MessagePackObject(keyAsPropertyName: true)]
 public class RestaurantData
 {
-    public int maxFarmerCount = 1;
-    public int maxHelperCount = 3;
-    public int maxCashierCount = 1;
-    public List<CustomerData> customers = new List<CustomerData>();
+    public int maxCustomerCount = 0;
+    public int maxFarmerCount = 0;
+    public int maxHelperCount = 0;
+    public int maxCashierCount = 0;
     public List<WorkerData> workers = new List<WorkerData>();
     public List<BuildingData> buildings = new List<BuildingData>();
     public Dictionary<int, int> readyUnlocks = new Dictionary<int, int>();
@@ -111,7 +111,6 @@ public class BuildingData
 }
 
 [Serializable]
-[MessagePackObject(keyAsPropertyName: true)]
 public class CustomerData
 {
     public int customerId;

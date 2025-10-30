@@ -101,7 +101,7 @@ public class WorkerSystem
         int cashierCount = workers.Count(w => w.WorkerData.type == WorkerType.Cashier);
         int farmerCount = workers.Count(w => w.WorkerData.type == WorkerType.Farmer);
 
-        if (helperCount < restaurantData.maxHelperCount)
+        if (helperCount < 4)//restaurantData.maxHelperCount)
         {
             var data = new WorkerData() { type = WorkerType.Helper, workerId = 0 };
             var selectedFoodList = CustomerSystem.Instance.GetRandomFoodCombination();

@@ -15,6 +15,15 @@ public class FoodPlaceManager : MonoBehaviour
     public List<Transform> shelfPos;
     public List<FoodSpawner> foodSpawners =  new List<FoodSpawner>();
 
+    private void Awake()
+    {
+        customerPoints.Clear();
+        foreach (var VARIABLE in transform.GetComponentsInChildren<CustomerPoints>(true))
+        {
+            customerPoints.Add(VARIABLE);   
+        }
+    }
+
     public Transform GetIdleFoodTransform()
     {
         return shelfPos[collectedFoods.Count];
@@ -42,18 +51,13 @@ public class FoodPlaceManager : MonoBehaviour
         GameEntry.Event.RemoveEventListener(Constants.EventName.UpdateBuildingsObj, null);
     }
 
-    private readonly object lockObject = new object();
     public CustomerPoints GetIdlePoint()
     {
-        lock (lockObject) 
+        foreach (var point in customerPoints)
         {
-            foreach (var point in customerPoints)
+            if (!point.fill)
             {
-                if (!point.fill)
-                {
-                    point.fill = true;
-                    return point;
-                }
+                return point;
             }
         }
         return null; 

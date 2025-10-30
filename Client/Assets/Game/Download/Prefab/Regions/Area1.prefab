@@ -3743,7 +3743,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &9047395273005998502
 Transform:
   m_ObjectHideFlags: 0
@@ -4081,6 +4081,7 @@ GameObject:
   - component: {fileID: 9047395273209519090}
   - component: {fileID: 9047395273209519089}
   - component: {fileID: 9047395273209519088}
+  - component: {fileID: 2563917874895121877}
   m_Layer: 0
   m_Name: Cube (1)
   m_TagString: Untagged
@@ -4159,6 +4160,18 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &2563917874895121877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9047395273209519094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51d0973f0fc5e7d4182a049ee4fa7082, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BuildingBase
 --- !u!1 &9047395273783436410
 GameObject:
   m_ObjectHideFlags: 0

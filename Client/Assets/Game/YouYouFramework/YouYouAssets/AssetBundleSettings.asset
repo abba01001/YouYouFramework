@@ -20,7 +20,7 @@ MonoBehaviour:
   IsForceUploadAsset: 0
   IsUploadAPK: 0
   AssetBundleSavePath: AssetBundles
-  IsCanEditor: 1
+  IsCanEditor: 0
   Datas:
   - Name: "\u7EB9\u7406\u8D44\u6E90"
     IsBuild: 1
@@ -48,6 +48,7 @@ MonoBehaviour:
     - Game/Download/Textures/Tip
     - Game/Download/Textures/Weapon
     - Game/Download/Textures/YouLi
+    - Game/Download/Textures/Game
   - Name: "Hotfix\u7A0B\u5E8F\u96C6"
     IsBuild: 1
     Overall: 1

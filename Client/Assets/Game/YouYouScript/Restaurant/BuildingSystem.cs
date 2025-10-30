@@ -58,6 +58,7 @@ public class BuildingSystem
     private HashSet<int> UnlockRegionIds = new HashSet<int> { 1 };  // 初始化时加入默认的区域 1
     private HashSet<int> _buildingIdsCache = new HashSet<int>();
     private HashSet<int> _buyPointIdsCache = new HashSet<int>();
+    
     public PlayerController PlayerController;
 
     public bool InitFinish { get; set; }
@@ -83,6 +84,8 @@ public class BuildingSystem
         GameEntry.Event.Dispatch(Constants.EventName.UpdateBuildingsObj,null);
         InitFinish = true;
     }
+
+    public bool IsTest = false;
 
     private async UniTask GenPlayer()
     {

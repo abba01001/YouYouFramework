@@ -27,6 +27,7 @@ public partial class Sys_BuildingsDBModel : DataTableDBModelBase<Sys_BuildingsDB
             entity.Id = ms.ReadInt();
             entity.BuildingId = ms.ReadInt();
             entity.BuildingName = ms.ReadUTF8String();
+            entity.Name = ms.ReadUTF8String();
             entity.BuildingType = ms.ReadUTF8String();
             entity.Produce = ms.ReadUTF8String();
             entity.Consume = ms.ReadUTF8String();

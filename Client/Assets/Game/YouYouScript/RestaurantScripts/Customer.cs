@@ -6,6 +6,8 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine.AI;
 using DG.Tweening;
+using TMPro;
+using UnityEngine.UI;
 using YouYou;
 using Random = UnityEngine.Random;
 
@@ -46,7 +48,7 @@ public class Customer : MonoBehaviour
     public NavMeshAgent agent;
     public Animator anim;
     public GameObject packageObj;
-    private CustomerPoints _CustomerPoints;
+    public CustomerPoints _CustomerPoints;
     private bool hasChangeNeutral;
     public bool IsExit { get; set; }
     public CustomerData CustomerData{ get; set; }
@@ -56,6 +58,9 @@ public class Customer : MonoBehaviour
     public CustomerMood currentMood; // 默认情绪是中立
     public List<Food>collectedFoods;
     private TriggerDetector triggerDetector;
+
+    public SpriteRenderer foodSpriteBg;
+    public List<SpriteRenderer> foodSprites; 
 
     public void Init(CustomerData data)
     {
@@ -101,6 +106,29 @@ public class Customer : MonoBehaviour
         agent.updateRotation = true;
         IsExit = false;
         IsLiving = true;
+        RefresFoodSprite(true);
+    }
+
+    private void RefresFoodSprite(bool init = false)
+    {
+        if (init)
+        {
+            foreach (var s in foodSprites)
+            {
+                s.transform.parent.gameObject.MSetActive(false);
+                s.SetSpriteByAtlas(Constants.AtlasPath.Game,$"icon-tomato", true);
+            }
+        }
+
+        int index = 0;
+        foreach (var f in CustomerData.foodList)
+        {
+            if (index >= foodSprites.Count) break;
+            foodSprites[index].transform.parent.gameObject.MSetActive(true);
+            foodSprites[index].transform.parent.GetComponentInChildren<TextMeshPro>(true).text = $"{f.hasCount}/{f.needCount}";
+            index++;
+        }
+        foodSpriteBg.size = new Vector2(0.8f,index == 1 ? 0.45f : index == 2 ? 0.9f : index == 3 ? 1.25f : 1.65f);
     }
 
 
@@ -111,7 +139,7 @@ public class Customer : MonoBehaviour
             if (other.gameObject == _CustomerPoints.gameObject)
             {
                 agent.updateRotation = false;
-                StartCoroutine(SmoothRotate(other.transform.rotation));
+                SmoothRotate(other.transform.rotation.eulerAngles);
                 modTimeAction ??= GameEntry.Time.CreateTimerLoop(this, 1, -1, (_) => { ShoppingTime += 1; });
             }
         }
@@ -138,6 +166,7 @@ public class Customer : MonoBehaviour
                 CollectFood(building.Entity.Consume);
                 food.GotoCustomer(slotList[collectedFoods.Count]);
                 collectedFoods.Add(food);
+                RefresFoodSprite();
             }
 
         }
@@ -212,18 +241,11 @@ public class Customer : MonoBehaviour
         }
     }
     
-    private IEnumerator SmoothRotate(Quaternion targetRotation)
+    private void SmoothRotate(Vector3 targetRotation)
     {
-        float timeElapsed = 0f;
-        float rotationDuration = .2f; // 旋转的时间，单位为秒
-        Quaternion initialRotation = transform.rotation;
-        while (timeElapsed < rotationDuration)
+        transform.DORotate(targetRotation, .2f).OnComplete(() =>
         {
-            transform.rotation = Quaternion.Lerp(initialRotation, targetRotation, timeElapsed / rotationDuration);
-            timeElapsed += Time.deltaTime;
-            yield return null;
-        }
-        transform.rotation = targetRotation; // 最终确保旋转到目标值
+        });
     }
 
     public void GoToBillingCounter()
@@ -310,7 +332,10 @@ public class Customer : MonoBehaviour
         {
             if (ReachedDestinationOrGaveUp())
             {
-                StartCoroutine(SmoothRotate(Quaternion.Euler(0,-90,0)));
+                if (IsInCashier)
+                {
+                    SmoothRotate(new Vector3(0,-90,0));
+                }
                 // transform.rotation = Quaternion.Euler(0,-90,0);
                 counterLook = false;
             }
@@ -352,9 +377,10 @@ public class Customer : MonoBehaviour
 
                 if (obj != null)
                 {
-                    _CustomerPoints = obj.GetComponent<FoodPlaceManager>().GetIdlePoint();
-                    if (_CustomerPoints != null)
+                    CustomerPoints point = obj.GetComponent<FoodPlaceManager>().GetIdlePoint();
+                    if (point != null && !CustomerSystem.Instance.CheckPointIsOccupied(point))
                     {
+                        _CustomerPoints = point;
                         _CustomerPoints.customerName = transform.gameObject.name;
                         _CustomerPoints.fill = true;
                         agent.SetDestination(_CustomerPoints.transform.position);

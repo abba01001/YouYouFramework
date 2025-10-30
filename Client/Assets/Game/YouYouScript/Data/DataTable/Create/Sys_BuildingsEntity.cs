@@ -18,6 +18,11 @@ namespace YouYou
         public string BuildingName;
 
         /// <summary>
+        /// 名
+        /// </summary>
+        public string Name;
+
+        /// <summary>
         /// 类型
         /// </summary>
         public string BuildingType;

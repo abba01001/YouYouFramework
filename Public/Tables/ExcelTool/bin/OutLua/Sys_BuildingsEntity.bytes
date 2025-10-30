@@ -1,14 +1,15 @@
-Sys_BuildingsEntity = { Id = 0, BuildingId = 0, BuildingName = "", BuildingType = "", Produce = "", Consume = "", Cost = 0, Position = "", Rotation = "", BuyPoinrPos = "", RegionId = 0, isVisible = 0, Dependencies = "" }
+Sys_BuildingsEntity = { Id = 0, BuildingId = 0, BuildingName = "", Name = "", BuildingType = "", Produce = "", Consume = "", Cost = 0, Position = "", Rotation = "", BuyPoinrPos = "", RegionId = 0, isVisible = 0, Dependencies = "" }
 
 Sys_BuildingsEntity.__index = Sys_BuildingsEntity;
 
-function Sys_BuildingsEntity.New(Id, BuildingId, BuildingName, BuildingType, Produce, Consume, Cost, Position, Rotation, BuyPoinrPos, RegionId, isVisible, Dependencies)
+function Sys_BuildingsEntity.New(Id, BuildingId, BuildingName, Name, BuildingType, Produce, Consume, Cost, Position, Rotation, BuyPoinrPos, RegionId, isVisible, Dependencies)
     local self = { };
     setmetatable(self, Sys_BuildingsEntity);
 
     self.Id = Id;
     self.BuildingId = BuildingId;
     self.BuildingName = BuildingName;
+    self.Name = Name;
     self.BuildingType = BuildingType;
     self.Produce = Produce;
     self.Consume = Consume;

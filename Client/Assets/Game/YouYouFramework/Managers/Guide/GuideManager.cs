@@ -61,7 +61,7 @@ public class GuideManager
     
     public void OnUpdate()
     {
-        if(Constants.IsShieldGuide) return;//屏蔽引导系统
+        if (Constants.IsShieldGuide) return;//屏蔽引导系统
         if (!GameEntry.Net.IsLoginGame) return;
         if (IsGuiding) return;
         if (TriggerEventQueue.Count > 0 && CurTriggerEvent == String.Empty)
@@ -94,8 +94,7 @@ public class GuideManager
 
     private bool CheckGuideIsEnable(Sys_GuideEntity entity)
     {
-        if (entity.IsEnable == 1) return true;
-        return true;
+        return entity.IsEnable == 1;
     }
 
     private async UniTask HandleGuideDetail(Sys_GuideEntity entity)

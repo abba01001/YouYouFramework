@@ -70,6 +70,7 @@ static partial class Constants
         public const string LoginSuccess = "LoginSuccess";
 
         public const string FinishInputName = "FinishInputName";
+        public const string FirstCustomer = "FirstCustomer";
         public const string TriggerGuideEvent = "TriggerGuideEvent";
         public const string TriggerDialogue = "TriggerDialogue";
         public const string InitBattleData = "InitBattleData";
@@ -118,6 +119,7 @@ static partial class Constants
         public const string LordPanel = "Assets/Game/Download/Textures/LordPanel/LordPanel.spriteatlas";
         public const string Equip = "Assets/Game/Download/Textures/Equip/Equip.spriteatlas";
         public const string Daoju = "Assets/Game/Download/Textures/DaoJu/DaoJu.spriteatlas";
+        public const string Game = "Assets/Game/Download/Textures/Game/Game.spriteatlas";
         public const string Common = "Assets/Game/Download/Textures/Common/Common.spriteatlas";
     }
     

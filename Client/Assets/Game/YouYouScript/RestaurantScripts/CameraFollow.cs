@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using DG.Tweening;
+using Protocols;
 using UnityEngine;
 using YouYou;
 
@@ -12,8 +14,12 @@ public class CameraFollow : MonoBehaviour
     public Transform inputTrans;
     Vector3 velocity;
 
+    public Vector3 recordPos;
+    public Vector3 recordRota;
+    public bool isTest = false;
     void LateUpdate()
     {
+        if (isTest) return;
         if (BuildingSystem.Instance.PlayerController != null)
         {
             Vector3 pos = Vector3.zero;
@@ -30,6 +36,8 @@ public class CameraFollow : MonoBehaviour
             pos.y = inputTrans.position.y + height;
             pos.z = inputTrans.position.z - distance;
             transform.position = Vector3.SmoothDamp(transform.position, pos+offset, ref velocity, smoothness);
+            recordPos = transform.position;
+            recordRota = transform.rotation.eulerAngles;
         }
 
     }
@@ -49,4 +57,33 @@ public class CameraFollow : MonoBehaviour
 
     //}
 
+    public void Test()
+    {
+        isTest = true;
+    }
+    
+    public void Update()
+    {
+        // if (Input.GetKeyDown(KeyCode.Q))
+        // {
+        //     Test();
+        //     transform.DOMove(new Vector3(-9, 5, -1), 1f);
+        //     transform.DORotate(new Vector3(0, -90, 0), 1f);
+        // }
+        // if (Input.GetKeyDown(KeyCode.W))
+        // {
+        //     Test();
+        //     
+        //     Vector3 pos = Vector3.zero;
+        //     pos.x = inputTrans.transform.position.x;
+        //     pos.y = inputTrans.position.y + height;
+        //     pos.z = inputTrans.position.z - distance;
+        //     
+        //     transform.DOMove(pos+offset, 1f);
+        //     transform.DORotate(recordRota, 1f).OnComplete(() =>
+        //     {
+        //         isTest = false;
+        //     });
+        // }
+    }
 }

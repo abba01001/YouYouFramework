@@ -10,26 +10,20 @@ public class CustomerSystem
 {
     private static CustomerSystem _instance;
     public static CustomerSystem Instance => _instance ??= new CustomerSystem();
-    
-    private List<Customer> customers = new();
+    public List<CustomerData> TempCustomerDatas = new List<CustomerData>();
+    private List<Customer> TempCustomers = new();
     private readonly Dictionary<int, Customer> idToCustomer = new();
-    private int defaultMaxCustomers = 16;
 
     // 初始化
     public async UniTask Init()
     {
-        // 加载已存在的顾客
-        var list = GameEntry.Data.PlayerRoleData.restaurantData.customers;
-        foreach (var data in list)
-        {
-            SpawnCustomer(data);
-        }
+
     }
 
     // 检查是否需要生成新的顾客
     private void AddWorkerIfNeeded()
     {
-        if (customers.Count < defaultMaxCustomers)
+        if (TempCustomers.Count < 10)//GameEntry.Data.PlayerRoleData.restaurantData.maxCustomerCount)
         {
             // 如果顾客少于上限，增加一个顾客数据
             CustomerData data = new CustomerData();
@@ -39,7 +33,7 @@ public class CustomerSystem
             data.mood = CustomerMood.Neutral;
             RandomEmotion(data);
             RandomFood(data);
-            GameEntry.Data.PlayerRoleData.restaurantData.customers.Add(data);
+            TempCustomerDatas.Add(data);
             // 创建顾客对象并加入列表
             SpawnCustomer(data);
         }
@@ -135,10 +129,19 @@ public class CustomerSystem
         int index = GameUtil.RandomRange(0, bornPos.Count);
         obj.gameObject.transform.position = bornPos[index];
         
-        customers.Add(customer);
+        TempCustomers.Add(customer);
         idToCustomer[data.customerId] = customer;
     }
 
+    private void HandleFirstCustomer()
+    {
+        if (GameEntry.Data.PlayerRoleData.restaurantData.maxCustomerCount != 0) return;
+        if (BuildingSystem.Instance.IsTest)
+        {
+            GameEntry.Data.PlayerRoleData.restaurantData.maxCustomerCount++;
+            GameEntry.Event.Dispatch(Constants.EventName.TriggerGuideEvent,Constants.EventName.FirstCustomer);
+        }
+    }
 
     private float spawnCooldown = 2f; // 每隔2秒生成一个顾客
     private float spawnTimer = 0f;
@@ -146,10 +149,11 @@ public class CustomerSystem
     public void Update()
     {
         spawnTimer += Time.deltaTime;
-    
-        for (int i = customers.Count - 1; i >= 0; i--)
+        HandleFirstCustomer();
+        
+        for (int i = TempCustomers.Count - 1; i >= 0; i--)
         {
-            var customer = customers[i];
+            var customer = TempCustomers[i];
             if (customer.IsLiving)
             {
                 customer.Tick();
@@ -167,13 +171,22 @@ public class CustomerSystem
         }
     }
 
+    public bool CheckPointIsOccupied(CustomerPoints points)
+    {
+        foreach (var customer in TempCustomers)
+        {
+            if (customer._CustomerPoints == points) return true;
+        }
+        return false;
+    }
+    
     public void RemoveCustomer(Customer customer)
     {
-        if (!customers.Contains(customer)) return;
+        if (!TempCustomers.Contains(customer)) return;
 
-        customers.Remove(customer);
+        TempCustomers.Remove(customer);
         idToCustomer.Remove(customer.CustomerData.customerId);
-        GameEntry.Data.PlayerRoleData.restaurantData.customers.Remove(customer.CustomerData);
+        TempCustomerDatas.Remove(customer.CustomerData);
         GameObject.Destroy(customer.gameObject);
     }
 

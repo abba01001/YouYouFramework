@@ -19,7 +19,7 @@ public class NavMeshBakeEditorInspector : Editor
         // 加按钮
         if (GUILayout.Button("更新所有的BuyPoint"))
         {
-            // script.Refresh(); // 调用你类里的方法
+            script.Refresh(); // 调用你类里的方法
         }
 
         // // 你还可以加更多按钮
