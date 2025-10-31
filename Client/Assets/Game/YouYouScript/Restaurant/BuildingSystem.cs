@@ -427,13 +427,13 @@ public class BuildingSystem
 
     
     //获取货架建筑
-    public GameObject GetShelfBuilding(string food)
+    public BuildingBase GetShelfBuilding(string food)
     {
         foreach (var build in _buildings)
         {
             if (build.Entity.BuildingType == "Shelf" && build.Entity.Consume == food)
             {
-                return build.gameObject;
+                return build;
             }
         }
         return null;

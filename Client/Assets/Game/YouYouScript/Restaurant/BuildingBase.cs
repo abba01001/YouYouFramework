@@ -11,9 +11,9 @@ public class BuildingBase : MonoBehaviour
     private TriggerDetector triggerDetector;
     public Sys_BuildingsEntity Entity;
     public List<FoodSpawner> foodSpawners =  new List<FoodSpawner>();
-    public List<CustomerPoints> customerPoints =  new List<CustomerPoints>();
+    public List<CustomerPoint> customerPoints =  new List<CustomerPoint>();
     public List<InputSlots> shelfPos =  new List<InputSlots>();
-    public List<Food> collectedFoods =   new List<Food>();
+    public List<Food> collectedFood =   new List<Food>();
     public void Init(Sys_BuildingsEntity entity)
     {
         Entity =  entity;
@@ -32,7 +32,7 @@ public class BuildingBase : MonoBehaviour
             foodSpawners.Add(f);
         }
         customerPoints.Clear();
-        foreach (var f in transform.GetComponentsInChildren<CustomerPoints>(true))
+        foreach (var f in transform.GetComponentsInChildren<CustomerPoint>(true))
         {
             customerPoints.Add(f);
         }
@@ -54,7 +54,30 @@ public class BuildingBase : MonoBehaviour
     
     private void HandleOnStay(Collider other)
     {
+        if (Entity.BuildingType == "Produce" && other.gameObject.CompareTag("Player"))
+        {
+            foreach (var foodSpawner in foodSpawners)
+            {
+                foodSpawner.JumpFoodToPlayer(other);
+            }
+        }
+        if (Entity.BuildingType == "Consume" && other.gameObject.CompareTag("Customer"))
+        {
+            Customer customer = other.GetComponent<Customer>();
+            if (CustomerSystem.Instance.CheckIsFullCollect(customer.CharacterData, Entity.Consume))
+            {
+                customer.SetFullCollectFlag();
+                //释放顾客位置
+                return;
+            }
 
+            if (collectedFood.Count > 0)
+            {
+                Food food = collectedFood[collectedFood.Count - 1];
+                ClearFoodToBuilding(food);
+                customer.CollectFood(food);
+            }
+        }
     }
     
     private void HandleOnExit(Collider other)
@@ -70,24 +93,30 @@ public class BuildingBase : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (Entity.BuildingType == "Produce" && other.gameObject.CompareTag("Player"))
-        {
-            foreach (var foodSpawner in foodSpawners)
-            {
-                foodSpawner.JumpFoodToPlayer(other);
-            }
-        }
+
     }
     
     
     public Transform GetIdleFoodTransform()
     {
-        return shelfPos[collectedFoods.Count].transform;
+        return shelfPos[collectedFood.Count].transform;
+    }
+        
+    public CustomerPoint GetIdlePoint()
+    {
+        foreach (var point in customerPoints)
+        {
+            if (!point.fill)
+            {
+                return point;
+            }
+        }
+        return null; 
     }
     
     public bool CanPlaceFood()
     {
-        return collectedFoods.Count < shelfPos.Count;
+        return collectedFood.Count < shelfPos.Count;
     }
 
     public void AddFoodToBuilding(Food food)
@@ -95,6 +124,11 @@ public class BuildingBase : MonoBehaviour
         food.PlaceFood(GetIdleFoodTransform());
         food.transform.parent = transform;
         food.goToCustomer = true;
-        collectedFoods.Add(food);
+        collectedFood.Add(food);
+    }
+    
+    public void ClearFoodToBuilding(Food food)
+    {
+        collectedFood.Remove(food);
     }
 }

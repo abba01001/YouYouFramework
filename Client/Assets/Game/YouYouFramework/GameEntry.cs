@@ -198,8 +198,10 @@ namespace YouYou
         
         private void Test4()
         {
-            GameUtil.LogError(typeof(FormMain).FullName);
-            GameEntry.UI.OpenUIFormByName("FormChangeName");
+            // GameUtil.LogError(typeof(FormMain).FullName);
+            // GameEntry.UI.OpenUIFormByName("FormChangeName");
+            GameEntry.Data.InitGameData(null);
+            GameEntry.Data.SaveData(true);
             return;
             GameEntry.Data.InitGameData(null);
             GameEntry.Data.SaveData(true);

@@ -11,87 +11,35 @@ using UnityEngine.UI;
 using YouYou;
 using Random = UnityEngine.Random;
 
-public enum CustomerMood
-{
-    Happy,   // 高兴的顾客，购物效率高，买得更多
-    Neutral, // 中立的顾客，购物行为正常
-    Annoyed, // 不满的顾客，购物效率低，可能放弃购物
-    Anxious,  // 焦虑的顾客，购物效率低，反复挑选商品
-    Angry //愤怒的顾客，离开购物
-}
 
-public class Customer : MonoBehaviour
+public class Customer : CharacterBase
 {
     [SerializeField] private Transform panel;
     private List<Transform> slotList = new List<Transform>();
     
-    private bool isCollecting = false;
-    private bool IsBilling = true;
-    public bool counterLook;
     private BillingDesk billingDesk;
     public Transform handPos;
-
-    private bool isInCashier;
-    public bool IsInCashier
-    {
-        get => isInCashier;
-        set
-        {
-            isInCashier = value;
-            counterLook = true;
-        }
-    }
 
     public GameObject moneyPrefab, trolly;
     public MeshFilter hat;
     public SkinnedMeshRenderer skin;
-    public NavMeshAgent agent;
     public Animator anim;
     public GameObject packageObj;
-    public CustomerPoints _CustomerPoints;
-    private bool hasChangeNeutral;
-    public bool IsExit { get; set; }
-    public CustomerData CustomerData{ get; set; }
-    public bool IsLiving{ get; set; }
-    private int ShoppingTime { get; set; }
-    private TimeAction modTimeAction;
-    public CustomerMood currentMood; // 默认情绪是中立
-    public List<Food>collectedFoods;
-    private TriggerDetector triggerDetector;
+    public CustomerPoint tempCustomerPoint;
 
     public SpriteRenderer foodSpriteBg;
-    public List<SpriteRenderer> foodSprites; 
+    public List<SpriteRenderer> foodSprites;
 
-    public void Init(CustomerData data)
+    private bool fullCollectFlag = false;
+    public override void Init(CharacterData data)
     {
-        IsInCashier = false;
-        if (triggerDetector == null)
-        {
-            triggerDetector = gameObject.AddComponent<TriggerDetector>();
-        }
-        else
-        {
-            triggerDetector.UnsubscribeAll();
-        }
+        base.Init(data);
         
-        // 绑定触发器事件
-        triggerDetector.OnEnter += HandleOnEnter;
-        triggerDetector.OnStay += HandleOnStay;
-        triggerDetector.OnExit += HandleOnExit;
-        
-        foreach (var f in collectedFoods.ToList())
-        {
-            Destroy(f.gameObject);
-        }
-        collectedFoods.Clear();
         packageObj.MSetActive(false);
         trolly.MSetActive(true);
-        isCollecting = false;
-        IsBilling = false;
-        _CustomerPoints?.Clean();
-        _CustomerPoints = null;
-        ShoppingTime = 0;
-        CustomerData = data;
+        fullCollectFlag = false;
+        tempCustomerPoint?.Clean();
+        tempCustomerPoint = null;
         slotList.Clear();
         foreach (Transform child in transform.Find("TrolleySlots"))
         {
@@ -100,8 +48,6 @@ public class Customer : MonoBehaviour
         
         skin.material.color = GameEntry.Instance.customerColors[data.hatColorIndex];
         hat.mesh = GameEntry.Instance.customerHats[data.meshColorIndex];
-        currentMood = data.mood;
-        billingDesk = BuildingSystem.Instance.GetBillingDesk();
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = true;
         IsExit = false;
@@ -109,7 +55,7 @@ public class Customer : MonoBehaviour
         RefresFoodSprite(true);
     }
 
-    private void RefresFoodSprite(bool init = false)
+    public void RefresFoodSprite(bool init = false)
     {
         if (init)
         {
@@ -121,7 +67,7 @@ public class Customer : MonoBehaviour
         }
 
         int index = 0;
-        foreach (var f in CustomerData.foodList)
+        foreach (var f in CharacterData.foodList)
         {
             if (index >= foodSprites.Count) break;
             foodSprites[index].transform.parent.gameObject.MSetActive(true);
@@ -131,145 +77,20 @@ public class Customer : MonoBehaviour
         foodSpriteBg.size = new Vector2(0.8f,index == 1 ? 0.45f : index == 2 ? 0.9f : index == 3 ? 1.25f : 1.65f);
     }
 
-
-    private void HandleOnEnter(Collider other)
-    {
-        if(_CustomerPoints == null) return;
-        if (other.CompareTag("CustomerPoint") && !IsBilling)
-        {
-            if (other.gameObject == _CustomerPoints.gameObject)
-            {
-                agent.updateRotation = false;
-                SmoothRotate(other.transform.rotation.eulerAngles);
-                modTimeAction ??= GameEntry.Time.CreateTimerLoop(this, 1, -1, (_) => { ShoppingTime += 1; });
-            }
-        }
-    }
     
-    private void HandleOnStay(Collider other)
+    private void SmoothRotate(Vector3 targetRotation,float duration = 0.2f)
     {
-        BuildingBase building = other.gameObject.GetComponent<BuildingBase>();
-        if (building != null && building.Entity.BuildingType == "Shelf" && ReachedDestinationOrGaveUp())
-        {
-            FoodPlaceManager shelf = other.GetComponent<FoodPlaceManager>();
-            if (CustomerSystem.Instance.CheckIsFullCollect(CustomerData,shelf.shelfFoodName))
-            {
-                isCollecting = false;
-                _CustomerPoints?.Clean();
-                _CustomerPoints = null;
-                return;
-            }
-            if (shelf.collectedFoods.Count > 0)
-            {
-                Food food = shelf.collectedFoods[shelf.collectedFoods.Count - 1];
-                shelf.collectedFoods.Remove(food);
-
-                CollectFood(building.Entity.Consume);
-                food.GotoCustomer(slotList[collectedFoods.Count]);
-                collectedFoods.Add(food);
-                RefresFoodSprite();
-            }
-
-        }
-    }
-    
-    private void UpdateMoodBasedOnTime()
-    {
-        if (modTimeAction == null) return;
-        if (ShoppingTime <= CustomerData.happyTime)
-        {
-            currentMood = CustomerMood.Happy;
-        }
-        else if (ShoppingTime <= CustomerData.neutralTime && !hasChangeNeutral)
-        {
-            currentMood = CustomerMood.Neutral;
-            hasChangeNeutral = true;
-        }
-        else if (ShoppingTime <= CustomerData.annoyedTime)
-        {
-            currentMood = CustomerMood.Annoyed;
-        }
-        else if (ShoppingTime <= CustomerData.anxiousTime)
-        {
-            currentMood = CustomerMood.Anxious;
-        }
-        else if (ShoppingTime <= CustomerData.angryTime)
-        {
-            currentMood = CustomerMood.Angry;
-        }
-    }
-
-    private void CheckModChange()
-    {
-        if (IsExit) return;
-        if (modTimeAction == null) return;
-        UpdateMoodBasedOnTime();
-        UpdateMoodBasedOnStoreConditions();
-        if (currentMood == CustomerMood.Anxious)
-        {
-        }
-        if (currentMood == CustomerMood.Angry)
-        {
-            GoToExit();
-        }
-    }
-    
-    // 更新顾客情绪基于商店条件（只在 Neutral 时生效）
-    private void UpdateMoodBasedOnStoreConditions()
-    {
-        if (modTimeAction == null) return;
-        if (currentMood == CustomerMood.Neutral)
-        {
-            if (CustomerSystem.Instance.IsStoreBusy())
-            {
-                currentMood = CustomerMood.Anxious; // 商店拥挤导致焦虑
-            }
-            else if (BuildingSystem.Instance.HasPromotionActivity())
-            {
-                currentMood = CustomerMood.Happy; // 促销活动导致高兴
-            }
-        }
-    }
-    
-    private void HandleOnExit(Collider other)
-    {
-        if (_CustomerPoints != null && other.CompareTag("CustomerPoint") && !IsBilling)
-        {
-            if (other.gameObject == _CustomerPoints.gameObject)
-            {
-                _CustomerPoints?.Clean();
-            }
-        }
-    }
-    
-    private void SmoothRotate(Vector3 targetRotation)
-    {
-        transform.DORotate(targetRotation, .2f).OnComplete(() =>
-        {
-        });
-    }
-
-    public void GoToBillingCounter()
-    {
-        IsBilling = true;
-        modTimeAction?.Stop();
-        modTimeAction = null;
-        agent.updateRotation = true;
-        _CustomerPoints?.Clean();
-        agent.isStopped = false;
-        billingDesk.AddCustomer(this);
+        transform.DORotate(targetRotation, 0.2f);
     }
 
     public void GoToExit()
     {
         agent.updateRotation = true;
-        modTimeAction?.Stop();
-        modTimeAction = null;
         billingDesk.RemoveCustomer(this);
         int index = GameUtil.RandomRange(0, CustomerSystem.Instance.bornPos.Count);
         Vector3 tarGetPos = CustomerSystem.Instance.bornPos[index];
         agent.SetDestination(tarGetPos);
-        _CustomerPoints?.Clean();
+        tempCustomerPoint?.Clean();
         GameEntry.Time.CreateTimer(this, 0.1f, () =>
         {
             IsExit = true;
@@ -307,41 +128,47 @@ public class Customer : MonoBehaviour
 
 
 
-    private void CollectFood(string name)
+    public void CollectFood(Food food)
     {
-        foreach (var data in CustomerData.foodList)
+        foreach (var data in CharacterData.foodList)
         {
-            if (data.name == name)
+            if (data.name == food.name)
             {
                 data.hasCount += 1;
+                collectedFood.Add(food);
+                food.GotoCustomer(slotList[collectedFood.Count]);
+                RefresFoodSprite();
                 break;
             }
         }
-        CustomerSystem.Instance.PrintFoordData(CustomerData);
+        CustomerSystem.Instance.PrintFoordData(CharacterData);
     }
 
 
     // 更新所有顾客
-    public void Tick()
+    public override void Tick()
     {
         if (!IsLiving) return;
-        if (agent == null) return;
-        CheckModChange();
         HandlePanelToCamera();
-        CheckGoToCollect();
-        if (counterLook)
+
+        
+        if (isStateChanged)
         {
-            if (ReachedDestinationOrGaveUp())
+            isStateChanged = false;
+            switch (CurrentState)
             {
-                if (IsInCashier)
-                {
-                    SmoothRotate(new Vector3(0,-90,0));
-                }
-                // transform.rotation = Quaternion.Euler(0,-90,0);
-                counterLook = false;
+                case CharacterState.Idle:
+                    HandleIdleRun();
+                    break;
+                case CharacterState.GoToShelfBuilding:
+                    HandleFindShelf();
+                    break;
+                case CharacterState.GoToBillingDesk:
+                    HandleFindBillingDesk();
+                    break;
             }
         }
-        
+
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
             anim.SetBool("Run", false);
@@ -353,6 +180,55 @@ public class Customer : MonoBehaviour
         }
     }
 
+    private void HandleIdleRun()
+    {
+        _ = MoveToDestination(transform.position + new Vector3(GameUtil.RandomRange(-10f,10f),0,GameUtil.RandomRange(-10f,10f)),() =>
+        {
+            GameEntry.Time.CreateTimer(this, 1,()=>
+            {
+                CurrentState = CharacterState.GoToShelfBuilding;
+            });
+        });
+    }
+
+    private void HandleFindShelf()
+    {
+        CustomerPoint point = GetTargetCustomerPoint();
+        if (point != null && !CustomerSystem.Instance.CheckPointIsOccupied(point))
+        {
+            tempCustomerPoint = point;
+            tempCustomerPoint.customerName = transform.gameObject.name;
+            tempCustomerPoint.fill = true;
+            
+            agent.updateRotation = true;
+            _ = MoveToDestination(tempCustomerPoint.transform.position, () =>
+            {
+                agent.updateRotation = false;
+                SmoothRotate(tempCustomerPoint.transform.rotation.eulerAngles);
+            });
+            return;
+        }
+        GameEntry.Time.CreateTimer(this, 2, HandleFindShelf);
+    }
+
+    private void HandleFindBillingDesk()
+    {
+        billingDesk = BuildingSystem.Instance.GetBillingDesk();
+        agent.updateRotation = true;
+        agent.isStopped = false;
+        billingDesk.AddCustomer(this);
+        
+        
+        tempCustomerPoint?.Clean();
+    }
+    
+    
+    public void GoToBillingCounter()
+    {
+
+    }
+
+
     private void HandlePanelToCamera()
     {
         Vector3 directionToFace = Camera.main.transform.position - panel.position;
@@ -360,38 +236,26 @@ public class Customer : MonoBehaviour
         panel.rotation = Quaternion.LookRotation(-directionToFace);
     }
 
-    private void CheckGoToCollect()
+    public void SetFullCollectFlag()
     {
-        if (IsExit) return;
-        if (IsBilling) return;
-        if (CustomerSystem.Instance.CheckIsFullCollect(CustomerData))
-        {
-            GoToBillingCounter();
-            return;
-        }
-        if (!isCollecting)
-        {
-            foreach (FoodData data in CustomerData.foodList)
-            {
-                if (data.needCount == data.hasCount) continue;
-                GameObject obj = BuildingSystem.Instance.GetShelfBuilding(data.name);
+        tempCustomerPoint?.Clean();
+        tempCustomerPoint = null;
+        fullCollectFlag = true;
+        CurrentState = CharacterState.GoToBillingDesk;
+    }
 
-                if (obj != null)
-                {
-                    CustomerPoints point = obj.GetComponent<FoodPlaceManager>().GetIdlePoint();
-                    if (point != null && !CustomerSystem.Instance.CheckPointIsOccupied(point))
-                    {
-                        _CustomerPoints = point;
-                        _CustomerPoints.customerName = transform.gameObject.name;
-                        _CustomerPoints.fill = true;
-                        agent.SetDestination(_CustomerPoints.transform.position);
-                        agent.updateRotation = true;
-                        isCollecting = true;
-                        break;
-                    }
-                }
-            }
+    public CustomerPoint GetTargetCustomerPoint()
+    {
+        foreach (FoodData data in CharacterData.foodList)
+        {
+            if (data.needCount == data.hasCount) continue;
+            BuildingBase building = BuildingSystem.Instance.GetShelfBuilding(data.name);
+            if (building == null) continue;
+            CustomerPoint point = building.GetIdlePoint();
+            if (point == null) continue;
+            return point;
         }
+        return null;
     }
 
     private bool ReachedDestinationOrGaveUp()
@@ -429,15 +293,15 @@ public class Customer : MonoBehaviour
     public async UniTask CheckPackageFood()
     {
         InitPackagBox(billingDesk.packageBoxPos);
-        while (collectedFoods.Count > 0)
+        while (collectedFood.Count > 0)
         {
-            int foodCount = collectedFoods.Count;
-            Food food = collectedFoods[foodCount - 1];
-            collectedFoods.RemoveAt(foodCount - 1);
+            int foodCount = collectedFood.Count;
+            Food food = collectedFood[foodCount - 1];
+            collectedFood.RemoveAt(foodCount - 1);
             await food.GotoBillingCounterBox(billingDesk.packageBoxPos);
             Destroy(food.gameObject);
         }
-        CustomerData.foodList.Clear();
+        CharacterData.foodList.Clear();
         packageObj.GetComponent<Animator>().SetTrigger("StartProduction");
         await UniTask.Delay(600);
         await DoPlayPackageAnim();
@@ -445,12 +309,14 @@ public class Customer : MonoBehaviour
 
     public bool IsNullFood()
     {
-        return collectedFoods.Count == 0;
+        return collectedFood.Count == 0;
     }
 
     public void CheckGotoBillingDesk(Vector3 pos)
     {
-        agent.SetDestination(pos);
-        IsInCashier = true;
+        MoveToDestination(pos,()=>
+        {
+             SmoothRotate(new Vector3(0,-90,0));
+        });
     }
 }

@@ -46,8 +46,8 @@ public class FormLogin : UIFormBase
         //loginBtn.GetComponent<Image>().SetImage("Assets/Game/Download/Atlas/Textures/Common","JoyBg.png",true);
         
          await GameEntry.Net.ConnectServerAsync();
-         // GameEntry.Net.Requset.c2s_request_register("a88888","99999");
-         GameEntry.Net.Requset.c2s_request_login("a88888","99999");
+         // GameEntry.Net.Requset.c2s_request_register("a888888","99999");
+         GameEntry.Net.Requset.c2s_request_login("a888888","99999");
         return;
         
 //将 Base64 字符串转换为二进制数据

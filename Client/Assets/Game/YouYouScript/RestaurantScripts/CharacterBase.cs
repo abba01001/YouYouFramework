@@ -1,28 +1,30 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 using YouYou;
 
-public abstract class WorkerBase : MonoBehaviour
+public abstract class CharacterBase : MonoBehaviour
 {
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
     }
 
-    public enum WorkerState
+    public enum CharacterState
     {
         None,
         Idle,
         GoToProduceBuilding,
-        GoToShelfBuilding
+        GoToShelfBuilding,
+        GoToBillingDesk
     }
 
-    public WorkerState currentState = WorkerState.None;
-    public WorkerState CurrentState
+    public CharacterState currentState = CharacterState.None;
+    public CharacterState CurrentState
     {
         get
         {
@@ -39,9 +41,10 @@ public abstract class WorkerBase : MonoBehaviour
     public List<Food> collectedFood = new List<Food>();
     public TriggerDetector triggerDetector;
     public bool IsLiving { get; set; }
-    public WorkerData WorkerData { get; set; }
+    public bool IsExit { get; set; }
+    public CharacterData CharacterData { get; set; }
 
-    public virtual void Init(WorkerData data)
+    public virtual void Init(CharacterData data)
     {
         if (triggerDetector == null)
         {
@@ -54,11 +57,15 @@ public abstract class WorkerBase : MonoBehaviour
         triggerDetector.OnEnter += HandleOnEnter;
         triggerDetector.OnStay += HandleOnStay;
         triggerDetector.OnExit += HandleOnExit;
-        WorkerData = data;
+        CharacterData = data;
+        foreach (var f in collectedFood.ToList())
+        {
+            Destroy(f.gameObject);
+        }
         collectedFood.Clear();
         agent = GetComponent<NavMeshAgent>();
         IsLiving = true;
-        currentState = WorkerState.Idle;
+        currentState = CharacterState.Idle;
         isStateChanged = true;
         CheckStartWork();
     }
@@ -102,7 +109,7 @@ public abstract class WorkerBase : MonoBehaviour
     }
     
         
-    public async UniTask MoveToDestination(Vector3 pos,Action action)
+    public async UniTask MoveToDestination(Vector3 pos,Action action = null)
     {
         SetDestinationWithOffset(pos);
         // 等待直到目标到达

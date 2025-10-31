@@ -37,7 +37,7 @@ public class BillingDesk : MonoBehaviour
         if (other.CompareTag("Customer") && isIdling)
         {
             currentCustomer = other.gameObject.GetComponent<Customer>();
-            if (CustomerSystem.Instance.CheckIsFullCollect(currentCustomer.CustomerData))
+            if (CustomerSystem.Instance.CheckIsFullCollect(currentCustomer.CharacterData))
             {
                 isIdling = false;
                 customer = true;

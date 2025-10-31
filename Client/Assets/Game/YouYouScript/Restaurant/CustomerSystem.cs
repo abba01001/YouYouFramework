@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,14 +6,15 @@ using System.Text;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using YouYou;
+using Random = UnityEngine.Random;
 
 public class CustomerSystem
 {
     private static CustomerSystem _instance;
     public static CustomerSystem Instance => _instance ??= new CustomerSystem();
-    public List<CustomerData> TempCustomerDatas = new List<CustomerData>();
+    public List<CharacterData> TempCustomerDatas = new List<CharacterData>();
     private List<Customer> TempCustomers = new();
-    private readonly Dictionary<int, Customer> idToCustomer = new();
+    private readonly Dictionary<string, Customer> idToCustomer = new();
 
     // 初始化
     public async UniTask Init()
@@ -26,12 +28,10 @@ public class CustomerSystem
         if (TempCustomers.Count < GameEntry.Data.PlayerRoleData.restaurantData.maxCustomerCount)
         {
             // 如果顾客少于上限，增加一个顾客数据
-            CustomerData data = new CustomerData();
-            data.customerId = GameUtil.RandomRange(1, 9999999);
+            CharacterData data = new CharacterData();
+            data.characterId = Guid.NewGuid().ToString();
             data.hatColorIndex = GameUtil.RandomRange(0, GameEntry.Instance.customerColors.Length);
             data.meshColorIndex = GameUtil.RandomRange(0, GameEntry.Instance.customerHats.Length);
-            data.mood = CustomerMood.Neutral;
-            RandomEmotion(data);
             RandomFood(data);
             TempCustomerDatas.Add(data);
             // 创建顾客对象并加入列表
@@ -72,7 +72,7 @@ public class CustomerSystem
         return selectedFoods;
     }
     
-    private void RandomFood(CustomerData customerData)
+    private void RandomFood(CharacterData customerData)
     {
         List<(string,int)> selectedFoodList = GetRandomFoodCombination(); // 获取随机食物组合
 
@@ -88,7 +88,7 @@ public class CustomerSystem
         PrintFoordData(customerData);
     }
 
-    public void PrintFoordData(CustomerData customerData)
+    public void PrintFoordData(CharacterData customerData)
     {
         return;
         StringBuilder sb = new StringBuilder();
@@ -100,15 +100,6 @@ public class CustomerSystem
         GameUtil.LogError(sb.ToString());
     }
 
-    
-    public void RandomEmotion(CustomerData customerData)
-    {
-        customerData.happyTime = 5;//Random.Range(10, 20);
-        customerData.neutralTime = 10;//Random.Range(20, 30);
-        customerData.annoyedTime = 12;//Random.Range(30, 40);
-        customerData.anxiousTime = 13;//Random.Range(40, 45);
-        customerData.angryTime = 15; //Random.Range(45,50);
-    }
 
     public List<Vector3> bornPos = new List<Vector3>()
     {
@@ -117,9 +108,9 @@ public class CustomerSystem
         new Vector3(-30f,0f,61f),
         new Vector3(-60f,0f,31f)
     };
-    private void SpawnCustomer(CustomerData data)
+    private void SpawnCustomer(CharacterData data)
     {
-        if (idToCustomer.ContainsKey(data.customerId)) return; // 防止重复生成
+        if (idToCustomer.ContainsKey(data.characterId)) return; // 防止重复生成
         
         PoolObj obj = GameEntry.Pool.GameObjectPool.SpawnSynchronous(
             $"Assets/Game/Download/Prefab/Regions/Customer.prefab", BuildingSystem.Instance.Root);
@@ -130,7 +121,7 @@ public class CustomerSystem
         obj.gameObject.transform.position = bornPos[index];
         
         TempCustomers.Add(customer);
-        idToCustomer[data.customerId] = customer;
+        idToCustomer[data.characterId] = customer;
     }
 
     private void HandleFirstCustomer()
@@ -171,11 +162,11 @@ public class CustomerSystem
         }
     }
 
-    public bool CheckPointIsOccupied(CustomerPoints points)
+    public bool CheckPointIsOccupied(CustomerPoint point)
     {
         foreach (var customer in TempCustomers)
         {
-            if (customer._CustomerPoints == points) return true;
+            if (customer.tempCustomerPoint == point) return true;
         }
         return false;
     }
@@ -185,8 +176,8 @@ public class CustomerSystem
         if (!TempCustomers.Contains(customer)) return;
 
         TempCustomers.Remove(customer);
-        idToCustomer.Remove(customer.CustomerData.customerId);
-        TempCustomerDatas.Remove(customer.CustomerData);
+        idToCustomer.Remove(customer.CharacterData.characterId);
+        TempCustomerDatas.Remove(customer.CharacterData);
         GameObject.Destroy(customer.gameObject);
     }
 
@@ -195,7 +186,7 @@ public class CustomerSystem
         return false;
     }
     
-    public bool CheckIsFullCollect(CustomerData data,string foodName = "")
+    public bool CheckIsFullCollect(CharacterData data,string foodName = "")
     {
         if (foodName != "")
         {

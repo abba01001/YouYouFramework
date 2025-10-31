@@ -56,19 +56,15 @@ public class Food : MonoBehaviour
 
     public void JumpFoodToPlayer(Collider other)
     {
-        WorkerBase worker = other.gameObject.GetComponent<WorkerBase>();
-        if (worker != null)
+        CharacterBase character = other.gameObject.GetComponent<CharacterBase>();
+        if (character != null)
         {
-            Helper helper = other.gameObject.GetComponent<Helper>();
-            if (helper != null)
+            if(!character.CharacterData.collectFood.Contains(foodName))
             {
-                if(!helper.WorkerData.collectFood.Contains(foodName))
-                {
-                    return;
-                }
+                return;
             }
-
-            if (worker.collectedFood.Count < worker.WorkerData.maxFoodCarry)
+            
+            if (character.collectedFood.Count < character.CharacterData.maxFoodCarry)
             {
                 if (notSpawnAuto /*foodName != "Egg" || foodName != "Sauce"*/)
                 {
@@ -76,17 +72,13 @@ public class Food : MonoBehaviour
                 }
                 else
                 {
-                    foodSpawner.RefreshFood(this);
+                    foodSpawner.ClearCollectFood(this);
                 }
 
-
                 Vibration.Vibrate(30);
-
-                if(other.gameObject.layer == 7)
-                    AudioManager.Instance.Play("FoodCollect");
-
+                AudioManager.Instance.Play("FoodCollect");
                 transform.parent = other.transform;
-                worker.AddCollectFood(this);
+                character.AddCollectFood(this);
             }
             else
             {

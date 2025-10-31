@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
@@ -17,8 +18,8 @@ public class WorkerSystem
     private static WorkerSystem _instance;
     public static WorkerSystem Instance => _instance ??= new WorkerSystem();
 
-    private readonly List<WorkerBase> workers = new();
-    private readonly Dictionary<int, WorkerBase> idToWorker = new();
+    private readonly List<CharacterBase> workers = new();
+    private readonly Dictionary<string, CharacterBase> idToWorker = new();
 
     public List<Vector3> bornPos = new()
     {
@@ -33,7 +34,6 @@ public class WorkerSystem
 
     public async UniTask Init()
     {
-        return;
         var list = GameEntry.Data.PlayerRoleData.restaurantData.workers;
         foreach (var data in list)
         {
@@ -41,33 +41,33 @@ public class WorkerSystem
         }
     }
 
-    private void SpawnWorker(WorkerData data)
+    private void SpawnWorker(CharacterData data)
     {
-        if (idToWorker.ContainsKey(data.workerId)) return; // 防止重复生成
+        if (idToWorker.ContainsKey(data.characterId)) return; // 防止重复生成
 
         var prefabPath = $"Assets/Game/Download/Prefab/Regions/{data.type}.prefab";
         PoolObj obj = GameEntry.Pool.GameObjectPool.SpawnSynchronous(prefabPath, BuildingSystem.Instance.Root);
 
-        WorkerBase workerBase = obj.GetComponent<WorkerBase>();
-        workerBase.Init(data);
+        CharacterBase characterBase = obj.GetComponent<CharacterBase>();
+        characterBase.Init(data);
 
-        data.workerId = data.workerId == 0 ? GameUtil.RandomRange(1, 9999999) : data.workerId;
+        data.characterId = Guid.NewGuid().ToString();
         Vector3 pos = GetRandomBornPos();
         obj.transform.position = pos;
         obj.gameObject.MSetActive(true);
 
-        workers.Add(workerBase);
-        idToWorker[data.workerId] = workerBase;
+        workers.Add(characterBase);
+        idToWorker[data.characterId] = characterBase;
     }
 
-    public void RemoveWorker(WorkerBase workerBase)
+    public void RemoveWorker(CharacterBase characterBase)
     {
-        if (!workers.Contains(workerBase)) return;
+        if (!workers.Contains(characterBase)) return;
 
-        workers.Remove(workerBase);
-        idToWorker.Remove(workerBase.WorkerData.workerId);
-        GameEntry.Data.PlayerRoleData.restaurantData.workers.Remove(workerBase.WorkerData);
-        GameObject.Destroy(workerBase.gameObject);
+        workers.Remove(characterBase);
+        idToWorker.Remove(characterBase.CharacterData.characterId);
+        GameEntry.Data.PlayerRoleData.restaurantData.workers.Remove(characterBase.CharacterData);
+        GameObject.Destroy(characterBase.gameObject);
     }
 
     public void Update()
@@ -94,47 +94,35 @@ public class WorkerSystem
         }
     }
 
-    public int index = 1;
     public void AddWorkerIfNeeded()
     {
         var restaurantData = GameEntry.Data.PlayerRoleData.restaurantData;
 
-        int helperCount = workers.Count(w => w.WorkerData.type == WorkerType.Helper);
-        int cashierCount = workers.Count(w => w.WorkerData.type == WorkerType.Cashier);
-        int farmerCount = workers.Count(w => w.WorkerData.type == WorkerType.Farmer);
+        int helperCount = workers.Count(w => w.CharacterData.type == WorkerType.Helper);
+        int cashierCount = workers.Count(w => w.CharacterData.type == WorkerType.Cashier);
+        int farmerCount = workers.Count(w => w.CharacterData.type == WorkerType.Farmer);
 
-        // if (helperCount < restaurantData.maxHelperCount)
-        // {
-        //     var data = new WorkerData() { type = WorkerType.Helper, workerId = 0 };
-        //     var selectedFoodList = CustomerSystem.Instance.GetRandomFoodCombination();
-        //     foreach (var item in selectedFoodList)
-        //         data.collectFood.Add(item.Item1);
-        //
-        //     restaurantData.workers.Add(data);
-        //     SpawnWorker(data);
-        // }
-
-        if (workers.Count < index)
+        if (helperCount < restaurantData.maxHelperCount)
         {
-            var data = new WorkerData() { type = WorkerType.Helper, workerId = 0 };
+            var data = new CharacterData() { type = WorkerType.Helper, characterId = Guid.NewGuid().ToString() };
             var selectedFoodList = CustomerSystem.Instance.GetRandomFoodCombination();
             foreach (var item in selectedFoodList)
                 data.collectFood.Add(item.Item1);
-
+        
             restaurantData.workers.Add(data);
             SpawnWorker(data);
         }
 
         if (cashierCount < restaurantData.maxCashierCount)
         {
-            var data = new WorkerData() { type = WorkerType.Cashier, workerId = 0 };
+            var data = new CharacterData() { type = WorkerType.Cashier, characterId = Guid.NewGuid().ToString() };
             restaurantData.workers.Add(data);
             SpawnWorker(data);
         }
 
         if (farmerCount < restaurantData.maxFarmerCount)
         {
-            var data = new WorkerData() { type = WorkerType.Farmer, workerId = 0 };
+            var data = new CharacterData() { type = WorkerType.Farmer, characterId = Guid.NewGuid().ToString() };
             data.collectFood.Add("Tomato");
             restaurantData.workers.Add(data);
             SpawnWorker(data);

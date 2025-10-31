@@ -8,7 +8,7 @@ public class FoodPlaceManager : MonoBehaviour
     public Transform HelperPos;
 
     public string shelfFoodName;
-    public List<CustomerPoints> customerPoints;
+    public List<CustomerPoint> customerPoints;
 
     [HideInInspector] public List<Food> collectedFoods;
     public List<FoodSpawner> foodSpawners =  new List<FoodSpawner>();
@@ -16,7 +16,7 @@ public class FoodPlaceManager : MonoBehaviour
     private void Awake()
     {
         customerPoints.Clear();
-        foreach (var VARIABLE in transform.GetComponentsInChildren<CustomerPoints>(true))
+        foreach (var VARIABLE in transform.GetComponentsInChildren<CustomerPoint>(true))
         {
             customerPoints.Add(VARIABLE);   
         }
@@ -45,7 +45,7 @@ public class FoodPlaceManager : MonoBehaviour
         GameEntry.Event.RemoveEventListener(Constants.EventName.UpdateBuildingsObj, null);
     }
 
-    public CustomerPoints GetIdlePoint()
+    public CustomerPoint GetIdlePoint()
     {
         foreach (var point in customerPoints)
         {

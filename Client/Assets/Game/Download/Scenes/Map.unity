@@ -31124,27 +31124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d25da06f2d2e224588b7216647cdf18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  building:
-  - {fileID: 6692086}
-  - {fileID: 22164598}
-  - {fileID: 179117458}
-  - {fileID: 353302780}
-  - {fileID: 354555594}
-  - {fileID: 364700604}
-  - {fileID: 425491604}
-  - {fileID: 441054506}
-  - {fileID: 462592640}
-  - {fileID: 908532913}
-  - {fileID: 1109747071}
-  - {fileID: 1265180287}
-  - {fileID: 1306746214}
-  - {fileID: 1341624520}
-  - {fileID: 1460667068}
-  - {fileID: 1481741874}
-  - {fileID: 1524709286}
-  - {fileID: 1917663620}
-  - {fileID: 2142625155}
-  - {fileID: 2145243847}
+  building: []
   activeObjects: 0
 --- !u!1 &800029774
 GameObject:
@@ -72298,8 +72278,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentState: 0
+  agent: {fileID: 0}
   isStateChanged: 0
-  maxFoodPlayerCarry: 0
   collectedFood: []
   triggerDetector: {fileID: 0}
   _PlayerManager: {fileID: 162197881181586156}

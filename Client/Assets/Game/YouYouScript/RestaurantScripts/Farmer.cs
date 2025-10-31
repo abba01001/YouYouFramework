@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using YouYou;
 
-public class Farmer : WorkerBase
+public class Farmer : CharacterBase
 {
     private Vector3 initialFoodCollectPos;
     public Transform foodCollectPos;
@@ -20,7 +20,7 @@ public class Farmer : WorkerBase
     private System.Random _random = new System.Random();
 
     
-    public override void Init(WorkerData data)
+    public override void Init(CharacterData data)
     {
         base.Init(data);
         initialFoodCollectPos = foodCollectPos.transform.localPosition;

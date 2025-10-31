@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Cashier : WorkerBase
+public class Cashier : CharacterBase
 {
     private Transform cashierPos;
     private NavMeshAgent agent;
     public Animator anim;
 
-    public override void Init(WorkerData data)
+    public override void Init(CharacterData data)
     {
         base.Init(data);
         agent = GetComponent<NavMeshAgent>();

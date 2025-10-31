@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using YouYou;
 
-public class Player : WorkerBase
+public class Player : CharacterBase
 {
     private BillingDesk _BillingDesk;
     private bool removedAnyFood;
@@ -121,8 +121,8 @@ public class Player : WorkerBase
         {
             AudioManager.Instance.Play("Upgrade");
 
-            WorkerData.maxFoodCarry++;
-            PlayerPrefs.SetInt("PlayerCapacity",WorkerData.maxFoodCarry);
+            CharacterData.maxFoodCarry++;
+            PlayerPrefs.SetInt("PlayerCapacity",CharacterData.maxFoodCarry);
 
             playerCapacityBuyAmount += 100;
             PlayerPrefs.SetInt("PlayerCapacityBuyAmount", playerCapacityBuyAmount);

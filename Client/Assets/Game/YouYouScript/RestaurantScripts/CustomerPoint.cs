@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CustomerPoints : MonoBehaviour
+public class CustomerPoint : MonoBehaviour
 {
     public bool fill;
     public string customerName;

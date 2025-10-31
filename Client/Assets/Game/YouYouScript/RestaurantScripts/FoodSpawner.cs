@@ -61,7 +61,7 @@ public class FoodSpawner : MonoBehaviour
         matureFoodList.Add(foodObj.GetComponent<Food>());
     }
 
-    public void RefreshFood(Food discardFood)
+    public void ClearCollectFood(Food discardFood)
     {
         matureFoodList.Remove(discardFood);
         SpawnFood();

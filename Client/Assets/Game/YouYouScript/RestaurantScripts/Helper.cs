@@ -1,14 +1,9 @@
-using System;
-using System.Collections;
-using DG.Tweening;
-using System.Collections.Generic;
 using System.Linq;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 using YouYou;
 
-public class Helper : WorkerBase
+public class Helper : CharacterBase
 {
     public Transform foodCollectPos;
     private Vector3 initialFoodCollectPos;
@@ -18,11 +13,10 @@ public class Helper : WorkerBase
     private Transform trashBin;
     private GameObject[] shelfs;
     
-    public override void Init(WorkerData data)
+    public override void Init(CharacterData data)
     {
         base.Init(data);
-        // trashBin = GameObject.FindGameObjectWithTag("TrashBin").transform;
-        GetComponent<NavMeshAgent>().speed = WorkerData.speed;
+        GetComponent<NavMeshAgent>().speed = CharacterData.speed;
         initialFoodCollectPos = foodCollectPos.transform.localPosition;
         agent.updateRotation = true;
     }
@@ -41,13 +35,13 @@ public class Helper : WorkerBase
             isStateChanged = false;
             switch (CurrentState)
             {
-                case WorkerState.Idle:
+                case CharacterState.Idle:
                     HandleIdleRun();
                     break;
-                case WorkerState.GoToProduceBuilding:
+                case CharacterState.GoToProduceBuilding:
                     HandleFindProduce();
                     break;
-                case WorkerState.GoToShelfBuilding:
+                case CharacterState.GoToShelfBuilding:
                     HandleFindShelf();
                     break;
             }
@@ -61,19 +55,13 @@ public class Helper : WorkerBase
 
     private void HandleIdleRun()
     {
-        List<BuildingBase> list = BuildingSystem.Instance.GetShelfBuilding();
-        GameUtil.Shuffle(list);
-        foreach (BuildingBase shelf in list)
+        _ = MoveToDestination(transform.position + new Vector3(GameUtil.RandomRange(-10f,10f),0,GameUtil.RandomRange(-10f,10f)),() =>
         {
-            _ = MoveToDestination(shelf.transform.position,() =>
+            GameEntry.Time.CreateTimer(this, 1,()=>
             {
-                GameEntry.Time.CreateTimer(this, 1,()=>
-                {
-                    CurrentState = WorkerState.GoToProduceBuilding;
-                });
+                CurrentState = CharacterState.GoToProduceBuilding;
             });
-            break;
-        }
+        });
     }
     
     private void HandleFindProduce()
@@ -82,13 +70,12 @@ public class Helper : WorkerBase
         {
             foreach (var foodSpawner in shelf.foodSpawners)
             {
-                if (!WorkerData.collectFood.Contains(foodSpawner.food.foodName)) continue;
+                if (!CharacterData.collectFood.Contains(foodSpawner.food.foodName)) continue;
                 if (foodSpawner.HasSpawnedFood())
                 {
                     _ = MoveToDestination(shelf.transform.position + new Vector3(GameUtil.RandomRange(-2f,2f),0,0f),() =>
                     {
-                        CurrentState =  WorkerState.GoToShelfBuilding;
-                        GameUtil.LogError($"到达Produce");
+                        CurrentState =  CharacterState.GoToShelfBuilding;
                     });
                     return;
                 }
@@ -101,7 +88,7 @@ public class Helper : WorkerBase
     {
         if (collectedFood.Count <= 0)
         {
-            CurrentState = WorkerState.Idle;
+            CurrentState = CharacterState.Idle;
         }
         else
         {
@@ -110,26 +97,12 @@ public class Helper : WorkerBase
                 if (collectedFood.All(food => food.foodName != shelf.Entity.Consume)) continue;
                 _ = MoveToDestination(shelf.transform.position,() =>
                 {
-                    CurrentState =  WorkerState.Idle;
+                    CurrentState =  CharacterState.Idle;
                 });
                 return;
             }
             GameEntry.Time.CreateTimer(this, 2, HandleFindShelf);
         }
-    }
-
-    private bool ReachedTargetPos()
-    {
-        if (!agent.pathPending)
-        {
-            if (agent.remainingDistance <= agent.stoppingDistance)
-            {
-                if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
-                    return true;
-            }
-        }
-
-        return false;
     }
 
     public override void HandleOnStay(Collider other)
@@ -172,12 +145,12 @@ public class Helper : WorkerBase
 
     public void IncreaseCapacity(int increaseVal)
     {
-        WorkerData.maxFoodCarry += increaseVal;
+        CharacterData.maxFoodCarry += increaseVal;
     }
 
     public void IncreaseSpeed(int increaseVal)
     {
         GetComponent<NavMeshAgent>().speed += increaseVal;
-        WorkerData.speed = GetComponent<NavMeshAgent>().speed;
+        CharacterData.speed = GetComponent<NavMeshAgent>().speed;
     }
 }
