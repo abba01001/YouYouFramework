@@ -10,7 +10,6 @@ public class Food : MonoBehaviour
 {
     private Transform foodCollectPos;
     private float foodCollectPlayerYVal = 1f;
-    private bool goToPlayer = true;
     [HideInInspector]
     public bool goToCustomer;
     public bool notSpawnAuto;
@@ -21,6 +20,7 @@ public class Food : MonoBehaviour
     [HideInInspector]
     public int maxFoodPlayerCarry;
 
+    public FoodSpawner foodSpawner;
     private void Start()
     {
         _BillingDesk = FindObjectOfType<BillingDesk>();
@@ -35,6 +35,12 @@ public class Food : MonoBehaviour
         GameEntry.Event.RemoveEventListener(Constants.EventName.UpdateFoodPlayerCarry,UpdateCarryEvent);
     }
 
+    public void Init(FoodSpawner spawner, string foodName)
+    {
+        this.foodSpawner = spawner;
+        this.foodName = foodName;
+    }
+
     private void UpdateCarryEvent(object userdata)
     {
         maxFoodPlayerCarry = (int) userdata;
@@ -44,55 +50,62 @@ public class Food : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            if (goToPlayer)
+
+        }
+    }
+
+    public void JumpFoodToPlayer(Collider other)
+    {
+        WorkerBase worker = other.gameObject.GetComponent<WorkerBase>();
+        if (worker != null)
+        {
+            Helper helper = other.gameObject.GetComponent<Helper>();
+            if (helper != null)
             {
-                if (other.gameObject.GetComponent<PlayerManager>())
+                if(!helper.WorkerData.collectFood.Contains(foodName))
                 {
-                    PlayerManager _PlayerManager = other.gameObject.GetComponent<PlayerManager>();
+                    return;
+                }
+            }
 
-                    if (other.gameObject.GetComponent<Helper>())
-                    {
-                        if(foodName != _PlayerManager.currentFoodName)
-                        {
-                            return;
-                        }
-                    }
-
-                    if (_PlayerManager.collectedFood.Count < _PlayerManager.maxFoodPlayerCarry)
-                    {
-                        if(notSpawnAuto/*foodName != "Egg" || foodName != "Sauce"*/)
-                            transform.GetComponentInParent<FoodSpawner>().foodObj = null;
-                        else
-                            transform.GetComponentInParent<FoodSpawner>().SpawnFood();
-
-
-                        Vibration.Vibrate(30);
-
-                        if(other.gameObject.layer == 7)
-                           AudioManager.Instance.Play("FoodCollect");
-
-                        transform.parent = other.transform;
-                        _PlayerManager.collectedFood.Add(this);
-                    }
-                    else
-                        return;
+            if (worker.collectedFood.Count < worker.WorkerData.maxFoodCarry)
+            {
+                if (notSpawnAuto /*foodName != "Egg" || foodName != "Sauce"*/)
+                {
+                    
+                }
+                else
+                {
+                    foodSpawner.RefreshFood(this);
                 }
 
-                foodCollectPos = other.transform.GetChild(1).transform;
-                targetPose = foodCollectPos;
 
-                transform.DOLocalJump(targetPose.localPosition, jumpPower, 1, speed)
-                .OnComplete(delegate ()
-                {
-                    this.transform.localPosition = foodCollectPos.localPosition;
-                    this.transform.localEulerAngles = Vector3.zero;
+                Vibration.Vibrate(30);
 
-                    foodCollectPos.position = new Vector3(foodCollectPos.transform.position.x, foodCollectPos.transform.position.y + foodCollectPlayerYVal, foodCollectPos.transform.position.z);
-                });
+                if(other.gameObject.layer == 7)
+                    AudioManager.Instance.Play("FoodCollect");
 
-                goToPlayer = false;
+                transform.parent = other.transform;
+                worker.AddCollectFood(this);
+            }
+            else
+            {
+                return;
             }
         }
+
+        foodCollectPos = other.transform.GetChild(1).transform;
+        targetPose = foodCollectPos;
+
+        transform.DOLocalJump(targetPose.localPosition, jumpPower, 1, speed)
+            .OnComplete(delegate ()
+            {
+                this.transform.localPosition = foodCollectPos.localPosition;
+                this.transform.localEulerAngles = Vector3.zero;
+
+                foodCollectPos.position = new Vector3(foodCollectPos.transform.position.x, foodCollectPos.transform.position.y + foodCollectPlayerYVal, foodCollectPos.transform.position.z);
+            });
+
     }
 
     public void PlaceFood(Transform targetPos)
@@ -109,8 +122,6 @@ public class Food : MonoBehaviour
 
     public void GotoCustomer(Transform target)
     {
-        goToPlayer = false;
-
         transform.DOJump(target.position, 4, 1, .4f)
         .OnComplete(delegate ()
         {

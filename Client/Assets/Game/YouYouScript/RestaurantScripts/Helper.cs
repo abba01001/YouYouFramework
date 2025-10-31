@@ -1,5 +1,9 @@
+using System;
+using System.Collections;
 using DG.Tweening;
 using System.Collections.Generic;
+using System.Linq;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 using YouYou;
@@ -9,21 +13,15 @@ public class Helper : WorkerBase
     public Transform foodCollectPos;
     private Vector3 initialFoodCollectPos;
     private bool removedAnyFood;
-    private bool canCheck = true;
     public Animator anim;
-    private bool checkReachedShelf;
-    public NavMeshAgent agent;
-    private Transform targetShelfPos;
     public ParticleSystem upgradeParticle;
-    public PlayerManager _PlayerManager;
     private Transform trashBin;
     private GameObject[] shelfs;
-
+    
     public override void Init(WorkerData data)
     {
         base.Init(data);
         // trashBin = GameObject.FindGameObjectWithTag("TrashBin").transform;
-        _PlayerManager.maxFoodPlayerCarry = WorkerData.maxFoodCarry;
         GetComponent<NavMeshAgent>().speed = WorkerData.speed;
         initialFoodCollectPos = foodCollectPos.transform.localPosition;
         agent.updateRotation = true;
@@ -32,33 +30,26 @@ public class Helper : WorkerBase
     public override void StartWork()
     {
         base.StartWork();
-        FindShelf();
+
     }
 
     public override void Tick()
     {
         if (!IsLiving) return;
-        if (ReachedDestinationOrGaveUp() && canCheck)
+        if (isStateChanged)
         {
-            if (_PlayerManager.collectedFood.Count >= _PlayerManager.maxFoodPlayerCarry)
+            isStateChanged = false;
+            switch (CurrentState)
             {
-                Goto(targetShelfPos.position);
-                checkReachedShelf = true;
-                canCheck = false;
-            }
-        }
-
-        if (ReachedDestinationOrGaveUp() && checkReachedShelf)
-        {
-            if (_PlayerManager.collectedFood.Count == 0)
-            {
-                checkReachedShelf = false;
-                GameEntry.Time.CreateTimer(this, 0.5f, FindShelf);
-            }
-            else
-            {
-                
-                //agent.SetDestination(trashBin.position);
+                case WorkerState.Idle:
+                    HandleIdleRun();
+                    break;
+                case WorkerState.GoToProduceBuilding:
+                    HandleFindProduce();
+                    break;
+                case WorkerState.GoToShelfBuilding:
+                    HandleFindShelf();
+                    break;
             }
         }
 
@@ -68,40 +59,66 @@ public class Helper : WorkerBase
             anim.SetBool("Run", true);
     }
 
-    private void FindShelf()
+    private void HandleIdleRun()
     {
-        foreach (BuildingBase shelf in BuildingSystem.Instance.GetShelfBuilding())
+        List<BuildingBase> list = BuildingSystem.Instance.GetShelfBuilding();
+        GameUtil.Shuffle(list);
+        foreach (BuildingBase shelf in list)
         {
-            FoodPlaceManager _FoodPlaceManager = shelf.GetComponent<FoodPlaceManager>();
-            if (!WorkerData.collectFood.Contains(_FoodPlaceManager.shelfFoodName)) continue;
-            int i = _FoodPlaceManager.collectFoodCapacity / 2;
-            if (_FoodPlaceManager.collectedFoods.Count < i)
+            _ = MoveToDestination(shelf.transform.position,() =>
             {
-                targetShelfPos = _FoodPlaceManager.HelperPos;
-                foreach (FoodSpawner foodSpawner in _FoodPlaceManager.foodSpawners)
+                GameEntry.Time.CreateTimer(this, 1,()=>
                 {
-                    if (foodSpawner.food.foodName == _FoodPlaceManager.shelfFoodName)
+                    CurrentState = WorkerState.GoToProduceBuilding;
+                });
+            });
+            break;
+        }
+    }
+    
+    private void HandleFindProduce()
+    {
+        foreach (BuildingBase shelf in BuildingSystem.Instance.GetpProduceBuilding())
+        {
+            foreach (var foodSpawner in shelf.foodSpawners)
+            {
+                if (!WorkerData.collectFood.Contains(foodSpawner.food.foodName)) continue;
+                if (foodSpawner.HasSpawnedFood())
+                {
+                    _ = MoveToDestination(shelf.transform.position + new Vector3(GameUtil.RandomRange(-2f,2f),0,0f),() =>
                     {
-                        if (foodSpawner.foodObj != null)
-                        {
-                            _PlayerManager.currentFoodName = _FoodPlaceManager.shelfFoodName;
-                            Goto(foodSpawner.transform.position + new Vector3(GameUtil.RandomRange(0f,1f),0,GameUtil.RandomRange(0f,1f)));
-                            return;
-                        }
-                    }
+                        CurrentState =  WorkerState.GoToShelfBuilding;
+                        GameUtil.LogError($"到达Produce");
+                    });
+                    return;
                 }
             }
         }
-        GameEntry.Time.CreateTimer(this, 2, FindShelf);
+        GameEntry.Time.CreateTimer(this, 2, HandleFindProduce);
     }
 
-    private void Goto(Vector3 target)
+    private void HandleFindShelf()
     {
-        agent.SetDestination(target);
-        canCheck = true;
+        if (collectedFood.Count <= 0)
+        {
+            CurrentState = WorkerState.Idle;
+        }
+        else
+        {
+            foreach (BuildingBase shelf in BuildingSystem.Instance.GetShelfBuilding())
+            {
+                if (collectedFood.All(food => food.foodName != shelf.Entity.Consume)) continue;
+                _ = MoveToDestination(shelf.transform.position,() =>
+                {
+                    CurrentState =  WorkerState.Idle;
+                });
+                return;
+            }
+            GameEntry.Time.CreateTimer(this, 2, HandleFindShelf);
+        }
     }
 
-    private bool ReachedDestinationOrGaveUp()
+    private bool ReachedTargetPos()
     {
         if (!agent.pathPending)
         {
@@ -115,33 +132,25 @@ public class Helper : WorkerBase
         return false;
     }
 
-    //��ʳ��ŵ�������
     public override void HandleOnStay(Collider other)
     {
         if (other.CompareTag("Shelf"))
         {
-            FoodPlaceManager shelf = other.GetComponent<FoodPlaceManager>();
-            
-            if (shelf.collectedFoods.Count < shelf.collectFoodCapacity)
+            BuildingBase building = other.GetComponent<BuildingBase>();
+            if (building.CanPlaceFood())
             {
-                int collectedFoodCount = _PlayerManager.collectedFood.Count - 1;
-                
+                int collectedFoodCount = collectedFood.Count - 1;
                 if (collectedFoodCount >= 0)
                 {
-                    for (int i = _PlayerManager.collectedFood.Count - 1; i >= 0; i--)
+                    for (int i = collectedFood.Count - 1; i >= 0; i--)
                     {
-                        Food food = _PlayerManager.collectedFood[i];
-                        if (food.foodName == shelf.shelfFoodName)
+                        Food food = collectedFood[i];
+                        if (food.foodName == building.Entity.Consume)
                         {
                             removedAnyFood = true;
-                            food.PlaceFood(shelf.GetIdleFoodTransform());
                             FindObjectOfType<AudioManager>().Play("PlaceFood");
-
-                            shelf.collectedFoods.Add(food);
-                            food.transform.parent = shelf.transform;
-
-                            food.goToCustomer = true;
-                            _PlayerManager.collectedFood.Remove(food);
+                            building.AddFoodToBuilding(food);
+                            ClearCollectFood(food);
                             break;
                         }
                     }
@@ -149,8 +158,7 @@ public class Helper : WorkerBase
                     if (removedAnyFood)
                     {
                         foodCollectPos.localPosition = initialFoodCollectPos;
-
-                        foreach (Food food in _PlayerManager.collectedFood)
+                        foreach (Food food in collectedFood)
                         {
                             food.transform.localPosition = foodCollectPos.localPosition;
                             foodCollectPos.localPosition = new Vector3(foodCollectPos.transform.localPosition.x, foodCollectPos.transform.localPosition.y + 1, foodCollectPos.transform.localPosition.z);

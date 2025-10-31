@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using YouYou;
 
-public class Player : MonoBehaviour
+public class Player : WorkerBase
 {
     private BillingDesk _BillingDesk;
     private bool removedAnyFood;
@@ -15,59 +15,55 @@ public class Player : MonoBehaviour
 
     private void Start()
     { 
-        _PlayerManager.maxFoodPlayerCarry = PlayerPrefs.GetInt("PlayerCapacity", _PlayerManager.maxFoodPlayerCarry);
-        playerCapacityBuyAmount = PlayerPrefs.GetInt("PlayerCapacityBuyAmount", playerCapacityBuyAmount);
-        // playerCapaciyTest.text = playerCapacityBuyAmount.ToString();
-
         _BillingDesk = FindObjectOfType<BillingDesk>();
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.GetComponent<FoodPlaceManager>())
-        {
-            FoodPlaceManager shelf = other.GetComponent<FoodPlaceManager>();
-
-            if (shelf.collectedFoods.Count < shelf.collectFoodCapacity)
-            {
-                int collectedFoodCount = _PlayerManager.collectedFood.Count - 1;
-
-                if (collectedFoodCount >= 0)
-                {
-                    for (int i = _PlayerManager.collectedFood.Count - 1; i >= 0; i--)
-                    {
-                        if (_PlayerManager.collectedFood[i].foodName == shelf.shelfFoodName)
-                        {
-                            removedAnyFood = true;
-                            _PlayerManager.collectedFood[i].PlaceFood(shelf.GetIdleFoodTransform());
-                            AudioManager.Instance.Play("FoodPlace");
-
-                            shelf.collectedFoods.Add(_PlayerManager.collectedFood[i]);
-                            _PlayerManager.collectedFood[i].transform.parent = shelf.transform;
-
-                            _PlayerManager.collectedFood[i].goToCustomer = true;
-                            _PlayerManager.collectedFood.Remove(_PlayerManager.collectedFood[i]);
-                            break;
-                        }
-                    }
-
-                    if (removedAnyFood)
-                    {
-                        Transform foodCollectPos = _PlayerManager.foodCollectPos;
-
-                        foodCollectPos.localPosition = _PlayerManager.initialFoodCollectPos;
-
-                        foreach (Food food in _PlayerManager.collectedFood)
-                        {
-                            food.transform.localPosition = foodCollectPos.localPosition;
-                            foodCollectPos.localPosition = new Vector3(foodCollectPos.transform.localPosition.x, foodCollectPos.transform.localPosition.y + 1, foodCollectPos.transform.localPosition.z);
-                        }
-
-                        removedAnyFood = false;
-                    }
-                }
-            }
-        }
+        // if (other.GetComponent<FoodPlaceManager>())
+        // {
+        //     FoodPlaceManager shelf = other.GetComponent<FoodPlaceManager>();
+        //
+        //     if (shelf.collectedFoods.Count < shelf.collectFoodCapacity)
+        //     {
+        //         int collectedFoodCount = _PlayerManager.collectedFood.Count - 1;
+        //
+        //         if (collectedFoodCount >= 0)
+        //         {
+        //             for (int i = _PlayerManager.collectedFood.Count - 1; i >= 0; i--)
+        //             {
+        //                 if (_PlayerManager.collectedFood[i].foodName == shelf.shelfFoodName)
+        //                 {
+        //                     removedAnyFood = true;
+        //                     _PlayerManager.collectedFood[i].PlaceFood(shelf.GetIdleFoodTransform());
+        //                     AudioManager.Instance.Play("FoodPlace");
+        //
+        //                     shelf.collectedFoods.Add(_PlayerManager.collectedFood[i]);
+        //                     _PlayerManager.collectedFood[i].transform.parent = shelf.transform;
+        //
+        //                     _PlayerManager.collectedFood[i].goToCustomer = true;
+        //                     _PlayerManager.collectedFood.Remove(_PlayerManager.collectedFood[i]);
+        //                     break;
+        //                 }
+        //             }
+        //
+        //             if (removedAnyFood)
+        //             {
+        //                 Transform foodCollectPos = _PlayerManager.foodCollectPos;
+        //
+        //                 foodCollectPos.localPosition = _PlayerManager.initialFoodCollectPos;
+        //
+        //                 foreach (Food food in _PlayerManager.collectedFood)
+        //                 {
+        //                     food.transform.localPosition = foodCollectPos.localPosition;
+        //                     foodCollectPos.localPosition = new Vector3(foodCollectPos.transform.localPosition.x, foodCollectPos.transform.localPosition.y + 1, foodCollectPos.transform.localPosition.z);
+        //                 }
+        //
+        //                 removedAnyFood = false;
+        //             }
+        //         }
+        //     }
+        // }
 
         if (other.CompareTag("BillingDeskCollider"))
         {
@@ -125,13 +121,18 @@ public class Player : MonoBehaviour
         {
             AudioManager.Instance.Play("Upgrade");
 
-            _PlayerManager.maxFoodPlayerCarry++;
-            PlayerPrefs.SetInt("PlayerCapacity", _PlayerManager.maxFoodPlayerCarry);
+            WorkerData.maxFoodCarry++;
+            PlayerPrefs.SetInt("PlayerCapacity",WorkerData.maxFoodCarry);
 
             playerCapacityBuyAmount += 100;
             PlayerPrefs.SetInt("PlayerCapacityBuyAmount", playerCapacityBuyAmount);
 
             // playerCapaciyTest.text = playerCapacityBuyAmount.ToString();
         }
+    }
+
+    public override void Tick()
+    {
+        
     }
 }

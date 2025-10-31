@@ -23,7 +23,7 @@ public class Animal : MonoBehaviour
         {
             for(int i = 0; i< foodSpawners.Length; i++)
             {
-                if (foodSpawners[i].foodObj == null)
+                if (foodSpawners[i].HasSpawnedFood())
                 {
                     canEat = false;
                     Invoke("Eat", 2);

@@ -134,6 +134,7 @@ public class Customer : MonoBehaviour
 
     private void HandleOnEnter(Collider other)
     {
+        if(_CustomerPoints == null) return;
         if (other.CompareTag("CustomerPoint") && !IsBilling)
         {
             if (other.gameObject == _CustomerPoints.gameObject)

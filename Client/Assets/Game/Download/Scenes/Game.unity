@@ -675,27 +675,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d25da06f2d2e224588b7216647cdf18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  building:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  building: []
   activeObjects: 0
 --- !u!1 &1846721756
 GameObject:

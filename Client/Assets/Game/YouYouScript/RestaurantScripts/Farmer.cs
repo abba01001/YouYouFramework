@@ -38,20 +38,20 @@ public class Farmer : WorkerBase
     {
         if (!IsLiving) return;
         
-        if (ReachedDestinationOrGaveUp() && canCheck)
-        {
-            if (_PlayerManager.collectedFood.Count == _PlayerManager.maxFoodPlayerCarry)
-            {
-                Goto(targetChickenPos.position);
-                canCheck = false;
-            }
-        }
-
-        if (reachedShelf)
-        {
-            reachedShelf = false;
-            GameEntry.Time.CreateTimer(this, 3, FindChicken);
-        }
+        // if (ReachedDestinationOrGaveUp() && canCheck)
+        // {
+        //     if (_PlayerManager.collectedFood.Count == _PlayerManager.maxFoodPlayerCarry)
+        //     {
+        //         Goto(targetChickenPos.position);
+        //         canCheck = false;
+        //     }
+        // }
+        //
+        // if (reachedShelf)
+        // {
+        //     reachedShelf = false;
+        //     GameEntry.Time.CreateTimer(this, 3, FindChicken);
+        // }
 
         if (agent.remainingDistance <= agent.stoppingDistance)
             anim.SetBool("Run", false);
@@ -63,21 +63,21 @@ public class Farmer : WorkerBase
 
     private void FindChicken()
     {
-        foreach (BuildingBase building in BuildingSystem.Instance.GetpProduceBuilding())
-        {
-            if (building.Entity.Produce == "Egg")
-            {
-                FoodPlaceManager chicken = building.GetComponent<FoodPlaceManager>();
-                int j = chicken.collectFoodCapacity / 2;
-                if (chicken.collectedFoods.Count < j)
-                {
-                    targetChickenPos = chicken.HelperPos;
-                    FindFoodSpawner(chicken.shelfFoodName);
-                    return;
-                }
-            }
-        }
-        GameEntry.Time.CreateTimer(this, 2, FindChicken);
+        // foreach (BuildingBase building in BuildingSystem.Instance.GetpProduceBuilding())
+        // {
+        //     if (building.Entity.Produce == "Egg")
+        //     {
+        //         FoodPlaceManager chicken = building.GetComponent<FoodPlaceManager>();
+        //         int j = chicken.collectFoodCapacity / 2;
+        //         if (chicken.collectedFoods.Count < j)
+        //         {
+        //             targetChickenPos = chicken.HelperPos;
+        //             FindFoodSpawner(chicken.shelfFoodName);
+        //             return;
+        //         }
+        //     }
+        // }
+        // GameEntry.Time.CreateTimer(this, 2, FindChicken);
     }
     private void FindFoodSpawner(string _foodName)
     {
@@ -129,47 +129,47 @@ public class Farmer : WorkerBase
         {
             FoodPlaceManager ChickenShelf = other.GetComponent<FoodPlaceManager>();
 
-            if (ChickenShelf.collectedFoods.Count < ChickenShelf.collectFoodCapacity)
-            {
-                int collectedFoodCount = _PlayerManager.collectedFood.Count - 1;
-
-                if (collectedFoodCount >= 0)
-                {
-                    for (int i = _PlayerManager.collectedFood.Count - 1; i >= 0; i--)
-                    {
-                        if (_PlayerManager.collectedFood[i].foodName == ChickenShelf.shelfFoodName)
-                        {
-                            removedAnyFood = true;
-                            _PlayerManager.collectedFood[i].PlaceFood(ChickenShelf.GetIdleFoodTransform());
-                            FindObjectOfType<AudioManager>().Play("PlaceFood");
-
-                            ChickenShelf.collectedFoods.Add(_PlayerManager.collectedFood[i]);
-                            _PlayerManager.collectedFood[i].transform.parent = ChickenShelf.transform;
-
-                            _PlayerManager.collectedFood[i].goToCustomer = true;
-                            _PlayerManager.collectedFood.Remove(_PlayerManager.collectedFood[i]);
-                            break;
-                        }
-                    }
-
-                    if (removedAnyFood)
-                    {
-                        foodCollectPos.localPosition = initialFoodCollectPos;
-
-                        foreach (Food food in _PlayerManager.collectedFood)
-                        {
-                            food.transform.localPosition = foodCollectPos.localPosition;
-                            foodCollectPos.localPosition = new Vector3(foodCollectPos.transform.localPosition.x, foodCollectPos.transform.localPosition.y + 1, foodCollectPos.transform.localPosition.z);
-                        }
-
-                        removedAnyFood = false;
-                    }
-                }
-            }
-            else
-            {
-                Goto(standPos);
-            }
+            // if (ChickenShelf.collectedFoods.Count < ChickenShelf.collectFoodCapacity)
+            // {
+                // int collectedFoodCount = _PlayerManager.collectedFood.Count - 1;
+                //
+                // if (collectedFoodCount >= 0)
+                // {
+                //     for (int i = _PlayerManager.collectedFood.Count - 1; i >= 0; i--)
+                //     {
+                //         if (_PlayerManager.collectedFood[i].foodName == ChickenShelf.shelfFoodName)
+                //         {
+                //             removedAnyFood = true;
+                //             _PlayerManager.collectedFood[i].PlaceFood(ChickenShelf.GetIdleFoodTransform());
+                //             FindObjectOfType<AudioManager>().Play("PlaceFood");
+                //
+                //             ChickenShelf.collectedFoods.Add(_PlayerManager.collectedFood[i]);
+                //             _PlayerManager.collectedFood[i].transform.parent = ChickenShelf.transform;
+                //
+                //             _PlayerManager.collectedFood[i].goToCustomer = true;
+                //             _PlayerManager.collectedFood.Remove(_PlayerManager.collectedFood[i]);
+                //             break;
+                //         }
+                //     }
+                //
+                //     if (removedAnyFood)
+                //     {
+                //         foodCollectPos.localPosition = initialFoodCollectPos;
+                //
+                //         foreach (Food food in _PlayerManager.collectedFood)
+                //         {
+                //             food.transform.localPosition = foodCollectPos.localPosition;
+                //             foodCollectPos.localPosition = new Vector3(foodCollectPos.transform.localPosition.x, foodCollectPos.transform.localPosition.y + 1, foodCollectPos.transform.localPosition.z);
+                //         }
+                //
+                //         removedAnyFood = false;
+                //     }
+                // }
+            // }
+            // else
+            // {
+                // Goto(standPos);
+            // }
         }
     }
 

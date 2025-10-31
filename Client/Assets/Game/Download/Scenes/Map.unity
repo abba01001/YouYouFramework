@@ -165,6 +165,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51d0973f0fc5e7d4182a049ee4fa7082, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuildingBase
+  foodSpawners: []
+  customerPoints: []
+  shelfPos: []
+  collectedFoods: []
 --- !u!23 &6692087
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -393,6 +397,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51d0973f0fc5e7d4182a049ee4fa7082, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  foodSpawners: []
+  customerPoints: []
+  shelfPos: []
+  collectedFoods: []
 --- !u!23 &22164599
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -638,8 +646,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: 4350d4290f2dcf14f8549c174e5bc330, type: 3}
   anim: {fileID: 1385857550}
-  foodObj: {fileID: 1879045676}
   spawnAtStart: 1
+  matureFoodList: []
 --- !u!1 &30498879
 GameObject:
   m_ObjectHideFlags: 0
@@ -1314,8 +1322,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: 2b095de45da128c4f9bf0005f11ac4eb, type: 3}
   anim: {fileID: 0}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &69196874
 GameObject:
   m_ObjectHideFlags: 0
@@ -1452,8 +1460,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 1121368205545516766, guid: 336e603fd07b19d4f8ea654f9ec4443e, type: 3}
   anim: {fileID: 0}
-  foodObj: {fileID: 790448604}
   spawnAtStart: 1
+  matureFoodList: []
 --- !u!1 &73263005
 GameObject:
   m_ObjectHideFlags: 0
@@ -1829,6 +1837,7 @@ MonoBehaviour:
   jumpPower: 1
   foodName: Wheat
   maxFoodPlayerCarry: 0
+  foodSpawner: {fileID: 0}
 --- !u!65 &104527019
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2242,8 +2251,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: 2b095de45da128c4f9bf0005f11ac4eb, type: 3}
   anim: {fileID: 0}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &115571279
 GameObject:
   m_ObjectHideFlags: 0
@@ -2443,8 +2452,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: 1baf786785f206f48940de7acfe4fb32, type: 3}
   anim: {fileID: 986744449}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &132526303
 GameObject:
   m_ObjectHideFlags: 0
@@ -2491,8 +2500,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: beb048dcfa2d6de4da28ac50c44c8fcd, type: 3}
   anim: {fileID: 1306746213}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &132731804
 GameObject:
   m_ObjectHideFlags: 0
@@ -3003,8 +3012,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 1121368205545516766, guid: 00851a2a01447d249963f004297f7d28, type: 3}
   anim: {fileID: 364700603}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &174328525
 GameObject:
   m_ObjectHideFlags: 0
@@ -3240,6 +3249,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51d0973f0fc5e7d4182a049ee4fa7082, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  foodSpawners: []
+  customerPoints: []
+  shelfPos: []
+  collectedFoods: []
 --- !u!114 &179117459
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3253,7 +3266,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HelperPos: {fileID: 1345413400}
-  collectFoodCapacity: 15
   shelfFoodName: Tomato
   customerPoints:
   - {fileID: 2010445400}
@@ -3261,22 +3273,6 @@ MonoBehaviour:
   - {fileID: 1077217490}
   - {fileID: 1293769698}
   collectedFoods: []
-  shelfPos:
-  - {fileID: 783889925}
-  - {fileID: 1625428409}
-  - {fileID: 1831977531}
-  - {fileID: 87027494}
-  - {fileID: 1155620495}
-  - {fileID: 1348182181}
-  - {fileID: 49103730}
-  - {fileID: 486260354}
-  - {fileID: 2025685628}
-  - {fileID: 823947040}
-  - {fileID: 1534639642}
-  - {fileID: 732553581}
-  - {fileID: 2088149957}
-  - {fileID: 871054526}
-  - {fileID: 565850988}
   foodSpawners: []
 --- !u!1 &181862394
 GameObject:
@@ -7145,8 +7141,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 1121368205545516766, guid: 32e97d1e2a831c94ea8327acf2b22111, type: 3}
   anim: {fileID: 353302779}
-  foodObj: {fileID: 815519144}
   spawnAtStart: 1
+  matureFoodList: []
 --- !u!1 &255540768
 GameObject:
   m_ObjectHideFlags: 0
@@ -7193,8 +7189,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 1121368205545516766, guid: 00851a2a01447d249963f004297f7d28, type: 3}
   anim: {fileID: 364700603}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &261008788
 GameObject:
   m_ObjectHideFlags: 0
@@ -7346,6 +7342,7 @@ MonoBehaviour:
   jumpPower: 1
   foodName: Wheat
   maxFoodPlayerCarry: 0
+  foodSpawner: {fileID: 0}
 --- !u!65 &271341426
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7570,8 +7567,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: 4350d4290f2dcf14f8549c174e5bc330, type: 3}
   anim: {fileID: 326905947}
-  foodObj: {fileID: 409041408}
   spawnAtStart: 1
+  matureFoodList: []
 --- !u!1 &282579724
 GameObject:
   m_ObjectHideFlags: 0
@@ -7782,6 +7779,7 @@ MonoBehaviour:
   jumpPower: 1
   foodName: Wheat
   maxFoodPlayerCarry: 0
+  foodSpawner: {fileID: 0}
 --- !u!65 &294465803
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7905,8 +7903,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: 2b095de45da128c4f9bf0005f11ac4eb, type: 3}
   anim: {fileID: 0}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &296215916
 GameObject:
   m_ObjectHideFlags: 0
@@ -8049,8 +8047,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: 4350d4290f2dcf14f8549c174e5bc330, type: 3}
   anim: {fileID: 628414251}
-  foodObj: {fileID: 1620181321}
   spawnAtStart: 1
+  matureFoodList: []
 --- !u!1 &314535980
 GameObject:
   m_ObjectHideFlags: 0
@@ -8097,8 +8095,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: 1baf786785f206f48940de7acfe4fb32, type: 3}
   anim: {fileID: 986744449}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &317152518
 GameObject:
   m_ObjectHideFlags: 0
@@ -8218,7 +8216,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &318282445
@@ -8305,7 +8303,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &326905946
 Transform:
   m_ObjectHideFlags: 0
@@ -8683,8 +8681,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: beb048dcfa2d6de4da28ac50c44c8fcd, type: 3}
   anim: {fileID: 1306746213}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &340727841
 GameObject:
   m_ObjectHideFlags: 0
@@ -8731,8 +8729,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 1121368205545516766, guid: 90ec5e06c23dd3747903fb66d11a8535, type: 3}
   anim: {fileID: 0}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &350533102
 GameObject:
   m_ObjectHideFlags: 0
@@ -8868,6 +8866,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51d0973f0fc5e7d4182a049ee4fa7082, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  foodSpawners: []
+  customerPoints: []
+  shelfPos: []
+  collectedFoods: []
 --- !u!65 &353302781
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8943,6 +8945,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51d0973f0fc5e7d4182a049ee4fa7082, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  foodSpawners: []
+  customerPoints: []
+  shelfPos: []
+  collectedFoods: []
 --- !u!65 &354555595
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8998,26 +9004,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HelperPos: {fileID: 1912019960}
-  collectFoodCapacity: 12
   shelfFoodName: Flour
   customerPoints:
   - {fileID: 282579726}
   - {fileID: 1641956560}
   - {fileID: 318282447}
   collectedFoods: []
-  shelfPos:
-  - {fileID: 296215917}
-  - {fileID: 2085563331}
-  - {fileID: 938179169}
-  - {fileID: 1006248767}
-  - {fileID: 1541852276}
-  - {fileID: 728498280}
-  - {fileID: 511853555}
-  - {fileID: 175984682}
-  - {fileID: 1407480795}
-  - {fileID: 436599759}
-  - {fileID: 887362030}
-  - {fileID: 655346167}
   foodSpawners: []
 --- !u!1 &357086519
 GameObject:
@@ -9198,6 +9190,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51d0973f0fc5e7d4182a049ee4fa7082, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  foodSpawners: []
+  customerPoints: []
+  shelfPos: []
+  collectedFoods: []
 --- !u!65 &364700605
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9274,19 +9270,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HelperPos: {fileID: 2089422383}
-  collectFoodCapacity: 8
   shelfFoodName: Wheat
   customerPoints: []
   collectedFoods: []
-  shelfPos:
-  - {fileID: 30498880}
-  - {fileID: 433236447}
-  - {fileID: 1502558055}
-  - {fileID: 1793485715}
-  - {fileID: 9638171}
-  - {fileID: 144244866}
-  - {fileID: 734200628}
-  - {fileID: 1785728496}
   foodSpawners: []
 --- !u!1 &366056819
 GameObject:
@@ -9426,6 +9412,7 @@ MonoBehaviour:
   jumpPower: 1
   foodName: Tomato
   maxFoodPlayerCarry: 4
+  foodSpawner: {fileID: 0}
 --- !u!23 &368952090
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -9756,8 +9743,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: 2b095de45da128c4f9bf0005f11ac4eb, type: 3}
   anim: {fileID: 0}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &377537240
 GameObject:
   m_ObjectHideFlags: 0
@@ -9804,8 +9791,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 1121368205545516766, guid: 90ec5e06c23dd3747903fb66d11a8535, type: 3}
   anim: {fileID: 0}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &380838133
 GameObject:
   m_ObjectHideFlags: 0
@@ -13262,6 +13249,7 @@ MonoBehaviour:
   jumpPower: 1
   foodName: Tomato
   maxFoodPlayerCarry: 4
+  foodSpawner: {fileID: 0}
 --- !u!23 &409041412
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -13627,7 +13615,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &425491602
@@ -13685,6 +13673,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51d0973f0fc5e7d4182a049ee4fa7082, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  foodSpawners: []
+  customerPoints: []
+  shelfPos: []
+  collectedFoods: []
 --- !u!65 &425491605
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13740,7 +13732,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HelperPos: {fileID: 1252897400}
-  collectFoodCapacity: 12
   shelfFoodName: Beans
   customerPoints:
   - {fileID: 387563212}
@@ -13748,19 +13739,6 @@ MonoBehaviour:
   - {fileID: 964786019}
   - {fileID: 1552957227}
   collectedFoods: []
-  shelfPos:
-  - {fileID: 1500445004}
-  - {fileID: 182771766}
-  - {fileID: 1634632331}
-  - {fileID: 1306987050}
-  - {fileID: 1158859124}
-  - {fileID: 73263006}
-  - {fileID: 725675180}
-  - {fileID: 1984939599}
-  - {fileID: 558630982}
-  - {fileID: 106249459}
-  - {fileID: 1558197835}
-  - {fileID: 2015755837}
   foodSpawners: []
 --- !u!1 &428240424
 GameObject:
@@ -14089,6 +14067,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51d0973f0fc5e7d4182a049ee4fa7082, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  foodSpawners: []
+  customerPoints: []
+  shelfPos: []
+  collectedFoods: []
 --- !u!1 &445792794
 GameObject:
   m_ObjectHideFlags: 0
@@ -14172,8 +14154,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: 1baf786785f206f48940de7acfe4fb32, type: 3}
   anim: {fileID: 986744449}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &448174510
 GameObject:
   m_ObjectHideFlags: 0
@@ -17158,6 +17140,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51d0973f0fc5e7d4182a049ee4fa7082, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  foodSpawners: []
+  customerPoints: []
+  shelfPos: []
+  collectedFoods: []
 --- !u!65 &462592641
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -17236,19 +17222,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HelperPos: {fileID: 1490806305}
-  collectFoodCapacity: 8
   shelfFoodName: Flour
   customerPoints: []
   collectedFoods: []
-  shelfPos:
-  - {fileID: 433836999}
-  - {fileID: 85738064}
-  - {fileID: 1164201703}
-  - {fileID: 1658585434}
-  - {fileID: 1510529649}
-  - {fileID: 186213418}
-  - {fileID: 1409190953}
-  - {fileID: 1753881813}
   foodSpawners: []
 --- !u!1 &462696607
 GameObject:
@@ -18039,6 +18015,7 @@ MonoBehaviour:
   jumpPower: 1
   foodName: Tomato
   maxFoodPlayerCarry: 4
+  foodSpawner: {fileID: 0}
 --- !u!23 &516184960
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -18313,7 +18290,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &540897586
@@ -18618,8 +18595,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: beb048dcfa2d6de4da28ac50c44c8fcd, type: 3}
   anim: {fileID: 1917663619}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &545878637
 GameObject:
   m_ObjectHideFlags: 0
@@ -18998,7 +18975,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &559920599
@@ -19076,6 +19053,7 @@ MonoBehaviour:
   jumpPower: 1
   foodName: Tomato
   maxFoodPlayerCarry: 4
+  foodSpawner: {fileID: 0}
 --- !u!23 &559920603
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -22248,8 +22226,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 1121368205545516766, guid: 336e603fd07b19d4f8ea654f9ec4443e, type: 3}
   anim: {fileID: 0}
-  foodObj: {fileID: 294465800}
   spawnAtStart: 1
+  matureFoodList: []
 --- !u!1 &593327105
 GameObject:
   m_ObjectHideFlags: 0
@@ -25186,7 +25164,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &628414250
 Transform:
   m_ObjectHideFlags: 0
@@ -25336,8 +25314,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: 4350d4290f2dcf14f8549c174e5bc330, type: 3}
   anim: {fileID: 1385857550}
-  foodObj: {fileID: 559920599}
   spawnAtStart: 1
+  matureFoodList: []
 --- !u!1 &633092141
 GameObject:
   m_ObjectHideFlags: 0
@@ -25416,8 +25394,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 1121368205545516766, guid: 00851a2a01447d249963f004297f7d28, type: 3}
   anim: {fileID: 364700603}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &641889978
 GameObject:
   m_ObjectHideFlags: 0
@@ -25496,8 +25474,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: 4350d4290f2dcf14f8549c174e5bc330, type: 3}
   anim: {fileID: 2022643644}
-  foodObj: {fileID: 516184956}
   spawnAtStart: 1
+  matureFoodList: []
 --- !u!1 &649279529
 GameObject:
   m_ObjectHideFlags: 0
@@ -25950,6 +25928,7 @@ MonoBehaviour:
   jumpPower: 1
   foodName: Wheat
   maxFoodPlayerCarry: 0
+  foodSpawner: {fileID: 0}
 --- !u!65 &677977628
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -26317,8 +26296,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 1121368205545516766, guid: 90ec5e06c23dd3747903fb66d11a8535, type: 3}
   anim: {fileID: 0}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &691802730
 GameObject:
   m_ObjectHideFlags: 0
@@ -26398,8 +26377,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: 4350d4290f2dcf14f8549c174e5bc330, type: 3}
   anim: {fileID: 2022643644}
-  foodObj: {fileID: 2027348388}
   spawnAtStart: 1
+  matureFoodList: []
 --- !u!1 &705322239
 GameObject:
   m_ObjectHideFlags: 0
@@ -26478,8 +26457,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 1121368205545516766, guid: 336e603fd07b19d4f8ea654f9ec4443e, type: 3}
   anim: {fileID: 0}
-  foodObj: {fileID: 1258904512}
   spawnAtStart: 1
+  matureFoodList: []
 --- !u!1 &710758725
 GameObject:
   m_ObjectHideFlags: 0
@@ -27322,8 +27301,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 1121368205545516766, guid: 336e603fd07b19d4f8ea654f9ec4443e, type: 3}
   anim: {fileID: 0}
-  foodObj: {fileID: 1814260491}
   spawnAtStart: 1
+  matureFoodList: []
 --- !u!1 &738056276
 GameObject:
   m_ObjectHideFlags: 0
@@ -27408,6 +27387,7 @@ MonoBehaviour:
   jumpPower: 1
   foodName: Beans
   maxFoodPlayerCarry: 0
+  foodSpawner: {fileID: 0}
 --- !u!65 &738166909
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -30275,6 +30255,7 @@ MonoBehaviour:
   jumpPower: 1
   foodName: Wheat
   maxFoodPlayerCarry: 0
+  foodSpawner: {fileID: 0}
 --- !u!65 &751449018
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -30836,8 +30817,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: 2b095de45da128c4f9bf0005f11ac4eb, type: 3}
   anim: {fileID: 0}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &783889924
 GameObject:
   m_ObjectHideFlags: 0
@@ -30953,6 +30934,7 @@ MonoBehaviour:
   jumpPower: 1
   foodName: Wheat
   maxFoodPlayerCarry: 0
+  foodSpawner: {fileID: 0}
 --- !u!65 &790448607
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -31144,25 +31126,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   building:
   - {fileID: 6692086}
-  - {fileID: 1524709286}
-  - {fileID: 1917663620}
-  - {fileID: 1481741874}
-  - {fileID: 179117458}
-  - {fileID: 1306746214}
-  - {fileID: 441054506}
-  - {fileID: 1265180287}
-  - {fileID: 2142625155}
-  - {fileID: 1460667068}
   - {fileID: 22164598}
-  - {fileID: 1109747071}
-  - {fileID: 364700604}
-  - {fileID: 1341624520}
+  - {fileID: 179117458}
   - {fileID: 353302780}
+  - {fileID: 354555594}
+  - {fileID: 364700604}
   - {fileID: 425491604}
+  - {fileID: 441054506}
   - {fileID: 462592640}
   - {fileID: 908532913}
+  - {fileID: 1109747071}
+  - {fileID: 1265180287}
+  - {fileID: 1306746214}
+  - {fileID: 1341624520}
+  - {fileID: 1460667068}
+  - {fileID: 1481741874}
+  - {fileID: 1524709286}
+  - {fileID: 1917663620}
+  - {fileID: 2142625155}
   - {fileID: 2145243847}
-  - {fileID: 354555594}
   activeObjects: 0
 --- !u!1 &800029774
 GameObject:
@@ -31471,8 +31453,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: 1baf786785f206f48940de7acfe4fb32, type: 3}
   anim: {fileID: 986744449}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &813760455
 GameObject:
   m_ObjectHideFlags: 0
@@ -31519,8 +31501,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: 1baf786785f206f48940de7acfe4fb32, type: 3}
   anim: {fileID: 986744449}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &815519144
 GameObject:
   m_ObjectHideFlags: 0
@@ -31575,6 +31557,7 @@ MonoBehaviour:
   jumpPower: 1
   foodName: Beans
   maxFoodPlayerCarry: 0
+  foodSpawner: {fileID: 0}
 --- !u!65 &815519147
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -32232,8 +32215,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: 2b095de45da128c4f9bf0005f11ac4eb, type: 3}
   anim: {fileID: 0}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &840713303
 GameObject:
   m_ObjectHideFlags: 0
@@ -32441,8 +32424,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: 1baf786785f206f48940de7acfe4fb32, type: 3}
   anim: {fileID: 986744449}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &848263885
 GameObject:
   m_ObjectHideFlags: 0
@@ -32521,8 +32504,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: 4350d4290f2dcf14f8549c174e5bc330, type: 3}
   anim: {fileID: 628414251}
-  foodObj: {fileID: 1683401204}
   spawnAtStart: 1
+  matureFoodList: []
 --- !u!1001 &856747151
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -32669,8 +32652,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: 4350d4290f2dcf14f8549c174e5bc330, type: 3}
   anim: {fileID: 1385857550}
-  foodObj: {fileID: 861994893}
   spawnAtStart: 1
+  matureFoodList: []
 --- !u!1 &861033523
 GameObject:
   m_ObjectHideFlags: 0
@@ -32748,8 +32731,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: 2b095de45da128c4f9bf0005f11ac4eb, type: 3}
   anim: {fileID: 0}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &861994893
 GameObject:
   m_ObjectHideFlags: 0
@@ -32824,6 +32807,7 @@ MonoBehaviour:
   jumpPower: 1
   foodName: Tomato
   maxFoodPlayerCarry: 4
+  foodSpawner: {fileID: 0}
 --- !u!23 &861994897
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -32926,8 +32910,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 1121368205545516766, guid: 90ec5e06c23dd3747903fb66d11a8535, type: 3}
   anim: {fileID: 0}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &867363582
 GameObject:
   m_ObjectHideFlags: 0
@@ -33188,8 +33172,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 1121368205545516766, guid: 336e603fd07b19d4f8ea654f9ec4443e, type: 3}
   anim: {fileID: 0}
-  foodObj: {fileID: 271341423}
   spawnAtStart: 1
+  matureFoodList: []
 --- !u!1 &882301788
 GameObject:
   m_ObjectHideFlags: 0
@@ -33991,6 +33975,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51d0973f0fc5e7d4182a049ee4fa7082, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  foodSpawners: []
+  customerPoints: []
+  shelfPos: []
+  collectedFoods: []
 --- !u!95 &908532914
 Animator:
   serializedVersion: 7
@@ -34068,19 +34056,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HelperPos: {fileID: 1621211129}
-  collectFoodCapacity: 8
   shelfFoodName: Wheat
   customerPoints: []
   collectedFoods: []
-  shelfPos:
-  - {fileID: 1935173158}
-  - {fileID: 1972166388}
-  - {fileID: 818833223}
-  - {fileID: 2113318616}
-  - {fileID: 892759188}
-  - {fileID: 1497602197}
-  - {fileID: 132731805}
-  - {fileID: 560807087}
   foodSpawners: []
 --- !u!114 &908532918
 MonoBehaviour:
@@ -34972,8 +34950,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: beb048dcfa2d6de4da28ac50c44c8fcd, type: 3}
   anim: {fileID: 1917663619}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &964473572
 GameObject:
   m_ObjectHideFlags: 0
@@ -35061,7 +35039,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &964786017
@@ -35323,8 +35301,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: 1baf786785f206f48940de7acfe4fb32, type: 3}
   anim: {fileID: 986744449}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &977379695
 GameObject:
   m_ObjectHideFlags: 0
@@ -35444,7 +35422,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &981752734
@@ -36176,6 +36154,7 @@ MonoBehaviour:
   jumpPower: 1
   foodName: Wheat
   maxFoodPlayerCarry: 0
+  foodSpawner: {fileID: 0}
 --- !u!65 &1018539599
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -36306,6 +36285,7 @@ MonoBehaviour:
   jumpPower: 1
   foodName: Wheat
   maxFoodPlayerCarry: 0
+  foodSpawner: {fileID: 0}
 --- !u!65 &1019847367
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -36652,8 +36632,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 1121368205545516766, guid: 90ec5e06c23dd3747903fb66d11a8535, type: 3}
   anim: {fileID: 0}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &1034320505
 GameObject:
   m_ObjectHideFlags: 0
@@ -37268,8 +37248,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 1121368205545516766, guid: 336e603fd07b19d4f8ea654f9ec4443e, type: 3}
   anim: {fileID: 0}
-  foodObj: {fileID: 751449015}
   spawnAtStart: 1
+  matureFoodList: []
 --- !u!1 &1095709539
 GameObject:
   m_ObjectHideFlags: 0
@@ -37387,8 +37367,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: 2b095de45da128c4f9bf0005f11ac4eb, type: 3}
   anim: {fileID: 0}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &1109747069
 GameObject:
   m_ObjectHideFlags: 0
@@ -37440,6 +37420,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51d0973f0fc5e7d4182a049ee4fa7082, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  foodSpawners: []
+  customerPoints: []
+  shelfPos: []
+  collectedFoods: []
 --- !u!65 &1109747072
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -37495,7 +37479,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HelperPos: {fileID: 1538482143}
-  collectFoodCapacity: 15
   shelfFoodName: Wheat
   customerPoints:
   - {fileID: 272599919}
@@ -37503,22 +37486,6 @@ MonoBehaviour:
   - {fileID: 593558982}
   - {fileID: 717106707}
   collectedFoods: []
-  shelfPos:
-  - {fileID: 1936497631}
-  - {fileID: 1682663818}
-  - {fileID: 1280262696}
-  - {fileID: 1965740088}
-  - {fileID: 297852417}
-  - {fileID: 1184749114}
-  - {fileID: 1184888934}
-  - {fileID: 392063502}
-  - {fileID: 525933169}
-  - {fileID: 1063775420}
-  - {fileID: 1439733764}
-  - {fileID: 1231564011}
-  - {fileID: 627093449}
-  - {fileID: 1870703522}
-  - {fileID: 1261105630}
   foodSpawners: []
 --- !u!1 &1123256943
 GameObject:
@@ -37825,6 +37792,7 @@ MonoBehaviour:
   jumpPower: 1
   foodName: Tomato
   maxFoodPlayerCarry: 4
+  foodSpawner: {fileID: 0}
 --- !u!23 &1138104648
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -38299,8 +38267,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 1121368205545516766, guid: 90ec5e06c23dd3747903fb66d11a8535, type: 3}
   anim: {fileID: 0}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &1165744259
 GameObject:
   m_ObjectHideFlags: 0
@@ -38670,8 +38638,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 1121368205545516766, guid: 00851a2a01447d249963f004297f7d28, type: 3}
   anim: {fileID: 364700603}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &1179352969
 GameObject:
   m_ObjectHideFlags: 0
@@ -38865,8 +38833,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: 4350d4290f2dcf14f8549c174e5bc330, type: 3}
   anim: {fileID: 628414251}
-  foodObj: {fileID: 1138104644}
   spawnAtStart: 1
+  matureFoodList: []
 --- !u!1 &1193396694
 GameObject:
   m_ObjectHideFlags: 0
@@ -39065,8 +39033,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 1121368205545516766, guid: 336e603fd07b19d4f8ea654f9ec4443e, type: 3}
   anim: {fileID: 0}
-  foodObj: {fileID: 1908239174}
   spawnAtStart: 1
+  matureFoodList: []
 --- !u!1 &1214599668
 GameObject:
   m_ObjectHideFlags: 0
@@ -39177,8 +39145,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: beb048dcfa2d6de4da28ac50c44c8fcd, type: 3}
   anim: {fileID: 1917663619}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &1231564010
 GameObject:
   m_ObjectHideFlags: 0
@@ -39329,7 +39297,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1238574822
@@ -39635,8 +39603,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: beb048dcfa2d6de4da28ac50c44c8fcd, type: 3}
   anim: {fileID: 1917663619}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &1258054378
 GameObject:
   m_ObjectHideFlags: 0
@@ -39779,6 +39747,7 @@ MonoBehaviour:
   jumpPower: 1
   foodName: Wheat
   maxFoodPlayerCarry: 0
+  foodSpawner: {fileID: 0}
 --- !u!65 &1258904515
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -40055,8 +40024,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: beb048dcfa2d6de4da28ac50c44c8fcd, type: 3}
   anim: {fileID: 1306746213}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &1265180285
 GameObject:
   m_ObjectHideFlags: 0
@@ -40104,6 +40073,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51d0973f0fc5e7d4182a049ee4fa7082, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  foodSpawners: []
+  customerPoints: []
+  shelfPos: []
+  collectedFoods: []
 --- !u!1 &1273956705
 GameObject:
   m_ObjectHideFlags: 0
@@ -40779,6 +40752,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51d0973f0fc5e7d4182a049ee4fa7082, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  foodSpawners: []
+  customerPoints: []
+  shelfPos: []
+  collectedFoods: []
 --- !u!82 &1306746215
 AudioSource:
   m_ObjectHideFlags: 0
@@ -40889,13 +40866,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HelperPos: {fileID: 439919666}
-  collectFoodCapacity: 2
   shelfFoodName: Tomato
   customerPoints: []
   collectedFoods: []
-  shelfPos:
-  - {fileID: 460254688}
-  - {fileID: 404794478}
   foodSpawners: []
 --- !u!54 &1306746217
 Rigidbody:
@@ -41397,8 +41370,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 1121368205545516766, guid: 336e603fd07b19d4f8ea654f9ec4443e, type: 3}
   anim: {fileID: 0}
-  foodObj: {fileID: 104527016}
   spawnAtStart: 1
+  matureFoodList: []
 --- !u!1 &1326315597
 GameObject:
   m_ObjectHideFlags: 0
@@ -41520,6 +41493,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51d0973f0fc5e7d4182a049ee4fa7082, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  foodSpawners: []
+  customerPoints: []
+  shelfPos: []
+  collectedFoods: []
 --- !u!114 &1341624521
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -41588,7 +41565,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HelperPos: {fileID: 760341393}
-  collectFoodCapacity: 12
   shelfFoodName: Milk
   customerPoints:
   - {fileID: 250855705}
@@ -41596,19 +41572,6 @@ MonoBehaviour:
   - {fileID: 1938952352}
   - {fileID: 791733492}
   collectedFoods: []
-  shelfPos:
-  - {fileID: 1841706774}
-  - {fileID: 1886169511}
-  - {fileID: 710758726}
-  - {fileID: 873753312}
-  - {fileID: 1179352970}
-  - {fileID: 232453679}
-  - {fileID: 486570739}
-  - {fileID: 812140720}
-  - {fileID: 718025439}
-  - {fileID: 136518954}
-  - {fileID: 1778973090}
-  - {fileID: 922065274}
   foodSpawners: []
 --- !u!1 &1341919845
 GameObject:
@@ -42179,8 +42142,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 1121368205545516766, guid: 90ec5e06c23dd3747903fb66d11a8535, type: 3}
   anim: {fileID: 0}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &1359138794
 GameObject:
   m_ObjectHideFlags: 0
@@ -43279,8 +43242,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: 4350d4290f2dcf14f8549c174e5bc330, type: 3}
   anim: {fileID: 326905947}
-  foodObj: {fileID: 1417095613}
   spawnAtStart: 1
+  matureFoodList: []
 --- !u!1 &1396049374
 GameObject:
   m_ObjectHideFlags: 0
@@ -43828,6 +43791,7 @@ MonoBehaviour:
   jumpPower: 1
   foodName: Tomato
   maxFoodPlayerCarry: 4
+  foodSpawner: {fileID: 0}
 --- !u!23 &1417095617
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -43931,8 +43895,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 1121368205545516766, guid: 336e603fd07b19d4f8ea654f9ec4443e, type: 3}
   anim: {fileID: 0}
-  foodObj: {fileID: 677977625}
   spawnAtStart: 1
+  matureFoodList: []
 --- !u!1 &1418486831
 GameObject:
   m_ObjectHideFlags: 0
@@ -44676,6 +44640,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51d0973f0fc5e7d4182a049ee4fa7082, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  foodSpawners: []
+  customerPoints: []
+  shelfPos: []
+  collectedFoods: []
 --- !u!65 &1460667069
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -44710,19 +44678,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HelperPos: {fileID: 1949223865}
-  collectFoodCapacity: 8
   shelfFoodName: Tomato
   customerPoints: []
   collectedFoods: []
-  shelfPos:
-  - {fileID: 1381520249}
-  - {fileID: 1550740691}
-  - {fileID: 1574286036}
-  - {fileID: 217246156}
-  - {fileID: 1075430460}
-  - {fileID: 54546261}
-  - {fileID: 1788308539}
-  - {fileID: 1752472162}
   foodSpawners: []
 --- !u!65 &1460667071
 BoxCollider:
@@ -44886,7 +44844,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1477421085
@@ -45034,6 +44992,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51d0973f0fc5e7d4182a049ee4fa7082, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  foodSpawners: []
+  customerPoints: []
+  shelfPos: []
+  collectedFoods: []
 --- !u!65 &1481741875
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -45068,7 +45030,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HelperPos: {fileID: 1889662680}
-  collectFoodCapacity: 9
   shelfFoodName: Egg
   customerPoints:
   - {fileID: 190212939}
@@ -45076,16 +45037,6 @@ MonoBehaviour:
   - {fileID: 483914977}
   - {fileID: 110080102}
   collectedFoods: []
-  shelfPos:
-  - {fileID: 811699634}
-  - {fileID: 947817418}
-  - {fileID: 1139689135}
-  - {fileID: 1139586006}
-  - {fileID: 207658722}
-  - {fileID: 262053541}
-  - {fileID: 1832757226}
-  - {fileID: 33146696}
-  - {fileID: 1511730379}
   foodSpawners: []
 --- !u!1 &1485552966
 GameObject:
@@ -46209,6 +46160,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51d0973f0fc5e7d4182a049ee4fa7082, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  foodSpawners: []
+  customerPoints: []
+  shelfPos: []
+  collectedFoods: []
 --- !u!65 &1524709287
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -47154,8 +47109,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 1121368205545516766, guid: 00851a2a01447d249963f004297f7d28, type: 3}
   anim: {fileID: 364700603}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &1557403834
 GameObject:
   m_ObjectHideFlags: 0
@@ -47327,8 +47282,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 1121368205545516766, guid: 32e97d1e2a831c94ea8327acf2b22111, type: 3}
   anim: {fileID: 353302779}
-  foodObj: {fileID: 738166906}
   spawnAtStart: 1
+  matureFoodList: []
 --- !u!1 &1567931899
 GameObject:
   m_ObjectHideFlags: 0
@@ -47547,6 +47502,7 @@ MonoBehaviour:
   jumpPower: 1
   foodName: Wheat
   maxFoodPlayerCarry: 0
+  foodSpawner: {fileID: 0}
 --- !u!65 &1586551869
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -47829,8 +47785,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 1121368205545516766, guid: 336e603fd07b19d4f8ea654f9ec4443e, type: 3}
   anim: {fileID: 0}
-  foodObj: {fileID: 1019847364}
   spawnAtStart: 1
+  matureFoodList: []
 --- !u!1 &1611695584
 GameObject:
   m_ObjectHideFlags: 0
@@ -47930,8 +47886,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: 1baf786785f206f48940de7acfe4fb32, type: 3}
   anim: {fileID: 986744449}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &1620181321
 GameObject:
   m_ObjectHideFlags: 0
@@ -48006,6 +47962,7 @@ MonoBehaviour:
   jumpPower: 1
   foodName: Tomato
   maxFoodPlayerCarry: 4
+  foodSpawner: {fileID: 0}
 --- !u!23 &1620181325
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -48869,6 +48826,7 @@ MonoBehaviour:
   jumpPower: 1
   foodName: Tomato
   maxFoodPlayerCarry: 4
+  foodSpawner: {fileID: 0}
 --- !u!23 &1683401208
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -48972,8 +48930,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 1121368205545516766, guid: 336e603fd07b19d4f8ea654f9ec4443e, type: 3}
   anim: {fileID: 0}
-  foodObj: {fileID: 1586551866}
   spawnAtStart: 1
+  matureFoodList: []
 --- !u!1 &1689521787
 GameObject:
   m_ObjectHideFlags: 0
@@ -52705,8 +52663,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 1121368205545516766, guid: 00851a2a01447d249963f004297f7d28, type: 3}
   anim: {fileID: 364700603}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &1792047790
 GameObject:
   m_ObjectHideFlags: 0
@@ -53127,8 +53085,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: beb048dcfa2d6de4da28ac50c44c8fcd, type: 3}
   anim: {fileID: 1306746213}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &1805171411
 GameObject:
   m_ObjectHideFlags: 0
@@ -55954,6 +55912,7 @@ MonoBehaviour:
   jumpPower: 1
   foodName: Wheat
   maxFoodPlayerCarry: 0
+  foodSpawner: {fileID: 0}
 --- !u!65 &1814260494
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -56899,6 +56858,7 @@ MonoBehaviour:
   jumpPower: 1
   foodName: Tomato
   maxFoodPlayerCarry: 4
+  foodSpawner: {fileID: 0}
 --- !u!23 &1879045680
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -57486,6 +57446,7 @@ MonoBehaviour:
   jumpPower: 1
   foodName: Wheat
   maxFoodPlayerCarry: 0
+  foodSpawner: {fileID: 0}
 --- !u!65 &1908239177
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -60269,6 +60230,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51d0973f0fc5e7d4182a049ee4fa7082, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  foodSpawners: []
+  customerPoints: []
+  shelfPos: []
+  collectedFoods: []
 --- !u!82 &1917663621
 AudioSource:
   m_ObjectHideFlags: 0
@@ -60379,13 +60344,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HelperPos: {fileID: 78501397}
-  collectFoodCapacity: 2
   shelfFoodName: Tomato
   customerPoints: []
   collectedFoods: []
-  shelfPos:
-  - {fileID: 521009110}
-  - {fileID: 1625662033}
   foodSpawners: []
 --- !u!54 &1917663623
 Rigidbody:
@@ -66227,8 +66188,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: 4350d4290f2dcf14f8549c174e5bc330, type: 3}
   anim: {fileID: 326905947}
-  foodObj: {fileID: 1982852484}
   spawnAtStart: 1
+  matureFoodList: []
 --- !u!1 &1978257334
 GameObject:
   m_ObjectHideFlags: 0
@@ -66454,6 +66415,7 @@ MonoBehaviour:
   jumpPower: 1
   foodName: Tomato
   maxFoodPlayerCarry: 4
+  foodSpawner: {fileID: 0}
 --- !u!23 &1982852488
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -66588,8 +66550,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: -2603591618214385327, guid: 4350d4290f2dcf14f8549c174e5bc330, type: 3}
   anim: {fileID: 2022643644}
-  foodObj: {fileID: 368952086}
   spawnAtStart: 1
+  matureFoodList: []
 --- !u!1 &1988834293
 GameObject:
   m_ObjectHideFlags: 0
@@ -67461,6 +67423,7 @@ MonoBehaviour:
   jumpPower: 1
   foodName: Tomato
   maxFoodPlayerCarry: 4
+  foodSpawner: {fileID: 0}
 --- !u!23 &2027348392
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -67626,8 +67589,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 1121368205545516766, guid: 90ec5e06c23dd3747903fb66d11a8535, type: 3}
   anim: {fileID: 0}
-  foodObj: {fileID: 0}
   spawnAtStart: 0
+  matureFoodList: []
 --- !u!1 &2045707954
 GameObject:
   m_ObjectHideFlags: 0
@@ -71058,8 +71021,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   food: {fileID: 1121368205545516766, guid: 336e603fd07b19d4f8ea654f9ec4443e, type: 3}
   anim: {fileID: 0}
-  foodObj: {fileID: 1018539596}
   spawnAtStart: 1
+  matureFoodList: []
 --- !u!1 &2106706633
 GameObject:
   m_ObjectHideFlags: 0
@@ -71737,6 +71700,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51d0973f0fc5e7d4182a049ee4fa7082, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  foodSpawners: []
+  customerPoints: []
+  shelfPos: []
+  collectedFoods: []
 --- !u!65 &2142625156
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -71792,26 +71759,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HelperPos: {fileID: 938329637}
-  collectFoodCapacity: 12
   shelfFoodName: Sauce
   customerPoints:
   - {fileID: 1623133533}
   - {fileID: 1310070998}
   - {fileID: 1775076699}
   collectedFoods: []
-  shelfPos:
-  - {fileID: 1689521788}
-  - {fileID: 1900586420}
-  - {fileID: 545878638}
-  - {fileID: 2139366077}
-  - {fileID: 1884075198}
-  - {fileID: 873247645}
-  - {fileID: 12320061}
-  - {fileID: 1148807128}
-  - {fileID: 224996774}
-  - {fileID: 1416367595}
-  - {fileID: 1285625073}
-  - {fileID: 848263886}
   foodSpawners: []
 --- !u!1 &2142948192
 GameObject:
@@ -71899,6 +71852,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51d0973f0fc5e7d4182a049ee4fa7082, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  foodSpawners: []
+  customerPoints: []
+  shelfPos: []
+  collectedFoods: []
 --- !u!65 &2145243848
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -71954,7 +71911,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HelperPos: {fileID: 1589627865}
-  collectFoodCapacity: 12
   shelfFoodName: Bread
   customerPoints:
   - {fileID: 1899719683}
@@ -71962,19 +71918,6 @@ MonoBehaviour:
   - {fileID: 1805171414}
   - {fileID: 1283226352}
   collectedFoods: []
-  shelfPos:
-  - {fileID: 1577355483}
-  - {fileID: 1988834294}
-  - {fileID: 1302647177}
-  - {fileID: 1468040365}
-  - {fileID: 187982461}
-  - {fileID: 1978257335}
-  - {fileID: 611834150}
-  - {fileID: 1448167226}
-  - {fileID: 1533323496}
-  - {fileID: 2074434881}
-  - {fileID: 1372876823}
-  - {fileID: 1885322495}
   foodSpawners: []
 --- !u!1 &162197881179742497
 GameObject:
@@ -72340,12 +72283,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfdceefc084ab934db3261e942976edf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collectedFood: []
-  maxFoodPlayerCarry: 4
-  minimumFoodPlayerCarry: 4
   initialFoodCollectPos: {x: 0, y: 0, z: 0}
   foodCollectPos: {fileID: 162197881179742510}
-  currentFoodName: 
 --- !u!114 &162197881181586157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72358,6 +72297,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa049a259966527478a903999f3bf723, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentState: 0
+  isStateChanged: 0
+  maxFoodPlayerCarry: 0
+  collectedFood: []
+  triggerDetector: {fileID: 0}
   _PlayerManager: {fileID: 162197881181586156}
   playerCapacityBuyAmount: 100
   playerCapaciyTest: {fileID: 0}

@@ -6,13 +6,11 @@ using YouYou;
 public class FoodPlaceManager : MonoBehaviour
 {
     public Transform HelperPos;
-    public int collectFoodCapacity;
 
     public string shelfFoodName;
     public List<CustomerPoints> customerPoints;
 
     [HideInInspector] public List<Food> collectedFoods;
-    public List<Transform> shelfPos;
     public List<FoodSpawner> foodSpawners =  new List<FoodSpawner>();
 
     private void Awake()
@@ -24,10 +22,6 @@ public class FoodPlaceManager : MonoBehaviour
         }
     }
 
-    public Transform GetIdleFoodTransform()
-    {
-        return shelfPos[collectedFoods.Count];
-    }
 
     private void OnEnable()
     {
@@ -62,4 +56,5 @@ public class FoodPlaceManager : MonoBehaviour
         }
         return null; 
     }
+
 }

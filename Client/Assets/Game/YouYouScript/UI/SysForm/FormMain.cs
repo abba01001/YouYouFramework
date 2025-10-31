@@ -48,7 +48,7 @@ public class FormMain : UIFormBase
         // {
         //     SceneManager.MoveGameObjectToScene(obj.gameObject, targetScene);
         // }
-        GameEntry.Event.Dispatch(Constants.EventName.UpdateFoodPlayerCarry,obj.GetComponent<PlayerManager>().maxFoodPlayerCarry);
+        // GameEntry.Event.Dispatch(Constants.EventName.UpdateFoodPlayerCarry,obj.GetComponent<PlayerManager>().maxFoodPlayerCarry);
         BuildingSystem.Instance.PlayerController = obj.GetComponent<PlayerController>();
 
     }

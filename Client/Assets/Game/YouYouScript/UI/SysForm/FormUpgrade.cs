@@ -84,11 +84,11 @@ public class FormUpgrade : UIFormBase
 
         UpdateBuyAmountsText();
 
-        if (helper._PlayerManager.maxFoodPlayerCarry == 12)
-        {
-            capacityFullText.SetActive(true);
-            PlayerPrefs.SetString(srNo + "CapacityFull", "True");
-        }
+        // if (helper._PlayerManager.maxFoodPlayerCarry == 12)
+        // {
+            // capacityFullText.SetActive(true);
+            // PlayerPrefs.SetString(srNo + "CapacityFull", "True");
+        // }
 
         helper.IncreaseCapacity(increaseCapacityVal);
 

@@ -98,7 +98,7 @@ public class BuildingSystem
         // {
         //     SceneManager.MoveGameObjectToScene(obj.gameObject, targetScene);
         // }
-        GameEntry.Event.Dispatch(Constants.EventName.UpdateFoodPlayerCarry,obj.GetComponent<PlayerManager>().maxFoodPlayerCarry);
+        // GameEntry.Event.Dispatch(Constants.EventName.UpdateFoodPlayerCarry,obj.GetComponent<PlayerManager>().maxFoodPlayerCarry);
         PlayerController = obj.GetComponent<PlayerController>();
             
                         

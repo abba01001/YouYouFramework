@@ -33,6 +33,7 @@ public class WorkerSystem
 
     public async UniTask Init()
     {
+        return;
         var list = GameEntry.Data.PlayerRoleData.restaurantData.workers;
         foreach (var data in list)
         {
@@ -93,6 +94,7 @@ public class WorkerSystem
         }
     }
 
+    public int index = 1;
     public void AddWorkerIfNeeded()
     {
         var restaurantData = GameEntry.Data.PlayerRoleData.restaurantData;
@@ -101,7 +103,18 @@ public class WorkerSystem
         int cashierCount = workers.Count(w => w.WorkerData.type == WorkerType.Cashier);
         int farmerCount = workers.Count(w => w.WorkerData.type == WorkerType.Farmer);
 
-        if (helperCount < 4)//restaurantData.maxHelperCount)
+        // if (helperCount < restaurantData.maxHelperCount)
+        // {
+        //     var data = new WorkerData() { type = WorkerType.Helper, workerId = 0 };
+        //     var selectedFoodList = CustomerSystem.Instance.GetRandomFoodCombination();
+        //     foreach (var item in selectedFoodList)
+        //         data.collectFood.Add(item.Item1);
+        //
+        //     restaurantData.workers.Add(data);
+        //     SpawnWorker(data);
+        // }
+
+        if (workers.Count < index)
         {
             var data = new WorkerData() { type = WorkerType.Helper, workerId = 0 };
             var selectedFoodList = CustomerSystem.Instance.GetRandomFoodCombination();

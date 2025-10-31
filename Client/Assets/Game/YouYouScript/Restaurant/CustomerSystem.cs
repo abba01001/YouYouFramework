@@ -23,7 +23,7 @@ public class CustomerSystem
     // 检查是否需要生成新的顾客
     private void AddWorkerIfNeeded()
     {
-        if (TempCustomers.Count < 10)//GameEntry.Data.PlayerRoleData.restaurantData.maxCustomerCount)
+        if (TempCustomers.Count < GameEntry.Data.PlayerRoleData.restaurantData.maxCustomerCount)
         {
             // 如果顾客少于上限，增加一个顾客数据
             CustomerData data = new CustomerData();
