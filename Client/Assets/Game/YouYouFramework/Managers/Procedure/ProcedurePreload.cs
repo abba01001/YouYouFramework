@@ -81,14 +81,6 @@ namespace YouYou
                 Constants.HasLoadAllAsset = true;
                 m_loadFinish = true;
                 MainEntry.Instance.PreloadComplete();
-
-#if UNITY_EDITOR
-                if (MainEntry.ParamsSettings.IsMapEditorMode)
-                {
-                    GameEntry.Procedure.ChangeState(ProcedureState.MapEditor);
-                    return;
-                }
-#endif
                 GameEntry.UI.OpenUIForm<FormLogin>();
             }
         }

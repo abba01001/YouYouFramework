@@ -1,6 +1,7 @@
 Client/Temp/
 Client/Library/
 Client/Logs/
+Client/Assets/StreamingAssets
 Client/UserSettings/
 Client/AssetBundles/
 Client/*.sln

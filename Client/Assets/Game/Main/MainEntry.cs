@@ -1,5 +1,6 @@
 using Sirenix.OdinInspector;
 using System;
+using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
@@ -89,7 +90,8 @@ namespace Main
         /// 单例
         /// </summary>
         public static MainEntry Instance { get; private set; }
-        
+
+        public static bool IsLoadStreamingAssets { get; set; } = false;//本地包资源模式
         void OnValidate()
         {
             if (MacroSettings == null)
@@ -113,34 +115,15 @@ namespace Main
             HttpRetry = ParamsSettings.GetGradeParamData(YFConstDefine.Http_Retry, CurrDeviceGrade);
             HttpRetryInterval = ParamsSettings.GetGradeParamData(YFConstDefine.Http_RetryInterval, CurrDeviceGrade);
         }
-        private void Start()
+        private async UniTask Start()
         {
-            CheckMapEditorMode();
-            
             Download = new DownloadManager();
             Assets = new CheckVersionManager();
             ClassObjectPool = new ClassObjectPool();
             Hotfix = new HotfixManager();
             Reporter = gameObject.GetComponentInChildren<ReporterManager>();
-            Download.Init();
-            Assets.Init();
-            Hotfix.Init();
-        }
-
-        private void CheckMapEditorMode()
-        {
             
-#if UNITY_EDITOR && !EDITORLOAD
-        if(ParamsSettings.IsMapEditorMode)
-            {
-                EditorUtility.DisplayDialog(
-                    "提示",
-                    "请选择EDITORLOAD模式打开地图编辑器！",
-                    "确定"
-                );          
-                EditorApplication.isPlaying = false; 
-            }
-#endif
+            await Hotfix.Init();
         }
         
         private void Update()

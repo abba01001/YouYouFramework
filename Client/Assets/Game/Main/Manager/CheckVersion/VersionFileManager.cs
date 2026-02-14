@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -66,40 +67,45 @@ namespace Main
         /// <summary>
         /// 初始化CDN的版本文件信息
         /// </summary>
-        public void InitCDNVersionFile(Action onInitComplete)
+        public async UniTask InitCDNVersionFileAsync()
         {
+            // 1️⃣ 构造 URL
             StringBuilder sbr = StringHelper.PoolNew();
             string url = sbr.AppendFormatNoGC("{0}{1}", SystemModel.Instance.CurrChannelConfig.RealSourceUrl, YFConstDefine.VersionFileName).ToString();
             StringHelper.PoolDel(ref sbr);
 
-            IEnumerator UnityWebRequestGet(string url, Action<UnityWebRequest> onComplete)
-            {
-                using (UnityWebRequest request = UnityWebRequest.Get(url))
-                {
-                    yield return request.SendWebRequest();
-                    onComplete?.Invoke(request);
-                }
-            }
             MainEntry.Log(MainEntry.LogCategory.Assets, $"开始请求云端AssetBundle资源列表信息=>{url}");
-            MainEntry.Instance.StartCoroutine(UnityWebRequestGet(url, (request) =>
+            try
             {
+                // 2️⃣ 使用 UnityWebRequest 异步请求
+                using UnityWebRequest request = UnityWebRequest.Get(url);
+                await request.SendWebRequest();
                 if (request.result == UnityWebRequest.Result.Success)
                 {
-                    m_CDNVersionDic = GetAssetBundleVersionList(request.downloadHandler.data, ref m_CDNApkVersion,ref m_CDNAssetVersion);
+                    m_CDNVersionDic = GetAssetBundleVersionList(request.downloadHandler.data, ref m_CDNApkVersion, ref m_CDNAssetVersion);
                     if (GetVersionFileExists())
                     {
-                        //可写区版本文件存在，加载版本文件信息
+                        // 可写区版本文件存在，加载本地版本信息
                         m_LocalAssetsVersionDic = GetAssetBundleVersionList(ref m_LocalAssetsVersion);
                         MainEntry.Log(MainEntry.LogCategory.Assets, "成功下载云端AssetBundle资源列表");
                     }
-                    onInitComplete?.Invoke();
+                    await UniTask.NextFrame();
+                              
+                    MainEntry.Log(MainEntry.LogCategory.Assets,
+                        $"本地apk{PlayerPrefs.GetString("apkVersion")}和资源{PlayerPrefs.GetString("assetVersion")}" +
+                        $"==云端apk{MainEntry.Assets.VersionFile.CdnApkVersion}和资源{MainEntry.Assets.VersionFile.CdnAssetVersion}");
                 }
                 else
                 {
-                    MainEntry.Log(MainEntry.LogCategory.Assets, "下载云端AssetBundle资源列表失败");
+                    MainEntry.Log(MainEntry.LogCategory.Assets, $"下载云端AssetBundle资源列表失败，错误码={request.responseCode}，result={request.result}");
                 }
-            }));
+            }
+            catch (Exception e)
+            {
+                MainEntry.Log(MainEntry.LogCategory.Assets, $"下载云端AssetBundle资源列表异常：{e.Message}");
+            }
         }
+
 
         /// <summary>
         /// 获取CDN上的资源包的版本信息(这个方法一定要能返回信息)

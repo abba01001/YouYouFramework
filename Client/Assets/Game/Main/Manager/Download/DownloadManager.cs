@@ -1,7 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Main
 {
@@ -33,6 +37,10 @@ namespace Main
         {
             m_DownloadSingleRoutineList = new LinkedList<DownloadRoutine>();
             m_DownloadMulitRoutineList = new LinkedList<DownloadMulitRoutine>();
+            
+            Retry = MainEntry.ParamsSettings.GetGradeParamData(YFConstDefine.Download_Retry, MainEntry.CurrDeviceGrade);
+            DownloadRoutineCount = MainEntry.ParamsSettings.GetGradeParamData(YFConstDefine.Download_RoutineCount, MainEntry.CurrDeviceGrade);
+            FlushSize = MainEntry.ParamsSettings.GetGradeParamData(YFConstDefine.Download_FlushSize, MainEntry.CurrDeviceGrade);
         }
         internal void Dispose()
         {
@@ -68,11 +76,9 @@ namespace Main
                 mulitRoutine = mulitRoutine.Next;
             }
         }
-        internal void Init()
+        internal async UniTask Init()
         {
-            Retry = MainEntry.ParamsSettings.GetGradeParamData(YFConstDefine.Download_Retry, MainEntry.CurrDeviceGrade);
-            DownloadRoutineCount = MainEntry.ParamsSettings.GetGradeParamData(YFConstDefine.Download_RoutineCount, MainEntry.CurrDeviceGrade);
-            FlushSize = MainEntry.ParamsSettings.GetGradeParamData(YFConstDefine.Download_FlushSize, MainEntry.CurrDeviceGrade);
+
         }
 
         /// <summary>
@@ -97,23 +103,45 @@ namespace Main
             });
             m_DownloadSingleRoutineList.AddLast(routine);
         }
-
-        public void DownloadGameData(string url, Action onUpdate = null, Action<string> onComplete = null)
-        {
-            DownloadRoutine routine = DownloadRoutine.Create();
-            routine.DownloadGameData(url, 30,onUpdate, onComplete: (string fileUrl) =>
-            {
-                onComplete(fileUrl);
-            });
-        }
         
-        public void GetAPKVersion(string url, Action onUpdate = null, Action<string> onComplete = null)
+        
+        //TODO 这里需要优化版本存储信息
+        public async Task<string> GetAPKVersion(string url)
         {
-            DownloadRoutine routine = DownloadRoutine.Create();
-            routine.DownAPKVersion(url, 30,onUpdate, onComplete: (string fileUrl) =>
+            string result = null;
+            
+            string firstInstallFlag = Path.Combine(Application.persistentDataPath, "first_install.txt");
+            bool isFirstInstall = !File.Exists(firstInstallFlag);
+            string targetFolder = Path.Combine(Application.streamingAssetsPath, "AssetBundles");
+            string versionFilePath = Path.Combine(targetFolder, "version.txt");
+            
+            if (isFirstInstall)
             {
-                onComplete(fileUrl);
-            });
+                using UnityWebRequest request = UnityWebRequest.Get(versionFilePath);
+                await request.SendWebRequest();
+                if (request.result == UnityWebRequest.Result.Success)
+                {
+                    result = request.downloadHandler.text;
+                    MainEntry.IsLoadStreamingAssets = true;
+                }
+                else
+                {
+                    DownloadRoutine routine = DownloadRoutine.Create();
+                    result = await routine.DownAPKVersion(url, 30);
+                }
+            }
+            else
+            {
+                DownloadRoutine routine = DownloadRoutine.Create();
+                result = await routine.DownAPKVersion(url, 30);
+
+                if (string.IsNullOrEmpty(result) && File.Exists(versionFilePath))
+                {
+                    result = await File.ReadAllTextAsync(versionFilePath);
+                    MainEntry.IsLoadStreamingAssets = true;
+                }
+            }
+            return result;
         }
 
 

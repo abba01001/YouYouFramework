@@ -110,3 +110,47 @@ QQ交流群: 185187673
 >UI无限滚动列表
 
 }
+
+2️⃣ 首次初始化流程
+通常有两种选择：
+方案 A：
+复制 StreamingAssets → persistentDataPath
+游戏启动时，检查 persistentDataPath 是否存在资源
+如果不存在，将 StreamingAssets 内的 AB 包 全部复制 到 persistentDataPath
+之后所有 AB 包 统一从 persistentDataPath 加载
+
+优点：
+加载统一，只用 AssetBundle.LoadFromFile
+StreamingAssets 可以不管平台差异
+可以后续再从服务器更新 AB 包覆盖
+
+缺点：
+第一次启动要复制所有 AB，文件多可能稍慢
+APK 已打包的资源需要占用手机存储一份
+
+方案 B：按需加载
+persistentDataPath 空
+游戏启动时，检查需要的 AB 包
+如果 persistentDataPath 没有 → 检查 StreamingAssets
+StreamingAssets 有 → 从 StreamingAssets 加载
+如果服务器有新版本 → 下载覆盖到 persistentDataPath
+AB 包的最终加载路径：
+优先 persistentDataPath
+没有再回退到 StreamingAssets
+
+优点：
+不复制全部资源，节省首次启动时间
+只有玩家需要的资源才会下载或复制
+
+缺点：
+逻辑稍复杂，需要判断路径顺序
+加载时 StreamingAssets 路径在 Android 要用 jar:file://
+
+3️⃣ 典型商业项目做法
+
+大部分商业项目用 方案 A + 热更逻辑：
+
+首次启动 → 复制 StreamingAssets → persistentDataPath
+后续启动 → 统一从 persistentDataPath 读取
+检查服务器版本 → 下载更新 AB 包覆盖 persistentDataPath
+这样无论平台，加载路径都统一，代码简单，便于热更。

@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using HybridCLR.Editor;
 using HybridCLR.Editor.Commands;
 using Sirenix.OdinInspector;
 using UnityEditor;
@@ -157,18 +158,60 @@ public class AssetBundleSettings : ScriptableObject
 
         AssetDatabase.Refresh();
         UploadAssetsAsync();
+        
+        if (IsUploadStreamingAsset)
+        {
+            CopyAssetBundlesToStreamingAssets(AssetVersion);
+        }
     }
 
     private async Task UploadAssetsAsync()
     {
-        if (IsUploadAsset || IsForceUploadAsset)
+        if (IsUploadCloudAsset || IsForceUploadCloudAsset)
         {
             COSUploader.ShowUploadWindow();
             await UniTask.Delay(3000);  // 延迟 1 秒
             // 等待文件存在
             COSUploader.UploadVersion(AssetVersion);
-            COSUploader.UploadAssetBundle(AssetVersion, GetUploadPath(),IsForceUploadAsset); 
+            COSUploader.UploadAssetBundle(AssetVersion, GetUploadPath(),IsForceUploadCloudAsset); 
+        }
+    }
+    
+    //复制到steamingassets资源
+    public static void CopyAssetBundlesToStreamingAssets(string version)
+    {
+        string baseFolder = Path.Combine(SettingsUtil.ProjectDir, "AssetBundles", version);
+        string targetFolder = Path.Combine(Application.streamingAssetsPath, "AssetBundles", version);
+        CopyDirectory(baseFolder, targetFolder);
+   
+        // 👇 写到目标目录
+        string filePath = Path.Combine(Application.streamingAssetsPath, "AssetBundles","version.txt");
+        string[] versionParts = version.Split('.');
+        string apkVersion = versionParts[0] + ".0.0";
+        using (StreamWriter writer = new StreamWriter(filePath, false))
+        {
+            writer.WriteLine(apkVersion);
+            writer.WriteLine(version);
+        }
+    }
 
+    private static void CopyDirectory(string sourceDir, string destinationDir)
+    {
+        if (!Directory.Exists(destinationDir))
+        {
+            Directory.CreateDirectory(destinationDir);
+        }
+        string[] files = Directory.GetFiles(sourceDir);
+        foreach (var file in files)
+        {
+            string destFile = Path.Combine(destinationDir, Path.GetFileName(file));
+            File.Copy(file, destFile, true);
+        }
+        string[] directories = Directory.GetDirectories(sourceDir);
+        foreach (var dir in directories)
+        {
+            string destDir = Path.Combine(destinationDir, Path.GetFileName(dir));
+            CopyDirectory(dir, destDir);
         }
     }
     
@@ -284,6 +327,31 @@ public class AssetBundleSettings : ScriptableObject
         }
     }
 
+    [VerticalGroup("Common/Right")]
+    [Button("清理StreamingAssets资源", ButtonSizes.Medium)]
+    public void ClarStreamingAssets()
+    {
+        string assetBundlesPath = Path.Combine(Application.streamingAssetsPath, "AssetBundles");
+
+        // 确保 AssetBundles 文件夹存在
+        if (Directory.Exists(assetBundlesPath))
+        {
+            try
+            {
+                Directory.Delete(assetBundlesPath, true);  // 递归删除
+                Debug.Log("StreamingAssets/AssetBundles资源清理完成！");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"删除AssetBundles文件夹时发生异常: {e.Message}");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("AssetBundles 文件夹不存在！");
+        }
+    }
+    
     #region TempPath OutPath
     /// <summary>
     /// 临时目录
@@ -746,7 +814,7 @@ public class AssetBundleSettings : ScriptableObject
     {
         PublishPath = $"{Application.persistentDataPath}/OutPut";
         PlayerSettings.bundleVersion = AssetVersion;
-        IsForceUploadAsset = false;
+        IsForceUploadCloudAsset = false;
         IsUploadAPK = false;
     }
     
@@ -774,13 +842,16 @@ public class AssetBundleSettings : ScriptableObject
     }
 
     [LabelText("勾选输出资源时上传到云端(增量上传)")]
-    public bool IsUploadAsset;
+    public bool IsUploadCloudAsset;
     
     [LabelText("勾选输出资源时上传到云端(全部上传)")]
-    public bool IsForceUploadAsset;
+    public bool IsForceUploadCloudAsset;
     
     [LabelText("勾选输出包时上传到云端")]
     public bool IsUploadAPK;
+    
+    [LabelText("勾选输出资源时上传到包内")]
+    public bool IsUploadStreamingAsset;
     
     [LabelText("资源包保存路径")]
     [FolderPath]

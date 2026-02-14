@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Main;
 using UnityEngine;
 
 /// <summary>
@@ -54,7 +55,15 @@ public class ChannelConfigEntity
 #elif UNITY_IPHONE
                 buildTarget = "iOS";
 #endif
-                m_RealSourceUrl = string.Format("{0}{1}/{2}/", SourceUrl, SourceVersion, buildTarget);
+                if(MainEntry.IsLoadStreamingAssets)
+                {
+                    m_RealSourceUrl = string.Format("{0}/{1}/{2}/", Application.streamingAssetsPath + "/AssetBundles", SourceVersion, buildTarget);
+                }
+                else
+                {
+                    m_RealSourceUrl = string.Format("{0}{1}/{2}/", SourceUrl, SourceVersion, buildTarget);
+                }
+                Debug.LogError($"RealSourceUrl====》{m_RealSourceUrl}");
             }
             return m_RealSourceUrl;
         }

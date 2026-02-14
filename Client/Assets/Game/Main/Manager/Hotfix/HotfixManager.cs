@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -19,23 +20,22 @@ namespace Main
             System.Data.AcceptRejectRule acceptRejectRule = System.Data.AcceptRejectRule.None;
             System.Net.WebSockets.WebSocketReceiveResult webSocketReceiveResult = null;
         }
-        public void Init()
+        public async UniTask Init()
         {
 #if EDITORLOAD && UNITY_EDITOR
             GameObject gameEntry = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Game/Download/Hotfix/GameEntry.prefab");
             UnityEngine.Object.Instantiate(gameEntry);
             return;
-#endif
+# else
             MainEntry.Log(MainEntry.LogCategory.Assets,$"请求云端Apk和AssetBundle版本信息=>{SystemModel.Instance.CurrChannelConfig.APKVersionUrl}");
-            MainEntry.Download.GetAPKVersion(SystemModel.Instance.CurrChannelConfig.APKVersionUrl, null, (result) =>
-            {
-                InitServerVersion(result);
-                InitLocalVersion();
-                CompareVersion();
-            });
+            string result = await MainEntry.Download.GetAPKVersion(SystemModel.Instance.CurrChannelConfig.APKVersionUrl);
+            await InitServerVersion(result);
+            await InitLocalVersion();
+            await CompareVersion();
+#endif
         }
-
-        private void InitServerVersion(string result)
+        
+        private async UniTask InitServerVersion(string result)
         {
             string apkVersion = result.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)[0];
             string sourceVersion = result.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)[1];
@@ -43,7 +43,7 @@ namespace Main
             SystemModel.Instance.CurrChannelConfig.SourceVersion = sourceVersion;
         }
         
-        private void InitLocalVersion()
+        private async UniTask InitLocalVersion()
         {
             TextAsset versionFile = Resources.Load<TextAsset>("version"); // 不带后缀名
             if (versionFile != null)
@@ -66,18 +66,15 @@ namespace Main
         }
 
         
-        private void CompareVersion()
+        private async UniTask CompareVersion()
         {
             //初始化CDN的VersionFile信息
-            MainEntry.Assets.VersionFile.InitCDNVersionFile(() =>
-            {
-                MainEntry.Log(MainEntry.LogCategory.Assets,
-                    $"本地apk{PlayerPrefs.GetString("apkVersion")}和资源{PlayerPrefs.GetString("assetVersion")}" +
-                    $"==云端apk{MainEntry.Assets.VersionFile.CdnApkVersion}和资源{MainEntry.Assets.VersionFile.CdnAssetVersion}");
+           await MainEntry.Assets.VersionFile.InitCDNVersionFileAsync();
+ 
 #if UNITY_EDITOR
-                PlayerPrefs.SetString("assetVersion",MainEntry.Assets.VersionFile.CdnAssetVersion);
-                PlayerPrefs.SetString("apkVersion", MainEntry.Assets.VersionFile.CdnApkVersion);
-                PlayerPrefs.Save();
+            PlayerPrefs.SetString("assetVersion",MainEntry.Assets.VersionFile.CdnAssetVersion);
+            PlayerPrefs.SetString("apkVersion", MainEntry.Assets.VersionFile.CdnApkVersion);
+            PlayerPrefs.Save();
 #else
                 //校验游戏版本
                 DownLoadApk dl = new DownLoadApk();
@@ -86,25 +83,23 @@ namespace Main
                     return;
                 }
 #endif
-                //下载并加载热更程序集
-                CheckAndDownload(YFConstDefine.HotfixAssetBundlePath, (string fileUrl) =>
-                {
+            //下载并加载热更程序集
+            CheckAndDownload(YFConstDefine.HotfixAssetBundlePath, (string fileUrl) =>
+            {
 #if !UNITY_EDITOR
                     hotfixAb = AssetBundle.LoadFromFile(string.Format("{0}/{1}", Application.persistentDataPath, fileUrl));
                     LoadMetadataForAOTAssemblies();
                     System.Reflection.Assembly.Load(hotfixAb.LoadAsset<TextAsset>("Assembly-CSharp.dll.bytes").bytes);
                     MainEntry.Log(MainEntry.LogCategory.Assets, "Assembly-CSharp.dll加载完毕");
 #else
-                    hotfixAb = AssetBundle.LoadFromFile(string.Format("{0}/{1}", Application.persistentDataPath,
-                        fileUrl));
+                hotfixAb = AssetBundle.LoadFromFile(string.Format("{0}/{1}", SystemModel.Instance.CurrChannelConfig.RealSourceUrl,fileUrl));
 #endif
-                    UnityEngine.Object.Instantiate(hotfixAb.LoadAsset<GameObject>("formcheckversion.prefab"));
-                    UnityEngine.Object.Instantiate(hotfixAb.LoadAsset<GameObject>("gameentry.prefab"));
-                });
+                UnityEngine.Object.Instantiate(hotfixAb.LoadAsset<GameObject>("formcheckversion.prefab"));
+                UnityEngine.Object.Instantiate(hotfixAb.LoadAsset<GameObject>("gameentry.prefab"));
             });
         }
  
-        private void CheckAndDownload(string url, Action<string> onComplete)
+        private async UniTask CheckAndDownload(string url, Action<string> onComplete)
         {
             bool isEquals = MainEntry.Assets.CheckVersionChangeSingle(url);
             if (isEquals)

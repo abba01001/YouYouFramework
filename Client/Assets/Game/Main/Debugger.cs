@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Debugger : MonoBehaviour
@@ -24,22 +25,32 @@ public class Debugger : MonoBehaviour
         Application.logMessageReceived -= HandleLog;
     }
     
-    // 处理日志的方法
+    private const int MaxLogLines = 100;
+    private readonly Queue<string> logLines = new Queue<string>();
     void HandleLog(string logString, string stackTrace, LogType type)
     {
-        // 如果是错误类型，则附加堆栈信息并将内容格式化为红色
+        string newLine;
+
         if (type == LogType.Error || type == LogType.Exception)
         {
-            logContent += $"<color=red>{logString}</color>\n";
-            logContent += $"<color=red>{stackTrace}</color>\n";
+            newLine = $"<color=red>{logString}</color>\n<color=red>{stackTrace}</color>";
         }
         else
         {
-            logContent += logString + "\n";
+            newLine = logString;
         }
 
-        // 自动滚动到最新日志
-        //scrollPosition.y = Mathf.Max(scrollPosition.y + scrollSpeed, float.MaxValue); // 使滚动条自动滚动到最底部
+        // 添加新日志
+        logLines.Enqueue(newLine);
+
+        // 超过最大行数时移除最早的一行
+        while (logLines.Count > MaxLogLines)
+        {
+            logLines.Dequeue();
+        }
+
+        // 重新拼接
+        logContent = string.Join("\n", logLines);
     }
 
     void OnGUI()

@@ -28,8 +28,18 @@ namespace YouYou
         internal async void InitAssetInfo(Action initAssetInfoComplete)
         {
             m_InitAssetInfoComplete = initAssetInfoComplete;
-
-            byte[] buffer = IOUtil.GetFileBuffer(string.Format("{0}/{1}", Application.persistentDataPath, YFConstDefine.AssetInfoName));
+            byte[] buffer = null;
+            string path = "";
+            if (MainEntry.IsLoadStreamingAssets)
+            {
+                path = string.Format("{0}/{1}", SystemModel.Instance.CurrChannelConfig.RealSourceUrl,YFConstDefine.AssetInfoName);
+            }
+            else
+            {
+                path = string.Format("{0}/{1}", Application.persistentDataPath, YFConstDefine.AssetInfoName);
+            }
+            
+            buffer = IOUtil.GetFileBuffer(path);
             if (buffer == null)
             {
                 //如果可写区没有,从CDN读取
@@ -63,10 +73,6 @@ namespace YouYou
                 AssetInfoEntity entity = new AssetInfoEntity();
                 entity.AssetFullPath = ms.ReadUTF8String();
                 entity.AssetBundleFullPath = ms.ReadUTF8String();
-
-                //GameEntry.Log("entity.AssetBundleName=" + entity.AssetBundleName);
-                //GameEntry.Log("entity.AssetFullName=" + entity.AssetFullName);
-
                 entity.DependsAssetBundleList = new List<string>();
                 depLen = ms.ReadInt();
                 if (depLen > 0)
@@ -78,7 +84,6 @@ namespace YouYou
                 }
                 m_AssetInfoDic[entity.AssetFullPath] = entity;
             }
-
             m_InitAssetInfoComplete?.Invoke();
         }
 

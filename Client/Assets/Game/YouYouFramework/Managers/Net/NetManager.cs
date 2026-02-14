@@ -210,7 +210,7 @@ public class NetManager
     {
         string url = Main.MainEntry.ParamsSettings.WebAccountUrl;
         #if UNITY_EDITOR
-        if (Main.MainEntry.ParamsSettings.IsTestMode)
+        if (Main.MainEntry.ParamsSettings.IsTestServerMode)
         {
             url = Main.MainEntry.ParamsSettings.TestWebAccountUrl;
         }

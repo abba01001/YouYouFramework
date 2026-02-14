@@ -39,11 +39,6 @@ namespace Main
             m_NeedDownloadList = new LinkedList<string>();
         }
 
-        internal void Init()
-        {
-            
-        }
-
         /// <summary>
         /// 检查更新
         /// </summary>

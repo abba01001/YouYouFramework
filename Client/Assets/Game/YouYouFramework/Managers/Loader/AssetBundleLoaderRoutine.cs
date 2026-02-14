@@ -44,13 +44,14 @@ namespace YouYou
             CurrAssetBundleInfo = MainEntry.Assets.VersionFile.GetVersionFileEntity(assetBundlePath);
 
             //检查文件在可写区是否存在
-            bool isExistsInLocal = File.Exists(string.Format("{0}/{1}", Application.persistentDataPath, assetBundlePath));
+            string path = string.Format("{0}/{1}", Application.persistentDataPath, assetBundlePath);
+            bool isExistsInLocal = File.Exists(path);
             if (isExistsInLocal)
             {
                 if (CurrAssetBundleInfo.IsEncrypt)
                 {
                     //可写区加载, 需要解密
-                    byte[] buffer = IOUtil.GetFileBuffer(string.Format("{0}/{1}", Application.persistentDataPath, assetBundlePath));
+                    byte[] buffer = IOUtil.GetFileBuffer(path);
                     if (buffer != null)
                     {
                         buffer = SecurityUtil.Xor(buffer);
@@ -61,7 +62,7 @@ namespace YouYou
                 else
                 {
                     //可写区加载, 不用解密
-                    CurrAssetBundleCreateRequest = AssetBundle.LoadFromFileAsync(string.Format("{0}/{1}", Application.persistentDataPath, assetBundlePath));
+                    CurrAssetBundleCreateRequest = AssetBundle.LoadFromFileAsync(path);
                 }
             }
             else

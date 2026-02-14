@@ -16,9 +16,10 @@ MonoBehaviour:
   CurrBuildTarget: 1
   Options: 272
   PublishPath: C:/Users/Administrator/AppData/LocalLow/DefaultCompany/YFYouYou/OutPut
-  IsUploadAsset: 0
-  IsForceUploadAsset: 0
+  IsUploadCloudAsset: 0
+  IsForceUploadCloudAsset: 0
   IsUploadAPK: 0
+  IsUploadStreamingAsset: 1
   AssetBundleSavePath: AssetBundles
   IsCanEditor: 0
   Datas:

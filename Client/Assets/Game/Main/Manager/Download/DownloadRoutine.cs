@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -178,21 +179,25 @@ namespace Main
         }
 
         //临时处理下载文件
-        public async void DownAPKVersion(string url, int tryRequestCount,Action onUpdate,Action<string> onComplete)
+        public async Task<string> DownAPKVersion(string url, int tryRequestCount, Action onUpdate = null)
         {
             int currentRetry = 0;
+
             while (currentRetry < tryRequestCount)
             {
                 using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
                 {
                     try
                     {
-                        onUpdate?.Invoke();
                         await webRequest.SendWebRequest();
+
+                        // 404 直接返回 null
                         if (webRequest.responseCode == 404)
                         {
-                            return;
+                            return null;
                         }
+
+                        // 网络错误或协议错误，重试
                         if (webRequest.result == UnityWebRequest.Result.ConnectionError ||
                             webRequest.result == UnityWebRequest.Result.ProtocolError)
                         {
@@ -201,22 +206,27 @@ namespace Main
                         }
                         else
                         {
+                            // 下载成功
                             string result = webRequest.downloadHandler.text;
-                            MainEntry.Log(MainEntry.LogCategory.Assets, "成功下载云端Apk和AssetBundle版本信息=>\n" +
-                                                                          $"{result}");
-                            onComplete?.Invoke(result);
-                            return;
+                            MainEntry.Log(MainEntry.LogCategory.Assets,
+                                "成功下载云端Apk和AssetBundle版本信息=>\n" + result);
+                            return result;
                         }
                     }
                     catch (Exception e)
                     {
                         if (e.Message.Contains("404"))
                         {
-                            return;
+                            return null;
                         }
+
+                        currentRetry++;
+                        await UniTask.Delay(100); // 出异常也重试
                     }
                 }
             }
+            // 超过重试次数仍失败，返回 null
+            return null;
         }
 
         public async UniTask DownloadFileAsync(string url, Action<byte[]> successCb, Action failCb, Action onUpdate)
