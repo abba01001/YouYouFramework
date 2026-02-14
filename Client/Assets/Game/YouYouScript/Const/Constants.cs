@@ -14,6 +14,7 @@ static partial class Constants
     public static float MainRoleMoveSpeed = 4f;//玩家移动速度
     public static bool IsLoadDataTable = false;
     public static bool IsLoginGame = false;
+    public static bool IsEntryGame = true;
     public static bool IsShieldGuide = true;
     public static bool IsEntryFormMain = false;
     

@@ -62,7 +62,7 @@ public class GuideManager
     public void OnUpdate()
     {
         if (Constants.IsShieldGuide) return;//屏蔽引导系统
-        if (!GameEntry.Net.IsLoginGame) return;
+        if (!Constants.IsEntryGame) return;
         if (IsGuiding) return;
         if (TriggerEventQueue.Count > 0 && CurTriggerEvent == String.Empty)
         {

@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UI;
 using YouYou;
 
@@ -12,59 +13,59 @@ public class Player : CharacterBase
     public PlayerManager _PlayerManager;
     public int playerCapacityBuyAmount;
     public Text playerCapaciyTest;
+    private Transform foodCollectPos;
+    private Vector3 initialFoodCollectPos;
 
     private void Start()
     { 
         _BillingDesk = FindObjectOfType<BillingDesk>();
+        Init(GameEntry.Data.PlayerRoleData.restaurantData.player);
     }
 
-    private void OnTriggerStay(Collider other)
+    public override void Init(CharacterData data)
     {
-        // if (other.GetComponent<FoodPlaceManager>())
-        // {
-        //     FoodPlaceManager shelf = other.GetComponent<FoodPlaceManager>();
-        //
-        //     if (shelf.collectedFoods.Count < shelf.collectFoodCapacity)
-        //     {
-        //         int collectedFoodCount = _PlayerManager.collectedFood.Count - 1;
-        //
-        //         if (collectedFoodCount >= 0)
-        //         {
-        //             for (int i = _PlayerManager.collectedFood.Count - 1; i >= 0; i--)
-        //             {
-        //                 if (_PlayerManager.collectedFood[i].foodName == shelf.shelfFoodName)
-        //                 {
-        //                     removedAnyFood = true;
-        //                     _PlayerManager.collectedFood[i].PlaceFood(shelf.GetIdleFoodTransform());
-        //                     AudioManager.Instance.Play("FoodPlace");
-        //
-        //                     shelf.collectedFoods.Add(_PlayerManager.collectedFood[i]);
-        //                     _PlayerManager.collectedFood[i].transform.parent = shelf.transform;
-        //
-        //                     _PlayerManager.collectedFood[i].goToCustomer = true;
-        //                     _PlayerManager.collectedFood.Remove(_PlayerManager.collectedFood[i]);
-        //                     break;
-        //                 }
-        //             }
-        //
-        //             if (removedAnyFood)
-        //             {
-        //                 Transform foodCollectPos = _PlayerManager.foodCollectPos;
-        //
-        //                 foodCollectPos.localPosition = _PlayerManager.initialFoodCollectPos;
-        //
-        //                 foreach (Food food in _PlayerManager.collectedFood)
-        //                 {
-        //                     food.transform.localPosition = foodCollectPos.localPosition;
-        //                     foodCollectPos.localPosition = new Vector3(foodCollectPos.transform.localPosition.x, foodCollectPos.transform.localPosition.y + 1, foodCollectPos.transform.localPosition.z);
-        //                 }
-        //
-        //                 removedAnyFood = false;
-        //             }
-        //         }
-        //     }
-        // }
+        base.Init(data);
+        foodCollectPos = transform.Find("FoodCollectPos");
+        initialFoodCollectPos = foodCollectPos.transform.localPosition;
+    }
+    
+    public override void HandleOnStay(Collider other)
+    {
+        if (other.CompareTag("Shelf"))
+        {
+            BuildingBase building = other.GetComponent<BuildingBase>();
+            if (building.CanPlaceFood())
+            {
+                int collectedFoodCount = collectedFood.Count - 1;
+                if (collectedFoodCount >= 0)
+                {
+                    for (int i = collectedFood.Count - 1; i >= 0; i--)
+                    {
+                        Food food = collectedFood[i];
+                        if (food.foodName == building.Entity.Consume)
+                        {
+                            removedAnyFood = true;
+                            FindObjectOfType<AudioManager>().Play("PlaceFood");
+                            building.AddFoodToBuilding(food);
+                            ClearCollectFood(food);
+                            break;
+                        }
+                    }
 
+                    if (removedAnyFood)
+                    {
+                        foodCollectPos.localPosition = initialFoodCollectPos;
+                        foreach (Food food in collectedFood)
+                        {
+                            food.transform.localPosition = foodCollectPos.localPosition;
+                            foodCollectPos.localPosition = new Vector3(foodCollectPos.transform.localPosition.x, foodCollectPos.transform.localPosition.y + 1, foodCollectPos.transform.localPosition.z);
+                        }
+                        removedAnyFood = false;
+                    }
+                }
+            }
+        }
+        
         if (other.CompareTag("BillingDeskCollider"))
         {
             if (_BillingDesk.money.Count > 0)
@@ -72,12 +73,12 @@ public class Player : CharacterBase
                 foreach (GameObject money in _BillingDesk.money)
                 {
                     money.transform.DOJump(transform.position, 4, 1, .4f)
-                    .OnComplete(delegate ()
-                    {
-                        GameEntry.Data.AddMoney(5);
-                        AudioManager.Instance.Play("MoneyCollect");
-                        Destroy(money);
-                    });
+                        .OnComplete(delegate ()
+                        {
+                            GameEntry.Data.AddMoney(5);
+                            AudioManager.Instance.Play("MoneyCollect");
+                            Destroy(money);
+                        });
                 }
 
                 _BillingDesk.money = new List<GameObject>();
@@ -91,24 +92,18 @@ public class Player : CharacterBase
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    public override void HandleOnEnter(Collider other)
     {
-        // if (other.gameObject.CompareTag("BuyPoint"))
-        // {
-        //     other.GetComponent<BuyPoint>().StartSpend();
-        // }
-
+        base.HandleOnEnter(other);
         if (other.gameObject.CompareTag("HelperSpawner"))
         {
             other.GetComponent<HelperBuy_UpgradePoint>().OpenWindow();
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    public override void HandleOnExit(Collider other)
     {
-        // if (other.gameObject.CompareTag("BuyPoint"))
-        //     other.GetComponent<BuyPoint>().StopSpend();
-
+        base.HandleOnExit(other);
         if (other.gameObject.CompareTag("HelperSpawner"))
         {
             other.GetComponent<HelperBuy_UpgradePoint>().CloseWindow();

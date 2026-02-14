@@ -111,7 +111,7 @@ public class NetResponseHandler
                 GameEntry.Net.Token = data.Token;
                 GameEntry.Time.InitNetTime(message.Timestamp);
                 GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);
-                Constants.IsLoginGame = true;
+                Constants.IsEntryGame = true;
             }
             else
             {
@@ -132,7 +132,7 @@ public class NetResponseHandler
                 GameEntry.Data.InitGameData(null);//data.SaveData.ToByteArray());
                 GameEntry.Net.Token = data.Token;
                 GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);
-                Constants.IsLoginGame = true;
+                Constants.IsEntryGame = true;
             }
             else
             {

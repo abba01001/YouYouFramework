@@ -30,7 +30,7 @@ namespace YouYou
             m_InitAssetInfoComplete = initAssetInfoComplete;
             byte[] buffer = null;
             string path = "";
-            if (MainEntry.IsLoadStreamingAssets)
+            if (MainEntry.IsOfflineMode)
             {
                 path = string.Format("{0}/{1}", SystemModel.Instance.CurrChannelConfig.RealSourceUrl,YFConstDefine.AssetInfoName);
             }

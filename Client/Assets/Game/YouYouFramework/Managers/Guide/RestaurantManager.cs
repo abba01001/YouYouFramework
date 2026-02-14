@@ -21,8 +21,7 @@ public class RestaurantManager
 
     public void OnUpdate()
     {
-        if(Constants.IsShieldGuide) return;//屏蔽引导系统
-        if (!GameEntry.Net.IsLoginGame) return;
+
 
     }
 

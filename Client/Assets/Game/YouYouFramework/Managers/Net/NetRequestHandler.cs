@@ -34,7 +34,7 @@ public class NetRequestHandler
         }
         else
         {
-            canSend = GameEntry.Net.IsLoginGame;
+            canSend = GameEntry.Net.IsConnectServer;
         }
         if (!canSend) return;
         List<byte[]> list = HandleMessage(data);

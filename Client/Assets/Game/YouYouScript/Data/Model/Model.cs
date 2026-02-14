@@ -97,6 +97,11 @@ public class RestaurantData
     public int maxFarmerCount = 0;
     public int maxHelperCount = 1;
     public int maxCashierCount = 0;
+    public CharacterData player = new CharacterData()
+    {
+        type = WorkerType.Player,
+        maxFoodCarry =  5
+    };
     public List<CharacterData> workers = new List<CharacterData>();
     public List<BuildingData> buildings = new List<BuildingData>();
     public Dictionary<int, int> readyUnlocks = new Dictionary<int, int>();

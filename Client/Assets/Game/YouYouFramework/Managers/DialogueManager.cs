@@ -60,7 +60,7 @@ public class DialogueManager : Observable<DialogueManager>
     //解析对话配置表
     private void ParseDialogueTable()
     {
-        if(!Constants.IsLoadDataTable || IsHandleIng || !Constants.IsLoginGame) return;
+        if(!Constants.IsLoadDataTable || IsHandleIng || !Constants.IsEntryGame) return;
         if (dialogueModel == null) return;
         if (GameEntry.Data.PlayerRoleData.dialogueIds.Contains(dialogueModel.dialogueId))
         {

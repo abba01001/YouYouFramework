@@ -122,7 +122,7 @@ namespace Main
                 if (request.result == UnityWebRequest.Result.Success)
                 {
                     result = request.downloadHandler.text;
-                    MainEntry.IsLoadStreamingAssets = true;
+                    MainEntry.IsOfflineMode = true;
                 }
                 else
                 {
@@ -138,7 +138,7 @@ namespace Main
                 if (string.IsNullOrEmpty(result) && File.Exists(versionFilePath))
                 {
                     result = await File.ReadAllTextAsync(versionFilePath);
-                    MainEntry.IsLoadStreamingAssets = true;
+                    MainEntry.IsOfflineMode = true;
                 }
             }
             return result;

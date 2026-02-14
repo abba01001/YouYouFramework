@@ -5,7 +5,7 @@ using YouYou;
 
 public class Helper : CharacterBase
 {
-    public Transform foodCollectPos;
+    private Transform foodCollectPos;
     private Vector3 initialFoodCollectPos;
     private bool removedAnyFood;
     public Animator anim;
@@ -16,6 +16,7 @@ public class Helper : CharacterBase
     public override void Init(CharacterData data)
     {
         base.Init(data);
+        foodCollectPos = transform.Find("FoodCollectPos");
         GetComponent<NavMeshAgent>().speed = CharacterData.speed;
         initialFoodCollectPos = foodCollectPos.transform.localPosition;
         agent.updateRotation = true;

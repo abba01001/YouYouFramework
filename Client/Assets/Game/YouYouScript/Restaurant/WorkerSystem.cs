@@ -10,6 +10,7 @@ public enum WorkerType
     Farmer,
     Cashier,
     Helper,
+    Player
     // 你可以继续扩展，例如 Cleaner, Security 等等
 }
 

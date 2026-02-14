@@ -91,7 +91,7 @@ namespace Main
         /// </summary>
         public static MainEntry Instance { get; private set; }
 
-        public static bool IsLoadStreamingAssets { get; set; } = false;//本地包资源模式
+        public static bool IsOfflineMode { get; set; } = false;//离线模式
         void OnValidate()
         {
             if (MacroSettings == null)

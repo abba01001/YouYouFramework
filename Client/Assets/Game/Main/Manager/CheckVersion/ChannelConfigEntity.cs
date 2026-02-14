@@ -55,7 +55,7 @@ public class ChannelConfigEntity
 #elif UNITY_IPHONE
                 buildTarget = "iOS";
 #endif
-                if(MainEntry.IsLoadStreamingAssets)
+                if(MainEntry.IsOfflineMode)
                 {
                     m_RealSourceUrl = string.Format("{0}/{1}/{2}/", Application.streamingAssetsPath + "/AssetBundles", SourceVersion, buildTarget);
                 }
@@ -63,7 +63,6 @@ public class ChannelConfigEntity
                 {
                     m_RealSourceUrl = string.Format("{0}{1}/{2}/", SourceUrl, SourceVersion, buildTarget);
                 }
-                Debug.LogError($"RealSourceUrl====》{m_RealSourceUrl}");
             }
             return m_RealSourceUrl;
         }

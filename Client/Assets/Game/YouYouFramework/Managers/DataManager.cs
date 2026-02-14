@@ -192,7 +192,6 @@ public class DataManager : Observable<DataManager>, IDataManager
     /// <param name="ignoreCloudTime">无视cd写入</param>
     public void SaveData(bool writeLocal = true,bool ignoreLocalTime = false,bool writeCloud = false,bool ignoreCloudTime = false)
     {
-        if (!GameEntry.Net.IsLoginGame) return;
         _data_update_time = (int)GameEntry.Time.GetNetTime();
         var binaryData = MessagePackSerializer.Serialize(this, MessagePackSerializer.DefaultOptions);
         
@@ -201,12 +200,14 @@ public class DataManager : Observable<DataManager>, IDataManager
         {
             if (Time.time - lastWriteTime >= writeCooldown || ignoreLocalTime)
             {
-                PlayerPrefs.SetString(GameEntry.Data.UserId, str);
+                PlayerPrefs.SetString("SaveData", str);
                 string json = MessagePackSerializer.SerializeToJson(this, MessagePackSerializer.DefaultOptions);
                 lastWriteTime = Time.time;  // 更新写入的时间
-                //MainEntry.Log(MainEntry.LogCategory.GameData,$"保存本地数据=={json}");
+                MainEntry.Log(MainEntry.LogCategory.GameData,$"保存本地数据=={json}");
             }
         }
+        
+        if (!GameEntry.Net.IsConnectServer) return;
         if (writeCloud)
         {
             string json = MessagePackSerializer.SerializeToJson(this, MessagePackSerializer.DefaultOptions);
@@ -217,7 +218,7 @@ public class DataManager : Observable<DataManager>, IDataManager
                 if (SaveAction != null) SaveAction.Stop();
                 SaveAction = GameEntry.Time.CreateTimer(this, 0.02f, () =>
                 {
-                    //MainEntry.Log(MainEntry.LogCategory.GameData,$"上传数据=={str}");
+                    MainEntry.Log(MainEntry.LogCategory.GameData,$"上传数据=={str}");
                     GameEntry.SDK.UploadGameData(UserId, str);
                     lastUploadTime = Time.time;  // 更新上传的时间
                 });

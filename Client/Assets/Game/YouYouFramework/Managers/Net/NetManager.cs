@@ -49,9 +49,9 @@ public class NetManager
         }
     }
 
-    public bool IsLoginGame
+    public bool IsConnectServer
     {
-        get { return connectionStatus == ConnectionStatus.Connected && Constants.IsLoginGame; }
+        get { return connectionStatus == ConnectionStatus.Connected && Constants.IsEntryGame; }
     }
 
     public NetLogger Logger;
@@ -245,6 +245,7 @@ public class NetManager
     
     public async void HandleDisconnected()
     {
+        if (MainEntry.IsOfflineMode) return;
         connectionStatus = ConnectionStatus.Disconnected;
 
         while (CurReconnectCount < MaxReconnect)

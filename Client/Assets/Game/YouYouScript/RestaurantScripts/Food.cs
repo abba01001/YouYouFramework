@@ -59,12 +59,11 @@ public class Food : MonoBehaviour
         CharacterBase character = other.gameObject.GetComponent<CharacterBase>();
         if (character != null)
         {
-            if(!character.CharacterData.collectFood.Contains(foodName))
+            if (character.CharacterData.type != WorkerType.Player)
             {
-                return;
+                if (!character.CharacterData.collectFood.Contains(foodName)) return;
             }
-            
-            if (character.collectedFood.Count < character.CharacterData.maxFoodCarry)
+            if (character.CanCollectFood())
             {
                 if (notSpawnAuto /*foodName != "Egg" || foodName != "Sauce"*/)
                 {

@@ -23,23 +23,20 @@ public abstract class CharacterBase : MonoBehaviour
         GoToBillingDesk
     }
 
-    public CharacterState currentState = CharacterState.None;
+    private CharacterState currentState = CharacterState.None;
     public CharacterState CurrentState
     {
-        get
-        {
-            return currentState;
-        }
+        get => currentState;
         set
         {
             if(currentState != value) isStateChanged = true;
             currentState = value;
         }
     }
-    public NavMeshAgent agent;
-    public bool isStateChanged;
-    public List<Food> collectedFood = new List<Food>();
-    public TriggerDetector triggerDetector;
+    protected NavMeshAgent agent;
+    protected bool isStateChanged;
+    protected TriggerDetector triggerDetector;
+    protected List<Food> collectedFood = new List<Food>();
     public bool IsLiving { get; set; }
     public bool IsExit { get; set; }
     public CharacterData CharacterData { get; set; }
@@ -81,6 +78,11 @@ public abstract class CharacterBase : MonoBehaviour
     public void ClearCollectFood(Food food)
     {
         collectedFood.Remove(food);
+    }
+
+    public bool CanCollectFood()
+    {
+        return collectedFood.Count < CharacterData.maxFoodCarry;
     }
     
     private async UniTask CheckStartWork()
