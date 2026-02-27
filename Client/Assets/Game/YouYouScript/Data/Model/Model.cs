@@ -46,12 +46,9 @@ public class PlayerRoleData
     public int curGuide;
     public Dictionary<int, int> equipLevels;//装备栏等级信息
     public Dictionary<string, int> roleAttr;//角色属性
-    public List<EqiupItemData> equipWareHouse;//装备仓库
     public List<BagItemData> bagWareHouse;//背包仓库
-    public RestaurantData restaurantData;
     public PlayerRoleData()
     {
-        restaurantData = new RestaurantData();
         equipLevels = new Dictionary<int, int>()
         {
             {1,0},{2,0},{3,0},{4,0},{5,0},{6,0},
@@ -59,7 +56,6 @@ public class PlayerRoleData
         guideIds = new List<int>();
         guideEvent = new List<string>();
         dialogueIds = new List<int>();
-        equipWareHouse = new List<EqiupItemData>();
         bagWareHouse = new List<BagItemData>();
         roleAttr = new Dictionary<string, int>();
         totalOnlineDuration = 0;
@@ -73,73 +69,10 @@ public class PlayerRoleData
 
 [Serializable]
 [MessagePackObject(keyAsPropertyName: true)]
-public class EqiupItemData
-{
-    public int equipId;
-    public int quality;
-    public bool isWear;
-    public Dictionary<int, int> extraAttr = new Dictionary<int, int>();
-}
-
-[Serializable]
-[MessagePackObject(keyAsPropertyName: true)]
 public class BagItemData
 {
     public int itemId;
     public int itemCount;
-}
-
-[Serializable]
-[MessagePackObject(keyAsPropertyName: true)]
-public class RestaurantData
-{
-    public int maxCustomerCount = 1;
-    public int maxFarmerCount = 0;
-    public int maxHelperCount = 1;
-    public int maxCashierCount = 0;
-    public CharacterData player = new CharacterData()
-    {
-        type = WorkerType.Player,
-        maxFoodCarry =  5
-    };
-    public List<CharacterData> workers = new List<CharacterData>();
-    public List<BuildingData> buildings = new List<BuildingData>();
-    public Dictionary<int, int> readyUnlocks = new Dictionary<int, int>();
-}
-
-[Serializable]
-[MessagePackObject(keyAsPropertyName: true)]
-public class BuildingData
-{
-    public int buildingId;
-    
-}
-
-
-[Serializable]
-[MessagePackObject(keyAsPropertyName: true)]
-public class CharacterData
-{
-    public string characterId;
-    public WorkerType type;//类型
-    public string name;
-    
-    public List<string> collectFood = new List<string>();//收集食物列表
-    public List<FoodData> foodList =  new List<FoodData>();//所需食物列表
-    public int hatColorIndex;//帽子颜色索引
-    public int meshColorIndex;//网格颜色索引
-    
-    public int maxFoodCarry = 2;//食物容量
-    public float speed = 10;//速度
-}
-
-[Serializable]
-[MessagePackObject(keyAsPropertyName: true)]
-public class FoodData
-{
-    public string name;
-    public int needCount;
-    public int hasCount;
 }
 
 public class DialogueCommand

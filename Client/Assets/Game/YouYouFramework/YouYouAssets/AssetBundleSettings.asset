@@ -21,7 +21,7 @@ MonoBehaviour:
   IsUploadAPK: 0
   IsUploadStreamingAsset: 1
   AssetBundleSavePath: AssetBundles
-  IsCanEditor: 0
+  IsCanEditor: 1
   Datas:
   - Name: "\u7EB9\u7406\u8D44\u6E90"
     IsBuild: 1
@@ -97,13 +97,6 @@ MonoBehaviour:
     IsEncrypt: 0
     Path:
     - Game/Download/Sound
-  - Name: "\u80CC\u666F\u8D44\u6E90"
-    IsBuild: 1
-    Overall: 1
-    IsFirstData: 0
-    IsEncrypt: 0
-    Path:
-    - Game/Download/BackGround
   - Name: "\u5BC6\u94A5"
     IsBuild: 1
     Overall: 1
@@ -111,17 +104,10 @@ MonoBehaviour:
     IsEncrypt: 0
     Path:
     - Game/Download/Key
-  - Name: "\u5173\u5361"
+  - Name: 
     IsBuild: 1
     Overall: 1
     IsFirstData: 1
-    IsEncrypt: 1
-    Path:
-    - Game/Download/MapLevel
-  - Name: "\u63D0\u53D6\u8D44\u6E90"
-    IsBuild: 1
-    Overall: 1
-    IsFirstData: 0
     IsEncrypt: 0
     Path:
-    - Game/Download/RestaurantAsse
+    - Game/Download/Project Files

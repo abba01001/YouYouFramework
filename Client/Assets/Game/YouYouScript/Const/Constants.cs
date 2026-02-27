@@ -90,11 +90,6 @@ static partial class Constants
         public const string UpdateBtnUnlockStatus = "UpdateBtnUnlockStatus";
     }
 
-    public static Dictionary<int, string> ChatChannel = new Dictionary<int, string>()
-    {
-        {(int) ChatChannelType.World,"世界"},
-        {(int) ChatChannelType.Private,"私聊"}
-    };
 
     public struct ItemPath
     {

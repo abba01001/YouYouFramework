@@ -15,7 +15,6 @@ public interface IDataManager
     PlayerRoleData PlayerRoleData { get; set; }
     int DataUpdateTime { get; set; }
     void InitPlayData();
-    List<EqiupItemData> GetWearEquip();
 }
 
 [MessagePackObject(keyAsPropertyName: true)]
@@ -77,7 +76,6 @@ public class DataManager : Observable<DataManager>, IDataManager
     [IgnoreMember] private float lastUploadTime = 0f; // 上次上传时间
     [IgnoreMember] private float writeCooldown = 5f; // 写入的冷却时间（5秒）
     [IgnoreMember] private float uploadCooldown = 10f; // 上传的冷却时间（10秒）
-    [IgnoreMember] private List<EqiupItemData> wearEquipList = new List<EqiupItemData>();
 
     [IgnoreMember]
     public int RoleLevel => _playerRoleData.roleAttr["role_level"];
@@ -98,19 +96,6 @@ public class DataManager : Observable<DataManager>, IDataManager
         if (_playerRoleData.roleAttr["coin"] == 0) return;
         _playerRoleData.roleAttr["coin"] -= count;
         GameEntry.Event.Dispatch(Constants.EventName.SetMoneyText,_playerRoleData.roleAttr["coin"]);
-    }
-    
-    public List<EqiupItemData> GetWearEquip()
-    {
-        wearEquipList.Clear();
-        foreach (var item in _playerRoleData.equipWareHouse)
-        {
-            if (item.isWear)
-            {
-                wearEquipList.Add(item);
-            }
-        }
-        return wearEquipList;
     }
     
     public string PrintUserData()
@@ -192,6 +177,7 @@ public class DataManager : Observable<DataManager>, IDataManager
     /// <param name="ignoreCloudTime">无视cd写入</param>
     public void SaveData(bool writeLocal = true,bool ignoreLocalTime = false,bool writeCloud = false,bool ignoreCloudTime = false)
     {
+        return;
         _data_update_time = (int)GameEntry.Time.GetNetTime();
         var binaryData = MessagePackSerializer.Serialize(this, MessagePackSerializer.DefaultOptions);
         

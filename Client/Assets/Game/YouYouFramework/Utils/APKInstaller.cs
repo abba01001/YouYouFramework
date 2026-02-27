@@ -20,7 +20,7 @@ public class APKInstaller : MonoBehaviour
         }
 
         Instance = this; // 设置单例实例
-        DontDestroyOnLoad(gameObject); // 不销毁该对象
+        // DontDestroyOnLoad(gameObject); // 不销毁该对象
     }
 
     // 调用安装 APK 的方法

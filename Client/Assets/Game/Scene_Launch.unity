@@ -221,10 +221,8 @@ GameObject:
   m_Component:
   - component: {fileID: 856664107}
   - component: {fileID: 856664108}
-  - component: {fileID: 856664110}
   - component: {fileID: 856664111}
   - component: {fileID: 856664112}
-  - component: {fileID: 856664113}
   m_Layer: 0
   m_Name: MainEntry
   m_TagString: Untagged
@@ -264,18 +262,6 @@ MonoBehaviour:
   m_ParamsSettings: {fileID: 11400000, guid: 31383792df0064f4aac1120ffd378771, type: 2}
   m_MacroSettings: {fileID: 11400000, guid: 7834227d1d1628a4f8629d1715b119e1, type: 2}
   m_CurrDeviceGrade: 0
---- !u!114 &856664110
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 856664105}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6da24bac46108f34ca945aa02649e4e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &856664111
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -302,14 +288,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jsonString: "{\"\u63D0\u793A\": \"\u6E38\u620F\u5185\u6309\u7A7A\u683C\u952E\",
     \"\u4F5C\u7528\": \"\u53EF\u5C55\u793A\u73A9\u5BB6\u6570\u636E\"}"
---- !u!81 &856664113
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 856664105}
-  m_Enabled: 1
 --- !u!1001 &1867182076
 PrefabInstance:
   m_ObjectHideFlags: 0

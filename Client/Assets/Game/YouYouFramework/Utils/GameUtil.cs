@@ -11,6 +11,7 @@ using ICSharpCode.SharpZipLib.Zip;
 using Main;
 using Newtonsoft.Json;
 using Unity.VisualScripting;
+using UnityEngine.InputSystem;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
@@ -157,21 +158,34 @@ public class GameUtil
         LogError($"{tag} --- 消耗时间: {seconds:F3} 秒");
     }
 
-    public static IEnumerator CheckKeys(Dictionary<(KeyCode, KeyCode?), Action> keyMappings)
+    public static IEnumerator CheckKeys(Dictionary<(Key, Key?), Action> keyMappings)
     {
         while (true)
         {
-            foreach (var keyMapping in keyMappings)
+            if (Keyboard.current != null)
             {
-                KeyCode mainKey = keyMapping.Key.Item1;
-                KeyCode? modifierKey = keyMapping.Key.Item2; // 可选修饰键
-                Action action = keyMapping.Value;
-                if (modifierKey.HasValue)
+                foreach (var keyMapping in keyMappings)
                 {
-                    // 检查修饰键和功能键是否同时按下
-                    if (Input.GetKey(modifierKey.Value) && Input.GetKeyDown(mainKey))
+                    Key mainKey = keyMapping.Key.Item1;
+                    Key? modifierKey = keyMapping.Key.Item2;
+                    Action action = keyMapping.Value;
+
+                    if (modifierKey.HasValue)
                     {
-                        action?.Invoke();
+                        if (
+                            Keyboard.current[modifierKey.Value].isPressed &&
+                            Keyboard.current[mainKey].wasPressedThisFrame
+                        )
+                        {
+                            action?.Invoke();
+                        }
+                    }
+                    else
+                    {
+                        if (Keyboard.current[mainKey].wasPressedThisFrame)
+                        {
+                            action?.Invoke();
+                        }
                     }
                 }
             }

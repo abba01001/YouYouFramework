@@ -73,10 +73,10 @@ public class NetManager
             Debug.LogWarning("连接已断开，请尝试重新连接。");
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Requset.c2s_request_item_info();
-        }
+        // if (Input.GetKeyDown(KeyCode.Space))
+        // {
+        //     Requset.c2s_request_item_info();
+        // }
     }
 
     public void DisConnectServer()

@@ -28,32 +28,14 @@ public class FormMain : UIFormBase
         });
         testBt2.SetButtonClick(() =>
         {
-            GameEntry.UI.OpenUIForm<FormUpgrade>();
         });
     }
 
     protected override void OnShow()
     {
         base.OnShow();
-        BuildingSystem.Instance.PlayerController.joystick = joystick;
     }
     
-    async UniTask InitPlayer()
-    {
-        PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync($"Assets/Game/Download/Prefab/Role/Player.prefab");
-        obj.GetComponent<PlayerController>().joystick = joystick;
-        obj.gameObject.MSetActive(true);
-        Scene targetScene = SceneManager.GetSceneByName("Main");
-        // if (targetScene.IsValid())
-        // {
-        //     SceneManager.MoveGameObjectToScene(obj.gameObject, targetScene);
-        // }
-        // GameEntry.Event.Dispatch(Constants.EventName.UpdateFoodPlayerCarry,obj.GetComponent<PlayerManager>().maxFoodPlayerCarry);
-        BuildingSystem.Instance.PlayerController = obj.GetComponent<PlayerController>();
-
-    }
-    
-    public Joystick joystick;
     public Text collectedMoney;
     public GameObject dragToMoveWindow;
     public GameObject settingsPanel;
@@ -98,7 +80,6 @@ public class FormMain : UIFormBase
     public void OpenSettingsWindow()
     {
         PlayerPrefs.DeleteAll();
-        MyAdManager.Instance.ShowInterstitialAd();
         settingsPanel.SetActive(true);
     }
 }

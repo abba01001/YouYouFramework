@@ -46,7 +46,7 @@ public class FormLogin : UIFormBase
         //loginBtn.GetComponent<Image>().SetImage("Assets/Game/Download/Atlas/Textures/Common","JoyBg.png",true);
         
          // GameEntry.Net.Requset.c2s_request_register("a888888","99999");
-         if (MainEntry.IsOfflineMode)
+         if (true || MainEntry.IsOfflineMode)
          {
              string result = PlayerPrefs.GetString("SaveData");
              byte[] binaryData = Convert.FromBase64String(result);

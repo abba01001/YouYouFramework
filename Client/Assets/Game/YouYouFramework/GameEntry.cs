@@ -7,6 +7,7 @@ using MessagePack;
 using MessagePack.Unity;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace YouYou
@@ -140,13 +141,13 @@ namespace YouYou
             //进入第一个流程
             Procedure.ChangeState(ProcedureState.Launch);
             
-            Dictionary<(KeyCode, KeyCode?), Action> keyMappings = new Dictionary<(KeyCode, KeyCode?), Action>
+            Dictionary<(Key, Key?), Action> keyMappings = new Dictionary<(Key, Key?), Action>
             {
-                {(KeyCode.Keypad0, KeyCode.LeftControl), Test0},
-                {(KeyCode.Keypad1, KeyCode.LeftControl), Test1},
-                {(KeyCode.Keypad2, KeyCode.LeftControl), Test2},
-                {(KeyCode.Keypad3, KeyCode.LeftControl), Test3},
-                {(KeyCode.Keypad4, KeyCode.LeftControl), Test4}
+                {(Key.Numpad0, Key.LeftCtrl), Test0},
+                {(Key.Numpad1, Key.LeftCtrl), Test1},
+                {(Key.Numpad2, Key.LeftCtrl), Test2},
+                {(Key.Numpad3, Key.LeftCtrl), Test3},
+                {(Key.Numpad4, Key.LeftCtrl), Test4}
             };
             StopCoroutine(GameUtil.CheckKeys(keyMappings));
             StartCoroutine(GameUtil.CheckKeys(keyMappings));
@@ -167,6 +168,9 @@ namespace YouYou
         private bool isOpen = false;
         private void Test0()
         {
+            GameUtil.LogError("11111");
+            UI.OpenUIForm<FormMain>();
+            return;
             // isOpen = !isOpen;
             // MainEntry.Reporter.ShowLogPanel(isOpen);
             StartCoroutine(GameUtil.LocationInfoCoroutine(null));
@@ -174,6 +178,8 @@ namespace YouYou
         
         private void Test1()
         {
+            UI.CloseUIForm<FormMain>();
+            return;
             GameEntry.Data.PlayerRoleData.roleAttr["role_level"]++;
             GameEntry.Event.Dispatch(Constants.EventName.UpdateBtnUnlockStatus);
             //QueueManager.Instance.AddEventTask("Hello","CloseHello");

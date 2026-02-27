@@ -1,7 +1,9 @@
 using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
+using Watermelon;
 
 
 namespace YouYou
@@ -25,7 +27,11 @@ namespace YouYou
         {
             Scene targetScene = SceneManager.GetSceneByName("Game");
             SceneManager.SetActiveScene(targetScene);
-            BuildingSystem.Instance.Init();
+            GameController.InitCamera(Camera.main);
+            // var cam = GameEntry.Instance.UICamera.gameObject;
+            // cam.transform.SetParent(null);
+            // SceneManager.MoveGameObjectToScene(cam, targetScene);
+            // BuildingSystem.Instance.Init();
             initScene = true;
             // Material main3Skybox = Resources.Load<Material>("CloudyNight"); // 确保路径正确
             // // 更新渲染设置中的天空盒
@@ -41,7 +47,27 @@ namespace YouYou
             //     GameObject.Destroy(mapParent);
             // }
             // MapParent = new GameObject("Map");
+            
+            var baseData = Camera.main.GetUniversalAdditionalCameraData();
+            baseData.cameraStack.Add(GameEntry.Instance.UICamera);
+            // GameEntry.Instance.UICamera.sta
 
+        }
+        
+        public static void AddToStack(Camera baseCam, Camera overlayCam)
+        {
+            if (baseCam == null || overlayCam == null) return;
+
+            var baseData = baseCam.GetUniversalAdditionalCameraData();
+            var overlayData = overlayCam.GetUniversalAdditionalCameraData();
+
+            if (baseData == null || overlayData == null) return;
+            // 必须设置为 Overlay 类型
+            overlayData.renderType = CameraRenderType.Overlay;
+            if (!baseData.cameraStack.Contains(overlayCam))
+            {
+                baseData.cameraStack.Add(overlayCam);
+            }
         }
 
         private async UniTask InitFixedBuilding()
@@ -115,12 +141,12 @@ namespace YouYou
         internal override void OnUpdate()
         {
             base.OnUpdate();
-            if (!initScene) return;
-            if (!BuildingSystem.Instance.InitFinish) return;
-            
-            BuildingSystem.Instance.Update();
-            CustomerSystem.Instance.Update();
-            WorkerSystem.Instance.Update();
+            // if (!initScene) return;
+            // if (!BuildingSystem.Instance.InitFinish) return;
+            //
+            // BuildingSystem.Instance.Update();
+            // CustomerSystem.Instance.Update();
+            // WorkerSystem.Instance.Update();
         }
         internal override void OnLeave()
         {

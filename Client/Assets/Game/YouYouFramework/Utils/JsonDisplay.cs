@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using MessagePack;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using YouYou;
 
 public class JsonDisplay : MonoBehaviour
@@ -14,11 +15,9 @@ public class JsonDisplay : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             jsonString = GameEntry.Data.PrintUserData();
-            // GameEntry.Data.InitGameData(null);
-            // GameEntry.Data.SaveData(true);
         }
     }
 }
