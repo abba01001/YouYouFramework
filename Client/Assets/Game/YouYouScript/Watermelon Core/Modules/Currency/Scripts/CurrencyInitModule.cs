@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace Watermelon
 {
+    /// <summary>
+    /// 货币系统模块
+    /// </summary>
     [RegisterModule("Currencies", false)]
     public class CurrencyInitModule : InitModule
     {

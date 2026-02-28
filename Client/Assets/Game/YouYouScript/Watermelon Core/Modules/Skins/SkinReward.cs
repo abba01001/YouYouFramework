@@ -14,6 +14,7 @@ namespace Watermelon
         private void Start()
         {
             skinsController = SkinController.Instance;
+            GameUtil.LogError("SkinReward====>",skinsController == null);
         }
 
         private void OnEnable()

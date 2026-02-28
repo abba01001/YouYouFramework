@@ -771,7 +771,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1465082807990892917}
-  - component: {fileID: 8205599830313418849}
   m_Layer: 5
   m_Name: Joystick
   m_TagString: Untagged
@@ -800,23 +799,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &8205599830313418849
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3030217840333052541}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2cf12820e9d115845a48307e900aeb64, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  center: {fileID: 6027421766367589236}
-  knob: {fileID: 6772152573712076802}
-  range: 0.7
-  fixedJoystick: 0
-  direction: {x: 0, y: 0}
 --- !u!1 &3183139856402562404
 GameObject:
   m_ObjectHideFlags: 0
@@ -3349,7 +3331,6 @@ MonoBehaviour:
   testBtn: {fileID: 354397286990549881}
   testBt1: {fileID: 809485465553758470}
   testBt2: {fileID: 8384667913660752277}
-  joystick: {fileID: 8205599830313418849}
   collectedMoney: {fileID: 6303374365865200831}
   dragToMoveWindow: {fileID: 8381516398251372957}
   settingsPanel: {fileID: 9187199944128751531}

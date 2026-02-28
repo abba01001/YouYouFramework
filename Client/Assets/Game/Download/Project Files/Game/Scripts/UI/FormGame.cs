@@ -5,10 +5,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using Watermelon.GlobalUpgrades;
 using Watermelon.IAPStore;
+using YouYou;
 
 namespace Watermelon
 {
-    public class UIGame : UIPage
+    public class FormGame : UIFormBase
     {
         [SerializeField] RectTransform safeAreaRectTransform;
         [SerializeField] Joystick joystick;
@@ -36,9 +37,6 @@ namespace Watermelon
         [SerializeField] TutorialCanvasController tutorialCanvasController;
 
         [Space]
-        [SerializeField] RawImage backgroundImage;
-
-        [Space]
         [SerializeField] GamepadIndicatorUI gamepadInteractor;
 
         [Header("Inventory")]
@@ -52,9 +50,17 @@ namespace Watermelon
         private TweenCaseCollection caseCollection;
         private Coroutine shineCoroutine;
 
-        public override void Init()
+        protected override void Awake()
         {
-            joystick.Init(canvas);
+            base.Awake();
+            GameUtil.LogError("初始化FormGame");
+            Init();
+            GameUtil.LogError("初始化FormGame完成");
+        }
+
+        public void Init()
+        {
+            joystick.Init(CurrCanvas);
 
             inventoryButton.onClick.AddListener(OnInventoryButtonClicked);
             upgradesButton.onClick.AddListener(OnUpgradesButonClicked);
@@ -72,36 +78,36 @@ namespace Watermelon
                 hungerUI.gameObject.SetActive(false);
             }
 
-            NotchSaveArea.RegisterRectTransform(safeAreaRectTransform);
+            // NotchSaveArea.RegisterRectTransform(safeAreaRectTransform);
 
             tutorialCanvasController.Initialise();
             worldTransitionPopUp.Initialise();
 
-            backgroundImage.color = Color.white;
+            GameEntry.Instance.BackgroundImage.color = Color.white;
 
             gamepadInteractor.Init();
         }
 
         #region Show/Hide
 
-        public override void PlayShowAnimation()
+        public void PlayShowAnimation()
         {
             playerInventory = PlayerBehavior.GetBehavior().Inventory;
             playerInventory.CapacityChanged += UpdateInventoryUI;
 
             UpdateInventoryUI();
 
-            UIController.OnPageOpened(this);
+            // UIController.OnPageOpened(this);
 
             UIGamepadButton.DisableAllTags();
             UIGamepadButton.EnableTag(UIGamepadButtonTag.Game);
         }
 
-        public override void PlayHideAnimation()
+        public void PlayHideAnimation()
         {
             playerInventory.CapacityChanged -= UpdateInventoryUI;
 
-            UIController.OnPageClosed(this);
+            // UIController.OnPageClosed(this);
         }
 
         #endregion
@@ -198,7 +204,7 @@ namespace Watermelon
 
         public void SetBackgroundTexture(Texture texture)
         {
-            backgroundImage.texture = texture;
+            GameEntry.Instance.BackgroundImage.texture = texture;
         }
 
         private void OnUpgradesButonClicked()

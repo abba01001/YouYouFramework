@@ -21,7 +21,7 @@ namespace Watermelon
 
             UIController.HidePage<UIPause>(() => 
             {
-                UIController.HidePage<UIGame>();
+                // UIController.HidePage<FormGame>();
 
                 GameController.OpenMainMenu();
             });

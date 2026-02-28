@@ -1,6 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using YouYou;
 
 namespace Watermelon
 {
@@ -46,12 +47,12 @@ namespace Watermelon
 
             clickHandler.onClick.AddListener(OnMissionClicked);
 
-            UIGame gameUI = UIController.GetPage<UIGame>();
+            FormGame gameForm = GameEntry.UI.GetUIForm<FormGame>();//UIController.GetPage<FormGame>();
 
             // Creating positions for currency reward cloud
             GameObject spawn = new GameObject("[floating cloud spawn]");
             spawn.transform.position = rewardText.transform.position;
-            spawn.transform.SetParent(gameUI.transform);
+            spawn.transform.SetParent(gameForm.transform);
             floatingCloundSpawn = spawn.AddComponent<RectTransform>();
         }
 
@@ -234,9 +235,9 @@ namespace Watermelon
                 Currency currency = CurrencyController.GetCurrency(reward.CurrencyType);
                 if(currency.FloatingCloud.AddToCloud)
                 {
-                    UIGame gameUI = UIController.GetPage<UIGame>();
+                    FormGame gameForm = GameEntry.UI.GetUIForm<FormGame>();//UIController.GetPage<FormGame>();
 
-                    CurrencyUI currencyUI = gameUI.CurrenciesUIController.ActivateCurrency(reward.CurrencyType);
+                    CurrencyUI currencyUI = gameForm.CurrenciesUIController.ActivateCurrency(reward.CurrencyType);
 
                     Tween.NextFrame(() =>
                     {

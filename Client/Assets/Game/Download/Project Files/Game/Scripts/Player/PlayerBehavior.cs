@@ -210,7 +210,8 @@ namespace Watermelon
         {
             if (IsDead)
                 return;
-
+            if (Control.CurrentControl == null)
+                return;
             // Fix audio listener rotation
             audioListenerTransform.rotation = Quaternion.identity;
 

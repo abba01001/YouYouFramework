@@ -1,6 +1,8 @@
 ﻿#pragma warning disable 0649
 
+using Unity.VisualScripting;
 using UnityEngine;
+using YouYou;
 
 namespace Watermelon
 {
@@ -21,7 +23,7 @@ namespace Watermelon
 
         public override void CreateComponent()
         {
-            Tween tween = Initializer.GameObject.AddComponent<Tween>();
+            Tween tween = GameEntry.Instance.AddComponent<Tween>();
             tween.Init(tweensUpdateCount, tweensFixedUpdateCount, tweensLateUpdateCount, verboseLogging);
 
             Ease.Init(customEasingFunctions);

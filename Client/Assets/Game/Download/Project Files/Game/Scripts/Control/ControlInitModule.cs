@@ -1,7 +1,12 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
+using YouYou;
 
 namespace Watermelon
 {
+    /// <summary>
+    /// 输入控制管理系统
+    /// </summary>
     [RegisterModule("Control Manager")]
     public class ControlInitModule : InitModule
     {
@@ -24,12 +29,12 @@ namespace Watermelon
 
             if(inputType == InputType.Keyboard)
             {
-                KeyboardControl keyboardControl = Initializer.GameObject.AddComponent<KeyboardControl>();
+                KeyboardControl keyboardControl = GameEntry.Instance.AddComponent<KeyboardControl>();
                 keyboardControl.Init();
             } 
             else if(inputType == InputType.Gamepad)
             {
-                GamepadControl gamepadControl = Initializer.GameObject.AddComponent<GamepadControl>();
+                GamepadControl gamepadControl = GameEntry.Instance.AddComponent<GamepadControl>();
                 gamepadControl.Init();
             }
         }

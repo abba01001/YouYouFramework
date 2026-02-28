@@ -312,6 +312,26 @@ namespace YouYou
             return UIPool.GetUIForm(uiFormId) as T;
         }
 
+        public T GetUIForm<T>() where T : UIFormBase
+        {
+            string uiFormName = typeof(T).Name;
+
+            int uiFormId = GameEntry.DataTable.Sys_UIFormDBModel
+                .GetEntity(uiFormName).Id;
+
+            // 先看看已打开的窗口有没有
+            for (LinkedListNode<UIFormBase> curr = m_OpenUIFormList.First; 
+                 curr != null; 
+                 curr = curr.Next)
+            {
+                if (curr.Value.SysUIForm.Id == uiFormId)
+                    return curr.Value as T;
+            }
+
+            // 再看看对象池内有没有
+            return null;
+        }
+        
         /// <summary>
         /// 检查UI是否已经打开
         /// </summary>

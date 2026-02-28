@@ -4,6 +4,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using Unity.VisualScripting;
+using YouYou;
 
 namespace Watermelon
 {
@@ -92,7 +94,7 @@ namespace Watermelon
                 lastInterstitialTime = Time.time + settings.InterstitialStartDelay;
             }
 
-            Initializer.GameObject.AddComponent<AdsManager.AdEventExecutor>();
+            GameEntry.Instance.AddComponent<AdsManager.AdEventExecutor>();
 
             advertisingActiveModules = new Dictionary<AdProvider, AdProviderHandler>();
             for (int i = 0; i < AD_PROVIDERS.Length; i++)

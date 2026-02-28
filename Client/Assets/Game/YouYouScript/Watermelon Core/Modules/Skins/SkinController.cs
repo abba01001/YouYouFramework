@@ -23,7 +23,7 @@ namespace Watermelon
         public void Init()
         {
             Instance = this;
-
+            Debug.LogError("SkinController  Init111111111111111111");
             save = SaveController.GetSaveObject<SkinControllerSave>("Skin Controller Save");
 
             selectedSkins = new Dictionary<AbstractSkinDatabase, ISkinData>();

@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
+using YouYou;
 
 namespace Watermelon
 {
     public class EnvironmentSkyModule
     {
-        private static UIGame uiGame;
+        private static FormGame _formGame;
 
         private Texture2D texture;
         private Color[] pixels;
@@ -15,18 +17,29 @@ namespace Watermelon
 
         public EnvironmentSkyModule(EnvironmentWeatherModule weatherModule)
         {
-            uiGame = UIController.GetPage<UIGame>();
+            // _formGame = UIController.GetPage<FormGame>();
 
             texture = new Texture2D(1, 100);
             texture.wrapMode = TextureWrapMode.Clamp;
 
             pixels = new Color[100];
-
-            uiGame.SetBackgroundTexture(texture);
-
+            InitBackgroundTexture();
+            // _formGame.SetBackgroundTexture(texture);
             this.weatherModule = weatherModule;
         }
 
+        async UniTask InitBackgroundTexture()
+        {
+            var form = GameEntry.UI.GetUIForm<FormGame>();
+            while (form == null)
+            {
+                form = GameEntry.UI.GetUIForm<FormGame>();
+                if(form != null) break;
+                await UniTask.Delay(50);
+            }
+            GameEntry.UI.GetUIForm<FormGame>().SetBackgroundTexture(texture);
+        }
+        
         public void ApplyDayPartPreset(PartOfDayPreset preset)
         {
             for (int i = 0; i < 100; i++)

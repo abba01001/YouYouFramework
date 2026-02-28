@@ -108,6 +108,7 @@ namespace Watermelon
 
             SceneManager.LoadScene(worldData.Scene.Name, LoadSceneMode.Additive);
 
+            Debug.LogError("记得加载UI Game");
             Control.EnableMovementControl();
         }
 

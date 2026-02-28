@@ -1,6 +1,7 @@
 #pragma warning disable CS0414 
 
 using UnityEngine;
+using YouYou;
 
 namespace Watermelon
 {
@@ -44,12 +45,12 @@ namespace Watermelon
             MissionsController.missions = missions;
 
             // Get game ui and initialise missions panel
-            UIGame gameUI = UIController.GetPage<UIGame>();
+            FormGame gameForm = GameEntry.UI.GetUIForm<FormGame>();//UIController.GetPage<FormGame>();
 
-            missionUIPanel = gameUI.MissionUIPanel;
+            missionUIPanel = gameForm.MissionUIPanel;
             missionUIPanel.Initialise();
 
-            missionRewardPopUp = gameUI.MissionRewardPopUp;
+            missionRewardPopUp = gameForm.MissionRewardPopUp;
 
             for (int i = 0; i < missions.Length; i++)
             {

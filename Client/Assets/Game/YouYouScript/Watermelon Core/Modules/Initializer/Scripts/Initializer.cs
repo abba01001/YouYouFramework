@@ -1,70 +1,30 @@
-﻿#pragma warning disable 0649
-
-using UnityEngine;
-using UnityEngine.EventSystems;
-
-namespace Watermelon
-{
-    [DefaultExecutionOrder(-999)]
-    public class Initializer : MonoBehaviour
-    {
-        private static Initializer initializer;
-
-        [SerializeField] ProjectInitSettings initSettings;
-        [SerializeField] EventSystem eventSystem;
-
-        public static GameObject GameObject { get; private set; }
-        public static Transform Transform { get; private set; }
-
-        public static ProjectInitSettings InitSettings { get; private set; }
-
-        private bool manualActivation;
-
-        public void Awake()
-        {
-            if (initializer != null) return;
-
-            initializer = this;
-
-            manualActivation = false;
-
-            InitSettings = initSettings;
-
-            GameObject = gameObject;
-            Transform = transform;
-
-#if MODULE_INPUT_SYSTEM
-            eventSystem.gameObject.GetOrSetComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
-#else
-            eventSystem.gameObject.GetOrSetComponent<StandaloneInputModule>();
-#endif
-
-            DontDestroyOnLoad(gameObject);
-
-            initSettings.Init(this);
-        }
-
-        public void Start()
-        {
-            if (!manualActivation)
-                LoadGame(true);
-        }
-
-        public void LoadGame(bool loadingScene)
-        {
-            if (loadingScene)
-            {
-                GameLoading.LoadGameScene();
-            }
-            else
-            {
-                GameLoading.SimpleLoad();
-            }
-        }
-
-        public void EnableManualActivation()
-        {
-            manualActivation = true;
-        }
-    }
-}
+﻿// #pragma warning disable 0649
+//
+// using UnityEngine;
+//
+// namespace Watermelon
+// {
+//     [DefaultExecutionOrder(-999)]
+//     public class Initializer : MonoBehaviour
+//     {
+//         private static Initializer initializer;
+//
+//         [SerializeField] ProjectInitSettings initSettings;
+//
+//         public static GameObject GameObject { get; private set; }
+//         public static Transform Transform { get; private set; }
+//
+//
+//         public void Awake()
+//         {
+//             if (initializer != null) return;
+//             initializer = this;
+//             GameObject = gameObject;
+//             Transform = transform;
+//             DontDestroyOnLoad(gameObject);
+//             initSettings.Init();
+//             // GameLoading.SimpleLoad();
+//             Debug.LogError("11111111");
+//         }
+//     }
+// }

@@ -175,13 +175,13 @@ namespace Watermelon
 
             EventSystem eventSystem = eventSystemObject.AddComponent<EventSystem>();
 
-            Initializer initializer = initializerObject.AddComponent<Initializer>();
+            /*Initializer initializer = initializerObject.AddComponent<Initializer>();
 
             SerializedObject serializedObject = new SerializedObject(initializer);
             serializedObject.Update();
             serializedObject.FindProperty("initSettings").objectReferenceValue = projectInitSettings;
             serializedObject.FindProperty("eventSystem").objectReferenceValue = eventSystem;
-            serializedObject.ApplyModifiedProperties();
+            serializedObject.ApplyModifiedProperties();*/
 
             GameObject prefabObject = PrefabUtility.SaveAsPrefabAsset(initializerObject, path);
 

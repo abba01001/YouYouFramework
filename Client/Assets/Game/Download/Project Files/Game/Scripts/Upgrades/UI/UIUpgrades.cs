@@ -37,7 +37,7 @@ namespace Watermelon
         private UpgradeUIPanel SelectedItem => UpgradeUIPanels[SelectedItemId];
         public Transform ContentTransform => contentTransform;
 
-        private UIGame mainPage;
+        private FormGame mainPage;
 
         // Upgrades
 
@@ -59,7 +59,7 @@ namespace Watermelon
         {
             upgradeHelper = new UpgradePanelHelper(this);
 
-            mainPage = UIController.GetPage<UIGame>();
+            mainPage = null;//UIController.GetPage<FormGame>();
 
             closeButton.onClick.AddListener(OnCloseButtonClicked);
 

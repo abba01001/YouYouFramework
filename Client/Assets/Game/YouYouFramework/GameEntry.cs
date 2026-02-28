@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using Watermelon;
 
 namespace YouYou
 {
@@ -37,23 +38,19 @@ namespace YouYou
 
         [FoldoutGroup("UIGroup")]
         [Header("主页背景")]
-        public Image MainBg;
-        
-        [FoldoutGroup("UIGroup")]
-        [Header("战斗背景")]
-        public Image BattleBg;
-        
         [FoldoutGroup("AudioGroup")]
         [Header("声音主混合器")]
         public AudioMixer MonsterMixer;
+        public RawImage BackgroundImage;
 
         [Header("当前语言（要和本地化表的语言字段 一致）")]
         [SerializeField]
         private YouYouLanguage m_CurrLanguage;
         public static YouYouLanguage CurrLanguage;
 
-        public Color[] customerColors;
-        public Mesh[] customerHats;
+        [Header("Suvivor工程试着")]
+        [SerializeField] ProjectInitSettings initSettings;
+
 
         //管理器属性
         public static LoggerManager Logger { get; private set; }
@@ -157,6 +154,8 @@ namespace YouYou
             {
                 Data.SaveData(true);
             },null,true);
+            
+            initSettings.Init();
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -266,36 +265,36 @@ namespace YouYou
 
         public async void ShowBackGround(BGType _type,string _bgName)
         {
-            MainBg.gameObject.MSetActive(false);
-            BattleBg.gameObject.MSetActive(false);
-            if (_type == BGType.Main)
-            {
-                if (MainBg.sprite == null || (MainBg.sprite != null && MainBg.sprite.name != _bgName))
-                {
-                    Texture2D texture = await GameEntry.Loader.LoadMainAssetAsync<Texture2D>(_bgName, this.gameObject);
-                    if (texture != null)
-                    {
-                        Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),new Vector2(0.5f, 0.5f));
-                        sprite.name = _bgName;
-                        MainBg.sprite = sprite;
-                    }
-                }
-                MainBg.gameObject.MSetActive(true);
-            }
-            else if (_type == BGType.Battle)
-            {
-                if (BattleBg.sprite == null || (BattleBg.sprite != null && BattleBg.sprite.name != _bgName))
-                {
-                    Texture2D texture = await GameEntry.Loader.LoadMainAssetAsync<Texture2D>(_bgName, this.gameObject);
-                    if (texture != null)
-                    {
-                        Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),new Vector2(0.5f, 0.5f));
-                        sprite.name = _bgName;
-                        BattleBg.sprite = sprite;
-                    }
-                }
-                BattleBg.gameObject.MSetActive(true);
-            }
+            // MainBg.gameObject.MSetActive(false);
+            // BattleBg.gameObject.MSetActive(false);
+            // if (_type == BGType.Main)
+            // {
+            //     if (MainBg.sprite == null || (MainBg.sprite != null && MainBg.sprite.name != _bgName))
+            //     {
+            //         Texture2D texture = await GameEntry.Loader.LoadMainAssetAsync<Texture2D>(_bgName, this.gameObject);
+            //         if (texture != null)
+            //         {
+            //             Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),new Vector2(0.5f, 0.5f));
+            //             sprite.name = _bgName;
+            //             MainBg.sprite = sprite;
+            //         }
+            //     }
+            //     MainBg.gameObject.MSetActive(true);
+            // }
+            // else if (_type == BGType.Battle)
+            // {
+            //     if (BattleBg.sprite == null || (BattleBg.sprite != null && BattleBg.sprite.name != _bgName))
+            //     {
+            //         Texture2D texture = await GameEntry.Loader.LoadMainAssetAsync<Texture2D>(_bgName, this.gameObject);
+            //         if (texture != null)
+            //         {
+            //             Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),new Vector2(0.5f, 0.5f));
+            //             sprite.name = _bgName;
+            //             BattleBg.sprite = sprite;
+            //         }
+            //     }
+            //     BattleBg.gameObject.MSetActive(true);
+            // }
         }
 
         public static void Log(LogCategory catetory, object message, params object[] args)

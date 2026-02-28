@@ -62,6 +62,7 @@ namespace Watermelon
 
         private void Update()
         {
+            if (instance == null) return;
             // Update for debug or weather transition
             if (!TransitionInProgress && (IsDebug || weatherModule.IsTransitioning))
             {

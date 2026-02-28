@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
+using YouYou;
 
 namespace Watermelon
 {
@@ -29,14 +31,14 @@ namespace Watermelon
         public static void ChangeInputType(InputType inputType)
         {
             InputType = inputType;
-
+            Debug.LogError($"ChangeInputType=====>{inputType}");
             Object.Destroy(CurrentControl as MonoBehaviour);
 
             switch (inputType)
             {
                 case InputType.Gamepad:
 
-                    GamepadControl gamepadControl = Initializer.GameObject.AddComponent<GamepadControl>();
+                    GamepadControl gamepadControl = GameEntry.Instance.AddComponent<GamepadControl>();
                     gamepadControl.Init();
 
                     CurrentControl = gamepadControl;
@@ -44,7 +46,7 @@ namespace Watermelon
                     break;
 
                 case InputType.Keyboard:
-                    KeyboardControl keyboardControl = Initializer.GameObject.AddComponent<KeyboardControl>();
+                    KeyboardControl keyboardControl = GameEntry.Instance.AddComponent<KeyboardControl>();
                     keyboardControl.Init();
 
                     CurrentControl = keyboardControl;

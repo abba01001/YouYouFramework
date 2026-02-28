@@ -81,7 +81,6 @@ namespace Watermelon
                 return null;
             }
 #endif
-
             return currencies[currenciesLink[currencyType]];
         }
 

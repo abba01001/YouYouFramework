@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Watermelon
 {
+    /// <summary>
+    /// 音频系统模块
+    /// </summary>
     [RegisterModule("Audio Controller", core: true)]
     public class AudioInitModule : InitModule
     {

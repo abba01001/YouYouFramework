@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using YouYou;
 
 namespace Watermelon
 {
@@ -25,7 +26,7 @@ namespace Watermelon
                 {
                     GameObject messagesCanvasObject = Instantiate(systemMessagesPrefab);
                     messagesCanvasObject.name = systemMessagesPrefab.name;
-                    messagesCanvasObject.transform.SetParent(Initializer.Transform);
+                    messagesCanvasObject.transform.SetParent(GameEntry.Instance.transform);
                 }
                 else
                 {

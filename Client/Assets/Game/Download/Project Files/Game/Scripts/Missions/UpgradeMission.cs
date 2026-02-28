@@ -75,8 +75,8 @@ namespace Watermelon
 
             if (highlightTheUIButton)
             {
-                UIGame gameUI = UIController.GetPage<UIGame>();
-                gameUI.HighlightUpgradesButton();
+                FormGame gameForm = null;//UIController.GetPage<FormGame>();
+                gameForm.HighlightUpgradesButton();
             }
 
             if (highlightInTheList)
@@ -116,8 +116,8 @@ namespace Watermelon
 
             if (highlightTheUIButton)
             {
-                UIGame gameUI = UIController.GetPage<UIGame>();
-                gameUI.StopUpgradesButtonHighlight();
+                FormGame gameForm = null;//UIController.GetPage<FormGame>();
+                gameForm.StopUpgradesButtonHighlight();
             }
 
             upgrade.IsHighlighted = false;

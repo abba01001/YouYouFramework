@@ -47,6 +47,7 @@ namespace Watermelon
 
         public void Initialise()
         {
+            GameUtil.LogError("初始化EnergyController");
             instance = this;
             save = SaveController.GetSaveObject<EnergySave>("Energy");
 
@@ -76,7 +77,8 @@ namespace Watermelon
 
         private void DisableFoodItemsCurrencyUI()
         {
-            CurrencyUIController currenciesUIController = UIController.GetPage<UIGame>().CurrenciesUIController;
+            return;
+            CurrencyUIController currenciesUIController = null;//UIController.GetPage<FormGame>().CurrenciesUIController;
             for (int i = 0; i < Data.FoodItems.Count; i++)
             {
                 currenciesUIController.DisableCurrency(Data.FoodItems[i].type);

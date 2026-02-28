@@ -2,6 +2,9 @@
 
 namespace Watermelon
 {
+    /// <summary>
+    /// 震动模块
+    /// </summary>
     [RegisterModule("Haptic")]
     public class HapticInitModule : InitModule
     {

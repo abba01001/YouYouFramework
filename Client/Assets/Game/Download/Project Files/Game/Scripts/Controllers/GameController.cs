@@ -1,6 +1,8 @@
+using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using YouYou;
 
 namespace Watermelon
 {
@@ -47,12 +49,14 @@ namespace Watermelon
             CacheComponent(out skinController);
             CacheComponent(out energyController);
             CacheComponent(out environmentController);
+            
+            InitCamera(Camera.main);
             Init();
-            init = true;
         }
 
         private async UniTask Init()
         {
+            GameUtil.LogError("InitInitInit");
             if (cameraController == null)
             {
                 while (true)
@@ -61,39 +65,51 @@ namespace Watermelon
                     await UniTask.Delay(10);
                 }
             }
-            
-            Data.Init();
 
-            defaultMusicController.Initialise();
+            try
+            {
+                Data.Init();
 
-            uiController.Init();
+                defaultMusicController.Initialise();
+
+                uiController.Init();
   
-            cameraController.Initialise();
-            PreviewCamera.Initialise();
+                cameraController.Initialise();
+                PreviewCamera.Initialise();
 
-            skinController.Init();
+                skinController.Init();
 
-            unlockableToolsController.Initialise();
+                unlockableToolsController.Initialise();
 
-            energyController.Initialise();
+                energyController.Initialise();
 
-            environmentController.Initialise();
+                environmentController.Initialise();
 
-            fishingController.Initialise();
+                fishingController.Initialise();
 
-            diggingController.Initialise();
+                diggingController.Initialise();
 
-            globalUpgradesController.Initialise();
+                globalUpgradesController.Initialise();
 
-            floatingTextController.Init();
+                floatingTextController.Init();
 
-            worldController.Initialise();
+                worldController.Initialise();
 
-            uiController.InitPages();
+                uiController.InitPages();
 
-            particlesController.Init();
+                particlesController.Init();
 
-            navigationHelper.Initialise();
+                navigationHelper.Initialise();
+            }
+            catch (Exception e)
+            {
+
+                GameUtil.LogError(e);
+            }
+            
+            init = true;
+            GameUtil.LogError("打开FormGame");
+            GameEntry.UI.OpenUIForm<FormGame>();
         }
 
         public static void InitCamera(Camera camera)
@@ -182,7 +198,7 @@ namespace Watermelon
 
         public static void OnWorldLoaded(WorldBehavior worldBehavior)
         {
-            UIController.ShowPage<UIGame>();
+            // UIController.ShowPage<FormGame>();
 
             fishingController.SpawnFishingPlaces();
 
@@ -209,7 +225,7 @@ namespace Watermelon
 
         public static void LoadWorld(string worldID, SimpleCallback onWorldUnloaded = null, SimpleCallback onNewWorldLoaded = null)
         {
-            UIController.HidePage<UIGame>();
+            // UIController.HidePage<FormGame>();
 
             // Show fullscreen black overlay
             Overlay.Show(0.3f, () =>
@@ -228,7 +244,7 @@ namespace Watermelon
                     // Disable fullscreen black overlay
                     Overlay.Hide(0.3f, () =>
                     {
-                        UIController.ShowPage<UIGame>();
+                        // UIController.ShowPage<FormGame>();
 
                         onNewWorldLoaded?.Invoke();
                     });

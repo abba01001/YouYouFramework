@@ -28,9 +28,9 @@ namespace Watermelon
         {
             if (other.CompareTag(PhysicsHelper.TAG_PLAYER))
             {
-                UIGame gameUI = UIController.GetPage<UIGame>();
+                FormGame gameForm = null;//UIController.GetPage<FormGame>();
 
-                gameUI.WorldTransitionPopUp.Show(() =>
+                gameForm.WorldTransitionPopUp.Show(() =>
                 {
                     if(changeSpecialBehavior != null)
                     {

@@ -9,7 +9,7 @@ namespace Watermelon
         [SerializeField] InitModule[] modules;
         public InitModule[] Modules => modules;
 
-        public void Init(Initializer initializer)
+        public void Init()
         {
             for (int i = 0; i < modules.Length; i++)
             {
