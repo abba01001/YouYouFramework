@@ -28,7 +28,8 @@ MonoBehaviour:
     Overall: 1
     IsFirstData: 1
     IsEncrypt: 0
-    Path: []
+    Path:
+    - Game/Download/Textures
   - Name: "Hotfix\u7A0B\u5E8F\u96C6"
     IsBuild: 1
     Overall: 1

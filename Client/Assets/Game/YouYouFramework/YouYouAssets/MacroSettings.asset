@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e41751009a217614b98fcfd2fb766013, type: 3}
   m_Name: MacroSettings
   m_EditorClassIdentifier: 
-  CurrAssetLoadTarget: 1
+  CurrAssetLoadTarget: 0
   Settings:
   - Enabled: 0
     Name: "\u8C03\u8BD5\u6A21\u5F0F"
