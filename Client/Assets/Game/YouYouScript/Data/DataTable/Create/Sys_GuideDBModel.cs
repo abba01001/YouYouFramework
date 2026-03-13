@@ -1,47 +1,45 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using System;
 
+/// <summary>
+/// Sys_Guide数据管理
+/// </summary>
+public partial class Sys_GuideDBModel : DataTableDBModelBase<Sys_GuideDBModel, Sys_GuideEntity>
+{
+    /// <summary>
+    /// 文件名称
+    /// </summary>
+    public override string DataTableName { get { return "Sys_Guide"; } }
 
     /// <summary>
-    /// Sys_Guide数据管理
+    /// 加载列表
     /// </summary>
-    public partial class Sys_GuideDBModel : DataTableDBModelBase<Sys_GuideDBModel, Sys_GuideEntity>
+    protected override void LoadList(MMO_MemoryStream ms)
     {
-        /// <summary>
-        /// 文件名称
-        /// </summary>
-        public override string DataTableName { get { return "Sys_Guide"; } }
+        int rows = ms.ReadInt();
+        int columns = ms.ReadInt();
 
-        /// <summary>
-        /// 加载列表
-        /// </summary>
-        protected override void LoadList(MMO_MemoryStream ms)
+        for (int i = 0; i < rows; i++)
         {
-            int rows = ms.ReadInt();
-            int columns = ms.ReadInt();
+            Sys_GuideEntity entity = new Sys_GuideEntity();
+            entity.Id = ms.ReadInt();
+            entity.GuideId = ms.ReadInt();
+            entity.GuideType = ms.ReadInt();
+            entity.EventTrigger = ms.ReadUTF8String();
+            entity.ToLevelTrigger = ms.ReadInt();
+            entity.NextGuideId = ms.ReadInt();
+            entity.ClickWidth = ms.ReadUTF8String();
+            entity.TimeToClose = ms.ReadFloat();
+            entity.ShowForm = ms.ReadUTF8String();
+            entity.ClickArrow = ms.ReadUTF8String();
+            entity.TriggerScene = ms.ReadInt();
+            entity.DialogueId = ms.ReadInt();
+            entity.Progress = ms.ReadUTF8String();
+            entity.IsEnable = ms.ReadInt();
 
-            for (int i = 0; i < rows; i++)
-            {
-                Sys_GuideEntity entity = new Sys_GuideEntity();
-                entity.Id = ms.ReadInt();
-                entity.GuideId = ms.ReadInt();
-                entity.GuideType = ms.ReadInt();
-                entity.EventTrigger = ms.ReadUTF8String();
-                entity.ToLevelTrigger = ms.ReadInt();
-                entity.NextGuideId = ms.ReadInt();
-                entity.ClickWidth = ms.ReadUTF8String();
-                entity.TimeToClose = ms.ReadFloat();
-                entity.ShowForm = ms.ReadUTF8String();
-                entity.ClickArrow = ms.ReadUTF8String();
-                entity.TriggerScene = ms.ReadInt();
-                entity.DialogueId = ms.ReadInt();
-                entity.Progress = ms.ReadUTF8String();
-                entity.IsEnable = ms.ReadInt();
-
-                m_List.Add(entity);
-                m_Dic[entity.Id] = entity;
-            }
+            m_List.Add(entity);
+            m_Dic[entity.Id] = entity;
         }
     }
+}

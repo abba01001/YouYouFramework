@@ -7,7 +7,7 @@ local sys_buildingsTable = { }; --定义表格
 
 function Sys_BuildingsDBModel.LoadList()
     GameInit.AddTotalLoadTableCount();
-    CS.YouYou.GameEntry.Lua:LoadDataTable("Sys_Buildings", this.LoadFormMS);
+    CS.GameEntry.Lua:LoadDataTable("Sys_Buildings", this.LoadFormMS);
 end
 
 function Sys_BuildingsDBModel.LoadFormMS(ms)

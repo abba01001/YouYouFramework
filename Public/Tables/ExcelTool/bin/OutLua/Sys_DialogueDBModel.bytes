@@ -7,7 +7,7 @@ local sys_dialogueTable = { }; --定义表格
 
 function Sys_DialogueDBModel.LoadList()
     GameInit.AddTotalLoadTableCount();
-    CS.YouYou.GameEntry.Lua:LoadDataTable("Sys_Dialogue", this.LoadFormMS);
+    CS.GameEntry.Lua:LoadDataTable("Sys_Dialogue", this.LoadFormMS);
 end
 
 function Sys_DialogueDBModel.LoadFormMS(ms)

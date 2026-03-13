@@ -1,37 +1,35 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using System;
 
+/// <summary>
+/// Sys_Item数据管理
+/// </summary>
+public partial class Sys_ItemDBModel : DataTableDBModelBase<Sys_ItemDBModel, Sys_ItemEntity>
+{
+    /// <summary>
+    /// 文件名称
+    /// </summary>
+    public override string DataTableName { get { return "Sys_Item"; } }
 
     /// <summary>
-    /// Sys_Item数据管理
+    /// 加载列表
     /// </summary>
-    public partial class Sys_ItemDBModel : DataTableDBModelBase<Sys_ItemDBModel, Sys_ItemEntity>
+    protected override void LoadList(MMO_MemoryStream ms)
     {
-        /// <summary>
-        /// 文件名称
-        /// </summary>
-        public override string DataTableName { get { return "Sys_Item"; } }
+        int rows = ms.ReadInt();
+        int columns = ms.ReadInt();
 
-        /// <summary>
-        /// 加载列表
-        /// </summary>
-        protected override void LoadList(MMO_MemoryStream ms)
+        for (int i = 0; i < rows; i++)
         {
-            int rows = ms.ReadInt();
-            int columns = ms.ReadInt();
+            Sys_ItemEntity entity = new Sys_ItemEntity();
+            entity.Id = ms.ReadInt();
+            entity.ItemId = ms.ReadInt();
+            entity.Type = ms.ReadInt();
+            entity.Icon = ms.ReadUTF8String();
 
-            for (int i = 0; i < rows; i++)
-            {
-                Sys_ItemEntity entity = new Sys_ItemEntity();
-                entity.Id = ms.ReadInt();
-                entity.ItemId = ms.ReadInt();
-                entity.Type = ms.ReadInt();
-                entity.Icon = ms.ReadUTF8String();
-
-                m_List.Add(entity);
-                m_Dic[entity.Id] = entity;
-            }
+            m_List.Add(entity);
+            m_Dic[entity.Id] = entity;
         }
     }
+}

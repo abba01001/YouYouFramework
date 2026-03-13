@@ -7,7 +7,7 @@ local sys_levelTable = { }; --定义表格
 
 function Sys_LevelDBModel.LoadList()
     GameInit.AddTotalLoadTableCount();
-    CS.YouYou.GameEntry.Lua:LoadDataTable("Sys_Level", this.LoadFormMS);
+    CS.GameEntry.Lua:LoadDataTable("Sys_Level", this.LoadFormMS);
 end
 
 function Sys_LevelDBModel.LoadFormMS(ms)

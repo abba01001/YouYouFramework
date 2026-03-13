@@ -246,104 +246,75 @@ namespace ExcelTool
         {
             if (dataArr == null) return;
 
-            //生成Byte文件
-            {
-                if (!Directory.Exists(OutBytesFilePath)) Directory.CreateDirectory(OutBytesFilePath);
-                FileStream fs = new FileStream(string.Format("{0}\\{1}", OutBytesFilePath, fileName + ".bytes"), FileMode.Create);
-                fs.Write(buffer, 0, buffer.Length);
-                fs.Close();
-                Console.WriteLine("客户端表格=>" + fileName + " 生成bytes文件完毕");
-            }
+            // 生成Byte文件
+            if (!Directory.Exists(OutBytesFilePath)) Directory.CreateDirectory(OutBytesFilePath);
+            File.WriteAllBytes(Path.Combine(OutBytesFilePath, fileName + ".bytes"), buffer);
+            Console.WriteLine("客户端表格=>" + fileName + " 生成bytes文件完毕");
 
-            //生成代码Entity
+            // 生成代码Entity
             StringBuilder sbr = new StringBuilder();
-            sbr.Append("using System.Collections;\r\n");
-            sbr.Append("\r\n");
-            sbr.Append("    /// <summary>\r\n");
-            sbr.AppendFormat("      /// {0}实体\r\n", fileName);
-            sbr.Append("    /// </summary>\r\n");
-            sbr.AppendFormat("    public partial class {0}Entity : DataTableEntityBase\r\n", fileName);
-            sbr.Append("    {\r\n");
+            sbr.AppendLine("using System.Collections;");
+            sbr.AppendLine();
+            sbr.AppendLine("/// <summary>");
+            sbr.AppendFormat("/// {0}实体\r\n", fileName);
+            sbr.AppendLine("/// </summary>");
+            sbr.AppendFormat("public partial class {0}Entity : DataTableEntityBase\r\n", fileName);
+            sbr.AppendLine("{");
 
-            for (int i = 0; i < dataArr.GetLength(0); i++)
+            for (int i = 1; i < dataArr.GetLength(0); i++)
             {
-                if (i == 0) continue;
-                sbr.Append("        /// <summary>\r\n");
-                sbr.AppendFormat("        /// {0}\r\n", dataArr[i, 2]);
-                sbr.Append("        /// </summary>\r\n");
-                sbr.AppendFormat("        public {0} {1};\r\n", dataArr[i, 1], dataArr[i, 0]);
-                sbr.Append("\r\n");
+                sbr.AppendLine("    /// <summary>");
+                sbr.AppendFormat("    /// {0}\r\n", dataArr[i, 2]);
+                sbr.AppendLine("    /// </summary>");
+                sbr.AppendFormat("    public {0} {1};\r\n", dataArr[i, 1], dataArr[i, 0]);
             }
 
-            sbr.Append("    }\r\n");
+            sbr.AppendLine("}");
 
+            File.WriteAllText(Path.Combine(OutCSharpFilePath, fileName + "Entity.cs"), sbr.ToString());
 
-            using (FileStream fs = new FileStream(string.Format("{0}/{1}Entity.cs", OutCSharpFilePath, fileName), FileMode.Create))
-            {
-                using (StreamWriter sw = new StreamWriter(fs))
-                {
-                    sw.Write(sbr.ToString());
-                }
-            }
-
-            //生成代码DBModel
+            // 生成DBModel
             sbr.Clear();
-            sbr.Append("\r\n");
-            sbr.Append("using System.Collections;\r\n");
-            sbr.Append("using System.Collections.Generic;\r\n");
-            sbr.Append("using System;\r\n");
-            sbr.Append("\r\n");
-            sbr.Append("    /// <summary>\r\n");
-            sbr.AppendFormat("    /// {0}数据管理\r\n", fileName);
-            sbr.Append("    /// </summary>\r\n");
-            sbr.AppendFormat("    public partial class {0}DBModel : DataTableDBModelBase<{0}DBModel, {0}Entity>\r\n", fileName);
-            sbr.Append("    {\r\n");
-
-            sbr.Append("        /// <summary>\r\n");
-            sbr.Append("        /// 文件名称\r\n");
-            sbr.Append("        /// </summary>\r\n");
-            sbr.AppendFormat("        public override string DataTableName {{ get {{ return \"{0}\"; }} }}\r\n", fileName);
-            sbr.Append("\r\n");
-
-
-            sbr.Append("        /// <summary>\r\n");
-            sbr.Append("        /// 加载列表\r\n");
-            sbr.Append("        /// </summary>\r\n");
-            sbr.Append("        protected override void LoadList(MMO_MemoryStream ms)\r\n");
-            sbr.Append("        {\r\n");
-            sbr.Append("            int rows = ms.ReadInt();\r\n");
-            sbr.Append("            int columns = ms.ReadInt();\r\n");
-            sbr.Append("\r\n");
-            sbr.Append("            for (int i = 0; i < rows; i++)\r\n");
-            sbr.Append("            {\r\n");
-            sbr.AppendFormat("                {0}Entity entity = new {0}Entity();\r\n", fileName);
+            sbr.AppendLine("using System.Collections;");
+            sbr.AppendLine("using System.Collections.Generic;");
+            sbr.AppendLine("using System;");
+            sbr.AppendLine();
+            sbr.AppendLine("/// <summary>");
+            sbr.AppendFormat("/// {0}数据管理\r\n", fileName);
+            sbr.AppendLine("/// </summary>");
+            sbr.AppendFormat("public partial class {0}DBModel : DataTableDBModelBase<{0}DBModel, {0}Entity>\r\n", fileName);
+            sbr.AppendLine("{");
+            sbr.AppendLine("    /// <summary>");
+            sbr.AppendLine("    /// 文件名称");
+            sbr.AppendLine("    /// </summary>");
+            sbr.AppendFormat("    public override string DataTableName {{ get {{ return \"{0}\"; }} }}\r\n", fileName);
+            sbr.AppendLine();
+            sbr.AppendLine("    /// <summary>");
+            sbr.AppendLine("    /// 加载列表");
+            sbr.AppendLine("    /// </summary>");
+            sbr.AppendLine("    protected override void LoadList(MMO_MemoryStream ms)");
+            sbr.AppendLine("    {");
+            sbr.AppendLine("        int rows = ms.ReadInt();");
+            sbr.AppendLine("        int columns = ms.ReadInt();");
+            sbr.AppendLine();
+            sbr.AppendLine($"        for (int i = 0; i < rows; i++)");
+            sbr.AppendLine("        {");
+            sbr.AppendFormat("            {0}Entity entity = new {0}Entity();\r\n", fileName);
 
             for (int i = 0; i < dataArr.GetLength(0); i++)
             {
-                if (dataArr[i, 1].Equals("byte", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    sbr.AppendFormat("                entity.{0} = (byte)ms.Read{1}();\r\n", dataArr[i, 0], ChangeTypeName(dataArr[i, 1]));
-                }
-                else
-                {
-                    sbr.AppendFormat("                entity.{0} = ms.Read{1}();\r\n", dataArr[i, 0], ChangeTypeName(dataArr[i, 1]));
-                }
+                string cast = dataArr[i, 1].Equals("byte", StringComparison.CurrentCultureIgnoreCase) ? "(byte)" : "";
+                sbr.AppendFormat("            entity.{0} = {1}ms.Read{2}();\r\n", dataArr[i, 0], cast, ChangeTypeName(dataArr[i, 1]));
             }
 
-            sbr.Append("\r\n");
-            sbr.Append("                m_List.Add(entity);\r\n");
-            sbr.Append("                m_Dic[entity.Id] = entity;\r\n");
-            sbr.Append("            }\r\n");
-            sbr.Append("        }\r\n");
-            sbr.Append("    }\r\n");
+            sbr.AppendLine();
+            sbr.AppendLine("            m_List.Add(entity);");
+            sbr.AppendLine("            m_Dic[entity.Id] = entity;");
+            sbr.AppendLine("        }");
+            sbr.AppendLine("    }");
+            sbr.AppendLine("}");
 
-            using (FileStream fs = new FileStream(string.Format("{0}/{1}DBModel.cs", OutCSharpFilePath, fileName), FileMode.Create))
-            {
-                using (StreamWriter sw = new StreamWriter(fs))
-                {
-                    sw.Write(sbr.ToString());
-                }
-            }
+            File.WriteAllText(Path.Combine(OutCSharpFilePath, fileName + "DBModel.cs"), sbr.ToString());
 
             Console.WriteLine("客户端表格=>" + fileName + " 生成实体脚本完毕");
         }

@@ -1,47 +1,45 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using System;
 
+/// <summary>
+/// Sys_Buildings数据管理
+/// </summary>
+public partial class Sys_BuildingsDBModel : DataTableDBModelBase<Sys_BuildingsDBModel, Sys_BuildingsEntity>
+{
+    /// <summary>
+    /// 文件名称
+    /// </summary>
+    public override string DataTableName { get { return "Sys_Buildings"; } }
 
     /// <summary>
-    /// Sys_Buildings数据管理
+    /// 加载列表
     /// </summary>
-    public partial class Sys_BuildingsDBModel : DataTableDBModelBase<Sys_BuildingsDBModel, Sys_BuildingsEntity>
+    protected override void LoadList(MMO_MemoryStream ms)
     {
-        /// <summary>
-        /// 文件名称
-        /// </summary>
-        public override string DataTableName { get { return "Sys_Buildings"; } }
+        int rows = ms.ReadInt();
+        int columns = ms.ReadInt();
 
-        /// <summary>
-        /// 加载列表
-        /// </summary>
-        protected override void LoadList(MMO_MemoryStream ms)
+        for (int i = 0; i < rows; i++)
         {
-            int rows = ms.ReadInt();
-            int columns = ms.ReadInt();
+            Sys_BuildingsEntity entity = new Sys_BuildingsEntity();
+            entity.Id = ms.ReadInt();
+            entity.BuildingId = ms.ReadInt();
+            entity.BuildingName = ms.ReadUTF8String();
+            entity.Name = ms.ReadUTF8String();
+            entity.BuildingType = ms.ReadUTF8String();
+            entity.Produce = ms.ReadUTF8String();
+            entity.Consume = ms.ReadUTF8String();
+            entity.Cost = ms.ReadInt();
+            entity.Position = ms.ReadUTF8String();
+            entity.Rotation = ms.ReadUTF8String();
+            entity.BuyPoinrPos = ms.ReadUTF8String();
+            entity.RegionId = ms.ReadInt();
+            entity.isVisible = ms.ReadInt();
+            entity.Dependencies = ms.ReadUTF8String();
 
-            for (int i = 0; i < rows; i++)
-            {
-                Sys_BuildingsEntity entity = new Sys_BuildingsEntity();
-                entity.Id = ms.ReadInt();
-                entity.BuildingId = ms.ReadInt();
-                entity.BuildingName = ms.ReadUTF8String();
-                entity.Name = ms.ReadUTF8String();
-                entity.BuildingType = ms.ReadUTF8String();
-                entity.Produce = ms.ReadUTF8String();
-                entity.Consume = ms.ReadUTF8String();
-                entity.Cost = ms.ReadInt();
-                entity.Position = ms.ReadUTF8String();
-                entity.Rotation = ms.ReadUTF8String();
-                entity.BuyPoinrPos = ms.ReadUTF8String();
-                entity.RegionId = ms.ReadInt();
-                entity.isVisible = ms.ReadInt();
-                entity.Dependencies = ms.ReadUTF8String();
-
-                m_List.Add(entity);
-                m_Dic[entity.Id] = entity;
-            }
+            m_List.Add(entity);
+            m_Dic[entity.Id] = entity;
         }
     }
+}

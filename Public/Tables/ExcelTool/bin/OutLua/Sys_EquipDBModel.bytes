@@ -7,7 +7,7 @@ local sys_equipTable = { }; --定义表格
 
 function Sys_EquipDBModel.LoadList()
     GameInit.AddTotalLoadTableCount();
-    CS.YouYou.GameEntry.Lua:LoadDataTable("Sys_Equip", this.LoadFormMS);
+    CS.GameEntry.Lua:LoadDataTable("Sys_Equip", this.LoadFormMS);
 end
 
 function Sys_EquipDBModel.LoadFormMS(ms)

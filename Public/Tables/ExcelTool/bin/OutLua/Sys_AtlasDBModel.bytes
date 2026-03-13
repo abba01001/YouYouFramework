@@ -7,7 +7,7 @@ local sys_atlasTable = { }; --定义表格
 
 function Sys_AtlasDBModel.LoadList()
     GameInit.AddTotalLoadTableCount();
-    CS.YouYou.GameEntry.Lua:LoadDataTable("Sys_Atlas", this.LoadFormMS);
+    CS.GameEntry.Lua:LoadDataTable("Sys_Atlas", this.LoadFormMS);
 end
 
 function Sys_AtlasDBModel.LoadFormMS(ms)

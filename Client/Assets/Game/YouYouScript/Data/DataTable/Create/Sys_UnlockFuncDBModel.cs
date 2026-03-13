@@ -1,38 +1,36 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using System;
 
+/// <summary>
+/// Sys_UnlockFunc数据管理
+/// </summary>
+public partial class Sys_UnlockFuncDBModel : DataTableDBModelBase<Sys_UnlockFuncDBModel, Sys_UnlockFuncEntity>
+{
+    /// <summary>
+    /// 文件名称
+    /// </summary>
+    public override string DataTableName { get { return "Sys_UnlockFunc"; } }
 
     /// <summary>
-    /// Sys_UnlockFunc数据管理
+    /// 加载列表
     /// </summary>
-    public partial class Sys_UnlockFuncDBModel : DataTableDBModelBase<Sys_UnlockFuncDBModel, Sys_UnlockFuncEntity>
+    protected override void LoadList(MMO_MemoryStream ms)
     {
-        /// <summary>
-        /// 文件名称
-        /// </summary>
-        public override string DataTableName { get { return "Sys_UnlockFunc"; } }
+        int rows = ms.ReadInt();
+        int columns = ms.ReadInt();
 
-        /// <summary>
-        /// 加载列表
-        /// </summary>
-        protected override void LoadList(MMO_MemoryStream ms)
+        for (int i = 0; i < rows; i++)
         {
-            int rows = ms.ReadInt();
-            int columns = ms.ReadInt();
+            Sys_UnlockFuncEntity entity = new Sys_UnlockFuncEntity();
+            entity.Id = ms.ReadInt();
+            entity.FuncName = ms.ReadUTF8String();
+            entity.UnlockLevel = ms.ReadInt();
+            entity.ShowLevel = ms.ReadInt();
+            entity.FuncDetailName = ms.ReadUTF8String();
 
-            for (int i = 0; i < rows; i++)
-            {
-                Sys_UnlockFuncEntity entity = new Sys_UnlockFuncEntity();
-                entity.Id = ms.ReadInt();
-                entity.FuncName = ms.ReadUTF8String();
-                entity.UnlockLevel = ms.ReadInt();
-                entity.ShowLevel = ms.ReadInt();
-                entity.FuncDetailName = ms.ReadUTF8String();
-
-                m_List.Add(entity);
-                m_Dic[entity.Id] = entity;
-            }
+            m_List.Add(entity);
+            m_Dic[entity.Id] = entity;
         }
     }
+}

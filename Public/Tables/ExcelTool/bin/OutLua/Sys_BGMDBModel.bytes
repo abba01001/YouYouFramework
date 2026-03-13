@@ -7,7 +7,7 @@ local sys_bgmTable = { }; --定义表格
 
 function Sys_BGMDBModel.LoadList()
     GameInit.AddTotalLoadTableCount();
-    CS.YouYou.GameEntry.Lua:LoadDataTable("Sys_BGM", this.LoadFormMS);
+    CS.GameEntry.Lua:LoadDataTable("Sys_BGM", this.LoadFormMS);
 end
 
 function Sys_BGMDBModel.LoadFormMS(ms)
