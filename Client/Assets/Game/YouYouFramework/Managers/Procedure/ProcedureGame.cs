@@ -1,9 +1,11 @@
+using System;
 using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using Watermelon;
+using Object = UnityEngine.Object;
 
 
 namespace YouYou
@@ -23,22 +25,42 @@ namespace YouYou
             GameEntry.Scene.LoadSceneAction(SceneGroupName.Game, 1, () => { Init();});
         }
 
+        private async UniTask InitSetting()
+        {
+            ProjectInitSettings t = await GameEntry.Loader.LoadMainAssetAsync<ProjectInitSettings>("Assets/Game/Download/ProjectFiles/Data/Project Init Settings.asset", GameEntry.Instance.gameObject);
+            t.Init();
+        }
+        
         private async UniTask Init()
         {
+            GameUtil.LogError("8888888888888888");
             Scene targetScene = SceneManager.GetSceneByName("Game");
             SceneManager.SetActiveScene(targetScene);
+            GameUtil.LogError("11111111111111");
             
             ///这里是入口=====>>>>>>>>
-            PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync("Assets/Game/Download/Prefab/GameRoot.prefab");
-            obj.gameObject.MSetActive(true);
-            obj.transform.SetParent(null);
-            obj.gameObject.name = "GameRoot";
-            SceneManager.MoveGameObjectToScene(obj.gameObject,targetScene);
+            GameUtil.LogError("11111111111111");
+
+            await InitSetting();
+            
+            try
+            {
+                
+                PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync("Assets/Game/Download/Prefab/GameRoot.prefab");
+                obj.gameObject.SetActive(true);
+                GameUtil.LogError($"==============GameRoot状态>{obj.gameObject.activeSelf}");
+                obj.transform.SetParent(null);
+                obj.name = "GameRoot";
+                SceneManager.MoveGameObjectToScene(obj.gameObject, targetScene);
+            }
+            catch (Exception ex)
+            {
+                GameUtil.LogError("Prefab加载/激活异常: " + ex);
+            }
+            GameUtil.LogError("22222222222");
             
             initScene = true;
-            AddToStack(Camera.main, GameEntry.Instance.UICamera);
-            // var baseData = Camera.main.GetUniversalAdditionalCameraData();
-            // baseData.cameraStack.Add(GameEntry.Instance.UICamera);
+            GameUtil.LogError("3333333333");
         }
         
         public static void AddToStack(Camera baseCam, Camera overlayCam)

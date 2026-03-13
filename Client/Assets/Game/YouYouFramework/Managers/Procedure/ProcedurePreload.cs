@@ -87,37 +87,44 @@ namespace YouYou
 
         private async UniTask OnLoginSuccess(object userdata)
         {
+            GameUtil.LogError("44444444");
             GameEntry.UI.CloseUIForm<FormLogin>();
+            GameUtil.LogError("555555555");
+            
             if (GameEntry.Data.IsFirstLoginTime) GameEntry.Data.IsFirstLoginTime = false;
             GameEntry.Audio.InitVolume();
+            GameUtil.LogError("6666666666");
+            
             GameEntry.Data.SaveData(true,true,true,true);
             GameEntry.Procedure.ChangeState(ProcedureState.Game);
-
-            if (Application.platform != RuntimePlatform.OSXEditor &&
-                Application.platform != RuntimePlatform.WindowsEditor)
-            {
-                TalkingDataProfile profile = TalkingDataProfile.CreateProfile();
-                profile.SetName($"{GameEntry.Data.PlayerRoleData.name}");
-                profile.SetType(TalkingDataProfileType.WEIXIN);
-                profile.SetGender(TalkingDataGender.MALE);
-                profile.SetAge(18);
-                profile.SetProperty1("value1");
-                profile.SetProperty2("value2");
-                profile.SetProperty3("value3");
-                profile.SetProperty4("value4");
-                profile.SetProperty5("value5");
-                profile.SetProperty6(0.01);
-                profile.SetProperty7(99.8);
-                profile.SetProperty8(100);
-                profile.SetProperty9(10000);
-                profile.SetProperty10(100000000000L);
-                Dictionary<string, object> eventValue = new Dictionary<string, object>
-                {
-                    {"key01", "value01"},
-                    {"key02", 0.1}
-                };
-                TalkingDataSDK.OnLogin($"{GameEntry.Data.UserId}", profile, eventValue);
-            }
+            GameUtil.LogError("777777777777");
+            
+            //
+            // if (Application.platform != RuntimePlatform.OSXEditor &&
+            //     Application.platform != RuntimePlatform.WindowsEditor)
+            // {
+            //     TalkingDataProfile profile = TalkingDataProfile.CreateProfile();
+            //     profile.SetName($"{GameEntry.Data.PlayerRoleData.name}");
+            //     profile.SetType(TalkingDataProfileType.WEIXIN);
+            //     profile.SetGender(TalkingDataGender.MALE);
+            //     profile.SetAge(18);
+            //     profile.SetProperty1("value1");
+            //     profile.SetProperty2("value2");
+            //     profile.SetProperty3("value3");
+            //     profile.SetProperty4("value4");
+            //     profile.SetProperty5("value5");
+            //     profile.SetProperty6(0.01);
+            //     profile.SetProperty7(99.8);
+            //     profile.SetProperty8(100);
+            //     profile.SetProperty9(10000);
+            //     profile.SetProperty10(100000000000L);
+            //     Dictionary<string, object> eventValue = new Dictionary<string, object>
+            //     {
+            //         {"key01", "value01"},
+            //         {"key02", 0.1}
+            //     };
+            //     TalkingDataSDK.OnLogin($"{GameEntry.Data.UserId}", profile, eventValue);
+            // }
         }
 
         private void OnConnectServerSuccess(object userdata)
@@ -150,7 +157,7 @@ namespace YouYou
                 GameEntry.Loader.LoadAssetBundleAction(YFConstDefine.CusShadersAssetBundlePath, onComplete: (AssetBundle bundle) =>
                 {
                     bundle.LoadAllAssets();
-                    Shader.WarmupAllShaders();
+                    // Shader.WarmupAllShaders();
                     taskRoutine.Leave();
                 });
             });

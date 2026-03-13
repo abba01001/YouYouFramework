@@ -104,10 +104,10 @@ MonoBehaviour:
     IsEncrypt: 0
     Path:
     - Game/Download/Key
-  - Name: 
+  - Name: "\u5E78\u8FD0\u8005\u8D44\u6E90"
     IsBuild: 1
-    Overall: 1
+    Overall: 0
     IsFirstData: 1
     IsEncrypt: 0
     Path:
-    - Game/Download/Project Files
+    - Game/Download/ProjectFiles

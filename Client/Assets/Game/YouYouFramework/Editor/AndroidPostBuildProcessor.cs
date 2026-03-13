@@ -17,7 +17,7 @@ class AndroidPostBuildProcessor : IPostGenerateGradleAndroidProject
     {
         Debug.Log("AndroidPostBuildProcessor.OnPostGenerateGradleAndroidProject at path " + path);
 
-        string unityPlayerJavaFilePath = path + "/src/main/java/com/unity3d/player/UnityPlayerActivity.java";
+        string unityPlayerJavaFilePath = path + "/src/main/java/com/unity3d/player/UnityPlayerGameActivity.java";
 
         string content = File.ReadAllText(unityPlayerJavaFilePath);
 

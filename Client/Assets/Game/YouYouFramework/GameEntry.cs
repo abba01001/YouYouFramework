@@ -2,6 +2,7 @@ using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
 using System.Collections;
+using Cysharp.Threading.Tasks;
 using Main;
 using MessagePack;
 using MessagePack.Unity;
@@ -47,9 +48,6 @@ namespace YouYou
         [SerializeField]
         private YouYouLanguage m_CurrLanguage;
         public static YouYouLanguage CurrLanguage;
-
-        [Header("Suvivor工程试着")]
-        [SerializeField] ProjectInitSettings initSettings;
 
 
         //管理器属性
@@ -154,8 +152,7 @@ namespace YouYou
             {
                 Data.SaveData(true);
             },null,true);
-            
-            initSettings.Init();
+
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]

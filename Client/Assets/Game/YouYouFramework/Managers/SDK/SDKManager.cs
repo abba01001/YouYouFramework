@@ -465,11 +465,11 @@ public class SDKManager : Observable<SDKManager>
     {
         MainEntry.Log(MainEntry.LogCategory.Framework,"========>开始初始化TalkingDataSdk");
         //TalkingDataSDK.SetVerboseLogDisable();//关闭日志
-        TalkingDataSDK.BackgroundSessionEnabled();
-        TalkingDataSDK.InitSDK(Constants.TalkingDataAppid, "102", "");
+        // TalkingDataSDK.BackgroundSessionEnabled();
+        // TalkingDataSDK.InitSDK(Constants.TalkingDataAppid, "102", "");
 
         //用户获得隐私授权后才能调用StartA()
-        TalkingDataSDK.StartA();
+        // TalkingDataSDK.StartA();
         MainEntry.Log(MainEntry.LogCategory.Framework,"初始化TalkingDataSDK完成");
     }
 

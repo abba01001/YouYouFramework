@@ -8,6 +8,8 @@ adb devices 设备信息
 
 adb install apk拖进来
 
+adb -s 127.0.0.1:7555 shell
+
 --抓unity 日志
 adb shell
 logcat | grep -i unity
@@ -15,3 +17,9 @@ logcat | grep -i unity | grep -i "E"
 清理日志
 adb logcat -c
             T obj = await AddressableUtils.LoadAsync<ScriptableObject>("111")
+
+
+adb connect 127.0.0.1:7555 && adb logcat -c && adb logcat -v time | findstr "Unity AndroidRuntime"
+
+
+adb connect 127.0.0.1:7555 && adb -s 127.0.0.1:7555 logcat -c && adb -s 127.0.0.1:7555 logcat -v time | findstr "Unity AndroidRuntime"

@@ -46,7 +46,7 @@ public class PanelBase : MonoBehaviour
             // Dictionary<string,object> dic = new Dictionary<string,object>();
             // dic.Add("Panel",CurPanelName);
             // TalkingDataSDK.OnEvent("显示Panel",dic,null);
-            TalkingDataSDK.OnPageBegin($"{CurPanelName}");
+            // TalkingDataSDK.OnPageBegin($"{CurPanelName}");
         }
         GameEntry.Event.AddEventListener(Constants.EventName.UpdateBtnUnlockStatus,OnUpdateBtnStatus);
     }
@@ -58,7 +58,7 @@ public class PanelBase : MonoBehaviour
             // Dictionary<string,object> dic = new Dictionary<string,object>();
             // dic.Add("Panel",CurPanelName);
             // TalkingDataSDK.OnEvent("关闭Panel",dic,null);
-            TalkingDataSDK.OnPageEnd($"{CurPanelName}");
+            // TalkingDataSDK.OnPageEnd($"{CurPanelName}");
         }
         GameEntry.Event.RemoveEventListener(Constants.EventName.UpdateBtnUnlockStatus,OnUpdateBtnStatus);
     }
