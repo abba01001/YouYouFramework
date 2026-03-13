@@ -1,19 +1,75 @@
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 
+[InitializeOnLoad]
 public class LaunchScene
 {
-    private const string PREF_KEY_SELECTED_MODE = "LaunchScene_SelectedMode"; // 保存选择的键名
-    private static bool isSelectGame => EditorPrefs.GetString(PREF_KEY_SELECTED_MODE, "default") == "game";
-    private static bool isSelectMapEditor => EditorPrefs.GetString(PREF_KEY_SELECTED_MODE, "default") == "mapEditor";
-    private static bool isDefault => EditorPrefs.GetString(PREF_KEY_SELECTED_MODE, "default") == "default";
+    private const string PREF_KEY = "LaunchScene_SelectedMode";
+
+    /// 场景配置
+    private static readonly Dictionary<string, string> SceneMap = new()
+    {
+        { "game", "Assets/Game/Scene_Launch.unity" },
+        { "mapEditor", "Assets/Game/Download/Scenes/Map.unity" }
+    };
+
+    static LaunchScene()
+    {
+        EditorApplication.update += Init;
+        EditorApplication.playModeStateChanged += OnPlayModeChanged;
+    }
+
+    static void Init()
+    {
+        EditorApplication.update -= Init;
+        RestoreScene();
+    }
+
+    static void OnPlayModeChanged(PlayModeStateChange state)
+    {
+        if (state == PlayModeStateChange.ExitingEditMode)
+            RestoreScene();
+    }
+
+    static void RestoreScene()
+    {
+        string mode = EditorPrefs.GetString(PREF_KEY, "default");
+
+        if (mode == "default")
+        {
+            EditorSceneManager.playModeStartScene = null;
+            return;
+        }
+
+        if (SceneMap.TryGetValue(mode, out var path))
+        {
+            EditorSceneManager.playModeStartScene =
+                AssetDatabase.LoadAssetAtPath<SceneAsset>(path);
+        }
+    }
+
+    static void SaveSelection(string mode)
+    {
+        EditorPrefs.SetString(PREF_KEY, mode);
+    }
+
+    static bool IsSelected(string mode)
+    {
+        return EditorPrefs.GetString(PREF_KEY, "default") == mode;
+    }
+
+    //=====================
+    // Menu
+    //=====================
 
     [MenuItem("启动场景/游戏", true)]
-    static bool ValidatePlayModeUseFirstScene()
+    static bool ValidateGame()
     {
-        Menu.SetChecked("启动场景/游戏", isSelectGame);
-        Menu.SetChecked("启动场景/地图编辑器", isSelectMapEditor);
-        Menu.SetChecked("启动场景/手动选择", isDefault);
+        Menu.SetChecked("启动场景/游戏", IsSelected("game"));
+        Menu.SetChecked("启动场景/地图编辑器", IsSelected("mapEditor"));
+        Menu.SetChecked("启动场景/手动选择", IsSelected("default"));
+
         return !EditorApplication.isPlaying;
     }
 
@@ -21,26 +77,20 @@ public class LaunchScene
     static void GameScene()
     {
         SaveSelection("game");
-        EditorSceneManager.playModeStartScene = AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/Game/Scene_Launch.unity");
+        RestoreScene();
     }
 
     [MenuItem("启动场景/地图编辑器")]
-    static void MapEditorScene()
+    static void MapScene()
     {
         SaveSelection("mapEditor");
-        EditorSceneManager.playModeStartScene = AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/Game/Download/Scenes/Map.unity");
+        RestoreScene();
     }
 
     [MenuItem("启动场景/手动选择")]
     static void AnyScene()
     {
         SaveSelection("default");
-        EditorSceneManager.playModeStartScene = null;
-    }
-
-    // 保存选择状态到 EditorPrefs
-    static void SaveSelection(string mode)
-    {
-        EditorPrefs.SetString(PREF_KEY_SELECTED_MODE, mode);
+        RestoreScene();
     }
 }

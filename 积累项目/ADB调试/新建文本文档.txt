@@ -10,6 +10,8 @@ adb install apk拖进来
 
 adb -s 127.0.0.1:7555 shell
 
+adb -s 127.0.0.1:7555 logcat -v time | grep -i unity -A 20
+
 --抓unity 日志
 adb shell
 logcat | grep -i unity
@@ -23,3 +25,8 @@ adb connect 127.0.0.1:7555 && adb logcat -c && adb logcat -v time | findstr "Uni
 
 
 adb connect 127.0.0.1:7555 && adb -s 127.0.0.1:7555 logcat -c && adb -s 127.0.0.1:7555 logcat -v time | findstr "Unity AndroidRuntime"
+
+
+
+adb -s 127.0.0.1:7555 logcat -v time | findstr /i "Unity" > unity.log
+notepad unity.log

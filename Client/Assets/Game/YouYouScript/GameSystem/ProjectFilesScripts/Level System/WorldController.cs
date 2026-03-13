@@ -89,6 +89,11 @@ namespace Watermelon
             string worldID = worldGlobalSave.worldID;
             if (string.IsNullOrEmpty(worldID))
                 worldID = GetWorldData(0).ID;
+            if (database == null)
+            {
+                AssetReferenceEntity entity = GameEntry.Loader.LoadMainAsset("Assets/Game/Download/ProjectFiles/Data/Worlds Database.asset");
+                database = entity.Target as WorldsDatabase;
+            }
 
             LoadWorld(database.GetWorldByID(worldID));
         }
@@ -96,7 +101,11 @@ namespace Watermelon
         public void LoadWorld(string worldID)
         {
             worldGlobalSave.worldID = worldID;
-
+            if (database == null)
+            {
+                AssetReferenceEntity entity = GameEntry.Loader.LoadMainAsset("Assets/Game/Download/ProjectFiles/Data/Worlds Database.asset");
+                database = entity.Target as WorldsDatabase;
+            }
             LoadWorld(database.GetWorldByID(worldID));
         }
 
