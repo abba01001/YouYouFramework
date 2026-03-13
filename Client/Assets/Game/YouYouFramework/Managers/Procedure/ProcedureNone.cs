@@ -5,10 +5,6 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.Android;
 
-
-namespace YouYou
-{
     public class ProcedureNone : ProcedureBase
     {
     }
-}

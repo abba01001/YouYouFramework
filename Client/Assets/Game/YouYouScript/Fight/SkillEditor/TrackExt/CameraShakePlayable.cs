@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 
-namespace YouYou
-{
     public class CameraShakeEventArgs
     {
     }
@@ -23,4 +21,3 @@ namespace YouYou
 
         }
     }
-}

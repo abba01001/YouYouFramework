@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-namespace YouYou
-{
     /// <summary>
     /// 日志管理器
     /// </summary>
@@ -115,4 +113,3 @@ namespace YouYou
             m_LogArray.Clear();
         }
     }
-}

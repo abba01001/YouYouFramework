@@ -2,41 +2,39 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace YouYou
+public class VarVector3 : Variable<Vector3>
 {
-    public class VarVector3 : Variable<Vector3>
+    /// <summary>
+    /// ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    /// </summary>
+    /// <returns></returns>
+    public static VarVector3 Alloc()
     {
-        /// <summary>
-        /// ·ÖÅäÒ»¸ö¶ÔÏó
-        /// </summary>
-        /// <returns></returns>
-        public static VarVector3 Alloc()
-        {
-            VarVector3 var = GameEntry.Pool.DequeueVarObject<VarVector3>();
-            var.Value = Vector3.zero; ;
-            var.Retain();
-            return var;
-        }
+        VarVector3 var = GameEntry.Pool.DequeueVarObject<VarVector3>();
+        var.Value = Vector3.zero;
+        ;
+        var.Retain();
+        return var;
+    }
 
-        /// <summary>
-        /// ·ÖÅäÒ»¸ö¶ÔÏó
-        /// </summary>
-        /// <param name="value">³õÊ¼Öµ</param>
-        /// <returns></returns>
-        public static VarVector3 Alloc(VarVector3 value)
-        {
-            VarVector3 var = Alloc();
-            var.Value = value;
-            return var;
-        }
+    /// <summary>
+    /// ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    /// </summary>
+    /// <param name="value">ï¿½ï¿½Ê¼Öµ</param>
+    /// <returns></returns>
+    public static VarVector3 Alloc(VarVector3 value)
+    {
+        VarVector3 var = Alloc();
+        var.Value = value;
+        return var;
+    }
 
-        /// <summary>
-        /// VarString -> string
-        /// </summary>
-        /// <param name="value"></param>
-        public static implicit operator Vector3(VarVector3 value)
-        {
-            return value.Value;
-        }
+    /// <summary>
+    /// VarString -> string
+    /// </summary>
+    /// <param name="value"></param>
+    public static implicit operator Vector3(VarVector3 value)
+    {
+        return value.Value;
     }
 }

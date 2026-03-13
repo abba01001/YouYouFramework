@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace YouYou
-{
     public partial class Sys_DialogueDBModel
     {
         public Dictionary<int, Sys_DialogueEntity> IdByDic;
@@ -32,8 +30,7 @@ namespace YouYou
             {
                 return IdByDic[task_id];
             }
-            YouYou.GameEntry.LogError(LogCategory.Framework, "没有找到对话, DialogueId==" + task_id);
+            GameEntry.LogError(LogCategory.Framework, "没有找到对话, DialogueId==" + task_id);
             return null;
         }
     }
-}

@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace YouYou
-{
     /// <summary>
     /// 画面品质设置
     /// </summary>
@@ -104,4 +102,3 @@ namespace YouYou
 //#endif
         }
     }
-}

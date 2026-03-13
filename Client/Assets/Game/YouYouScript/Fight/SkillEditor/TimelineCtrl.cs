@@ -5,8 +5,6 @@ using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
 
-namespace YouYou
-{
     /// <summary>
     /// 技能控制器
     /// </summary>
@@ -97,4 +95,3 @@ namespace YouYou
         }
 
     }
-}

@@ -5,9 +5,7 @@ using UnityEngine;
 
 
 
-namespace YouYou
-{
-	/// <summary>
+/// <summary>
 	/// 状态机
 	/// </summary>
 	/// <typeparam name="T">FSMManager</typeparam>
@@ -162,4 +160,3 @@ namespace YouYou
 			m_ParamDic.Clear();
 		}
 	}
-}

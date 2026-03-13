@@ -3,46 +3,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace YouYou
+public class GuideGroup
 {
-    public class GuideGroup
+    public TaskGroup TaskGroup { get; private set; }
+
+    public GuideGroup()
     {
-        public TaskGroup TaskGroup { get; private set; }
+        TaskGroup = new TaskGroup();
+    }
 
-        public GuideGroup()
-        {
-            TaskGroup = new TaskGroup();
-        }
+    public void AddGuide(Action onEnter)
+    {
+        TaskGroup.AddTask(taskRoutine => { onEnter?.Invoke(); });
+    }
 
-        public void AddGuide(Action onEnter)
+    public void AddGuide(GuideRoutine guideRoutine)
+    {
+        TaskGroup.AddTask(taskRoutine =>
         {
-            TaskGroup.AddTask(taskRoutine =>
-            {
-                onEnter?.Invoke();
-            });
-        }
+            taskRoutine.OnCompleteStack.Push(() => { guideRoutine.OnExit?.Invoke(); });
+            guideRoutine.OnEnter?.Invoke();
+        });
+    }
 
-        public void AddGuide(GuideRoutine guideRoutine)
+    public void Run(Action onComplete = null)
+    {
+        TaskGroup.OnComplete = () =>
         {
-            TaskGroup.AddTask(taskRoutine =>
-            {
-                taskRoutine.OnCompleteStack.Push(() =>
-                {
-                    guideRoutine.OnExit?.Invoke();
-                });
-                guideRoutine.OnEnter?.Invoke();
-            });
-        }
-
-        public void Run(Action onComplete = null)
-        {
-            TaskGroup.OnComplete = () =>
-            {
-                onComplete?.Invoke();
-                GameEntry.Log(LogCategory.Guide, "GroupComplete:" + GameEntry.Guide.CurrentState);
-                GameEntry.Guide.OnStateEnter(GuideState.None);
-            };
-            TaskGroup.Run();
-        }
+            onComplete?.Invoke();
+            GameEntry.Log(LogCategory.Guide, "GroupComplete:" + GameEntry.Guide.CurrentState);
+            GameEntry.Guide.OnStateEnter(GuideState.None);
+        };
+        TaskGroup.Run();
     }
 }

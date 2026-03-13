@@ -3,21 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 
-namespace YouYou
-{
     [System.Serializable]
     public class HurtPointEventArgs
     {
-        [Header("ÉËº¦·¶Î§")]
+        [Header("ï¿½Ëºï¿½ï¿½ï¿½Î§")]
         public int hurtRange = 5;
 
-        [Header("ÉËº¦Öµ")]
+        [Header("ï¿½Ëºï¿½Öµ")]
         public int hurtValue = 10;
 
-        [Header("BuffÀà±ğ")]
+        [Header("Buffï¿½ï¿½ï¿½")]
         public BuffCategory buffCategory;
 
-        [Header("BuffÖµ, ÀıÈçÑ£ÔÎ1.2Ãë ÔòÌî1.2")]
+        [Header("BuffÖµ, ï¿½ï¿½ï¿½ï¿½Ñ£ï¿½ï¿½1.2ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½1.2")]
         public float buffValue;
     }
     public class HurtPointPlayable : BasePlayableAsset<HurtPointPlayableBehaviour, HurtPointEventArgs>
@@ -34,5 +32,4 @@ namespace YouYou
         {
 
         }
-    }
 }

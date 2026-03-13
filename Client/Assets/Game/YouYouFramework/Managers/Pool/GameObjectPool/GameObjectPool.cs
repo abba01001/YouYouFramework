@@ -1,5 +1,5 @@
 //===================================================
-using YouYou;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,8 +7,6 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 using Cysharp.Threading.Tasks;
 
-namespace YouYou
-{
     /// <summary>
     /// 游戏物体对象池
     /// </summary>
@@ -137,7 +135,7 @@ namespace YouYou
             GameObject retObj = referenceEntity.Target as GameObject;
             if (retObj == null)
             {
-                YouYou.GameEntry.LogError(LogCategory.Loader, "找不到Prefab, AssetFullName==" + prefabPath);
+                GameEntry.LogError(LogCategory.Loader, "找不到Prefab, AssetFullName==" + prefabPath);
                 return null;
             }
 
@@ -158,7 +156,7 @@ namespace YouYou
             GameObject retObj = referenceEntity.Target as GameObject;
             if (retObj == null)
             {
-                YouYou.GameEntry.LogError(LogCategory.Loader, "找不到Prefab, AssetFullName==" + entity.AssetFullPath);
+                GameEntry.LogError(LogCategory.Loader, "找不到Prefab, AssetFullName==" + entity.AssetFullPath);
                 return null;
             }
             Transform prefab = retObj.transform;
@@ -184,7 +182,7 @@ namespace YouYou
             GameObject retObj = referenceEntity.Target as GameObject;
             if (retObj == null)
             {
-                YouYou.GameEntry.LogError(LogCategory.Loader, "找不到Prefab, AssetFullPath==" + entity.AssetFullPath);
+                GameEntry.LogError(LogCategory.Loader, "找不到Prefab, AssetFullPath==" + entity.AssetFullPath);
                 return null;
             }
             Transform prefab = retObj.transform;
@@ -200,7 +198,7 @@ namespace YouYou
             GameObject retObj = referenceEntity.Target as GameObject;
             if (retObj == null)
             {
-                YouYou.GameEntry.LogError(LogCategory.Loader, "找不到Prefab, AssetFullName==" + prefabPath);
+                GameEntry.LogError(LogCategory.Loader, "找不到Prefab, AssetFullName==" + prefabPath);
                 return null;
             }
 
@@ -326,4 +324,3 @@ namespace YouYou
         }
 
     }
-}

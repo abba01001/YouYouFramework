@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace YouYou
-{
     public partial class Sys_PrefabDBModel
     {
         public Dictionary<string, Sys_PrefabEntity> NameByDic;
@@ -37,8 +35,7 @@ namespace YouYou
             {
                 return NameByDic[name];
             }
-            YouYou.GameEntry.LogError(LogCategory.Framework, "没有找到资源, Name==" + name);
+            GameEntry.LogError(LogCategory.Framework, "没有找到资源, Name==" + name);
             return null;
         }
     }
-}

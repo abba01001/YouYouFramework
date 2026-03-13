@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using YouYou;
+
 
 [CustomEditor(typeof(PoolAnalyze_ClassObjectPool))]
 public class PoolAnalyze_ClassObjectPoolEditor : Editor

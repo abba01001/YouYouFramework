@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace YouYou
-{
+
     /// <summary>
     /// UI层级管理
     /// </summary>
@@ -54,4 +53,3 @@ namespace YouYou
             formBase.CurrCanvas.sortingOrder = m_UILayerDic[formBase.SysUIForm.UIGroupId];
         }
     }
-}

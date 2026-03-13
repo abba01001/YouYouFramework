@@ -1,7 +1,6 @@
 using System.Collections;
 
-namespace YouYou
-{
+
     /// <summary>
       /// Sys_Model实体
     /// </summary>
@@ -53,4 +52,3 @@ namespace YouYou
         public string HeroPanelIcon;
 
     }
-}

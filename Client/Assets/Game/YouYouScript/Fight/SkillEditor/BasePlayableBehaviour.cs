@@ -2,8 +2,6 @@ using Main;
 using UnityEngine;
 using UnityEngine.Playables;
 
-namespace YouYou
-{
     /// <summary>
     /// Playable控制器基类
     /// </summary>
@@ -126,4 +124,3 @@ namespace YouYou
         protected abstract void OnYouYouBehaviourPlay(Playable playable, FrameData info);
         protected abstract void OnYouYouBehaviourStop(Playable playable, FrameData info);
     }
-}

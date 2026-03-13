@@ -359,7 +359,7 @@ namespace Main
                 if (m_CurrDownloaderSize < m_UnityWebRequest.downloadedBytes)//这里是为了判断当前是否处于下载未完成
                 {
                     m_CurrDownloaderSize = m_UnityWebRequest.downloadedBytes;
-                    //YouYou.GameEntry.LogError(string.Format("下载进度{0}%", (int)(m_CurrDownloaderSize / (float)m_TotalSize) * 100));
+                    //GameEntry.LogError(string.Format("下载进度{0}%", (int)(m_CurrDownloaderSize / (float)m_TotalSize) * 100));
 
                     Sava(m_UnityWebRequest.downloadHandler.data);
 
@@ -423,7 +423,7 @@ namespace Main
             m_CurrWaitFlushSize += count;
             if (m_CurrWaitFlushSize >= MainEntry.Download.FlushSize || downloadComplete)
             {
-                //YouYou.GameEntry.LogError("写入磁盘" + m_CurrFileUrl);
+                //GameEntry.LogError("写入磁盘" + m_CurrFileUrl);
                 m_CurrWaitFlushSize = 0;
                 m_FileStream.Flush();
             }

@@ -12,290 +12,292 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Watermelon;
 
-namespace YouYou
+public class GameEntry : MonoBehaviour
 {
-    public class GameEntry : MonoBehaviour
+    [FoldoutGroup("ResourceGroup")] [Header("游戏物体对象池分组")]
+    public GameObjectPoolEntity[] GameObjectPoolGroups;
+
+    [FoldoutGroup("ResourceGroup")] [Header("对象池锁定的资源包")]
+    public string[] LockedAssetBundle;
+
+    [FoldoutGroup("UIGroup")] [Header("UI摄像机")]
+    public Camera UICamera;
+
+    [Header("主摄像机")] public Camera MainCamera;
+
+    [FoldoutGroup("UIGroup")] [Header("根画布的缩放")]
+    public CanvasScaler UIRootCanvasScaler;
+
+    public RectTransform UIRootRectTransform { get; private set; }
+
+    [FoldoutGroup("UIGroup")] [Header("UI分组")]
+    public UIGroup[] UIGroups;
+
+    [FoldoutGroup("UIGroup")] [Header("主页背景")] [FoldoutGroup("AudioGroup")] [Header("声音主混合器")]
+    public AudioMixer MonsterMixer;
+
+    public RawImage BackgroundImage;
+
+    [Header("当前语言（要和本地化表的语言字段 一致）")] [SerializeField]
+    private YouYouLanguage m_CurrLanguage;
+
+    public static YouYouLanguage CurrLanguage;
+
+
+    //管理器属性
+    public static LoggerManager Logger { get; private set; }
+    public static EventManager Event { get; private set; }
+    public static TimeManager Time { get; private set; }
+    public static DataManager Data { get; private set; }
+    public static FsmManager Fsm { get; private set; }
+    public static ProcedureManager Procedure { get; private set; }
+    public static DataTableManager DataTable { get; private set; }
+    public static HttpManager Http { get; private set; }
+    public static LocalizationManager Localization { get; private set; }
+    public static PoolManager Pool { get; private set; }
+    public static YouYouSceneManager Scene { get; private set; }
+    public static LoaderManager Loader { get; private set; }
+    public static UIManager UI { get; private set; }
+    public static NetManager Net { get; private set; }
+    public static AudioManager Audio { get; private set; }
+    public static AtlasManager Atlas { get; private set; }
+    public static CrossPlatformInputManager Input { get; private set; }
+    public static TaskManager Task { get; private set; }
+    public static QualityManager Quality { get; private set; }
+    public static SDKManager SDK { get; private set; }
+    public static DialogueManager Dialogue { get; private set; }
+    public static GuideManager Guide { get; private set; }
+    public static RestaurantManager RestaurantManager { get; private set; }
+    public Camera SceneCamera { get; set; }
+
+    /// <summary>
+    /// 单例
+    /// </summary>
+    public static GameEntry Instance { get; private set; }
+
+    private void Awake()
     {
-        [FoldoutGroup("ResourceGroup")]
-        [Header("游戏物体对象池分组")]
-        public GameObjectPoolEntity[] GameObjectPoolGroups;
+        Log(LogCategory.Procedure, "GameEntry.OnAwake()");
+        Instance = this;
+        UIRootRectTransform = UIRootCanvasScaler.GetComponent<RectTransform>();
+        if (MainEntry.Reporter != null) MainEntry.Reporter.ShowLogPanel(false);
+        CurrLanguage = m_CurrLanguage;
+        Application.targetFrameRate = 120;
+    }
 
-        [FoldoutGroup("ResourceGroup")]
-        [Header("对象池锁定的资源包")]
-        public string[] LockedAssetBundle;
+    private void Start()
+    {
+        Log(LogCategory.Procedure, "GameEntry.OnStart()");
+        Logger = new LoggerManager();
+        Event = new EventManager();
+        Time = new TimeManager();
+        Data = new DataManager();
+        Fsm = new FsmManager();
+        Procedure = new ProcedureManager();
+        DataTable = new DataTableManager();
+        Http = new HttpManager();
+        Localization = new LocalizationManager();
+        Pool = new PoolManager();
+        Scene = new YouYouSceneManager();
+        Loader = new LoaderManager();
+        UI = new UIManager();
+        Net = new NetManager();
+        Audio = new AudioManager();
+        Atlas = new AtlasManager();
+        Input = new CrossPlatformInputManager();
+        Task = new TaskManager();
+        Quality = new QualityManager();
+        SDK = new SDKManager();
+        Dialogue = new DialogueManager();
+        Guide = new GuideManager();
+        RestaurantManager = new RestaurantManager();
+        Logger.Init();
+        Procedure.Init();
+        DataTable.Init();
+        Http.Init();
+        Localization.Init();
+        Pool.Init();
+        Scene.Init();
+        Loader.Init();
+        UI.Init();
+        Net.Init();
+        Audio.Init();
+        Atlas.Init();
+        SDK.Init();
+        Dialogue.Init();
+        Task.Init();
+        Time.Init();
+        Guide.Init();
+        RestaurantManager.Init();
+        //进入第一个流程
+        Procedure.ChangeState(ProcedureState.Launch);
 
-        [FoldoutGroup("UIGroup")]
-        [Header("UI摄像机")]
-        public Camera UICamera;
-        
-        [FoldoutGroup("UIGroup")]
-        [Header("根画布的缩放")]
-        public CanvasScaler UIRootCanvasScaler;
-        public RectTransform UIRootRectTransform { get; private set; }
-
-        [FoldoutGroup("UIGroup")]
-        [Header("UI分组")]
-        public UIGroup[] UIGroups;
-
-        [FoldoutGroup("UIGroup")]
-        [Header("主页背景")]
-        [FoldoutGroup("AudioGroup")]
-        [Header("声音主混合器")]
-        public AudioMixer MonsterMixer;
-        public RawImage BackgroundImage;
-
-        [Header("当前语言（要和本地化表的语言字段 一致）")]
-        [SerializeField]
-        private YouYouLanguage m_CurrLanguage;
-        public static YouYouLanguage CurrLanguage;
-
-
-        //管理器属性
-        public static LoggerManager Logger { get; private set; }
-        public static EventManager Event { get; private set; }
-        public static TimeManager Time { get; private set; }
-        public static DataManager Data { get; private set; }
-        public static FsmManager Fsm { get; private set; }
-        public static ProcedureManager Procedure { get; private set; }
-        public static DataTableManager DataTable { get; private set; }
-        public static HttpManager Http { get; private set; }
-        public static LocalizationManager Localization { get; private set; }
-        public static PoolManager Pool { get; private set; }
-        public static YouYouSceneManager Scene { get; private set; }
-        public static LoaderManager Loader { get; private set; }
-        public static UIManager UI { get; private set; }
-        public static NetManager Net { get; private set; }
-        public static AudioManager Audio { get; private set; }
-        public static AtlasManager Atlas { get; private set; }
-        public static CrossPlatformInputManager Input { get; private set; }
-        public static TaskManager Task { get; private set; }
-        public static QualityManager Quality { get; private set; }
-        public static SDKManager SDK { get; private set; }
-        public static DialogueManager Dialogue { get; private set; }
-        public static GuideManager Guide { get; private set; }
-        public static RestaurantManager RestaurantManager { get; private set; }
-        public Camera SceneCamera { get; set; }
-        /// <summary>
-        /// 单例
-        /// </summary>
-        public static GameEntry Instance { get; private set; }
-
-        private void Awake()
+        Dictionary<(Key, Key?), Action> keyMappings = new Dictionary<(Key, Key?), Action>
         {
-            Log(LogCategory.Procedure, "GameEntry.OnAwake()");
-            Instance = this;
-            UIRootRectTransform = UIRootCanvasScaler.GetComponent<RectTransform>();
-            if(MainEntry.Reporter != null) MainEntry.Reporter.ShowLogPanel(false);
-            CurrLanguage = m_CurrLanguage;
-            Application.targetFrameRate = 120; 
-        }
-        private void Start()
-        {
-            Log(LogCategory.Procedure, "GameEntry.OnStart()");
-            Logger = new LoggerManager();
-            Event = new EventManager();
-            Time = new TimeManager();
-            Data = new DataManager();
-            Fsm = new FsmManager();
-            Procedure = new ProcedureManager();
-            DataTable = new DataTableManager();
-            Http = new HttpManager();
-            Localization = new LocalizationManager();
-            Pool = new PoolManager();
-            Scene = new YouYouSceneManager();
-            Loader = new LoaderManager();
-            UI = new UIManager();
-            Net = new NetManager();
-            Audio = new AudioManager();
-            Atlas = new AtlasManager();
-            Input = new CrossPlatformInputManager();
-            Task = new TaskManager();
-            Quality = new QualityManager();
-            SDK = new SDKManager();
-            Dialogue = new DialogueManager();
-            Guide = new GuideManager();
-            RestaurantManager = new RestaurantManager();
-            Logger.Init();
-            Procedure.Init();
-            DataTable.Init();
-            Http.Init();
-            Localization.Init();
-            Pool.Init();
-            Scene.Init();
-            Loader.Init();
-            UI.Init();
-            Net.Init();
-            Audio.Init();
-            Atlas.Init();
-            SDK.Init();
-            Dialogue.Init();
-            Task.Init();
-            Time.Init();
-            Guide.Init();
-            RestaurantManager.Init();
-            //进入第一个流程
-            Procedure.ChangeState(ProcedureState.Launch);
-            
-            Dictionary<(Key, Key?), Action> keyMappings = new Dictionary<(Key, Key?), Action>
-            {
-                {(Key.Numpad0, Key.LeftCtrl), Test0},
-                {(Key.Numpad1, Key.LeftCtrl), Test1},
-                {(Key.Numpad2, Key.LeftCtrl), Test2},
-                {(Key.Numpad3, Key.LeftCtrl), Test3},
-                {(Key.Numpad4, Key.LeftCtrl), Test4}
-            };
-            StopCoroutine(GameUtil.CheckKeys(keyMappings));
-            StartCoroutine(GameUtil.CheckKeys(keyMappings));
-            ViewQueueManager.Instance.RegisterEvents();
-            Initialize();
-            Time.CreateTimerLoop(this, 15f, -1, (t) =>
-            {
-                Data.SaveData(true);
-            },null,true);
+            { (Key.Numpad0, Key.LeftCtrl), Test0 },
+            { (Key.Numpad1, Key.LeftCtrl), Test1 },
+            { (Key.Numpad2, Key.LeftCtrl), Test2 },
+            { (Key.Numpad3, Key.LeftCtrl), Test3 },
+            { (Key.Numpad4, Key.LeftCtrl), Test4 }
+        };
+        StopCoroutine(GameUtil.CheckKeys(keyMappings));
+        StartCoroutine(GameUtil.CheckKeys(keyMappings));
+        ViewQueueManager.Instance.RegisterEvents();
+        Initialize();
+        Time.CreateTimerLoop(this, 15f, -1, (t) => { Data.SaveData(true); }, null, true);
+    }
 
-        }
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private void Initialize()
+    {
+        MessagePackSerializer.DefaultOptions =
+            MessagePackSerializerOptions.Standard.WithResolver(UnityResolver.InstanceWithStandardResolver);
+    }
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        private void Initialize()
-        {
-            MessagePackSerializer.DefaultOptions = MessagePackSerializerOptions.Standard.WithResolver(UnityResolver.InstanceWithStandardResolver);
-        }
+    private bool isOpen = false;
 
-        private bool isOpen = false;
-        private void Test0()
-        {
-            GameUtil.LogError("11111");
-            UI.OpenUIForm<FormMain>();
-            return;
-            // isOpen = !isOpen;
-            // MainEntry.Reporter.ShowLogPanel(isOpen);
-            StartCoroutine(GameUtil.LocationInfoCoroutine(null));
-        }
-        
-        private void Test1()
-        {
-            UI.CloseUIForm<FormMain>();
-            return;
-            GameEntry.Data.PlayerRoleData.roleAttr["role_level"]++;
-            GameEntry.Event.Dispatch(Constants.EventName.UpdateBtnUnlockStatus);
-            //QueueManager.Instance.AddEventTask("Hello","CloseHello");
-        }
-        
-        private void Test2()
-        {
-            FormMask.CloseCircleMask();
-            // QueueManager.Instance.AddTimeTask(1f, () =>
-            // {
-            //     GameUtil.LogError("你好");
-            // }, () =>
-            // {
-            //     GameUtil.LogError("结束，跳转下一个队列");
-            // });
-        }
-        
-        private void Test3()
-        {
-            GameEntry.Event.Dispatch(Constants.EventName.EventMessage,new EventMessage("CloseHello"));
-        }
-        
-        private void Test4()
-        {
-            // GameUtil.LogError(typeof(FormMain).FullName);
-            // GameEntry.UI.OpenUIFormByName("FormChangeName");
-            GameEntry.Data.InitGameData(null);
-            GameEntry.Data.SaveData(true);
-            return;
-            GameEntry.Data.InitGameData(null);
-            GameEntry.Data.SaveData(true);
-            GameUtil.ShowTip("测试文本哈哈哈哈哈哈！！！");
-        }
-        
-        void Update()
-        {
-            Time.OnUpdate();
-            Data.OnUpdate();
-            Procedure.OnUpdate();
-            Pool.OnUpdate();
-            Scene.OnUpdate();
-            Loader.OnUpdate();
-            UI.OnUpdate();
-            Net.OnUpdate();
-            Audio.OnUpdate();
-            Atlas.OnUpdate();
-            SDK.OnUpdate();
-            Dialogue.OnUpdate();
-            Input.OnUpdate();
-            Task.OnUpdate();
-            Guide.OnUpdate();
-            RestaurantManager.OnUpdate();
-            GameEntry.Event.Dispatch(Constants.EventName.GameEntryOnUpdate);
-        }
+    private void Test0()
+    {
+        GameUtil.LogError("11111");
+        UI.OpenUIForm<FormMain>();
+        return;
+        // isOpen = !isOpen;
+        // MainEntry.Reporter.ShowLogPanel(isOpen);
+        StartCoroutine(GameUtil.LocationInfoCoroutine(null));
+    }
 
-        private void LateUpdate()
-        {
-        }
+    private void Test1()
+    {
+        EnvironmentController.CurrentPreset.ApplEveningPreset();
+        return;
+        UI.CloseUIForm<FormMain>();
+        return;
+        GameEntry.Data.PlayerRoleData.roleAttr["role_level"]++;
+        GameEntry.Event.Dispatch(Constants.EventName.UpdateBtnUnlockStatus);
+        //QueueManager.Instance.AddEventTask("Hello","CloseHello");
+    }
 
-        private void OnApplicationQuit()
+    private void Test2()
+    {
+        EnvironmentController.CurrentPreset.ApplyDayPreset();
+
+        // FormMask.CloseCircleMask();
+        // QueueManager.Instance.AddTimeTask(1f, () =>
+        // {
+        //     GameUtil.LogError("你好");
+        // }, () =>
+        // {
+        //     GameUtil.LogError("结束，跳转下一个队列");
+        // });
+    }
+
+    private void Test3()
+    {
+        EnvironmentController.CurrentPreset.ApplyMorningPreset();
+        return;
+        GameEntry.Event.Dispatch(Constants.EventName.EventMessage, new EventMessage("CloseHello"));
+    }
+
+    private void Test4()
+    {
+        EnvironmentController.CurrentPreset.ApplyNightPreset();
+        return;
+        // GameUtil.LogError(typeof(FormMain).FullName);
+        // GameEntry.UI.OpenUIFormByName("FormChangeName");
+        GameEntry.Data.InitGameData(null);
+        GameEntry.Data.SaveData(true);
+        return;
+        GameEntry.Data.InitGameData(null);
+        GameEntry.Data.SaveData(true);
+        GameUtil.ShowTip("测试文本哈哈哈哈哈哈！！！");
+    }
+
+    void Update()
+    {
+        Time.OnUpdate();
+        Data.OnUpdate();
+        Procedure.OnUpdate();
+        Pool.OnUpdate();
+        Scene.OnUpdate();
+        Loader.OnUpdate();
+        UI.OnUpdate();
+        Net.OnUpdate();
+        Audio.OnUpdate();
+        Atlas.OnUpdate();
+        SDK.OnUpdate();
+        Dialogue.OnUpdate();
+        Input.OnUpdate();
+        Task.OnUpdate();
+        Guide.OnUpdate();
+        RestaurantManager.OnUpdate();
+        GameEntry.Event.Dispatch(Constants.EventName.GameEntryOnUpdate);
+    }
+
+    private void LateUpdate()
+    {
+    }
+
+    private void OnApplicationQuit()
+    {
+        Data.SaveData(true);
+        Net.DisConnectServer();
+        Logger.SyncLog();
+        Logger.Dispose();
+        Fsm.Dispose();
+        SDK.UploadLogData(Data.UserId);
+        GameEntry.Event.Dispatch(Constants.EventName.GameEntryOnApplicationQuit);
+    }
+
+    private void OnApplicationPause(bool pause)
+    {
+        if (pause)
         {
             Data.SaveData(true);
-            Net.DisConnectServer();
-            Logger.SyncLog();
-            Logger.Dispose();
-            Fsm.Dispose();
-            SDK.UploadLogData(Data.UserId);
-            GameEntry.Event.Dispatch(Constants.EventName.GameEntryOnApplicationQuit);
+            GameEntry.Event.Dispatch(Constants.EventName.GameEntryOnApplicationPause);
         }
-        
-        private void OnApplicationPause(bool pause)
-        {
-            if (pause)
-            {
-                Data.SaveData(true);
-                GameEntry.Event.Dispatch(Constants.EventName.GameEntryOnApplicationPause);
-            }
-        }
+    }
 
-        public Transform GetSayItemParent()
-        {
-            return UIGroups[4].Group;
-        }
+    public Transform GetSayItemParent()
+    {
+        return UIGroups[4].Group;
+    }
 
-        public async void ShowBackGround(BGType _type,string _bgName)
-        {
-            // MainBg.gameObject.MSetActive(false);
-            // BattleBg.gameObject.MSetActive(false);
-            // if (_type == BGType.Main)
-            // {
-            //     if (MainBg.sprite == null || (MainBg.sprite != null && MainBg.sprite.name != _bgName))
-            //     {
-            //         Texture2D texture = await GameEntry.Loader.LoadMainAssetAsync<Texture2D>(_bgName, this.gameObject);
-            //         if (texture != null)
-            //         {
-            //             Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),new Vector2(0.5f, 0.5f));
-            //             sprite.name = _bgName;
-            //             MainBg.sprite = sprite;
-            //         }
-            //     }
-            //     MainBg.gameObject.MSetActive(true);
-            // }
-            // else if (_type == BGType.Battle)
-            // {
-            //     if (BattleBg.sprite == null || (BattleBg.sprite != null && BattleBg.sprite.name != _bgName))
-            //     {
-            //         Texture2D texture = await GameEntry.Loader.LoadMainAssetAsync<Texture2D>(_bgName, this.gameObject);
-            //         if (texture != null)
-            //         {
-            //             Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),new Vector2(0.5f, 0.5f));
-            //             sprite.name = _bgName;
-            //             BattleBg.sprite = sprite;
-            //         }
-            //     }
-            //     BattleBg.gameObject.MSetActive(true);
-            // }
-        }
+    public async void ShowBackGround(BGType _type, string _bgName)
+    {
+        // MainBg.gameObject.MSetActive(false);
+        // BattleBg.gameObject.MSetActive(false);
+        // if (_type == BGType.Main)
+        // {
+        //     if (MainBg.sprite == null || (MainBg.sprite != null && MainBg.sprite.name != _bgName))
+        //     {
+        //         Texture2D texture = await GameEntry.Loader.LoadMainAssetAsync<Texture2D>(_bgName, this.gameObject);
+        //         if (texture != null)
+        //         {
+        //             Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),new Vector2(0.5f, 0.5f));
+        //             sprite.name = _bgName;
+        //             MainBg.sprite = sprite;
+        //         }
+        //     }
+        //     MainBg.gameObject.MSetActive(true);
+        // }
+        // else if (_type == BGType.Battle)
+        // {
+        //     if (BattleBg.sprite == null || (BattleBg.sprite != null && BattleBg.sprite.name != _bgName))
+        //     {
+        //         Texture2D texture = await GameEntry.Loader.LoadMainAssetAsync<Texture2D>(_bgName, this.gameObject);
+        //         if (texture != null)
+        //         {
+        //             Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),new Vector2(0.5f, 0.5f));
+        //             sprite.name = _bgName;
+        //             BattleBg.sprite = sprite;
+        //         }
+        //     }
+        //     BattleBg.gameObject.MSetActive(true);
+        // }
+    }
 
-        public static void Log(LogCategory catetory, object message, params object[] args)
-        {
+    public static void Log(LogCategory catetory, object message, params object[] args)
+    {
 #if DEBUG_LOG_NORMAL
             string value = string.Empty;
             if (args.Length == 0)
@@ -308,10 +310,10 @@ namespace YouYou
             }
             Debug.Log(string.Format("youyouLog=={0}=={1}", catetory.ToString(), value));
 #endif
-        }
+    }
 
-        public static void LogWarning(LogCategory catetory, object message, params object[] args)
-        {
+    public static void LogWarning(LogCategory catetory, object message, params object[] args)
+    {
 #if DEBUG_LOG_WARNING
             string value = string.Empty;
             if (args.Length == 0)
@@ -324,10 +326,10 @@ namespace YouYou
             }
             Debug.LogWarning(string.Format("youyouLog=={0}=={1}", catetory.ToString(), value));
 #endif
-        }
+    }
 
-        public static void LogError(LogCategory catetory, object message, params object[] args)
-        {
+    public static void LogError(LogCategory catetory, object message, params object[] args)
+    {
 #if DEBUG_LOG_ERROR
             string value = string.Empty;
             if (args.Length == 0)
@@ -340,12 +342,11 @@ namespace YouYou
             }
             Debug.LogError(string.Format("youyouLog=={0}=={1}", catetory.ToString(), value));
 #endif
-        }
+    }
 
-        public static void LogError(params object[] messages)
-        {
-            string combinedMessage = StringUtil.JointString(messages);
-            Debug.LogError(combinedMessage);
-        }
+    public static void LogError(params object[] messages)
+    {
+        string combinedMessage = StringUtil.JointString(messages);
+        Debug.LogError(combinedMessage);
     }
 }

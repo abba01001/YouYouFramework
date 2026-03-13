@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace YouYou
-{
     /// <summary>
     /// 任务管理器
     /// </summary>
@@ -39,7 +37,7 @@ namespace YouYou
                 LinkedListNode<TaskGroup> taskGroup = m_TaskGroupList.First;
                 while (taskGroup != null)
                 {
-                    YouYou.GameEntry.LogError(LogCategory.Framework, "======================");
+                    GameEntry.LogError(LogCategory.Framework, "======================");
                     taskGroup.Value.LogTask();
                     taskGroup = taskGroup.Next;
                 }
@@ -97,4 +95,3 @@ namespace YouYou
 
         }
     }
-}

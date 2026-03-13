@@ -9,7 +9,7 @@ using System.Text;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using YouYou;
+
 
 public class YouYouEditor : OdinMenuEditorWindow
 {

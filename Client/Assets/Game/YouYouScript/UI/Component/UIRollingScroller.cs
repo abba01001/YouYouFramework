@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using System;
 using UnityEngine.EventSystems;
 using DG.Tweening;
-using YouYou;
+
 
 public class UIRollingScroller : UIScroller, IDragHandler, IEndDragHandler
 {

@@ -2,8 +2,6 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace YouYou
-{
     public static class InstanceHandler
     {
         public delegate GameObject InstantiateDelegate(GameObject prefab, Vector3 pos, Quaternion rot);
@@ -50,4 +48,3 @@ namespace YouYou
         }
 
     }
-}

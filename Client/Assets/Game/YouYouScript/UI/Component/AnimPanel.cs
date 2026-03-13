@@ -5,28 +5,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace YouYou
+[DisallowMultipleComponent]
+public class AnimPanel : MonoBehaviour
 {
-    [DisallowMultipleComponent]
-    public class AnimPanel : MonoBehaviour
+    private float BegScale;
+    private Button m_Button;
+
+    void Awake()
     {
-        private float BegScale;
-        private Button m_Button;
+        BegScale = transform.localScale.x;
+    }
 
-        void Awake()
-        {
-            BegScale = transform.localScale.x;
-        }
+    private void OnEnable()
+    {
+        DoAnim();
+    }
 
-        private void OnEnable()
-        {
-            DoAnim();
-        }
-
-        public void DoAnim()
-        {
-            transform.localScale = BegScale * Vector3.one * 1.05f;
-            transform.DOScale(BegScale, 0.05f).SetUpdate(true);
-        }
+    public void DoAnim()
+    {
+        transform.localScale = BegScale * Vector3.one * 1.05f;
+        transform.DOScale(BegScale, 0.05f).SetUpdate(true);
     }
 }

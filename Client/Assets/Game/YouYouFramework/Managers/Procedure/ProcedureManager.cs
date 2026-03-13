@@ -4,9 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace YouYou
-{
-    /// <summary>
+/// <summary>
     /// 流程状态
     /// </summary>
     public enum ProcedureState
@@ -106,4 +104,3 @@ namespace YouYou
             return CurrFsm.GetDada<TData>(key);
         }
     }
-}

@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace YouYou
-{
     public partial class Sys_BuildingsDBModel
     {
         public Dictionary<int, Sys_BuildingsEntity> IdByDic;
@@ -32,8 +30,7 @@ namespace YouYou
             {
                 return IdByDic[task_id];
             }
-            YouYou.GameEntry.LogError(LogCategory.Framework, "û���ҵ��Ի�, DialogueId==" + task_id);
+            GameEntry.LogError(LogCategory.Framework, "û���ҵ��Ի�, DialogueId==" + task_id);
             return null;
         }
     }
-}

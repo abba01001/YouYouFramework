@@ -1,7 +1,6 @@
 using System.Collections;
 
-namespace YouYou
-{
+
     /// <summary>
       /// Sys_Prefab实体
     /// </summary>
@@ -38,4 +37,3 @@ namespace YouYou
         public int CullMaxPerPass;
 
     }
-}

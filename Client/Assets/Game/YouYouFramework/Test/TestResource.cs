@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using YouYou;
+
 
 public class TestResource : MonoBehaviour
 {

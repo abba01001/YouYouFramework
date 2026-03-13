@@ -7,7 +7,7 @@ local testTable = { }; --定义表格
 
 function TestDBModel.LoadList()
     GameInit.AddTotalLoadTableCount();
-    CS.YouYou.GameEntry.Lua:LoadDataTable("Test", this.LoadFormMS);
+    CS.GameEntry.Lua:LoadDataTable("Test", this.LoadFormMS);
 end
 
 function TestDBModel.LoadFormMS(ms)

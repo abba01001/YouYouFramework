@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace YouYou
-{
     public partial class Sys_SceneDBModel
     {
         private Dictionary<string, List<Sys_SceneEntity>> GroupNameByDic = new Dictionary<string, List<Sys_SceneEntity>>();
@@ -37,4 +35,3 @@ namespace YouYou
             return lst;
         }
     }
-}

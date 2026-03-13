@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D;
 using UnityEngine.UI;
-using YouYou;
+
 using Object = UnityEngine.Object;
 
 public static class ExtendFunction

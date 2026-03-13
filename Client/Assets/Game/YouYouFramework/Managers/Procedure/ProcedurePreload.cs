@@ -5,8 +5,6 @@ using Main;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace YouYou
-{
     /// <summary>
     /// 预加载流程
     /// </summary>
@@ -176,4 +174,3 @@ namespace YouYou
         }
 
     }
-}

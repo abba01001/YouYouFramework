@@ -4,7 +4,7 @@ using Fungus;
 using Main;
 using Newtonsoft.Json;
 using UnityEngine;
-using YouYou;
+
 
 public enum DialogueConfigId
 {

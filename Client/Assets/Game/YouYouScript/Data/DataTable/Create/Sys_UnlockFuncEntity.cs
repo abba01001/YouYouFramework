@@ -1,7 +1,6 @@
 using System.Collections;
 
-namespace YouYou
-{
+
     /// <summary>
       /// Sys_UnlockFunc实体
     /// </summary>
@@ -28,4 +27,3 @@ namespace YouYou
         public string FuncDetailName;
 
     }
-}

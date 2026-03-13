@@ -1,9 +1,7 @@
 using UnityEngine.Timeline;
 
-namespace YouYou
-{
     /// <summary>
-    /// PlayAnim¹ìµÀ¶¨Òå
+    /// PlayAnimï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     [TrackColor(0f, 222 / 255f, 1)]
     [TrackClipType(typeof(PlayAnimPlayable))]
@@ -11,4 +9,3 @@ namespace YouYou
     {
 
     }
-}

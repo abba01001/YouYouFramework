@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace YouYou
-{
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Text))]//脚本依赖
     public class YouYouText : MonoBehaviour
@@ -26,4 +24,3 @@ namespace YouYou
             }
         }
     }
-}

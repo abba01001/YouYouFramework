@@ -1,7 +1,6 @@
 using System.Collections;
 
-namespace YouYou
-{
+
     /// <summary>
       /// Sys_UIForm实体
     /// </summary>
@@ -43,4 +42,3 @@ namespace YouYou
         public byte ShowMode;
 
     }
-}

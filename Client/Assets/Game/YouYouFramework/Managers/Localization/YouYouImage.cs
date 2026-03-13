@@ -4,26 +4,21 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-namespace YouYou
+[DisallowMultipleComponent]
+[RequireComponent(typeof(Image))] //脚本依赖
+public class YouYouImage : MonoBehaviour
 {
-    [DisallowMultipleComponent]
-    [RequireComponent(typeof(Image))]//脚本依赖
-    public class YouYouImage : MonoBehaviour
+    [Header("本地化语言Key")] [SerializeField] private string m_Localization;
+
+    private Image m_Image;
+
+    private void Start()
     {
-        [Header("本地化语言Key")]
-        [SerializeField]
-        private string m_Localization;
+        m_Image = GetComponent<Image>();
 
-        private Image m_Image;
-
-        private void Start()
+        if (GameEntry.Localization != null)
         {
-            m_Image = GetComponent<Image>();
-
-            if (GameEntry.Localization != null)
-            {
-                m_Image.AutoLoadTexture(GameEntry.Localization.GetString(m_Localization));
-            }
+            m_Image.AutoLoadTexture(GameEntry.Localization.GetString(m_Localization));
         }
     }
 }

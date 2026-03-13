@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.AI;
-using YouYou;
+
 
 public class RoleCtrl : MonoBehaviour
 {

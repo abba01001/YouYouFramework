@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace YouYou
-{
     public partial class Sys_EquipDBModel
     {
         public Dictionary<int, Sys_EquipEntity> IdByDic { get;private set; }
@@ -32,8 +30,7 @@ namespace YouYou
             {
                 return IdByDic[modelId];
             }
-            YouYou.GameEntry.LogError(LogCategory.Framework, "?????????, DialogueId==" + modelId);
+            GameEntry.LogError(LogCategory.Framework, "?????????, DialogueId==" + modelId);
             return null;
         }
     }
-}

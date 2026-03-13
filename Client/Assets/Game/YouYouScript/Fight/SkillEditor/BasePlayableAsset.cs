@@ -6,8 +6,6 @@ using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
 
-namespace YouYou
-{
     /// <summary>
     /// Playable视图基类
     /// </summary>
@@ -51,4 +49,3 @@ namespace YouYou
 
         protected virtual void OnYouYouCreatePlayable(ScriptPlayable<T> playable) { }
     }
-}

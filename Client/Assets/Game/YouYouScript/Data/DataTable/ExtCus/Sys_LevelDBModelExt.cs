@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace YouYou
-{
     public partial class Sys_LevelDBModel
     {
         public Dictionary<int, LevelModel> IdByDic;
@@ -29,8 +27,7 @@ namespace YouYou
             {
                 return IdByDic[levelId];
             }
-            YouYou.GameEntry.LogError(LogCategory.Framework, "没有找到资源, levelId==" + levelId);
+            GameEntry.LogError(LogCategory.Framework, "没有找到资源, levelId==" + levelId);
             return null;
         }
     }
-}

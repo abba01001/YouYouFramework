@@ -7,8 +7,6 @@ using Protocols;
 using Protocols.Guild;
 using Protocols.Player;
 
-namespace YouYou
-{
     /// <summary>
     /// 池管理器
     /// </summary>
@@ -238,4 +236,3 @@ namespace YouYou
         }
 
     }
-}

@@ -4,7 +4,7 @@ using Main;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using YouYou;
+
 
 
 // "主"界面
@@ -39,20 +39,6 @@ public class FormMain : UIFormBase
     public Text collectedMoney;
     public GameObject dragToMoveWindow;
     public GameObject settingsPanel;
-    private void Update()
-    {
-        if (Input.GetMouseButton(0) && dragToMoveWindow)
-        {
-            PlayerPrefs.SetString("DragWindow","");
-            Destroy(dragToMoveWindow);
-        }
-
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            // BuildingSystem.Instance.Test();
-            // GameEntry.Data.AddMoney(2000);
-        }
-    }
 
     private void Start()
     {

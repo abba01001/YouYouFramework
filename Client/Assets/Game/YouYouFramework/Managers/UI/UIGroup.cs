@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace YouYou
-{
+
     /// <summary>
     /// UI分组
     /// </summary>
@@ -26,4 +25,3 @@ namespace YouYou
         /// </summary>
         public Transform Group;
     }
-}

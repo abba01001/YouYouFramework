@@ -2,7 +2,7 @@ using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using YouYou;
+
 
 namespace Watermelon
 {
@@ -31,12 +31,10 @@ namespace Watermelon
         private static SkinController skinController;
         private static EnergyController energyController;
         private static EnvironmentController environmentController;
-
-        private bool init = false;
         private void Awake()
         {
             instance = this;
-
+            cameraController = GameEntry.Instance.MainCamera.GetComponent<CameraController>();
             CacheComponent(out worldController);
             CacheComponent(out globalUpgradesController);
             CacheComponent(out missionsController);
@@ -50,89 +48,41 @@ namespace Watermelon
             CacheComponent(out energyController);
             CacheComponent(out environmentController);
             
-            InitCamera(Camera.main);
             Init();
         }
 
         private async UniTask Init()
         {
-            GameUtil.LogError("InitInitInit");
-            if (cameraController == null)
-            {
-                while (true)
-                {
-                    if(cameraController != null) break;
-                    await UniTask.Delay(10);
-                }
-            }
-
             try
             {
                 Data.Init();
-
                 defaultMusicController.Initialise();
-
                 uiController.Init();
-  
                 cameraController.Initialise();
                 PreviewCamera.Initialise();
-
                 skinController.Init();
-
                 unlockableToolsController.Initialise();
-
                 energyController.Initialise();
-
                 environmentController.Initialise();
-
                 fishingController.Initialise();
-
                 diggingController.Initialise();
-
                 globalUpgradesController.Initialise();
-
                 floatingTextController.Init();
-
                 worldController.Initialise();
-
                 uiController.InitPages();
-
                 particlesController.Init();
-
                 navigationHelper.Initialise();
             }
             catch (Exception e)
             {
-
                 GameUtil.LogError(e);
             }
-            
-            init = true;
-            GameUtil.LogError("打开FormGame");
-            GameEntry.UI.OpenUIForm<FormGame>();
-        }
-
-        public static void InitCamera(Camera camera)
-        {
-            cameraController = camera.GetComponent<CameraController>();
-        }
-
-        private void Start()
-        {
             InitStart();
+            GameEntry.UI.OpenUIForm<FormGame>();
         }
 
         private async UniTask InitStart()
         {
-            if (cameraController == null || !init)
-            {
-                while (true)
-                {
-                    if(cameraController != null && init) break;
-                    await UniTask.Delay(10);
-                }
-            }
-            
             if (gameData.UseMainMenu)
             {
                 DefaultMusicController.ActivateMusic();

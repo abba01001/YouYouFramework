@@ -28,28 +28,7 @@ MonoBehaviour:
     Overall: 1
     IsFirstData: 1
     IsEncrypt: 0
-    Path:
-    - Game/Download/Textures/Battle
-    - Game/Download/Textures/BiaoQing
-    - Game/Download/Textures/Common
-    - Game/Download/Textures/DaoJu
-    - Game/Download/Textures/Equip
-    - Game/Download/Textures/FormChat
-    - Game/Download/Textures/FX
-    - Game/Download/Textures/HeadIcon
-    - Game/Download/Textures/HeroLh
-    - Game/Download/Textures/HeroPanel
-    - Game/Download/Textures/HeroPanelDetail
-    - Game/Download/Textures/Login
-    - Game/Download/Textures/LoginEntry
-    - Game/Download/Textures/LordPanel
-    - Game/Download/Textures/Main
-    - Game/Download/Textures/Map
-    - Game/Download/Textures/ModelPreviewIcon
-    - Game/Download/Textures/Tip
-    - Game/Download/Textures/Weapon
-    - Game/Download/Textures/YouLi
-    - Game/Download/Textures/Game
+    Path: []
   - Name: "Hotfix\u7A0B\u5E8F\u96C6"
     IsBuild: 1
     Overall: 1
@@ -81,8 +60,6 @@ MonoBehaviour:
     - Game/Download/Font
     - Game/Download/Material
     - Game/Download/Animations
-    - Game/Download/Animator
-    - Game/Download/Skybox
   - Name: "\u573A\u666F"
     IsBuild: 1
     Overall: 0

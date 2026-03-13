@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace YouYou
-{
     /// <summary>
     /// 场景管理器
     /// </summary>
@@ -234,4 +232,3 @@ namespace YouYou
         }
 
     }
-}

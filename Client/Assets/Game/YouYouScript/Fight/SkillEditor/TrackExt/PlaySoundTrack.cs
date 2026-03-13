@@ -1,7 +1,5 @@
 using UnityEngine.Timeline;
 
-namespace YouYou
-{
     /// <summary>
     /// PlaySound轨道定义
     /// </summary>
@@ -11,4 +9,3 @@ namespace YouYou
     {
 
     }
-}

@@ -1,7 +1,6 @@
 using System.Collections;
 
-namespace YouYou
-{
+
     /// <summary>
       /// Sys_Guide实体
     /// </summary>
@@ -73,4 +72,3 @@ namespace YouYou
         public int IsEnable;
 
     }
-}

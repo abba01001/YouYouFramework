@@ -11,7 +11,7 @@ using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
-using YouYou;
+
 using Debug = UnityEngine.Debug;
 
 [CreateAssetMenu(menuName = "YouYouAsset/AssetBundleSettings")]

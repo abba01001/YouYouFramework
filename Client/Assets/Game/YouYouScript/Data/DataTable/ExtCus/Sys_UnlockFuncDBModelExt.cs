@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace YouYou
-{
     public partial class Sys_UnlockFuncDBModel
     {
         public Dictionary<int, Sys_UnlockFuncEntity> IdByDic { get;private set; }
@@ -26,4 +24,3 @@ namespace YouYou
             }
         }
     }
-}

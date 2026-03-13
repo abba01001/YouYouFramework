@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-namespace YouYou
-{
     /// <summary>
     /// 任务执行器
     /// </summary>
@@ -63,4 +61,3 @@ namespace YouYou
             }
         }
     }
-}

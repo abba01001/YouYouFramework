@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace YouYou
-{
     /// <summary>
     /// 任务组
     /// </summary>
@@ -174,11 +172,10 @@ namespace YouYou
             LinkedListNode<TaskRoutine> routine = m_TaskRoutineList.First;
             while (routine != null)
             {
-                YouYou.GameEntry.LogError(LogCategory.Framework, routine.Value);
-                YouYou.GameEntry.LogError(LogCategory.Framework, routine.Value.CurrTask);
+                GameEntry.LogError(LogCategory.Framework, routine.Value);
+                GameEntry.LogError(LogCategory.Framework, routine.Value.CurrTask);
                 GameEntry.LogError(LogCategory.Framework, "{0}=========={1}", routine.Value.CurrTask.Target, routine.Value.CurrTask.Method);
                 routine = routine.Next;
             }
         }
     }
-}

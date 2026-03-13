@@ -3,72 +3,71 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace YouYou
+
+/// <summary>
+/// ï¿½ï¿½Òªï¿½ï¿½ï¿½Ú½ï¿½ï¿½ï¿½ï¿½Ð§ï¿½Þ·ï¿½ï¿½ï¿½È¾ï¿½ï¿½UIï¿½Ïµï¿½ï¿½ï¿½ï¿½ï¿½
+/// </summary>
+[RequireComponent(typeof(Canvas))] //ï¿½Å±ï¿½ï¿½ï¿½ï¿½ï¿½
+public class UIFormEffect : MonoBehaviour
+{
+    [Header("ï¿½Ç·ñ´°¿Ú¶ï¿½ï¿½ï¿½")] [SerializeField] bool isAnim = false;
+
+    [Header("UIï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½")] [SerializeField] public List<UIEffectGroup> UIEffectGroups = new List<UIEffectGroup>();
+
+    [Header("ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½Åµï¿½ï¿½ï¿½Ð§")] [SerializeField]
+    List<ParticleSystem> effectOnOpenPlay = new List<ParticleSystem>();
+
+
+    void Start()
+    {
+        Canvas CurrCanvas = GetComponent<Canvas>();
+        //ï¿½ï¿½ï¿½ï¿½UIï¿½ã¼¶, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ã¼¶
+        for (int i = 0; i < UIEffectGroups.Count; i++)
+        {
+            UIEffectGroup effectGroup = UIEffectGroups[i];
+            effectGroup.Group.ForEach(x =>
+            {
+                x.SetEffectOrder(CurrCanvas.sortingOrder + effectGroup.Order);
+                x.gameObject.SetLayer("UI");
+            });
+        }
+
+        //Í£Ö¹ï¿½ï¿½Ð§ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½×¢ï¿½ï¿½
+        ParticleSystem[] particles = GetComponentsInChildren<ParticleSystem>();
+        for (int i = 0; i < particles.Length; i++)
+            particles[i].Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+
+        //ï¿½ï¿½ï¿½ï¿½ï¿½è¶¨ï¿½Ä³ï¿½Ê¼ï¿½ï¿½Ð§
+        effectOnOpenPlay.ForEach(x => x.Play());
+    }
+
+    private void OnEnable()
+    {
+#if UNITY_EDITOR
+        transform.SetAsLastSibling();
+#endif
+        if (isAnim) AnimOpen();
+    }
+
+    public void AnimOpen()
+    {
+        transform.DoShowScale(0.3f, 1);
+    }
+}
+
+/// <summary>
+/// UIï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½
+/// </summary>
+[Serializable]
+public class UIEffectGroup
 {
     /// <summary>
-    /// Ö÷ÒªÓÃÓÚ½â¾öÌØÐ§ÎÞ·¨äÖÈ¾ÔÚUIÉÏµÄÎÊÌâ
+    /// ï¿½ï¿½ï¿½ï¿½
     /// </summary>
-    [RequireComponent(typeof(Canvas))]//½Å±¾ÒÀÀµ
-    public class UIFormEffect : MonoBehaviour
-    {
-        [Header("ÊÇ·ñ´°¿Ú¶¯»­")]
-        [SerializeField] bool isAnim = false;
-
-        [Header("UIÌØÐ§·Ö×é")]
-        [SerializeField] public List<UIEffectGroup> UIEffectGroups = new List<UIEffectGroup>();
-        [Header("³õÊ¼²¥·ÅµÄÌØÐ§")]
-        [SerializeField] List<ParticleSystem> effectOnOpenPlay = new List<ParticleSystem>();
-
-
-        void Start()
-        {
-            Canvas CurrCanvas = GetComponent<Canvas>();
-            //¸ù¾ÝUI²ã¼¶, ÉèÖÃÌØÐ§²ã¼¶
-            for (int i = 0; i < UIEffectGroups.Count; i++)
-            {
-                UIEffectGroup effectGroup = UIEffectGroups[i];
-                effectGroup.Group.ForEach(x =>
-                {
-                    x.SetEffectOrder(CurrCanvas.sortingOrder + effectGroup.Order);
-                    x.gameObject.SetLayer("UI");
-                });
-            }
-
-            //Í£Ö¹ÌØÐ§³õÊ¼²¥·Å, ²»ÐèÒª¿ÉÒÔ×¢ÊÍ
-            ParticleSystem[] particles = GetComponentsInChildren<ParticleSystem>();
-            for (int i = 0; i < particles.Length; i++) particles[i].Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-
-            //²¥·ÅÉè¶¨µÄ³õÊ¼ÌØÐ§
-            effectOnOpenPlay.ForEach(x => x.Play());
-        }
-        private void OnEnable()
-        {
-#if UNITY_EDITOR
-            transform.SetAsLastSibling();
-#endif
-            if (isAnim) AnimOpen();
-        }
-
-        public void AnimOpen()
-        {
-            transform.DoShowScale(0.3f, 1);
-        }
-
-    }
+    public ushort Order;
 
     /// <summary>
-    /// UIÌØÐ§·Ö×é
+    /// ï¿½ï¿½Ð§ï¿½ï¿½
     /// </summary>
-    [Serializable]
-    public class UIEffectGroup
-    {
-        /// <summary>
-        /// ÅÅÐò
-        /// </summary>
-        public ushort Order;
-        /// <summary>
-        /// ÌØÐ§×é
-        /// </summary>
-        public List<Transform> Group = new List<Transform>();
-    }
+    public List<Transform> Group = new List<Transform>();
 }

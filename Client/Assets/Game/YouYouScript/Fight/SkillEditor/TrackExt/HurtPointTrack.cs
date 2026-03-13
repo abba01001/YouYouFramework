@@ -3,15 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Timeline;
 
-namespace YouYou
+/// <summary>
+/// PlaySoundï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+/// </summary>
+[TrackColor(0f, 222 / 255f, 1)]
+[TrackClipType(typeof(HurtPointPlayable))]
+public class HurtPointTrack : TrackAsset
 {
-    /// <summary>
-    /// PlaySound¹ìµÀ¶¨Òå
-    /// </summary>
-    [TrackColor(0f, 222 / 255f, 1)]
-    [TrackClipType(typeof(HurtPointPlayable))]
-    public class HurtPointTrack : TrackAsset
-    {
-
-    }
 }

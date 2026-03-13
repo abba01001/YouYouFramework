@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace YouYou
-{
     /// <summary>
     /// 检查更新流程
     /// </summary>
@@ -19,4 +17,3 @@ namespace YouYou
 
         }
     }
-}

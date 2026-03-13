@@ -2,20 +2,18 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Playables;
-using YouYou;
 
-namespace YouYou
-{
+
     [System.Serializable]
     public class PlayAnimEventArgs
     {
-        [Header("Ä¿±êµã")]
+        [Header("Ä¿ï¿½ï¿½ï¿½")]
         public DynamicTarget Target;
 
-        [Header("¶¯»­×ÊÔ´")]
+        [Header("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô´")]
         public AnimationClip AnimationClip;
 
-        [Header("¶¯»­²ÎÊý")]
+        [Header("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")]
         public int Param = 0;
 
     }
@@ -34,4 +32,3 @@ namespace YouYou
 
         }
     }
-}

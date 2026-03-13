@@ -7,8 +7,7 @@ using System;
 using System.Linq;
 using Object = UnityEngine.Object;
 
-namespace YouYou
-{
+
     public class UIManager
     {
         /// <summary>
@@ -198,7 +197,7 @@ namespace YouYou
             if (!formBase.IsActive) return;
             if (!m_OpenUIFormList.Remove(formBase))
             {
-                //YouYou.GameEntry.LogError(formBase + "==已经是关闭状态了");
+                //GameEntry.LogError(formBase + "==已经是关闭状态了");
                 return;
             }
             formBase.ToClose();
@@ -372,4 +371,3 @@ namespace YouYou
         }
 
     }
-}

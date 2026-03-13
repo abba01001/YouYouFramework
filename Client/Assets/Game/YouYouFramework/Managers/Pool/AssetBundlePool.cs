@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace YouYou
-{
     public class AssetBundlePool
     {
 #if UNITY_EDITOR
@@ -99,4 +97,3 @@ namespace YouYou
         }
 
     }
-}

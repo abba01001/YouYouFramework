@@ -6,8 +6,6 @@ using Main;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace YouYou
-{
     public class TimeManager
     {
         /// <summary>
@@ -340,4 +338,3 @@ namespace YouYou
             return $"{minutes:D2}:{seconds:D2}"; // 格式化为 MM:SS
         }
     }
-}

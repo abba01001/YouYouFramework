@@ -5,8 +5,6 @@ using UnityEngine;
 using System.Linq;
 
 
-namespace YouYou
-{
     /// <summary>
     /// 启动流程
     /// </summary>
@@ -36,4 +34,3 @@ namespace YouYou
 #endif
         }
     }
-}

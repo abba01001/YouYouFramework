@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace YouYou
-{
     /// <summary>
     /// 对象池
     /// </summary>
@@ -126,7 +124,7 @@ namespace YouYou
 
                 if (inst == null)
                 {
-                    YouYou.GameEntry.Log(YouYou.LogCategory.Pool, "池内拿出来的对象是null， 被私自Destroy了, Prefab==" + prefab);
+                    GameEntry.Log(LogCategory.Pool, "池内拿出来的对象是null， 被私自Destroy了, Prefab==" + prefab);
                     return null;
                 }
 
@@ -212,4 +210,3 @@ namespace YouYou
         }
 
     }
-}

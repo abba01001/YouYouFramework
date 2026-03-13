@@ -3,104 +3,105 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace YouYou
+public class DataTableManager
 {
-    public class DataTableManager
+    internal Action OnLoadDataTableComplete;
+
+    internal void Init()
     {
-        internal Action OnLoadDataTableComplete;
-        internal void Init()
+    }
+
+
+    public LocalizationDBModel LocalizationDBModel { get; private set; }
+    public Sys_UIFormDBModel Sys_UIFormDBModel { get; private set; }
+    public Sys_PrefabDBModel Sys_PrefabDBModel { get; private set; }
+    public Sys_BGMDBModel Sys_BGMDBModel { get; private set; }
+    public Sys_BuildingsDBModel Sys_BuildingsDBModel { get; private set; }
+    public Sys_AudioDBModel Sys_AudioDBModel { get; private set; }
+    public Sys_SceneDBModel Sys_SceneDBModel { get; private set; }
+    public Sys_GuideDBModel Sys_GuideDBModel { get; private set; }
+    public Sys_AtlasDBModel Sys_AtlasDBModel { get; private set; }
+    public Sys_DialogueDBModel Sys_DialogueDBModel { get; private set; }
+    public Sys_ModelDBModel Sys_ModelDBModel { get; private set; }
+    public Sys_EquipDBModel Sys_EquipDBModel { get; private set; }
+    public Sys_ItemDBModel Sys_ItemDBModel { get; private set; }
+    public Sys_UnlockFuncDBModel Sys_UnlockFuncDBModel { get; private set; }
+    public Sys_LevelDBModel Sys_LevelDBModel { get; private set; }
+
+    /// <summary>
+    /// 加载表格
+    /// </summary>
+    private void LoadDataTable()
+    {
+        TaskGroup m_TaskGroup = GameEntry.Task.CreateTaskGroup();
+        LocalizationDBModel = new LocalizationDBModel();
+        LocalizationDBModel.LoadData(m_TaskGroup);
+
+        Sys_UIFormDBModel = new Sys_UIFormDBModel();
+        Sys_UIFormDBModel.LoadData(m_TaskGroup);
+
+        Sys_PrefabDBModel = new Sys_PrefabDBModel();
+        Sys_PrefabDBModel.LoadData(m_TaskGroup);
+
+        Sys_AudioDBModel = new Sys_AudioDBModel();
+        Sys_AudioDBModel.LoadData(m_TaskGroup);
+
+        Sys_BGMDBModel = new Sys_BGMDBModel();
+        Sys_BGMDBModel.LoadData(m_TaskGroup);
+
+        Sys_BuildingsDBModel = new Sys_BuildingsDBModel();
+        Sys_BuildingsDBModel.LoadData(m_TaskGroup);
+
+        Sys_SceneDBModel = new Sys_SceneDBModel();
+        Sys_SceneDBModel.LoadData(m_TaskGroup);
+
+        Sys_GuideDBModel = new Sys_GuideDBModel();
+        Sys_GuideDBModel.LoadData(m_TaskGroup);
+
+        Sys_AtlasDBModel = new Sys_AtlasDBModel();
+        Sys_AtlasDBModel.LoadData(m_TaskGroup);
+
+        Sys_DialogueDBModel = new Sys_DialogueDBModel();
+        Sys_DialogueDBModel.LoadData(m_TaskGroup);
+
+        Sys_ModelDBModel = new Sys_ModelDBModel();
+        Sys_ModelDBModel.LoadData(m_TaskGroup);
+
+        Sys_EquipDBModel = new Sys_EquipDBModel();
+        Sys_EquipDBModel.LoadData(m_TaskGroup);
+
+        Sys_ItemDBModel = new Sys_ItemDBModel();
+        Sys_ItemDBModel.LoadData(m_TaskGroup);
+
+        Sys_UnlockFuncDBModel = new Sys_UnlockFuncDBModel();
+        Sys_UnlockFuncDBModel.LoadData(m_TaskGroup);
+
+        Sys_LevelDBModel = new Sys_LevelDBModel();
+        Sys_LevelDBModel.LoadData(m_TaskGroup);
+
+        m_TaskGroup.OnComplete += OnLoadDataTableComplete;
+        m_TaskGroup.OnComplete += () =>
         {
-        }
+            Constants.IsLoadDataTable = true;
+            GameEntry.Event.Dispatch(Constants.EventName.FinishLoadDataTable);
+        };
+        m_TaskGroup.Run(true);
+    }
 
+    /// <summary>
+    /// 表格资源包
+    /// </summary>
+    private AssetBundle m_DataTableBundle;
 
-        public LocalizationDBModel LocalizationDBModel { get; private set; }
-        public Sys_UIFormDBModel Sys_UIFormDBModel { get; private set; }
-        public Sys_PrefabDBModel Sys_PrefabDBModel { get; private set; }
-        public Sys_BGMDBModel Sys_BGMDBModel { get; private set; }
-        public Sys_BuildingsDBModel Sys_BuildingsDBModel { get; private set; }
-        public Sys_AudioDBModel Sys_AudioDBModel { get; private set; }
-        public Sys_SceneDBModel Sys_SceneDBModel { get; private set; }
-        public Sys_GuideDBModel Sys_GuideDBModel { get; private set; }
-        public Sys_AtlasDBModel Sys_AtlasDBModel { get; private set; }
-        public Sys_DialogueDBModel Sys_DialogueDBModel { get; private set; }
-        public Sys_ModelDBModel Sys_ModelDBModel { get; private set; }
-        public Sys_EquipDBModel Sys_EquipDBModel { get; private set; }
-        public Sys_ItemDBModel Sys_ItemDBModel { get; private set; }
-        public Sys_UnlockFuncDBModel Sys_UnlockFuncDBModel { get; private set; }
-        public Sys_LevelDBModel Sys_LevelDBModel { get; private set; }
-        /// <summary>
-        /// 加载表格
-        /// </summary>
-        private void LoadDataTable()
-        {
-            TaskGroup m_TaskGroup = GameEntry.Task.CreateTaskGroup();
-            LocalizationDBModel = new LocalizationDBModel();
-            LocalizationDBModel.LoadData(m_TaskGroup);
-
-            Sys_UIFormDBModel = new Sys_UIFormDBModel();
-            Sys_UIFormDBModel.LoadData(m_TaskGroup);
-
-            Sys_PrefabDBModel = new Sys_PrefabDBModel();
-            Sys_PrefabDBModel.LoadData(m_TaskGroup);
-
-            Sys_AudioDBModel = new Sys_AudioDBModel();
-            Sys_AudioDBModel.LoadData(m_TaskGroup);
-
-            Sys_BGMDBModel = new Sys_BGMDBModel();
-            Sys_BGMDBModel.LoadData(m_TaskGroup);
-
-            Sys_BuildingsDBModel =  new Sys_BuildingsDBModel();
-            Sys_BuildingsDBModel.LoadData(m_TaskGroup);
-            
-            Sys_SceneDBModel = new Sys_SceneDBModel();
-            Sys_SceneDBModel.LoadData(m_TaskGroup);
-
-            Sys_GuideDBModel = new Sys_GuideDBModel();
-            Sys_GuideDBModel.LoadData(m_TaskGroup);
-
-            Sys_AtlasDBModel = new Sys_AtlasDBModel();
-            Sys_AtlasDBModel.LoadData(m_TaskGroup);
-
-            Sys_DialogueDBModel = new Sys_DialogueDBModel();
-            Sys_DialogueDBModel.LoadData(m_TaskGroup);
-
-            Sys_ModelDBModel = new Sys_ModelDBModel();
-            Sys_ModelDBModel.LoadData(m_TaskGroup);
-
-            Sys_EquipDBModel = new Sys_EquipDBModel();
-            Sys_EquipDBModel.LoadData(m_TaskGroup);
-
-            Sys_ItemDBModel = new Sys_ItemDBModel();
-            Sys_ItemDBModel.LoadData(m_TaskGroup);
-
-            Sys_UnlockFuncDBModel = new Sys_UnlockFuncDBModel();
-            Sys_UnlockFuncDBModel.LoadData(m_TaskGroup);
-
-            Sys_LevelDBModel = new Sys_LevelDBModel();
-            Sys_LevelDBModel.LoadData(m_TaskGroup);
-            
-            m_TaskGroup.OnComplete += OnLoadDataTableComplete;
-            m_TaskGroup.OnComplete += () =>
-            {
-                Constants.IsLoadDataTable = true;
-                GameEntry.Event.Dispatch(Constants.EventName.FinishLoadDataTable);
-            };
-            m_TaskGroup.Run(true);
-        }
-
-        /// <summary>
-        /// 表格资源包
-        /// </summary>
-        private AssetBundle m_DataTableBundle;
-
-        /// <summary>
-        /// 加载表格
-        /// </summary>
-        internal void LoadDataAllTable(Action onComplete = null)
-        {
-            OnLoadDataTableComplete += onComplete;
+    /// <summary>
+    /// 加载表格
+    /// </summary>
+    internal void LoadDataAllTable(Action onComplete = null)
+    {
+        OnLoadDataTableComplete += onComplete;
 #if ASSETBUNDLE
-            GameEntry.Loader.LoadAssetBundleAction(YFConstDefine.DataTableAssetBundlePath, onComplete: (AssetBundle bundle) =>
+        GameEntry.Loader.LoadAssetBundleAction(YFConstDefine.DataTableAssetBundlePath,
+            onComplete: (AssetBundle bundle) =>
             {
                 m_DataTableBundle = bundle;
                 LoadDataTable();
@@ -108,27 +109,28 @@ namespace YouYou
 #else
             LoadDataTable();
 #endif
-        }
+    }
 
-        /// <summary>
-        /// 获取表格的字节数组
-        /// </summary>
-        public void GetDataTableBuffer(string dataTableName, Action<byte[]> onComplete)
-        {
+    /// <summary>
+    /// 获取表格的字节数组
+    /// </summary>
+    public void GetDataTableBuffer(string dataTableName, Action<byte[]> onComplete)
+    {
 #if EDITORLOAD
             GameEntry.Time.Yield(() =>
             {
-                byte[] buffer = IOUtil.GetFileBuffer(string.Format("{0}/Game/Download/DataTable/{1}.bytes", Application.dataPath, dataTableName));
+                byte[] buffer =
+ IOUtil.GetFileBuffer(string.Format("{0}/Game/Download/DataTable/{1}.bytes", Application.dataPath, dataTableName));
                 if (onComplete != null) onComplete(buffer);
             });
 #else
-            GameEntry.Loader.LoadAssetAction(GameUtil.GetLastPathName(dataTableName), m_DataTableBundle, onComplete: (AssetReferenceEntity referenceEntity) =>
+        GameEntry.Loader.LoadAssetAction(GameUtil.GetLastPathName(dataTableName), m_DataTableBundle,
+            onComplete: (AssetReferenceEntity referenceEntity) =>
             {
                 if (referenceEntity == null) return;
                 TextAsset asset = referenceEntity.Target as TextAsset;
                 if (onComplete != null) onComplete(asset.bytes);
             });
 #endif
-        }
     }
 }

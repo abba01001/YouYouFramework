@@ -10,8 +10,7 @@ using UnityEngine.UI;
 using Path = DG.Tweening.Plugins.Core.PathCore.Path;
 
 //操作战斗流程开始，结束
-namespace YouYou
-{
+
     /// <summary>
     /// 游戏流程
     /// </summary>
@@ -77,4 +76,3 @@ namespace YouYou
             base.OnDestroy();
         }
     }
-}

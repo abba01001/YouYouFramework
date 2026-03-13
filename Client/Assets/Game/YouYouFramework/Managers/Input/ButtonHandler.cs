@@ -2,19 +2,18 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace YouYou
+public class ButtonHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
-    public class ButtonHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+    [SerializeField] InputName Name;
+
+    public void OnPointerDown(PointerEventData eventData)
     {
-        [SerializeField] InputName Name;
-        public void OnPointerDown(PointerEventData eventData)
-        {
-            GameEntry.Input.SetButtonDown(Name);
-            GameEntry.Event.Common.Dispatch("ButtonDown" + Name);
-        }
-        public void OnPointerUp(PointerEventData eventData)
-        {
-            GameEntry.Input.SetButtonUp(Name);
-        }
+        GameEntry.Input.SetButtonDown(Name);
+        GameEntry.Event.Common.Dispatch("ButtonDown" + Name);
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        GameEntry.Input.SetButtonUp(Name);
     }
 }

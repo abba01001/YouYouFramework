@@ -2,10 +2,8 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Playables;
-using YouYou;
 
-namespace YouYou
-{
+
     [System.Serializable]
     public class PlayResourceEventArgs
     {
@@ -20,22 +18,22 @@ namespace YouYou
         }
 #endif
 
-        [Header("Ä¿±êµã")]
+        [Header("Ä¿ï¿½ï¿½ï¿½")]
         public DynamicTarget Target;
 
-        [Header("Ô¤ÉèÂ·¾¶")]
+        [Header("Ô¤ï¿½ï¿½Â·ï¿½ï¿½")]
         public string PrefabPath;
 
-        [Header("Ô¤ÉèÃû³Æ")]
+        [Header("Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")]
         public string PrefabName;
 
-        [Header("Æ«ÒÆ")]
+        [Header("Æ«ï¿½ï¿½")]
         public Vector3 Offset;
 
-        [Header("Ðý×ª")]
+        [Header("ï¿½ï¿½×ª")]
         public Vector3 Rotation;
 
-        [Header("Ëõ·Å")]
+        [Header("ï¿½ï¿½ï¿½ï¿½")]
         public Vector3 Scale = Vector3.one;
 
     }
@@ -54,4 +52,3 @@ namespace YouYou
 
         }
     }
-}

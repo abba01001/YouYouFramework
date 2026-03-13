@@ -3,8 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-namespace YouYou
-{
+
     /// <summary>
     /// Sys_UIForm数据管理
     /// </summary>
@@ -40,4 +39,3 @@ namespace YouYou
             }
         }
     }
-}

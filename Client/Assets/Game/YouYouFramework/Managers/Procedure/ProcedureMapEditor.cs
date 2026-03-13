@@ -4,8 +4,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 
-namespace YouYou
-{
     /// <summary>
     /// 游戏流程
     /// </summary>
@@ -73,4 +71,3 @@ namespace YouYou
         }
 #endif
     }
-}

@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
-using YouYou;
+
 
 // "登录"界面
 public class FormWearEquip : UIFormBase

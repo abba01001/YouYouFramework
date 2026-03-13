@@ -5,7 +5,7 @@ using DG.Tweening;
 using Main;
 using UnityEngine;
 using UnityEngine.UI;
-using YouYou;
+
 
 public class TipModel
 {

@@ -1,7 +1,6 @@
 using System.Collections;
 
-namespace YouYou
-{
+
     /// <summary>
       /// Sys_Item实体
     /// </summary>
@@ -23,4 +22,3 @@ namespace YouYou
         public string Icon;
 
     }
-}

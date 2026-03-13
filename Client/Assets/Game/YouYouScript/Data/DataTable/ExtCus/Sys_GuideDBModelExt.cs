@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace YouYou
-{
     public partial class Sys_GuideDBModel
     {
         public Dictionary<int, Sys_GuideEntity> IdByDic;
@@ -32,8 +30,7 @@ namespace YouYou
             {
                 return IdByDic[task_id];
             }
-            YouYou.GameEntry.LogError(LogCategory.Framework, "没有找到任务, TaskId==" + task_id);
+            GameEntry.LogError(LogCategory.Framework, "没有找到任务, TaskId==" + task_id);
             return null;
         }
     }
-}

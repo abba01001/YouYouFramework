@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-namespace YouYou
-{
     /// <summary>
     /// 总池, 包含多个对象池
     /// </summary>
@@ -41,7 +39,7 @@ namespace YouYou
         {
             if (GetPrefabPool(prefabPool.prefab) != null)
             {
-                YouYou.GameEntry.Log(YouYou.LogCategory.Pool, "该Prefab对应的对象池已经存在， 不要重复创建!  prefab==" + prefabPool.prefab);
+                GameEntry.Log(LogCategory.Pool, "该Prefab对应的对象池已经存在， 不要重复创建!  prefab==" + prefabPool.prefab);
                 return;
             }
 
@@ -103,4 +101,3 @@ namespace YouYou
 
     }
 
-}

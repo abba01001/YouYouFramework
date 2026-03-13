@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace YouYou
-{
     public class PopupQueueManager
     {
         internal UIPool UIPool;
@@ -134,4 +132,4 @@ namespace YouYou
             return Random.Range(0, 10); // 随机优先级，实际应替换为真实逻辑
         }
     }
-}
+

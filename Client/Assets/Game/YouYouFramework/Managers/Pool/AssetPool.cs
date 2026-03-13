@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace YouYou
-{
     /// <summary>
     /// 资源池
     /// </summary>
@@ -99,4 +97,3 @@ namespace YouYou
         }
 
     }
-}

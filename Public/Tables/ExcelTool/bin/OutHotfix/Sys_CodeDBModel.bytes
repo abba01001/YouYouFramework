@@ -7,7 +7,7 @@ local sys_codeTable = { }; --定义表格
 
 function Sys_CodeDBModel.LoadList()
     GameInit.AddTotalLoadTableCount();
-    CS.YouYou.GameEntry.Lua:LoadDataTable("Sys_Code", this.LoadFormMS);
+    CS.GameEntry.Lua:LoadDataTable("Sys_Code", this.LoadFormMS);
 end
 
 function Sys_CodeDBModel.LoadFormMS(ms)

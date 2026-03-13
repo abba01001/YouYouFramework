@@ -38,7 +38,7 @@ namespace ExcelTool
         private static void LoadConfig()
         {
             string configPath = Environment.CurrentDirectory + "/config.txt";
-
+            Console.WriteLine(configPath);
             if (File.Exists(configPath))
             {
                 string str = "";
@@ -259,8 +259,6 @@ namespace ExcelTool
             StringBuilder sbr = new StringBuilder();
             sbr.Append("using System.Collections;\r\n");
             sbr.Append("\r\n");
-            sbr.Append("namespace YouYou\r\n");
-            sbr.Append("{\r\n");
             sbr.Append("    /// <summary>\r\n");
             sbr.AppendFormat("      /// {0}实体\r\n", fileName);
             sbr.Append("    /// </summary>\r\n");
@@ -278,7 +276,6 @@ namespace ExcelTool
             }
 
             sbr.Append("    }\r\n");
-            sbr.Append("}\r\n");
 
 
             using (FileStream fs = new FileStream(string.Format("{0}/{1}Entity.cs", OutCSharpFilePath, fileName), FileMode.Create))
@@ -296,8 +293,6 @@ namespace ExcelTool
             sbr.Append("using System.Collections.Generic;\r\n");
             sbr.Append("using System;\r\n");
             sbr.Append("\r\n");
-            sbr.Append("namespace YouYou\r\n");
-            sbr.Append("{\r\n");
             sbr.Append("    /// <summary>\r\n");
             sbr.AppendFormat("    /// {0}数据管理\r\n", fileName);
             sbr.Append("    /// </summary>\r\n");
@@ -342,7 +337,6 @@ namespace ExcelTool
             sbr.Append("        }\r\n");
             sbr.Append("    }\r\n");
 
-            sbr.Append("}");
             using (FileStream fs = new FileStream(string.Format("{0}/{1}DBModel.cs", OutCSharpFilePath, fileName), FileMode.Create))
             {
                 using (StreamWriter sw = new StreamWriter(fs))
@@ -544,7 +538,7 @@ namespace ExcelTool
             sbr.Append("\r\n");
             sbr.AppendFormat("function {0}DBModel.LoadList()\r\n", fileName);
             sbr.Append("    GameInit.AddTotalLoadTableCount();\r\n");
-            sbr.AppendFormat("    CS.YouYou.GameEntry.Lua:LoadDataTable(\"{0}\", this.LoadFormMS);\r\n", fileName);
+            sbr.AppendFormat("    CS.GameEntry.Lua:LoadDataTable(\"{0}\", this.LoadFormMS);\r\n", fileName);
             sbr.Append("end\r\n");
             sbr.Append("\r\n");
             sbr.AppendFormat("function {0}DBModel.LoadFormMS(ms)\r\n", fileName);
