@@ -50,15 +50,12 @@ public class FormLogin : UIFormBase
          {
              string result = PlayerPrefs.GetString("SaveData");
              byte[] binaryData = Convert.FromBase64String(result);
-             GameUtil.LogError("1111111111111");
              GameEntry.Data.InitGameData(binaryData);
-             GameUtil.LogError("2222222222222");
 
              long timestampSeconds = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds();
              GameEntry.Time.InitNetTime(timestampSeconds);
 
              await UniTask.Delay(100);
-             GameUtil.LogError("333333333333");
              
              GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);
              Constants.IsEntryGame = true;

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace Watermelon
 {
@@ -15,13 +16,14 @@ namespace Watermelon
 
         private Pool positionPointerPool;
 
-        public void Initialise()
+        public async UniTask Initialise()
         {
             instance = this;
 
             directionPointersController.Initialise();
 
             positionPointerPool = new Pool(positionPointerPrefab, positionPointerPrefab.name);
+            await UniTask.NextFrame();
         }
 
         private void OnDestroy()

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Watermelon
@@ -13,9 +14,10 @@ namespace Watermelon
 
         private static List<FishingPlaceBehavior> registeredFishingPlaces = new List<FishingPlaceBehavior>();
 
-        public void Initialise()
+        public async UniTask Initialise()
         {
             instance = this;
+            await UniTask.NextFrame();
         }
 
         public void SpawnFishingPlaces()

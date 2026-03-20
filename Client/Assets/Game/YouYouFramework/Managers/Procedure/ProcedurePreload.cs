@@ -85,17 +85,13 @@ using Object = UnityEngine.Object;
 
         private async UniTask OnLoginSuccess(object userdata)
         {
-            GameUtil.LogError("44444444");
             GameEntry.UI.CloseUIForm<FormLogin>();
-            GameUtil.LogError("555555555");
             
             if (GameEntry.Data.IsFirstLoginTime) GameEntry.Data.IsFirstLoginTime = false;
             GameEntry.Audio.InitVolume();
-            GameUtil.LogError("6666666666");
             
             GameEntry.Data.SaveData(true,true,true,true);
             GameEntry.Procedure.ChangeState(ProcedureState.Game);
-            GameUtil.LogError("777777777777");
             
             //
             // if (Application.platform != RuntimePlatform.OSXEditor &&

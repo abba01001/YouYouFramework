@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Watermelon
@@ -19,7 +20,7 @@ namespace Watermelon
 
         private static float nextMessageTime;
 
-        public void Initialise()
+        public async UniTask Initialise()
         {
             instance = this;
 
@@ -29,6 +30,8 @@ namespace Watermelon
             {
                 unlockableTool.Initialise();
             }
+            
+            await UniTask.NextFrame();
         }
 
         public static bool IsToolUnlocked(InteractionAnimationType toolType)

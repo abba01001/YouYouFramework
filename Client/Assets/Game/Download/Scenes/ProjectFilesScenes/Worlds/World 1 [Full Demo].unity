@@ -57096,6 +57096,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2857906073127068233, guid: fcee1b288897c12408b87f7d77341016,
         type: 3}
+      propertyPath: m_SoftShadowQuality
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2857906073127068233, guid: fcee1b288897c12408b87f7d77341016,
+        type: 3}
       propertyPath: m_LightCookieOffset.x
       value: -22.72
       objectReference: {fileID: 0}
@@ -57113,6 +57118,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Intensity
       value: 1.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 5579117448769914125, guid: fcee1b288897c12408b87f7d77341016,
+        type: 3}
+      propertyPath: m_Shadows.m_Strength
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -92916,8 +92926,8 @@ MonoBehaviour:
   navMeshSurface: {fileID: 438512383339899028}
   subWorldHandler:
     subworlds:
-    - {fileID: 1820117116}
     - {fileID: 18863360}
+    - {fileID: 1820117116}
   diggingSpawnSettings:
     spawnDelay:
       firstValue: 0

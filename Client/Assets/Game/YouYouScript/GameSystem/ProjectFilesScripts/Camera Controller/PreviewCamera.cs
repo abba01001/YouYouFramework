@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Watermelon
@@ -25,7 +26,7 @@ namespace Watermelon
 
         private static CameraCase frozenCase;
 
-        public static void Initialise()
+        public static async UniTask Initialise()
         {
             // Get preivew virtual camera
             previewCamera = CameraController.GetCamera(CameraType.Preview);
@@ -37,6 +38,7 @@ namespace Watermelon
             // Create custom curvature target
             curvatureTarget = new GameObject("[CURVATURE CUSTOM TARGET]");
             curvatureTarget.transform.ResetGlobal();
+            await UniTask.NextFrame();
         }
 
         public static void ResetTargetPosition()

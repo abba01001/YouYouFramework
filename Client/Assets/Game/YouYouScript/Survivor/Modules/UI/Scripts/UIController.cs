@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -35,7 +36,7 @@ namespace Watermelon
         public static event PopupWindowCallback PopupOpened;
         public static event PopupWindowCallback PopupClosed;
 
-        public void Init()
+        public async UniTask Init()
         {
             uiController = this;
 
@@ -73,9 +74,11 @@ namespace Watermelon
 
             // Initialize global overlay
             Overlay.Init(this);
+
+            await UniTask.NextFrame();
         }
 
-        public void InitPages()
+        public async UniTask InitPages()
         {
             // Refresh notch save area
             notchSaveArea.Init();
@@ -88,6 +91,8 @@ namespace Watermelon
                 pages[i].Init();
                 pages[i].DisableCanvas();
             }
+
+            await UniTask.NextFrame();
         }
 
         public static void ResetPages()

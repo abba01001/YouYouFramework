@@ -53,49 +53,27 @@ namespace Watermelon
 
         private async UniTask Init()
         {
-            try
-            {
-                Data.Init();
-                defaultMusicController.Initialise();
-                uiController.Init();
-                cameraController.Initialise();
-                PreviewCamera.Initialise();
-                skinController.Init();
-                unlockableToolsController.Initialise();
-                energyController.Initialise();
-                environmentController.Initialise();
-                fishingController.Initialise();
-                diggingController.Initialise();
-                globalUpgradesController.Initialise();
-                floatingTextController.Init();
-                worldController.Initialise();
-                uiController.InitPages();
-                particlesController.Init();
-                navigationHelper.Initialise();
-            }
-            catch (Exception e)
-            {
-                GameUtil.LogError(e);
-            }
-            InitStart();
-            GameEntry.UI.OpenUIForm<FormGame>();
-        }
-
-        private async UniTask InitStart()
-        {
-            if (gameData.UseMainMenu)
-            {
-                DefaultMusicController.ActivateMusic();
-
-                UIController.ShowPage<UIMainMenu>();
-            }
-            else
-            {
-                worldController.LoadCurrentWorld();
-            }
-
-            // Move this method to the point when the game is fully loaded
+            await Data.Init();
+            await defaultMusicController.Initialise();
+            await uiController.Init();
+            await cameraController.Initialise();
+            await PreviewCamera.Initialise();
+            await skinController.Init();
+            await unlockableToolsController.Initialise();
+            await energyController.Initialise();
+            await environmentController.Initialise();
+            await fishingController.Initialise();
+            await diggingController.Initialise();
+            await globalUpgradesController.Initialise();
+            await floatingTextController.Init();
+            await worldController.Initialise();
+            await uiController.InitPages();
+            await particlesController.Init();
+            await navigationHelper.Initialise();
+            await worldController.LoadCurrentWorld();
             GameLoading.MarkAsReadyToHide();
+            await UniTask.NextFrame();
+            GameEntry.UI.OpenUIForm<FormGame>();
         }
 
         private void OnDestroy()

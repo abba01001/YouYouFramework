@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Watermelon
@@ -7,10 +8,11 @@ namespace Watermelon
     {
         public static MusicSource MusicSource { get; private set; }
 
-        public void Initialise()
+        public async UniTask Initialise()
         {
             MusicSource = GetComponent<MusicSource>();
             MusicSource.Init();
+            await UniTask.NextFrame();
         }
 
         public static void ActivateMusic()

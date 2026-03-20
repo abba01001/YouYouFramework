@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Watermelon
@@ -38,7 +39,7 @@ namespace Watermelon
 
         private static CameraBlendCase currentBlendCase;
 
-        public void Initialise()
+        public async UniTask Initialise()
         {
             cameraController = this;
 
@@ -61,6 +62,8 @@ namespace Watermelon
             activeCamera = firstVirtualCamera;
 
             UpdateCamera();
+
+            await UniTask.NextFrame();
         }
 
         private static void UpdateCamera()

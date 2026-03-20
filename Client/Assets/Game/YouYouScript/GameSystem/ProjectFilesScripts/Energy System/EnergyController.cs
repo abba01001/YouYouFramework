@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -45,9 +46,8 @@ namespace Watermelon
         private static int lastDisplayedFoodPoints;
         private static readonly float FULL_ENERGY_THRESHOLD = 0.9f;
 
-        public void Initialise()
+        public async UniTask Initialise()
         {
-            GameUtil.LogError("初始化EnergyController");
             instance = this;
             save = SaveController.GetSaveObject<EnergySave>("Energy");
 
@@ -73,6 +73,8 @@ namespace Watermelon
             PlayerBehavior.OnResourceWillBeReceived += OnResorceWillBeReceivedReceived;
 
             Tween.DelayedCall(0.1f, DisableFoodItemsCurrencyUI);
+
+            await UniTask.NextFrame();
         }
 
         private void DisableFoodItemsCurrencyUI()

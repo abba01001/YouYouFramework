@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Watermelon
@@ -22,7 +23,7 @@ namespace Watermelon
         /// Initializes the particles controller by registering all particles in the array.
         /// Also starts a coroutine to continuously check for active particles.
         /// </summary>
-        public void Init()
+        public async UniTask Init()
         {
             // Register particles from the array.
             for (int i = 0; i < particles.Length; i++)
@@ -32,6 +33,8 @@ namespace Watermelon
 
             // Start the coroutine to monitor active particles.
             StartCoroutine(CheckForActiveParticles());
+
+            await UniTask.NextFrame();
         }
 
         /// <summary>

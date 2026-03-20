@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Watermelon
@@ -10,7 +11,7 @@ namespace Watermelon
         [SerializeField] FloatingTextCase[] floatingTextCases;
         private Dictionary<int, FloatingTextCase> floatingTextLink;
 
-        public void Init()
+        public async UniTask Init()
         {
             floatingTextController = this;
 
@@ -36,6 +37,8 @@ namespace Watermelon
 
                 floatingTextLink.Add(floatingText.Name.GetHashCode(), floatingText);
             }
+
+            await UniTask.NextFrame();
         }
 
         private void OnDestroy()

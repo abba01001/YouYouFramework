@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -23,12 +24,15 @@ namespace Watermelon
 
         public static event SimpleCallback OnWorldLoaded;
 
-        public void Initialise()
+        public async UniTask Initialise()
         {
             worldController = this;
-
-            // Load save
             worldGlobalSave = SaveController.GetSaveObject<WorldGlobalSave>("worldGlobal");
+            if (database == null)
+            {
+                database = await GameEntry.Loader.LoadMainAssetAsync<WorldsDatabase>("Assets/Game/Download/ProjectFiles/Data/Worlds Database.asset",GameEntry.Instance.gameObject);
+            }
+            await UniTask.NextFrame();
         }
 
         private void OnDestroy()
@@ -84,40 +88,27 @@ namespace Watermelon
             SceneManager.UnloadSceneAsync(CurrentWorld.Scene.Name, UnloadSceneOptions.None).OnCompleted(onWorldUnloaded);
         }
 
-        public void LoadCurrentWorld()
+        public async UniTask LoadCurrentWorld()
         {
             string worldID = worldGlobalSave.worldID;
             if (string.IsNullOrEmpty(worldID))
                 worldID = GetWorldData(0).ID;
-            if (database == null)
-            {
-                AssetReferenceEntity entity = GameEntry.Loader.LoadMainAsset("Assets/Game/Download/ProjectFiles/Data/Worlds Database.asset");
-                database = entity.Target as WorldsDatabase;
-            }
 
-            LoadWorld(database.GetWorldByID(worldID));
+            await LoadWorld(database.GetWorldByID(worldID));
         }
 
-        public void LoadWorld(string worldID)
+        public async UniTask LoadWorld(string worldID)
         {
             worldGlobalSave.worldID = worldID;
-            if (database == null)
-            {
-                AssetReferenceEntity entity = GameEntry.Loader.LoadMainAsset("Assets/Game/Download/ProjectFiles/Data/Worlds Database.asset");
-                database = entity.Target as WorldsDatabase;
-            }
-            LoadWorld(database.GetWorldByID(worldID));
+            await LoadWorld(database.GetWorldByID(worldID));
         }
 
-        public void LoadWorld(WorldData worldData)
+        public async UniTask LoadWorld(WorldData worldData)
         {
             CurrentWorld = worldData;
-
             WorldItemCollector.Initialise();
-
-            SceneManager.LoadScene(worldData.Scene.Name, LoadSceneMode.Additive);
-
-            Debug.LogError("记得加载UI Game");
+            AsyncOperation loadOperation = SceneManager.LoadSceneAsync(worldData.Scene.Name, LoadSceneMode.Additive);
+            await loadOperation.ToUniTask();
             Control.EnableMovementControl();
         }
 

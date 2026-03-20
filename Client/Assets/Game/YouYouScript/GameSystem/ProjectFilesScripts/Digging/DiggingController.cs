@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Watermelon
@@ -17,9 +18,10 @@ namespace Watermelon
         private static List<DiggingSpotBehavior> activeDiggingPoints = new List<DiggingSpotBehavior>();
         private static List<DiggingSpawnPoint> registeredSpawnPoints = new List<DiggingSpawnPoint>();
 
-        public void Initialise()
+        public async UniTask Initialise()
         {
             instance = this;
+            await UniTask.NextFrame();
         }
 
         private IEnumerator SpawnCoroutine()

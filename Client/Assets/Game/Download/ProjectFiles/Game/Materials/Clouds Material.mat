@@ -15,10 +15,11 @@ Material:
   - _SHADOWS_PIXEL
   m_InvalidKeywords: []
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
+  m_CustomRenderQueue: 2000
+  stringTagMap:
+    RenderType: Opaque
   disabledShaderPasses: []
   m_LockedProperties: 
   m_SavedProperties:
@@ -80,6 +81,7 @@ Material:
     - _SrcBlend: 1
     - _ToonOn: 0
     - _Transparent: 0
+    - _UseGlobalMultipliers: 0
     - _WindOn: 0
     - _WindPower: 1
     - _ZWrite: 1
@@ -97,3 +99,4 @@ Material:
     - _WindTexSize: {r: 1, g: 1, b: 0, a: 0}
     - _WindVelocity: {r: 0.1, g: 0.1, b: 0, a: 0}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1

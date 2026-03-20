@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 
 namespace Watermelon
 {
@@ -20,7 +21,7 @@ namespace Watermelon
 
         private static UIUpgrades uiUpgrades;
 
-        public void Initialise()
+        public async UniTask Initialise()
         {
             activeUpgrades = new List<AbstactGlobalUpgrade>(upgradesDatabase.Upgrades);
             
@@ -44,6 +45,8 @@ namespace Watermelon
             }
 
             uiUpgrades = UIController.GetPage<UIUpgrades>();
+
+            await UniTask.NextFrame();
         }
 
         [System.Obsolete]

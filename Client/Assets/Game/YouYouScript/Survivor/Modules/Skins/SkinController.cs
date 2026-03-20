@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Watermelon
@@ -20,10 +21,9 @@ namespace Watermelon
 
         public delegate void SkinCallback(ISkinData skinData);
 
-        public void Init()
+        public async UniTask Init()
         {
             Instance = this;
-            Debug.LogError("SkinController  Init111111111111111111");
             save = SaveController.GetSaveObject<SkinControllerSave>("Skin Controller Save");
 
             selectedSkins = new Dictionary<AbstractSkinDatabase, ISkinData>();
@@ -36,6 +36,8 @@ namespace Watermelon
             }
 
             UpdateSave();
+            
+            await UniTask.NextFrame();
         }
 
         private void InitProvider(AbstractSkinDatabase provider)

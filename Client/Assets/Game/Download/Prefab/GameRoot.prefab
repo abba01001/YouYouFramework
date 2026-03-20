@@ -247,8 +247,8 @@ MonoBehaviour:
     curveForwardPower: 18
     curveSideOffset: 0
     curveSidePower: 0
-    fovMultiplier: 1.5
-    aspectMultiplier: 1.3
+    fovMultiplier: 1
+    aspectMultiplier: 1
 --- !u!114 &6140130618651536496
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,5 +1,7 @@
-#pragma warning disable CS0414 
+#pragma warning disable CS0414
 
+using Cysharp.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -33,7 +35,7 @@ namespace Watermelon
             instance = this;
         }
 
-        public void Initialise(Mission[] missions)
+        public async UniTask Initialise(Mission[] missions)
         {
             if (missions == null)
                 return;
@@ -46,7 +48,13 @@ namespace Watermelon
 
             // Get game ui and initialise missions panel
             FormGame gameForm = GameEntry.UI.GetUIForm<FormGame>();//UIController.GetPage<FormGame>();
-
+            while (gameForm == null)
+            {
+                await UniTask.DelayFrame(2);
+                if(gameForm != null) break;
+                gameForm = GameEntry.UI.GetUIForm<FormGame>();
+            }
+            
             missionUIPanel = gameForm.MissionUIPanel;
             missionUIPanel.Initialise();
 

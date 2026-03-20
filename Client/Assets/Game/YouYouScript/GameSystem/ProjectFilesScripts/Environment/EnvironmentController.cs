@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Watermelon
@@ -46,18 +47,19 @@ namespace Watermelon
 
         public static bool TransitionInProgress { get; private set; }
 
-        public void Initialise()
+        public async UniTask Initialise()
         {
             instance = this;
 
             if (database == null)
             {
-                Destroy(this);
-                return;
+                database = await GameEntry.Loader.LoadMainAssetAsync<EnvironmentPresetsDatabase>("Assets/Game/Download/ProjectFiles/Data/Environment/Environment Presets Database.asset", GameEntry.Instance.gameObject);
             }
 
             weatherModule = new EnvironmentWeatherModule();
             skyModule = new EnvironmentSkyModule(weatherModule);
+
+            await UniTask.NextFrame();
         }
 
         private void Update()

@@ -100,17 +100,11 @@ ShaderVariantCollection:
         passType: 8
       - keywords: 
         passType: 13
-      - keywords: EVALUATE_SH_VERTEX _MAIN_LIGHT_SHADOWS_CASCADE
-        passType: 13
       - keywords: EVALUATE_SH_VERTEX _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT
         passType: 13
   - first: {fileID: 4800000, guid: 832d317c9a566784eba826bf81454a07, type: 3}
     second:
       variants:
-      - keywords: 
-        passType: 0
-      - keywords: CURVE_ON
-        passType: 0
       - keywords: CURVE_ON _COLORCOLOR_ON _FADING_ON _SOFTPARTICLES_ON _SURFACE_TYPE_TRANSPARENT
         passType: 0
       - keywords: CURVE_ON _COLORCOLOR_ON _SURFACE_TYPE_TRANSPARENT
@@ -162,8 +156,7 @@ ShaderVariantCollection:
         passType: 13
       - keywords: CURVE_ON TOON_ON USE_GLOBAL_MULTIPLIERS _SHADOWS_PIXEL
         passType: 13
-      - keywords: CURVE_ON _LIGHT_COOKIES _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_PIXEL
-          _SHADOWS_SOFT
+      - keywords: CURVE_ON _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_PIXEL _SHADOWS_SOFT
         passType: 13
       - keywords: TOON_ON _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_NONE _SHADOWS_SOFT
         passType: 13
@@ -177,13 +170,11 @@ ShaderVariantCollection:
           _SHADOWS_PIXEL _SHADOWS_SOFT
         passType: 0
       - keywords: CURVE_ON DISTORTION_ON FOAM_NOISE_ON SECONDARY_DEEP_COLOR_ON SECOND_PATTERN_ON
-          TOON_ON _LIGHT_COOKIES _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_PIXEL _SHADOWS_SOFT
+          TOON_ON _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_PIXEL _SHADOWS_SOFT
         passType: 0
   - first: {fileID: 4800000, guid: 650dd9526735d5b46b79224bc6e94025, type: 3}
     second:
       variants:
-      - keywords: 
-        passType: 0
       - keywords: _ALPHATEST_ON _SURFACE_TYPE_TRANSPARENT
         passType: 0
   - first: {fileID: 4800000, guid: 1270a9d7434352e418aa359025d6e314, type: 3}

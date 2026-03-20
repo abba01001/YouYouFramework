@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Watermelon
@@ -32,9 +33,10 @@ namespace Watermelon
         public DuoFloat StepsVolumeRange => stepsVolumeRange;
         public float MinSpeedToTriggerSteps => minSpeedToTriggerSteps;
 
-        public void Init()
+        public async UniTask Init()
         {
             enemiesDatabase.Init();
+            await UniTask.NextFrame();
         }
 
         public void Unload()
