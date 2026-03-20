@@ -114,7 +114,7 @@ namespace Main
             bool isFirstInstall = !File.Exists(firstInstallFlag);
             string targetFolder = Path.Combine(Application.streamingAssetsPath, "AssetBundles");
             string versionFilePath = Path.Combine(targetFolder, "version.txt");
-            
+            isFirstInstall = false;
             if (isFirstInstall)
             {
                 using UnityWebRequest request = UnityWebRequest.Get(versionFilePath);

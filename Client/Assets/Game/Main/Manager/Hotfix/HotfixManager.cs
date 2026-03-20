@@ -86,7 +86,7 @@ namespace Main
             //下载并加载热更程序集
             CheckAndDownload(YFConstDefine.HotfixAssetBundlePath, (string fileUrl) =>
             {
-#if !UNITY_EDITOR
+#if !UNITY_EDITOR || ASSETBUNDLE
                     hotfixAb = AssetBundle.LoadFromFile(string.Format("{0}/{1}", Application.persistentDataPath, fileUrl));
                     LoadMetadataForAOTAssemblies();
                     System.Reflection.Assembly.Load(hotfixAb.LoadAsset<TextAsset>("Assembly-CSharp.dll.bytes").bytes);

@@ -19,7 +19,7 @@ MonoBehaviour:
   IsUploadCloudAsset: 0
   IsForceUploadCloudAsset: 0
   IsUploadAPK: 0
-  IsUploadStreamingAsset: 1
+  IsUploadStreamingAsset: 0
   AssetBundleSavePath: AssetBundles
   IsCanEditor: 1
   Datas:

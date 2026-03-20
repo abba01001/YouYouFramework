@@ -10,6 +10,7 @@ namespace Watermelon
 
         public WorldData GetWorldByID(string id)
         {
+            id = "608437bb-6374-4923-8489-096284bf32cc";
             if (string.IsNullOrEmpty(id))
             {
                 // Return first world if ID is empty
