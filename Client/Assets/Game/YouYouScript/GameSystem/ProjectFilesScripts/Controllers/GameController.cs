@@ -67,6 +67,7 @@ namespace Watermelon
             await WorldController.Instance.Initialise();
             GameUtil.LogCurTimerLog("WorldController Init====>");
 
+            GameEntry.Event.Dispatch(Constants.EventName.EnergyChangedEvent);
             GameLoading.MarkAsReadyToHide();
             await UniTask.NextFrame();
             CheckPlayFirstEntryAnim();

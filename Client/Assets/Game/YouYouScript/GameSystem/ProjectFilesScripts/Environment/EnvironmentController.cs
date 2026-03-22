@@ -76,7 +76,7 @@ namespace Watermelon
             var pause = new WaitUntil(() => DayNightEnabled);
             while (true)
             {
-                yield return new WaitForSeconds(2);//CurrentPartOfDay.PartOfDayDuration);
+                yield return new WaitForSeconds(CurrentPartOfDay.PartOfDayDuration);
                 if (!DayNightEnabled) yield return pause;
                 var nextPartOfDay = PartsOfDayPresets[++i % PartsOfDayPresets.Count];
                 yield return PartsOfDayTransition(CurrentPartOfDay, nextPartOfDay);

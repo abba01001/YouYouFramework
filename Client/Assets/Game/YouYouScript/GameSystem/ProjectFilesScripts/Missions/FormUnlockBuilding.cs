@@ -1,13 +1,14 @@
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Watermelon
 {
-    public class UIMissionRewardPopUp : MonoBehaviour
+    public class FormUnlockBuilding : UIFormBase
     {
-        [SerializeField] UIFadeAnimation fadeAnimation;
-        [SerializeField] UIScaleAnimation panelBackScaleAnimation;
+        UIFadeAnimation fadeAnimation;
+        UIScaleAnimation panelBackScaleAnimation;
 
         [Space]
         [SerializeField] TMP_Text headerText;
@@ -15,32 +16,19 @@ namespace Watermelon
         [SerializeField] TMP_Text mainText;
         [SerializeField] TMP_Text buttonText;
 
-        [Space]
-        [SerializeField] Button fadeButton;
         [SerializeField] Button continueButton;
 
-        private void Awake()
+        protected override void Awake()
         {
-            fadeButton.onClick.AddListener(ClosePanelButton);
-            continueButton.onClick.AddListener(ClosePanelButton);
-        }
+            base.Awake();
+            fadeAnimation = new UIFadeAnimation(fadeImage.gameObject);
+            panelBackScaleAnimation = new UIScaleAnimation(panelRectTransform);
 
-        public void OnMissionFinished(Mission mission)
-        {
-            if (mission.RewardType == MissionRewardType.Tool)
-            {
-                Show(mission.ToolsReward.RewardInfo);
-            }
-            else if (mission.RewardType == MissionRewardType.Generic)
-            {
-                Show(mission.GenericReward.RewardInfo);
-            }
+            continueButton.onClick.AddListener(() => ClosePanelButton());
         }
 
         public void Show(RewardInfo data)
         {
-            gameObject.SetActive(true);
-
             fadeAnimation.Show();
             panelBackScaleAnimation.Show();
 
@@ -53,7 +41,7 @@ namespace Watermelon
             UIGamepadButton.EnableTag(UIGamepadButtonTag.Popup);
         }
 
-        public void Hide()
+        public async UniTask Hide()
         {
             if (!gameObject.activeSelf)
                 return;
@@ -66,10 +54,12 @@ namespace Watermelon
 
             UIGamepadButton.DisableAllTags();
             UIGamepadButton.EnableTag(UIGamepadButtonTag.Game);
+            await UniTask.Delay(500);
         }
 
-        private void ClosePanelButton()
+        private async UniTask ClosePanelButton()
         {
+            await Hide();
             MissionsController.Instance.CompleteMission();
         }
 

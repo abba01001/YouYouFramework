@@ -150,10 +150,35 @@ PrefabInstance:
       propertyPath: m_PresetInfoIsWorld
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 326622423383716442, guid: c44b244029d81b74a89c0bd10aeda63b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 696534547019157715, guid: c44b244029d81b74a89c0bd10aeda63b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1507300242726454463, guid: c44b244029d81b74a89c0bd10aeda63b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2048575607968929474, guid: c44b244029d81b74a89c0bd10aeda63b,
         type: 3}
       propertyPath: m_Name
       value: Resources Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 2048575607968929474, guid: c44b244029d81b74a89c0bd10aeda63b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3678724031829403523, guid: c44b244029d81b74a89c0bd10aeda63b,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
       objectReference: {fileID: 0}
     - target: {fileID: 4173478246764909074, guid: c44b244029d81b74a89c0bd10aeda63b,
         type: 3}
@@ -185,10 +210,25 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4209297529391133283, guid: c44b244029d81b74a89c0bd10aeda63b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4445792702064036017, guid: c44b244029d81b74a89c0bd10aeda63b,
         type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5038826765234065023, guid: c44b244029d81b74a89c0bd10aeda63b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5837067686010847638, guid: c44b244029d81b74a89c0bd10aeda63b,
+        type: 3}
+      propertyPath: m_BlockingMask.m_Bits
+      value: 1032191
       objectReference: {fileID: 0}
     - target: {fileID: 6640440747128222704, guid: c44b244029d81b74a89c0bd10aeda63b,
         type: 3}
@@ -288,6 +328,11 @@ PrefabInstance:
     - target: {fileID: 6640440747128222704, guid: c44b244029d81b74a89c0bd10aeda63b,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6923049870165210845, guid: c44b244029d81b74a89c0bd10aeda63b,
+        type: 3}
+      propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

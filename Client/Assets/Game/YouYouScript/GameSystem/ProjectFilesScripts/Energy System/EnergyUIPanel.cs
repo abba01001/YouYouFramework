@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,21 +19,23 @@ namespace Watermelon
         private TweenCase maskTweenCase;
         private Color defaultColor;
 
+        private void Awake()
+        {
+            Initialise();
+        }
+
         public void Initialise()
         {
             defaultColor = frontFillImage.color;
-
-            EnergyController.Instance.OnEnergyChanged += OnEnergyChanged;
-
-            OnEnergyChanged();
+            GameEntry.Event.AddEventListener(Constants.EventName.EnergyChangedEvent,OnEnergyChanged);
         }
 
         private void OnDestroy()
         {
-            EnergyController.Instance.OnEnergyChanged -= OnEnergyChanged;
+            GameEntry.Event.RemoveEventListener(Constants.EventName.EnergyChangedEvent,OnEnergyChanged);
         }
 
-        public void OnEnergyChanged()
+        public void OnEnergyChanged(object userdata)
         {
             backFillImage.fillAmount = (float)EnergyController.Instance.EnergyPoints / EnergyController.Instance.Data.MaxEnergyPoints;
 

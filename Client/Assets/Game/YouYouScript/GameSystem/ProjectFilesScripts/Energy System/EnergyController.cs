@@ -23,15 +23,12 @@ namespace Watermelon
             {
                 save.energyPoints = Mathf.Clamp(value, 0, Data.MaxEnergyPoints);
                 SaveController.MarkAsSaveIsRequired();
-
-                OnEnergyChanged?.Invoke();
+                GameEntry.Event.Dispatch(Constants.EventName.EnergyChangedEvent);
             }
         }
 
         private  readonly int FLOATING_TEXT_HASH = "Floating Text".GetHashCode();
         private  float notAccountedEnergyPoints;
-
-        public  event SimpleCallback OnEnergyChanged;
 
         private  EnergySave save;
         private  EnergyController instance;

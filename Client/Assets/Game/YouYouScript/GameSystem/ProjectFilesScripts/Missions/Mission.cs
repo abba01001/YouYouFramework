@@ -112,7 +112,6 @@ namespace Watermelon
             Deactivate();
 
             MissionsController.Instance.MissionFinished();
-            GameUtil.LogError(MissionsController.Instance == null);
             if (MissionsController.Instance.AutoCompleteMissions)
                 MissionsController.Instance.AutoCompleteMission(5.0f);
         }
@@ -380,15 +379,15 @@ namespace Watermelon
             [SerializeField] InteractionAnimationType interactionToUnlock;
             public InteractionAnimationType InteractionToUnlock => interactionToUnlock;
 
-            [SerializeField] UIMissionRewardPopUp.RewardInfo uiRewardInfo;
-            public UIMissionRewardPopUp.RewardInfo RewardInfo => uiRewardInfo;
+            [SerializeField] FormUnlockBuilding.RewardInfo uiRewardInfo;
+            public FormUnlockBuilding.RewardInfo RewardInfo => uiRewardInfo;
         }
 
         [System.Serializable]
         public class GenericRewardData
         {
-            [SerializeField] UIMissionRewardPopUp.RewardInfo uiRewardInfo;
-            public UIMissionRewardPopUp.RewardInfo RewardInfo => uiRewardInfo;
+            [SerializeField] FormUnlockBuilding.RewardInfo uiRewardInfo;
+            public FormUnlockBuilding.RewardInfo RewardInfo => uiRewardInfo;
         }
     }
 }

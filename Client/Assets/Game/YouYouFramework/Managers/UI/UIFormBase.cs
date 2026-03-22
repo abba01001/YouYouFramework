@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using Watermelon;
 
 
 [RequireComponent(typeof(Canvas))] //脚本依赖
@@ -28,12 +30,24 @@ public class UIFormBase : MonoBehaviour
     internal bool IsActive = true;
 
     protected object userData;
-
+    
+    private readonly Vector2 DEFAULT_POSITION = new Vector2(0, 0);
+    private readonly Vector2 HIDE_POSITION = new Vector2(0, -2000);
+    protected Image fadeImage;
+    protected RectTransform panelRectTransform;
     protected virtual void Awake()
     {
         Name = transform.name;
         if (GetComponent<GraphicRaycaster>() == null) gameObject.AddComponent<GraphicRaycaster>();
         CurrCanvas = GetComponent<Canvas>();
+        if (transform.Find("Fade"))
+        {
+            fadeImage = transform.Find("Fade").GetComponent<Image>();
+        }
+        if (transform.Find("Shadow"))
+        {
+            panelRectTransform = transform.Find("Shadow").rectTransform();
+        }
     }
 
     protected virtual void Start()
@@ -111,5 +125,23 @@ public class UIFormBase : MonoBehaviour
         GameEntry.UI.HideUI(this);
         GameEntry.UI.UIPool.EnQueue(this);
         GameEntry.Event.Dispatch(Constants.EventName.PopupAction, new PopupActionEvent(Name, UIActionType.HideUI));
+    }
+
+    public virtual async UniTask PlayShowAnimation()
+    {
+        if (fadeImage) fadeImage.color = fadeImage.color.SetAlpha(0.0f);
+        if (fadeImage) fadeImage.DOFade(0.25f, 0.5f);
+
+        // Reset panel position
+        if (panelRectTransform) panelRectTransform.anchoredPosition = HIDE_POSITION;
+        if (panelRectTransform) panelRectTransform.DOAnchoredPosition(DEFAULT_POSITION, 0.5f).SetEasing(Ease.Type.CircOut);
+        
+        if (panelRectTransform) await UniTask.Delay(500);
+    }
+    public virtual async UniTask PlayHideAnimation()
+    {
+        if (fadeImage) fadeImage.DOFade(0, 0.5f);
+        if (panelRectTransform) panelRectTransform.DOAnchoredPosition(HIDE_POSITION, 0.5f).SetEasing(Ease.Type.CircIn);
+        if (panelRectTransform) await UniTask.Delay(500);
     }
 }

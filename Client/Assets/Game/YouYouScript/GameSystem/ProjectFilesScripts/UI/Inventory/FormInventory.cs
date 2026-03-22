@@ -1,16 +1,12 @@
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Watermelon
 {
-    public class InventoryUIPage : UIPage
+    public class FormInventory : UIFormBase
     {
-        private static InventoryUIPage instance;
-
-        [SerializeField] RectTransform panelRect;
-        [SerializeField] float panelHiddenY;
-        [SerializeField] float panelShownY;
         [SerializeField] GameObject tutorialObject;
         [SerializeField] GameObject emptyInventoryPanel;
 
@@ -38,10 +34,14 @@ namespace Watermelon
 
         private TweenCase scrollCase;
 
-        public override void Init()
+        protected override void Awake()
         {
-            instance = this;
+            base.Awake();
+            Init();
+        }
 
+        public void Init()
+        {
             closeButton.onClick.AddListener(OnCloseButtonClicked);
             sellAllButton.onClick.AddListener(OnSellAllButtonClicked);
             sellAllAdButton.onClick.AddListener(OnSellAllAdButtonClicked);
@@ -56,50 +56,37 @@ namespace Watermelon
             itemsPool?.Destroy();
         }
 
-        public override void PlayHideAnimation()
+        public override async UniTask PlayHideAnimation()
         {
-            panelRect.DOAnchoredPosition(Vector2.up * panelHiddenY, 0.3f).SetEasing(Ease.Type.SineIn).OnComplete(() =>
+            await base.PlayHideAnimation();
+            for (int i = 0; i < items.Count; i++)
             {
-                for (int i = 0; i < items.Count; i++)
-                {
-                    items[i].OnDeselect();
-                    items[i].gameObject.SetActive(false);
-                }
+                items[i].OnDeselect();
+                items[i].gameObject.SetActive(false);
+            }
 
-                items.Clear();
-
-                Control.EnableMovementControl();
-
-                UIController.OnPageClosed(this);
-            });
+            items.Clear();
+            Control.EnableMovementControl();
+            GameEntry.UI.CloseUIForm<FormInventory>();
         }
 
-        public override void PlayShowAnimation()
+        public override async UniTask PlayShowAnimation()
         {
+            base.PlayShowAnimation();
             InitData();
 
             CheckIfEmpty();
-
-            Show();
 
             Control.DisableMovementControl();
 
             UIGamepadButton.DisableAllTags();
             UIGamepadButton.EnableTag(UIGamepadButtonTag.Inventory);
 
-            UIController.OnPageOpened(this);
-        }
-
-        private void Show()
-        {
-            panelRect.anchoredPosition = Vector2.up * panelHiddenY;
-
-            panelRect.DOAnchoredPosition(Vector2.up * panelShownY, 0.3f).SetEasing(Ease.Type.SineOut);
         }
 
         private void Update()
         {
-            if (IsPageDisplayed && Control.InputType == InputType.Gamepad)
+            if (Control.InputType == InputType.Gamepad)
             {
                 if (GamepadControl.WasButtonPressedThisFrame(GamepadButtonType.B))
                 {
@@ -179,13 +166,12 @@ namespace Watermelon
 
         private void OnCloseButtonClicked()
         {
-            UIController.HidePage<InventoryUIPage>();
-
 #if MODULE_HAPTIC
             Haptic.Play(Haptic.HAPTIC_LIGHT);
 #endif
 
             AudioController.PlaySound(AudioController.AudioClips.buttonSound);
+            PlayHideAnimation();
         }
 
         private void OnSellAllButtonClicked()
@@ -293,17 +279,17 @@ namespace Watermelon
             }
         }
 
-        public static void OnCurrencyPanelDisabled(InventoryUIItem panel)
+        public void OnCurrencyPanelDisabled(InventoryUIItem panel)
         {
-            instance.items.Remove(panel);
-            if (instance.items.Count > 0)
+            items.Remove(panel);
+            if (items.Count > 0)
             {
-                if (instance.SelectedItemId > instance.items.Count - 1) instance.SelectedItemId = instance.items.Count - 1;
+                if (SelectedItemId > items.Count - 1) SelectedItemId = items.Count - 1;
 
-                instance.SelectedItem.OnSelect();
+                SelectedItem.OnSelect();
             }
 
-            instance.CheckIfEmpty();
+            CheckIfEmpty();
         }
     }
 }

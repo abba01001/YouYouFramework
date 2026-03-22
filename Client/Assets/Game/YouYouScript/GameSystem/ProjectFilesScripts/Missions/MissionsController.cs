@@ -20,7 +20,6 @@ namespace Watermelon
         public Mission ActiveMission => activeMission;
 
         private MissionUIPanel missionUIPanel;
-        private UIMissionRewardPopUp missionRewardPopUp;
 
         private TweenCase completeTweenCase;
 
@@ -53,7 +52,6 @@ namespace Watermelon
             missionUIPanel = gameForm.MissionUIPanel;
             missionUIPanel.Initialise();
 
-            missionRewardPopUp = gameForm.MissionRewardPopUp;
 
             for (int i = 0; i < missions.Length; i++)
             {
@@ -112,7 +110,6 @@ namespace Watermelon
                     activeMission.ApplyReward(1.0f);
 
                     missionUIPanel.OnRewardClaimed();
-                    missionRewardPopUp.Hide();
 
                     fistTimeLoadingMission = true;
 
@@ -199,7 +196,16 @@ namespace Watermelon
 
             Tween.DelayedCall(0.5f, () =>
             {
-                missionRewardPopUp.OnMissionFinished(activeMission);
+                if (activeMission.RewardType == MissionRewardType.Tool)
+                {
+                    FormUnlockBuilding form = GameEntry.UI.OpenUIForm<FormUnlockBuilding>();
+                    form.Show(activeMission.ToolsReward.RewardInfo);
+                }
+                else if (activeMission.RewardType == MissionRewardType.Generic)
+                {
+                    FormUnlockBuilding form = GameEntry.UI.OpenUIForm<FormUnlockBuilding>();
+                    form.Show(activeMission.GenericReward.RewardInfo);
+                }
             });
         }
 

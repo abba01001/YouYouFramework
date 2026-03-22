@@ -32,7 +32,7 @@ public class BehaviourTreeWindow : EditorWindow
     
     private delegate void GetUndoListDelegate(List<string> undoList, out int index);
     private static MethodInfo getUndoListMethod = typeof(Undo).GetMethod("GetUndoList", BindingFlags.Static | BindingFlags.NonPublic);
-    private static GetUndoListDelegate getUndoList = (GetUndoListDelegate)Delegate.CreateDelegate(typeof(GetUndoListDelegate), getUndoListMethod);
+    // private static GetUndoListDelegate getUndoList = (GetUndoListDelegate)Delegate.CreateDelegate(typeof(GetUndoListDelegate), getUndoListMethod);
     private static List<string> undoList = new List<string>();
     
     public bool IsRefreshing;
@@ -399,8 +399,8 @@ public class BehaviourTreeWindow : EditorWindow
 
         //若当前已撤销到最初的状态，则视为未修改过
         undoList.Clear();
-        getUndoList(undoList, out int index);
-        IsModify = index != -1;
+        // getUndoList(undoList, out int index);
+        // IsModify = index != -1;
             
         Refresh(curBTSO);
     }

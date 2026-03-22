@@ -136,8 +136,8 @@ namespace Watermelon
             else
             {
                 gameObject.SetActive(false);
-
-                InventoryUIPage.OnCurrencyPanelDisabled(this);
+                FormInventory form = GameEntry.UI.GetUIForm<FormInventory>();
+                form.OnCurrencyPanelDisabled(this);
             }
         }
 

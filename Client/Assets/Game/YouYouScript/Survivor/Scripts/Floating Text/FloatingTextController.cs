@@ -30,6 +30,7 @@ namespace Watermelon
                 {
                     t.FloatingTextBehavior = obj.GetComponent<UnlockableToolFloatingText>();
                 }
+                obj.gameObject.MSetActive(false);
                 floatingTextCases.Add(t);
             }
 

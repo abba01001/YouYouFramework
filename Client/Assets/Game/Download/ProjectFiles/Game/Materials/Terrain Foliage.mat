@@ -185,7 +185,7 @@ Material:
     - _Transparent: 0
     - _UseGlobalMultipliers: 1
     - _WindOn: 1
-    - _WindPower: 1
+    - _WindPower: 0.939
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:

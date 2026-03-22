@@ -88,6 +88,9 @@ static partial class Constants
         public const string GetSuspendReward = "GetSuspendReward";
         public const string UpdateChatText = "UpdateChatText";
         public const string UpdateBtnUnlockStatus = "UpdateBtnUnlockStatus";
+
+
+        public const string EnergyChangedEvent = "EnergyChangedEvent";
     }
 
 

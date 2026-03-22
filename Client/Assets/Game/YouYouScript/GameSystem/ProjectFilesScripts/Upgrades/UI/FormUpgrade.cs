@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using Watermelon.GlobalUpgrades;
@@ -8,14 +9,8 @@ namespace Watermelon
 {
     public class FormUpgrade : UIFormBase
     {
-        private readonly Vector2 DEFAULT_POSITION = new Vector2(0, 0);
-        private readonly Vector2 HIDE_POSITION = new Vector2(0, -2000);
-
         [SerializeField] VerticalLayoutGroup verticalLayoutGroup;
 
-        [Space]
-        [SerializeField] Image fadeImage;
-        [SerializeField] RectTransform panelRectTransform;
         [SerializeField] RectTransform viewportRectTransform;
         [SerializeField] RectTransform contentTransform;
         [SerializeField] Button closeButton;
@@ -75,18 +70,12 @@ namespace Watermelon
             UpgradeHelper.AddUpgrades(upgrades);
         }
 
-        public void PlayShowAnimation()
+        public override async UniTask PlayShowAnimation()
         {
+            base.PlayShowAnimation();
             GlobalUpgradesEventsHandler.OnUpgraded += UpgradeHelper.OnUpgraded;
 
             FormGame.Instance.Joystick.HideVisuals();
-
-            fadeImage.color = fadeImage.color.SetAlpha(0.0f);
-            fadeImage.DOFade(0.25f, 0.5f);
-
-            // Reset panel position
-            panelRectTransform.anchoredPosition = HIDE_POSITION;
-            panelRectTransform.DOAnchoredPosition(DEFAULT_POSITION, 0.5f).SetEasing(Ease.Type.CircOut);
 
             UpgradeHelper.Show();
 
@@ -120,24 +109,19 @@ namespace Watermelon
 
         }
 
-        public  void PlayHideAnimation()
+        public override async UniTask PlayHideAnimation()
         {
             GlobalUpgradesEventsHandler.OnUpgraded -= UpgradeHelper.OnUpgraded;
-            
             FormGame.Instance.Joystick.ShowVisuals();
-            
-            fadeImage.DOFade(0, 0.5f);
-            panelRectTransform.DOAnchoredPosition(HIDE_POSITION, 0.5f).SetEasing(Ease.Type.CircIn).OnComplete(delegate
-            {
-                GameEntry.UI.CloseUIForm<FormUpgrade>();
-            });
-
             for(int i = 0; i < UpgradeHelper.UpgradeUIPanels.Count; i++)
             {
                 UpgradeHelper.UpgradeUIPanels[i].Disable();
             }
 
             Control.EnableMovementControl();
+            
+            await base.PlayHideAnimation();
+            GameEntry.UI.CloseUIForm<FormUpgrade>();
         }
 
         private void Update()

@@ -16,11 +16,11 @@ namespace Watermelon
         CameraType firstCamera = CameraType.Gameplay;
 
         VirtualCamera[] virtualCameras;
-        List<CameraBlendSettings> blendSettings;
+        List<CameraBlendSettings> blendSettings = new List<CameraBlendSettings>();
 
         CameraBlendData defaultBlendData;
 
-        private Dictionary<CameraType, int> virtualCamerasLink;
+        private Dictionary<CameraType, int> virtualCamerasLink = new Dictionary<CameraType, int>();
         private VirtualCamera activeCamera;
         public VirtualCamera ActiveVirtualCamera => activeCamera;
 
@@ -32,7 +32,6 @@ namespace Watermelon
         public async UniTask Initialise()
         {
             // Initialise cameras link
-            virtualCamerasLink = new Dictionary<CameraType, int>();
             virtualCameras = GameEntry.Instance.MainCamera.GetComponentsInChildren<VirtualCamera>(true);
             for (int i = 0; i < virtualCameras.Length; i++)
             {

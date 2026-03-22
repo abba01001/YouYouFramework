@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5168584782687162474}
   - component: {fileID: 449042075300048577}
   - component: {fileID: 4683118464531882247}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Progress Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1032191
 --- !u!1 &7525794996366331691
 GameObject:
   m_ObjectHideFlags: 0

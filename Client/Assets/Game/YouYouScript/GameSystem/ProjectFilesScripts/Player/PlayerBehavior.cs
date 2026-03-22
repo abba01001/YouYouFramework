@@ -224,7 +224,7 @@ namespace Watermelon
 
             waterDetector.IsActive = true;
 
-            EnergyController.Instance.OnEnergyChanged += OnHungerChanged;
+            GameEntry.Event.AddEventListener(Constants.EventName.EnergyChangedEvent,OnHungerChanged);
             SkinController.Instance.SkinSelected += OnSkinSelected;
         }
 
@@ -765,7 +765,8 @@ namespace Watermelon
                 Haptic.Play(Haptic.HAPTIC_HARD);
 #endif
 
-                Overlay.Show(2.0f, () =>
+                FormMask.ShowMaskAnim(1f, 2f);
+                GameEntry.Time.CreateTimer(this.gameObject, 2f, () =>
                 {
                     WorldController.Instance.WorldBehavior.SubworldHandler.DisableSubworld();
 
@@ -785,8 +786,7 @@ namespace Watermelon
                     SwimmingEnergy.Restore();
 
                     IsDead = false;
-
-                    Overlay.Hide(0.3f);
+                    FormMask.ShowMaskAnim(0f, 0.3f);
                 });
             }
             else
@@ -1051,7 +1051,7 @@ namespace Watermelon
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float DistanceSqr(Transform other) => (other.position - Position).sqrMagnitude;
 
-        private void OnHungerChanged()
+        private void OnHungerChanged(object userdata)
         {
             PlayerGraphics.Animator.SetFloat(TIRED_MULTIPLIER_HASH,
                 EnergyController.Instance.EnergyPoints > 0.001f ? 0 : 1);
@@ -1087,7 +1087,7 @@ namespace Watermelon
             FoliageController.RemoveFoliageAgent(transform);
 
             inventory.CapacityChanged -= OnInventoryCapacityChanged;
-            EnergyController.Instance.OnEnergyChanged -= OnHungerChanged;
+            GameEntry.Event.RemoveEventListener(Constants.EventName.EnergyChangedEvent,OnHungerChanged);
             GlobalUpgradesEventsHandler.OnUpgraded -= OnUpgraded;
         }
 

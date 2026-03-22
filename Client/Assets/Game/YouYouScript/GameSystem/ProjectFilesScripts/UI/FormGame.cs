@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,9 +22,6 @@ namespace Watermelon
 
         [SerializeField] MissionUIPanel missionUI;
         public MissionUIPanel MissionUIPanel => missionUI;
-
-        [SerializeField] UIMissionRewardPopUp missionRewardPopUp;
-        public UIMissionRewardPopUp MissionRewardPopUp => missionRewardPopUp;
 
         [SerializeField] EnergyUIPanel hungerUI;
         public EnergyUIPanel HungerUI => hungerUI;
@@ -92,21 +90,21 @@ namespace Watermelon
 
         #region Show/Hide
 
-        public void PlayShowAnimation()
+        public override async UniTask PlayShowAnimation()
         {
+            base.PlayShowAnimation();
             playerInventory = PlayerBehavior.GetBehavior().Inventory;
             playerInventory.CapacityChanged += UpdateInventoryUI;
 
             UpdateInventoryUI();
 
-            // UIController.OnPageOpened(this);
-
             UIGamepadButton.DisableAllTags();
             UIGamepadButton.EnableTag(UIGamepadButtonTag.Game);
         }
 
-        public void PlayHideAnimation()
+        public override async UniTask PlayHideAnimation()
         {
+            base.PlayHideAnimation();
             playerInventory.CapacityChanged -= UpdateInventoryUI;
 
             // UIController.OnPageClosed(this);
@@ -118,18 +116,17 @@ namespace Watermelon
 
         private void OnInventoryButtonClicked()
         {
-            UIController.ShowPage<InventoryUIPage>();
-
-            InventoryUIPage inventoryUIPage = UIController.GetPage<InventoryUIPage>();
-            inventoryUIPage.ActivateTutorial(inventoryTutorial.activeSelf);
+            FormInventory form = GameEntry.UI.OpenUIForm<FormInventory>();
+            form.ActivateTutorial(inventoryTutorial.activeSelf);
 
             inventoryTutorial.SetActive(false);
 
 #if MODULE_HAPTIC
             Haptic.Play(Haptic.HAPTIC_LIGHT);
 #endif
-
             AudioController.PlaySound(AudioController.AudioClips.buttonSound);
+            
+            form.PlayShowAnimation();
         }
 
         private void UpdateInventoryUI()
