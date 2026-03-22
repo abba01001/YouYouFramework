@@ -302,3 +302,21 @@ MonoBehaviour:
       specialPrefab: {fileID: 0}
       appearAudioClip: {fileID: 0}
       collectAudioClip: {fileID: 0}
+  - currencyType: 53
+    defaultAmount: 0
+    icon: {fileID: 21300000, guid: a3a5fe0ab22a0fa41b5d8d07e3c3796e, type: 3}
+    data:
+      displayAlways: 0
+      flyingResPrefab: {fileID: 3912945604614884336, guid: 297e048ece40b76479e0af3c653b3e06,
+        type: 3}
+      dropResPrefab: {fileID: 3912945604614884336, guid: 327e69cddbf9b184987c8e5b1c4f19ef,
+        type: 3}
+      pickUpSound: {fileID: 0}
+      useInventory: 0
+      moneyConversionRate: 0
+    floatingCloud:
+      addToCloud: 1
+      radius: 200
+      specialPrefab: {fileID: 0}
+      appearAudioClip: {fileID: 0}
+      collectAudioClip: {fileID: 0}

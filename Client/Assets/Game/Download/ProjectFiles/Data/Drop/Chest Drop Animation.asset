@@ -121,7 +121,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  useScale: 0
+  useScale: 1
   scaleDuration: 0.5
   scaleCurve:
     serializedVersion: 2
@@ -165,7 +165,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  useRotation: 0
+  useRotation: 1
   rotationDuration: 0.5
   rotationAngle: {x: 0, y: 0, z: 0}
   rotationEasing: 0

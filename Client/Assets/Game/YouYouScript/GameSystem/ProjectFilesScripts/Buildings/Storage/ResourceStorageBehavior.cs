@@ -104,12 +104,11 @@ namespace Watermelon
 
             Storage += one;
             PopulateRequiredResources();
-
             flyingResource.SetCustomAnimation(customFlyingResourceAnimation);
             var tweenCase = flyingResource.PlayAnimation(FlyingResourceDestination, () =>
             {
                 flyingResource.gameObject.SetActive(false);
-
+                // flyingResource.transform.localScale = Vector3.one;
                 displayedStorage += one;
 
                 UpdateCanvas();

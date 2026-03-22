@@ -204,7 +204,7 @@ namespace Watermelon
                 outStorageResourceCanvas.ResourceUIList[0].SetFillState(0f);
 
                 inStorage.RemoveResource(recipe);
-
+                GameEntry.Event.Dispatch(Constants.EventName.ConsumeMatEvent,recipe);
                 isConversionActive = true;
 
                 float time = 0f;

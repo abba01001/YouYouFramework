@@ -20,6 +20,8 @@ MonoBehaviour:
   foodItems:
   - type: 150
     energyPointsRestoring: 35
+  - type: 53
+    energyPointsRestoring: 50
   - type: 151
     energyPointsRestoring: 100
   - type: 152

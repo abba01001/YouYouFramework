@@ -860,7 +860,7 @@ namespace Watermelon
 
             var tweenCase = flyingResource.PlayAnimation(FlyingResourceDestination, () =>
             {
-                flyingResource.gameObject.SetActive(false);
+                flyingResource.gameObject.SetActive(true);
 
                 resourcesYetToReachCounter -= flyingResource.Amount;
 

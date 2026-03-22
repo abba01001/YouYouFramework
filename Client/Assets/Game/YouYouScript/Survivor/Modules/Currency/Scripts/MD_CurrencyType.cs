@@ -14,7 +14,8 @@
         Planks = 50,
         Bricks = 51,
         Rope = 52,
-
+        Egg = 53,
+        
         // raw food
         Berries = 100,
         Coconut = 101,
