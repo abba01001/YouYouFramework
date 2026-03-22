@@ -34,8 +34,7 @@ namespace Watermelon
         private  Coroutine daynightCoroutine;
         private  Coroutine weatherCoroutine;
 
-        bool dayNightEnabled = true;
-        public bool DayNightEnabled { get => dayNightEnabled; set => dayNightEnabled = value; }
+        public bool DayNightEnabled { get; set; } = true;
 
         bool weatherEnabled = true;
         public bool WeatherEnabled { get => weatherEnabled; set => weatherEnabled = value; }
@@ -74,14 +73,11 @@ namespace Watermelon
         {
             int i = 0;
             CurrentPartOfDay = PartsOfDayPresets[i];
-
             var pause = new WaitUntil(() => DayNightEnabled);
-
             while (true)
             {
-                yield return new WaitForSeconds(CurrentPartOfDay.PartOfDayDuration);
+                yield return new WaitForSeconds(2);//CurrentPartOfDay.PartOfDayDuration);
                 if (!DayNightEnabled) yield return pause;
-
                 var nextPartOfDay = PartsOfDayPresets[++i % PartsOfDayPresets.Count];
                 yield return PartsOfDayTransition(CurrentPartOfDay, nextPartOfDay);
 
@@ -181,7 +177,6 @@ namespace Watermelon
             }
 
             CurrentPreset = Database.GetPreset(type);
-
             PartsOfDayPresets = new List<PartOfDayPreset>();
 
             if ((CurrentPreset.EnabledPartsOfDay & PartOfDay.Day) == PartOfDay.Day) PartsOfDayPresets.Add(CurrentPreset.DayPreset);
@@ -190,7 +185,6 @@ namespace Watermelon
             if ((CurrentPreset.EnabledPartsOfDay & PartOfDay.Morning) == PartOfDay.Morning) PartsOfDayPresets.Add(CurrentPreset.MorningPreset);
 
             CurrentPartOfDay = PartsOfDayPresets[0];
-
             ApplyDayPartPreset(CurrentPartOfDay);
 
             if (daynightCoroutine != null) GameEntry.Instance.StopCoroutine(daynightCoroutine);

@@ -28,7 +28,7 @@ namespace Watermelon
             }
         }
 
-        private  readonly int FLOATING_TEXT_HASH = "Floating".GetHashCode();
+        private  readonly int FLOATING_TEXT_HASH = "Floating Text".GetHashCode();
         private  float notAccountedEnergyPoints;
 
         public  event SimpleCallback OnEnergyChanged;

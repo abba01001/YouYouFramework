@@ -15,13 +15,7 @@ namespace Watermelon
 
         public void Init()
         {
-            if(saveCost != null)
-            {
-                Resources = new ResourcesList(saveCost);
-            } else
-            {
-                Resources = new ResourcesList();
-            }
+            Resources = saveCost != null ? new ResourcesList(saveCost) : new ResourcesList();
         }
 
         public void Flush()

@@ -13,7 +13,6 @@ namespace Watermelon
         private CanvasGroup canvasGroup;
         private RectTransform rectTransform;
         public RectTransform RectTransform => rectTransform;
-        private LayoutElement layoutElement;
 
         public string Text { get => text.text; set => text.text = value; }
         public Sprite Icon { get => icon.sprite; set => icon.sprite = value; }
@@ -32,10 +31,8 @@ namespace Watermelon
 
             rectTransform = GetComponent<RectTransform>();
             canvasGroup = GetComponent<CanvasGroup>();
-            layoutElement = GetComponent<LayoutElement>();
 
             canvasGroup.alpha = 0.0f;
-            layoutElement.preferredHeight = CurrencyUIHelper.PANEL_HEIGHT;
 
             icon.sprite = currency.Icon;
 
@@ -79,10 +76,7 @@ namespace Watermelon
             if (fadeTweenCase != null && fadeTweenCase.IsActive) fadeTweenCase.Kill();
 
             fadeTweenCase = canvasGroup.DOFade(0, 0.3f).OnComplete(() => {
-                fadeTweenCase = layoutElement.DOPreferredHeight(0, 0.3f).SetEasing(Ease.Type.QuadOut).OnComplete(delegate
-                {
-                    gameObject.SetActive(false);
-                });
+                gameObject.SetActive(false);
             });
         }
 

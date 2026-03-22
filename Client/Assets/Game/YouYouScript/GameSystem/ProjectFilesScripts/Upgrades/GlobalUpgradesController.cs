@@ -21,8 +21,6 @@ namespace Watermelon
 
         private  List<IUpgrade> globalSimpleUpgrades = new List<IUpgrade>();
 
-        private  UIUpgrades uiUpgrades;
-
         public async UniTask Initialise()
         {
             upgradesDatabase = await GameEntry.Loader.LoadMainAssetAsync<GlobalUpgradesDatabase>("Assets/Game/Download/ProjectFiles/Data/Upgrades/Global Upgrades Database.asset", GameEntry.Instance.gameObject);
@@ -46,8 +44,6 @@ namespace Watermelon
                     activeUpgradesLink.Add(upgrade.GlobalUpgradeType, activeUpgrades[i]);
                 }
             }
-
-            uiUpgrades = UIController.GetPage<UIUpgrades>();
 
             await UniTask.NextFrame();
         }
@@ -80,19 +76,19 @@ namespace Watermelon
 
         public  void OpenMainUpgradesPage()
         {
-            uiUpgrades.ResetUpgrades();
-            uiUpgrades.RegisterUpgrades(ActiveUpgrades.ConvertAll(upgrade => (IUpgrade)upgrade));
-            uiUpgrades.RegisterUpgrades(globalSimpleUpgrades);
-
-            UIController.ShowPage<UIUpgrades>();
+            FormUpgrade form = GameEntry.UI.OpenUIForm<FormUpgrade>();
+            form.ResetUpgrades();
+            form.RegisterUpgrades(ActiveUpgrades.ConvertAll(upgrade => (IUpgrade)upgrade));
+            form.RegisterUpgrades(globalSimpleUpgrades);
+            form.PlayShowAnimation();
         }
 
         public  void OpenUpgradesPage(List<IUpgrade> upgradesToOpen)
         {
-            uiUpgrades.ResetUpgrades();
-            uiUpgrades.RegisterUpgrades(upgradesToOpen);
-
-            UIController.ShowPage<UIUpgrades>();
+            FormUpgrade form = GameEntry.UI.OpenUIForm<FormUpgrade>();
+            form.ResetUpgrades();
+            form.RegisterUpgrades(upgradesToOpen);
+            form.PlayShowAnimation();
         }
     }
 }

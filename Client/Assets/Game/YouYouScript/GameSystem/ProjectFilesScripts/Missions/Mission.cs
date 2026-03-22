@@ -112,7 +112,7 @@ namespace Watermelon
             Deactivate();
 
             MissionsController.Instance.MissionFinished();
-
+            GameUtil.LogError(MissionsController.Instance == null);
             if (MissionsController.Instance.AutoCompleteMissions)
                 MissionsController.Instance.AutoCompleteMission(5.0f);
         }

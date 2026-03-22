@@ -11,9 +11,8 @@ namespace Watermelon
     {
         private static MissionsController _instance;
         public static MissionsController Instance => _instance ??= new MissionsController();
-        
-        bool autoCompleteMissions = true;
-        public bool AutoCompleteMissions => instance.autoCompleteMissions;
+
+        public bool AutoCompleteMissions { get; } = true;
 
         private Mission[] missions;
 
@@ -27,8 +26,6 @@ namespace Watermelon
 
         public event SimpleCallback OnNextMissionStarted;
         public event SimpleCallback OnMissionFinished;
-
-        private MissionsController instance;
 
         private bool isInitialised => missions != null;
         private bool fistTimeLoadingMission = false;

@@ -16,9 +16,9 @@ namespace Watermelon
         private List<IUpgrade> upgrades;
         public List<IUpgrade> Upgrades => upgrades;
 
-        private IUpgradePanel panel;
+        private FormUpgrade panel;
 
-        public UpgradePanelHelper(IUpgradePanel panel)
+        public UpgradePanelHelper(FormUpgrade panel)
         {
             this.panel = panel;
 
