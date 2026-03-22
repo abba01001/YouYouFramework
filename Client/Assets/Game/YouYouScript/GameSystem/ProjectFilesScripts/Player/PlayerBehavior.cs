@@ -8,9 +8,10 @@ using Watermelon.GlobalUpgrades;
 
 namespace Watermelon
 {
-    public class PlayerBehavior : MonoBehaviour, ICharacter, ICharacterGraphics<PlayerGraphics>, IResourceGiver, IResourceTaker, IHitter
+    public class PlayerBehavior : MonoBehaviour, ICharacter, ICharacterGraphics<PlayerGraphics>, IResourceGiver,
+        IResourceTaker, IHitter
     {
-        private static readonly int FULL_FLOATING_TEXT_HASH = "Floating".GetHashCode();
+        private static readonly int FULL_FLOATING_TEXT_HASH = "Floating Text".GetHashCode();
         private static readonly int FULL_FLOATING_TEXT_DELAY = 2;
 
         public static readonly int RUN_HASH = Animator.StringToHash("Run");
@@ -20,47 +21,66 @@ namespace Watermelon
         public static readonly int TIRED_MULTIPLIER_HASH = Animator.StringToHash("Tired Multiplier");
         public static readonly int ATTACKING_HASH = Animator.StringToHash("Attacking");
 
-        Dictionary<CurrencyType, ResourceIndicatorData> resourceIndicators = new Dictionary<CurrencyType, ResourceIndicatorData>();
+        Dictionary<CurrencyType, ResourceIndicatorData> resourceIndicators =
+            new Dictionary<CurrencyType, ResourceIndicatorData>();
 
         private static PlayerBehavior playerBehavior;
         public static PlayerBehavior GetBehavior() => playerBehavior;
 
-        public static Vector3 Position { get => playerBehavior.transform.position; }
-        public static Vector3 Forward { get => playerBehavior.transform.forward; }
-        public static Transform InstanceTransform { get => playerBehavior.transform; }
+        public static Vector3 Position
+        {
+            get => playerBehavior.transform.position;
+        }
 
-        [BoxGroup("References", "References")]
-        [SerializeField] Collider characterCollider;
+        public static Vector3 Forward
+        {
+            get => playerBehavior.transform.forward;
+        }
+
+        public static Transform InstanceTransform
+        {
+            get => playerBehavior.transform;
+        }
+
+        [BoxGroup("References", "References")] [SerializeField]
+        Collider characterCollider;
+
         public Collider CharacterCollider => characterCollider;
 
-        [BoxGroup("References")]
-        [SerializeField] HealthBehavior healthBehavior;
-        [BoxGroup("References")]
-        [SerializeField] HealthBehavior swimmingEnergyBehavior;
+        [BoxGroup("References")] [SerializeField]
+        HealthBehavior healthBehavior;
 
-        [BoxGroup("Settings", "Settings")]
-        [SerializeField] int health = 100;
-        [BoxGroup("Settings")]
-        [SerializeField] int swimmingEnergy = 100;
-        [BoxGroup("Settings")]
-        [SerializeField] DuoInt damage;
-        [BoxGroup("Settings")]
-        [SerializeField] float jumpHighDifference = 0.5f;
+        [BoxGroup("References")] [SerializeField]
+        HealthBehavior swimmingEnergyBehavior;
 
-        [BoxGroup("Triggers", "Triggers & Detectors")]
-        [SerializeField] PlayerHittableTrigger hittableTrigger;
-        [BoxGroup("Triggers")]
-        [SerializeField] PlayerResourcesTrigger resourcesTrigger;
-        [BoxGroup("Triggers")]
-        [SerializeField] PlayerWaterDetector waterDetector;
+        [BoxGroup("Settings", "Settings")] [SerializeField]
+        int health = 100;
 
-        [BoxGroup("Particles", "Particles")]
-        [SerializeField] ParticleSystem fallingParticle;
-        [BoxGroup("Particles")]
-        [SerializeField] ParticleSystem waterFallingParticle;
+        [BoxGroup("Settings")] [SerializeField]
+        int swimmingEnergy = 100;
 
-        [BoxGroup("Other")]
-        [SerializeField] FlyingResourceAnimation customFlyingResourceAnimation;
+        [BoxGroup("Settings")] [SerializeField]
+        DuoInt damage;
+
+        [BoxGroup("Settings")] [SerializeField]
+        float jumpHighDifference = 0.5f;
+
+        [BoxGroup("Triggers", "Triggers & Detectors")] [SerializeField]
+        PlayerHittableTrigger hittableTrigger;
+
+        [BoxGroup("Triggers")] [SerializeField]
+        PlayerResourcesTrigger resourcesTrigger;
+
+        [BoxGroup("Triggers")] [SerializeField]
+        PlayerWaterDetector waterDetector;
+
+        [BoxGroup("Particles", "Particles")] [SerializeField]
+        ParticleSystem fallingParticle;
+
+        [BoxGroup("Particles")] [SerializeField]
+        ParticleSystem waterFallingParticle;
+
+        [BoxGroup("Other")] [SerializeField] FlyingResourceAnimation customFlyingResourceAnimation;
 
         public bool IsPlayer => true;
         public bool IsDead { get; private set; }
@@ -102,6 +122,7 @@ namespace Watermelon
         private float lastShownResindicatorTime;
 
         public delegate void ResorceReceivedCallback(FlyingResourceBehavior resource);
+
         public static event ResorceReceivedCallback OnResourceWillBeReceived;
 
         // Movement
@@ -125,7 +146,7 @@ namespace Watermelon
         private float maxSpeed;
         private float acceleration;
 
-        private float HungrySpeedCoef => EnergyController.LowEnergySpeedCoef;
+        private float HungrySpeedCoef => EnergyController.Instance.LowEnergySpeedCoef;
 
         //Health
         private HealthBehavior Health => healthBehavior;
@@ -151,7 +172,7 @@ namespace Watermelon
             // Attach audio listener to player transform
             audioListenerTransform = AudioController.AttachAudioListener(playerBehavior.transform);
 
-            RequiredResources = new List<CurrencyType>((CurrencyType[])Enum.GetValues(typeof(CurrencyType)));
+            RequiredResources = new List<CurrencyType>((CurrencyType[]) Enum.GetValues(typeof(CurrencyType)));
             inventoryWasFull = false;
 
             inventory.CapacityChanged += OnInventoryCapacityChanged;
@@ -159,14 +180,18 @@ namespace Watermelon
             OnInventoryCapacityChanged();
 
             // Get upgrades
-            speedUpgrade = GlobalUpgradesController.GetUpgrade<MovementSpeedUpgrade>(GlobalUpgradeType.MovementSpeed);
+            speedUpgrade =
+                GlobalUpgradesController.Instance.GetUpgrade<MovementSpeedUpgrade>(GlobalUpgradeType.MovementSpeed);
 
             GlobalUpgradesEventsHandler.OnUpgraded += OnUpgraded;
 
-            swimmingUpgrade = GlobalUpgradesController.GetUpgrade<SwimmingDurationUpgrade>(GlobalUpgradeType.SwimmingDuration);
+            swimmingUpgrade =
+                GlobalUpgradesController.Instance.GetUpgrade<SwimmingDurationUpgrade>(
+                    GlobalUpgradeType.SwimmingDuration);
 
             // Get selected skin data
-            PlayerSkinData playerSkinData = (PlayerSkinData)SkinController.Instance.GetSelectedSkin<PlayerSkinsDatabase>();
+            PlayerSkinData playerSkinData =
+                (PlayerSkinData) SkinController.Instance.GetSelectedSkin<PlayerSkinsDatabase>();
 
             // Initialise player graphics
             playerGraphicsHolder = new CharacterGraphicsHolder<PlayerGraphics>();
@@ -175,10 +200,7 @@ namespace Watermelon
             // Recalculate values
             RecalculateSpeed();
 
-            NavMeshController.InvokeOrSubscribe(delegate
-            {
-                OnNavMeshUpdated();
-            });
+            NavMeshController.InvokeOrSubscribe(delegate { OnNavMeshUpdated(); });
 
             Health.Initialise(health);
             SwimmingEnergy.Initialise(swimmingEnergy);
@@ -187,7 +209,7 @@ namespace Watermelon
             Health.HideOnFull = true;
             SwimmingEnergy.HideOnFull = true;
 
-            RequiredResources = new List<CurrencyType>((CurrencyType[])Enum.GetValues(typeof(CurrencyType)));
+            RequiredResources = new List<CurrencyType>((CurrencyType[]) Enum.GetValues(typeof(CurrencyType)));
 
             hittableTrigger.Init(this);
             resourcesTrigger.Init(this);
@@ -202,8 +224,8 @@ namespace Watermelon
 
             waterDetector.IsActive = true;
 
-            EnergyController.OnEnergyChanged += OnHungerChanged;
-            SkinController.SkinSelected += OnSkinSelected;
+            EnergyController.Instance.OnEnergyChanged += OnHungerChanged;
+            SkinController.Instance.SkinSelected += OnSkinSelected;
         }
 
         private void Update()
@@ -260,6 +282,7 @@ namespace Watermelon
         #endregion
 
         #region Graphics
+
         public void OnGraphicsUpdated(PlayerGraphics characterGraphics)
         {
             characterGraphics.Inititalise(this);
@@ -269,18 +292,19 @@ namespace Watermelon
 
         public void OnGraphicsUnloaded(PlayerGraphics currentGraphics)
         {
-
         }
 
         private void OnSkinSelected(ISkinData skinData)
         {
-            PlayerSkinData playerSkinData = (PlayerSkinData)skinData;
+            PlayerSkinData playerSkinData = (PlayerSkinData) skinData;
 
             playerGraphicsHolder.SetGraphics(playerSkinData.Prefab);
         }
+
         #endregion
 
         #region Upgrades
+
         private void OnUpgraded(GlobalUpgradeType upgradeType, AbstactGlobalUpgrade upgrade)
         {
             if (upgradeType == GlobalUpgradeType.MovementSpeed)
@@ -288,9 +312,11 @@ namespace Watermelon
                 RecalculateSpeed();
             }
         }
+
         #endregion
 
         #region Hitting
+
         public void OnResourceInRange(IHitable resource)
         {
             if (hitableObjectsInRange.Contains(resource))
@@ -304,7 +330,8 @@ namespace Watermelon
             {
                 if (resource.IsActive)
                 {
-                    UnlockableToolsController.ShowMessage(resource.InteractionAnimationType, resource.SnappingTransform.position + new Vector3(0, 2, 0), Quaternion.identity);
+                    UnlockableToolsController.Instance.ShowMessage(resource.InteractionAnimationType,
+                        resource.SnappingTransform.position + new Vector3(0, 2, 0), Quaternion.identity);
                 }
             }
         }
@@ -314,7 +341,7 @@ namespace Watermelon
             if (hitableObjectsInRange.Count == 0)
                 return;
 
-            playerAnimator.SetFloat(HARVESTING_MULTIPLIER_HASH, EnergyController.LowEnergyHittingSpeedCoef);
+            playerAnimator.SetFloat(HARVESTING_MULTIPLIER_HASH, EnergyController.Instance.LowEnergyHittingSpeedCoef);
 
             IsHitting = true;
         }
@@ -430,7 +457,8 @@ namespace Watermelon
                 if (!resource.IsActive)
                     continue;
 
-                float angle = Quaternion.FromToRotation(transform.forward, (resource.SnappingTransform.position - transform.position).SetY(0).normalized).eulerAngles.y;
+                float angle = Quaternion.FromToRotation(transform.forward,
+                    (resource.SnappingTransform.position - transform.position).SetY(0).normalized).eulerAngles.y;
                 if (angle > 180)
                     angle -= 360;
                 if (angle < -180)
@@ -452,12 +480,16 @@ namespace Watermelon
 
                 if (lookAt.sqrMagnitude >= 0.0001f)
                 {
-                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookAt), Time.deltaTime * activeHitable.SnappingSpeedMultiplier);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookAt),
+                        Time.deltaTime * activeHitable.SnappingSpeedMultiplier);
                 }
 
                 if (activeHitable.HasSnappingDistance)
                 {
-                    transform.position = Vector3.Lerp(transform.position, activeHitable.SnappingTransform.position.SetY(transform.position.y) - lookAt * activeHitable.SnappingDistance, Time.deltaTime * activeHitable.SnappingSpeedMultiplier);
+                    transform.position = Vector3.Lerp(transform.position,
+                        activeHitable.SnappingTransform.position.SetY(transform.position.y) -
+                        lookAt * activeHitable.SnappingDistance,
+                        Time.deltaTime * activeHitable.SnappingSpeedMultiplier);
                 }
 
                 if (smallestAngle > 5 && activeHitable.RotateBeforeHit)
@@ -478,6 +510,7 @@ namespace Watermelon
         #endregion
 
         #region Movement
+
         private void RecalculateSpeed()
         {
             MovementSpeedUpgrade.MovementSpeedStage currentStage = speedUpgrade.GetCurrentStage();
@@ -493,7 +526,8 @@ namespace Watermelon
         {
             var control = Control.CurrentControl;
 
-            if (IsMovementEnabled && control.IsMovementInputNonZero && control.MovementInput.sqrMagnitude > 0.025f && !Health.IsDepleted)
+            if (IsMovementEnabled && control.IsMovementInputNonZero && control.MovementInput.sqrMagnitude > 0.025f &&
+                !Health.IsDepleted)
             {
                 if (!isRunning)
                 {
@@ -507,7 +541,8 @@ namespace Watermelon
                         isAttacking = false;
                 }
 
-                float maxAlowedSpeed = control.MovementInput.magnitude * maxSpeed * HungrySpeedCoef * (IsSwimming ? 0.5f : 1);
+                float maxAlowedSpeed = control.MovementInput.magnitude * maxSpeed * HungrySpeedCoef *
+                                       (IsSwimming ? 0.5f : 1);
 
                 if (speed > maxAlowedSpeed)
                 {
@@ -526,7 +561,8 @@ namespace Watermelon
                     }
                 }
 
-                bool playerStationary = Vector3.Distance(playerPrevPos, transform.position) < maxAlowedSpeed * Time.deltaTime * 0.5f;
+                bool playerStationary = Vector3.Distance(playerPrevPos, transform.position) <
+                                        maxAlowedSpeed * Time.deltaTime * 0.5f;
 
                 if (!playerStationary)
                     jumpCounter = 0;
@@ -540,14 +576,17 @@ namespace Watermelon
                 playerAnimator.SetFloat(MOVEMENT_MULTIPLIER_HASH, multiplier);
                 PlayerGraphics.SetMovementMultiplier(playerStationary ? 0 : multiplier);
 
-                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(control.MovementInput.normalized), 0.2f);
+                transform.rotation = Quaternion.Lerp(transform.rotation,
+                    Quaternion.LookRotation(control.MovementInput.normalized), 0.2f);
 
                 if (!IsSwimming)
                 {
                     var forwardPoint = transform.position + transform.forward * 1f;
-                    if (playerStationary && NavMesh.SamplePosition(forwardPoint, out var hit, 10f, NavMesh.AllAreas) && (hit.mask == 1 || hit.mask == 8 || hit.mask == 16))
+                    if (playerStationary && NavMesh.SamplePosition(forwardPoint, out var hit, 10f, NavMesh.AllAreas) &&
+                        (hit.mask == 1 || hit.mask == 8 || hit.mask == 16))
                     {
-                        if (Mathf.Abs(hit.position.x - forwardPoint.x) < 0.01f && Mathf.Abs(hit.position.z - forwardPoint.z) < 0.01f)
+                        if (Mathf.Abs(hit.position.x - forwardPoint.x) < 0.01f &&
+                            Mathf.Abs(hit.position.z - forwardPoint.z) < 0.01f)
                         {
                             var difference = forwardPoint.y - hit.position.y;
 
@@ -585,7 +624,9 @@ namespace Watermelon
                 {
                     if (isAttacking)
                     {
-                        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation((targetCharacterBehaviour.Transform.position - transform.position).normalized), Time.deltaTime * 10);
+                        transform.rotation = Quaternion.Lerp(transform.rotation,
+                            Quaternion.LookRotation((targetCharacterBehaviour.Transform.position - transform.position)
+                                .normalized), Time.deltaTime * 10);
                     }
                 }
 
@@ -606,11 +647,13 @@ namespace Watermelon
                 var swimmingMultiplier = playerAnimator.GetFloat(SWIMMING_MULTIPLIER_HASH);
                 if (swimmingMultiplier <= 0.1f)
                     swimmingMultiplier = 0.1f;
-                playerAnimator.SetFloat(SWIMMING_MULTIPLIER_HASH, Mathf.Clamp01(swimmingMultiplier + Time.deltaTime * 4));
+                playerAnimator.SetFloat(SWIMMING_MULTIPLIER_HASH,
+                    Mathf.Clamp01(swimmingMultiplier + Time.deltaTime * 4));
             }
             else
             {
-                playerAnimator.SetFloat(SWIMMING_MULTIPLIER_HASH, Mathf.Clamp01(playerAnimator.GetFloat(SWIMMING_MULTIPLIER_HASH) - Time.deltaTime * 4));
+                playerAnimator.SetFloat(SWIMMING_MULTIPLIER_HASH,
+                    Mathf.Clamp01(playerAnimator.GetFloat(SWIMMING_MULTIPLIER_HASH) - Time.deltaTime * 4));
             }
         }
 
@@ -655,9 +698,11 @@ namespace Watermelon
 
             IsMovementEnabled = true;
         }
+
         #endregion
 
         #region NavMesh
+
         public void OnNavMeshUpdated()
         {
             agent.enabled = true;
@@ -683,6 +728,7 @@ namespace Watermelon
 
             dustParticle.Play();
         }
+
         #endregion
 
         #region Combat
@@ -721,11 +767,11 @@ namespace Watermelon
 
                 Overlay.Show(2.0f, () =>
                 {
-                    WorldController.WorldBehavior.SubworldHandler.DisableSubworld();
+                    WorldController.Instance.WorldBehavior.SubworldHandler.DisableSubworld();
 
                     gameObject.SetActive(false);
 
-                    agent.Warp(WorldController.WorldBehavior.SpawnPoint.position);
+                    agent.Warp(WorldController.Instance.WorldBehavior.SpawnPoint.position);
 
                     StopHittingAnimation();
                     hitableObjectsInRange.Clear();
@@ -773,6 +819,7 @@ namespace Watermelon
         #endregion
 
         #region Resource Giver
+
         public bool HasResource(Resource resource)
         {
             return CurrencyController.HasAmount(resource.currency, resource.amount);
@@ -800,6 +847,7 @@ namespace Watermelon
         #endregion
 
         #region Resource Taker
+
         private int resourcesYetToReachCounter;
 
         public void TakeResource(FlyingResourceBehavior flyingResource, bool fromPlayer = false)
@@ -826,16 +874,20 @@ namespace Watermelon
             {
                 var gameData = GameController.Data;
 
-                tweenCase.OnTimeReached(gameData.StorageSoundStartTime, () =>
-                {
-                    gameData.StorageSoundHandler.Play(AudioController.AudioClips.resourcesPickUpFromStorageSound, transform.position);
-                });
+                tweenCase.OnTimeReached(gameData.StorageSoundStartTime,
+                    () =>
+                    {
+                        gameData.StorageSoundHandler.Play(AudioController.AudioClips.resourcesPickUpFromStorageSound,
+                            transform.position);
+                    });
             }
         }
 
         public int RequiredMaxAmount(CurrencyType currency)
         {
-            return CurrencyController.GetCurrency(currency).Data.UseInventory ? Inventory.MaxCapacity - Inventory.CurrentCapacity - resourcesYetToReachCounter : int.MaxValue;
+            return CurrencyController.GetCurrency(currency).Data.UseInventory
+                ? Inventory.MaxCapacity - Inventory.CurrentCapacity - resourcesYetToReachCounter
+                : int.MaxValue;
         }
 
         public void OnInventoryCapacityChanged()
@@ -844,13 +896,17 @@ namespace Watermelon
             {
                 if (!inventoryWasFull)
                 {
-                    RequiredResources.RemoveAll((resource) => CurrencyController.GetCurrency(resource).Data.UseInventory);
+                    RequiredResources.RemoveAll(
+                        (resource) => CurrencyController.GetCurrency(resource).Data.UseInventory);
                 }
+
                 inventoryWasFull = true;
             }
             else if (inventoryWasFull)
             {
-                var inventoryResources = new List<CurrencyType>((CurrencyType[])Enum.GetValues(typeof(CurrencyType))).FindAll((resource) => CurrencyController.GetCurrency(resource).Data.UseInventory);
+                var inventoryResources =
+                    new List<CurrencyType>((CurrencyType[]) Enum.GetValues(typeof(CurrencyType))).FindAll((resource) =>
+                        CurrencyController.GetCurrency(resource).Data.UseInventory);
 
                 for (int i = 0; i < inventoryResources.Count; i++)
                 {
@@ -867,11 +923,13 @@ namespace Watermelon
         #endregion
 
         #region Drop
+
         public void ShowFullFloatingText(bool ignoreDelay = false)
         {
             if (ignoreDelay || Time.time > lastFullMessageTime)
             {
-                FloatingTextController.SpawnFloatingText(FULL_FLOATING_TEXT_HASH, "FULL!", transform.position + new Vector3(0, 2, 0), Quaternion.identity, 1.0f, Color.red);
+                FloatingTextController.Instance.SpawnFloatingText(FULL_FLOATING_TEXT_HASH, "FULL!",
+                    transform.position + new Vector3(0, 2, 0), Quaternion.identity, 1.0f, Color.red);
 
                 lastFullMessageTime = Time.time + FULL_FLOATING_TEXT_DELAY;
             }
@@ -886,27 +944,24 @@ namespace Watermelon
                 data.amount += amount;
                 data.floatingText.Activate($"+{data.amount} <sprite name={resourceType}>", 1.0f, Color.white);
             }
-            else if (!EnergyController.IsFoorResource(resourceType))
+            else if (!EnergyController.Instance.IsFoorResource(resourceType))
             {
                 if (Time.time - lastShownResindicatorTime < 0.4f)
                 {
                     float waitingTime = Time.time - lastShownResindicatorTime + 0.05f;
                     if (waitingTime <= 0.05f) waitingTime = Time.deltaTime * 2;
 
-                    Tween.DelayedCall(waitingTime + 0.05f, () => {
-                        ShowResourceIndicator(resourceType, amount);
-                    });
+                    Tween.DelayedCall(waitingTime + 0.05f, () => { ShowResourceIndicator(resourceType, amount); });
                 }
                 else
                 {
                     var data = new ResourceIndicatorData();
 
                     data.amount = amount;
-                    data.floatingText = FloatingTextController.SpawnFloatingText(FULL_FLOATING_TEXT_HASH, $"+{data.amount} <sprite name={resourceType}>", InstanceTransform.position.AddToY(2f), Quaternion.identity, 1.0f, Color.white).GetComponent<FloatingTextBaseBehavior>();
-                    data.floatingText.OnAnimationCompleted += () =>
-                    {
-                        resourceIndicators.Remove(resourceType);
-                    };
+                    data.floatingText = FloatingTextController.Instance.SpawnFloatingText(FULL_FLOATING_TEXT_HASH,
+                        $"+{data.amount} <sprite name={resourceType}>", InstanceTransform.position.AddToY(2f),
+                        Quaternion.identity, 1.0f, Color.white).GetComponent<FloatingTextBaseBehavior>();
+                    data.floatingText.OnAnimationCompleted += () => { resourceIndicators.Remove(resourceType); };
 
                     resourceIndicators.Add(resourceType, data);
 
@@ -924,7 +979,7 @@ namespace Watermelon
         public void OnResourcePickPerformed(ResourceDropBehavior dropBehavior)
         {
             Currency currency = CurrencyController.GetCurrency(dropBehavior.CurrencyType);
-            if(currency != null)
+            if (currency != null)
             {
                 bool playSound = false;
 
@@ -953,7 +1008,7 @@ namespace Watermelon
 
                     dropBehavior.OnObjectPicked(this, true);
 
-                    if (!EnergyController.IsFoorResource(currency.CurrencyType))
+                    if (!EnergyController.Instance.IsFoorResource(currency.CurrencyType))
                     {
                         ShowResourceIndicator(dropBehavior.CurrencyType, dropBehavior.DropAmount);
                     }
@@ -970,7 +1025,6 @@ namespace Watermelon
                             var gameData = GameController.Data;
 
                             gameData.StorageSoundHandler.Play(currency.Data.PickUpSound, transform.position);
-
                         }
                     }
                 }
@@ -989,6 +1043,7 @@ namespace Watermelon
                 ShowFullFloatingText();
             }
         }
+
         #endregion
 
         #region Helpers
@@ -998,7 +1053,8 @@ namespace Watermelon
 
         private void OnHungerChanged()
         {
-            PlayerGraphics.Animator.SetFloat(TIRED_MULTIPLIER_HASH, EnergyController.EnergyPoints > 0.001f ? 0 : 1);
+            PlayerGraphics.Animator.SetFloat(TIRED_MULTIPLIER_HASH,
+                EnergyController.Instance.EnergyPoints > 0.001f ? 0 : 1);
         }
 
         #endregion
@@ -1031,7 +1087,7 @@ namespace Watermelon
             FoliageController.RemoveFoliageAgent(transform);
 
             inventory.CapacityChanged -= OnInventoryCapacityChanged;
-            EnergyController.OnEnergyChanged -= OnHungerChanged;
+            EnergyController.Instance.OnEnergyChanged -= OnHungerChanged;
             GlobalUpgradesEventsHandler.OnUpgraded -= OnUpgraded;
         }
 

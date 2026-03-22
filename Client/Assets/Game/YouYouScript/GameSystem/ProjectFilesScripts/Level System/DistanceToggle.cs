@@ -21,6 +21,7 @@ namespace Watermelon
 
         public static void Initialise(Transform transform)
         {
+            GameUtil.LogCurTimerLog("DistanceToggle===1");
             playerTransform = transform;
 
             isActive = true;
@@ -78,6 +79,8 @@ namespace Watermelon
 
         public static bool IsInRange(IDistanceToggle distanceToggle)
         {
+            GameUtil.LogCurTimerLog("DistanceToggle===2222");
+
             tempDistance = playerTransform.position - distanceToggle.OriginPositionOfDT;
             tempDistance.y = 0;
 

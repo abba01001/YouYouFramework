@@ -11,6 +11,7 @@ namespace Watermelon
 {
     public class FormGame : UIFormBase
     {
+        public static FormGame Instance = null;
         [SerializeField] RectTransform safeAreaRectTransform;
         [SerializeField] Joystick joystick;
         public Joystick Joystick => joystick;
@@ -53,6 +54,7 @@ namespace Watermelon
         protected override void Awake()
         {
             base.Awake();
+            Instance = this;
             GameUtil.LogError("初始化FormGame");
             Init();
             GameUtil.LogError("初始化FormGame完成");
@@ -69,14 +71,14 @@ namespace Watermelon
 
             currenciesUIController.Init(CurrencyController.Currencies);
 
-            if (EnergyController.IsEnergySystemEnabled)
-            {
-                hungerUI.Initialise();
-            }
-            else
-            {
-                hungerUI.gameObject.SetActive(false);
-            }
+            // if (EnergyController.IsEnergySystemEnabled)
+            // {
+            //     hungerUI.Initialise();
+            // }
+            // else
+            // {
+            //     hungerUI.gameObject.SetActive(false);
+            // }
 
             // NotchSaveArea.RegisterRectTransform(safeAreaRectTransform);
 
@@ -215,7 +217,7 @@ namespace Watermelon
 
             AudioController.PlaySound(AudioController.AudioClips.buttonSound);
 
-            GlobalUpgradesController.OpenMainUpgradesPage();
+            GlobalUpgradesController.Instance.OpenMainUpgradesPage();
 
             StopUpgradesButtonHighlight();
         }

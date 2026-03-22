@@ -91,7 +91,7 @@ namespace Watermelon.AI
             {
                 taskWaitingDelay = Time.time + TASK_UPDATE_DELAY;
 
-                if(!EnergyController.IsEnergySystemEnabled || EnergyController.EnergyPoints > 0)
+                if(!EnergyController.Instance.IsEnergySystemEnabled || EnergyController.Instance.EnergyPoints > 0)
                 {
                     BaseTask task = helperBehavior.FindAvailableTask();
                     if (task != null)
@@ -162,7 +162,7 @@ namespace Watermelon.AI
         {
             if(isSitting)
             {
-                if (EnergyController.IsEnergySystemEnabled && EnergyController.EnergyPoints == 0)
+                if (EnergyController.Instance.IsEnergySystemEnabled && EnergyController.Instance.EnergyPoints == 0)
                 {
                     target.EmoteBehavior.Show(SimpleEmoteBehavior.EmoteType.Hunger);
                 }

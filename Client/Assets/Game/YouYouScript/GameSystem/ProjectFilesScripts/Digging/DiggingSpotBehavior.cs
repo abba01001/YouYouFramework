@@ -43,7 +43,7 @@ namespace Watermelon
 
         private void Awake()
         {
-            unlockableTool = UnlockableToolsController.GetUnlockableTool(InteractionAnimationType);
+            unlockableTool = UnlockableToolsController.Instance.GetUnlockableTool(InteractionAnimationType);
 
             hitParticle.transform.SetParent(null);
             hitParticle.gameObject.SetActive(false);

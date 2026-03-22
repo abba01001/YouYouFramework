@@ -42,7 +42,7 @@ namespace Watermelon
         {
             isDirty = true;
             FinishMission();
-            MissionsController.CompleteMission();
+            MissionsController.Instance.CompleteMission();
         }
 
         public override float GetProgress()

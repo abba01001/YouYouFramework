@@ -109,32 +109,57 @@ namespace Main
         public async Task<string> GetAPKVersion(string url)
         {
             string result = null;
-            
+            // MainEntry.IsOfflineMode = true;
+            return "1.0.0\n1.0.0";
             string firstInstallFlag = Path.Combine(Application.persistentDataPath, "first_install.txt");
             bool isFirstInstall = !File.Exists(firstInstallFlag);
             string targetFolder = Path.Combine(Application.streamingAssetsPath, "AssetBundles");
             string versionFilePath = Path.Combine(targetFolder, "version.txt");
-            isFirstInstall = false;
+            // isFirstInstall = true;
             if (isFirstInstall)
             {
-                using UnityWebRequest request = UnityWebRequest.Get(versionFilePath);
-                await request.SendWebRequest();
-                if (request.result == UnityWebRequest.Result.Success)
+                using (UnityWebRequest request = UnityWebRequest.Get(url))
                 {
-                    result = request.downloadHandler.text;
+                    request.timeout = 1;
+                    try
+                    {
+                        // 异步发送请求并等待
+                        await request.SendWebRequest();
+                        // 如果请求成功
+                        if (request.result == UnityWebRequest.Result.Success)
+                        {
+                            result = request.downloadHandler.text;
+                            // MainEntry.IsOfflineMode = true;
+                        }
+                        else
+                        {
+                            // 捕获超时或其他错误
+                            DownloadRoutine routine = DownloadRoutine.Create();
+                            result = await routine.DownAPKVersion(url, 3);
+                            Debug.LogError("Request failed: " + request.error);
+                        }
+                    }
+                    catch (UnityWebRequestException e)
+                    {
+                        // 捕获超时或其他错误
+                        DownloadRoutine routine = DownloadRoutine.Create();
+                        result = await routine.DownAPKVersion(url, 3);
+                        Debug.LogError("Request failed with error: " + e.Message);
+                    }
+                };
+                
+                if (string.IsNullOrEmpty(result) && File.Exists(versionFilePath))
+                {
+                    result = await File.ReadAllTextAsync(versionFilePath);
                     MainEntry.IsOfflineMode = true;
                 }
-                else
-                {
-                    DownloadRoutine routine = DownloadRoutine.Create();
-                    result = await routine.DownAPKVersion(url, 30);
-                }
+                Debug.LogError("2222===>" + result);
             }
             else
             {
                 DownloadRoutine routine = DownloadRoutine.Create();
-                result = await routine.DownAPKVersion(url, 30);
-
+                result = await routine.DownAPKVersion(url, 3);
+                Debug.LogError("1111===>" + result);
                 if (string.IsNullOrEmpty(result) && File.Exists(versionFilePath))
                 {
                     result = await File.ReadAllTextAsync(versionFilePath);

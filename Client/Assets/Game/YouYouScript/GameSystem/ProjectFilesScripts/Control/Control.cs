@@ -31,7 +31,6 @@ namespace Watermelon
         public static void ChangeInputType(InputType inputType)
         {
             InputType = inputType;
-            Debug.LogError($"ChangeInputType=====>{inputType}");
             Object.Destroy(CurrentControl as MonoBehaviour);
 
             switch (inputType)

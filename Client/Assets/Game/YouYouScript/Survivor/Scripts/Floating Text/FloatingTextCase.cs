@@ -6,10 +6,19 @@ namespace Watermelon
     public class FloatingTextCase
     {
         [SerializeField] string name;
-        public string Name => name;
 
-        [SerializeField] FloatingTextBaseBehavior floatingTextBehavior;
-        public FloatingTextBaseBehavior FloatingTextBehavior => floatingTextBehavior;
+        public string Name
+        {
+            get => name;
+            set => name = value;
+        }
+
+        FloatingTextBaseBehavior floatingTextBehavior;
+        public FloatingTextBaseBehavior FloatingTextBehavior
+        {
+            get => floatingTextBehavior;
+            set => floatingTextBehavior = value;
+        }
 
         private Pool floatingTextPool;
         public Pool FloatingTextPool => floatingTextPool;

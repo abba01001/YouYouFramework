@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Watermelon
@@ -15,6 +16,12 @@ namespace Watermelon
             return skinProviders[index];
         }
 
+        public async UniTask RefreshSkinProviderCache()
+        {
+            AbstractSkinDatabase t = await GameEntry.Loader.LoadMainAssetAsync<AbstractSkinDatabase>("Assets/Game/Download/ProjectFiles/Data/Player Skins Database.asset", GameEntry.Instance.gameObject);
+            skinProviders = new[] {t};
+        }
+        
         public AbstractSkinDatabase GetSkinsProvider(System.Type providerType)
         {
             if (!skinProviders.IsNullOrEmpty())

@@ -321,6 +321,11 @@ public class GameUtil
         icon.rectTransform.sizeDelta = new Vector2(newWidth, newHeight);
     }
 
+    public static void LogCurTimerLog(string tag = "")
+    {
+        GameUtil.LogError($"{tag}====> {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}");
+    }
+    
     public static void LogError(params object[] messages)
     {
         string combinedMessage = StringUtil.JointString(messages);

@@ -58,7 +58,7 @@ namespace Watermelon
         {
             if (!Application.isPlaying) return;
 
-            EnvironmentController.ApplyPreset(this, partOfDay);
+            EnvironmentController.Instance.ApplyPreset(this, partOfDay);
         }
 
         private void ValidatePartOfDay()

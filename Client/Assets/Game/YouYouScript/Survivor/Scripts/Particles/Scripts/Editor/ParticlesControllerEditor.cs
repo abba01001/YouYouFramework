@@ -14,10 +14,9 @@ namespace Watermelon
         {
             base.OnEnable();
 
-            object boxedRegisteredParticles = ReflectionUtils.GetStaticComponent<ParticlesController>("registerParticles");
-            if(boxedRegisteredParticles != null)
+            if(ParticlesController.Instance.RegisterParticles != null)
             {
-                registeredParticles = (Dictionary<int, Particle>)boxedRegisteredParticles; 
+                registeredParticles = ParticlesController.Instance.RegisterParticles; 
             }
         }
 

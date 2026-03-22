@@ -47,7 +47,7 @@ namespace Watermelon
 
             // Get upgrade
             if (upgradeType == UpgradeType.Global)
-                upgrade = GlobalUpgradesController.GetUpgrade<AbstactGlobalUpgrade>(GlobalUpgradeType);
+                upgrade = GlobalUpgradesController.Instance.GetUpgrade<AbstactGlobalUpgrade>(GlobalUpgradeType);
             else
                 upgrade = localUpgrade;
         }

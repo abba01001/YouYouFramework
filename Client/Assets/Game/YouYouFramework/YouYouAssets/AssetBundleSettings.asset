@@ -19,9 +19,9 @@ MonoBehaviour:
   IsUploadCloudAsset: 0
   IsForceUploadCloudAsset: 0
   IsUploadAPK: 0
-  IsUploadStreamingAsset: 0
+  IsUploadStreamingAsset: 1
   AssetBundleSavePath: AssetBundles
-  IsCanEditor: 1
+  IsCanEditor: 0
   Datas:
   - Name: "\u7EB9\u7406\u8D44\u6E90"
     IsBuild: 1

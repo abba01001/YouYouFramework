@@ -113,7 +113,7 @@ namespace Watermelon
                 }
                 else if (activeMission.MissionStage == Mission.Stage.Finished && activeMission.RewardType == MissionRewardType.Resources)
                 {
-                    MissionsController.CompleteMission();
+                    MissionsController.Instance.CompleteMission();
 
 #if MODULE_HAPTIC
                     Haptic.Play(Haptic.HAPTIC_MEDIUM);

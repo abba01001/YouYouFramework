@@ -189,6 +189,7 @@ namespace Main
                 {
                     try
                     {
+                        webRequest.timeout = 1;
                         await webRequest.SendWebRequest();
 
                         // 404 直接返回 null

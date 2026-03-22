@@ -4,33 +4,33 @@ using UnityEngine;
 
 namespace Watermelon
 {
-    public class SkinController : MonoBehaviour, ISkinsProvider
+    public class SkinController : ISkinsProvider
     {
-        public static SkinController Instance { get; private set; }
+        private static SkinController _instance;
+        public static SkinController Instance => _instance ??= new SkinController();
 
-        [UnpackNested]
-        [SerializeField] SkinsHandler handler;
-        public SkinsHandler Handler => handler;
+        public SkinsHandler Handler;
 
         private SkinControllerSave save;
 
         private Dictionary<AbstractSkinDatabase, ISkinData> selectedSkins;
 
-        public static event SkinCallback SkinUnlocked;
-        public static event SkinCallback SkinSelected;
+        public  event SkinCallback SkinUnlocked;
+        public  event SkinCallback SkinSelected;
 
         public delegate void SkinCallback(ISkinData skinData);
 
-        public async UniTask Init()
+        public async UniTask Initialise()
         {
-            Instance = this;
+            Handler = new SkinsHandler();
+            await Handler.RefreshSkinProviderCache();
             save = SaveController.GetSaveObject<SkinControllerSave>("Skin Controller Save");
 
             selectedSkins = new Dictionary<AbstractSkinDatabase, ISkinData>();
 
-            for (int i = 0; i < handler.ProvidersCount; i++)
+            for (int i = 0; i < Handler.ProvidersCount; i++)
             {
-                AbstractSkinDatabase provider = handler.GetSkinsProvider(i);
+                AbstractSkinDatabase provider = Handler.GetSkinsProvider(i);
 
                 InitProvider(provider);
             }
@@ -211,9 +211,9 @@ namespace Watermelon
         {
             int hash = skinId.GetHashCode();
 
-            for (int i = 0; i < handler.ProvidersCount; i++)
+            for (int i = 0; i < Handler.ProvidersCount; i++)
             {
-                AbstractSkinDatabase provider = handler.GetSkinsProvider(i);
+                AbstractSkinDatabase provider = Handler.GetSkinsProvider(i);
 
                 for (int j = 0; j < provider.SkinsCount; j++)
                 {
@@ -235,9 +235,9 @@ namespace Watermelon
         {
             int hash = skinId.GetHashCode();
 
-            for (int i = 0; i < handler.ProvidersCount; i++)
+            for (int i = 0; i < Handler.ProvidersCount; i++)
             {
-                AbstractSkinDatabase provider = handler.GetSkinsProvider(i);
+                AbstractSkinDatabase provider = Handler.GetSkinsProvider(i);
 
                 for (int j = 0; j < provider.SkinsCount; j++)
                 {
@@ -255,9 +255,9 @@ namespace Watermelon
 
         private AbstractSkinDatabase GetProvider<T>() where T : AbstractSkinDatabase
         {
-            for (int i = 0; i < handler.ProvidersCount; i++)
+            for (int i = 0; i < Handler.ProvidersCount; i++)
             {
-                AbstractSkinDatabase provider = handler.GetSkinsProvider(i);
+                AbstractSkinDatabase provider = Handler.GetSkinsProvider(i);
 
                 if (provider is T)
                 {
@@ -298,6 +298,11 @@ namespace Watermelon
         public void Update(int[] newSelectedSkins)
         {
             selectedSkins = newSelectedSkins;
+        }
+
+        public void AddSkins()
+        {
+            
         }
 
         public void Flush()

@@ -6,23 +6,26 @@ namespace Watermelon
 {
     using GlobalUpgrades;
 
-    public class GlobalUpgradesController : MonoBehaviour
+    public class GlobalUpgradesController
     {
+        private static GlobalUpgradesController _instance;
+        public static GlobalUpgradesController Instance => _instance ??= new GlobalUpgradesController();
         private const string SAVE_IDENTIFIER = "upgrades:{0}";
 
-        [SerializeField] GlobalUpgradesDatabase upgradesDatabase;
+        GlobalUpgradesDatabase upgradesDatabase;
 
-        private static List<AbstactGlobalUpgrade> activeUpgrades;
-        public static List<AbstactGlobalUpgrade> ActiveUpgrades => activeUpgrades;
+        private  List<AbstactGlobalUpgrade> activeUpgrades;
+        public  List<AbstactGlobalUpgrade> ActiveUpgrades => activeUpgrades;
 
-        private static Dictionary<GlobalUpgradeType, AbstactGlobalUpgrade> activeUpgradesLink;
+        private  Dictionary<GlobalUpgradeType, AbstactGlobalUpgrade> activeUpgradesLink;
 
-        private static List<IUpgrade> globalSimpleUpgrades = new List<IUpgrade>();
+        private  List<IUpgrade> globalSimpleUpgrades = new List<IUpgrade>();
 
-        private static UIUpgrades uiUpgrades;
+        private  UIUpgrades uiUpgrades;
 
         public async UniTask Initialise()
         {
+            upgradesDatabase = await GameEntry.Loader.LoadMainAssetAsync<GlobalUpgradesDatabase>("Assets/Game/Download/ProjectFiles/Data/Upgrades/Global Upgrades Database.asset", GameEntry.Instance.gameObject);
             activeUpgrades = new List<AbstactGlobalUpgrade>(upgradesDatabase.Upgrades);
             
             activeUpgradesLink = new Dictionary<GlobalUpgradeType, AbstactGlobalUpgrade>();
@@ -50,7 +53,7 @@ namespace Watermelon
         }
 
         [System.Obsolete]
-        public static AbstactGlobalUpgrade GetUpgradeByType(GlobalUpgradeType perkType)
+        public  AbstactGlobalUpgrade GetUpgradeByType(GlobalUpgradeType perkType)
         {
             if (activeUpgradesLink.ContainsKey(perkType))
                 return activeUpgradesLink[perkType];
@@ -60,7 +63,7 @@ namespace Watermelon
             return null;
         }
 
-        public static T GetUpgrade<T>(GlobalUpgradeType type) where T : AbstactGlobalUpgrade
+        public  T GetUpgrade<T>(GlobalUpgradeType type) where T : AbstactGlobalUpgrade
         {
             if (activeUpgradesLink.ContainsKey(type))
                 return activeUpgradesLink[type] as T;
@@ -70,12 +73,12 @@ namespace Watermelon
             return null;
         }
 
-        public static void RegisterSimpleUpgrade(IUpgrade upgrade)
+        public  void RegisterSimpleUpgrade(IUpgrade upgrade)
         {
             globalSimpleUpgrades.Add(upgrade);
         }
 
-        public static void OpenMainUpgradesPage()
+        public  void OpenMainUpgradesPage()
         {
             uiUpgrades.ResetUpgrades();
             uiUpgrades.RegisterUpgrades(ActiveUpgrades.ConvertAll(upgrade => (IUpgrade)upgrade));
@@ -84,7 +87,7 @@ namespace Watermelon
             UIController.ShowPage<UIUpgrades>();
         }
 
-        public static void OpenUpgradesPage(List<IUpgrade> upgradesToOpen)
+        public  void OpenUpgradesPage(List<IUpgrade> upgradesToOpen)
         {
             uiUpgrades.ResetUpgrades();
             uiUpgrades.RegisterUpgrades(upgradesToOpen);

@@ -78,6 +78,100 @@ public class AssetBundleSettings : ScriptableObject
         AssetComparerWindow.ShowWindow();
     }
     
+    [VerticalGroup("Common/Left")]
+    [Button("启动本地AB包资源存储",ButtonSizes.Medium)]
+    void ChooseDirectoryAndStartServer()
+    {
+        // 打开文件夹选择对话框
+        string selectedDirectory = EditorUtility.OpenFolderPanel("Select a folder to serve", "", "");
+
+        // 如果用户选择了有效的目录，启动 Python 服务器
+        if (!string.IsNullOrEmpty(selectedDirectory))
+        {
+            // 转换路径中的反斜杠为正斜杠
+            selectedDirectory = selectedDirectory.Replace("\\", "/");
+            
+            // 将目录路径转义（避免路径中的空格等问题）
+            selectedDirectory = "\"" + selectedDirectory + "\"";
+
+            // 杀掉占用 8000 端口的进程
+            KillProcessOnPort(8000);
+
+            // 启动 Python HTTP 服务器
+            StartPythonServer(selectedDirectory);
+        }
+        else
+        {
+            UnityEngine.Debug.Log("No folder selected.");
+        }
+    }
+
+    void KillProcessOnPort(int port)
+    {
+        // 获取占用端口的进程 PID
+        string command = $"netstat -ano | findstr :{port}";
+        ProcessStartInfo startInfo = new ProcessStartInfo
+        {
+            FileName = "cmd.exe",
+            Arguments = "/C " + command,
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            CreateNoWindow = true
+        };
+
+        Process process = new Process
+        {
+            StartInfo = startInfo
+        };
+
+        process.Start();
+        string output = process.StandardOutput.ReadToEnd(); // 获取输出结果
+
+        process.WaitForExit();
+
+        // 提取 PID，并结束占用端口的进程
+        string[] lines = output.Split(new[] { "\r\n", "\r", "\n" }, System.StringSplitOptions.RemoveEmptyEntries);
+        foreach (string line in lines)
+        {
+            // 解析 PID (最后一列是 PID)
+            string[] parts = line.Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
+            string pid = parts[parts.Length - 1];
+
+            // 杀掉进程
+            if (int.TryParse(pid, out int pidInt))
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = "taskkill",
+                    Arguments = $"/PID {pidInt} /F", // 强制结束进程
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                });
+                UnityEngine.Debug.Log($"Killed process on port {port} with PID: {pidInt}");
+            }
+        }
+    }
+
+    void StartPythonServer(string directory)
+    {
+        // 启动 Python HTTP 服务器并指定根目录
+        ProcessStartInfo startInfo = new ProcessStartInfo
+        {
+            FileName = "cmd.exe",
+            Arguments = $"/C python -m http.server 8000 --bind 0.0.0.0 --directory {directory}", // 指定选择的目录
+            UseShellExecute = true,
+            CreateNoWindow = false // 显示命令行窗口
+        };
+
+        Process process = new Process
+        {
+            StartInfo = startInfo
+        };
+
+        process.Start();
+        UnityEngine.Debug.Log($"Python server started on port 8000, serving directory: {directory}");
+    }
+    
     [VerticalGroup("Common/Right")]
     [Button("清空本地AB包资源",ButtonSizes.Medium)]
     public void ClearAssetBundle()

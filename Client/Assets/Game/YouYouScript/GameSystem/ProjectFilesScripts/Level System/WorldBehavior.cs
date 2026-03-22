@@ -1,6 +1,7 @@
 ﻿using Unity.AI.Navigation;
 using UnityEngine;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 
 namespace Watermelon
 {
@@ -28,9 +29,9 @@ namespace Watermelon
 
         private WorldSave worldSave;
 
-        private void Awake()
+        private async UniTask Awake()
         {
-            WorldController.SetWorld(this);
+            await WorldController.Instance.SetWorld(this);
         }
 
         public override void Initialise()
@@ -69,8 +70,8 @@ namespace Watermelon
 
                 if (restoreHungerPointsOnFirstTimeLoad)
                 {
-                    if (EnergyController.IsEnergySystemEnabled)
-                        EnergyController.RestoreEnergyPoints(float.MaxValue);
+                    if (EnergyController.Instance.IsEnergySystemEnabled)
+                        EnergyController.Instance.RestoreEnergyPoints(float.MaxValue);
                 }
 
                 worldSave.IsFirstEnter = true;
@@ -85,7 +86,7 @@ namespace Watermelon
 
             base.Unload();
 
-            EnvironmentController.OnWorldUnloaded();
+            EnvironmentController.Instance.OnWorldUnloaded();
         }
 
         public void RegisterAndRecalculateNavMesh(SimpleCallback onWorldLoaded)
@@ -115,7 +116,7 @@ namespace Watermelon
 
         public void OnSubworldLeft()
         {
-            EnvironmentController.SetPreset(EnvironmentPresetType);
+            EnvironmentController.Instance.SetPreset(EnvironmentPresetType);
 
 #if MODULE_CURVE
             if (curveOverride != null)

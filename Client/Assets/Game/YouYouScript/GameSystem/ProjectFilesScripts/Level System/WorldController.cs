@@ -5,41 +5,34 @@ using UnityEngine.SceneManagement;
 
 namespace Watermelon
 {
-    public class WorldController : MonoBehaviour
+    public class WorldController
     {
-        private static WorldController worldController;
+        private static WorldController _instance;
+        public static WorldController Instance => _instance ??= new WorldController();
 
-        [SerializeField] WorldsDatabase database;
+        WorldsDatabase database;
 
-        [Header("Prefabs")]
-        [SerializeField] GameObject playerPrefab;
-        private static GameObject PlayerPrefab => worldController.playerPrefab;
+        private  PlayerBehavior playerBehavior;
 
-        private static PlayerBehavior playerBehavior;
+        private  WorldGlobalSave worldGlobalSave;
 
-        private static WorldGlobalSave worldGlobalSave;
+        public  WorldData CurrentWorld { get; private set; }
+        public  WorldBehavior WorldBehavior { get; private set; }
 
-        public static WorldData CurrentWorld { get; private set; }
-        public static WorldBehavior WorldBehavior { get; private set; }
-
-        public static event SimpleCallback OnWorldLoaded;
+        public  event SimpleCallback OnWorldLoaded;
 
         public async UniTask Initialise()
         {
-            worldController = this;
             worldGlobalSave = SaveController.GetSaveObject<WorldGlobalSave>("worldGlobal");
-            if (database == null)
-            {
-                database = await GameEntry.Loader.LoadMainAssetAsync<WorldsDatabase>("Assets/Game/Download/ProjectFiles/Data/Worlds Database.asset",GameEntry.Instance.gameObject);
-            }
-            await UniTask.NextFrame();
+            database = await GameEntry.Loader.LoadMainAssetAsync<WorldsDatabase>("Assets/Game/Download/ProjectFiles/Data/Worlds Database.asset",GameEntry.Instance.gameObject);
+            await LoadCurrentWorld();
         }
 
         private void OnDestroy()
         {
             NavMeshController.Reset();
 
-            MissionsController.Unload();
+            MissionsController.Instance.Unload();
 
             FloatingCloud.Unload();
 
@@ -64,7 +57,7 @@ namespace Watermelon
 
             playerBehavior.Unload();
 
-            MissionsController.Unload();
+            MissionsController.Instance.Unload();
 
             FloatingCloud.Unload();
 
@@ -107,31 +100,64 @@ namespace Watermelon
         {
             CurrentWorld = worldData;
             WorldItemCollector.Initialise();
+            GameUtil.LogCurTimerLog("LoadWorld111====>");
             AsyncOperation loadOperation = SceneManager.LoadSceneAsync(worldData.Scene.Name, LoadSceneMode.Additive);
-            await loadOperation.ToUniTask();
+            GameUtil.LogCurTimerLog("LoadWorld222====>");
+            loadOperation.allowSceneActivation = false;
+            while (!loadOperation.isDone)
+            {
+                GameUtil.LogCurTimerLog($"进度===>{loadOperation.progress}");
+                // 获取加载进度，从 0 到 0.9，之后会跳到 1
+                float progress = loadOperation.progress < 0.9f ? loadOperation.progress : 0.9f;
+                // 显示进度
+                LoadingGraphics.Instance.UpdateProgress(progress);
+                // 如果进度达到0.9，表示资源加载完毕，准备激活场景
+                if (loadOperation.progress >= 0.9f)
+                {
+                    // 激活场景
+                    loadOperation.allowSceneActivation = true;
+                }
+                await UniTask.Yield();  // 等待一帧
+            }
+            LoadingGraphics.Instance.StopProgress();
             Control.EnableMovementControl();
         }
 
-        public static void SetWorld(WorldBehavior worldBehavior)
+        public async UniTask LoadBuildings()
         {
+            
+        }
+        
+        public async UniTask LoadEnvironment()
+        {
+            
+        }
+        
+        public async UniTask SetWorld(WorldBehavior worldBehavior)
+        {
+            //这里加载世界入口
+            //加载世界环境
+   
             WorldBehavior = worldBehavior;
-
             WorldBehavior.Initialise();
             WorldBehavior.OnPlayerEntered();
 
             // Spawn player
-            GameObject playerObject = Instantiate(PlayerPrefab);
-            playerObject.transform.position = WorldBehavior.SpawnPoint.position;
-
-            playerBehavior = playerObject.GetComponent<PlayerBehavior>();
+            if (playerBehavior == null)
+            {
+                //这里统一改异步
+                PoolObj obj =  GameEntry.Pool.GameObjectPool.SpawnSynchronous("Assets/Game/Download/ProjectFiles/Game/Prefabs/Player/Player.prefab");
+                playerBehavior = obj.GetComponent<PlayerBehavior>();
+            }
+            playerBehavior.transform.position = WorldBehavior.SpawnPoint.position;
             playerBehavior.Initialise();
 
             DistanceToggle.Initialise(playerBehavior.transform);
 
-            VirtualCamera mainCamera = CameraController.GetCamera(CameraType.Gameplay);
+            VirtualCamera mainCamera = CameraController.Instance.GetCamera(CameraType.Gameplay);
             mainCamera.SetTarget(playerBehavior.transform);
 
-            CameraController.EnableCamera(CameraType.Gameplay);
+            CameraController.Instance.EnableCamera(CameraType.Gameplay);
 
             WorldBehavior.OnWorldLoaded();
 
@@ -139,7 +165,7 @@ namespace Watermelon
 
             WorldBehavior.RegisterAndRecalculateNavMesh(() =>
             {
-                MissionsController.ActivateNextMission();
+                MissionsController.Instance.ActivateNextMission();
 
                 WorldBehavior.OnWorldNavMeshRecalculated();
 
@@ -147,22 +173,22 @@ namespace Watermelon
             });
         }
 
-        public static WorldData GetWorldData(string worldID)
+        public WorldData GetWorldData(string worldID)
         {
-            return worldController.database.GetWorldByID(worldID);
+            return database.GetWorldByID(worldID);
         }
 
-        public static WorldData GetWorldData(int worldIndex)
+        public WorldData GetWorldData(int worldIndex)
         {
-            return worldController.database.GetWorldByIndex(worldIndex);
+            return database.GetWorldByIndex(worldIndex);
         }
 
-        public static bool IsWorldExists(int worldIndex)
+        public bool IsWorldExists(int worldIndex)
         {
-            return worldController.database.IsWorldExists(worldIndex);
+            return database.IsWorldExists(worldIndex);
         }
 
-        public static void UpdateWorldSave(string activeMissionName)
+        public void UpdateWorldSave(string activeMissionName)
         {
             worldGlobalSave.activeMissionName = activeMissionName;
         }

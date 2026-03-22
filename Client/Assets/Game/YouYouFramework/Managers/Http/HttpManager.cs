@@ -38,9 +38,9 @@ public class HttpManager
 
     internal void Init()
     {
-        m_WebAccountUrl = MainEntry.ParamsSettings.WebAccountUrl;
-        m_TestWebAccountUrl = MainEntry.ParamsSettings.TestWebAccountUrl;
-        m_IsTest = Main.MainEntry.ParamsSettings.IsTestServerMode;
+        m_WebAccountUrl = MainEntry.ParamsSettings.ServerWebUrl;
+        m_TestWebAccountUrl = MainEntry.ParamsSettings.LocalWebUrl;
+        m_IsTest = Main.MainEntry.ParamsSettings.IsLocalServerMode;
     }
 
     #region Get

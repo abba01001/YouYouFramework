@@ -43,7 +43,7 @@ namespace Watermelon
                 curveOverride.Apply();
 #endif
 
-            EnvironmentController.SetPreset(EnvironmentPresetType);
+            EnvironmentController.Instance.SetPreset(EnvironmentPresetType);
 
             SubworldActivated?.Invoke();
 

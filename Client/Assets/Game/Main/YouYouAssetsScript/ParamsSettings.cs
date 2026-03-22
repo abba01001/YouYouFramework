@@ -4,15 +4,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [CreateAssetMenu(menuName = "YouYouAsset/ParamsSettings")]
 public class ParamsSettings : ScriptableObject
 {
 
-    
-    [BoxGroup("通用参数设置")][LabelText("测试服务器IP")] public string TestWebAccountUrl;
-    [BoxGroup("通用参数设置")][LabelText("正式服务器IP")] public string WebAccountUrl;
-    [BoxGroup("通用参数设置")][LabelText("测试服务器模式")] public bool IsTestServerMode;
+    //43.134.133.178:17888
+    [BoxGroup("通用参数设置")][LabelText("开启本地服务器模式")] public bool IsLocalServerMode;
+    [BoxGroup("通用参数设置")][LabelText("本地服务器IP")] public string LocalWebUrl;
+    [BoxGroup("通用参数设置")][LabelText("正式服务器IP")] public string ServerWebUrl;
     [BoxGroup("通用参数设置")] public bool PostIsEncrypt;//是否加密(如时间戳)
     [BoxGroup("通用参数设置")] public string PostContentType;//设置ContentType
 

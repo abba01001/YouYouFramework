@@ -6,17 +6,17 @@ using UnityEngine.Serialization;
 
 namespace Watermelon
 {
-    public class EnergyController : MonoBehaviour
+    public class EnergyController
     {
-        [SerializeField, OnOff] bool isEnergyEnabled;
+        private static EnergyController _instance;
+        public static EnergyController Instance => _instance ??= new EnergyController();
+        bool isEnergyEnabled = true;
+        public  EnergySystemDatabase Data;
 
-        [SerializeField, ShowIf("isEnergyEnabled")] EnergySystemDatabase energySystemDatabase;
-        public static EnergySystemDatabase Data => instance.energySystemDatabase;
+        public  float LowEnergySpeedCoef => IsEnergySystemEnabled ? EnergyPoints == 0 ? Data.LowEnergySpeedMult : 1f : 1f;
+        public  float LowEnergyHittingSpeedCoef => IsEnergySystemEnabled ? EnergyPoints == 0 ? Data.LowEnergyHarvestSpeedMult : 1f : 1f;
 
-        public static float LowEnergySpeedCoef => IsEnergySystemEnabled ? EnergyPoints == 0 ? Data.LowEnergySpeedMult : 1f : 1f;
-        public static float LowEnergyHittingSpeedCoef => IsEnergySystemEnabled ? EnergyPoints == 0 ? Data.LowEnergyHarvestSpeedMult : 1f : 1f;
-
-        public static float EnergyPoints
+        public  float EnergyPoints
         {
             get => save.energyPoints;
             private set
@@ -28,28 +28,29 @@ namespace Watermelon
             }
         }
 
-        private static readonly int FLOATING_TEXT_HASH = "Floating".GetHashCode();
-        private static float notAccountedEnergyPoints;
+        private  readonly int FLOATING_TEXT_HASH = "Floating".GetHashCode();
+        private  float notAccountedEnergyPoints;
 
-        public static event SimpleCallback OnEnergyChanged;
+        public  event SimpleCallback OnEnergyChanged;
 
-        private static EnergySave save;
-        private static EnergyController instance;
+        private  EnergySave save;
+        private  EnergyController instance;
 
-        public static bool IsEnergySystemEnabled => instance.isEnergyEnabled;
+        public  bool IsEnergySystemEnabled => instance.isEnergyEnabled;
 
-        private static List<CurrencyType> foodResourceTypes = new List<CurrencyType>();
-        public static bool IsFoorResource(CurrencyType resource) => foodResourceTypes.Contains(resource);
+        private  List<CurrencyType> foodResourceTypes = new List<CurrencyType>();
+        public  bool IsFoorResource(CurrencyType resource) => foodResourceTypes.Contains(resource);
 
-        private static FloatingTextBaseBehavior foodConsumedText;
+        private  FloatingTextBaseBehavior foodConsumedText;
 
-        private static int lastDisplayedFoodPoints;
-        private static readonly float FULL_ENERGY_THRESHOLD = 0.9f;
+        private  int lastDisplayedFoodPoints;
+        private  readonly float FULL_ENERGY_THRESHOLD = 0.9f;
 
         public async UniTask Initialise()
         {
             instance = this;
             save = SaveController.GetSaveObject<EnergySave>("Energy");
+            Data = await GameEntry.Loader.LoadMainAssetAsync<EnergySystemDatabase>("Assets/Game/Download/ProjectFiles/Data/Energy System Database.asset", GameEntry.Instance.gameObject);
 
             // works only in editor
             if (EnergyActionMenu.IsEnergyDisabled())
@@ -111,7 +112,7 @@ namespace Watermelon
             PlayerBehavior.OnResourceWillBeReceived -= OnResorceWillBeReceivedReceived;
         }
 
-        public static void Unload()
+        public  void Unload()
         {
             if (instance == null)
                 return;
@@ -136,7 +137,7 @@ namespace Watermelon
                 if (foodConsumedText == null)
                 {
                     lastDisplayedFoodPoints = newPoints;
-                    foodConsumedText = FloatingTextController.SpawnFloatingText(FLOATING_TEXT_HASH, $"+{newPoints} ENERGY <sprite name={currency.CurrencyType}>", PlayerBehavior.InstanceTransform.position.AddToY(2f), Quaternion.identity, 1.0f, Color.white).GetComponent<FloatingTextBaseBehavior>();
+                    foodConsumedText = FloatingTextController.Instance.SpawnFloatingText(FLOATING_TEXT_HASH, $"+{newPoints} ENERGY <sprite name={currency.CurrencyType}>", PlayerBehavior.InstanceTransform.position.AddToY(2f), Quaternion.identity, 1.0f, Color.white).GetComponent<FloatingTextBaseBehavior>();
                     foodConsumedText.OnAnimationCompleted += OnFoodConsumedTextAnimationCompleted;
                 }
                 else
@@ -164,7 +165,7 @@ namespace Watermelon
             }
         }
 
-        private static void UpdatePlayerFoodReceiveAbility()
+        private  void UpdatePlayerFoodReceiveAbility()
         {
             if (EnergyPoints + notAccountedEnergyPoints >= Data.MaxEnergyPoints * FULL_ENERGY_THRESHOLD)
             {
@@ -181,12 +182,12 @@ namespace Watermelon
             RemoveEnergyPoints(Data.EnergyCostForHarvesting);
         }
 
-        public static void RestoreEnergyPoints(float poinsAmount)
+        public  void RestoreEnergyPoints(float poinsAmount)
         {
             EnergyPoints += poinsAmount;
         }
 
-        public static void RemoveEnergyPoints(float pointsAmount)
+        public  void RemoveEnergyPoints(float pointsAmount)
         {
             // works only in editor
             if (EnergyActionMenu.IsEnergyDisabled())
@@ -203,7 +204,7 @@ namespace Watermelon
             }
         }
 
-        public static void OnConstructionHit()
+        public  void OnConstructionHit()
         {
             RemoveEnergyPoints(Data.EnergyCostForBuilding);
         }

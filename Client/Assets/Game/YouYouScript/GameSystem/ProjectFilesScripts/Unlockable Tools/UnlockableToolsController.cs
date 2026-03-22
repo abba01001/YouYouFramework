@@ -3,29 +3,25 @@ using UnityEngine;
 
 namespace Watermelon
 {
-    public class UnlockableToolsController : MonoBehaviour
+    public class UnlockableToolsController
     {
-        private static readonly int FLOATING_TEXT_HASH = "UnlockableTool".GetHashCode();
-
+        private static UnlockableToolsController _instance;
+        public static UnlockableToolsController Instance => _instance ??= new UnlockableToolsController();
+        private  readonly int FLOATING_TEXT_HASH = "UnlockableTool".GetHashCode();
         private const float FLOATING_TEXT_DELAY = 3.0f;
         private const string FLOATING_TEXT_MESSAGE = "Required!";
 
-        private static UnlockableToolsController instance;
+        Color floatingTextColor = Color.red;
 
-        [SerializeField] UnlockableToolsDatabase database;
-        [SerializeField] Color floatingTextColor = Color.red;
+        private  UnlockableTool[] registeredUnlockableTools;
+        public  UnlockableTool[] RegisteredUnlockableTools => registeredUnlockableTools;
 
-        private static UnlockableTool[] registeredUnlockableTools;
-        public static UnlockableTool[] RegisteredUnlockableTools => registeredUnlockableTools;
-
-        private static float nextMessageTime;
+        private  float nextMessageTime;
 
         public async UniTask Initialise()
         {
-            instance = this;
-
-            registeredUnlockableTools = database.UnlockableTools;
-
+            var data = await GameEntry.Loader.LoadMainAssetAsync<UnlockableToolsDatabase>("Assets/Game/Download/ProjectFiles/Data/Unlockable Tools Database.asset", GameEntry.Instance.gameObject);
+            registeredUnlockableTools = data.UnlockableTools;
             foreach(UnlockableTool unlockableTool in registeredUnlockableTools)
             {
                 unlockableTool.Initialise();
@@ -34,7 +30,7 @@ namespace Watermelon
             await UniTask.NextFrame();
         }
 
-        public static bool IsToolUnlocked(InteractionAnimationType toolType)
+        public  bool IsToolUnlocked(InteractionAnimationType toolType)
         {
             foreach (UnlockableTool unlockableTool in registeredUnlockableTools)
             {
@@ -45,7 +41,7 @@ namespace Watermelon
             return true;
         }
 
-        public static UnlockableTool GetUnlockableTool(InteractionAnimationType toolType)
+        public  UnlockableTool GetUnlockableTool(InteractionAnimationType toolType)
         {
             foreach (UnlockableTool unlockableTool in registeredUnlockableTools)
             {
@@ -58,7 +54,7 @@ namespace Watermelon
             return null;
         }
 
-        public static void UnlockTool(InteractionAnimationType toolType)
+        public  void UnlockTool(InteractionAnimationType toolType)
         {
             foreach (UnlockableTool unlockableTool in registeredUnlockableTools)
             {
@@ -71,7 +67,7 @@ namespace Watermelon
             }
         }
 
-        public static FloatingTextBaseBehavior ShowMessage(InteractionAnimationType toolType, Vector3 position, Quaternion rotation)
+        public FloatingTextBaseBehavior ShowMessage(InteractionAnimationType toolType, Vector3 position, Quaternion rotation)
         {
             if (nextMessageTime > Time.time)
                 return null;
@@ -84,14 +80,14 @@ namespace Watermelon
             return ShowMessage(unlockableTool, position, rotation);
         }
 
-        public static FloatingTextBaseBehavior ShowMessage(UnlockableTool unlockableTool, Vector3 position, Quaternion rotation)
+        public FloatingTextBaseBehavior ShowMessage(UnlockableTool unlockableTool, Vector3 position, Quaternion rotation)
         {
             if (nextMessageTime > Time.time)
                 return null;
 
             nextMessageTime = Time.time + FLOATING_TEXT_DELAY;
 
-            FloatingTextBaseBehavior floatingText = FloatingTextController.SpawnFloatingText(FLOATING_TEXT_HASH, FLOATING_TEXT_MESSAGE, position, rotation, 1.0f, instance.floatingTextColor);
+            FloatingTextBaseBehavior floatingText = FloatingTextController.Instance.SpawnFloatingText(FLOATING_TEXT_HASH, FLOATING_TEXT_MESSAGE, position, rotation, 1.0f, floatingTextColor);
             
             UnlockableToolFloatingText unlockableToolFloatingText = (UnlockableToolFloatingText)floatingText;
             if(unlockableToolFloatingText != null)

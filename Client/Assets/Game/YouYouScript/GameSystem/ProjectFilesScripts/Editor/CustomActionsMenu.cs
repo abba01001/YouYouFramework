@@ -110,13 +110,13 @@ namespace Watermelon
         [MenuItem("Actions/Tools/Unlock Sickle", priority = 26)]
         private static void UnlockSickle()
         {
-            UnlockableToolsController.UnlockTool(InteractionAnimationType.Cutting);
+            UnlockableToolsController.Instance.UnlockTool(InteractionAnimationType.Cutting);
         }
 
         [MenuItem("Actions/Tools/Unlock Fishing Rod", priority = 26)]
         private static void UnlockFishingRod()
         {
-            UnlockableToolsController.UnlockTool(InteractionAnimationType.Fishing);
+            UnlockableToolsController.Instance.UnlockTool(InteractionAnimationType.Fishing);
         }
 
         #endregion

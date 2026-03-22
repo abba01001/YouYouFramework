@@ -1,93 +1,113 @@
 using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 
 namespace Watermelon
 {
-    [DefaultExecutionOrder(-10)]
+    // [DefaultExecutionOrder(-10)]
     public class GameController : MonoBehaviour
     {
-        private static GameController instance;
+        private static GameController Instance;
+        public static GameData Data;
 
-        [SerializeField] GameData gameData;
-        public static GameData Data => instance.gameData;
-
-        [Space]
-        [SerializeField] UIController uiController;
-        [SerializeField] DefaultMusicController defaultMusicController;
-        static CameraController cameraController;
-
-        private static WorldController worldController;
-        private static GlobalUpgradesController globalUpgradesController;
-        private static MissionsController missionsController;
-        private static ParticlesController particlesController;
-        private static NavigationHelper navigationHelper;
-        private static FloatingTextController floatingTextController;
-        private static UnlockableToolsController unlockableToolsController;
-        private static FishingController fishingController;
-        private static DiggingController diggingController;
-        private static SkinController skinController;
-        private static EnergyController energyController;
-        private static EnvironmentController environmentController;
         private void Awake()
         {
-            instance = this;
-            cameraController = GameEntry.Instance.MainCamera.GetComponent<CameraController>();
-            CacheComponent(out worldController);
-            CacheComponent(out globalUpgradesController);
-            CacheComponent(out missionsController);
-            CacheComponent(out particlesController);
-            CacheComponent(out navigationHelper);
-            CacheComponent(out floatingTextController);
-            CacheComponent(out unlockableToolsController);
-            CacheComponent(out fishingController);
-            CacheComponent(out diggingController);
-            CacheComponent(out skinController);
-            CacheComponent(out energyController);
-            CacheComponent(out environmentController);
-            
+            GameUtil.LogCurTimerLog("GameController 1111Awake====>");
+            Instance = this;
+            GameUtil.LogCurTimerLog("GameController 2222Awake====>");
             Init();
         }
 
         private async UniTask Init()
         {
+            GameEntry.UI.OpenUIForm<FormGame>();
+            GameUtil.LogCurTimerLog("Data Init111====>");
+            Data = await GameEntry.Loader.LoadMainAssetAsync<GameData>("Assets/Game/Download/ProjectFiles/Data/Game Data.asset", GameEntry.Instance.gameObject);
+            GameUtil.LogCurTimerLog("Data Init222====>");
             await Data.Init();
-            await defaultMusicController.Initialise();
-            await uiController.Init();
-            await cameraController.Initialise();
-            await PreviewCamera.Initialise();
-            await skinController.Init();
-            await unlockableToolsController.Initialise();
-            await energyController.Initialise();
-            await environmentController.Initialise();
-            await fishingController.Initialise();
-            await diggingController.Initialise();
-            await globalUpgradesController.Initialise();
-            await floatingTextController.Init();
-            await worldController.Initialise();
-            await uiController.InitPages();
-            await particlesController.Init();
-            await navigationHelper.Initialise();
-            await worldController.LoadCurrentWorld();
+            GameUtil.LogCurTimerLog("Data Init333====>");
+
+            await DefaultMusicController.Instance.Initialise(transform.parent);
+            GameUtil.LogCurTimerLog("DefaultMusicController Init====>");
+
+            await CameraController.Instance.Initialise();
+            GameUtil.LogCurTimerLog("CameraController Init====>");
+
+            await SkinController.Instance.Initialise();
+            GameUtil.LogCurTimerLog("SkinController Init====>");
+
+            await UnlockableToolsController.Instance.Initialise();
+            GameUtil.LogCurTimerLog("UnlockableToolsController Init====>");
+
+            await EnergyController.Instance.Initialise();
+            GameUtil.LogCurTimerLog("EnergyController Init====>");
+
+            await EnvironmentController.Instance.Initialise();
+            GameUtil.LogCurTimerLog("EnvironmentController Init====>");
+
+            await FishingController.Instance.Initialise();
+            GameUtil.LogCurTimerLog("FishingController Init====>");
+            
+            await DiggingController.Instance.Initialise();
+            GameUtil.LogCurTimerLog("DiggingController Init====>");
+            
+            await GlobalUpgradesController.Instance.Initialise();
+            GameUtil.LogCurTimerLog("GlobalUpgradesController Init====>");
+            
+            await FloatingTextController.Instance.Initialise();
+            GameUtil.LogCurTimerLog("FloatingTextController Init====>");
+
+            await ParticlesController.Instance.Initialise();
+            GameUtil.LogCurTimerLog("ParticlesController Init====>");
+
+            await NavigationHelper.Instance.Initialise();
+            GameUtil.LogCurTimerLog("NavigationHelper Init====>");
+
+            await WorldController.Instance.Initialise();
+            GameUtil.LogCurTimerLog("WorldController Init====>");
+
             GameLoading.MarkAsReadyToHide();
             await UniTask.NextFrame();
-            GameEntry.UI.OpenUIForm<FormGame>();
+            CheckPlayFirstEntryAnim();
+        }
+
+        private void CheckPlayFirstEntryAnim()
+        {
+            SimpleBoolSave alreadyPlayedAnimationSave = SaveController.GetSaveObject<SimpleBoolSave>("FirstAnimation" + "8a95ba6b-040a-478e-8cb6-a75f8562e553");
+
+            if (!alreadyPlayedAnimationSave.Value)
+            {
+                Control.DisableMovementControl();
+                PlayerBehavior.GetBehavior().PlayerGraphics.RunWakeUpAnimation();
+
+                alreadyPlayedAnimationSave.Value = true;
+                SaveController.MarkAsSaveIsRequired();
+
+                Tween.DelayedCall(3f, () =>
+                {
+                    Control.EnableMovementControl();
+                });
+            }
+        }
+
+        private void LateUpdate()
+        {
+            CameraController.Instance.LateUpdate();
         }
 
         private void OnDestroy()
         {
             Data.Unload(); 
             
-            NavigationHelper.Unload();
+            NavigationHelper.Instance.Unload();
 
             DistanceToggle.Unload();
 
-            FishingController.Unload();
+            FishingController.Instance.Unload();
 
-            diggingController.Disable();
-            diggingController.Unload();
+            DiggingController.Instance.Disable();
+            DiggingController.Instance.Unload();
 
             NavMeshController.Reset();
 
@@ -96,7 +116,7 @@ namespace Watermelon
 
         public static void LoadCurrentWorld()
         {
-            worldController.LoadCurrentWorld();
+            WorldController.Instance.LoadCurrentWorld();
         }
 
         public static void OpenMainMenu()
@@ -113,7 +133,7 @@ namespace Watermelon
                 // Unload the current world and all the dependencies
                 GameController.UnloadWorld(() =>
                 {
-                    DefaultMusicController.ActivateMusic();
+                    DefaultMusicController.Instance.ActivateMusic();
 
                     UIGamepadButton.DisableAllTags();
                     UIGamepadButton.EnableTag(UIGamepadButtonTag.MainMenu);
@@ -128,27 +148,27 @@ namespace Watermelon
         {
             // UIController.ShowPage<FormGame>();
 
-            fishingController.SpawnFishingPlaces();
+            FishingController.Instance.SpawnFishingPlaces();
 
-            missionsController.Initialise(worldBehavior.MissionsHolder?.Missions);
+            MissionsController.Instance.Initialise(worldBehavior.MissionsHolder?.Missions);
 
-            diggingController.Activate(worldBehavior.DiggingSpawnSettings);
+            DiggingController.Instance.Activate(worldBehavior.DiggingSpawnSettings);
         }
 
         public static void UnloadWorld(SimpleCallback onUnloaded)
         {
             Tween.RemoveAll();
 
-            NavigationHelper.Unload();
+            NavigationHelper.Instance.Unload();
 
             DistanceToggle.Unload();
 
-            FishingController.Unload();
+            FishingController.Instance.Unload();
 
-            diggingController.Disable();
-            diggingController.Unload();
+            DiggingController.Instance.Disable();
+            DiggingController.Instance.Unload();
 
-            worldController.UnloadWorld(onUnloaded);
+            WorldController.Instance.UnloadWorld(onUnloaded);
         }
 
         public static void LoadWorld(string worldID, SimpleCallback onWorldUnloaded = null, SimpleCallback onNewWorldLoaded = null)
@@ -167,7 +187,7 @@ namespace Watermelon
                     onWorldUnloaded?.Invoke();
 
                     // Load next world
-                    worldController.LoadWorld(worldID);
+                    WorldController.Instance.LoadWorld(worldID);
 
                     // Disable fullscreen black overlay
                     Overlay.Hide(0.3f, () =>

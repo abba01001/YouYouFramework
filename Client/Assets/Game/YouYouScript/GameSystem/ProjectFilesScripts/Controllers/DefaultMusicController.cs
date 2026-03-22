@@ -4,18 +4,20 @@ using UnityEngine;
 namespace Watermelon
 {
     [RequireComponent(typeof(MusicSource))]
-    public class DefaultMusicController : MonoBehaviour
+    public class DefaultMusicController
     {
-        public static MusicSource MusicSource { get; private set; }
+        private static DefaultMusicController _instance;
+        public static DefaultMusicController Instance => _instance ??= new DefaultMusicController();
+        public  MusicSource MusicSource { get; private set; }
 
-        public async UniTask Initialise()
+        public async UniTask Initialise(Transform transform)
         {
-            MusicSource = GetComponent<MusicSource>();
+            MusicSource = transform.GetComponent<MusicSource>();
             MusicSource.Init();
             await UniTask.NextFrame();
         }
 
-        public static void ActivateMusic()
+        public  void ActivateMusic()
         {
             MusicSource.Activate();
             MusicSource.SetAsDefault();

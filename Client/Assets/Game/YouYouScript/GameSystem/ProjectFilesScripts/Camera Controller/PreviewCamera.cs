@@ -29,7 +29,7 @@ namespace Watermelon
         public static async UniTask Initialise()
         {
             // Get preivew virtual camera
-            previewCamera = CameraController.GetCamera(CameraType.Preview);
+            previewCamera = CameraController.Instance.GetCamera(CameraType.Preview);
 
             // Create preview camera target
             previewCameraTarget = new GameObject("[PREVIEW CAMERA TARGET]");
@@ -43,7 +43,7 @@ namespace Watermelon
 
         public static void ResetTargetPosition()
         {
-            VirtualCamera mainCamera = CameraController.GetCamera(CameraType.Gameplay);
+            VirtualCamera mainCamera = CameraController.Instance.GetCamera(CameraType.Gameplay);
 
             // Reset camera position
             previewCameraTarget.transform.position = mainCamera.Target.position;
@@ -56,7 +56,7 @@ namespace Watermelon
 
         public static void Focus(Vector3 targetPosition, float freezeTime, SimpleCallback onStart = null, SimpleCallback onFocused = null, SimpleCallback onFreezeTimeEnded = null, SimpleCallback onFinished = null, bool debug = false)
         {
-            if (CameraController.IsBlending)
+            if (CameraController.Instance.IsBlending)
                 return;
 
             if (debug)
@@ -81,7 +81,7 @@ namespace Watermelon
             {
                 isActive = true;
 
-                VirtualCamera mainCamera = CameraController.GetCamera(CameraType.Gameplay);
+                VirtualCamera mainCamera = CameraController.Instance.GetCamera(CameraType.Gameplay);
 
                 // Reset camera position
                 previewCameraTarget.transform.position = mainCamera.Target.position;
@@ -105,13 +105,13 @@ namespace Watermelon
 
         private static void InvokeCase(CameraCase cameraCase)
         {
-            VirtualCamera previewCamera = CameraController.GetCamera(CameraType.Preview);
+            VirtualCamera previewCamera = CameraController.Instance.GetCamera(CameraType.Preview);
             previewCamera.SetTarget(previewCameraTarget.transform);
 
-            CameraController.OverrideBlend(CameraType.Gameplay, CameraType.Preview, cameraCase.moveTime, MOVEMENT_TWEEN);
+            CameraController.Instance.OverrideBlend(CameraType.Gameplay, CameraType.Preview, cameraCase.moveTime, MOVEMENT_TWEEN);
 
             // Enable Cinemachine tutorial camera
-            CameraController.EnableCamera(CameraType.Preview);
+            CameraController.Instance.EnableCamera(CameraType.Preview);
 
             // Invoke camera case start callback
             cameraCase.onStart?.Invoke();
@@ -140,7 +140,7 @@ namespace Watermelon
 
         private static IEnumerator WaitForCameraBlendToComplete(Action OnComplete)
         {
-            VirtualCamera previewCamera = CameraController.GetCamera(CameraType.Preview);
+            VirtualCamera previewCamera = CameraController.Instance.GetCamera(CameraType.Preview);
 
             while (previewCamera.IsBlending)
             {
@@ -157,15 +157,15 @@ namespace Watermelon
 
         private static void UnfreezeCase(CameraCase cameraCase)
         {
-            VirtualCamera mainCamera = CameraController.GetCamera(CameraType.Gameplay);
+            VirtualCamera mainCamera = CameraController.Instance.GetCamera(CameraType.Gameplay);
 
             if (waitingCases.Count == 0)
             {
                 cameraCase.onFreezeTimeEnded?.Invoke();
 
-                CameraController.OverrideBlend(CameraType.Preview, CameraType.Gameplay, cameraCase.moveTime, MOVEMENT_TWEEN);
+                CameraController.Instance.OverrideBlend(CameraType.Preview, CameraType.Gameplay, cameraCase.moveTime, MOVEMENT_TWEEN);
 
-                CameraController.EnableCamera(CameraType.Gameplay);
+                CameraController.Instance.EnableCamera(CameraType.Gameplay);
 
 #if MODULE_CURVE
                 CurvatureManager.EnableTempTarget(curvatureTarget.transform);
@@ -232,7 +232,7 @@ namespace Watermelon
             finishedCases.Clear();
 
             // Enable Cinemachine main camera
-            CameraController.EnableCamera(CameraType.Gameplay);
+            CameraController.Instance.EnableCamera(CameraType.Gameplay);
         }
 
         public static void Pause()

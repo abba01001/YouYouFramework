@@ -46,7 +46,7 @@ namespace Watermelon
                 {
                     for (int i = 0; i < buildingUpgrades.Count; i++)
                     {
-                        GlobalUpgradesController.RegisterSimpleUpgrade(buildingUpgrades[i].Upgrade);
+                        GlobalUpgradesController.Instance.RegisterSimpleUpgrade(buildingUpgrades[i].Upgrade);
                     }
                 }
             }

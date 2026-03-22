@@ -95,7 +95,7 @@ namespace Watermelon
             constructionTask.Activate();
             constructionTask.Register(LinkedWorldBehavior.TaskHandler);
 
-            unlockableTool = UnlockableToolsController.GetUnlockableTool(interactionAnimationType);
+            unlockableTool = UnlockableToolsController.Instance.GetUnlockableTool(interactionAnimationType);
 
             return true;
         }
@@ -150,7 +150,7 @@ namespace Watermelon
             if(constructionAudioClip != null)
                 AudioController.PlaySound(constructionAudioClip, transform.position);
 
-            EnergyController.OnConstructionHit();
+            EnergyController.Instance.OnConstructionHit();
 
             OnGotHit?.Invoke();
         }

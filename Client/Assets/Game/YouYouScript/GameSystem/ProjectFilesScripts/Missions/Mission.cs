@@ -95,7 +95,7 @@ namespace Watermelon
             }
             else if (rewardType == MissionRewardType.Tool)
             {
-                UnlockableToolsController.UnlockTool(toolsReward.InteractionToUnlock);
+                UnlockableToolsController.Instance.UnlockTool(toolsReward.InteractionToUnlock);
             }
 
             SetStage(Stage.Collected);
@@ -111,10 +111,10 @@ namespace Watermelon
 
             Deactivate();
 
-            MissionsController.MissionFinished();
+            MissionsController.Instance.MissionFinished();
 
-            if (MissionsController.AutoCompleteMissions)
-                MissionsController.AutoCompleteMission(5.0f);
+            if (MissionsController.Instance.AutoCompleteMissions)
+                MissionsController.Instance.AutoCompleteMission(5.0f);
         }
 
         public void StartMission()
@@ -126,8 +126,8 @@ namespace Watermelon
 
             ActivatePreviews();
 
-            WorldController.WorldBehavior.SubworldHandler.OnSubworldEnetered += OnSubworldEnteredOrLeft;
-            WorldController.WorldBehavior.SubworldHandler.OnSubworldLeft += OnSubworldEnteredOrLeft;
+            WorldController.Instance.WorldBehavior.SubworldHandler.OnSubworldEnetered += OnSubworldEnteredOrLeft;
+            WorldController.Instance.WorldBehavior.SubworldHandler.OnSubworldLeft += OnSubworldEnteredOrLeft;
 
             onMissionStarted?.Invoke();
         }
@@ -198,7 +198,7 @@ namespace Watermelon
             if (positionPointerCase != null)
                 return;
 
-            positionPointerCase = NavigationHelper.CreatePositionPointer(GetPreviewPosition() + pointerPositionOffset);
+            positionPointerCase = NavigationHelper.Instance.CreatePositionPointer(GetPreviewPosition() + pointerPositionOffset);
             positionPointerCase.Show();
         }
 
@@ -207,7 +207,7 @@ namespace Watermelon
             if (guidingLineCase != null)
                 return;
 
-            guidingLineCase = NavigationHelper.CreateGuidingLine(GetPreviewPosition() + guidingLineTargetOffset);
+            guidingLineCase = NavigationHelper.Instance.CreateGuidingLine(GetPreviewPosition() + guidingLineTargetOffset);
         }
 
         protected virtual void ActivateGuidingArrow()
@@ -215,7 +215,7 @@ namespace Watermelon
             if (guidingArrowCase != null)
                 return;
 
-            guidingArrowCase = NavigationHelper.CreateGuidingArrow(GetPreviewPosition() + guidingArrowTargetOffset);
+            guidingArrowCase = NavigationHelper.Instance.CreateGuidingArrow(GetPreviewPosition() + guidingArrowTargetOffset);
         }
 
         public void ForceComplete()
@@ -250,8 +250,8 @@ namespace Watermelon
 
         public virtual void Deactivate()
         {
-            WorldController.WorldBehavior.SubworldHandler.OnSubworldEnetered -= OnSubworldEnteredOrLeft;
-            WorldController.WorldBehavior.SubworldHandler.OnSubworldLeft -= OnSubworldEnteredOrLeft;
+            WorldController.Instance.WorldBehavior.SubworldHandler.OnSubworldEnetered -= OnSubworldEnteredOrLeft;
+            WorldController.Instance.WorldBehavior.SubworldHandler.OnSubworldLeft -= OnSubworldEnteredOrLeft;
 
             DisablePreviews();
         }
@@ -268,7 +268,7 @@ namespace Watermelon
 
         public Vector3 GetPreviewPosition()
         {
-            SubworldBehavior activeSubworld = WorldController.WorldBehavior.SubworldHandler.ActiveSubworld;
+            SubworldBehavior activeSubworld = WorldController.Instance.WorldBehavior.SubworldHandler.ActiveSubworld;
 
             // target is in the subworld
             if (isTargetInSubworld)
@@ -319,7 +319,7 @@ namespace Watermelon
 
         public string GetSaveString()
         {
-            return string.Format("world{0} mission{1}{2}", WorldController.CurrentWorld.ID, GetType(), id);
+            return string.Format("world{0} mission{1}{2}", WorldController.Instance.CurrentWorld.ID, GetType(), id);
         }
 
         public enum Stage

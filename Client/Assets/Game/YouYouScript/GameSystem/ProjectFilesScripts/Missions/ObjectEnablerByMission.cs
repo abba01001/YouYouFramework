@@ -18,7 +18,7 @@ namespace Watermelon
         {
             Tween.NextFrame(() =>
             {
-                missionRef = MissionsController.GetMissionById(requiredMissionId);
+                missionRef = MissionsController.Instance.GetMissionById(requiredMissionId);
 
                 if (missionRef == null)
                 {

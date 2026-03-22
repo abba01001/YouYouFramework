@@ -19,12 +19,12 @@ namespace Watermelon
 
         private void OnEnable()
         {
-            SkinController.SkinUnlocked += OnSkinUnlocked;    
+            SkinController.Instance.SkinUnlocked += OnSkinUnlocked;    
         }
 
         private void OnDisable()
         {
-            SkinController.SkinUnlocked -= OnSkinUnlocked;
+            SkinController.Instance.SkinUnlocked -= OnSkinUnlocked;
         }
 
         public override void ApplyReward()

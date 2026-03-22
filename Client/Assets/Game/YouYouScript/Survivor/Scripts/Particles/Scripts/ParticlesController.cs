@@ -5,34 +5,37 @@ using UnityEngine;
 
 namespace Watermelon
 {
-    public class ParticlesController : MonoBehaviour
+    public class ParticlesController
     {
-        // Array of particles to be registered and managed.
-        [SerializeField] Particle[] particles;
+        private static ParticlesController _instance;
+        public static ParticlesController Instance => _instance ??= new ParticlesController();
+        
+    // Array of particles to be registered and managed.
+        private List<Particle> particles = new List<Particle>();
 
         // Dictionary to register particles by their hash code for quick access.
-        private static Dictionary<int, Particle> registerParticles = new Dictionary<int, Particle>();
-
+        private  Dictionary<int, Particle> registerParticles = new Dictionary<int, Particle>();
+        public Dictionary<int, Particle> RegisterParticles => registerParticles;
         // List to hold currently active particle cases.
-        private static List<ParticleCase> activeParticles = new List<ParticleCase>();
+        private  List<ParticleCase> activeParticles = new List<ParticleCase>();
 
         // List to manage particles that are activated with a delay.
-        private static List<TweenCase> delayedParticles = new List<TweenCase>();
+        private  List<TweenCase> delayedParticles = new List<TweenCase>();
 
         /// <summary>
         /// Initializes the particles controller by registering all particles in the array.
         /// Also starts a coroutine to continuously check for active particles.
         /// </summary>
-        public async UniTask Init()
+        public async UniTask Initialise()
         {
             // Register particles from the array.
-            for (int i = 0; i < particles.Length; i++)
+            for (int i = 0; i < particles.Count; i++)
             {
                 RegisterParticle(particles[i]);
             }
 
             // Start the coroutine to monitor active particles.
-            StartCoroutine(CheckForActiveParticles());
+            GameEntry.Instance.StartCoroutine(CheckForActiveParticles());
 
             await UniTask.NextFrame();
         }
@@ -115,7 +118,7 @@ namespace Watermelon
         /// <param name="particle">The particle to activate.</param>
         /// <param name="delay">The delay before activation.</param>
         /// <returns>A ParticleCase representing the activated particle.</returns>
-        private static ParticleCase ActivateParticle(Particle particle, float delay = 0)
+        private  ParticleCase ActivateParticle(Particle particle, float delay = 0)
         {
             // Create or retrieve the pooled particle object
             GameObject particleObject = particle.ParticlePool.GetPooledObject();
@@ -132,7 +135,7 @@ namespace Watermelon
         /// <param name="particleSystem">The ParticleSystem to activate.</param>
         /// <param name="delay">The delay before activation.</param>
         /// <returns>A ParticleCase representing the activated particle.</returns>
-        private static ParticleCase ActivateParticle(ParticleSystem particleSystem, float delay = 0, bool resetParent = true)
+        private  ParticleCase ActivateParticle(ParticleSystem particleSystem, float delay = 0, bool resetParent = true)
         {
             bool isDelayed = delay > 0;
 
@@ -177,7 +180,7 @@ namespace Watermelon
         /// </summary>
         /// <param name="particle">The particle to register.</param>
         /// <returns>An integer hash code for the registered particle, or -1 if registration fails.</returns>
-        public static int RegisterParticle(Particle particle)
+        public  int RegisterParticle(Particle particle)
         {
             // Validate particle name.
             if (string.IsNullOrEmpty(particle.ParticleName))
@@ -225,7 +228,7 @@ namespace Watermelon
         /// <param name="particleName">The name of the particle.</param>
         /// <param name="particlePrefab">The prefab associated with the particle.</param>
         /// <returns>An integer hash code for the registered particle.</returns>
-        public static int RegisterParticle(string particleName, GameObject particlePrefab)
+        public  int RegisterParticle(string particleName, GameObject particlePrefab)
         {
             return RegisterParticle(new Particle(particleName, particlePrefab));
         }
@@ -238,7 +241,7 @@ namespace Watermelon
         /// <param name="particleName">The name of the particle to play.</param>
         /// <param name="delay">The delay before playing the particle.</param>
         /// <returns>A ParticleCase representing the played particle.</returns>
-        public static ParticleCase PlayParticle(string particleName, float delay = 0)
+        public  ParticleCase PlayParticle(string particleName, float delay = 0)
         {
             // Get the hash of the particle name.
             int particleHash = particleName.GetHashCode();
@@ -261,7 +264,7 @@ namespace Watermelon
         /// <param name="particleHash">The hash of the particle to play.</param>
         /// <param name="delay">The delay before playing the particle.</param>
         /// <returns>A ParticleCase representing the played particle.</returns>
-        public static ParticleCase PlayParticle(int particleHash, float delay = 0)
+        public  ParticleCase PlayParticle(int particleHash, float delay = 0)
         {
             // Check if the particle is registered and activate it.
             if (registerParticles.ContainsKey(particleHash))
@@ -281,7 +284,7 @@ namespace Watermelon
         /// <param name="particle">The particle instance to play.</param>
         /// <param name="delay">The delay before playing the particle.</param>
         /// <returns>A ParticleCase representing the played particle.</returns>
-        public static ParticleCase PlayParticle(Particle particle, float delay = 0)
+        public  ParticleCase PlayParticle(Particle particle, float delay = 0)
         {
             if (particle == null)
             {
@@ -299,7 +302,7 @@ namespace Watermelon
         /// <param name="particleSystem">The ParticleSystem instance to be played.</param>
         /// <param name="delay">The duration (in seconds) to wait before playing the particle. Default is 0.</param>
         /// <returns>A ParticleCase representing the activated particle, or null if the operation failed.</returns>
-        public static ParticleCase PlayParticle(ParticleSystem particleSystem, float delay = 0)
+        public  ParticleCase PlayParticle(ParticleSystem particleSystem, float delay = 0)
         {
             if (particleSystem == null)
             {
@@ -317,7 +320,7 @@ namespace Watermelon
         /// </summary>
         /// <param name="particleName">The name of the particle to check.</param>
         /// <returns>Returns true if the particle exists in the registry, otherwise false.</returns>
-        public static bool HasParticle(string particleName)
+        public  bool HasParticle(string particleName)
         {
             // Get the hash of the particle name.
             int particleHash = particleName.GetHashCode();
@@ -330,7 +333,7 @@ namespace Watermelon
         /// </summary>
         /// <param name="particleHash">The hash of the particle to check.</param>
         /// <returns>Returns true if the particle exists in the registry, otherwise false.</returns>
-        public static bool HasParticle(int particleHash)
+        public  bool HasParticle(int particleHash)
         {
             return registerParticles.ContainsKey(particleHash);
         }

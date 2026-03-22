@@ -38,11 +38,11 @@ namespace Watermelon
         {
             if (IsLocalTrigger)
             {
-                GlobalUpgradesController.OpenUpgradesPage(upgrades);
+                GlobalUpgradesController.Instance.OpenUpgradesPage(upgrades);
             }
             else
             {
-                GlobalUpgradesController.OpenMainUpgradesPage();
+                GlobalUpgradesController.Instance.OpenMainUpgradesPage();
             }
 
             UIGamepadButton.EnableTag(UIGamepadButtonTag.Upgrades);

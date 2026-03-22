@@ -66,12 +66,12 @@ namespace Watermelon
 
                 if(useForGlobalSpawn)
                 {
-                    DiggingController.RegisterSpawnPoint(this);
+                    DiggingController.Instance.RegisterSpawnPoint(this);
                 }
             }
             else
             {
-                DiggingController.RegisterSpawnPoint(this);
+                DiggingController.Instance.RegisterSpawnPoint(this);
             }
         }
 
@@ -121,7 +121,7 @@ namespace Watermelon
 
                 disableDelayTweenCase = Tween.DelayedCall(3.0f, () =>
                 {
-                    DiggingController.OnDiggingPointCollected(activePointBehavior);
+                    DiggingController.Instance.OnDiggingPointCollected(activePointBehavior);
 
                     Destroy(activePointBehavior.gameObject);
 

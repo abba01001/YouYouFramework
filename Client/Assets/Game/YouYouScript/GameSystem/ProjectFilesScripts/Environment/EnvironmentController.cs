@@ -5,66 +5,64 @@ using UnityEngine;
 
 namespace Watermelon
 {
-    public class EnvironmentController : MonoBehaviour
+    public class EnvironmentController
     {
-        private static readonly int _WeatherWindMultiplier = Shader.PropertyToID("_WeatherWindMultiplier");
+        private static EnvironmentController _instance;
+        public static EnvironmentController Instance => _instance ??= new EnvironmentController();
+        
+        private  readonly int _WeatherWindMultiplier = Shader.PropertyToID("_WeatherWindMultiplier");
 
-        private static readonly int _CloudsInfluence1 = Shader.PropertyToID("_CloudsInfluence1");
-        private static readonly int _CloudsInfluence2 = Shader.PropertyToID("_CloudsInfluence2");
+        private  readonly int _CloudsInfluence1 = Shader.PropertyToID("_CloudsInfluence1");
+        private  readonly int _CloudsInfluence2 = Shader.PropertyToID("_CloudsInfluence2");
 
-        private static readonly int _ShadowsIntensity = Shader.PropertyToID("_ShadowsIntensity");
-        private static readonly int _RimIntensity = Shader.PropertyToID("_RimIntensity");
+        private  readonly int _ShadowsIntensity = Shader.PropertyToID("_ShadowsIntensity");
+        private  readonly int _RimIntensity = Shader.PropertyToID("_RimIntensity");
 
-        private static EnvironmentController instance;
 
-        private static List<WeatherContainer> weather = new List<WeatherContainer>();
+        private  List<WeatherContainer> weather = new List<WeatherContainer>();
 
-        private static List<Material> cachedMaterials = new List<Material>();
+        private  List<Material> cachedMaterials = new List<Material>();
 
-        [SerializeField] EnvironmentPresetsDatabase database;
-        public static EnvironmentPresetsDatabase Database => instance.database;
+        public  EnvironmentPresetsDatabase Database;
 
-        public static EnvironmentPreset CurrentPreset { get; private set; }
-        public static List<PartOfDayPreset> PartsOfDayPresets { get; private set; }
-        public static PartOfDayPreset CurrentPartOfDay { get; private set; }
+        public  EnvironmentPreset CurrentPreset { get; private set; }
+        public  List<PartOfDayPreset> PartsOfDayPresets { get; private set; }
+        public  PartOfDayPreset CurrentPartOfDay { get; private set; }
 
-        private static Light Light { get; set; }
+        private  Light Light { get; set; }
 
-        private static Coroutine daynightCoroutine;
-        private static Coroutine weatherCoroutine;
+        private  Coroutine daynightCoroutine;
+        private  Coroutine weatherCoroutine;
 
-        [SerializeField] bool dayNightEnabled = true;
-        public static bool DayNightEnabled { get => instance.dayNightEnabled; set => instance.dayNightEnabled = value; }
+        bool dayNightEnabled = true;
+        public bool DayNightEnabled { get => dayNightEnabled; set => dayNightEnabled = value; }
 
-        [SerializeField] bool weatherEnabled = true;
-        public static bool WeatherEnabled { get => instance.weatherEnabled; set => instance.weatherEnabled = value; }
+        bool weatherEnabled = true;
+        public bool WeatherEnabled { get => weatherEnabled; set => weatherEnabled = value; }
 
         [SerializeField, Tooltip("Updates preset parameters every frame")] bool debug = false;
-        public static bool IsDebug { get => instance.debug; set => instance.debug = value; }
+        public bool IsDebug { get => debug; set => debug = value; }
 
-        private static EnvironmentSkyModule skyModule;
-        private static EnvironmentWeatherModule weatherModule;
+        private  EnvironmentSkyModule skyModule;
+        private  EnvironmentWeatherModule weatherModule;
 
-        public static bool TransitionInProgress { get; private set; }
+        public  bool TransitionInProgress { get; private set; }
 
+        private bool Init = false;
         public async UniTask Initialise()
         {
-            instance = this;
-
-            if (database == null)
-            {
-                database = await GameEntry.Loader.LoadMainAssetAsync<EnvironmentPresetsDatabase>("Assets/Game/Download/ProjectFiles/Data/Environment/Environment Presets Database.asset", GameEntry.Instance.gameObject);
-            }
+            Database = await GameEntry.Loader.LoadMainAssetAsync<EnvironmentPresetsDatabase>("Assets/Game/Download/ProjectFiles/Data/Environment/Environment Presets Database.asset", GameEntry.Instance.gameObject);
 
             weatherModule = new EnvironmentWeatherModule();
             skyModule = new EnvironmentSkyModule(weatherModule);
 
             await UniTask.NextFrame();
+            Init = true;
         }
 
         private void Update()
         {
-            if (instance == null) return;
+            if (!Init) return;
             // Update for debug or weather transition
             if (!TransitionInProgress && (IsDebug || weatherModule.IsTransitioning))
             {
@@ -72,7 +70,7 @@ namespace Watermelon
             }
         }
 
-        private static IEnumerator DayNightCoroutine()
+        private IEnumerator DayNightCoroutine()
         {
             int i = 0;
             CurrentPartOfDay = PartsOfDayPresets[i];
@@ -91,7 +89,7 @@ namespace Watermelon
             }
         }
 
-        public static IEnumerator PartsOfDayTransition(PartOfDayPreset from, PartOfDayPreset to)
+        public IEnumerator PartsOfDayTransition(PartOfDayPreset from, PartOfDayPreset to)
         {
             TransitionInProgress = true;
 
@@ -151,7 +149,7 @@ namespace Watermelon
             TransitionInProgress = false;
         }
 
-        private static void ApplyDayPartPreset(PartOfDayPreset preset)
+        private void ApplyDayPartPreset(PartOfDayPreset preset)
         {
             if (Light != null) Light.color = weatherModule.GetLightColor(preset.LightColor);
 
@@ -173,9 +171,9 @@ namespace Watermelon
             weatherModule.ApplyFog();
         }
 
-        public static void SetPreset(EnvironmentPresetType type)
+        public void SetPreset(EnvironmentPresetType type)
         {
-            Light = FindFirstObjectByType<Light>();
+            Light = GameEntry.FindFirstObjectByType<Light>();
 
             if(Light != null && Light.cookie != null && Light.cookie is CustomRenderTexture cloudsTexture)
             {
@@ -195,11 +193,11 @@ namespace Watermelon
 
             ApplyDayPartPreset(CurrentPartOfDay);
 
-            if (daynightCoroutine != null) instance.StopCoroutine(daynightCoroutine);
+            if (daynightCoroutine != null) GameEntry.Instance.StopCoroutine(daynightCoroutine);
 
             if (PartsOfDayPresets.Count > 1)
             {
-                daynightCoroutine = instance.StartCoroutine(DayNightCoroutine());
+                daynightCoroutine = GameEntry.Instance.StartCoroutine(DayNightCoroutine());
             }
 
             weather.Clear();
@@ -212,11 +210,11 @@ namespace Watermelon
                 }
             }
 
-            if (weatherCoroutine != null) instance.StopCoroutine(weatherCoroutine);
+            if (weatherCoroutine != null) GameEntry.Instance.StopCoroutine(weatherCoroutine);
 
             if (weather.Count > 1)
             {
-                weatherCoroutine = instance.StartCoroutine(WeatherCoroutine());
+                weatherCoroutine = GameEntry.Instance.StartCoroutine(WeatherCoroutine());
             }
             else if (weather.Count == 1)
             {
@@ -228,13 +226,13 @@ namespace Watermelon
             }
         }
 
-        public static void OnWorldUnloaded()
+        public void OnWorldUnloaded()
         {
-            if (daynightCoroutine != null) instance.StopCoroutine(daynightCoroutine);
-            if (weatherCoroutine != null) instance.StopCoroutine(weatherCoroutine);
+            if (daynightCoroutine != null) GameEntry.Instance.StopCoroutine(daynightCoroutine);
+            if (weatherCoroutine != null) GameEntry.Instance.StopCoroutine(weatherCoroutine);
         }
 
-        private static IEnumerator WeatherCoroutine()
+        private IEnumerator WeatherCoroutine()
         {
             var pause = new WaitUntil(() => WeatherEnabled);
 
@@ -250,7 +248,7 @@ namespace Watermelon
             }
         }
 
-        public static WeatherContainer GetNextWeather()
+        public WeatherContainer GetNextWeather()
         {
             var chanceSum = 0f;
             for (int i = 0; i < weather.Count; i++)
@@ -272,8 +270,7 @@ namespace Watermelon
             return null;
         }
 
-        [Button("Turn On Day")]
-        public static void StartDayPreset()
+        public void StartDayPreset()
         {
             if ((CurrentPreset.EnabledPartsOfDay & PartOfDay.Day) != PartOfDay.Day) return;
 
@@ -286,8 +283,7 @@ namespace Watermelon
             ApplyDayPartPreset(CurrentPreset.DayPreset);
         }
 
-        [Button("Turn On Evening")]
-        public static void StartEveningPreset()
+        public void StartEveningPreset()
         {
             if ((CurrentPreset.EnabledPartsOfDay & PartOfDay.Evening) != PartOfDay.Evening) return;
 
@@ -300,8 +296,7 @@ namespace Watermelon
             ApplyDayPartPreset(CurrentPreset.EveningPreset);
         }
 
-        [Button("Turn On Night")]
-        public static void StartNightPreset()
+        public void StartNightPreset()
         {
             if ((CurrentPreset.EnabledPartsOfDay & PartOfDay.Night) != PartOfDay.Night) return;
 
@@ -314,8 +309,7 @@ namespace Watermelon
             ApplyDayPartPreset(CurrentPreset.NightPreset);
         }
 
-        [Button("Turn On Morning")]
-        public static void StartMorningPreset()
+        public void StartMorningPreset()
         {
             if ((CurrentPreset.EnabledPartsOfDay & PartOfDay.Morning) != PartOfDay.Morning) return;
 
@@ -328,7 +322,7 @@ namespace Watermelon
             ApplyDayPartPreset(CurrentPreset.MorningPreset);
         }
 
-        public static void ApplyPreset(EnvironmentPreset preset, PartOfDay partOfDay)
+        public void ApplyPreset(EnvironmentPreset preset, PartOfDay partOfDay)
         {
             if(CurrentPreset != preset)
             {
@@ -348,7 +342,7 @@ namespace Watermelon
             ApplyDayPartPreset(CurrentPartOfDay);
         }
 
-        public static void ApplyWeather(EnvironmentWeatherPreset preset)
+        public void ApplyWeather(EnvironmentWeatherPreset preset)
         {
             WeatherEnabled = false;
             weatherModule.SetWeatherPreset(preset, 0);

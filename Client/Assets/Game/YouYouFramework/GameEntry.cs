@@ -168,7 +168,6 @@ public class GameEntry : MonoBehaviour
 
     private void Test1()
     {
-        EnvironmentController.CurrentPreset.ApplEveningPreset();
         return;
         UI.CloseUIForm<FormMain>();
         return;
@@ -179,7 +178,6 @@ public class GameEntry : MonoBehaviour
 
     private void Test2()
     {
-        EnvironmentController.CurrentPreset.ApplyDayPreset();
 
         // FormMask.CloseCircleMask();
         // QueueManager.Instance.AddTimeTask(1f, () =>
@@ -193,14 +191,12 @@ public class GameEntry : MonoBehaviour
 
     private void Test3()
     {
-        EnvironmentController.CurrentPreset.ApplyMorningPreset();
         return;
         GameEntry.Event.Dispatch(Constants.EventName.EventMessage, new EventMessage("CloseHello"));
     }
 
     private void Test4()
     {
-        EnvironmentController.CurrentPreset.ApplyNightPreset();
         return;
         // GameUtil.LogError(typeof(FormMain).FullName);
         // GameEntry.UI.OpenUIFormByName("FormChangeName");

@@ -45,13 +45,13 @@ namespace Watermelon
         [MenuItem("Actions/Energy System/Increase", priority = 204)]
         private static void AddFood()
         {
-            EnergyController.RestoreEnergyPoints(EnergyController.Data.MaxEnergyPoints * 0.4f);
+            EnergyController.Instance.RestoreEnergyPoints(EnergyController.Instance.Data.MaxEnergyPoints * 0.4f);
         }
 
         [MenuItem("Actions/Energy System/Decrease", priority = 204)]
         private static void RemoveFood()
         {
-            EnergyController.RemoveEnergyPoints(EnergyController.Data.MaxEnergyPoints * 0.4f);
+            EnergyController.Instance.RemoveEnergyPoints(EnergyController.Instance.Data.MaxEnergyPoints * 0.4f);
         }
 
         [MenuItem("Actions/Energy System/Increase", true)]

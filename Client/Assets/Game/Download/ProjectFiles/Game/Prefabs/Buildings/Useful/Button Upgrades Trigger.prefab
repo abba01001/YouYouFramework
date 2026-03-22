@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3596116641154955718}
   - component: {fileID: 6723982796713194896}
   - component: {fileID: 8632534190943276138}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 3369722946222954752}
   - component: {fileID: 2861649754527245821}
   - component: {fileID: 2831458927858491247}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Button Upgrades Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +177,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1032191
 --- !u!114 &2831458927858491247
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,7 +208,7 @@ GameObject:
   - component: {fileID: 8027802294779613647}
   - component: {fileID: 7340997381992095495}
   - component: {fileID: 3291644206374386421}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Upgrades Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}

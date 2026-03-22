@@ -4,19 +4,17 @@ using UnityEngine;
 
 namespace Watermelon
 {
-    public class FishingController : MonoBehaviour
+    public class FishingController
     {
-        private static FishingController instance;
-
-        [Slider(0.0f, 1.0f)]
-        [SerializeField] float spawnPercent = 0.5f;
+        private static FishingController _instance;
+        public static FishingController Instance => _instance ??= new FishingController();
+        float spawnPercent = 0.5f;
         public float SpawnPercent => spawnPercent;
 
-        private static List<FishingPlaceBehavior> registeredFishingPlaces = new List<FishingPlaceBehavior>();
+        private  List<FishingPlaceBehavior> registeredFishingPlaces = new List<FishingPlaceBehavior>();
 
         public async UniTask Initialise()
         {
-            instance = this;
             await UniTask.NextFrame();
         }
 
@@ -35,7 +33,7 @@ namespace Watermelon
             }
         }
 
-        public static void SpawnRandomFishingPlace()
+        public  void SpawnRandomFishingPlace()
         {
             int fishingPlacesCount = registeredFishingPlaces.Count;
             int randomStartPoint = Random.Range(0, fishingPlacesCount);
@@ -51,7 +49,7 @@ namespace Watermelon
             }
         }
 
-        public static void AddFishingPlace(FishingPlaceBehavior fishingPlaceBehavior, bool spawnIfRequired = false)
+        public void AddFishingPlace(FishingPlaceBehavior fishingPlaceBehavior, bool spawnIfRequired = false)
         {
             registeredFishingPlaces.Add(fishingPlaceBehavior);
 
@@ -66,7 +64,7 @@ namespace Watermelon
                     }
                 }
 
-                int requiredPlacesCount = Mathf.Clamp(Mathf.RoundToInt(registeredFishingPlaces.Count * instance.spawnPercent), 1, registeredFishingPlaces.Count);
+                int requiredPlacesCount = Mathf.Clamp(Mathf.RoundToInt(registeredFishingPlaces.Count * spawnPercent), 1, registeredFishingPlaces.Count);
                 int countDiff = requiredPlacesCount - activePlacesCount;
                 if(countDiff > 0)
                 {
@@ -78,12 +76,12 @@ namespace Watermelon
             }
         }
 
-        public static void RemoveFishingPlace(FishingPlaceBehavior fishingPlaceBehavior)
+        public  void RemoveFishingPlace(FishingPlaceBehavior fishingPlaceBehavior)
         {
             registeredFishingPlaces.Remove(fishingPlaceBehavior);
         }
 
-        public static void Unload()
+        public  void Unload()
         {
             registeredFishingPlaces.Clear();
         }

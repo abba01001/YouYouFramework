@@ -14,7 +14,7 @@ namespace Watermelon
 
         public void Start()
         {
-            missionRef = MissionsController.GetMissionById(disableWeatherUntillMissionWithIdCompleted);
+            missionRef = MissionsController.Instance.GetMissionById(disableWeatherUntillMissionWithIdCompleted);
 
             if (missionRef != null)
             {
@@ -23,8 +23,8 @@ namespace Watermelon
                     if (!subscribedToTheMission)
                         missionRef.OnStageChanged += OnStageChanged;
 
-                    EnvironmentController.ApplyPreset(EnvironmentController.Database.GetPreset(EnvironmentPresetType.World1), PartOfDay.Day);
-                    EnvironmentController.ApplyWeather(EnvironmentController.Database.GetPreset(EnvironmentPresetType.World1).Weather[3].WeatherPreset); // 3 is clear
+                    EnvironmentController.Instance.ApplyPreset(EnvironmentController.Instance.Database.GetPreset(EnvironmentPresetType.World1), PartOfDay.Day);
+                    EnvironmentController.Instance.ApplyWeather(EnvironmentController.Instance.Database.GetPreset(EnvironmentPresetType.World1).Weather[3].WeatherPreset); // 3 is clear
 
                     subscribedToTheMission = true;
                 }
@@ -35,8 +35,8 @@ namespace Watermelon
         {
             if (currentStage == Mission.Stage.Collected)
             {
-                EnvironmentController.DayNightEnabled = true;
-                EnvironmentController.WeatherEnabled = true;
+                EnvironmentController.Instance.DayNightEnabled = true;
+                EnvironmentController.Instance.WeatherEnabled = true;
 
                 missionRef.OnStageChanged -= OnStageChanged;
             }

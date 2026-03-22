@@ -79,7 +79,7 @@ namespace Watermelon
                 curveOverride.Apply();
 #endif
 
-            EnvironmentController.SetPreset(EnvironmentPresetType);
+            EnvironmentController.Instance.SetPreset(EnvironmentPresetType);
         }
 
         public void OnPlayerEntered()
@@ -91,7 +91,7 @@ namespace Watermelon
             }
             else
             {
-                DefaultMusicController.ActivateMusic();
+                DefaultMusicController.Instance.ActivateMusic();
             }
         }
 

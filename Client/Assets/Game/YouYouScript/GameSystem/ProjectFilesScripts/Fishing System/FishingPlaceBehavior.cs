@@ -61,7 +61,7 @@ namespace Watermelon
 
             defaultFishingPointPosition = fishingPointTransform.position;
 
-            unlockableTool = UnlockableToolsController.GetUnlockableTool(interactionAnimationType);
+            unlockableTool = UnlockableToolsController.Instance.GetUnlockableTool(interactionAnimationType);
 
             // Clamp drop rate
             dropRate = Mathf.Clamp(dropRate, 1, int.MaxValue);
@@ -155,7 +155,7 @@ namespace Watermelon
 
             fishingTask.Disable();
 
-            FishingController.SpawnRandomFishingPlace();
+            FishingController.Instance.SpawnRandomFishingPlace();
         }
 
         public override void GetHit(Vector3 hitSourcePosition, bool drop = true, IHitter resourcePicked = null)
@@ -201,7 +201,7 @@ namespace Watermelon
 
                 respawnCase = Tween.DelayedCall(respawnDuration, () =>
                 {
-                    FishingController.SpawnRandomFishingPlace();
+                    FishingController.Instance.SpawnRandomFishingPlace();
                 });
 
                 visualsParticleSystem.Stop();
@@ -235,14 +235,14 @@ namespace Watermelon
         {
             gameObject.SetActive(true);
 
-            FishingController.AddFishingPlace(this, true);
+            FishingController.Instance.AddFishingPlace(this, true);
         }
 
         public void OnGroundHidden(bool immediately)
         {
             gameObject.SetActive(false);
 
-            FishingController.RemoveFishingPlace(this);
+            FishingController.Instance.RemoveFishingPlace(this);
         }
 
         private void OnDestroy()

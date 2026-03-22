@@ -191,7 +191,7 @@ namespace Watermelon
             if (!Application.isPlaying)
                 return;
 
-            EnvironmentController.ApplyWeather(this);
+            EnvironmentController.Instance.ApplyWeather(this);
         }
     }
 

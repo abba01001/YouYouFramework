@@ -15,11 +15,11 @@ MonoBehaviour:
   worlds:
   - scene:
       scene: {fileID: 102900000, guid: 099600eb61093244fbc0ea52b433e03d, type: 3}
-      path: Assets/Project Files/Game/Scenes/Worlds/World 1 [Full Demo].unity
+      path: Assets/Game/Download/Scenes/ProjectFilesScenes/Worlds/World 1 [Full Demo].unity
       name: 'World 1 [Full Demo]'
     id: 608437bb-6374-4923-8489-096284bf32cc
   - scene:
       scene: {fileID: 102900000, guid: b987323407a93a541963884fe5cb7501, type: 3}
-      path: Assets/Project Files/Game/Scenes/Worlds/World 2 [Alt Demo].unity
+      path: Assets/Game/Download/Scenes/ProjectFilesScenes/Worlds/World 2 [Alt Demo].unity
       name: 'World 2 [Alt Demo]'
     id: 6fe84aed-5edb-4155-8fd2-99dfb1c08900

@@ -21,7 +21,7 @@ namespace Watermelon
         {
             defaultScale = transform.localScale;
 
-            worldData = WorldController.GetWorldData(worldIndex);
+            worldData = WorldController.Instance.GetWorldData(worldIndex);
         }
 
         private void OnTriggerEnter(Collider other)
@@ -101,7 +101,7 @@ namespace Watermelon
 
         private void ValidateWorldIndex()
         {
-            if (!WorldController.IsWorldExists(worldIndex))
+            if (!WorldController.Instance.IsWorldExists(worldIndex))
             {
                 Debug.LogError("Incorrect world index!", gameObject);
             }

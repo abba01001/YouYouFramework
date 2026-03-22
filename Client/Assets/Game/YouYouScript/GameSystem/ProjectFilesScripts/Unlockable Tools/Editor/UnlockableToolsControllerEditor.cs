@@ -19,10 +19,10 @@ namespace Watermelon
                 foldout = EditorGUILayout.Foldout(foldout, "Unlockable Tools");
                 if (foldout)
                 {
-                    UnlockableTool[] unlockableTools = UnlockableToolsController.RegisteredUnlockableTools;
+                    UnlockableTool[] unlockableTools = UnlockableToolsController.Instance.RegisteredUnlockableTools;
                     if(!unlockableTools.IsNullOrEmpty())
                     {
-                        foreach (var tool in UnlockableToolsController.RegisteredUnlockableTools)
+                        foreach (var tool in UnlockableToolsController.Instance.RegisteredUnlockableTools)
                         {
                             bool isUnlocked = tool.IsUnlocked;
                             if (GUILayout.Button(string.Format("{0} ({1})", tool.GetToolName(), isUnlocked ? "Unlocked" : "Locked")))

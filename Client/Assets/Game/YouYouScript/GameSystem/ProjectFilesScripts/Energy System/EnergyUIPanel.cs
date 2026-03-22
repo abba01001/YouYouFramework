@@ -22,19 +22,19 @@ namespace Watermelon
         {
             defaultColor = frontFillImage.color;
 
-            EnergyController.OnEnergyChanged += OnEnergyChanged;
+            EnergyController.Instance.OnEnergyChanged += OnEnergyChanged;
 
             OnEnergyChanged();
         }
 
         private void OnDestroy()
         {
-            EnergyController.OnEnergyChanged -= OnEnergyChanged;
+            EnergyController.Instance.OnEnergyChanged -= OnEnergyChanged;
         }
 
         public void OnEnergyChanged()
         {
-            backFillImage.fillAmount = (float)EnergyController.EnergyPoints / EnergyController.Data.MaxEnergyPoints;
+            backFillImage.fillAmount = (float)EnergyController.Instance.EnergyPoints / EnergyController.Instance.Data.MaxEnergyPoints;
 
             maskTweenCase.KillActive();
 

@@ -68,6 +68,7 @@ namespace Watermelon
                 }
             }
 
+            // GroundTilesManager.Instance.Enable = true;
             onRecalculated?.Invoke();
         }
 

@@ -112,7 +112,7 @@ namespace Watermelon
             // Initialise geathering task
             geatheringTask = new GatheringTask(helperTaskType, this, helperTaskPriority);
 
-            unlockableTool = UnlockableToolsController.GetUnlockableTool(interactionAnimationType);
+            unlockableTool = UnlockableToolsController.Instance.GetUnlockableTool(interactionAnimationType);
 
             // Clamp drop rate
             dropRate = Mathf.Clamp(dropRate, 1, int.MaxValue);
@@ -131,7 +131,7 @@ namespace Watermelon
 
             PopulateDrop();
 
-            upgrade = GlobalUpgradesController.GetUpgrade<GatheringUpgrade>(GlobalUpgradeType.Gathering);
+            upgrade = GlobalUpgradesController.Instance.GetUpgrade<GatheringUpgrade>(GlobalUpgradeType.Gathering);
             upgrade.OnUpgraded += CalculateDamagePerHit;
 
             CalculateDamagePerHit();

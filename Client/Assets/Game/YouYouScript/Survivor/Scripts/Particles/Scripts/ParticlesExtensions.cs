@@ -13,7 +13,7 @@ namespace Watermelon
         /// <returns>A ParticleCase representing the activated particle system.</returns>
         public static ParticleCase PlayCase(this ParticleSystem particleSystem, float delay = 0)
         {
-            return ParticlesController.PlayParticle(particleSystem, delay);
+            return ParticlesController.Instance.PlayParticle(particleSystem, delay);
         }
     }
 }

@@ -6,7 +6,6 @@ namespace Watermelon
     [CustomEditor(typeof(AbstractSkinDatabase), true)]
     public class AbstractSkinsProviderEditor : CustomInspector
     {
-        private SkinController skinsController;
         private bool isRegistered;
 
         protected override void OnEnable()
@@ -17,15 +16,9 @@ namespace Watermelon
 
             EditorSkinsProvider.AddDatabase(database);
 
-#if UNITY_6000
-            skinsController = GameObject.FindFirstObjectByType<SkinController>();
-#else
-            skinsController = GameObject.FindObjectOfType<SkinController>();
-#endif
-
-            if(skinsController != null && skinsController.Handler != null)
+            if(SkinController.Instance.Handler != null)
             {
-                isRegistered = skinsController.Handler.HasSkinsProvider(database);
+                isRegistered = SkinController.Instance.Handler.HasSkinsProvider(database);
             }
         }
 
@@ -33,7 +26,7 @@ namespace Watermelon
         {
             base.OnInspectorGUI();
 
-            if(skinsController != null)
+            if(SkinController.Instance != null)
             {
                 if (!isRegistered)
                 {
@@ -43,26 +36,26 @@ namespace Watermelon
 
                     EditorGUILayout.HelpBox("This database isn't linked to SkinsController", MessageType.Warning);
 
-                    if (GUILayout.Button("Add to Skins Handler"))
-                    {
-                        SerializedObject skinsHandlerSerializedObject = new SerializedObject(skinsController);
-
-                        skinsHandlerSerializedObject.Update();
-
-                        SerializedProperty handlerProperty = skinsHandlerSerializedObject.FindProperty("handler");
-
-                        SerializedProperty providersProperty = handlerProperty.FindPropertyRelative("skinProviders");
-                        int index = providersProperty.arraySize;
-
-                        providersProperty.arraySize = index + 1;
-
-                        SerializedProperty providerProperty = providersProperty.GetArrayElementAtIndex(index);
-                        providerProperty.objectReferenceValue = target;
-
-                        skinsHandlerSerializedObject.ApplyModifiedProperties();
-
-                        isRegistered = true;
-                    }
+                    // if (GUILayout.Button("Add to Skins Handler"))
+                    // {
+                    //     SerializedObject skinsHandlerSerializedObject = new SerializedObject();
+                    //
+                    //     skinsHandlerSerializedObject.Update();
+                    //
+                    //     SerializedProperty handlerProperty = skinsHandlerSerializedObject.FindProperty("handler");
+                    //
+                    //     SerializedProperty providersProperty = handlerProperty.FindPropertyRelative("skinProviders");
+                    //     int index = providersProperty.arraySize;
+                    //
+                    //     providersProperty.arraySize = index + 1;
+                    //
+                    //     SerializedProperty providerProperty = providersProperty.GetArrayElementAtIndex(index);
+                    //     providerProperty.objectReferenceValue = target;
+                    //
+                    //     skinsHandlerSerializedObject.ApplyModifiedProperties();
+                    //
+                    //     isRegistered = true;
+                    // }
 
                     EditorGUILayout.EndVertical();
                 }

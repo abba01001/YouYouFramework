@@ -8,47 +8,32 @@ using UnityEngine;
 namespace Watermelon
 {
     [DefaultExecutionOrder(100)]
-    public sealed class CameraController : MonoBehaviour, ISceneSavingCallback
+    public sealed class CameraController : ISceneSavingCallback
     {
-        private static CameraController cameraController;
+        private static CameraController _instance;
+        public static CameraController Instance => _instance ??= new CameraController();
 
-        [SerializeField] CameraType firstCamera;
+        CameraType firstCamera = CameraType.Gameplay;
 
-        [Space]
-        [ReadOnly]
-        [SerializeField] VirtualCamera[] virtualCameras;
+        VirtualCamera[] virtualCameras;
+        List<CameraBlendSettings> blendSettings;
 
-        [Header("Blends")]
-        [SerializeField] List<CameraBlendSettings> blendSettings;
+        CameraBlendData defaultBlendData;
 
-        [UnpackNested]
-        [SerializeField] CameraBlendData defaultBlendData;
+        private Dictionary<CameraType, int> virtualCamerasLink;
+        private VirtualCamera activeCamera;
+        public VirtualCamera ActiveVirtualCamera => activeCamera;
 
-        private static Transform cameraTransform;
+        private bool isBlending;
+        public bool IsBlending => isBlending;
 
-        private static Dictionary<CameraType, int> virtualCamerasLink;
-
-        private static Camera mainCamera;
-        public static Camera MainCamera => mainCamera;
-
-        private static VirtualCamera activeCamera;
-        public static VirtualCamera ActiveVirtualCamera => activeCamera;
-
-        private static bool isBlending;
-        public static bool IsBlending => isBlending;
-
-        private static CameraBlendCase currentBlendCase;
+        private CameraBlendCase currentBlendCase;
 
         public async UniTask Initialise()
         {
-            cameraController = this;
-
-            // Get camera component
-            mainCamera = GetComponent<Camera>();
-            cameraTransform = transform;
-
             // Initialise cameras link
             virtualCamerasLink = new Dictionary<CameraType, int>();
+            virtualCameras = GameEntry.Instance.MainCamera.GetComponentsInChildren<VirtualCamera>(true);
             for (int i = 0; i < virtualCameras.Length; i++)
             {
                 virtualCameras[i].Init();
@@ -62,29 +47,33 @@ namespace Watermelon
             activeCamera = firstVirtualCamera;
 
             UpdateCamera();
-
+            await PreviewCamera.Initialise();
             await UniTask.NextFrame();
+            Init = true;
         }
 
-        private static void UpdateCamera()
+        private void UpdateCamera()
         {
             UpdateCamera(activeCamera.CameraData);
         }
 
-        private static void UpdateCamera(CameraLocalData cameraData)
+        private void UpdateCamera(CameraLocalData cameraData)
         {
             if (activeCamera.Target == null)
                 return;
 
-            mainCamera.fieldOfView = cameraData.FieldOfView;
-            mainCamera.nearClipPlane = cameraData.NearClipPlane;
-            mainCamera.farClipPlane = cameraData.FarClipPlane;
+            GameEntry.Instance.MainCamera.fieldOfView = cameraData.FieldOfView;
+            GameEntry.Instance.MainCamera.nearClipPlane = cameraData.NearClipPlane;
+            GameEntry.Instance.MainCamera.farClipPlane = cameraData.FarClipPlane;
 
-            cameraTransform.SetPositionAndRotation(cameraData.Position, cameraData.Rotation);
+            GameEntry.Instance.MainCamera.transform.SetPositionAndRotation(cameraData.Position, cameraData.Rotation);
         }
 
-        private void LateUpdate()
+        private bool Init = false;
+
+        public void LateUpdate()
         {
+            if (!Init) return;
             if (activeCamera == null)
                 return;
 
@@ -99,25 +88,26 @@ namespace Watermelon
             UpdateCamera();
         }
 
-        public static VirtualCamera GetCamera(CameraType cameraType)
+        public VirtualCamera GetCamera(CameraType cameraType)
         {
-            return cameraController.virtualCameras[virtualCamerasLink[cameraType]];
+            return virtualCameras[virtualCamerasLink[cameraType]];
         }
 
-        private static CameraBlendData GetBlendData(CameraType firstCameraType, CameraType secondCameraType)
+        private CameraBlendData GetBlendData(CameraType firstCameraType, CameraType secondCameraType)
         {
-            for (int i = 0; i < cameraController.blendSettings.Count; i++)
+            for (int i = 0; i < blendSettings.Count; i++)
             {
-                if (cameraController.blendSettings[i].FirstCameraType == firstCameraType && cameraController.blendSettings[i].SecondCameraType == secondCameraType)
+                if (blendSettings[i].FirstCameraType == firstCameraType &&
+                    blendSettings[i].SecondCameraType == secondCameraType)
                 {
-                    return cameraController.blendSettings[i].BlendData;
+                    return blendSettings[i].BlendData;
                 }
             }
 
-            return cameraController.defaultBlendData;
+            return defaultBlendData;
         }
 
-        public static void EnableCamera(CameraType cameraTypeToEnable)
+        public void EnableCamera(CameraType cameraTypeToEnable)
         {
             // if required camera is already active
             if (activeCamera != null && activeCamera.CameraType == cameraTypeToEnable)
@@ -176,28 +166,32 @@ namespace Watermelon
             });
         }
 
-        public static void OverrideBlend(CameraType firstCameraType, CameraType secondCameraType, float newTime, Ease.Type easing)
+        public void OverrideBlend(CameraType firstCameraType, CameraType secondCameraType, float newTime,
+            Ease.Type easing)
         {
-            if (cameraController.blendSettings.FindIndex(s => s.FirstCameraType == firstCameraType && s.SecondCameraType == secondCameraType) != -1)
+            if (blendSettings.FindIndex(s =>
+                    s.FirstCameraType == firstCameraType && s.SecondCameraType == secondCameraType) != -1)
             {
                 CameraBlendData blendData = GetBlendData(firstCameraType, secondCameraType);
                 blendData.OverrideBlendTime(newTime);
             }
             else
             {
-                CameraBlendSettings newBlend = new CameraBlendSettings(firstCameraType, secondCameraType, new CameraBlendData(newTime, easing));
-                cameraController.blendSettings.Add(newBlend);
+                CameraBlendSettings newBlend = new CameraBlendSettings(firstCameraType, secondCameraType,
+                    new CameraBlendData(newTime, easing));
+                blendSettings.Add(newBlend);
             }
         }
 
         public void OnSceneSaving()
         {
-            VirtualCamera[] cachedVirtualCameras = FindObjectsByType<VirtualCamera>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            VirtualCamera[] cachedVirtualCameras =
+                GameEntry.Instance.MainCamera.transform.GetComponentsInChildren<VirtualCamera>(true);
             if (!cachedVirtualCameras.SafeSequenceEqual(virtualCameras))
             {
                 virtualCameras = cachedVirtualCameras;
 
-                RuntimeEditorUtils.SetDirty(this);
+                RuntimeEditorUtils.SetDirty(GameEntry.Instance.MainCamera.transform);
             }
         }
     }
@@ -216,7 +210,8 @@ namespace Watermelon
         private CameraLocalData cameraData;
         public CameraLocalData CameraData => cameraData;
 
-        public CameraBlendCase(VirtualCamera firstCamera, VirtualCamera secondCamera, CameraBlendData cameraBlendData, SimpleCallback completeCallback)
+        public CameraBlendCase(VirtualCamera firstCamera, VirtualCamera secondCamera, CameraBlendData cameraBlendData,
+            SimpleCallback completeCallback)
         {
             this.cameraBlendData = cameraBlendData;
 
@@ -229,17 +224,16 @@ namespace Watermelon
             cameraData = new CameraLocalData(firstCamera.CameraData);
             easingFunction = Ease.GetFunction(cameraBlendData.BlendEaseType);
 
-            tweenCase = Tween.DoFloat(0f, 1.0f, cameraBlendData.BlendTime, (value) =>
-            {
-                cameraData.Lerp(firstCamera.CameraData, secondCamera.CameraData, value);
+            tweenCase = Tween
+                .DoFloat(0f, 1.0f, cameraBlendData.BlendTime,
+                    (value) => { cameraData.Lerp(firstCamera.CameraData, secondCamera.CameraData, value); })
+                .SetCustomEasing(easingFunction).OnComplete(() =>
+                {
+                    FirstCamera.StopTransition();
+                    SecondCamera.StopTransition();
 
-            }).SetCustomEasing(easingFunction).OnComplete(() =>
-            {
-                FirstCamera.StopTransition();
-                SecondCamera.StopTransition();
-
-                completeCallback?.Invoke();
-            });
+                    completeCallback?.Invoke();
+                });
         }
 
         public void Clear()

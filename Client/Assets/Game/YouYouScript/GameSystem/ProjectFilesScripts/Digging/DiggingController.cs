@@ -6,21 +6,21 @@ using UnityEngine;
 
 namespace Watermelon
 {
-    public class DiggingController : MonoBehaviour
+    public class DiggingController
     {
-        private static DiggingController instance;
+        private static DiggingController _instance;
+        public static DiggingController Instance => _instance ??= new DiggingController();
 
         private bool isActive;
         private DiggingSpawnSettings settings;
 
         private Coroutine spawnCoroutine;
 
-        private static List<DiggingSpotBehavior> activeDiggingPoints = new List<DiggingSpotBehavior>();
-        private static List<DiggingSpawnPoint> registeredSpawnPoints = new List<DiggingSpawnPoint>();
+        private  List<DiggingSpotBehavior> activeDiggingPoints = new List<DiggingSpotBehavior>();
+        private  List<DiggingSpawnPoint> registeredSpawnPoints = new List<DiggingSpawnPoint>();
 
         public async UniTask Initialise()
         {
-            instance = this;
             await UniTask.NextFrame();
         }
 
@@ -93,7 +93,7 @@ namespace Watermelon
 
             isActive = true;
 
-            spawnCoroutine = StartCoroutine(SpawnCoroutine());
+            spawnCoroutine = GameEntry.Instance.StartCoroutine(SpawnCoroutine());
         }
 
         public void Disable()
@@ -101,7 +101,7 @@ namespace Watermelon
             isActive = false;
 
             if (spawnCoroutine != null)
-                StopCoroutine(spawnCoroutine);
+                GameEntry.Instance.StopCoroutine(spawnCoroutine);
         }
 
         public void Unload()
@@ -110,19 +110,19 @@ namespace Watermelon
             activeDiggingPoints.Clear();
         }
 
-        public static void OnDiggingPointCollected(DiggingSpotBehavior diggingPointBehavior)
+        public  void OnDiggingPointCollected(DiggingSpotBehavior diggingPointBehavior)
         {
             activeDiggingPoints.Remove(diggingPointBehavior);
         }
 
-        public static void OverrideSpawnSettings(DiggingSpawnSettings settings)
+        public void OverrideSpawnSettings(DiggingSpawnSettings _settings)
         {
             if (settings == null) return;
 
-            instance.settings = settings;
+            settings = _settings;
         }
 
-        public static void RegisterSpawnPoint(DiggingSpawnPoint spawnPoint)
+        public  void RegisterSpawnPoint(DiggingSpawnPoint spawnPoint)
         {
             registeredSpawnPoints.Add(spawnPoint);
         }

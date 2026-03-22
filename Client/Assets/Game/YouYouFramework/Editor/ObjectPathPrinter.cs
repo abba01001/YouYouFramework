@@ -43,4 +43,20 @@ public class ObjectPathPrinter : MonoBehaviour
 
         return path;
     }
+    
+    [MenuItem("Tools/打印静态合批物体")]
+    public static void PrintStaticObj()
+    {
+        // 获取场景中的所有物体
+        GameObject[] allObjects = GameObject.FindObjectsOfType<GameObject>();
+
+        foreach (GameObject obj in allObjects)
+        {
+            // 检查物体是否标记为 Static
+            if (obj.isStatic)
+            {
+                Debug.LogError("Static Object: " + obj.name);
+            }
+        }
+    }
 }

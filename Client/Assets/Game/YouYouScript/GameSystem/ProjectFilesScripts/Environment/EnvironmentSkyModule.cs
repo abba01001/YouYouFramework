@@ -30,11 +30,9 @@ namespace Watermelon
 
         async UniTask InitBackgroundTexture()
         {
-            var form = GameEntry.UI.GetUIForm<FormGame>();
-            while (form == null)
+            while (FormGame.Instance == null)
             {
-                form = GameEntry.UI.GetUIForm<FormGame>();
-                if(form != null) break;
+                if(FormGame.Instance != null) break;
                 await UniTask.Delay(50);
             }
             GameEntry.UI.GetUIForm<FormGame>().SetBackgroundTexture(texture);

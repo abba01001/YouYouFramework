@@ -208,11 +208,11 @@ public class NetManager
 
     public async Task ConnectServerAsync(Action action = null)
     {
-        string url = Main.MainEntry.ParamsSettings.WebAccountUrl;
+        string url = Main.MainEntry.ParamsSettings.ServerWebUrl;
         #if UNITY_EDITOR
-        if (Main.MainEntry.ParamsSettings.IsTestServerMode)
+        if (Main.MainEntry.ParamsSettings.IsLocalServerMode)
         {
-            url = Main.MainEntry.ParamsSettings.TestWebAccountUrl;
+            url = Main.MainEntry.ParamsSettings.LocalWebUrl;
         }
         #endif
         string[] urls = url.Split(StringUtil.FourthSeparator);

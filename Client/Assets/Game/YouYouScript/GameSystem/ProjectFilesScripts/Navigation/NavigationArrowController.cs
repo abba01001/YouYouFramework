@@ -11,8 +11,8 @@ namespace Watermelon
     [System.Serializable]
     public class DirecitonPointersController
     {
-        [SerializeField] GameObject arrowDirectionPointerPrefab;
-        [SerializeField] GameObject arrowsLineDirectionPointerPrefab;
+        public GameObject arrowDirectionPointerPrefab;
+        public GameObject arrowsLineDirectionPointerPrefab;
 
         private static List<BaseDirectionPointerCase> activePointers = new List<BaseDirectionPointerCase>();
 

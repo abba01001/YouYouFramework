@@ -30,7 +30,7 @@ namespace Watermelon
             inventorySave = SaveController.GetSaveObject<InventorySave>("inventorySave");
 
             // Get upgrade
-            characterCapacityUpgrade = GlobalUpgradesController.GetUpgrade<CapacityUpgrade>(GlobalUpgradeType.Capacity);
+            characterCapacityUpgrade = GlobalUpgradesController.Instance.GetUpgrade<CapacityUpgrade>(GlobalUpgradeType.Capacity);
 
             // Get all inventory currencies
             currencies = System.Array.FindAll(CurrencyController.Currencies, x => x.Data.UseInventory);

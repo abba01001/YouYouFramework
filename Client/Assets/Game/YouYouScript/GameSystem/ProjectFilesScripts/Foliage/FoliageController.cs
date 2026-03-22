@@ -5,8 +5,10 @@ using UnityEngine;
 namespace Watermelon
 {
     [StaticUnload]
-    public class FoliageController : MonoBehaviour
+    public class FoliageController
     {
+        private static FoliageController _instance;
+        public static FoliageController Instance => _instance ??= new FoliageController();
         private static List<Transform> foliageAgents = new List<Transform>();
 
         private static bool changed = false;

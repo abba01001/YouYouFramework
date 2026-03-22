@@ -70,7 +70,7 @@ namespace Watermelon
 
         private void ClosePanelButton()
         {
-            MissionsController.CompleteMission();
+            MissionsController.Instance.CompleteMission();
         }
 
         [System.Serializable]

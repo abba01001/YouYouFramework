@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1706803305806589538}
   - component: {fileID: 3690045036049186418}
   - component: {fileID: 8028516396128336614}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Holder Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 3637600815922635363}
   - component: {fileID: 8412104693940301221}
   - component: {fileID: 4031718898039867421}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Converter Resource Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -220,7 +220,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1032191
 --- !u!114 &4031718898039867421
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -251,6 +251,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Converter Resource UI
+      objectReference: {fileID: 0}
+    - target: {fileID: 2619896996095910800, guid: 2161c21281ad2ba45a7de89acdd6fe45,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4843786725122172236, guid: 2161c21281ad2ba45a7de89acdd6fe45,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5691849421065931832, guid: 2161c21281ad2ba45a7de89acdd6fe45,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5961438060809505388, guid: 2161c21281ad2ba45a7de89acdd6fe45,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
+      objectReference: {fileID: 0}
+    - target: {fileID: 6153956752025302331, guid: 2161c21281ad2ba45a7de89acdd6fe45,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
       objectReference: {fileID: 0}
     - target: {fileID: 6367263085771046909, guid: 2161c21281ad2ba45a7de89acdd6fe45,
         type: 3}
@@ -350,6 +375,16 @@ PrefabInstance:
     - target: {fileID: 6367263085771046909, guid: 2161c21281ad2ba45a7de89acdd6fe45,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6619255291166891916, guid: 2161c21281ad2ba45a7de89acdd6fe45,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8456983593124309328, guid: 2161c21281ad2ba45a7de89acdd6fe45,
+        type: 3}
+      propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

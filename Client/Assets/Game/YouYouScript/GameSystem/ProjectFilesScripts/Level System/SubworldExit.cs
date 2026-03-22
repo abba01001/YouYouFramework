@@ -44,7 +44,7 @@ namespace Watermelon
 
                 Overlay.Show(0.3f, () =>
                 {
-                    WorldController.WorldBehavior.SubworldHandler.LeaveSubworld(overridenSubworldEntrance, () =>
+                    WorldController.Instance.WorldBehavior.SubworldHandler.LeaveSubworld(overridenSubworldEntrance, () =>
                     {
                         Overlay.Hide(0.3f, () =>
                         {

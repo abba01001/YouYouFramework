@@ -382,7 +382,7 @@ public class YouYouEditor : OdinMenuEditorWindow
     #endregion
 
     #region 生成图集
-    [MenuItem("Assets/工具/生成图集")]
+    // [MenuItem("Assets/工具/生成图集")]
     public static void GenerateSprites()
     {
         Texture2D tex = Selection.activeObject as Texture2D;

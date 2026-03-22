@@ -7,33 +7,31 @@ using UnityEngine;
 
 namespace Watermelon
 {
-    public class MissionsController : MonoBehaviour
+    public class MissionsController
     {
-        [SerializeField] bool autoCompleteMissions = true;
-        public static bool AutoCompleteMissions => instance.autoCompleteMissions;
+        private static MissionsController _instance;
+        public static MissionsController Instance => _instance ??= new MissionsController();
+        
+        bool autoCompleteMissions = true;
+        public bool AutoCompleteMissions => instance.autoCompleteMissions;
 
-        private static Mission[] missions;
+        private Mission[] missions;
 
-        private static Mission activeMission;
-        public static Mission ActiveMission => activeMission;
+        private Mission activeMission;
+        public Mission ActiveMission => activeMission;
 
-        private static MissionUIPanel missionUIPanel;
-        private static UIMissionRewardPopUp missionRewardPopUp;
+        private MissionUIPanel missionUIPanel;
+        private UIMissionRewardPopUp missionRewardPopUp;
 
-        private static TweenCase completeTweenCase;
+        private TweenCase completeTweenCase;
 
-        public static event SimpleCallback OnNextMissionStarted;
-        public static event SimpleCallback OnMissionFinished;
+        public event SimpleCallback OnNextMissionStarted;
+        public event SimpleCallback OnMissionFinished;
 
-        private static MissionsController instance;
+        private MissionsController instance;
 
-        private static bool isInitialised => missions != null;
-        private static bool fistTimeLoadingMission = false;
-
-        private void Awake()
-        {
-            instance = this;
-        }
+        private bool isInitialised => missions != null;
+        private bool fistTimeLoadingMission = false;
 
         public async UniTask Initialise(Mission[] missions)
         {
@@ -44,7 +42,7 @@ namespace Watermelon
             if (MissionsActionMenu.AreMissionsDisabled())
                 return;
 
-            MissionsController.missions = missions;
+            this.missions = missions;
 
             // Get game ui and initialise missions panel
             FormGame gameForm = GameEntry.UI.GetUIForm<FormGame>();//UIController.GetPage<FormGame>();
@@ -66,7 +64,7 @@ namespace Watermelon
             }
         }
 
-        private static void Activate(int index)
+        private void Activate(int index)
         {
             if (activeMission != null)
                 activeMission.Deactivate();
@@ -79,8 +77,8 @@ namespace Watermelon
 #if UNITY_EDITOR
             if (fistTimeLoadingMission)
             {
-                WorldController.UpdateWorldSave(activeMission.gameObject.name);
-                SavePresets.CreateSave(WorldController.CurrentWorld.Scene.Name + " " + activeMission.gameObject.name, "Missions", activeMission.ID);
+                WorldController.Instance.UpdateWorldSave(activeMission.gameObject.name);
+                SavePresets.CreateSave(WorldController.Instance.CurrentWorld.Scene.Name + " " + activeMission.gameObject.name, "Missions", activeMission.ID);
             }
 #endif
         }
@@ -106,7 +104,7 @@ namespace Watermelon
             return false;
         }
 
-        public static void CompleteMission()
+        public void CompleteMission()
         {
             completeTweenCase.KillActive();
 
@@ -129,7 +127,7 @@ namespace Watermelon
             }
         }
 
-        public static void AutoCompleteMission(float duration)
+        public void AutoCompleteMission(float duration)
         {
             completeTweenCase.KillActive();
 
@@ -143,7 +141,7 @@ namespace Watermelon
             }
         }
 
-        public static int GetLastCompletedMissionIndex()
+        public int GetLastCompletedMissionIndex()
         {
             int activationMissionIndex = 0;
 
@@ -156,7 +154,7 @@ namespace Watermelon
             return activationMissionIndex;
         }
 
-        public static Mission GetMissionById(string id)
+        public Mission GetMissionById(string id)
         {
             if (missions == null)
                 return null;
@@ -164,7 +162,7 @@ namespace Watermelon
             return missions.Find(m => m.ID.Equals(id));
         }
 
-        public static void ActivateNextMission()
+        public void ActivateNextMission()
         {
             if (!isInitialised)
                 return;
@@ -198,7 +196,7 @@ namespace Watermelon
             }
         }
 
-        public static void MissionFinished()
+        public void MissionFinished()
         {
             OnMissionFinished?.Invoke();
 
@@ -208,7 +206,7 @@ namespace Watermelon
             });
         }
 
-        public static void Unload()
+        public void Unload()
         {
             if (!isInitialised) return;
 

@@ -7,18 +7,24 @@ namespace Watermelon
     /// This class provides 3 solutions to help navigation. 
     /// Arrow pointing down at something, arrow showing direction to something and arrows line showing direction to something.
     /// </summary>
-    public class NavigationHelper : MonoBehaviour
+    public class NavigationHelper
     {
-        private static NavigationHelper instance;
-
-        [SerializeField] GameObject positionPointerPrefab;
-        [SerializeField] DirecitonPointersController directionPointersController;
+        private static NavigationHelper _instance;
+        public static NavigationHelper Instance => _instance ??= new NavigationHelper();
+        
+        GameObject positionPointerPrefab;
+        readonly DirecitonPointersController directionPointersController = new DirecitonPointersController();
 
         private Pool positionPointerPool;
 
         public async UniTask Initialise()
         {
-            instance = this;
+            PoolObj obj1 = await GameEntry.Pool.GameObjectPool.SpawnAsync("Assets/Game/Download/ProjectFiles/Game/Prefabs/Navigation Helpers/Arrow Direction Pointer.prefab");
+            directionPointersController.arrowDirectionPointerPrefab = obj1.gameObject;
+            PoolObj obj2 = await GameEntry.Pool.GameObjectPool.SpawnAsync("Assets/Game/Download/ProjectFiles/Game/Prefabs/Navigation Helpers/Arrow Line Direction Pointer.prefab");
+            directionPointersController.arrowsLineDirectionPointerPrefab = obj2.gameObject;
+            PoolObj obj3 = await GameEntry.Pool.GameObjectPool.SpawnAsync("Assets/Game/Download/ProjectFiles/Game/Prefabs/Navigation Helpers/Position Pointer Arrow.prefab");
+            positionPointerPrefab = obj3.gameObject;
 
             directionPointersController.Initialise();
 
@@ -39,9 +45,9 @@ namespace Watermelon
         }
 
         // returns ready to use arrow pointing down at specified position
-        public static PositionPointerCase CreatePositionPointer(Vector3 position)
+        public PositionPointerCase CreatePositionPointer(Vector3 position)
         {
-            GameObject arrowObject = instance.positionPointerPool.GetPooledObject();
+            GameObject arrowObject = positionPointerPool.GetPooledObject();
             arrowObject.transform.SetPositionAndRotation(position, Quaternion.identity);
             arrowObject.transform.localScale = Vector3.one;
 
@@ -49,23 +55,23 @@ namespace Watermelon
         }
 
         // returns ready to use arrow showing direciton to specified position
-        public static ArrowPointerCase CreateGuidingArrow(Vector3 position)
+        public  ArrowPointerCase CreateGuidingArrow(Vector3 position)
         {
             return DirecitonPointersController.RegisterArrowPointer(PlayerBehavior.InstanceTransform, position);
         }
 
         // returns ready to use arrow line showing direciton to specified position
-        public static ArrowLinePointerCase CreateGuidingLine(Vector3 position)
+        public  ArrowLinePointerCase CreateGuidingLine(Vector3 position)
         {
             return DirecitonPointersController.RegisterArrowLinePointer(PlayerBehavior.InstanceTransform, position);
         }
 
         // unloads all 3 types of provided helpers
-        public static void Unload()
+        public void Unload()
         {
-            instance.positionPointerPool.Clear();
+            positionPointerPool.Clear();
 
-            instance.directionPointersController.Unload();
+            directionPointersController.Unload();
         }
     }
 }

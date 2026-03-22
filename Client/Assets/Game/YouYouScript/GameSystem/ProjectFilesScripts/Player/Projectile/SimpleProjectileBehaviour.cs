@@ -13,13 +13,13 @@ namespace Watermelon
         {
             base.Initialise(damageSource, speed, currentTarget, shooter, autoDisableTime, autoDisableOnHit);
 
-            trailParticleCase = ParticlesController.PlayParticle(trailParticleName).SetTarget(transform, Vector3.zero);
+            trailParticleCase = ParticlesController.Instance.PlayParticle(trailParticleName).SetTarget(transform, Vector3.zero);
         }
 
         protected override void OnCharacterHitted(ICharacter characterBehaviour)
         {
             if (!string.IsNullOrEmpty(hitParticleName))
-                ParticlesController.PlayParticle(hitParticleName).SetPosition(transform.position).SetDuration(1.0f);
+                ParticlesController.Instance.PlayParticle(hitParticleName).SetPosition(transform.position).SetDuration(1.0f);
         }
 
         protected override void OnProjectileDisabled()

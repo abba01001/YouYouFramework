@@ -19,7 +19,6 @@ namespace Watermelon
 
             // Store active currencies
             currencies = currenciesDatabase.Currencies;
-            GameUtil.LogError("Ä£¿é³õÊ¼»¯=====¡·Init====>",currenciesDatabase.Currencies == null);
             // Initialize currencies
             foreach (Currency currency in currencies)
             {
