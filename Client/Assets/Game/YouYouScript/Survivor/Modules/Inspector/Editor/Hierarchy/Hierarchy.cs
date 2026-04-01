@@ -60,15 +60,15 @@ namespace Watermelon
         public Hierarchy(EditorWindow window)
         {
             this.window = window;
-            //
-            // sceneHierarchy = sceneHierarchyProperty.GetValue(window);
-            // treeViewController = hierarchyTreeViewField.GetValue(sceneHierarchy);
-            // treeViewGUI = treeViewGUIProperty.GetValue(treeViewController);
-            //
-            // defaultIconWidth = (float)iconWidthField.GetValue(treeViewGUI);
-            // defaultSpaceBeforeIcon = (float)iconSpaceField.GetValue(treeViewGUI);
-            //
-            // SetIconWidth(0, 18);
+            return;
+            sceneHierarchy = sceneHierarchyProperty.GetValue(window);
+            treeViewController = hierarchyTreeViewField.GetValue(sceneHierarchy);
+            treeViewGUI = treeViewGUIProperty.GetValue(treeViewController);
+            
+            defaultIconWidth = (float)iconWidthField.GetValue(treeViewGUI);
+            defaultSpaceBeforeIcon = (float)iconSpaceField.GetValue(treeViewGUI);
+            
+            SetIconWidth(0, 18);
         }
 
         private void SetIconWidth(float iconWidth, float spaceBeforeIcon)
@@ -84,6 +84,7 @@ namespace Watermelon
 
         public void DrawElementGUI(int instanceID, Rect selectionRect)
         {
+            return;
             GameObject instanceObject = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
 
             if (!instanceObject) return;
