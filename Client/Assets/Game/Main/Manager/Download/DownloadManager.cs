@@ -109,7 +109,7 @@ namespace Main
         public async Task<string> GetAPKVersion(string url)
         {
             string result = null;
-            // MainEntry.IsOfflineMode = true;
+            MainEntry.IsOfflineMode = true;
             return "1.0.0\n1.0.0";
             string firstInstallFlag = Path.Combine(Application.persistentDataPath, "first_install.txt");
             bool isFirstInstall = !File.Exists(firstInstallFlag);

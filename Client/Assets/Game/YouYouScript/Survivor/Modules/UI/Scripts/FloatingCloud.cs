@@ -1,45 +1,36 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using Random = UnityEngine.Random;
 
 namespace Watermelon
 {
-    [System.Serializable]
-    public class FloatingCloud
+    public class FloatingCloud: SingletonMonoInstance<FloatingCloud>
     {
-        [SerializeField] Data[] floatingCloudCases;
-
         private static Dictionary<int, Data> floatingCloudLink = new Dictionary<int, Data>();
         private static List<Animation> activeClouds = new List<Animation>();
 
         public void Init()
         {
-            for (int i = 0; i < floatingCloudCases.Length; i++)
-            {
-                RegisterCase(floatingCloudCases[i]);
-            }
-
             Currency[] currencies = CurrencyController.Currencies;
+            GameUtil.LogError("货币数量===>",currencies.Length);
             if(!currencies.IsNullOrEmpty())
             {
                 foreach (var currency in currencies)
                 {
                     Currency.FloatingCloudCase floatingCloudCase = currency.FloatingCloud;
+                    GameUtil.LogError("FloatingCloud初始化=======>", currency.CurrencyType.ToString(), "===",
+                        floatingCloudCase.AddToCloud);
                     if (floatingCloudCase.AddToCloud)
                     {
                         FloatingCloudSettings floatingCloudSettings;
-
-                        if (floatingCloudCase.SpecialPrefab != null)
-                        {
-                            floatingCloudSettings = new FloatingCloudSettings(currency.CurrencyType.ToString(), floatingCloudCase.SpecialPrefab);
-                        }
-                        else
-                        {
-                            floatingCloudSettings = new FloatingCloudSettings(currency.CurrencyType.ToString(), currency.Icon, new Vector2(100, 100));
-                        }
-
-                        floatingCloudSettings.SetAudio(floatingCloudCase.AppearAudioClip, floatingCloudCase.CollectAudioClip);
-
+                        floatingCloudSettings = floatingCloudCase.SpecialPrefab != null
+                            ? new FloatingCloudSettings(currency.CurrencyType.ToString(),
+                                floatingCloudCase.SpecialPrefab)
+                            : new FloatingCloudSettings(currency.CurrencyType.ToString(), currency.Icon,
+                                new Vector2(100, 100));
+                        floatingCloudSettings.SetAudio(floatingCloudCase.AppearAudioClip,floatingCloudCase.CollectAudioClip);
                         RegisterCase(floatingCloudSettings);
                     }
                 }
@@ -68,7 +59,7 @@ namespace Watermelon
             activeClouds.Clear();
         }
 
-        public static void RegisterCase(FloatingCloudSettings floatingCloudSettings)
+        public void RegisterCase(FloatingCloudSettings floatingCloudSettings)
         {
             int cloudHash = floatingCloudSettings.Name.GetHashCode();
 
@@ -85,28 +76,12 @@ namespace Watermelon
             floatingCloudLink.Add(cloudHash, floatingCloudCase);
         }
 
-        public static void RegisterCase(Data floatingCloudCase)
-        {
-            int cloudHash = floatingCloudCase.Name.GetHashCode();
-
-            if (floatingCloudLink.ContainsKey(cloudHash))
-            {
-                Debug.LogError($"Cloud {floatingCloudCase.Name} already registered!");
-
-                return;
-            }
-
-            floatingCloudCase.Init();
-
-            floatingCloudLink.Add(cloudHash, floatingCloudCase);
-        }
-
-        public static void SpawnCurrency(string key, RectTransform rectTransform, RectTransform targetTransform, int elementsAmount, string text, SimpleCallback onCurrencyHittedTarget = null)
+        public void SpawnCurrency(string key, RectTransform rectTransform, RectTransform targetTransform, int elementsAmount, string text, SimpleCallback onCurrencyHittedTarget = null)
         {
             SpawnCurrency(key.GetHashCode(), rectTransform, targetTransform, elementsAmount, text, onCurrencyHittedTarget);
         }
 
-        public static void SpawnCurrency(int hash, RectTransform rectTransform, RectTransform targetTransform, int elementsAmount, string text, SimpleCallback onCurrencyHittedTarget = null)
+        public void SpawnCurrency(int hash, RectTransform rectTransform, RectTransform targetTransform, int elementsAmount, string text, SimpleCallback onCurrencyHittedTarget = null)
         {
             if (!floatingCloudLink.ContainsKey(hash))
             {
@@ -114,14 +89,12 @@ namespace Watermelon
 
                 return;
             }
-
             Animation animation = new Animation(floatingCloudLink[hash], rectTransform, targetTransform, elementsAmount, onCurrencyHittedTarget);
             animation.PlayAnimation();
-
             activeClouds.Add(animation);
         }
 
-        public static void OnAnimationFinished(Animation animation)
+        public void OnAnimationFinished(Animation animation)
         {
             activeClouds.Remove(animation);
         }
@@ -292,7 +265,7 @@ namespace Watermelon
                                 finishedElementsAmount++;
                                 if (finishedElementsAmount >= elementsAmount)
                                 {
-                                    FloatingCloud.OnAnimationFinished(this);
+                                    FloatingCloud.Instance.OnAnimationFinished(this);
 
                                     GameObject.Destroy(fakeTargetTransform.gameObject);
                                 }

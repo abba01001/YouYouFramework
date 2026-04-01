@@ -12,23 +12,28 @@ namespace Watermelon
 {
     public class FormGame : UIFormBase
     {
-        public static FormGame Instance = null;
-        [SerializeField] RectTransform safeAreaRectTransform;
+        public static FormGame Instance;
         [SerializeField] Joystick joystick;
         public Joystick Joystick => joystick;
 
-        [SerializeField] CurrencyUIController currenciesUIController;
-        public CurrencyUIController CurrenciesUIController => currenciesUIController;
+        private UIWorldChangePopUp worldChangePop;
+        MissionUIPanel missionUI;
+        public MissionUIPanel MissionUIPanel
+        {
+            get
+            {
+                if (missionUI == null)
+                {
+                    PoolObj obj =  GameEntry.Pool.GameObjectPool.SpawnSynchronous("Assets/Game/Download/Prefab/UI/Panel/MissionPanel.prefab");
+                    missionUI = obj.gameObject.GetComponent<MissionUIPanel>();
+                    missionUI.transform.SetParent(transform,false);
+                    missionUI.transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -20);
+                    missionUI.gameObject.MSetActive(true);
+                }
+                return missionUI;
+            }
+        }
 
-        [SerializeField] MissionUIPanel missionUI;
-        public MissionUIPanel MissionUIPanel => missionUI;
-
-        [SerializeField] EnergyUIPanel hungerUI;
-        public EnergyUIPanel HungerUI => hungerUI;
-
-        [SerializeField] UIWorldChangePopUp worldTransitionPopUp;
-        public UIWorldChangePopUp WorldTransitionPopUp => worldTransitionPopUp;
-        
         [Space]
         [SerializeField] Button upgradesButton;
         [SerializeField] Button iapStoreButton;
@@ -53,11 +58,30 @@ namespace Watermelon
         {
             base.Awake();
             Instance = this;
+            GameEntry.Event.AddEventListener(Constants.EventName.ExitCurWorldEvent,OnExitCurWorldEvent);
             GameUtil.LogError("初始化FormGame");
             Init();
             GameUtil.LogError("初始化FormGame完成");
         }
 
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            GameEntry.Event.RemoveEventListener(Constants.EventName.ExitCurWorldEvent,OnExitCurWorldEvent);
+        }
+
+        private void OnExitCurWorldEvent(object data)
+        {
+            if (worldChangePop == null)
+            {
+                PoolObj obj =  GameEntry.Pool.GameObjectPool.SpawnSynchronous("Assets/Game/Download/Prefab/UI/Panel/WorldChangePanel.prefab");
+                worldChangePop = obj.gameObject.GetComponent<UIWorldChangePopUp>();
+                worldChangePop.transform.SetParent(transform,false);
+            }
+            worldChangePop.gameObject.MSetActive(true);
+            worldChangePop.Show(data as SimpleCallback);
+        }
+        
         public void Init()
         {
             joystick.Init(CurrCanvas);
@@ -66,26 +90,7 @@ namespace Watermelon
             upgradesButton.onClick.AddListener(OnUpgradesButonClicked);
             iapStoreButton.onClick.AddListener(OnIAPStoreButtonClicked);
             pauseButton.onClick.AddListener(OnPauseButtonClicked);
-
-            currenciesUIController.Init(CurrencyController.Currencies);
-
-            // if (EnergyController.IsEnergySystemEnabled)
-            // {
-            //     hungerUI.Initialise();
-            // }
-            // else
-            // {
-            //     hungerUI.gameObject.SetActive(false);
-            // }
-
-            // NotchSaveArea.RegisterRectTransform(safeAreaRectTransform);
-
-            tutorialCanvasController.Initialise();
-            worldTransitionPopUp.Initialise();
-
             GameEntry.Instance.BackgroundImage.color = Color.white;
-
-            gamepadInteractor.Init();
         }
 
         #region Show/Hide

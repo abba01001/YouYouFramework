@@ -47,12 +47,9 @@ namespace Watermelon
 
             clickHandler.onClick.AddListener(OnMissionClicked);
 
-            FormGame gameForm = GameEntry.UI.GetUIForm<FormGame>();//UIController.GetPage<FormGame>();
-
-            // Creating positions for currency reward cloud
             GameObject spawn = new GameObject("[floating cloud spawn]");
             spawn.transform.position = rewardText.transform.position;
-            spawn.transform.SetParent(gameForm.transform);
+            spawn.transform.SetParent(FormGame.Instance.transform);
             floatingCloundSpawn = spawn.AddComponent<RectTransform>();
         }
 
@@ -235,13 +232,10 @@ namespace Watermelon
                 Currency currency = CurrencyController.GetCurrency(reward.CurrencyType);
                 if(currency.FloatingCloud.AddToCloud)
                 {
-                    FormGame gameForm = GameEntry.UI.GetUIForm<FormGame>();//UIController.GetPage<FormGame>();
-
-                    CurrencyUI currencyUI = gameForm.CurrenciesUIController.ActivateCurrency(reward.CurrencyType);
-
+                    CurrencyUI currencyUI = CurrencyUIController.Instance.ActivateCurrency(reward.CurrencyType);
                     Tween.NextFrame(() =>
                     {
-                        FloatingCloud.SpawnCurrency(reward.CurrencyType.ToString(), floatingCloundSpawn, currencyUI.RectTransform, 10, "");
+                        FloatingCloud.Instance.SpawnCurrency(reward.CurrencyType.ToString(), floatingCloundSpawn, currencyUI.RectTransform, 10, "");
                     });
                 }
             }

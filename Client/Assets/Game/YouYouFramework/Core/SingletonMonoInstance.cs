@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 
-public class SingletonMonoInstansce<T> : MonoBehaviour where T : MonoBehaviour
+public class SingletonMonoInstance<T> : MonoBehaviour where T : MonoBehaviour
 {
     private static T instance;
     public static T Instance

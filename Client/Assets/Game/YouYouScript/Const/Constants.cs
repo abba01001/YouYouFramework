@@ -92,6 +92,7 @@ static partial class Constants
 
         public const string EnergyChangedEvent = "EnergyChangedEvent";
         public const string ConsumeMatEvent = "ConsumeMatEvent";
+        public const string ExitCurWorldEvent = "ExitCurWorldEvent";
     }
 
 

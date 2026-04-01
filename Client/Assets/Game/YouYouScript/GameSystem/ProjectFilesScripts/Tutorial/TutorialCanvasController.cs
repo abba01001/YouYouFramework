@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Watermelon
@@ -25,6 +26,11 @@ namespace Watermelon
         private static Pool pointersPool;
 
         private static GameObject currentPointerRef;
+
+        private void Awake()
+        {
+            Initialise();
+        }
 
         public void Initialise()
         {

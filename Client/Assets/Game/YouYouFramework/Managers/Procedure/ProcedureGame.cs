@@ -20,24 +20,28 @@ public class ProcedureGame : ProcedureBase
         
     private async UniTask Init()
     {
-        GameUtil.LogError("ProcedureGame 1111====>",DateTime.Now);
+        GameUtil.LogCurTimerLog("ProcedureGame 1111====>");
         Scene targetScene = SceneManager.GetSceneByName("Game");
         SceneManager.SetActiveScene(targetScene);
         LoadingGraphics.Instance.ShowProgress();
-        GameUtil.LogError("ProcedureGame 222====>",DateTime.Now);
-
+        
+        GameUtil.LogCurTimerLog("加载Project Init Settings.asset前====>");
         ProjectInitSettings t = await GameEntry.Loader.LoadMainAssetAsync<ProjectInitSettings>("Assets/Game/Download/ProjectFiles/Data/Project Init Settings.asset", GameEntry.Instance.gameObject);
         t.Init();
-        GameUtil.LogError("ProcedureGame 333====>",DateTime.Now);
+        GameUtil.LogCurTimerLog("加载Project Init Settings.asset后====>");
 
-        PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync("Assets/Game/Download/Prefab/GameRoot.prefab");
-        GameUtil.LogError("ProcedureGame 444====>",DateTime.Now);
-
+        GameUtil.LogCurTimerLog("加载FormGame前====>");
+        GameEntry.UI.OpenUIForm<FormGame>();
+        GameUtil.LogCurTimerLog("加载FormGame后====>");
+        
+        GameUtil.LogCurTimerLog("加载GameController前====>");
+        PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync("Assets/Game/Download/Prefab/GameController.prefab");
+        await obj.GetComponent<GameController>().Init();
+        GameUtil.LogCurTimerLog("加载GameController后====>");
         obj.gameObject.SetActive(true);
         obj.transform.SetParent(null);
         obj.name = "GameRoot";
         SceneManager.MoveGameObjectToScene(obj.gameObject, targetScene);
-        GameUtil.LogError("ProcedureGame 555====>",DateTime.Now);
 
     }
         

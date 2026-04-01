@@ -48,7 +48,7 @@ namespace Watermelon
 
             if(spawnCurrencyCloud)
             {
-                FloatingCloud.SpawnCurrency(currencyCloudType.ToString(), currencyCloudSpawnPoint, currencyCloudTargetPoint, cloudElementsAmount, "", ApplyCurrency);
+                FloatingCloud.Instance.SpawnCurrency(currencyCloudType.ToString(), currencyCloudSpawnPoint, currencyCloudTargetPoint, cloudElementsAmount, "", ApplyCurrency);
             }
             else
             {

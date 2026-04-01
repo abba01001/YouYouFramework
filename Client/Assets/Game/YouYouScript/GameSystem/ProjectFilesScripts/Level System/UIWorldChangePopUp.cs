@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +7,7 @@ using UnityEngine.UI;
 namespace Watermelon
 {
     [System.Serializable]
-    public class UIWorldChangePopUp
+    public class UIWorldChangePopUp : MonoBehaviour
     {
         [SerializeField] GameObject panelObject;
         [SerializeField] UIFadeAnimation fadeAnimation;
@@ -17,6 +18,11 @@ namespace Watermelon
         [SerializeField] Button bigExitButton;
 
         private SimpleCallback callback;
+
+        private void Awake()
+        {
+            Initialise();
+        }
 
         public void Initialise()
         {

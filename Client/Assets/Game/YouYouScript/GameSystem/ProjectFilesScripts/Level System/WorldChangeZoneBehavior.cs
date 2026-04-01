@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Watermelon
@@ -28,11 +29,9 @@ namespace Watermelon
         {
             if (other.CompareTag(PhysicsHelper.TAG_PLAYER))
             {
-                FormGame gameForm = null;//UIController.GetPage<FormGame>();
-
-                gameForm.WorldTransitionPopUp.Show(() =>
+                SimpleCallback cb = () =>
                 {
-                    if(changeSpecialBehavior != null)
+                    if (changeSpecialBehavior != null)
                     {
                         changeSpecialBehavior.OnWorldChanged(() =>
                         {
@@ -43,9 +42,9 @@ namespace Watermelon
                     {
                         LoadNextWorld();
                     }
-
                     enabled = false;
-                });
+                };
+                GameEntry.Event.Dispatch(Constants.EventName.ExitCurWorldEvent, cb);
             }
         }
 

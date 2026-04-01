@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -18,6 +19,11 @@ namespace Watermelon
 
         public int SelectedInteractionId { get; private set; }
         public IGamepadInteraction SelectedInteraction => interactions[SelectedInteractionId];
+
+        private void Awake()
+        {
+            Init();
+        }
 
         public void Init()
         {

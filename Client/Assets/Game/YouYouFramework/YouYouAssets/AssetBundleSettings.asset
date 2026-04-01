@@ -21,6 +21,7 @@ MonoBehaviour:
   IsUploadAPK: 0
   IsUploadStreamingAsset: 1
   AssetBundleSavePath: AssetBundles
+  GradleSavePath: GradleProject
   IsCanEditor: 0
   Datas:
   - Name: "\u7EB9\u7406\u8D44\u6E90"

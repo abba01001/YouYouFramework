@@ -13,22 +13,17 @@ namespace Watermelon
 
         private void Awake()
         {
-            GameUtil.LogCurTimerLog("GameController 1111Awake====>");
             Instance = this;
-            GameUtil.LogCurTimerLog("GameController 2222Awake====>");
-            Init();
         }
 
-        private async UniTask Init()
+        public async UniTask Init()
         {
-            GameEntry.UI.OpenUIForm<FormGame>();
-            GameUtil.LogCurTimerLog("Data Init111====>");
             Data = await GameEntry.Loader.LoadMainAssetAsync<GameData>("Assets/Game/Download/ProjectFiles/Data/Game Data.asset", GameEntry.Instance.gameObject);
             GameUtil.LogCurTimerLog("Data Init222====>");
             await Data.Init();
             GameUtil.LogCurTimerLog("Data Init333====>");
 
-            await DefaultMusicController.Instance.Initialise(transform.parent);
+            await DefaultMusicController.Instance.Initialise(transform);
             GameUtil.LogCurTimerLog("DefaultMusicController Init====>");
 
             await CameraController.Instance.Initialise();
@@ -70,6 +65,9 @@ namespace Watermelon
             GameEntry.Event.Dispatch(Constants.EventName.EnergyChangedEvent);
             GameLoading.MarkAsReadyToHide();
             await UniTask.NextFrame();
+            
+            FloatingCloud.Instance.Init();
+            
             CheckPlayFirstEntryAnim();
         }
 

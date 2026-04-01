@@ -19,8 +19,6 @@ namespace Watermelon
         private Mission activeMission;
         public Mission ActiveMission => activeMission;
 
-        private MissionUIPanel missionUIPanel;
-
         private TweenCase completeTweenCase;
 
         public event SimpleCallback OnNextMissionStarted;
@@ -39,18 +37,8 @@ namespace Watermelon
                 return;
 
             this.missions = missions;
-
-            // Get game ui and initialise missions panel
-            FormGame gameForm = GameEntry.UI.GetUIForm<FormGame>();//UIController.GetPage<FormGame>();
-            while (gameForm == null)
-            {
-                await UniTask.DelayFrame(2);
-                if(gameForm != null) break;
-                gameForm = GameEntry.UI.GetUIForm<FormGame>();
-            }
             
-            missionUIPanel = gameForm.MissionUIPanel;
-            missionUIPanel.Initialise();
+            FormGame.Instance.MissionUIPanel.Initialise();
 
 
             for (int i = 0; i < missions.Length; i++)
@@ -67,7 +55,7 @@ namespace Watermelon
             activeMission = missions[index];
             activeMission.Activate();
 
-            missionUIPanel.ActivateMission(activeMission);
+            FormGame.Instance.MissionUIPanel.ActivateMission(activeMission);
 
 #if UNITY_EDITOR
             if (fistTimeLoadingMission)
@@ -109,7 +97,7 @@ namespace Watermelon
                 {
                     activeMission.ApplyReward(1.0f);
 
-                    missionUIPanel.OnRewardClaimed();
+                    FormGame.Instance.MissionUIPanel.OnRewardClaimed();
 
                     fistTimeLoadingMission = true;
 
@@ -186,7 +174,7 @@ namespace Watermelon
             // if last mission is completed
             else
             {
-                missionUIPanel.gameObject.SetActive(false);
+                FormGame.Instance.MissionUIPanel.gameObject.SetActive(false);
             }
         }
 
@@ -213,7 +201,7 @@ namespace Watermelon
         {
             if (!isInitialised) return;
 
-            missionUIPanel.Unload();
+            FormGame.Instance.MissionUIPanel.Unload();
 
             activeMission?.Deactivate();
 

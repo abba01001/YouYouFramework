@@ -17,14 +17,11 @@ namespace Watermelon
 
         public EnvironmentSkyModule(EnvironmentWeatherModule weatherModule)
         {
-            // _formGame = UIController.GetPage<FormGame>();
-
             texture = new Texture2D(1, 100);
             texture.wrapMode = TextureWrapMode.Clamp;
 
             pixels = new Color[100];
             InitBackgroundTexture();
-            // _formGame.SetBackgroundTexture(texture);
             this.weatherModule = weatherModule;
         }
 
@@ -35,7 +32,7 @@ namespace Watermelon
                 if(FormGame.Instance != null) break;
                 await UniTask.Delay(50);
             }
-            GameEntry.UI.GetUIForm<FormGame>().SetBackgroundTexture(texture);
+            FormGame.Instance.SetBackgroundTexture(texture);
         }
         
         public void ApplyDayPartPreset(PartOfDayPreset preset)

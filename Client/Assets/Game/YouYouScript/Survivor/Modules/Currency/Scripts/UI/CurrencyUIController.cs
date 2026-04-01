@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Watermelon
 {
     public class CurrencyUIController : MonoBehaviour
     {
+        public static CurrencyUIController Instance;
         private const float DISALBE_PANEL_IN_SECONDS = 5.0f;
 
         [SerializeField] StaticCurrencyUI[] staticPanels;
@@ -17,6 +19,12 @@ namespace Watermelon
 
         private Dictionary<CurrencyType, CurrencyUI> activePanelsUI;
         private List<CurrencyType> currenciesToHide = new List<CurrencyType>();
+
+        private void Awake()
+        {
+            Instance = this;
+            Init(CurrencyController.Currencies);
+        }
 
         public void Init(Currency[] currencies)
         {

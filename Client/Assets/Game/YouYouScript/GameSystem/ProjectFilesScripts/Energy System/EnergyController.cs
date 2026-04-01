@@ -6,10 +6,8 @@ using UnityEngine.Serialization;
 
 namespace Watermelon
 {
-    public class EnergyController
+    public class EnergyController : SingletonMonoInstance<EnergyController>
     {
-        private static EnergyController _instance;
-        public static EnergyController Instance => _instance ??= new EnergyController();
         bool isEnergyEnabled = true;
         public  EnergySystemDatabase Data;
 
@@ -31,9 +29,8 @@ namespace Watermelon
         private  float notAccountedEnergyPoints;
 
         private  EnergySave save;
-        private  EnergyController instance;
 
-        public  bool IsEnergySystemEnabled => instance.isEnergyEnabled;
+        public  bool IsEnergySystemEnabled => isEnergyEnabled;
 
         private  List<CurrencyType> foodResourceTypes = new List<CurrencyType>();
         public  bool IsFoorResource(CurrencyType resource) => foodResourceTypes.Contains(resource);
@@ -45,7 +42,6 @@ namespace Watermelon
 
         public async UniTask Initialise()
         {
-            instance = this;
             save = SaveController.GetSaveObject<EnergySave>("Energy");
             Data = await GameEntry.Loader.LoadMainAssetAsync<EnergySystemDatabase>("Assets/Game/Download/ProjectFiles/Data/Energy System Database.asset", GameEntry.Instance.gameObject);
 
@@ -77,11 +73,9 @@ namespace Watermelon
 
         private void DisableFoodItemsCurrencyUI()
         {
-            return;
-            CurrencyUIController currenciesUIController = null;//UIController.GetPage<FormGame>().CurrenciesUIController;
             for (int i = 0; i < Data.FoodItems.Count; i++)
             {
-                currenciesUIController.DisableCurrency(Data.FoodItems[i].type);
+                CurrencyUIController.Instance.DisableCurrency(Data.FoodItems[i].type);
             }
         }
 
@@ -111,14 +105,11 @@ namespace Watermelon
 
         public  void Unload()
         {
-            if (instance == null)
-                return;
-
             if (!IsEnergySystemEnabled)
                 return;
 
-            ResourceSourceBehavior.OnFirstTimeHit -= instance.OnFirstResourceHit;
-            PlayerBehavior.OnResourceWillBeReceived -= instance.OnResorceWillBeReceivedReceived;
+            ResourceSourceBehavior.OnFirstTimeHit -= OnFirstResourceHit;
+            PlayerBehavior.OnResourceWillBeReceived -= OnResorceWillBeReceivedReceived;
         }
 
         private void OnFoodCurrencyChanged(Currency currency, int difference)
