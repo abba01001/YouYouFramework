@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -23,12 +24,12 @@ public class PanelBase : MonoBehaviour
 
     private void OnEnable()
     {
-        GameEntry.Time.Yield(OnShow);
+        Observable.NextFrame().Subscribe(_ => OnShow());
     }
 
     private void OnDisable()
     {
-        GameEntry.Time.Yield(OnHide);
+        Observable.NextFrame().Subscribe(_ => OnHide());
     }
 
     protected virtual void OnAwake()

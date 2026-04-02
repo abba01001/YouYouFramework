@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using UniRx;
 using UnityEngine;
 using UnityEngine.AI;
 using Watermelon.GlobalUpgrades;
@@ -766,7 +767,7 @@ namespace Watermelon
 #endif
 
                 FormMask.ShowMaskAnim(1f, 2f);
-                GameEntry.Time.CreateTimer(this.gameObject, 2f, () =>
+                Observable.Timer(TimeSpan.FromSeconds(2f)).Subscribe(_ =>
                 {
                     WorldController.Instance.WorldBehavior.SubworldHandler.DisableSubworld();
 

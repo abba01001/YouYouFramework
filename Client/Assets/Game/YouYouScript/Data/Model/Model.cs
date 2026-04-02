@@ -21,15 +21,6 @@ public class DialogueModel
     public Action finishAction;
 }
 
-public class LevelModel
-{
-    public int levelId;
-    public int mapLevel;
-    public int levelNum;
-    public LevelData levelData;
-}
-
-
 [Serializable]
 [MessagePackObject(keyAsPropertyName: true)]
 public class PlayerRoleData

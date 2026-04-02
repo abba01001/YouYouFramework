@@ -14,7 +14,7 @@ public class ProcedureGame : ProcedureBase
     internal override void OnEnter()
     {
         base.OnEnter();
-        GameEntry.UI.OpenUIForm<FormLoading>();
+        // GameEntry.UI.OpenUIForm<FormLoading>();
         GameEntry.Scene.LoadSceneAction(SceneGroupName.Game, 1, () => { _ = Init();});
     }
         
@@ -35,7 +35,7 @@ public class ProcedureGame : ProcedureBase
         GameUtil.LogCurTimerLog("加载FormGame后====>");
         
         GameUtil.LogCurTimerLog("加载GameController前====>");
-        PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync("Assets/Game/Download/Prefab/GameController.prefab");
+        GameObject obj = await GameEntry.Pool.GameObjectPool.Spawn("Assets/Game/Download/Prefab/GameController.prefab");
         await obj.GetComponent<GameController>().Init();
         GameUtil.LogCurTimerLog("加载GameController后====>");
         obj.gameObject.SetActive(true);

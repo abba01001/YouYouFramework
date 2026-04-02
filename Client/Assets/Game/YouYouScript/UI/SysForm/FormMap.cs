@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,7 +11,7 @@ public class FormMap : UIFormBase
 {
     [SerializeField] private Button exitBtn;
 
-    protected override void Awake()
+    protected override async UniTask Awake()
     {
         base.Awake();
         exitBtn.SetButtonClick(Close);

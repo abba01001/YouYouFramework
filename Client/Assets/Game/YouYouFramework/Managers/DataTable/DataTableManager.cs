@@ -1,6 +1,7 @@
 using Main;
 using System;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 
 public class DataTableManager
@@ -117,20 +118,15 @@ public class DataTableManager
     public void GetDataTableBuffer(string dataTableName, Action<byte[]> onComplete)
     {
 #if EDITORLOAD
-            GameEntry.Time.Yield(() =>
+            Observable.NextFrame().Subscribe(_ =>
             {
                 byte[] buffer =
- IOUtil.GetFileBuffer(string.Format("{0}/Game/Download/DataTable/{1}.bytes", Application.dataPath, dataTableName));
+                    IOUtil.GetFileBuffer(string.Format("{0}/Game/Download/DataTable/{1}.bytes", Application.dataPath, dataTableName));
                 if (onComplete != null) onComplete(buffer);
             });
 #else
-        GameEntry.Loader.LoadAssetAction(GameUtil.GetLastPathName(dataTableName), m_DataTableBundle,
-            onComplete: (AssetReferenceEntity referenceEntity) =>
-            {
-                if (referenceEntity == null) return;
-                TextAsset asset = referenceEntity.Target as TextAsset;
-                if (onComplete != null) onComplete(asset.bytes);
-            });
+        TextAsset asset = GameEntry.Loader.LoadMainAsset<TextAsset>(GameUtil.GetLastPathName(dataTableName));
+        if (onComplete != null) onComplete(asset.bytes);
 #endif
     }
 }

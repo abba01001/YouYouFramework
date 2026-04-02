@@ -11,11 +11,13 @@ using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Watermelon;
+using YouYouFramework;
+using PoolManager = YouYouFramework.PoolManager;
 
 public class GameEntry : MonoBehaviour
 {
     [FoldoutGroup("ResourceGroup")] [Header("游戏物体对象池分组")]
-    public GameObjectPoolEntity[] GameObjectPoolGroups;
+    public SpawnPoolEntity[] GameObjectPoolGroups;
 
     [FoldoutGroup("ResourceGroup")] [Header("对象池锁定的资源包")]
     public string[] LockedAssetBundle;
@@ -43,11 +45,12 @@ public class GameEntry : MonoBehaviour
 
     public static YouYouLanguage CurrLanguage;
 
+    [Header("声音主混合器")]
+    public AudioMixer MasterMixer;
 
     //管理器属性
     public static LoggerManager Logger { get; private set; }
     public static EventManager Event { get; private set; }
-    public static TimeManager Time { get; private set; }
     public static DataManager Data { get; private set; }
     public static FsmManager Fsm { get; private set; }
     public static ProcedureManager Procedure { get; private set; }
@@ -60,8 +63,6 @@ public class GameEntry : MonoBehaviour
     public static UIManager UI { get; private set; }
     public static NetManager Net { get; private set; }
     public static AudioManager Audio { get; private set; }
-    public static AtlasManager Atlas { get; private set; }
-    public static CrossPlatformInputManager Input { get; private set; }
     public static TaskManager Task { get; private set; }
     public static QualityManager Quality { get; private set; }
     public static SDKManager SDK { get; private set; }
@@ -90,7 +91,6 @@ public class GameEntry : MonoBehaviour
         Log(LogCategory.Procedure, "GameEntry.OnStart()");
         Logger = new LoggerManager();
         Event = new EventManager();
-        Time = new TimeManager();
         Data = new DataManager();
         Fsm = new FsmManager();
         Procedure = new ProcedureManager();
@@ -103,8 +103,6 @@ public class GameEntry : MonoBehaviour
         UI = new UIManager();
         Net = new NetManager();
         Audio = new AudioManager();
-        Atlas = new AtlasManager();
-        Input = new CrossPlatformInputManager();
         Task = new TaskManager();
         Quality = new QualityManager();
         SDK = new SDKManager();
@@ -116,17 +114,13 @@ public class GameEntry : MonoBehaviour
         DataTable.Init();
         Http.Init();
         Localization.Init();
-        Pool.Init();
-        Scene.Init();
-        Loader.Init();
+        // Pool.Init();
         UI.Init();
         Net.Init();
         Audio.Init();
-        Atlas.Init();
         SDK.Init();
         Dialogue.Init();
         Task.Init();
-        Time.Init();
         Guide.Init();
         RestaurantManager.Init();
         //进入第一个流程
@@ -144,7 +138,6 @@ public class GameEntry : MonoBehaviour
         StartCoroutine(GameUtil.CheckKeys(keyMappings));
         ViewQueueManager.Instance.RegisterEvents();
         Initialize();
-        Time.CreateTimerLoop(this, 15f, -1, (t) => { Data.SaveData(true); }, null, true);
     }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -210,19 +203,15 @@ public class GameEntry : MonoBehaviour
 
     void Update()
     {
-        Time.OnUpdate();
         Data.OnUpdate();
         Procedure.OnUpdate();
         Pool.OnUpdate();
         Scene.OnUpdate();
-        Loader.OnUpdate();
         UI.OnUpdate();
         Net.OnUpdate();
         Audio.OnUpdate();
-        Atlas.OnUpdate();
         SDK.OnUpdate();
         Dialogue.OnUpdate();
-        Input.OnUpdate();
         Task.OnUpdate();
         Guide.OnUpdate();
         RestaurantManager.OnUpdate();
@@ -256,40 +245,6 @@ public class GameEntry : MonoBehaviour
     public Transform GetSayItemParent()
     {
         return UIGroups[4].Group;
-    }
-
-    public async void ShowBackGround(BGType _type, string _bgName)
-    {
-        // MainBg.gameObject.MSetActive(false);
-        // BattleBg.gameObject.MSetActive(false);
-        // if (_type == BGType.Main)
-        // {
-        //     if (MainBg.sprite == null || (MainBg.sprite != null && MainBg.sprite.name != _bgName))
-        //     {
-        //         Texture2D texture = await GameEntry.Loader.LoadMainAssetAsync<Texture2D>(_bgName, this.gameObject);
-        //         if (texture != null)
-        //         {
-        //             Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),new Vector2(0.5f, 0.5f));
-        //             sprite.name = _bgName;
-        //             MainBg.sprite = sprite;
-        //         }
-        //     }
-        //     MainBg.gameObject.MSetActive(true);
-        // }
-        // else if (_type == BGType.Battle)
-        // {
-        //     if (BattleBg.sprite == null || (BattleBg.sprite != null && BattleBg.sprite.name != _bgName))
-        //     {
-        //         Texture2D texture = await GameEntry.Loader.LoadMainAssetAsync<Texture2D>(_bgName, this.gameObject);
-        //         if (texture != null)
-        //         {
-        //             Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),new Vector2(0.5f, 0.5f));
-        //             sprite.name = _bgName;
-        //             BattleBg.sprite = sprite;
-        //         }
-        //     }
-        //     BattleBg.gameObject.MSetActive(true);
-        // }
     }
 
     public static void Log(LogCategory catetory, object message, params object[] args)

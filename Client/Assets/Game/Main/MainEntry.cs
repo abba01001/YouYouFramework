@@ -3,6 +3,7 @@ using System;
 using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using YooAsset;
 
 namespace Main
 {
@@ -66,31 +67,12 @@ namespace Main
         public event Action<float> ActionPreloadUpdate;
         public event Action ActionPreloadComplete;
 
-        /// <summary>
-        /// 下载管理器
-        /// </summary>
-        public static DownloadManager Download { get; private set; }
-        /// <summary>
-        /// 资源管理器
-        /// </summary>
-        public static CheckVersionManager Assets { get; private set; }
-        /// <summary>
-        /// 类对象池
-        /// </summary>
         public static ClassObjectPool ClassObjectPool { get; private set; }
-
-        /// <summary>
-        /// 热更新管理器
-        /// </summary>
-        public static HotfixManager Hotfix { get; private set; }
 
         public static ReporterManager Reporter { get; private set; }
         
-        /// <summary>
-        /// 单例
-        /// </summary>
         public static MainEntry Instance { get; private set; }
-
+        EPlayMode ePlayMode;
         public static bool IsOfflineMode { get; set; } = false;//离线模式
         void OnValidate()
         {
@@ -103,36 +85,49 @@ namespace Main
         private void Awake()
         {
             Instance = this;
-
-            //屏幕常亮
-            Screen.sleepTimeout = SleepTimeout.NeverSleep;
+            Screen.sleepTimeout = SleepTimeout.NeverSleep; //屏幕常亮
 
             //此处以后判断如果不是编辑器模式 要根据设备信息判断等级
             CurrDeviceGrade = m_CurrDeviceGrade;
             ParamsSettings = m_ParamsSettings;
             MacroSettings = m_MacroSettings;
+            
             //初始化系统参数
             HttpRetry = ParamsSettings.GetGradeParamData(YFConstDefine.Http_Retry, CurrDeviceGrade);
             HttpRetryInterval = ParamsSettings.GetGradeParamData(YFConstDefine.Http_RetryInterval, CurrDeviceGrade);
         }
-        private async UniTask Start()
+        private async void Start()
         {
-            Download = new DownloadManager();
-            Assets = new CheckVersionManager();
             ClassObjectPool = new ClassObjectPool();
-            Hotfix = new HotfixManager();
             Reporter = gameObject.GetComponentInChildren<ReporterManager>();
             
-            await Hotfix.Init();
+            //开始检查更新
+
+#if UNITY_EDITOR
+            ePlayMode = EPlayMode.EditorSimulateMode;
+#else
+            ePlayMode = EPlayMode.HostPlayMode;
+#endif
+            
+            CheckVersionCtrl.Instance.CheckVersionChange(ePlayMode, async () =>
+            {
+                // 检查更新完成, 加载Hotfix代码(HybridCLR)
+                await HotfixManager.Instance.LoadHotifx();
+
+                //启动YouYouFramework框架入口
+                var operation = CheckVersionCtrl.Instance.DefaultPackage.LoadAssetAsync("Assets/Game/Download/Prefab/GameEntry.prefab");
+                await operation.Task;
+                GameObject gameEntryAsset = operation.AssetObject as GameObject;
+                Instantiate(gameEntryAsset);
+            });
+            
         }
         
         private void Update()
         {
-            Download.OnUpdate();
         }
         private void OnApplicationQuit()
         {
-            Download.Dispose();
         }
 
         public static void Log(LogCategory catetory, object message, params object[] args)
@@ -181,6 +176,31 @@ namespace Main
             }
             Debug.LogError(string.Format("youyouLog=={0}=={1}", catetory.ToString(), value));
 #endif
+        }
+        
+        public static void Log(object message)
+        {
+// #if DEBUG_LOG_NORMAL
+            //由于性能原因，如果在Build Settings中没有勾上“Development Build”
+            //即使开启了DEBUG_LOG_NORMAL也依然不打印普通日志， 只打印警告日志和错误日志
+            // if (!Debug.isDebugBuild)
+            // {
+                // return;
+            // }
+            Debug.Log($"MainEntryLog==>{message}");
+// #endif
+        }
+        public static void LogWarning(object message)
+        {
+// #if DEBUG_LOG_WARNING
+            Debug.LogWarning($"MainEntryLog==>{message}");
+// #endif
+        }
+        public static void LogError(object message)
+        {
+// #if DEBUG_LOG_ERROR
+            Debug.LogError($"MainEntryLog==>{message}");
+// #endif
         }
 
         public void PreloadBegin()

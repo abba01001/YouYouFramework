@@ -10,6 +10,7 @@ using COSXML;
 using COSXML.Auth;
 using COSXML.Model.Object;
 using COSXML.Utils;
+using Cysharp.Threading.Tasks;
 using Main;
 using MessagePack;
 using MySql.Data.MySqlClient;
@@ -18,7 +19,7 @@ using Protocols.Player;
 using UnityEngine;
 
 
-public class SDKManager : Observable<SDKManager>
+public class SDKManager
 {
     private MySqlConnection sqlConnection;
     public void Init()
@@ -74,9 +75,9 @@ public class SDKManager : Observable<SDKManager>
             using (FileStream fileStream = new FileStream(zipFilePath, FileMode.Open, FileAccess.Read))
             {
                 // 创建COS客户端实例
-                CosXml cosXml = CreateCosXml();
+                CosXml cosXml = await CreateCosXml();
                 string fileName = $"{userId}.txt"; // 文件扩展名改为txt
-                var dic = SecurityUtil.GetSecretKeyDic();
+                var dic =  SecurityUtil.GetSecretKeyDic();
                 // 创建上传请求
                 PutObjectRequest request = new PutObjectRequest(dic["bucket"], "Unity/LogData/" + fileName, fileStream);
                 request.SetSign(TimeUtils.GetCurrentTime(TimeUnit.Seconds), 600);
@@ -94,12 +95,12 @@ public class SDKManager : Observable<SDKManager>
         });
     }
 
-    public async void DownloadGameData(string userId)
+    public async UniTask DownloadGameData(string userId)
     {
-        CosXml cosXml = CreateCosXml();
+        CosXml cosXml = await CreateCosXml();
         string fileName = $"{userId}.bin";
         string tempFileName = $"temp_{userId}.bin";
-        var dic = SecurityUtil.GetSecretKeyDic();
+        var dic =  SecurityUtil.GetSecretKeyDic();
         string bucketName = dic["bucket"];
         string filePath = "Unity/GameData/" + fileName; // COS 上的文件路径
         string localDir = Application.persistentDataPath;
@@ -189,9 +190,9 @@ public class SDKManager : Observable<SDKManager>
     //下载头像
     public async Task<Texture2D> DownloadAvatar(string spriteId, Action<Texture2D> action = null)
     {
-        CosXml cosXml = CreateCosXml();
+        CosXml cosXml = await CreateCosXml();
         string fileName = $"{spriteId}.jpg"; // 头像文件名
-        var dic = SecurityUtil.GetSecretKeyDic();
+        var dic =  SecurityUtil.GetSecretKeyDic();
         string bucketName = dic["bucket"];
         string filePath = "Unity/HeadImage/" + fileName; // COS 上的文件路径
         string localDir = Path.Combine(Application.persistentDataPath, "HeadIcon"); // 创建 "HeadIcon" 文件夹路径
@@ -240,9 +241,9 @@ public class SDKManager : Observable<SDKManager>
         }
     }
 
-    static CosXml CreateCosXml()
+    static async UniTask<CosXml> CreateCosXml()
     {
-        var dic = SecurityUtil.GetSecretKeyDic();
+        var dic =  SecurityUtil.GetSecretKeyDic();
         CosXmlConfig config = new CosXmlConfig.Builder()
             .SetConnectionTimeoutMs(60000) //设置连接超时时间，单位毫秒，默认45000ms
             .SetReadWriteTimeoutMs(40000) //设置读写超时时间，单位毫秒，默认45000ms
@@ -263,13 +264,14 @@ public class SDKManager : Observable<SDKManager>
     // 初始化数据库连接
     public async Task InitSqlConnect()
     {
+        var dic =  SecurityUtil.GetSqlKeyDic();
         var builder = new MySqlConnectionStringBuilder
         {
-            Server = SecurityUtil.GetSqlKeyDic()["Server"],
-            UserID = SecurityUtil.GetSqlKeyDic()["User ID"],
-            Password = SecurityUtil.GetSqlKeyDic()["Password"],
-            Database = SecurityUtil.GetSqlKeyDic()["Database"],
-            Port = UInt32.Parse(SecurityUtil.GetSqlKeyDic()["Port"]),
+            Server = dic["Server"],
+            UserID = dic["User ID"],
+            Password = dic["Password"],
+            Database = dic["Database"],
+            Port = UInt32.Parse(dic["Port"]),
             CharacterSet = "utf8mb4"
         };
 

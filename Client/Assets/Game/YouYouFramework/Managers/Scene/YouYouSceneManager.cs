@@ -1,10 +1,12 @@
 using Cysharp.Threading.Tasks;
-using Main;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
+namespace YouYouFramework
+{
     /// <summary>
     /// 场景管理器
     /// </summary>
@@ -18,22 +20,12 @@ using UnityEngine.SceneManagement;
         /// <summary>
         /// 当前加载的场景组
         /// </summary>
-        private SceneGroupName m_CurrSceneGroupName;
+        private string m_CurrSceneGroupName;
 
         /// <summary>
         /// 本次场景加载的最大数量
         /// </summary>
         private int SceneLoadMaxCount;
-
-        /// <summary>
-        /// 当前场景组
-        /// </summary>
-        public List<Sys_SceneEntity> CurrSceneEntityGroup { get; private set; }
-
-        /// <summary>
-        /// 当前已经加载或者卸载的明细数量
-        /// </summary>
-        private int m_CurrUnloadSceneDetailCount = 0;
 
         /// <summary>
         /// 场景是否加载中
@@ -59,55 +51,49 @@ using UnityEngine.SceneManagement;
         {
             m_SceneLoaderList = new LinkedList<SceneLoaderRoutine>();
             m_TargetProgressDic = new Dictionary<string, float>();
-            CurrSceneEntityGroup = new List<Sys_SceneEntity>();
-        }
 
-        internal void Init()
-        {
+            //监听单个场景加载完毕
             SceneManager.sceneLoaded += (Scene scene, LoadSceneMode sceneMode) =>
             {
-                if (CurrSceneEntityGroup.Count == 0) return;
-                if (CurrSceneEntityGroup.Find(x => x.AssetFullPath == scene.path) == null) return;
-
-                //设置列表里的第一个场景为主场景(激活场景)
-                if (scene.path == CurrSceneEntityGroup[0].AssetFullPath)
+                if (m_SceneLoaderList.Count == 0) return;
+                foreach (var item in m_SceneLoaderList)
                 {
-                    SceneManager.SetActiveScene(scene);
-                    //初始化对象池
-                    GameEntry.Pool.GameObjectPool.InitScenePool();
+                    if (item.SceneFullPath == scene.path)
+                    {
+                        //设置列表里的第一个场景为主场景(激活场景)
+                        if (scene.path == m_SceneLoaderList.First.Value.SceneFullPath)
+                        {
+                            SceneManager.SetActiveScene(scene);
+                            //初始化对象池
+                            GameEntry.Pool.GameObjectPool.InitScenePool();
+                        }
+
+                        m_TargetProgressDic[scene.path] = 1;
+                        break;
+                    }
                 }
 
-                m_TargetProgressDic[scene.path] = 1;
             };
-            SceneManager.sceneUnloaded += (Scene scene) =>
-            {
-                if (CurrSceneEntityGroup.Count == 0) return;
-                if (CurrSceneEntityGroup.Find(x => x.AssetFullPath == scene.path) == null) return;
 
-                m_CurrUnloadSceneDetailCount++;
-                if (m_CurrUnloadSceneDetailCount == CurrSceneEntityGroup.Count)
-                {
-                    Resources.UnloadUnusedAssets();
-                    GC.Collect();
-                    LoadNewScene();
-                }
-            };
         }
 
-        public UniTask LoadSceneAsync(SceneGroupName sceneName, int sceneLoadCount = -1)
-        {
-            var task = new UniTaskCompletionSource();
-            LoadSceneAction(sceneName, sceneLoadCount, () => task.TrySetResult());
-            return task.Task;
-        }
         /// <summary>
         /// 加载场景
         /// </summary>
-        public void LoadSceneAction(SceneGroupName sceneName, int sceneLoadCount = -1, Action onComplete = null)
+        public UniTask LoadSceneAsync(string sceneName, int sceneLoadCount = -1)
+        {
+            var task = new UniTaskCompletionSource();
+            LoadSceneAction(sceneName, sceneLoadCount, () =>
+            {
+                task.TrySetResult();
+            });
+            return task.Task;
+        }
+        public void LoadSceneAction(string sceneName, int sceneLoadCount = -1, Action onComplete = null)
         {
             if (m_CurrSceneIsLoading)
             {
-                GameEntry.LogError(LogCategory.Framework, "场景{0}正在加载中", m_CurrSceneGroupName);
+                GameEntry.LogError(LogCategory.Framework, string.Format("场景{0}正在加载中", m_CurrSceneGroupName));
                 return;
             }
             m_CurrSceneIsLoading = true;
@@ -115,7 +101,7 @@ using UnityEngine.SceneManagement;
             m_OnComplete = onComplete;
             if (m_CurrSceneGroupName == sceneName)
             {
-                GameEntry.LogError(LogCategory.Framework, "正在重复加载场景{0}", sceneName);
+                GameEntry.LogError(LogCategory.Framework, string.Format("正在重复加载场景{0}", sceneName));
                 m_OnComplete?.Invoke();
                 return;
             }
@@ -126,19 +112,16 @@ using UnityEngine.SceneManagement;
             SceneLoadMaxCount = sceneLoadCount;
 
             //卸载当前场景并加载新场景
-            if (CurrSceneEntityGroup.Count > 0)
+            if (m_SceneLoaderList.Count > 0)
             {
-                m_CurrUnloadSceneDetailCount = 0;
-                for (int i = 0; i < CurrSceneEntityGroup.Count; i++)
+                foreach (var routine in m_SceneLoaderList)
                 {
-                    SceneLoaderRoutine routine = new SceneLoaderRoutine();
-                    routine.UnLoadScene(CurrSceneEntityGroup[i].AssetFullPath);
+                    routine.UnLoadScene();
                 }
+                m_SceneLoaderList.Clear();
             }
-            else
-            {
-                LoadNewScene();
-            }
+
+            LoadNewScene();
         }
 
         /// <summary>
@@ -146,23 +129,25 @@ using UnityEngine.SceneManagement;
         /// </summary>
         private void LoadNewScene()
         {
-            m_SceneLoaderList.Clear();
-            CurrSceneEntityGroup = GameEntry.DataTable.Sys_SceneDBModel.GetListByGroupName(m_CurrSceneGroupName.ToString(), SceneLoadMaxCount);
-            for (int i = 0; i < CurrSceneEntityGroup.Count; i++)
+            var operation = GameEntry.Loader.DefaultPackage.UnloadUnusedAssetsAsync();
+            operation.WaitForAsyncComplete(); //支持同步操作
+            // await operation;
+
+            List<Sys_SceneEntity> currSceneEntityGroup = GameEntry.DataTable.Sys_SceneDBModel.GetListByGroupName(m_CurrSceneGroupName.ToString(), SceneLoadMaxCount);
+
+            for (int i = 0; i < currSceneEntityGroup.Count; i++)
             {
-                SceneLoaderRoutine routine = new SceneLoaderRoutine();
+                SceneLoaderRoutine routine = new();
                 m_SceneLoaderList.AddLast(routine);
-                routine.LoadScene(CurrSceneEntityGroup[i].AssetFullPath, (string sceneDetailId, float progress) =>
+                routine.LoadScene(currSceneEntityGroup[i].AssetFullPath, (string sceneFullPath, float progress) =>
                 {
                     //记录每个场景明细当前的进度
-                    m_TargetProgressDic[sceneDetailId] = progress;
+                    m_TargetProgressDic[sceneFullPath] = progress;
                 });
             }
         }
 
-        /// <summary>
-        /// 更新
-        /// </summary>
+        public event Action<float> LoadingUpdateAction;
         internal void OnUpdate()
         {
             if (m_CurrSceneIsLoading)
@@ -187,16 +172,14 @@ using UnityEngine.SceneManagement;
                     {
                         m_CurrProgress += Time.deltaTime * 0.8f;
                     }
-                    m_CurrProgress = Mathf.Min(m_CurrProgress, targetProgress);//这里是为了防止进度超过100%， 比如完成了显示102%
-
-                    VarFloat varFloat = new VarFloat();
-                    varFloat.Value = m_CurrProgress;
-                    GameEntry.Event.Dispatch(Constants.EventName.LoadingSceneUpdate, varFloat);
+                    m_CurrProgress = Mathf.Min(m_CurrProgress, targetProgress);
+                    LoadingUpdateAction?.Invoke(m_CurrProgress);
                 }
 
-                if (m_CurrProgress == 1)
+                if (m_CurrProgress >= 1)
                 {
-                    GameEntry.Log(LogCategory.Scene, "场景加载完毕=={0}", CurrSceneEntityGroup.ToJson());
+                    List<Sys_SceneEntity> currSceneEntityGroup = GameEntry.DataTable.Sys_SceneDBModel.GetListByGroupName(m_CurrSceneGroupName.ToString(), SceneLoadMaxCount);
+                    GameEntry.Log(LogCategory.Scene, string.Format("场景加载完毕=={0}", currSceneEntityGroup.ToJson()));
                     m_CurrSceneIsLoading = false;
                     m_OnComplete?.Invoke();
                 }
@@ -219,16 +202,5 @@ using UnityEngine.SceneManagement;
             return progress;
         }
 
-        public void UnLoadCurrScene()
-        {
-            if (CurrSceneEntityGroup.Count == 0) return;
-            for (int i = 0; i < CurrSceneEntityGroup.Count; i++)
-            {
-                SceneLoaderRoutine routine = new SceneLoaderRoutine();
-                routine.UnLoadScene(CurrSceneEntityGroup[i].AssetFullPath);
-            }
-            m_CurrSceneGroupName = SceneGroupName.None;
-            CurrSceneEntityGroup.Clear();
-        }
-
     }
+}

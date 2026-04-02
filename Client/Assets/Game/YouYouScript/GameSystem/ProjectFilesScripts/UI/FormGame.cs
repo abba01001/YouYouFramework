@@ -18,21 +18,7 @@ namespace Watermelon
 
         private UIWorldChangePopUp worldChangePop;
         MissionUIPanel missionUI;
-        public MissionUIPanel MissionUIPanel
-        {
-            get
-            {
-                if (missionUI == null)
-                {
-                    PoolObj obj =  GameEntry.Pool.GameObjectPool.SpawnSynchronous("Assets/Game/Download/Prefab/UI/Panel/MissionPanel.prefab");
-                    missionUI = obj.gameObject.GetComponent<MissionUIPanel>();
-                    missionUI.transform.SetParent(transform,false);
-                    missionUI.transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -20);
-                    missionUI.gameObject.MSetActive(true);
-                }
-                return missionUI;
-            }
-        }
+        public MissionUIPanel MissionUIPanel => missionUI;
 
         [Space]
         [SerializeField] Button upgradesButton;
@@ -54,11 +40,22 @@ namespace Watermelon
         private TweenCaseCollection caseCollection;
         private Coroutine shineCoroutine;
 
-        protected override void Awake()
+        protected override async UniTask Awake()
         {
             base.Awake();
+            if (missionUI == null)
+            {
+                GameObject obj = await  GameEntry.Pool.GameObjectPool.Spawn("Assets/Game/Download/Prefab/UI/Panel/MissionPanel.prefab");
+                missionUI = obj.gameObject.GetComponent<MissionUIPanel>();
+                missionUI.transform.SetParent(transform,false);
+                missionUI.transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -20);
+                missionUI.gameObject.MSetActive(true);
+            }
             Instance = this;
-            GameEntry.Event.AddEventListener(Constants.EventName.ExitCurWorldEvent,OnExitCurWorldEvent);
+            GameEntry.Event.AddEventListener(Constants.EventName.ExitCurWorldEvent,(object data) =>
+            {
+                _ = OnExitCurWorldEvent(data);
+            });
             GameUtil.LogError("初始化FormGame");
             Init();
             GameUtil.LogError("初始化FormGame完成");
@@ -67,14 +64,17 @@ namespace Watermelon
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            GameEntry.Event.RemoveEventListener(Constants.EventName.ExitCurWorldEvent,OnExitCurWorldEvent);
+            GameEntry.Event.RemoveEventListener(Constants.EventName.ExitCurWorldEvent, (object data) =>
+            {
+                _ = OnExitCurWorldEvent(data);
+            });
         }
 
-        private void OnExitCurWorldEvent(object data)
+        private async UniTask OnExitCurWorldEvent(object data)
         {
             if (worldChangePop == null)
             {
-                PoolObj obj =  GameEntry.Pool.GameObjectPool.SpawnSynchronous("Assets/Game/Download/Prefab/UI/Panel/WorldChangePanel.prefab");
+                GameObject obj = await GameEntry.Pool.GameObjectPool.Spawn("Assets/Game/Download/Prefab/UI/Panel/WorldChangePanel.prefab");
                 worldChangePop = obj.gameObject.GetComponent<UIWorldChangePopUp>();
                 worldChangePop.transform.SetParent(transform,false);
             }
@@ -86,7 +86,7 @@ namespace Watermelon
         {
             joystick.Init(CurrCanvas);
 
-            inventoryButton.onClick.AddListener(OnInventoryButtonClicked);
+            inventoryButton.onClick.AddListener(()=>_ = OnInventoryButtonClicked());
             upgradesButton.onClick.AddListener(OnUpgradesButonClicked);
             iapStoreButton.onClick.AddListener(OnIAPStoreButtonClicked);
             pauseButton.onClick.AddListener(OnPauseButtonClicked);
@@ -119,9 +119,9 @@ namespace Watermelon
 
         #region Player Inventory
 
-        private void OnInventoryButtonClicked()
+        private async UniTask OnInventoryButtonClicked()
         {
-            FormInventory form = GameEntry.UI.OpenUIForm<FormInventory>();
+            FormInventory form = await GameEntry.UI.OpenUIForm<FormInventory>();
             form.ActivateTutorial(inventoryTutorial.activeSelf);
 
             inventoryTutorial.SetActive(false);

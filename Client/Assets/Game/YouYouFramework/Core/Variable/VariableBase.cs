@@ -3,39 +3,49 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-/// <summary>
-/// 变量基类
-/// </summary>
-public abstract class VariableBase
+namespace YouYouFramework
 {
     /// <summary>
-    /// 获取变量类型
+    /// 变量基类
     /// </summary>
-    public abstract Type Type { get; }
-
-    /// <summary>
-    /// 引用计数
-    /// </summary>
-    public byte ReferenceCount { get; private set; }
-
-    /// <summary>
-    /// 保留对象
-    /// </summary>
-    public void Retain()
+    public abstract class VariableBase
     {
-        ReferenceCount++;
-    }
-
-    /// <summary>
-    /// 释放对象
-    /// </summary>
-    public void Release()
-    {
-        ReferenceCount--;
-        if (ReferenceCount < 1)
+        /// <summary>
+        /// 获取变量类型
+        /// </summary>
+        public abstract Type Type
         {
-            //回池操作
-            GameEntry.Pool.EnqueueVarObject(this);
+            get;
+        }
+
+        /// <summary>
+        /// 引用计数
+        /// </summary>
+        public byte ReferenceCount
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 保留对象
+        /// </summary>
+        public void Retain()
+        {
+            ReferenceCount++;
+        }
+
+        /// <summary>
+        /// 释放对象
+        /// </summary>
+        public void Release()
+        {
+            ReferenceCount--;
+            if (ReferenceCount < 1)
+            {
+                //回池操作
+                GameEntry.Pool.ClassObjectPool.Enqueue(this);
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using Object = UnityEngine.Object;
 
 
@@ -79,15 +80,15 @@ using Object = UnityEngine.Object;
         #endregion
 
         #region OpenUIForm 打开UI窗口
-        public T OpenUIForm<T>(object userData = null) where T : UIFormBase
+        public async UniTask<T> OpenUIForm<T>(object userData = null) where T : UIFormBase
         {
             // Dictionary<string,object> dic = new Dictionary<string,object>();
             // dic.Add("Form",typeof(T).Name);
             // TalkingDataSDK.OnEvent("显示Form",dic,null);
             // TalkingDataSDK.OnPageBegin($"{typeof(T).Name}");
-            return OpenUIForm<T>(typeof(T).Name, userData);
+            return await OpenUIForm<T>(typeof(T).Name, userData);
         }
-        public T OpenUIForm<T>(string uiFormName, object userData = null) where T : UIFormBase
+        public async UniTask<T> OpenUIForm<T>(string uiFormName, object userData = null) where T : UIFormBase
         {
             //1,读表
             Sys_UIFormEntity sys_UIForm = GameEntry.DataTable.Sys_UIFormDBModel.GetEntity(uiFormName);
@@ -110,7 +111,7 @@ using Object = UnityEngine.Object;
             }
 
             //对象池没有, 克隆新的
-            GameObject uiObj = GameUtil.LoadPrefabClone(sys_UIForm.AssetFullPath, GameEntry.UI.GetUIGroup(sys_UIForm.UIGroupId).Group);
+            GameObject uiObj = await GameUtil.LoadPrefabClone(sys_UIForm.AssetFullPath, GameEntry.UI.GetUIGroup(sys_UIForm.UIGroupId).Group);
 
             //初始化UI
             formBase = uiObj.GetComponent<UIFormBase>();

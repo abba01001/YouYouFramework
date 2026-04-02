@@ -20,9 +20,9 @@ public class FormLogin : UIFormBase
     [SerializeField] private TMP_InputField password;
     [SerializeField] private Button loginBtn;
     [SerializeField] private Image bgImage;
-    protected override void Awake()
+    protected override async UniTask Awake()
     {
-        base.Awake();
+        await base.Awake();
         LoadLoginBg();
         loginBtn.SetButtonClick(() =>
         {
@@ -53,7 +53,7 @@ public class FormLogin : UIFormBase
              GameEntry.Data.InitGameData(binaryData);
 
              long timestampSeconds = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds();
-             GameEntry.Time.InitNetTime(timestampSeconds);
+             //GameEntry.Time.InitNetTime(timestampSeconds);
 
              await UniTask.Delay(100);
              

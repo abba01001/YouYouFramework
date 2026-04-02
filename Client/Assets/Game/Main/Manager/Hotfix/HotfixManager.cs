@@ -13,6 +13,7 @@ namespace Main
     public class HotfixManager
     {
         private static AssetBundle hotfixAb;
+        public static HotfixManager Instance { get; private set; } = new();
 
         public HotfixManager()
         {
@@ -20,105 +21,28 @@ namespace Main
             System.Data.AcceptRejectRule acceptRejectRule = System.Data.AcceptRejectRule.None;
             System.Net.WebSockets.WebSocketReceiveResult webSocketReceiveResult = null;
         }
-        public async UniTask Init()
-        {
-#if EDITORLOAD && UNITY_EDITOR
-            GameObject gameEntry = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Game/Download/Hotfix/GameEntry.prefab");
-            UnityEngine.Object.Instantiate(gameEntry);
-            return;
-# else
-            MainEntry.Log(MainEntry.LogCategory.Assets,$"请求云端Apk和AssetBundle版本信息=>{SystemModel.Instance.CurrChannelConfig.APKVersionUrl}");
-            string result = await MainEntry.Download.GetAPKVersion(SystemModel.Instance.CurrChannelConfig.APKVersionUrl);
-            await InitServerVersion(result);
-            await InitLocalVersion();
-            await CompareVersion();
-#endif
-        }
-        
-        private async UniTask InitServerVersion(string result)
-        {
-            string apkVersion = result.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)[0];
-            string sourceVersion = result.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)[1];
-            SystemModel.Instance.CurrChannelConfig.APKVersion = apkVersion;
-            SystemModel.Instance.CurrChannelConfig.SourceVersion = sourceVersion;
-        }
-        
-        private async UniTask InitLocalVersion()
-        {
-            TextAsset versionFile = Resources.Load<TextAsset>("version"); // 不带后缀名
-            if (versionFile != null)
-            {
-                string version = versionFile.text;
-                string[] versionLines = version.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
-                if (versionLines.Length >= 2)
-                {
-                    string apkVersion = versionLines[0]; // 第一行
-                    string assetVersion = versionLines[1]; // 第二行
-                    PlayerPrefs.SetString("apkVersion",apkVersion);
-                    PlayerPrefs.SetString("assetVersion",assetVersion);
-                }
-            }
-            else
-            {
-                PlayerPrefs.SetString("assetVersion",Application.version);
-                PlayerPrefs.SetString("apkVersion",Application.version);
-            }
-        }
 
-        
-        private async UniTask CompareVersion()
+        public async UniTask LoadHotifx()
         {
-            //初始化CDN的VersionFile信息
-           await MainEntry.Assets.VersionFile.InitCDNVersionFileAsync();
- 
 #if UNITY_EDITOR
-            PlayerPrefs.SetString("assetVersion",MainEntry.Assets.VersionFile.CdnAssetVersion);
-            PlayerPrefs.SetString("apkVersion", MainEntry.Assets.VersionFile.CdnApkVersion);
-            PlayerPrefs.Save();
-#else
-                //校验游戏版本
-                DownLoadApk dl = new DownLoadApk();
-                if (dl.CheckDownLoadApk())
-                {
-                    return;
-                }
+            MainEntry.Log("编辑器模式 不需要加载HybridCLR");
+            return;
 #endif
-            //下载并加载热更程序集
-            CheckAndDownload(YFConstDefine.HotfixAssetBundlePath, (string fileUrl) =>
-            {
-#if !UNITY_EDITOR || ASSETBUNDLE
-                    hotfixAb = AssetBundle.LoadFromFile(string.Format("{0}/{1}", Application.persistentDataPath, fileUrl));
-                    LoadMetadataForAOTAssemblies();
-                    System.Reflection.Assembly.Load(hotfixAb.LoadAsset<TextAsset>("Assembly-CSharp.dll.bytes").bytes);
-                    MainEntry.Log(MainEntry.LogCategory.Assets, "Assembly-CSharp.dll加载完毕");
-#else
-                hotfixAb = AssetBundle.LoadFromFile(string.Format("{0}/{1}", SystemModel.Instance.CurrChannelConfig.RealSourceUrl,fileUrl));
-#endif
-                UnityEngine.Object.Instantiate(hotfixAb.LoadAsset<GameObject>("formcheckversion.prefab"));
-                UnityEngine.Object.Instantiate(hotfixAb.LoadAsset<GameObject>("gameentry.prefab"));
-            });
-        }
- 
-        private async UniTask CheckAndDownload(string url, Action<string> onComplete)
-        {
-            bool isEquals = MainEntry.Assets.CheckVersionChangeSingle(url);
-            if (isEquals)
-            {
-                MainEntry.Log(MainEntry.LogCategory.Assets, "Hotfix热更资源没变化, 不用重新下载, url==" + url);
-                onComplete?.Invoke(url);
-            }
-            else
-            {
-                MainEntry.Log(MainEntry.LogCategory.Assets, "Hotfix热更资源有更新, 重新下载, url==" + url);
-                MainEntry.Download.BeginDownloadSingle(url, onComplete: onComplete);
-            }
-        }
+            await LoadMetadataForAOTAssemblies();
 
+            //加载热更Dll
+            var operation = CheckVersionCtrl.Instance.DefaultPackage.LoadAssetAsync("Assets/Game/Download/Hotfix/Assembly-CSharp.dll.bytes");
+            await operation.Task;
+            var hotfixAsset = operation.AssetObject as TextAsset;
+            System.Reflection.Assembly.Load(hotfixAsset.bytes);
+            MainEntry.Log("Assembly-CSharp.dll加载完毕");
+        }
+        
         /// <summary>
         /// 为aot assembly加载原始metadata， 这个代码放aot或者热更新都行。
         /// 一旦加载后，如果AOT泛型函数对应native实现不存在，则自动替换为解释模式执行
         /// </summary>
-        private static void LoadMetadataForAOTAssemblies()
+        private async UniTask LoadMetadataForAOTAssemblies()
         {
             SupplementAOTDll t = new SupplementAOTDll();
             /// 注意，补充元数据是给AOT dll补充元数据，而不是给热更新dll补充元数据。
@@ -127,81 +51,14 @@ namespace Main
             HomologousImageMode mode = HomologousImageMode.SuperSet;
             foreach (var aotDllName in t.aotMetaAssemblyFiles)
             {
-                byte[] dllBytes = hotfixAb.LoadAsset<TextAsset>(aotDllName + ".bytes").bytes;
+                var operation = CheckVersionCtrl.Instance.DefaultPackage.LoadAssetAsync($"Assets/Game/Download/Hotfix/{aotDllName}.dll.bytes");
+                await operation.Task;
+                var asset = operation.AssetObject as TextAsset;
                 // 加载assembly对应的dll，会自动为它hook。一旦aot泛型函数的native函数不存在，用解释器版本代码
-                LoadImageErrorCode err = RuntimeApi.LoadMetadataForAOTAssembly(dllBytes, mode);
+                LoadImageErrorCode err = RuntimeApi.LoadMetadataForAOTAssembly(asset.bytes, mode);
             }
             MainEntry.Log(MainEntry.LogCategory.Assets, "补充元数据Dll加载完毕==" + t.aotMetaAssemblyFiles.ToJson());
         }
-    }
-
-    public class DownLoadApk
-    {
-        private string apkFileName = "{0}.apk"; // APK 文件名，放在 StreamingAssets 中
-        public bool CheckDownLoadApk()
-        {
-            string localApk = PlayerPrefs.GetString("apkVersion", string.Empty);
-            string cloudApk = MainEntry.Assets.VersionFile.CdnApkVersion;
-            if (!string.IsNullOrEmpty(localApk) && !string.IsNullOrEmpty(cloudApk))
-            {
-                if (localApk != cloudApk)
-                {
-                    //直接下载整包
-                    MainEntry.Instance.StartCoroutine(DownloadAndInstall(string.Format(SystemModel.Instance.CurrChannelConfig.ApkUrl,cloudApk)));
-                    return true;
-                }
-            }
-            return false;
-        }
         
-        public IEnumerator DownloadAndInstall(string url)
-        {
-            using (UnityWebRequest www = UnityWebRequest.Get(url))
-            {
-                string tempPath = Path.Combine(Application.persistentDataPath,string.Format(apkFileName,MainEntry.Assets.VersionFile.CdnApkVersion));
-                if (File.Exists(tempPath))
-                {
-                    MainEntry.LogError(MainEntry.LogCategory.Assets, "找到本地安装包,直接安装。");
-                    InstallAPKInternal(tempPath);
-                }
-                
-                www.SendWebRequest();
-                // 循环检查进度
-                while (!www.isDone)
-                {
-                    MainEntry.LogError(MainEntry.LogCategory.Assets,$"下载进度: {www.downloadProgress * 100}%");
-                    yield return new WaitForSeconds(0.5f);
-                }
-
-                if (www.result == UnityWebRequest.Result.ConnectionError ||
-                    www.result == UnityWebRequest.Result.ProtocolError)
-                {
-                    MainEntry.LogError(MainEntry.LogCategory.Assets,www.error);
-                }
-                else
-                {
-                    // 将 APK 数据保存到临时文件
-                    if (File.Exists(tempPath)) File.Delete(tempPath);
-                    File.WriteAllBytes(tempPath, www.downloadHandler.data);
-                    // 调用内部安装方法
-                    if (InstallAPKInternal(tempPath))
-                    {
-                        PlayerPrefs.SetString("apkVersion",MainEntry.Assets.VersionFile.CdnApkVersion);
-                        PlayerPrefs.SetString("assetVersion",MainEntry.Assets.VersionFile.CdnAssetVersion);
-                        PlayerPrefs.Save();
-                    }
-                    else
-                    {
-                        Application.Quit();
-                    }
-                }
-            }
-        }
-
-        private bool InstallAPKInternal(string apkPath)
-        {
-            AndroidJavaClass javaClass = new AndroidJavaClass("com.example.mylibrary.Install");
-            return javaClass.CallStatic<bool>("安装apk", apkPath);
-        }
     }
 }

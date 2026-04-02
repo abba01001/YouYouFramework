@@ -6,6 +6,7 @@ using System;
 
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using UniRx;
 using UnityEngine.UI;
 
 
@@ -180,14 +181,14 @@ public class GuideManager
         GameObject width = GameUtil.FindObjectByPath(GameEntry.Instance.transform,entity.ClickWidth);
         while (width == null && retries < maxRetries)
         {
-            await GameEntry.Time.Delay(this, 0.5f); 
+            await UniTask.Delay(500); 
             width = GameUtil.FindObjectByPath(GameEntry.Instance.transform,entity.ClickWidth);
             retries++;
         }
 
         if (!width.activeInHierarchy)
         {
-            await GameEntry.Time.Delay(this, 0.5f); 
+            await UniTask.Delay(500); 
             GameUtil.LogError($"挂起引导状态，等待{width.transform.name}激活");
         }
         GameEntry.Guide.GuideGroup = new GuideGroup();
@@ -203,7 +204,7 @@ public class GuideManager
             
             if (entity.TimeToClose != 0)
             {
-                GameEntry.Time.CreateTimer(this, entity.TimeToClose, () =>
+                Observable.Timer(TimeSpan.FromSeconds(entity.TimeToClose)).Subscribe(_ =>
                 {
                     GuideUtil.CheckDirectNext();
                 });
@@ -236,7 +237,7 @@ public class GuideManager
     {
         GameEntry.Data.PlayerRoleData.curGuide = guidId;
         GameEntry.Data.PlayerRoleData.guideIds.Add(guidId);
-        GameEntry.Time.CreateTimer(this, 0.1f, () =>
+        Observable.Timer(TimeSpan.FromSeconds(0.1F)).Subscribe(_ =>
         {
             IsGuiding = false;
             if (CurTriggerEvent != string.Empty)

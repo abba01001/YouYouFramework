@@ -182,16 +182,16 @@ namespace Watermelon
         {
             OnMissionFinished?.Invoke();
 
-            Tween.DelayedCall(0.5f, () =>
+            Tween.DelayedCall(0.5f, async () =>
             {
                 if (activeMission.RewardType == MissionRewardType.Tool)
                 {
-                    FormUnlockBuilding form = GameEntry.UI.OpenUIForm<FormUnlockBuilding>();
+                    FormUnlockBuilding form = await GameEntry.UI.OpenUIForm<FormUnlockBuilding>();
                     form.Show(activeMission.ToolsReward.RewardInfo);
                 }
                 else if (activeMission.RewardType == MissionRewardType.Generic)
                 {
-                    FormUnlockBuilding form = GameEntry.UI.OpenUIForm<FormUnlockBuilding>();
+                    FormUnlockBuilding form = await GameEntry.UI.OpenUIForm<FormUnlockBuilding>();
                     form.Show(activeMission.GenericReward.RewardInfo);
                 }
             });

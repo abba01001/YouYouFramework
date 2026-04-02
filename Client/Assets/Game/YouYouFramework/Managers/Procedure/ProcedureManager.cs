@@ -63,11 +63,8 @@ using UnityEngine;
             FsmState<ProcedureManager>[] states = new FsmState<ProcedureManager>[count];
             states[(byte)ProcedureState.None] = new ProcedureNone();
             states[(byte)ProcedureState.Launch] = new ProcedureLaunch();
-            states[(byte)ProcedureState.CheckVersion] = new ProcedureCheckVersion();
             states[(byte)ProcedureState.Preload] = new ProcedurePreload();
             states[(byte)ProcedureState.Game] = new ProcedureGame();
-            states[(byte)ProcedureState.Battle] = new ProcedureBattle();
-            states[(byte)ProcedureState.MapEditor] = new ProcedureMapEditor();
             CurrFsm = GameEntry.Fsm.Create(this, states);
         }
         internal void OnUpdate()

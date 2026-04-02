@@ -79,7 +79,7 @@ namespace Watermelon
 
         public static bool IsInRange(IDistanceToggle distanceToggle)
         {
-            GameUtil.LogCurTimerLog("DistanceToggle===2222");
+            GameUtil.LogCurTimerLog($"DistanceToggle===2222======{playerTransform == null}");
 
             tempDistance = playerTransform.position - distanceToggle.OriginPositionOfDT;
             tempDistance.y = 0;

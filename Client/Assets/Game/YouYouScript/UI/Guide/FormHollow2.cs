@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,8 +13,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(HollowOutMask))]
 public class FormHollow2 : UIFormBase
 {
-    [Header("强制观看时间")]
-    [SerializeField] float DelayTime;
+    [Header("强制观看时间")] [SerializeField] float DelayTime;
 
     private Button button;
 
@@ -45,10 +45,7 @@ public class FormHollow2 : UIFormBase
         if (DelayTime > 0)
         {
             button.enabled = false;
-            GameEntry.Time.CreateTimer(this, DelayTime, () =>
-            {
-                button.enabled = true;
-            });
+            Observable.Timer(TimeSpan.FromSeconds(DelayTime)).Subscribe(_ => { button.enabled = true; });
         }
     }
 }

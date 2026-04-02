@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,9 +21,9 @@ public class FormMask : UIFormBase, ICanvasRaycastFilter
     private static GameObject target;
     private static Tweener _topOriCloseTween; // 保存Tween引用
     private static Transform arrow; 
-    protected override void Awake()
+    protected override async UniTask Awake()
     {
-        base.Awake();
+        await base.Awake();
         BlackMask = transform.Get<Image>("BlackMask");
         BlackMask.gameObject.MSetActive(false);
         GuideMask = transform.Get<Image>("GuideMask");

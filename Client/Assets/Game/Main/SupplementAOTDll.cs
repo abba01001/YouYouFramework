@@ -4,6 +4,7 @@ public class SupplementAOTDll
 {
     public List<string> aotMetaAssemblyFiles = new List<string>()
     {
+        "Core.UE.dll",
         "DOTween.dll",
         "Google.Protobuf.dll",
         "Main.dll",
@@ -11,10 +12,11 @@ public class SupplementAOTDll
         "Newtonsoft.Json.dll",
         "System.Core.dll",
         "System.dll",
+        "UniRx.dll",
         "UniTask.dll",
+        "Unity.InputSystem.dll",
         "Unity.VisualScripting.Core.dll",
         "UnityEngine.AndroidJNIModule.dll",
-        "UnityEngine.AssetBundleModule.dll",
         "UnityEngine.CoreModule.dll",
         "UnityEngine.JSONSerializeModule.dll",
         "mscorlib.dll",

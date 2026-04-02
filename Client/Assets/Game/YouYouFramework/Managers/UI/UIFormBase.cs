@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 using Watermelon;
@@ -35,7 +36,7 @@ public class UIFormBase : MonoBehaviour
     private readonly Vector2 HIDE_POSITION = new Vector2(0, -2000);
     protected Image fadeImage;
     protected RectTransform panelRectTransform;
-    protected virtual void Awake()
+    protected virtual async UniTask Awake()
     {
         Name = transform.name;
         if (GetComponent<GraphicRaycaster>() == null) gameObject.AddComponent<GraphicRaycaster>();
@@ -50,24 +51,23 @@ public class UIFormBase : MonoBehaviour
         }
     }
 
-    protected virtual void Start()
+    protected async virtual void Start()
     {
-        GameEntry.Time.Yield(() =>
+        await UniTask.Yield();
+
+        //这里是禁用所有按钮的导航功能，因为用不上, 还可能有意外BUG
+        Button[] buttons = GetComponentsInChildren<Button>(true);
+        for (int i = 0; i < buttons.Length; i++)
         {
-            //这里是禁用所有按钮的导航功能，因为用不上, 还可能有意外BUG
-            Button[] buttons = GetComponentsInChildren<Button>(true);
-            for (int i = 0; i < buttons.Length; i++)
-            {
-                Navigation navigation = buttons[i].navigation;
-                navigation.mode = Navigation.Mode.None;
-                buttons[i].navigation = navigation;
-            }
-        });
+            Navigation navigation = buttons[i].navigation;
+            navigation.mode = Navigation.Mode.None;
+            buttons[i].navigation = navigation;
+        }
     }
 
     protected virtual void OnEnable()
     {
-        GameEntry.Time.Yield(OnShow);
+        Observable.NextFrame().Subscribe(_ => OnShow());
     }
 
     protected virtual void OnDisable()

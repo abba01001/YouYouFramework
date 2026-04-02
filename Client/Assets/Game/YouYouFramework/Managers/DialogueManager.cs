@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Fungus;
 using Main;
 using Newtonsoft.Json;
+using UniRx;
 using UnityEngine;
 
 
@@ -11,7 +12,7 @@ public enum DialogueConfigId
     FirstEntryGame = 1
 }
 
-public class DialogueManager : Observable<DialogueManager>
+public class DialogueManager
 {
     #region 变量
     private Flowchart Flowchart { get; set; }
@@ -49,7 +50,7 @@ public class DialogueManager : Observable<DialogueManager>
         dialogueModel = user_data as DialogueModel;
         if (dialogueModel.delay != default)
         {
-            GameEntry.Time.CreateTimer(this, dialogueModel.delay, ParseDialogueTable);
+            Observable.Timer(TimeSpan.FromSeconds(dialogueModel.delay)).Subscribe(_ => ParseDialogueTable());
         }
         else
         {

@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,9 +8,9 @@ public class FormWearEquip : UIFormBase
 {
     private int curSelectEquipType;
     [SerializeField] private Button closeBtn;
-    protected override void Awake()
+    protected override async UniTask Awake()
     {
-        base.Awake();
+        await base.Awake();
         closeBtn.SetButtonClick(() =>
         {
             GameEntry.UI.CloseUIForm<FormWearEquip>();

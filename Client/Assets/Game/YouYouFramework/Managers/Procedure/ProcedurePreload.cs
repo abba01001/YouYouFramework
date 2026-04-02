@@ -88,7 +88,6 @@ using Object = UnityEngine.Object;
             GameEntry.UI.CloseUIForm<FormLogin>();
             
             if (GameEntry.Data.IsFirstLoginTime) GameEntry.Data.IsFirstLoginTime = false;
-            GameEntry.Audio.InitVolume();
             
             GameEntry.Data.SaveData(true,true,true,true);
             GameEntry.Procedure.ChangeState(ProcedureState.Game);

@@ -1,8 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 
+namespace YouYouFramework
+{
     /// <summary>
     /// 对象池
     /// </summary>
@@ -12,66 +15,32 @@ using UnityEngine;
         /// <summary>
         /// 预制件
         /// </summary>
-        public Transform prefab;
-
-        /// <summary>
-        /// 基于性能原因而存储的预制件GameObject的引用
-        /// </summary>
-        public GameObject prefabGO;
+        public GameObject prefab;
 
         /// <summary>
         /// 是否开启缓存池自动清理模式
         /// </summary>
-        public bool cullDespawned = false;
+        public bool cullDespawned;
 
         /// <summary>
         /// 缓存池自动清理但是始终保留几个对象不清理
         /// </summary>
-        public int cullAbove = 50;
+        public int cullAbove;
 
         /// <summary>
         /// 多长时间清理一次单位是秒
         /// </summary>
-        public int cullDelay = 60;
+        public int cullDelay;
 
         /// <summary>
         /// 每次清理几个
         /// </summary>
-        public int cullMaxPerPass = 5;
+        public int cullMaxPerPass;
 
         /// <summary>
-        /// 总池的引用
+        /// 主要用于SetParent
         /// </summary>
-        public SpawnPool spawnPool;
-
-
-        public PrefabPool(Transform prefab)
-        {
-            this.prefab = prefab;
-            prefabGO = prefab.gameObject;
-        }
-        /// <summary>
-        /// 销毁自身对象池
-        /// </summary>
-        internal void SelfDestruct()
-        {
-            foreach (Transform inst in _despawned)
-                if (inst != null && spawnPool != null)
-                    InstanceHandler.DestroyInstance(inst.gameObject);
-
-            foreach (Transform inst in _spawned)
-                if (inst != null && spawnPool != null)
-                    InstanceHandler.DestroyInstance(inst.gameObject);
-
-            _spawned.Clear();
-            _despawned.Clear();
-
-            prefab = null;
-            prefabGO = null;
-            spawnPool = null;
-
-        }
-
+        public MonoBehaviour Root;
 
         /// <summary>
         /// 定时清理协程是否正在运行中？
@@ -81,11 +50,11 @@ using UnityEngine;
         /// <summary>
         /// 已被取池的对象
         /// </summary>
-        internal LinkedList<Transform> _spawned = new LinkedList<Transform>();
+        internal LinkedList<GameObject> spawnedList = new LinkedList<GameObject>();
         /// <summary>
         /// 在池内的对象
         /// </summary>
-        internal LinkedList<Transform> _despawned = new LinkedList<Transform>();
+        internal LinkedList<GameObject> despawnedList = new LinkedList<GameObject>();
 
         /// <summary>
         /// 当前对象的最大数量（包括在池内的, 已被取池的）
@@ -95,32 +64,88 @@ using UnityEngine;
             get
             {
                 int count = 0;
-                count += _spawned.Count;
-                count += _despawned.Count;
+                count += spawnedList.Count;
+                count += despawnedList.Count;
                 return count;
             }
+        }
+
+        public Func<GameObject> CreateFunc;
+        public Action<GameObject> ActionOnDestroy;
+        public Action ActionOnDestruct;
+
+        public PrefabPool(GameObject prefab, bool cullDespawned = true, int cullAbove = 0, int cullDelay = 60, int cullMaxPerPass = 30)
+        {
+            this.prefab = prefab;
+            this.cullDespawned = cullDespawned;
+            this.cullAbove = cullAbove;
+            this.cullDelay = cullDelay;
+            this.cullMaxPerPass = cullMaxPerPass;
+        }
+
+        public void PreloadPool()
+        {
+            if (cullAbove > 0)
+            {
+                for (int i = 0; i < cullAbove; i++)
+                {
+                    //预加载克隆对象
+                    GameObject inst = CreateFunc?.Invoke();
+                    inst.SetActive(false);
+                    despawnedList.AddLast(inst);
+
+#if UNITY_EDITOR
+                    //对象名字后缀
+                    inst.name += (TotalCount + 1).ToString("#000");
+#endif
+                }
+            }
+        }
+
+        /// <summary>
+        /// 销毁自身对象池
+        /// </summary>
+        internal void SelfDestruct()
+        {
+            while (despawnedList.First != null)
+            {
+                despawnedList.RemoveFirst();
+                if (despawnedList.Count > 0 && despawnedList.First.List != null && despawnedList.First.Value != null)
+                {
+                    ActionOnDestroy?.Invoke(despawnedList.First.Value);
+                }
+            }
+            while (spawnedList.First != null)
+            {
+                spawnedList.RemoveFirst();
+                if (spawnedList.Count > 0 && spawnedList.First.List != null && spawnedList.First.Value != null)
+                {
+                    ActionOnDestroy?.Invoke(spawnedList.First.Value);
+                }
+            }
+            
+            ActionOnDestruct?.Invoke();
+            prefab = null;
+            Root = null;
         }
 
         /// <summary>
         /// 从池内取对象，如果没有则克隆新的
         /// </summary>
-        internal Transform SpawnInstance(Vector3 pos, Quaternion rot, ref bool isNewInstance)
+        internal GameObject SpawnInstance()
         {
-            isNewInstance = false;
+            GameObject inst;
 
-            Transform inst;
-
-            if (_despawned.Count == 0)
+            if (despawnedList.Count == 0)
             {
                 //池内没对象了，克隆新对象
-                isNewInstance = true;
-                inst = SpawnNew(pos, rot);
+                inst = SpawnNew();
             }
             else
             {
                 //从池里拿对象
-                inst = _despawned.First.Value;
-                _despawned.RemoveFirst();
+                inst = despawnedList.First.Value;
+                despawnedList.RemoveFirst();
 
                 if (inst == null)
                 {
@@ -128,27 +153,19 @@ using UnityEngine;
                     return null;
                 }
 
-                _spawned.AddLast(inst);
-
-                inst.position = pos;
-                inst.rotation = rot;
-                inst.gameObject.SetActive(true);
-
+                spawnedList.AddLast(inst);
+                inst.SetActive(true);
             }
             return inst;
         }
         /// <summary>
         /// 克隆新的对象
         /// </summary>
-        private Transform SpawnNew(Vector3 pos, Quaternion rot)
+        private GameObject SpawnNew()
         {
-            if (pos == Vector3.zero) pos = spawnPool.transform.position;
-            if (rot == Quaternion.identity) rot = spawnPool.transform.rotation;
-
-            //使用InstanceHandler，克隆对象
-            GameObject instGO = InstanceHandler.InstantiatePrefab(prefabGO, pos, rot);
-            Transform inst = instGO.transform;
-            _spawned.AddLast(inst);
+            //克隆对象
+            GameObject inst = CreateFunc?.Invoke();
+            spawnedList.AddLast(inst);
 
 #if UNITY_EDITOR
             //对象名字后缀
@@ -160,17 +177,17 @@ using UnityEngine;
         /// <summary>
         /// 对象回池
         /// </summary>
-        public bool DespawnInstance(Transform xform)
+        public bool DespawnInstance(GameObject inst)
         {
-            _spawned.Remove(xform);
-            _despawned.AddLast(xform);
+            spawnedList.Remove(inst);
+            despawnedList.AddLast(inst);
 
-            xform.gameObject.SetActive(false);
+            inst.SetActive(false);
 
-            if (!cullingActive && cullDespawned && TotalCount > cullAbove)
+            if (!cullingActive && cullDespawned && despawnedList.Count > cullAbove)
             {
                 cullingActive = true;
-                spawnPool.StartCoroutine(CullDespawned());
+                Root.StartCoroutine(CullDespawned());
             }
             return true;
         }
@@ -180,7 +197,7 @@ using UnityEngine;
         /// </summary>
         internal IEnumerator CullDespawned()
         {
-            while (TotalCount > cullAbove)
+            while (despawnedList.Count > cullAbove)
             {
                 yield return new WaitForSeconds(cullDelay);
 
@@ -188,12 +205,12 @@ using UnityEngine;
                 for (int i = 0; i < cullMaxPerPass; i++)
                 {
                     //保留几个对象
-                    if (TotalCount <= cullAbove) break;
-                    if (_despawned.Count == 0) break;
+                    if (despawnedList.Count <= cullAbove) break;
+                    if (despawnedList.Count == 0) break;
 
-                    Transform inst = _despawned.Last.Value;
-                    _despawned.RemoveLast();
-                    InstanceHandler.DestroyInstance(inst.gameObject);
+                    GameObject inst = despawnedList.Last.Value;
+                    despawnedList.RemoveLast();
+                    ActionOnDestroy?.Invoke(inst);
                 }
             }
             cullingActive = false;
@@ -201,12 +218,17 @@ using UnityEngine;
         }
 
         /// <summary>
-        /// 直接完全释放
+        /// 直接销毁
         /// </summary>
-        public void Release(Transform xform)
+        public void Destroy(GameObject inst)
         {
-            _spawned.Remove(xform);
-            InstanceHandler.DestroyInstance(xform.gameObject);
+            bool isRemove = spawnedList.Remove(inst);
+            if (isRemove)
+            {
+                GameEntry.LogError(LogCategory.Pool, "该对象不在池内, inst==" + inst);
+            }
+            ActionOnDestroy?.Invoke(inst);
         }
 
     }
+}

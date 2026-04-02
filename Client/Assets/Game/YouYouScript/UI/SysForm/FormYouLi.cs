@@ -22,9 +22,9 @@ public class FormYouLi : UIFormBase
     [SerializeField] private Button getBtn;
     [SerializeField] private Button quickGetBtn;
 
-    protected override void Awake()
+    protected override async UniTask Awake()
     {
-        base.Awake();
+        await base.Awake();
         closeBtn.SetButtonClick(() =>
         {
             GameEntry.UI.CloseUIForm<FormYouLi>();
@@ -61,7 +61,6 @@ public class FormYouLi : UIFormBase
                 GameEntry.Data.SuspendStartTime = msg.Timestamp;
                 GameEntry.Data.SuspendQuickGetRewardIndex = msg.QuickGetSuspendRewardIndex;
                 GameEntry.Data.SuspendQuickGetRewardLimit = msg.QuickGetSuspendRewardLimit;
-                GameUtil.LogError($"{GameEntry.Time.UnixTimeStampToDateTime(msg.Timestamp)}==={msg.QuickGetSuspendRewardIndex}==={msg.QuickGetSuspendRewardLimit}");
                 break;
             case 1:
                 if (msg.CanGetReward && msg.Hour > 0)

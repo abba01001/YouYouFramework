@@ -18,12 +18,15 @@ public class FormLoading : UIFormBase
 
     private float m_TargetProgress;
 
-    private void OnLoadingProgressChange(object userData)
+    private void OnLoadingProgressChange(object value)
     {
-        VarFloat m_TargetProgress = userData as VarFloat;
-        txtTip.text = string.Format("正在进入场景, 加载进度 {0}%", Math.Floor(m_TargetProgress.Value * 100));
-        m_value.sizeDelta = new Vector2((float) m_TargetProgress.Value * m_valueBg.sizeDelta.x, 42);
-        if (m_TargetProgress == 1) Close();
+        float varFloat = (float)value;
+        txtTip.text = string.Format("正在进入场景, 加载进度 {0}%", Math.Floor(varFloat * 100));
+        m_value.sizeDelta = new Vector2(varFloat * m_valueBg.sizeDelta.x, 42);;
+        if (varFloat == 1)
+        {
+            Close();
+        }
     }
 
     protected override void OnEnable()

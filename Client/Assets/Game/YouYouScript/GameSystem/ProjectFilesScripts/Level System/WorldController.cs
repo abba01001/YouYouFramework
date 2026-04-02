@@ -146,7 +146,7 @@ namespace Watermelon
             if (playerBehavior == null)
             {
                 //这里统一改异步
-                PoolObj obj =  GameEntry.Pool.GameObjectPool.SpawnSynchronous("Assets/Game/Download/ProjectFiles/Game/Prefabs/Player/Player.prefab");
+                GameObject obj = await GameEntry.Pool.GameObjectPool.Spawn("Assets/Game/Download/ProjectFiles/Game/Prefabs/Player/Player.prefab");
                 playerBehavior = obj.GetComponent<PlayerBehavior>();
             }
             playerBehavior.transform.position = WorldBehavior.SpawnPoint.position;

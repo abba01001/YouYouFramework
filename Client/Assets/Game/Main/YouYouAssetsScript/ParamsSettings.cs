@@ -16,7 +16,10 @@ public class ParamsSettings : ScriptableObject
     [BoxGroup("通用参数设置")][LabelText("正式服务器IP")] public string ServerWebUrl;
     [BoxGroup("通用参数设置")] public bool PostIsEncrypt;//是否加密(如时间戳)
     [BoxGroup("通用参数设置")] public string PostContentType;//设置ContentType
-
+    
+    [BoxGroup("通用参数设置")] 
+    [LabelText("类对象池_释放间隔")]
+    public int PoolReleaseClassObjectInterval = 30;
     
     #region 常规数据
     /// <summary>

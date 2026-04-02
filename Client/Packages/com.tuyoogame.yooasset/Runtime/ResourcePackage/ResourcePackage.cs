@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using Debug = UnityEngine.Debug;
 
 namespace YooAsset
 {
@@ -222,10 +223,11 @@ namespace YooAsset
         /// </summary>
         /// <param name="appendTimeTicks">在URL末尾添加时间戳</param>
         /// <param name="timeout">超时时间（默认值：60秒）</param>
-        public RequestPackageVersionOperation RequestPackageVersionAsync(bool appendTimeTicks = true, int timeout = 60)
+        public RequestPackageVersionOperation RequestPackageVersionAsync(bool appendTimeTicks = false, int timeout = 60)
         {
             DebugCheckInitialize(false);
             var operation = _playModeImpl.RequestPackageVersionAsync(appendTimeTicks, timeout);
+            Debug.LogError($"请求最新的资源版本{PackageName}");
             OperationSystem.StartOperation(PackageName, operation);
             return operation;
         }

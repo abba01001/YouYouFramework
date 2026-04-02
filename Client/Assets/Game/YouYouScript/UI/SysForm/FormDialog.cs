@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Main;
 using UnityEngine;
 using UnityEngine.UI;
@@ -41,9 +42,9 @@ public class FormDialog : UIFormBase
     private Action m_CancelAction;
 
 
-    protected override void Awake()
+    protected override async UniTask Awake()
     {
-        base.Awake();
+        await base.Awake();
         btnOK.onClick.AddListener(() =>
         {
             m_OkAction?.Invoke();
@@ -54,12 +55,6 @@ public class FormDialog : UIFormBase
             m_CancelAction?.Invoke();
             Close();
         });
-    }
-
-    public static void ShowForm(string message = "", string title = "提示", DialogFormType type = DialogFormType.Affirm, Action okAction = null, Action cancelAction = null)
-    {
-        FormDialog formDialog = GameEntry.UI.OpenUIForm<FormDialog>();
-        formDialog.SetUI(message, title, type, okAction, cancelAction);
     }
 
     private void SetUI(string message = "", string title = "提示", DialogFormType type = DialogFormType.Affirm, Action okAction = null, Action cancelAction = null)

@@ -20,25 +20,9 @@ public class GameUtil
     private static readonly System.Random _random = new System.Random();
     private static StringBuilder stringBuilder = new StringBuilder();
 
-    /// <summary>
-    /// 加载FBX嵌入的所有动画
-    /// </summary>
-    public static AnimationClip[] LoadInitRoleAnimationsByFBX(string path)
+    public static int RandomRange(int minInclusive, int maxExclusive)
     {
-#if EDITORLOAD && UNITY_EDITOR
-        UnityEngine.Object[] objs = UnityEditor.AssetDatabase.LoadAllAssetsAtPath(path);
-        List<AnimationClip> clips = new List<AnimationClip>();
-        foreach (var item in objs)
-        {
-            if (item is AnimationClip) clips.Add(item as AnimationClip);
-        }
-
-        return clips.ToArray();
-#else
-        AssetInfoEntity m_CurrAssetEnity = GameEntry.Loader.AssetInfo.GetAssetEntity(path);
-        AssetBundle bundle = GameEntry.Loader.LoadAssetBundle(m_CurrAssetEnity.AssetBundleFullPath);
-        return bundle.LoadAllAssets<AnimationClip>();
-#endif
+        return _random.Next(minInclusive, maxExclusive);
     }
 
     /// <summary>
@@ -55,41 +39,16 @@ public class GameUtil
 
         return path.Substring(path.LastIndexOf('/') + 1);
     }
-
-    /// <summary>
-    /// 加载Prefab并克隆
-    /// </summary>
-    public static GameObject LoadPrefabClone(string prefabFullPath, Transform parent = null)
+    
+    public static async UniTask<GameObject> LoadPrefabClone(string prefabFullPath, Transform parent = null)
     {
-        AssetReferenceEntity referenceEntity = GameEntry.Loader.LoadMainAsset(prefabFullPath);
-        if (referenceEntity != null)
-        {
-            GameObject obj = UnityEngine.Object.Instantiate(referenceEntity.Target as GameObject, parent);
-            AutoReleaseHandle.Add(referenceEntity, obj);
-            return obj;
-        }
-
-        return null;
+        var operation = GameEntry.Loader.DefaultPackage.LoadAssetAsync(prefabFullPath);
+        await operation.Task;
+        GameObject obj = UnityEngine.Object.Instantiate(operation.AssetObject as GameObject, parent);
+        AssetReleaseHandle.Add(operation, obj);
+        return obj;
     }
-
-    public static async UniTask<GameObject> LoadPrefabCloneAsync(string prefabFullPath, Transform parent = null)
-    {
-        AssetReferenceEntity referenceEntity = await GameEntry.Loader.LoadMainAssetAsync(prefabFullPath);
-        if (referenceEntity != null)
-        {
-            GameObject obj = UnityEngine.Object.Instantiate(referenceEntity.Target as GameObject, parent);
-            AutoReleaseHandle.Add(referenceEntity, obj);
-            return obj;
-        }
-
-        return null;
-    }
-
-    public static int RandomRange(int minInclusive, int maxExclusive)
-    {
-        return _random.Next(minInclusive, maxExclusive);
-    }
-
+    
     public static string GetRandomString(List<string> stringList)
     {
         // 通过 RandomRange 方法生成一个随机索引
@@ -276,26 +235,6 @@ public class GameUtil
         {
             camera.cullingMask |= (1 << layer);
         }
-    }
-
-    public static void PlayAnimation(Animator animator, string animName, int layer, Action endCall = null,
-        bool disableAnimator = true)
-    {
-        animator.enabled = true;
-        animator.Play(animName, layer, 0);
-        GameEntry.Time.Yield(() =>
-        {
-            GameEntry.Time.CreateTimer(GameEntry.Instance.gameObject,
-                TimeSpan.FromSeconds(animator.GetCurrentAnimatorStateInfo(0).length).Seconds, () =>
-                {
-                    if (disableAnimator)
-                    {
-                        animator.enabled = false;
-                    }
-
-                    endCall?.Invoke();
-                });
-        });
     }
 
     public static void LoadPropSprite(Image icon)

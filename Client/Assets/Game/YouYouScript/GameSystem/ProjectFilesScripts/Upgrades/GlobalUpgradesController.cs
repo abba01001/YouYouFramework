@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 
 namespace Watermelon
@@ -74,18 +75,18 @@ namespace Watermelon
             globalSimpleUpgrades.Add(upgrade);
         }
 
-        public  void OpenMainUpgradesPage()
+        public async UniTask OpenMainUpgradesPage()
         {
-            FormUpgrade form = GameEntry.UI.OpenUIForm<FormUpgrade>();
+            FormUpgrade form = await GameEntry.UI.OpenUIForm<FormUpgrade>();
             form.ResetUpgrades();
             form.RegisterUpgrades(ActiveUpgrades.ConvertAll(upgrade => (IUpgrade)upgrade));
             form.RegisterUpgrades(globalSimpleUpgrades);
             form.PlayShowAnimation();
         }
 
-        public  void OpenUpgradesPage(List<IUpgrade> upgradesToOpen)
+        public async UniTask OpenUpgradesPage(List<IUpgrade> upgradesToOpen)
         {
-            FormUpgrade form = GameEntry.UI.OpenUIForm<FormUpgrade>();
+            FormUpgrade form = await GameEntry.UI.OpenUIForm<FormUpgrade>();
             form.ResetUpgrades();
             form.RegisterUpgrades(upgradesToOpen);
             form.PlayShowAnimation();

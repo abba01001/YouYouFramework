@@ -15,7 +15,7 @@ namespace Watermelon
         {
             foreach (var name in new List<string>(){"Floating Text","Following Text","Unlockable Tool Floating Text"})
             {
-                PoolObj obj = await GameEntry.Pool.GameObjectPool.SpawnAsync($"Assets/Game/Download/ProjectFiles/Game/Prefabs/Floating Text/{name}.prefab");
+                GameObject obj = await GameEntry.Pool.GameObjectPool.Spawn($"Assets/Game/Download/ProjectFiles/Game/Prefabs/Floating Text/{name}.prefab");
                 FloatingTextCase t = new FloatingTextCase();
                 t.Name = name;
                 if (name == "Floating Text")

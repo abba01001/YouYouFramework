@@ -3,8 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using Main;
 using Sirenix.OdinInspector;
+using UniRx;
 
+
+public enum UIActionType
+{
+    ShowUI,
+    HideUI,
+}
 
 public class TaskData
 {
@@ -29,11 +37,12 @@ public class TaskData
 
 public class QueueManager : MonoBehaviour
 {
-    private float checkInterval = 0.04f; // 检测间隔秒数
-    private float elapsedTime = 0f;
     private List<TaskData> taskList = new List<TaskData>();
     private List<TaskData> readyAddTaskList = new List<TaskData>();
+
     private bool isHandlingQueue = false;
+    private bool needProcess = false;
+
     private readonly object _lock = new object();
     
     private static QueueManager _instace;
@@ -52,29 +61,21 @@ public class QueueManager : MonoBehaviour
         }
     }
     
-    private void Update()
+    private void LateUpdate()
     {
+        if (!needProcess) return;
         if (taskList.Count == 0 && readyAddTaskList.Count == 0) return;
-        elapsedTime += Time.deltaTime;
-        if (elapsedTime >= checkInterval)
-        {
-            HandleReadyAddTaskList(); // 检查准备添加的任务
-            HandleTaskQueue(); // 处理任务队列
-            elapsedTime = 0f; // 重置计时器
-        }
+
+        HandleReadyAddTaskList();
+        HandleTaskQueue();
+
+        needProcess = false;
     }
 
     //添加弹窗任务
     public void AddPopupTask(string popupName, Action action, int inputPriority = 999, bool isInsert = false,bool isCanTouch = true)
     {
-        //IConfigService configService = MainContainer.Container.Resolve<IConfigService>();
-        //if (popupName == Constants.DoozyView.RewardPopup) isInsert = true;
         var task = new TaskData(TaskData.TaskType.Popup, () => ViewQueueManager.Instance.EnqueuePopup(popupName, action,isInsert,isCanTouch), inputPriority);
-        // // 检查优先级
-        // if (configService.PopupPriorityConfig.TryGetValue(popupName, out PopupPriorityModel model))
-        // {
-        //     task.Priority = model.priority;
-        // }
         readyAddTaskList.Add(task);
     }
 
@@ -420,7 +421,7 @@ public class ViewQueueManager : MonoBehaviour
                 StartCoroutine(DoTimeTaskAction());
                 break;
             case EventTaskParam param:
-                GameEntry.Time.Yield(() => { GameEntry.Event.Dispatch(param.eventName); });
+                Observable.NextFrame().Subscribe(_ => GameEntry.Event.Dispatch(param.eventName));
                 break;
             case PopupTaskParam param:
                 param.openAction();

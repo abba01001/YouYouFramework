@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
 using System;
-using Object = UnityEngine.Object;
+using YooAsset;
+using SceneHandle = YooAsset.SceneHandle;
 
+
+namespace YouYouFramework
+{
     /// <summary>
     /// 场景加载和卸载器
     /// </summary>
@@ -13,7 +16,9 @@ using Object = UnityEngine.Object;
     {
         private AsyncOperation m_CurrAsync = null;
 
-        private string SceneFullPath;
+        public string SceneFullPath;
+
+        private SceneHandle asyncOperation;
 
         /// <summary>
         /// 进度更新
@@ -29,42 +34,17 @@ using Object = UnityEngine.Object;
 
             OnProgressUpdate = onProgressUpdate;
 
-#if EDITORLOAD || RESOURCES
-            m_CurrAsync = SceneManager.LoadSceneAsync(sceneFullPath , LoadSceneMode.Additive);
-#else
-            //加载场景的资源包
-            await GameEntry.Loader.LoadAssetBundleMainAndDependAsync(sceneFullPath);
-            m_CurrAsync = SceneManager.LoadSceneAsync(sceneFullPath, LoadSceneMode.Additive);
-
-            //场景只需要给AssetBundle做引用计数， 不需要给Asset做引用计数
-            AssetInfoEntity assetEntity = GameEntry.Loader.AssetInfo.GetAssetEntity(sceneFullPath);
-            AssetBundleReferenceEntity assetBundleEntity = GameEntry.Pool.AssetBundlePool.Spawn(assetEntity.AssetBundleFullPath);
-            assetBundleEntity.ReferenceAdd();
-            for (int i = 0; i < assetEntity.DependsAssetBundleList.Count; i++)
-            {
-                AssetBundleReferenceEntity dependAssetBundleEntity = GameEntry.Pool.AssetBundlePool.Spawn(assetEntity.DependsAssetBundleList[i]);
-                dependAssetBundleEntity.ReferenceAdd();
-            }
-#endif
+            asyncOperation = GameEntry.Loader.DefaultPackage.LoadSceneAsync(sceneFullPath, LoadSceneMode.Additive);
+            await asyncOperation.Task;
         }
 
         /// <summary>
         /// 卸载场景
         /// </summary>
-        public void UnLoadScene(string sceneFullPath)
+        public async void UnLoadScene()
         {
-            m_CurrAsync = SceneManager.UnloadSceneAsync(sceneFullPath);
-
-            //场景只需要给AssetBundle做引用计数， 不需要给Asset做引用计数
-            AssetInfoEntity assetEntity = GameEntry.Loader.AssetInfo.GetAssetEntity(sceneFullPath);
-            if(assetEntity == null) return;
-            AssetBundleReferenceEntity assetBundleEntity = GameEntry.Pool.AssetBundlePool.Spawn(assetEntity.AssetBundleFullPath);
-            assetBundleEntity.ReferenceRemove();
-            for (int i = 0; i < assetEntity.DependsAssetBundleList.Count; i++)
-            {
-                AssetBundleReferenceEntity dependAssetBundleEntity = GameEntry.Pool.AssetBundlePool.Spawn(assetEntity.DependsAssetBundleList[i]);
-                dependAssetBundleEntity.ReferenceRemove();
-            }
+            var operation = asyncOperation.UnloadAsync();
+            await operation.Task;
         }
 
         /// <summary>
@@ -79,3 +59,4 @@ using Object = UnityEngine.Object;
             }
         }
     }
+}

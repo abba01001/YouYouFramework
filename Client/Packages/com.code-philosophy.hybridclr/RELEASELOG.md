@@ -1,5 +1,34 @@
 # ReleaseLog
 
+## 8.7.0
+
+Release Date: 2025-11-03.
+
+### Runtime
+
+- [fix] fix a crash issue in IH_object_ctor caused by `ctx.GetCurbb()->insts` may be empty in obfuscated code
+- [merge] **Unity 6000***: merge il2cpp changes from 6000.0.44 to 6000.0.60
+- [merge] **TuanJie**: merge il2cpp changes from tuanjie 1.6.5 to 1.6.7
+
+### Editor
+
+- [fix] fix raising NullReferenceException in generating MethodBridge for MonoPInvokeCallbackAttribute while constructor arguments is empty.
+
+## 8.6.0
+
+Release Date: 2025-09-27.
+
+### Runtime
+
+- [fix] fix the crash in InterpreterDelegateInvoke when compiled in Release mode on Xcode 26.x. This bug is caused by an optimization issue in the newer Clang version.
+- [fix] [tuanjie] fix a bug on tuanjie that calling Init of Il2CppClass `Nullable<EnumType`> may not init Il2CppClass of EnumType, which causes crash when box `Nullable<EnumType>`
+- [fix] [tuanjie] fix bug that computation of method index in Class::GetGenericInstanceMethodFromDefintion. tuanjie 1.6.4 only fixes it when IL2CPP_ENABLE_LAZY_INIT.
+- [merge] merge il2cpp of tuanjie changes from 1.6.0-1.6.4
+
+### Editor
+
+- [fix] fix the bug that BashUtil.CopyDir calls UnityEditor.FileUtil.CopyFileOrDirectory failed when parent directory of dst does not exist.
+
 ## 8.5.1
 
 Release Date: 2025-08-25.

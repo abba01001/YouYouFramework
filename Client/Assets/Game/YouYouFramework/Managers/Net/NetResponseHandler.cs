@@ -109,7 +109,8 @@ public class NetResponseHandler
                 byte[] binaryData = data.SaveData.ToByteArray();
                 GameEntry.Data.InitGameData(binaryData);
                 GameEntry.Net.Token = data.Token;
-                GameEntry.Time.InitNetTime(message.Timestamp);
+                // GameEntry.Time.InitNetTime(message.Timestamp);
+                //初始化网络时间
                 GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);
                 Constants.IsEntryGame = true;
             }

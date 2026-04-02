@@ -19,15 +19,15 @@ namespace Watermelon
 
         public async UniTask Initialise()
         {
-            PoolObj obj1 = await GameEntry.Pool.GameObjectPool.SpawnAsync("Assets/Game/Download/ProjectFiles/Game/Prefabs/Navigation Helpers/Arrow Direction Pointer.prefab");
+            GameObject obj1 = await GameEntry.Pool.GameObjectPool.Spawn("Assets/Game/Download/ProjectFiles/Game/Prefabs/Navigation Helpers/Arrow Direction Pointer.prefab");
             obj1.gameObject.MSetActive(false);
             directionPointersController.arrowDirectionPointerPrefab = obj1.gameObject;
             
-            PoolObj obj2 = await GameEntry.Pool.GameObjectPool.SpawnAsync("Assets/Game/Download/ProjectFiles/Game/Prefabs/Navigation Helpers/Arrow Line Direction Pointer.prefab");
+            GameObject obj2 = await GameEntry.Pool.GameObjectPool.Spawn("Assets/Game/Download/ProjectFiles/Game/Prefabs/Navigation Helpers/Arrow Line Direction Pointer.prefab");
             obj2.gameObject.MSetActive(false);
             directionPointersController.arrowsLineDirectionPointerPrefab = obj2.gameObject;
             
-            PoolObj obj3 = await GameEntry.Pool.GameObjectPool.SpawnAsync("Assets/Game/Download/ProjectFiles/Game/Prefabs/Navigation Helpers/Position Pointer Arrow.prefab");
+            GameObject obj3 = await GameEntry.Pool.GameObjectPool.Spawn("Assets/Game/Download/ProjectFiles/Game/Prefabs/Navigation Helpers/Position Pointer Arrow.prefab");
             obj3.gameObject.MSetActive(false);
             positionPointerPrefab = obj3.gameObject;
 

@@ -45,9 +45,9 @@ namespace Watermelon
 
         private TweenCase scrollCase;
 
-        protected override void Awake()
+        protected override async UniTask Awake()
         {
-            base.Awake();
+            await base.Awake();
             Init();
         }
 

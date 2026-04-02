@@ -10,6 +10,7 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using Main;
 using Protocols;
+using UniRx;
 
 
 public class NetManager
@@ -19,7 +20,7 @@ public class NetManager
     private Queue<byte[]> receiveQueue = new Queue<byte[]>();
     private byte[] receiveBytes = new byte[Constants.ProtocalTotalLength];
 
-    private TimeAction heartbeatAction;
+    private IDisposable heartbeatAction;
     private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
     private int CurReconnectCount; // 当前重连次数
@@ -92,7 +93,7 @@ public class NetManager
         {
             // 更新连接状态
             connectionStatus = ConnectionStatus.Disconnected;
-            heartbeatAction?.Stop();
+            heartbeatAction?.Dispose();
             if (socket != null)
             {
                 socket.Shutdown(SocketShutdown.Both); // 停止发送和接收数据
@@ -230,8 +231,12 @@ public class NetManager
             CurReconnectCount = 0;
             Task.Run(SendMessagesAsync);
             Task.Run(ReceiveMessagesAsync);
-            heartbeatAction?.Stop();
-            heartbeatAction = GameEntry.Time.CreateTimerLoop(this, 1f, -1, SendHeartbeat,null,true);
+            heartbeatAction?.Dispose();
+            heartbeatAction = Observable.Interval(TimeSpan.FromSeconds(1f))
+                .Subscribe(count =>
+                {
+                    SendHeartbeat((int)count);
+                });
             action?.Invoke();
             GameEntry.Log(LogCategory.NetWork, $"连接服务器成功{socket.RemoteEndPoint}");
         }
@@ -280,7 +285,7 @@ public class NetManager
         socket.Shutdown(SocketShutdown.Both);
         socket.Close();
         connectionStatus = ConnectionStatus.Disconnected;
-        heartbeatAction?.Stop();
+        heartbeatAction?.Dispose();
     }
 
     private void OnDestroy()

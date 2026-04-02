@@ -13,9 +13,9 @@ public class FormMain : UIFormBase
     [SerializeField] private Button testBtn;
     [SerializeField] private Button testBt1;
     [SerializeField] private Button testBt2;
-    protected override void Awake()
+    protected override async UniTask Awake()
     {
-        base.Awake();
+        await base.Awake();
         Constants.IsEntryFormMain = true;
         testBtn.SetButtonClick(() =>
         {

@@ -18,9 +18,9 @@ namespace Watermelon
 
         [SerializeField] Button continueButton;
 
-        protected override void Awake()
+        protected override async UniTask Awake()
         {
-            base.Awake();
+            await base.Awake();
             fadeAnimation = new UIFadeAnimation(fadeImage.gameObject);
             panelBackScaleAnimation = new UIScaleAnimation(panelRectTransform);
 

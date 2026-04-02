@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using Protocols;
+using UniRx;
 using UnityEngine;
 
 
@@ -18,7 +19,7 @@ public interface IDataManager
 }
 
 [MessagePackObject(keyAsPropertyName: true)]
-public class DataManager : Observable<DataManager>, IDataManager
+public class DataManager : IDataManager
 {
     #region 持久化数据
 
@@ -167,7 +168,7 @@ public class DataManager : Observable<DataManager>, IDataManager
         SaveData(true, true, forceWriteCloud, true);
     }
 
-    private TimeAction SaveAction = null;
+    private IDisposable SaveAction = null;
     /// <summary>
     /// 
     /// </summary>
@@ -178,7 +179,7 @@ public class DataManager : Observable<DataManager>, IDataManager
     public void SaveData(bool writeLocal = true,bool ignoreLocalTime = false,bool writeCloud = false,bool ignoreCloudTime = false)
     {
         return;
-        _data_update_time = (int)GameEntry.Time.GetNetTime();
+        _data_update_time = 1;
         var binaryData = MessagePackSerializer.Serialize(this, MessagePackSerializer.DefaultOptions);
         
         var str = Convert.ToBase64String(binaryData);
@@ -201,8 +202,8 @@ public class DataManager : Observable<DataManager>, IDataManager
             MainEntry.Log(MainEntry.LogCategory.GameData,$"数据====>{json}");
             if (Time.time - lastUploadTime >= uploadCooldown || ignoreCloudTime)
             {
-                if (SaveAction != null) SaveAction.Stop();
-                SaveAction = GameEntry.Time.CreateTimer(this, 0.02f, () =>
+                if (SaveAction != null) SaveAction.Dispose();
+                SaveAction = Observable.Interval(TimeSpan.FromSeconds(0.02f)).Subscribe(_ =>
                 {
                     MainEntry.Log(MainEntry.LogCategory.GameData,$"上传数据=={str}");
                     GameEntry.SDK.UploadGameData(UserId, str);

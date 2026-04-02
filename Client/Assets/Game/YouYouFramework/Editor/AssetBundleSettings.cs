@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
@@ -75,35 +77,57 @@ public class AssetBundleSettings : ScriptableObject
     [Button("AB包资源预览",ButtonSizes.Medium)]
     public void Test()
     {
-        AssetComparerWindow.ShowWindow();
+        GameUtil.LogError(EditorUserBuildSettings.activeBuildTarget,"===",GetBuildTarget());
+    }
+
+    [VerticalGroup("Common/Left")]
+    [Button("启动本地AB包资源存储", ButtonSizes.Medium)]
+    void StartLocalServer()
+    {
+        string projectPath = Application.dataPath.Replace("/Assets", "");
+        string serveDirectory = projectPath + "/ServerBundles";
+        if (!System.IO.Directory.Exists(serveDirectory))
+        {
+            System.IO.Directory.CreateDirectory(serveDirectory);
+            Debug.Log($"已创建目录: {serveDirectory}");
+        }
+
+        // 转换路径格式
+        serveDirectory = serveDirectory.Replace("\\", "/");
+        serveDirectory = "\"" + serveDirectory + "\"";
+
+        // 👉 获取本地IP
+        string localIP = GetLocalIPAddress();
+
+        // 杀掉占用 8000 端口的进程
+        KillProcessOnPort(8000);
+
+        // 启动 Python 服务器
+        StartPythonServer(serveDirectory);
+
+        Debug.Log($"服务器已启动: http://{localIP}:8000/");
+        Debug.Log($"服务目录: {serveDirectory}");
+        Debug.Log($"访问地址: http://{localIP}:8000/");
     }
     
-    [VerticalGroup("Common/Left")]
-    [Button("启动本地AB包资源存储",ButtonSizes.Medium)]
-    void ChooseDirectoryAndStartServer()
+    string GetLocalIPAddress()
     {
-        // 打开文件夹选择对话框
-        string selectedDirectory = EditorUtility.OpenFolderPanel("Select a folder to serve", "", "");
-
-        // 如果用户选择了有效的目录，启动 Python 服务器
-        if (!string.IsNullOrEmpty(selectedDirectory))
+        foreach (var netInterface in System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces())
         {
-            // 转换路径中的反斜杠为正斜杠
-            selectedDirectory = selectedDirectory.Replace("\\", "/");
-            
-            // 将目录路径转义（避免路径中的空格等问题）
-            selectedDirectory = "\"" + selectedDirectory + "\"";
+            if (netInterface.OperationalStatus != System.Net.NetworkInformation.OperationalStatus.Up)
+                continue;
 
-            // 杀掉占用 8000 端口的进程
-            KillProcessOnPort(8000);
-
-            // 启动 Python HTTP 服务器
-            StartPythonServer(selectedDirectory);
+            var props = netInterface.GetIPProperties();
+            foreach (var addr in props.UnicastAddresses)
+            {
+                if (addr.Address.AddressFamily == AddressFamily.InterNetwork &&
+                    !addr.Address.ToString().StartsWith("127"))
+                {
+                    return addr.Address.ToString();
+                }
+            }
         }
-        else
-        {
-            UnityEngine.Debug.Log("No folder selected.");
-        }
+        return "127.0.0.1";
     }
 
     void KillProcessOnPort(int port)
@@ -210,65 +234,22 @@ public class AssetBundleSettings : ScriptableObject
             );
             return;
         }
-        
-        CopyHofixDll();
-
-        builds.Clear();
-        int len = Datas.Length;
-        for (int i = 0; i < len; i++)
-        {
-            AssetBundleData assetBundleData = Datas[i];
-            if (assetBundleData.IsBuild)
-            {
-                int lenPath = assetBundleData.Path.Length;
-                for (int j = 0; j < lenPath; j++)
-                {
-                    //打包这个路径
-                    string path = assetBundleData.Path[j];
-                    BuildAssetBundleForPath(path, assetBundleData.Overall);
-                }
-            }
-        }
-
-        if (!Directory.Exists(TempPath)) Directory.CreateDirectory(TempPath);
-
-        if (builds.Count == 0) return;
-        Debug.Log("builds count==" + builds.Count);
-
-        BuildPipeline.BuildAssetBundles(TempPath, builds.ToArray(), Options, GetBuildTarget());
-        Debug.Log("临时资源包打包完毕");
-
-        CopyFile(TempPath);
-        Debug.Log("拷贝到输出目录完毕");
-
-        AssetBundleEncrypt();
-        Debug.Log("资源包加密完毕");
-
-        CreateDependenciesFile();
-        Debug.Log("AssetInfo生成依赖关系文件完毕");
-
-        CreateVersionFile();
-        Debug.Log("VersionFile生成版本文件完毕");
-
-        AssetDatabase.Refresh();
-        UploadAssetsAsync();
-        
-        if (IsUploadStreamingAsset)
-        {
-            CopyAssetBundlesToStreamingAssets(AssetVersion);
-        }
+        // if (IsUploadStreamingAsset)
+        // {
+        //     CopyAssetBundlesToStreamingAssets(AssetVersion);
+        // }
     }
 
     private async Task UploadAssetsAsync()
     {
-        if (IsUploadCloudAsset || IsForceUploadCloudAsset)
-        {
-            COSUploader.ShowUploadWindow();
-            await UniTask.Delay(3000);  // 延迟 1 秒
-            // 等待文件存在
-            COSUploader.UploadVersion(AssetVersion);
-            COSUploader.UploadAssetBundle(AssetVersion, GetUploadPath(),IsForceUploadCloudAsset); 
-        }
+        // if (IsUploadCloudAsset || IsForceUploadCloudAsset)
+        // {
+        //     COSUploader.ShowUploadWindow();
+        //     await UniTask.Delay(3000);  // 延迟 1 秒
+        //     // 等待文件存在
+        //     COSUploader.UploadVersion(AssetVersion);
+        //     COSUploader.UploadAssetBundle(AssetVersion, GetUploadPath(),IsForceUploadCloudAsset); 
+        // }
     }
     
     //复制到steamingassets资源
@@ -359,14 +340,14 @@ public class AssetBundleSettings : ScriptableObject
             target = BuildTarget.Android,
             options = BuildOptions.CompressWithLz4
         };
-        COSUploader.UploadVersion(AssetVersion);
+        // COSUploader.UploadVersion(AssetVersion);
         EditorUserBuildSettings.exportAsGoogleAndroidProject = false; 
         BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
         BuildSummary summary = report.summary;
         if (summary.result == BuildResult.Succeeded)
         {
             EditorUtility.DisplayDialog("打包成功", "APK 已成功生成！", "确定");
-            if (IsUploadAPK) COSUploader.UploadAPK(path);
+            // if (IsUploadAPK) COSUploader.UploadAPK(path);
             string directoryPath = Path.GetDirectoryName(path); // 获取文件夹路径
             Process.Start("explorer.exe", directoryPath);
         }
@@ -384,39 +365,39 @@ public class AssetBundleSettings : ScriptableObject
     {
         // 设置Keystore信息（如果需要的话）
         SetKeystoreInfo();
-    
-        var path = PublishPath + "/GradleProject";
-        if (!Directory.Exists(path))
-        {
-            Directory.CreateDirectory(path);
-        }
 
+        if (!Directory.Exists(TempGradlePath))
+        {
+            Directory.CreateDirectory(TempGradlePath);
+        }
+        
         // 配置导出Gradle项目
-        string[] scenes = { "Assets/Game/Scene_Launch.unity" };
+        string[] scenes = { "Assets/Game/Scene_Launch.unity" }; // 根据实际场景选择
         BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions
         {
-            // 自动包含所有场景
             scenes = scenes, // 使用当前编辑器中的所有场景
-            locationPathName = path, // 导出的路径
+            locationPathName = TempGradlePath, // 用户选择的导出路径
             target = BuildTarget.Android, // 构建目标平台
             options = BuildOptions.None // 允许外部修改，开发模式等
         };
-        
-        // 执行导出
-        EditorUserBuildSettings.exportAsGoogleAndroidProject = true; 
+
+        // 导出Gradle项目
+        EditorUserBuildSettings.exportAsGoogleAndroidProject = true;
         BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
         BuildSummary summary = report.summary;
 
+        // 导出结果反馈
         if (summary.result == BuildResult.Succeeded)
         {
             EditorUtility.DisplayDialog("导出成功", "Gradle 项目已成功导出！", "确定");
-            string directoryPath = Path.GetDirectoryName(path); // 获取文件夹路径
-            Process.Start("explorer.exe", directoryPath);
+
+            // 打开导出目录
+            Process.Start("explorer.exe", TempGradlePath);
         }
         else if (summary.result == BuildResult.Failed)
         {
             string errorMessage = "导出失败！\n错误信息: " + summary.totalErrors;
-            GameEntry.LogError(errorMessage);
+            Debug.LogError(errorMessage);
             EditorUtility.DisplayDialog("导出失败", errorMessage, "确定");
         }
     }
@@ -455,6 +436,17 @@ public class AssetBundleSettings : ScriptableObject
         get
         {
             return Application.dataPath + "/../" + AssetBundleSavePath + "/" + AssetVersion + "_Temp/" + CurrBuildTarget;
+        }
+    }
+    
+    /// <summary>
+    /// 临时目录
+    /// </summary>
+    public string TempGradlePath
+    {
+        get
+        {
+            return Application.dataPath + "/../" + GradleSavePath;
         }
     }
 
@@ -567,135 +559,6 @@ public class AssetBundleSettings : ScriptableObject
         {
             fs.Write(buffer, 0, buffer.Length);
             fs.Flush();
-        }
-    }
-    #endregion
-
-    #region OnCreateDependenciesFile 生成依赖关系文件
-    /// <summary>
-    /// 生成依赖关系文件
-    /// </summary>
-    private void CreateDependenciesFile()
-    {
-        //第一次循环 把所有的Asset存储到一个列表里
-
-        //临时列表
-        List<AssetInfoEntity> tempLst = new List<AssetInfoEntity>();
-        Dictionary<string, AssetInfoEntity> tempDic = new Dictionary<string, AssetInfoEntity>();
-
-        //循环设置文件夹包括子文件里边的项
-        for (int i = 0; i < Datas.Length; i++)
-        {
-            AssetBundleData assetBundleData = Datas[i];
-            if (assetBundleData.IsBuild)
-            {
-                for (int j = 0; j < assetBundleData.Path.Length; j++)
-                {
-                    string path = Application.dataPath + "/" + assetBundleData.Path[j];
-                    //Debug.LogError("CreateDependenciesFile path=" + path);
-                    CollectFileInfo(tempLst, tempDic, path);
-                }
-            }
-        }
-
-        //资源列表
-        List<AssetInfoEntity> assetList = new List<AssetInfoEntity>();
-        for (int i = 0; i < tempLst.Count; i++)
-        {
-            AssetInfoEntity entity = tempLst[i];
-
-            AssetInfoEntity newEntity = new AssetInfoEntity();
-            newEntity.AssetFullPath = entity.AssetFullPath;
-            newEntity.AssetBundleFullPath = entity.AssetBundleFullPath;
-
-            assetList.Add(newEntity);
-
-            newEntity.DependsAssetBundleList = new List<string>();
-            string[] arr = AssetDatabase.GetDependencies(entity.AssetFullPath, true);
-            foreach (string str in arr)
-            {
-                if (!str.IsSuffix(".cs") && tempDic.ContainsKey(str))
-                {
-                    //把多余的依赖AB包剔除掉，比如依赖AB包==主AB包， 或者依赖AB包已经存在于DependsAssetBundleList内
-                    if (!newEntity.AssetBundleFullPath.Equals(tempDic[str].AssetBundleFullPath) && 
-                        !newEntity.DependsAssetBundleList.Contains(tempDic[str].AssetBundleFullPath))
-                    {
-                        //把依赖资源 加入到依赖资源列表
-                        newEntity.DependsAssetBundleList.Add(tempDic[str].AssetBundleFullPath);
-                    }
-                }
-            }
-        }
-
-        //生成一个Json文件
-        string targetPath = OutPath;
-        if (!Directory.Exists(targetPath)) Directory.CreateDirectory(targetPath);
-
-        string strJsonFilePath = targetPath + "/AssetInfo.json"; //依赖文件路径
-        IOUtil.CreateTextFile(strJsonFilePath, assetList.ToJson());
-
-        //生成二进制文件
-        MMO_MemoryStream ms = new MMO_MemoryStream();
-        ms.WriteInt(assetList.Count);
-        for (int i = 0; i < assetList.Count; i++)
-        {
-            AssetInfoEntity entity = assetList[i];
-            ms.WriteUTF8String(entity.AssetFullPath);
-            ms.WriteUTF8String(entity.AssetBundleFullPath);
-
-            if (entity.DependsAssetBundleList != null)
-            {
-                //添加依赖资源
-                int depLen = entity.DependsAssetBundleList.Count;
-                ms.WriteInt(depLen);
-                for (int j = 0; j < depLen; j++)
-                {
-                    ms.WriteUTF8String(entity.DependsAssetBundleList[j]);
-                }
-            }
-            else
-            {
-                ms.WriteInt(0);
-            }
-        }
-
-        string filePath = targetPath + "/AssetInfo.bytes"; //版本文件路径
-        byte[] buffer = ms.ToArray();
-        buffer = ZlibHelper.CompressBytes(buffer);
-        using (FileStream fs = new FileStream(filePath, FileMode.Create))
-        {
-            fs.Write(buffer, 0, buffer.Length);
-        }
-    }
-    /// <summary>
-    /// 收集文件信息
-    /// </summary>
-    private void CollectFileInfo(List<AssetInfoEntity> tempLst, Dictionary<string, AssetInfoEntity> tempDic, string folderPath)
-    {
-        DirectoryInfo directory = new DirectoryInfo(folderPath);
-        if (directory.Exists == false) return;
-
-        //拿到文件夹下所有文件
-        FileInfo[] arrFiles = directory.GetFiles("*", SearchOption.AllDirectories);
-
-        for (int i = 0; i < arrFiles.Length; i++)
-        {
-            FileInfo file = arrFiles[i];
-            if (file.Extension == ".meta") continue;
-            if (file.FullName.IndexOf(".idea") != -1) continue;
-
-            //绝对路径
-            string filePath = file.FullName;
-            //Debug.LogError("filePath==" + filePath);
-
-            AssetInfoEntity entity = new AssetInfoEntity();
-            //相对路径
-            entity.AssetFullPath = filePath.Substring(filePath.IndexOf("Assets\\")).Replace("\\", "/");
-            //Debug.LogError("AssetFullName==" + entity.AssetFullName);
-
-            entity.AssetBundleFullPath = (GetAssetBundleName(entity.AssetFullPath) + ".assetbundle").ToLower();
-            tempLst.Add(entity);
-            tempDic.Add(entity.AssetFullPath, entity);
         }
     }
     #endregion
@@ -954,6 +817,13 @@ public class AssetBundleSettings : ScriptableObject
     /// </summary>
     public string AssetBundleSavePath;
 
+    [LabelText("导出Gradle工程路径")]
+    [FolderPath]
+    /// <summary>
+    /// 资源包保存路径
+    /// </summary>
+    public string GradleSavePath;
+    
     [LabelText("勾选进行编辑")]
     public bool IsCanEditor;
 
