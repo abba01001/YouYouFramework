@@ -87,41 +87,40 @@ public class CheckVersionCtrl
         }
 
         await initializationOperation;
-        Debug.LogError($"initializationOperation状态===>{initializationOperation.Status}");
         
         if (initializationOperation.Status != EOperationStatus.Succeed)
         {
-            MainEntry.LogWarning($"资源包初始化失败：{initializationOperation.Error}");
+            Debugger.LogWarning($"资源包初始化失败：{initializationOperation.Error}");
             return;
         }
-        MainEntry.Log("资源包初始化成功！");
+        Debugger.Log("资源包初始化成功！");
 
         //获取资源版本
         var operationVersion = DefaultPackage.RequestPackageVersionAsync();
         await operationVersion;
-        MainEntry.Log($"获取资源版本！operationVersion状态:{operationVersion.Status}");
+        Debugger.Log($"获取资源版本！operationVersion状态:{operationVersion.Status}");
         
         if (operationVersion.Status != EOperationStatus.Succeed)
         {
-            MainEntry.LogWarning($"获取资源版本失败：{operationVersion.Error}");
+            Debugger.LogWarning($"获取资源版本失败：{operationVersion.Error}");
             return;
         }
-        MainEntry.Log($"获取资源版本成功 : {operationVersion.PackageVersion}");
+        Debugger.Log($"获取资源版本成功 : {operationVersion.PackageVersion}");
 
         //更新资源清单
         var operationManifest = DefaultPackage.UpdatePackageManifestAsync(operationVersion.PackageVersion);
         await operationManifest;
         if (operationManifest.Status != EOperationStatus.Succeed)
         {
-            MainEntry.LogWarning($"更新资源清单失败：{operationManifest.Error}");
+            Debugger.LogWarning($"更新资源清单失败：{operationManifest.Error}");
             return;
         }
-        MainEntry.Log("更新资源清单成功");
+        Debugger.Log("更新资源清单成功");
 
 #if UNITY_EDITOR
         if (playMode == EPlayMode.EditorSimulateMode)
         {
-            MainEntry.Log("编辑器加载模式 不需要检查更新");
+            Debugger.Log("编辑器加载模式 不需要检查更新");
             CheckVersionComplete.Invoke();
             return;
         }
@@ -134,7 +133,7 @@ public class CheckVersionCtrl
 
         if (downloader.TotalDownloadCount == 0)
         {
-            MainEntry.Log("没有需要下载的资源");
+            Debugger.Log("没有需要下载的资源");
             CheckVersionComplete?.Invoke();
             return;
         }
@@ -157,14 +156,14 @@ public class CheckVersionCtrl
         //检测下载结果
         if (downloader.Status == EOperationStatus.Succeed)
         {
-            MainEntry.Log("检查更新下载完毕, 进入预加载流程");
+            Debugger.Log("检查更新下载完毕, 进入预加载流程");
 
             CheckVersionDownloadComplete?.Invoke();
             CheckVersionComplete?.Invoke();
         }
         else
         {
-            MainEntry.LogError("检查更新失败, 请点击重试");
+            Debugger.LogError("检查更新失败, 请点击重试");
             // MainDialogForm.ShowForm("检查更新失败, 请点击重试", "Error", "重试", "", MainDialogForm.DialogFormType.Affirm, () =>
             // {
             //     CheckVersionChange(playMode, CheckVersionComplete);
@@ -197,6 +196,7 @@ public class CheckVersionCtrl
     /// </summary>
     private string GetHostServerURL()
     {
+        return $"http://192.168.124.45:8000/Android/{Application.version}";
         //string hostServerIP = "http://10.0.0.127"; //安卓模拟器地址
         // string hostServerIP = "http://127.0.0.1";
         string hostServerIP = GetLocalIPAddress();

@@ -1,11 +1,12 @@
-using HybridCLR.Editor;
-using HybridCLR.Editor.AOT;
-using HybridCLR.Editor.Settings;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using HybridCLR.Editor;
+using HybridCLR.Editor.AOT;
 using HybridCLR.Editor.Commands;
+using HybridCLR.Editor.Settings;
 using UnityEditor;
 using UnityEngine;
 using YooAsset;
@@ -38,9 +39,8 @@ public class CustomYooAssetBuild
         string CodeDir = "Assets/Game/Download/Hotfix/";
         string ScriptAssembliesDir = Application.dataPath + "/../" + "HybridCLRData/HotUpdateDlls/" + EditorUserBuildSettings.activeBuildTarget.ToString() + "/Assembly-CSharp.dll";
         File.Copy(ScriptAssembliesDir, Path.Combine(CodeDir, "Assembly-CSharp.dll.bytes"), true);
-        SupplementAOTDll t = new SupplementAOTDll();
         string aotMetaAssemblyDir = Application.dataPath + "/../" + "HybridCLRData/AssembliesPostIl2CppStrip/" + EditorUserBuildSettings.activeBuildTarget.ToString() + "/";
-        foreach (var aotDllName in t.aotMetaAssemblyFiles)
+        foreach (var aotDllName in AOTGenericReferences.PatchedAOTAssemblyList)
         {
             File.Copy(aotMetaAssemblyDir + aotDllName, Path.Combine(CodeDir, aotDllName + ".bytes"), true);
         }
@@ -150,34 +150,6 @@ public class CustomYooAssetBuild
         UnityEngine.Debug.Log("复制热更的DLL到资源目录 完成!!!");
     }
 
-
-
-    
-    // [MenuItem("YooAsset/构建资源包", false, 1000)]
-    // public static void OpenBuildInternalWindow()
-    // {
-    //     Action<bool> callBack = (bool removePackRes) => {
-    //         //Debug.Log("removePackRes....."+ removePackRes);
-    //         if (removePackRes)
-    //         {
-    //             FilterPackRes();
-    //             BuildInternal();
-    //             ResetFilterRule();
-    //         }
-    //         else
-    //         {
-    //             BuildInternal();
-    //         }
-    //     };
-    //     BuildInternalWindow.Open(callBack);
-    // }
-
-    [MenuItem("Tools/构建资源包", false, 1000)]
-    public static void OpenBuildInternalWindow()
-    {
-        CustomYooAssetBuild.BuildInternal();
-    }
-    
     private static Dictionary<string, string> FilterRuleDict;
     //过滤不需要打入包的资源
     private static void FilterPackRes()
@@ -248,8 +220,7 @@ public class CustomYooAssetBuild
 
     private static bool BuildInternal(BuildTarget buildTarget)
     {
-        string projectPath = Application.dataPath.Replace("/Assets", "");
-        string serveDirectory = projectPath + "/ServerBundles";
+        string serveDirectory = AssetBundleBuilderHelper.GetDefaultBuildOutputRoot();
         if (!System.IO.Directory.Exists(serveDirectory))
         {
             System.IO.Directory.CreateDirectory(serveDirectory);

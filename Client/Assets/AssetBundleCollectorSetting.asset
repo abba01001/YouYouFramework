@@ -123,14 +123,6 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
-      - CollectPath: Assets/Game/Download/Protocol
-        CollectorGUID: 2a8ebc9b1bfbb0940becc2e0853c0d82
-        CollectorType: 0
-        AddressRuleName: AddressByFileName
-        PackRuleName: PackDirectory
-        FilterRuleName: CollectAll
-        AssetTags: 
-        UserData: 
       - CollectPath: Assets/Game/Download/Textures
         CollectorGUID: 44f526c68d5946a46a37cad76fe2b02d
         CollectorType: 0

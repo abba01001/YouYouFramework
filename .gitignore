@@ -16,6 +16,4 @@ Package/test.apk
 Server/Server
 /Server/TCPServer/bin
 /Client/.utmp
-Client/GradleProject/
-Client/Bundles/
-Client/ServerBundles
+Client/TempProjectData/

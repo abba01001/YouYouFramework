@@ -144,7 +144,6 @@ MonoBehaviour:
   - {fileID: -2216892594888297763}
   - {fileID: -4044611709077354654}
   - {fileID: -3215799406735479311}
-  - {fileID: -3676294334094533771}
   - {fileID: 2432783747566181004}
 --- !u!114 &1380406298548894520
 MonoBehaviour:
@@ -360,3 +359,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   autoSaveDelay: 0
   cleanSaveStart: 0
+  webGLPrefix: gameName
