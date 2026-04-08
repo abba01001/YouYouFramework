@@ -23,20 +23,20 @@ public class YouYouEditor : OdinMenuEditorWindow
     {
         var tree = new OdinMenuTree(true);
         //参数设置
-        tree.AddAssetAtPath("ParamsSettings", "Game/YouYouFramework/YouYouAssets/ParamsSettings.asset");
+        tree.AddAssetAtPath("ParamsSettings", "Game/Script/YouYouFramework/YouYouAssets/ParamsSettings.asset");
         
         //宏设置
-        tree.AddAssetAtPath("MacroSettings", "Game/YouYouFramework/YouYouAssets/MacroSettings.asset");
+        tree.AddAssetAtPath("MacroSettings", "Game/Script/YouYouFramework/YouYouAssets/MacroSettings.asset");
 
         //AssetBundle打包管理
-        tree.AddAssetAtPath("AssetBundleSettings", "Game/YouYouFramework/YouYouAssets/AssetBundleSettings.asset");
+        tree.AddAssetAtPath("AssetBundleSettings", "Game/Script/YouYouFramework/YouYouAssets/AssetBundleSettings.asset");
 
         //类对象池
-        tree.AddAssetAtPath("PoolAnalyze/ClassObjectPool", "Game/YouYouFramework/YouYouAssets/PoolAnalyze_ClassObjectPool.asset");
+        tree.AddAssetAtPath("PoolAnalyze/ClassObjectPool", "Game/Script/YouYouFramework/YouYouAssets/PoolAnalyze_ClassObjectPool.asset");
         //AssetBundele池
-        tree.AddAssetAtPath("PoolAnalyze/AssetBundlePool", "Game/YouYouFramework/YouYouAssets/PoolAnalyze_AssetBundlePool.asset");
+        tree.AddAssetAtPath("PoolAnalyze/AssetBundlePool", "Game/Script/YouYouFramework/YouYouAssets/PoolAnalyze_AssetBundlePool.asset");
         //Asset池
-        tree.AddAssetAtPath("PoolAnalyze/AssetPool", "Game/YouYouFramework/YouYouAssets/PoolAnalyze_AssetPool.asset");
+        tree.AddAssetAtPath("PoolAnalyze/AssetPool", "Game/Script/YouYouFramework/YouYouAssets/PoolAnalyze_AssetPool.asset");
 
         return tree;
     }
