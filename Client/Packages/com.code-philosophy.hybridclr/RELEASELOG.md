@@ -1,5 +1,62 @@
 # ReleaseLog
 
+## 8.11.0
+
+Release Date: 2026-02-28.
+
+### Runtime
+
+- [fix] fix methodPointer of Full Generic Sharing Method may not be initialized in some cases, which leads to methodPointerCallByInterp not initialized correctly.
+- [fix] handle intrinsic System.Array.UnsafeMov specially. It will raise unbox exception if runs this generic method at interpreter mod.
+- [fix] adjust data type at stack top after JitHelper::UnsafeCast and JitHelper::UnsafeEnumCastLong.
+- [fix] **6000.3.x**: fix bug of comparing MVAR in IsSameOverrideType
+
+## 8.10.0
+
+Release Date: 2026-02-24.
+
+### Runtime
+
+- fix: fix bug of computing interface vtable implement when re-implements interface in child class.
+- fix: for arrays whose element type is a value type, `ldelema` no longer performs type-matching checks.
+Although this does not strictly follow the ECMA-335 specification, it is consistent with the behavior of Mono and CoreCLR.
+- fix: fix bug that didn't handle RuntimeOptionId::MaxInlineableMethodBodySize in RuntimeConfig::GetRuntimeOption and RuntimeConfig::SetRuntimeOption.
+- fix: assign FindImageByAssembly result to image in PreJitClass
+- fix: use strict bounds in CheckMulOverflow for int32 and uint32
+- fix: fix arguments overflow when method argument count > 256 in InvokeDelegateBeginInvoke.
+
+### Editor
+
+- [new]: support BuildTarget GameCoreXboxOne and GameCoreXboxSeries.
+
+## 8.9.0
+
+Release Date: 2026-01-12.
+
+### Runtime
+
+- [fix] **Unity 6.3.x**: fix bug that didn't handle interpreter type in GlobalMetadata::GetNestedTypes
+- [fix] **Unity 6.3.x**: fix crash on GlobalMetadata::GetMethodHandleFromMethodInfo because it maybe passed null as methodInfo in setup vtable.
+- [fix] **TUANJIE**: fix IL2CPP_ASSERT fail in Class::GetVirtualMethod when klass is generic class and not initialized, at this time klass->vtable_count == 0
+- [fix] **TUANJIE**: fix the bug that didn't initialize method->klass->rgctx_data after GenericMetadata::InflateRGCTXMethod
+- [change] **TUANJIE**: [merge] merge il2cpp changes from tuanjie 1.6.7 to 1.6.8
+
+## 8.8.0
+
+Release Date: 2025-12-14.
+
+### Runtime
+
+- [new] support 6000.3.x
+- [new] add instructions for ldfld and stfld while field offset >= 2^16
+- [fix] fix offset overflow issue for ldflda, ldfld, stfld while offset >= 2^16
+- [fix] fix bug of comparing array rank
+
+### Editor
+
+- [new] support 6000.3.x
+- [fix] fix deprecated warning of `PlayerSettings.GetScriptingBackend(BuildTargetGroup)` in Unity 6000
+
 ## 8.7.0
 
 Release Date: 2025-11-03.
