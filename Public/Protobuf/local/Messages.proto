@@ -98,3 +98,32 @@ message SuspendTimeMsg{
     int32 quickGetSuspendRewardIndex = 6;
     int32 quickGetSuspendRewardLimit = 7;
 }
+
+// 玩家动作结构
+message PlayerActionMsg {
+    string user_uuid = 1;           // 玩家ID
+    // 位置与旋转信息
+    Position position = 2;          // 玩家位置
+    Rotation rotation = 3;          // 玩家旋转
+
+    // 位置消息
+    message Position {
+        float x = 1;                // X 坐标
+        float y = 2;                // Y 坐标
+        float z = 3;                // Z 坐标
+    }
+
+    // 旋转消息（欧拉角表示）
+    message Rotation {
+        float x = 1;            // 俯仰角（X轴旋转）
+        float y = 2;              // 偏航角（Y轴旋转）
+        float z = 3;             // 滚转角（Z轴旋转）
+    }
+
+    enum ActionType {
+        UNKNOWN = 0;                // 未知动作
+        MOVE = 1;                   // 移动
+        ATTACK = 2;                 // 攻击
+        INTERACT = 3;               // 互动
+    }
+}

@@ -7,7 +7,7 @@ public class PlayerService
     /// <summary>
     /// 玩家登录
     /// </summary>
-    public async Task OnLogin(long uid)
+    public async Task OnLogin(string uid)
     {
         var db = RedisManager.Instance.GetDB();
 
@@ -32,7 +32,7 @@ public class PlayerService
     /// <summary>
     /// 玩家下线
     /// </summary>
-    public async Task OnLogout(long uid)
+    public async Task OnLogout(string uid)
     {
         var db = RedisManager.Instance.GetDB();
 
@@ -46,7 +46,7 @@ public class PlayerService
     /// <summary>
     /// 模拟 MySQL 读取
     /// </summary>
-    private async Task<(int Level, int Exp, int Gold)> LoadFromMySQL(long uid)
+    private async Task<(int Level, int Exp, int Gold)> LoadFromMySQL(string uid)
     {
         // TODO: 你自己接 MySQL
         await Task.Delay(10);

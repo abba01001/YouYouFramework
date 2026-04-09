@@ -144,7 +144,7 @@ namespace TCPServer.Core.Services
                     MemberCount = Convert.ToInt32(row["member_count"]),
                     Description = row["description"]?.ToString(),
                     ActivityScore = Convert.ToInt32(row["activity_score"]),
-                    IconId = Convert.ToInt32(row["iconId"])
+                    // IconId = Convert.ToInt32(row["iconId"])
                 };
                 guildInfos.Add(guildInfo);
             }

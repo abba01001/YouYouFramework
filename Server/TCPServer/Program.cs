@@ -46,6 +46,10 @@ class Program
             }
             else if (inputStr == "1")
             {
+                RedisManager.Instance.Init("127.0.0.1:6379");
+                var flush = new DBFlushService();
+                flush.Start();
+                
                 StartServer();
             }
             else if (inputStr == "2")
@@ -139,7 +143,7 @@ $"UserId={"pengjunwei"};Password={"pengjunwei"};Port = {"5001"}");
         flush.Start();
         
         // 写入字符串
-        long uid = 88888888;
+        string uid = "88888888";
         await RedisHelper.ListRightPushAsync(RedisKey.PlayerBag(uid), "Sword");
         await RedisHelper.ListRightPushAsync(RedisKey.PlayerBag(uid), "Shield");
 

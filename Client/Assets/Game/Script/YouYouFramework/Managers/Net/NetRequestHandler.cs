@@ -8,7 +8,7 @@ using Protocols;
 using Protocols.Game;
 using Protocols.Guild;
 using Protocols.Player;
-
+using UnityEngine;
 
 
 public class NetRequestHandler
@@ -191,6 +191,29 @@ public class NetRequestHandler
         {
             data.UpdatedAttrs.Add(kvp.Key, kvp.Value);
         }
+        SendMessage(data);
+    }
+    
+    //同步玩家位置数据
+    private PlayerActionMsg.Types.Position tempPos;
+    private PlayerActionMsg.Types.Rotation tempRot;
+    public void c2s_request_synchronous_player(Vector3 pos, Vector3 rot)
+    {
+        tempPos ??= new PlayerActionMsg.Types.Position();
+        tempPos.X = (float)pos.x;
+        tempPos.Y = (float)pos.y;
+        tempPos.Z = (float)pos.z;
+        
+        tempRot ??= new PlayerActionMsg.Types.Rotation();
+        tempRot.X = (float)rot.x;
+        tempRot.Y = (float)rot.y;
+        tempRot.Z = (float)rot.z;
+        PlayerActionMsg data = new PlayerActionMsg()
+        {
+            UserUuid = GameEntry.Data.UserId,
+            Position = tempPos,
+            Rotation = tempRot
+        };
         SendMessage(data);
     }
     #endregion

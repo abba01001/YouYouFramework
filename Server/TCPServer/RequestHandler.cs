@@ -102,16 +102,16 @@ public class RequestHandler
 
     public async void c2s_request_join_guild(string memberId, string guildId)
     {
-        JoinGuildRequest data = new JoinGuildRequest();
-        data.State = await GuildService.JoinGuild(memberId, "玩家名字",guildId,0,1);
-        SendMessage(data);
+        // JoinGuildRequest data = new JoinGuildRequest();
+        // data.State = await GuildService.JoinGuild(memberId, "玩家名字",guildId,0,1);
+        // SendMessage(data);
     }
 
     public async void c2s_request_exit_guild(string memberId, string guildId)
     {
-        ExitGuildRequest data = new ExitGuildRequest();
-        data.State = await GuildService.ExitGuild(memberId, guildId);
-        SendMessage(data);
+        // ExitGuildRequest data = new ExitGuildRequest();
+        // data.State = await GuildService.ExitGuild(memberId, guildId);
+        // SendMessage(data);
     }
 
     public async void c2s_request_delete_guild(int currentPage, int pageSize)

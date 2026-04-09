@@ -29,15 +29,16 @@ public class ResponseHandler
         // 注册心跳包处理器
         RegisterHandler(nameof(HeartBeatMsg), s2c_handle_request_heart_beat);
         RegisterHandler(nameof(GuildListMsg), s2c_handle_request_guild_list);
-        RegisterHandler(nameof(JoinGuildRequest), s2c_handle_request_join_guild);
-        RegisterHandler(nameof(ExitGuildRequest), s2c_handle_request_exit_guild);
-        RegisterHandler(nameof(DeleteGuildRequest), s2c_handle_request_delete_guild);
+        // RegisterHandler(nameof(JoinGuildRequest), s2c_handle_request_join_guild);
+        // RegisterHandler(nameof(ExitGuildRequest), s2c_handle_request_exit_guild);
+        // RegisterHandler(nameof(DeleteGuildRequest), s2c_handle_request_delete_guild);
 
         RegisterHandler(nameof(LoginMsg), s2c_handle_request_login);
         RegisterHandler(nameof(RegisterMsg), s2c_handle_request_register);
         RegisterHandler(nameof(UpdateUserRequest), s2c_handle_request_update_role_info);
         RegisterHandler(nameof(ChatMsg), s2c_handle_request_chat);
         RegisterHandler(nameof(SuspendTimeMsg), s2c_handle_get_suspend_time_msg);
+        RegisterHandler(nameof(PlayerActionMsg), s2c_handle_request_synchronous_player);
     }
     
     public void RegisterHandler(string messageType, Action<BaseMessage> handler)
@@ -98,19 +99,19 @@ public class ResponseHandler
     private void s2c_handle_request_join_guild(BaseMessage message)
     {
         //处理业务逻辑
-        ProtocolHelper.UnpackData<Protocols.Guild.JoinGuildRequest>(message, async (data) =>
-        {
-            request.c2s_request_join_guild(data.MemberId, data.GuildId);
-        });
+        // ProtocolHelper.UnpackData<Protocols.Guild.JoinGuildRequest>(message, async (data) =>
+        // {
+            // request.c2s_request_join_guild(data.MemberId, data.GuildId);
+        // });
     }
 
     private void s2c_handle_request_exit_guild(BaseMessage message)
     {
         //处理业务逻辑
-        ProtocolHelper.UnpackData<Protocols.Guild.ExitGuildRequest>(message, async (data) =>
-        {
-            request.c2s_request_exit_guild(data.MemberId, data.GuildId);
-        });
+        // ProtocolHelper.UnpackData<Protocols.Guild.ExitGuildRequest>(message, async (data) =>
+        // {
+            // request.c2s_request_exit_guild(data.MemberId, data.GuildId);
+        // });
     }
 
     private void s2c_handle_request_delete_guild(BaseMessage message)
@@ -172,6 +173,26 @@ public class ResponseHandler
         });
     }
 
+    private void s2c_handle_request_synchronous_player(BaseMessage message)
+    {
+        ProtocolHelper.UnpackData<PlayerActionMsg>(message, async (data) =>
+        {
+            LoggerHelper.Instance.Info($"{nameof(PlayerActionMsg)}: {data}");
+
+            RedisHelper.HashSetAsync(RedisKey.PlayerPosition(data.UserUuid), "X", data.Position.X.ToString());
+            RedisHelper.HashSetAsync(RedisKey.PlayerPosition(data.UserUuid), "Y", data.Position.Y.ToString());
+            RedisHelper.HashSetAsync(RedisKey.PlayerPosition(data.UserUuid), "Z", data.Position.Z.ToString());
+
+            if (data.Rotation != null)
+            {
+                RedisHelper.HashSetAsync(RedisKey.PlayerRotation(data.UserUuid), "X", data.Rotation.X.ToString());
+                RedisHelper.HashSetAsync(RedisKey.PlayerRotation(data.UserUuid), "Y", data.Rotation.Y.ToString());
+                RedisHelper.HashSetAsync(RedisKey.PlayerRotation(data.UserUuid), "Z", data.Rotation.Z.ToString());
+            }
+
+        });
+    }
+    
     private void s2c_handle_get_suspend_time_msg(BaseMessage message)
     {
         ProtocolHelper.UnpackData<SuspendTimeMsg>(message, async (data) =>

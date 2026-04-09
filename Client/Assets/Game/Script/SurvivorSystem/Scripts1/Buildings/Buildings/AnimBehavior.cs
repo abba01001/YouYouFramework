@@ -19,7 +19,6 @@ namespace Watermelon
         private void OnConsumeMatEvent(object userdata)
         {
             Recipe recipe = userdata as Recipe;
-            Debugger.LogError($"OnConsumeMatEvent==>{recipe.ResultResourceType}");
             if (recipe.ResultResourceType == CurrencyType.Egg)
             {
                 if(_animator) _animator.SetTrigger("Play");

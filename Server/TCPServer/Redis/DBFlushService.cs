@@ -28,7 +28,7 @@ public class DBFlushService
                         continue;
                     }
 
-                    long uid = (long)uidValue;
+                    string uid = (string)uidValue;
 
                     await FlushPlayer(uid);
                 }
@@ -40,7 +40,7 @@ public class DBFlushService
         });
     }
 
-    private async Task FlushPlayer(long uid)
+    private async Task FlushPlayer(string uid)
     {
         var db = RedisManager.Instance.GetDB();
 
@@ -54,7 +54,7 @@ public class DBFlushService
         Console.WriteLine($"[DBFlush] 已刷盘 uid={uid}");
     }
 
-    private async Task SaveToMySQL(long uid,
+    private async Task SaveToMySQL(string uid,
         HashEntry[] baseData,
         HashEntry[] currency,
         HashEntry[] bag)

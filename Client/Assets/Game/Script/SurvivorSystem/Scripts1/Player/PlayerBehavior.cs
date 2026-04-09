@@ -243,6 +243,39 @@ namespace Watermelon
             HittingUpdate();
         }
 
+        private float moveThreshold = 0.01f;  // 位置变化的最小阈值
+        private float timeSinceLastSend = 0f; // 距离上次发送的时间
+        private float sendInterval = 0.1f;    // 发送数据的最小间隔（0.1秒）
+        private Vector3 lastPosition;
+        private Vector3 currentPosition;
+        private Vector3 currentRotation;
+        private void LateUpdate()
+        {
+            // 获取当前帧玩家的位置
+            currentPosition = transform.position;
+            currentRotation = transform.rotation.eulerAngles;
+            // 计算每帧更新的时间
+            timeSinceLastSend += Time.deltaTime;
+
+            // 判断位置是否发生变化并且时间间隔达到阈值
+            if (HasMoved() && timeSinceLastSend >= sendInterval)
+            {
+                // 发送数据给后端
+                // SendMoveDataToBackend(currentPosition);
+                // 更新上次位置
+                lastPosition = currentPosition;
+                GameEntry.Net.Requset.c2s_request_synchronous_player(currentPosition,currentRotation);
+                // 重置发送间隔
+                timeSinceLastSend = 0f;
+            }
+        }
+        
+        private bool HasMoved()
+        {
+            // 判断当前位置和上次位置是否有明显变化
+            return (currentPosition - lastPosition).sqrMagnitude > 0.01f; // 你可以根据实际需要调整阈值
+        }           
+
         #region Swimming
 
         public void IsPlayerOnWater(bool value)

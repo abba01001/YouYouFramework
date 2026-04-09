@@ -5,7 +5,7 @@ public class PlayerCache
 {
     // ---------------- 基础数据 ----------------
 
-    public async Task SetBase(long uid, int level, int exp)
+    public async Task SetBase(string uid, int level, int exp)
     {
         var key = RedisKey.PlayerBase(uid);
 
@@ -18,7 +18,7 @@ public class PlayerCache
         MarkDirty(uid);
     }
 
-    public async Task<HashEntry[]> GetBase(long uid)
+    public async Task<HashEntry[]> GetBase(string uid)
     {
         var key = RedisKey.PlayerBase(uid);
         return await RedisManager.Instance.GetDB().HashGetAllAsync(key);
@@ -26,7 +26,7 @@ public class PlayerCache
 
     // ---------------- 货币（高频！） ----------------
 
-    public async Task<long> AddGold(long uid, int value)
+    public async Task<long> AddGold(string uid, int value)
     {
         var key = RedisKey.PlayerCurrency(uid);
 
@@ -37,7 +37,7 @@ public class PlayerCache
         return result;
     }
 
-    public async Task<long> GetGold(long uid)
+    public async Task<long> GetGold(string uid)
     {
         var key = RedisKey.PlayerCurrency(uid);
         var val = await RedisHelper.HashGetAsync(key, "gold");
@@ -47,7 +47,7 @@ public class PlayerCache
 
     // ---------------- 背包 ----------------
 
-    public async Task AddItem(long uid, int itemId, int count)
+    public async Task AddItem(string uid, int itemId, int count)
     {
         var key = RedisKey.PlayerBag(uid);
 
@@ -58,7 +58,7 @@ public class PlayerCache
 
     // ---------------- 脏标记 ----------------
 
-    private void MarkDirty(long uid)
+    private void MarkDirty(string uid)
     {
         var key = $"dirty:player:{uid}";
 
