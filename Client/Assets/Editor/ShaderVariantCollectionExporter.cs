@@ -67,11 +67,9 @@ public static class ShaderVariantCollectionExporter
             var shader = AssetDatabase.LoadAssetAtPath<Shader>(shaderPath);
             if (shader != null)
             {
-                Debugger.LogError(shader.name);
                 // 将Shader依赖加入dict
                 foreach (var dependency in AssetDatabase.GetDependencies(new string[] { shaderPath }, true))
                 {
-                     Debugger.LogError("=====>>>>",dependency);
                     if (!dict.ContainsKey(dependency))
                     {
                         dict.Add(dependency, true);
@@ -123,7 +121,7 @@ public static class ShaderVariantCollectionExporter
 
                 foreach (var m in kvp.Value)
                 {
-                    Debugger.Log(AssetDatabase.GetAssetPath(m), m);
+                    Debug.Log(AssetDatabase.GetAssetPath(m), m);
                 }
             }
         }

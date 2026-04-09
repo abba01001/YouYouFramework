@@ -19,24 +19,17 @@ public class ProcedureGame : ProcedureBase
         
     private async UniTask Init()
     {
-        Debugger.LogError("ProcedureGame 1111====>");
         Scene targetScene = SceneManager.GetSceneByName("Game");
         SceneManager.SetActiveScene(targetScene);
         LoadingGraphics.Instance.ShowProgress();
         
-        Debugger.LogError("加载Project Init Settings.asset前====>");
         ProjectInitSettings t = await GameEntry.Loader.LoadMainAssetAsync<ProjectInitSettings>("Assets/Game/Download/ProjectFiles/Data/Project Init Settings.asset", GameEntry.Instance.gameObject);
         t.Init();
-        Debugger.LogError("加载Project Init Settings.asset后====>");
 
-        Debugger.LogError("加载FormGame前====>");
         GameEntry.UI.OpenUIForm<FormGame>();
-        Debugger.LogError("加载FormGame后====>");
         
-        Debugger.LogError("加载GameController前====>");
         GameObject obj = await GameEntry.Pool.GameObjectPool.Spawn("Assets/Game/Download/Prefab/GameController.prefab");
         await obj.GetComponent<GameController>().Init();
-        Debugger.LogError("加载GameController后====>");
         obj.gameObject.SetActive(true);
         obj.transform.SetParent(null);
         obj.name = "GameRoot";

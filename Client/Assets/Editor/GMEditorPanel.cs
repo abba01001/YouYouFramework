@@ -8,7 +8,18 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using Sirenix.Utilities.Editor;
-using Watermelon;
+
+public enum TestCardType
+{
+    NULL = 0,
+    Value = 1,
+}
+
+public enum TestEditorCardTypeEnum
+{
+    [LabelText("--",SdfIconType.Coin)] NULL = TestCardType.NULL,
+    [LabelText("数值牌(value)",SdfIconType.CashCoin)] Value = TestCardType.Value,
+}
 
 public class GMEditorPanel : OdinEditorWindow
 {
@@ -50,7 +61,7 @@ public class GMEditorPanel : OdinEditorWindow
         //     Debug.Log($"给 {player.Name} 增加了100金币, 当前金币: {player.Coins}");
         // }
 
-        CurrencyController.Set(CurrencyType.Coins, 10000);
+        // CurrencyController.Set(CurrencyType.Coins, 10000);
     }
 
     // 玩家列表，用于批量修改
@@ -60,18 +71,25 @@ public class GMEditorPanel : OdinEditorWindow
     [FoldoutGroup("枚举示例", false)] [LabelText("选择枚举列表")]
     public ControlEnum selectedEnum = ControlEnum.None;
 
-    [FoldoutGroup("滑动条示例", false)] [LabelText("滑动条")] [Slider(0, 100)] // 0 到 100 的滑动条
+    [FoldoutGroup("滑动条示例", false)] [LabelText("滑动条")] //[Slider(0, 100)] // 0 到 100 的滑动条
     public float sliderValue = 50; // 初始值是 50
 
     [FoldoutGroup("开关示例", false)] [LabelText("开关")] [ToggleLeft()]
     public bool enableFeature = false;
 
-    
+    void ChangeCardType()
+    {
+        
+    }
     
     
     [FoldoutGroup("货币列表")] [LabelText("下拉栏")] [ValueDropdown("GetOptions")]
     public string selectedOption;
+    
+    [FoldoutGroup("货币列表")] [LabelText("卡牌类型")]
+    public TestEditorCardTypeEnum TheCardType;
 
+    
     [FoldoutGroup("货币列表")] [LabelText("输入框")]
     public int textInput = 0;
 
@@ -83,21 +101,21 @@ public class GMEditorPanel : OdinEditorWindow
     }
 
     // 获取枚举的中文描述
-    private string GetEnumDescription(CurrencyType currency)
-    {
-        var field = currency.GetType().GetField(currency.ToString());
-        var attribute = (DescriptionAttribute)Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute));
-        return attribute != null ? attribute.Description : currency.ToString();  // 如果没有描述，返回枚举的名称
-    }
+    // private string GetEnumDescription(CurrencyType currency)
+    // {
+    //     var field = currency.GetType().GetField(currency.ToString());
+    //     var attribute = (DescriptionAttribute)Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute));
+    //     return attribute != null ? attribute.Description : currency.ToString();  // 如果没有描述，返回枚举的名称
+    // }
     
-    private IEnumerable GetOptions()
-    {
-        // 获取枚举所有项并转换为字符串数组
-        return Enum.GetValues(typeof(CurrencyType))
-            .Cast<CurrencyType>()
-            .Select(e => new ValueDropdownItem($"{GetEnumDescription(e)}|{e}", e.ToString()))  // 显示中文+英文
-            .ToArray();
-    }
+    // private IEnumerable GetOptions()
+    // {
+    //     // 获取枚举所有项并转换为字符串数组
+    //     return Enum.GetValues(typeof(CurrencyType))
+    //         .Cast<CurrencyType>()
+    //         .Select(e => new ValueDropdownItem($"{GetEnumDescription(e)}|{e}", e.ToString()))  // 显示中文+英文
+    //         .ToArray();
+    // }
 
     [LabelText("用户ID")] [FoldoutGroup("多行文本框示例", false)]
     public string longText1 = "这里可以输入很多文字...";
@@ -237,4 +255,90 @@ public class PlayerData
         Level = level;
         Coins = coins;
     }
+}
+
+public static class GMPrefs
+{
+    private const string PREFIX = "GM_";
+
+#if UNITY_EDITOR
+    private static readonly Dictionary<string, object> _cache = new Dictionary<string, object>();
+#endif
+
+    #region Int
+    public static void SetInt(string key, int value)
+    {
+        key = PREFIX + key;
+#if UNITY_EDITOR
+        _cache[key] = value;
+#else
+        PlayerPrefs.SetInt(key, value);
+#endif
+    }
+
+    public static int GetInt(string key, int defaultValue = 0)
+    {
+        key = PREFIX + key;
+#if UNITY_EDITOR
+        if (_cache.TryGetValue(key, out var v) && v is int i)
+            return i;
+        return defaultValue;
+#else
+        return PlayerPrefs.GetInt(key, defaultValue);
+#endif
+    }
+    #endregion
+
+    #region Bool
+    public static void SetBool(string key, bool value) => SetInt(key, value ? 1 : 0);
+    public static bool GetBool(string key, bool defaultValue = false) => GetInt(key, defaultValue ? 1 : 0) == 1;
+    #endregion
+
+    #region Float
+    public static void SetFloat(string key, float value)
+    {
+        key = PREFIX + key;
+#if UNITY_EDITOR
+        _cache[key] = value;
+#else
+        PlayerPrefs.SetFloat(key, value);
+#endif
+    }
+
+    public static float GetFloat(string key, float defaultValue = 0)
+    {
+        key = PREFIX + key;
+#if UNITY_EDITOR
+        if (_cache.TryGetValue(key, out var v) && v is float f)
+            return f;
+        return defaultValue;
+#else
+        return PlayerPrefs.GetFloat(key, defaultValue);
+#endif
+    }
+    #endregion
+
+    #region String
+    public static void SetString(string key, string value)
+    {
+        key = PREFIX + key;
+#if UNITY_EDITOR
+        _cache[key] = value;
+#else
+        PlayerPrefs.SetString(key, value);
+#endif
+    }
+
+    public static string GetString(string key, string defaultValue = "")
+    {
+        key = PREFIX + key;
+#if UNITY_EDITOR
+        if (_cache.TryGetValue(key, out var v) && v is string s)
+            return s;
+        return defaultValue;
+#else
+        return PlayerPrefs.GetString(key, defaultValue);
+#endif
+    }
+    #endregion
 }

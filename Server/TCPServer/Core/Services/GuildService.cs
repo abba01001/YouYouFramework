@@ -97,7 +97,7 @@ namespace TCPServer.Core.Services
                     }
 
                     // 7️⃣ 更新创建者的角色表 guild_id（非事务操作也可以，但你可以选择事务内也更新）
-                    await RoleService.UpdateGuildId(creatorId, guildId);
+                    await AccountService.UpdateGuildId(creatorId, guildId);
 
                     // 8️⃣ 事务提交（由 ExecuteTransactionAsync 自动处理）
                     return true;
@@ -191,7 +191,7 @@ namespace TCPServer.Core.Services
                 foreach (var row in memberRows)
                 {
                     string mId = row["member_id"].ToString();
-                    await RoleService.UpdateGuildId(mId, null); // 清空成员的公会ID
+                    await AccountService.UpdateGuildId(mId, null); // 清空成员的公会ID
                 }
 
                 // 3️⃣ 删除 guild_members 表里的记录
@@ -235,7 +235,7 @@ namespace TCPServer.Core.Services
                 }
 
                 // 2 更新玩家的公会 ID
-                await RoleService.UpdateGuildId(memberId, null);
+                await AccountService.UpdateGuildId(memberId, null);
 
                 // 3. 更新公会成员数量
                 string updateQuery = @"
@@ -322,7 +322,7 @@ namespace TCPServer.Core.Services
                 }
 
                 // 4️⃣ 更新玩家的公会 ID
-                await RoleService.UpdateGuildId(memberId, guildId);
+                await AccountService.UpdateGuildId(memberId, guildId);
 
                 // 5️⃣ 更新公会成员数量
                 string updateQuery = "UPDATE guild_list SET member_count = member_count + 1 WHERE guild_id = @guild_id";

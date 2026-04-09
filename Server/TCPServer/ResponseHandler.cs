@@ -78,7 +78,7 @@ public class ResponseHandler
             socket.LastHeartbeatTime = DateTime.UtcNow;
             if (socket.UserAccount != string.Empty)
             {
-                RoleService.RefreshOnlineUsers(3,socket.UserAccount);
+                AccountService.RefreshOnlineUsers(3,socket.UserAccount);
             }
             //NetManager.Instance.Logger.LogMessage(socket,$"解包成功: Item ID: {itemData.ItemId}, Item Name: {itemData.ItemName}");
         });
@@ -126,13 +126,18 @@ public class ResponseHandler
     {
         ProtocolHelper.UnpackData<LoginMsg>(message, async (data) =>
         {
-            (OperationResult state,string user_uuid, byte[] save_data) = await RoleService.LoginAsync(data.UserAccount, data.UserPassword);
-            if (state == OperationResult.Success)
+            (OperationResult state,string user_uuid, byte[] save_data) = await AccountService.LoginAsync(data.UserAccount, data.UserPassword);
+            bool success = state == OperationResult.Success;
+            request.c2s_request_login((int)state, user_uuid, save_data);
+            if (success)
             {
                 socket.UserAccount = data.UserAccount;
                 socket.UserUUID = user_uuid;
+                
+                //下发别的数据
+                await request.c2s_request_synrous_role_attrs();
             }
-            request.c2s_request_login((int)state, user_uuid, save_data);
+            request.c2s_request_entry_game();
         });
     }
 
@@ -140,7 +145,7 @@ public class ResponseHandler
     {
         ProtocolHelper.UnpackData<RegisterMsg>(message, async (data) =>
         {
-            (OperationResult state,string uuid) = await RoleService.CreateUserAsync(data.UserAccount, data.UserPassword);
+            (OperationResult state,string uuid) = await AccountService.CreateUserAsync(data.UserAccount, data.UserPassword);
             request.c2s_request_register((int)state, uuid);
         });
     }
@@ -175,13 +180,13 @@ public class ResponseHandler
             SuspendTimeMsg s = new SuspendTimeMsg();
             if(data.Type == 0)
             {
-                (s.Timestamp,s.QuickGetSuspendRewardIndex,s.QuickGetSuspendRewardLimit) = await RoleService.GetSuspendTimeParamsAsync(data.UserUuid);
+                (s.Timestamp,s.QuickGetSuspendRewardIndex,s.QuickGetSuspendRewardLimit) = await AccountService.GetSuspendTimeParamsAsync(data.UserUuid);
                 s.Type = data.Type;
                 request.c2s_request_get_suspend_reward(s);
             }
             else
             {
-                (OperationResult state, SuspendTimeMsg msg) = await RoleService.CanClaimRewardAsync(data.UserUuid, data.Type);
+                (OperationResult state, SuspendTimeMsg msg) = await AccountService.CanClaimRewardAsync(data.UserUuid, data.Type);
                 if (state == OperationResult.Success && msg != null)
                 {
                     s.Type = data.Type;
@@ -204,7 +209,7 @@ public class ResponseHandler
         ProtocolHelper.UnpackData<UpdateUserRequest>(message, async (data) =>
         {
             Dictionary<string, string> updatedAttrs = new Dictionary<string, string>(data.UpdatedAttrs);
-            (OperationResult result, Dictionary<string, object> updatedValues) = await RoleService.UpdateUserPropertyAsync(data.UserUuid, updatedAttrs);
+            (OperationResult result, Dictionary<string, object> updatedValues) = await AccountService.UpdateUserPropertyAsync(data.UserUuid, updatedAttrs);
             request.c2s_request_update_role_info(result, updatedValues);
         });
     }

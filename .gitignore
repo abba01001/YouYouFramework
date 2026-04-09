@@ -15,5 +15,7 @@ APK/
 Package/test.apk
 Server/Server
 /Server/TCPServer/bin
-/Client/.utmp
+Client/.utmp
 Client/TempProjectData/
+Client/Assets/StreamingAssets.meta
+Client/ProjectSettings/

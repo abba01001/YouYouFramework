@@ -106,17 +106,6 @@ public class GameUtil
         rectTransform.anchoredPosition = originalPosition + sizeDelta;
     }
 
-    // 测试代码块的执行时间
-    public static void TestTime(string tag, System.Action action = null)
-    {
-        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-        stopwatch.Start();
-        action?.Invoke();
-        stopwatch.Stop();
-        float seconds = stopwatch.ElapsedTicks / (float) System.Diagnostics.Stopwatch.Frequency;
-        LogError($"{tag} --- 消耗时间: {seconds:F3} 秒");
-    }
-
     public static IEnumerator CheckKeys(Dictionary<(Key, Key?), Action> keyMappings)
     {
         while (true)
@@ -198,27 +187,6 @@ public class GameUtil
         return new Vector3(x, y, z);
     }
     
-    public static List<int> ParseNumbers(string input)
-    {
-        List<int> parsedNumbers = new List<int>();
-        if (string.IsNullOrEmpty(input)) return parsedNumbers;
-        // 使用 Split() 分割字符串，如果没有逗号，结果依然是一个单一元素数组
-        string[] numbers = input.Split(',');
-        foreach (string num in numbers)
-        {
-            // 尝试解析每个数字
-            if (int.TryParse(num, out int parsedNumber))
-            {
-                parsedNumbers.Add(parsedNumber);
-            }
-            else
-            {
-                LogError($"Invalid number: {num}");
-            }
-        }
-        return parsedNumbers;
-    }
-    
     // 屏蔽渲染某个层
     public static void BlockSceneLayer(Camera camera,int layer)
     {
@@ -258,17 +226,6 @@ public class GameUtil
         }
 
         icon.rectTransform.sizeDelta = new Vector2(newWidth, newHeight);
-    }
-
-    public static void LogCurTimerLog(string tag = "")
-    {
-        Debugger.LogError($"{tag}====> {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}");
-    }
-    
-    public static void LogError(params object[] messages)
-    {
-        string combinedMessage = StringUtil.JointString(messages);
-        Debug.LogError(combinedMessage);
     }
 
     public static void Shuffle<T>(List<T> list)

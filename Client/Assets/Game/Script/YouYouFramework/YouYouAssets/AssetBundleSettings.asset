@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: AssetBundleSettings
   m_EditorClassIdentifier: 
   AssetVersion: 1.0.0
-  CurrBuildTarget: 0
   GradleSavePath: TempProjectData/GradleProject
   PulishAPKPath: TempProjectData/Package
   ServerBundlePath: TempProjectData/ServerBundles

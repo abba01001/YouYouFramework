@@ -106,20 +106,23 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -224,7 +227,6 @@ GameObject:
   - component: {fileID: 7563552372806454619}
   - component: {fileID: 4666934212725620286}
   - component: {fileID: 8219088970492313875}
-  - component: {fileID: 6710287393727491591}
   m_Layer: 5
   m_Name: Purchase Button
   m_TagString: Untagged
@@ -335,24 +337,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &6710287393727491591
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3163347104808944083}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ecf93014a8a16543a51dabf3be71bf7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  backImage: {fileID: 4666934212725620286}
-  button: {fileID: 8219088970492313875}
-  priceText: {fileID: 6758880405574903887}
-  loadingObject: {fileID: 1806170688917752102}
-  activeBackSprite: {fileID: 21300000, guid: 1e40370f98026b946ba3bceec1d09434, type: 3}
-  unactiveBackSprite: {fileID: 21300000, guid: f12507f8e19f8ea4c95c456f8a7ad44c, type: 3}
 --- !u!1 &3946396935359374944
 GameObject:
   m_ObjectHideFlags: 0
@@ -364,8 +348,6 @@ GameObject:
   - component: {fileID: 9220444062157575407}
   - component: {fileID: 7942111352603079653}
   - component: {fileID: 6781399547516937187}
-  - component: {fileID: 7772792212372791739}
-  - component: {fileID: 2377847618720921161}
   m_Layer: 5
   m_Name: IAP Offer No Ads
   m_TagString: Untagged
@@ -433,36 +415,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1.9
---- !u!114 &7772792212372791739
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3946396935359374944}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c01010db2bb1b8343a59e4dc34c08e10, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  offerReceived:
-    m_PersistentCalls:
-      m_Calls: []
-  productKey: 0
-  purchaseButton: {fileID: 6710287393727491591}
---- !u!114 &2377847618720921161
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3946396935359374944}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5c882a45a1f3314fb8d735fea431487, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  disableOfferIfNoAdsPurchased: 0
 --- !u!1 &7275999437667558945
 GameObject:
   m_ObjectHideFlags: 0
@@ -567,20 +519,23 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0

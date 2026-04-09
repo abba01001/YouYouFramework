@@ -83,7 +83,7 @@ public class ClientSocket
             // 从 OnlineUsers 中移除玩家信息
             if (!string.IsNullOrEmpty(UserAccount))
             {
-                RoleService.RefreshOnlineUsers(2, UserAccount);
+                AccountService.RefreshOnlineUsers(2, UserAccount);
             }
             if(socket != null)
             {

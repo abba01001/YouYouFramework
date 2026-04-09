@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3913760315111396949}
-  - component: {fileID: 7228282042795800245}
   m_Layer: 0
   m_Name: RedDot
   m_TagString: Untagged
@@ -24,6 +23,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3913760315111396947}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 186.1807, y: 270.1014, z: -3.9357383}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -31,26 +31,7 @@ Transform:
   m_Children:
   - {fileID: 3913760315579718058}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7228282042795800245
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3913760315111396947}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d00ac634801eea540bac37f8a79eca78, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  redDots: []
-  requestOnStart: 0
-  requestOnEnable: 0
-  requestOnDisable: 0
-  requestOnDestroy: 0
-  requestRedDotTypes: 
 --- !u!1 &3913760315579718057
 GameObject:
   m_ObjectHideFlags: 0
@@ -82,7 +63,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3913760315111396949}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

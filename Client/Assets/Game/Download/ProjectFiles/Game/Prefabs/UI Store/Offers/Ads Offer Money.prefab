@@ -104,20 +104,23 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -221,7 +224,6 @@ GameObject:
   - component: {fileID: 8156791952208202623}
   - component: {fileID: 6989351496192191605}
   - component: {fileID: 5826383447003528307}
-  - component: {fileID: 7529987423402439448}
   - component: {fileID: 2093432743182159239}
   m_Layer: 5
   m_Name: Ads Offer Money
@@ -290,24 +292,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1.86
---- !u!114 &7529987423402439448
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4036154418757417456}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18d72f5975850b64795d54aa99963fb5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  productPurchased:
-    m_PersistentCalls:
-      m_Calls: []
-  offerID: f4dc1072-abe6-43a5-b9f8-9f75d3547f70
-  adsButton: {fileID: 818869572709562704}
-  disableAfterPurchase: 0
 --- !u!114 &2093432743182159239
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -329,7 +313,7 @@ MonoBehaviour:
     formatTheNumber: 0
   spawnCurrencyCloud: 0
   currencyCloudType: 0
-  elementsAmount: 10
+  cloudElementsAmount: 10
   currencyCloudSpawnPoint: {fileID: 0}
   currencyCloudTargetPoint: {fileID: 0}
 --- !u!1 &7866153483401918813

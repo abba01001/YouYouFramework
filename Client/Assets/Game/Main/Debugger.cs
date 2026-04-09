@@ -19,7 +19,7 @@ public static class Debugger
     #region Log 接口
 
     // 单个对象调用，支持传入 context 以便在编辑器点击定位
-    [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
+    // [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
     public static void Log(object message, Object context = null)
     {
         if (!EnableLog) return;
@@ -27,7 +27,7 @@ public static class Debugger
     }
 
     // 多参数任意拼接
-    [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
+    // [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
     public static void Log(params object[] messages)
     {
         if (!EnableLog) return;
@@ -38,7 +38,7 @@ public static class Debugger
 
     #region Warning 接口
 
-    [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
+    // [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
     public static void LogWarning(params object[] messages)
     {
         if (!EnableLog) return;
@@ -49,7 +49,7 @@ public static class Debugger
 
     #region Error 接口
 
-    [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
+    // [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
     public static void LogError(params object[] messages)
     {
         UnityEngine.Debug.LogError($"{GetTimeStamp()}<color=#FF0000>[ERROR]</color> {JointString(messages)}");
@@ -57,6 +57,18 @@ public static class Debugger
 
     #endregion
 
+    
+    // 测试代码块的执行时间
+    public static void TestTime(string tag, System.Action action = null)
+    {
+        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+        action?.Invoke();
+        stopwatch.Stop();
+        float seconds = stopwatch.ElapsedTicks / (float) System.Diagnostics.Stopwatch.Frequency;
+        LogError($"{tag} --- 消耗时间: {seconds:F3} 秒");
+    }
+    
     #region 内部工具
 
     private static string GetTimeStamp()

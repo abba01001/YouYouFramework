@@ -220,13 +220,6 @@ public class CustomYooAssetBuild
 
     private static bool BuildInternal(BuildTarget buildTarget)
     {
-        string serveDirectory = AssetBundleBuilderHelper.GetDefaultBuildOutputRoot();
-        if (!System.IO.Directory.Exists(serveDirectory))
-        {
-            System.IO.Directory.CreateDirectory(serveDirectory);
-            Debug.Log($"已创建目录: {serveDirectory}");
-        }
-        
         UnityEngine.Debug.Log($"开始构建 : ");
         var buildoutputRoot = AssetBundleBuilderHelper.GetDefaultBuildOutputRoot();
         var streamingAssetsRoot = AssetBundleBuilderHelper.GetStreamingAssetsRoot();
@@ -266,36 +259,8 @@ public class CustomYooAssetBuild
         if (buildResult.Success)
         {
             UnityEngine.Debug.Log($"构建成功 : {buildResult.OutputPackageDirectory}");
-            //服务器用 start
-            string sourceDirectory = buildResult.OutputPackageDirectory;
-            string targetDirectory = $"{serveDirectory}/{buildTarget}/{Application.version}";
-            if (buildTarget == BuildTarget.Android)
-            {
-                targetDirectory = $"{serveDirectory}/Android/{Application.version}";
-            }
-            else if (buildTarget == BuildTarget.StandaloneWindows64)
-            {
-                targetDirectory = $"{serveDirectory}/WindowsPlayer/{Application.version}";
-            }
-
-            if (!Directory.Exists(targetDirectory))
-            {
-                Directory.CreateDirectory(targetDirectory);
-            }
-            else
-            {
-                foreach (string file in Directory.GetFiles(targetDirectory))
-                {
-                    File.Delete(file);
-                }
-            }
-            foreach (string file in Directory.GetFiles(sourceDirectory))
-            {
-                string fileName = Path.GetFileName(file);
-                string destFile = Path.Combine(targetDirectory, fileName);
-                File.Copy(file, destFile, true);
-            }
-            UnityEngine.Debug.Log($"资源已复制到 : {targetDirectory}");
+            CopyAssetsToTarget(AssetBundleBuilderHelper.GetDefaultBuildOutputRoot(), buildTarget, buildResult);
+            CopyAssetsToTarget(AssetBundleBuilderHelper.GetDefaultBuildOutputRoot2(), buildTarget, buildResult);
             //服务器用 end
             return true;
         }
@@ -306,6 +271,46 @@ public class CustomYooAssetBuild
         return false;
     }
 
+    private static void CopyAssetsToTarget(string serveDirectory,BuildTarget buildTarget,BuildResult buildResult)
+    {
+        if (!System.IO.Directory.Exists(serveDirectory))
+        {
+            System.IO.Directory.CreateDirectory(serveDirectory);
+            Debug.Log($"已创建目录: {serveDirectory}");
+        }
+
+        //服务器用 start
+        string sourceDirectory = buildResult.OutputPackageDirectory;
+        string targetDirectory = $"{serveDirectory}/{buildTarget}/{Application.version}";
+        if (buildTarget == BuildTarget.Android)
+        {
+            targetDirectory = $"{serveDirectory}/Android/{Application.version}";
+        }
+        else if (buildTarget == BuildTarget.StandaloneWindows64)
+        {
+            targetDirectory = $"{serveDirectory}/WindowsPlayer/{Application.version}";
+        }
+
+        if (!Directory.Exists(targetDirectory))
+        {
+            Directory.CreateDirectory(targetDirectory);
+        }
+        else
+        {
+            foreach (string file in Directory.GetFiles(targetDirectory))
+            {
+                File.Delete(file);
+            }
+        }
+        foreach (string file in Directory.GetFiles(sourceDirectory))
+        {
+            string fileName = Path.GetFileName(file);
+            string destFile = Path.Combine(targetDirectory, fileName);
+            File.Copy(file, destFile, true);
+        }
+        UnityEngine.Debug.Log($"资源已复制到 : {targetDirectory}");
+    }
+    
     private static string GetBuiltinShaderBundleName()
     {
         var uniqueBundleName = AssetBundleCollectorSettingData.Setting.UniqueBundleName;

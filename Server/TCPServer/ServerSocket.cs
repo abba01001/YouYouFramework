@@ -87,7 +87,7 @@ public static class ServerSocket
         DateTime executedTime = DateTime.UtcNow;
         await UpdateTaskExecutionTimeAsync(executedTime);
         await ChatService.ClearPublicChannelMessagesAsync();
-        await RoleService.ResetSuspendParams();
+        await AccountService.ResetSuspendParams();
         LoggerHelper.Instance.Info("任务已执行并记录。");
     }
 

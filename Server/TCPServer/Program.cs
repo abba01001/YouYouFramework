@@ -1,14 +1,17 @@
 ﻿using Google.Protobuf;
 using NLog;
+using NLog.Config;
 using Protocols;
 using Protocols.Player;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using TCPServer;
 using TCPServer.Core;
 using TCPServer.Core.DataAccess;
 using TCPServer.Core.Services;
@@ -18,7 +21,13 @@ class Program
 {
     static void Main(string[] args)
     {
-        NLog.LogManager.Configuration = new NLog.Config.XmlLoggingConfiguration("nlog.config");
+        // 设置工作目录为 exe 所在目录
+        string exeDir = AppContext.BaseDirectory;
+        Directory.SetCurrentDirectory(exeDir);
+
+        // 加载 NLog 配置
+        string configPath = Path.Combine(exeDir, "NLog.config");
+        LogManager.Configuration = new XmlLoggingConfiguration(configPath);
 
         // 提供功能选择
         while (true)
@@ -27,6 +36,7 @@ class Program
             LoggerHelper.Instance.Debug("1. 开启服务器");
             LoggerHelper.Instance.Debug("2. 查询某个玩家的游戏数据");
             LoggerHelper.Instance.Debug("3. 测试服务端mysql");
+            LoggerHelper.Instance.Debug("4. 测试Redis");
             LoggerHelper.Instance.Debug("请输入数字选择操作（或者输入Quit退出）：");
 
             string inputStr = Console.ReadLine();
@@ -40,8 +50,10 @@ class Program
             }
             else if (inputStr == "2")
             {
-                SqlManager.Initialize($"Server={KeyUtils.GetSqlKey(SqlKey.Server)};Database={KeyUtils.GetSqlKey(SqlKey.Database)};" +
-  $"UserId={KeyUtils.GetSqlKey(SqlKey.UserId)};Password={KeyUtils.GetSqlKey(SqlKey.Password)};Port = {KeyUtils.GetSqlKey(SqlKey.Port)}");
+                SqlManager.Initialize($"Server={"43.134.133.178"};Database={"unitygamedata"};" +
+                                      $"UserId={"pengjunwei"};Password={"pengjunwei"};Port = {"5001"}");
+  //               SqlManager.Initialize($"Server={KeyUtils.GetSqlKey(SqlKey.Server)};Database={KeyUtils.GetSqlKey(SqlKey.Database)};" +
+  // $"UserId={KeyUtils.GetSqlKey(SqlKey.UserId)};Password={KeyUtils.GetSqlKey(SqlKey.Password)};Port = {KeyUtils.GetSqlKey(SqlKey.Port)}");
                 QueryPlayerData();
             }
             else if (inputStr == "3")
@@ -53,6 +65,11 @@ $"UserId={"pengjunwei"};Password={"pengjunwei"};Port = {"5001"}");
 
                 //GuildService.ExitGuild("1c1341de-ac5c-463e-b920-5a072dec40a9", "83");
 
+            }
+            else if (inputStr == "4")
+            {
+                TestConnectRedis();
+                
             }
             else
             {
@@ -115,6 +132,26 @@ $"UserId={"pengjunwei"};Password={"pengjunwei"};Port = {"5001"}");
         }
     }
 
+    private static async Task TestConnectRedis()
+    {
+        RedisManager.Instance.Init("127.0.0.1:6379");
+        var flush = new DBFlushService();
+        flush.Start();
+        
+        // 写入字符串
+        long uid = 88888888;
+        await RedisHelper.ListRightPushAsync(RedisKey.PlayerBag(uid), "Sword");
+        await RedisHelper.ListRightPushAsync(RedisKey.PlayerBag(uid), "Shield");
+
+        var items = await RedisHelper.ListRangeAsync(RedisKey.PlayerBag(uid));
+        LoggerHelper.Instance.Error($"List Inventory: {string.Join(",", items)}");
+
+        await RedisHelper.HashSetAsync(RedisKey.PlayerCurrency(uid), "Gold", "500");
+        await RedisHelper.HashSetAsync(RedisKey.PlayerCurrency(uid), "Gems", "50");
+
+        var gold = await RedisHelper.HashGetAsync(RedisKey.PlayerCurrency(uid), "Gold");
+        LoggerHelper.Instance.Error($"Gold: {gold}");
+    }
 
 
     // 开启服务器
@@ -155,10 +192,10 @@ $"UserId={"pengjunwei"};Password={"pengjunwei"};Port = {"5001"}");
         }
         else if (inputStr == "Z")
         {
-            RoleService.CreateUserAsync("a1", "132");
-            RoleService.CreateUserAsync("a2", "132");
-            RoleService.CreateUserAsync("a3", "132");
-            RoleService.CreateUserAsync("a4", "132");
+            AccountService.CreateUserAsync("a1", "132");
+            AccountService.CreateUserAsync("a2", "132");
+            AccountService.CreateUserAsync("a3", "132");
+            AccountService.CreateUserAsync("a4", "132");
         }
         else if (inputStr == "B")
         {
@@ -194,7 +231,7 @@ $"UserId={"pengjunwei"};Password={"pengjunwei"};Port = {"5001"}");
             LoggerHelper.Instance.Debug($"开始查询玩家 {playerAccount} 的游戏数据");
 
             // 模拟查询玩家数据（此处根据需求进行替换）
-            var result = RoleService.GetUserByAccountAsync(playerAccount);
+            var result = AccountService.GetUserByAccountAsync(playerAccount);
             if (result != null)
             {
                 byte[] datas = new byte[0];

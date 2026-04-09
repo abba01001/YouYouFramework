@@ -250,7 +250,6 @@ public class NetManager
     
     public async void HandleDisconnected()
     {
-        if (MainEntry.IsOfflineMode) return;
         connectionStatus = ConnectionStatus.Disconnected;
 
         while (CurReconnectCount < MaxReconnect)

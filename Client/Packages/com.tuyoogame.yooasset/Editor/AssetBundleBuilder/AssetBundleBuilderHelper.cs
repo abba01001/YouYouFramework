@@ -14,9 +14,15 @@ namespace YooAsset.Editor
         public static string GetDefaultBuildOutputRoot()
         {
             string projectPath = EditorTools.GetProjectPath();
-            return $"{projectPath}/Bundles";
+            return $"{projectPath}/TempProjectData/TempBundles";
         }
 
+        public static string GetDefaultBuildOutputRoot2()
+        {
+            string projectPath = EditorTools.GetProjectPath();
+            return $"{projectPath}/TempProjectData/ServerBundles";
+        }
+        
         /// <summary>
         /// 获取流文件夹路径
         /// </summary>

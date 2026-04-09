@@ -139,11 +139,22 @@ public class RequestHandler
         if(user_uuid != string.Empty)
         {
             data.Token = JwtHelper.GenerateToken(data.UserUuid, "测试");
+            LoggerHelper.Instance.Info($"生成Token: {data.Token}");
         }
         data.SaveData = ByteString.CopyFrom(save_data);
         SendMessage(data);
     }
 
+    public async Task c2s_request_synrous_role_attrs()
+    {
+        
+    }
+
+    public void c2s_request_entry_game()
+    {
+        
+    }
+    
     public void c2s_request_register(int state,string user_uuid)
     {
         RegisterMsg data = new RegisterMsg();

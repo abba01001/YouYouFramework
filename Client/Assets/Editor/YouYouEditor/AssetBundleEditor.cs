@@ -9,7 +9,9 @@ using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
-
+using YooAsset.Editor;
+using BuildReport = UnityEditor.Build.Reporting.BuildReport;
+using BuildResult = UnityEditor.Build.Reporting.BuildResult;
 using Debug = UnityEngine.Debug;
 
 [CreateAssetMenu(menuName = "YouYouAsset/AssetBundleSettings")]
@@ -30,39 +32,26 @@ public class AssetBundleEditor : ScriptableObject
     string keyPassword = "FrameWork";
     #endregion
 
-    [PropertySpace(2)]
+    [PropertySpace(0.5f)]
     [HorizontalGroup("Common", LabelWidth = 75)]
     [VerticalGroup("Common/Left")]
     [LabelText("资源版本号")]
-    public string AssetVersion = "1.0.0";
+    [OnValueChanged(nameof(OnAssetVersionChanged))]
+    public string AssetVersion;
 
-    [PropertySpace(5)]
-    [VerticalGroup("Common/Left")]
-    [LabelText("目标平台")]
-    public CusBuildTarget CurrBuildTarget;
-
-    public BuildTarget GetBuildTarget()
+    private void OnAssetVersionChanged()
     {
-        switch (CurrBuildTarget)
-        {
-            default:
-            case CusBuildTarget.Windows:
-                return BuildTarget.StandaloneWindows64;
-            case CusBuildTarget.Android:
-                return BuildTarget.Android;
-            case CusBuildTarget.IOS:
-                return BuildTarget.iOS;
-            case CusBuildTarget.WebGL:
-                return BuildTarget.WebGL;
-        }
+        PlayerSettings.bundleVersion = AssetVersion;
     }
 
+    [PropertySpace(1)]
     [VerticalGroup("Common/Left")]
     [Button("AB包资源预览",ButtonSizes.Medium)]
     public void Test()
     {
     }
 
+    [PropertySpace(0)]
     [VerticalGroup("Common/Left")]
     [Button("启动本地AB包资源存储", ButtonSizes.Medium)]
     void StartLocalServer()
@@ -170,6 +159,64 @@ public class AssetBundleEditor : ScriptableObject
 
         process.Start();
         UnityEngine.Debug.Log($"Python server started on port 8000, serving directory: {directory}");
+    }
+
+    [PropertySpace(0)]
+    [VerticalGroup("Common/Left")]
+    [Button("启动本地服务器", ButtonSizes.Medium)]
+    public void StartServer()
+    {
+        // 构建服务器 exe 路径，相对 Unity 项目 Assets 目录的上两级
+        string exePath = Path.Combine(Application.dataPath, "..", "..", "Server", "Server", "TCPServer.exe");
+        exePath = Path.GetFullPath(exePath); // 转成绝对路径
+        if (!File.Exists(exePath))
+        {
+            Debug.LogError("服务器 exe 不存在: " + exePath);
+            return;
+        }
+        try
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = exePath,
+                WorkingDirectory = Path.GetDirectoryName(exePath),
+                UseShellExecute = true
+            });
+            Debug.Log("本地服务器已启动: " + exePath);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError("启动服务器失败: " + ex);
+        }
+    }
+    
+    [VerticalGroup("Common/Right")]
+    [Button("清理AB资源包缓存",ButtonSizes.Medium)]
+    public void ClearAB()
+    {
+        string tempBundlePath = AssetBundleBuilderHelper.GetDefaultBuildOutputRoot();
+        string localServerBundlePath = AssetBundleBuilderHelper.GetDefaultBuildOutputRoot2();
+        
+        foreach (var path in new List<string>(){tempBundlePath,localServerBundlePath})
+        {
+            if (Directory.Exists(path))
+            {
+                try
+                {
+                    Directory.Delete(path, true);  // 递归删除
+                    AssetDatabase.Refresh();
+                    Debug.Log($"{path}资源清理完成！");
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"删除AssetBundles文件夹时发生异常: {e.Message}");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("AssetBundles 文件夹不存在！");
+            }
+        }
     }
     
     [VerticalGroup("Common/Right")]
@@ -300,38 +347,10 @@ public class AssetBundleEditor : ScriptableObject
         }
     }
 
-    [VerticalGroup("Common/Right")]
-    [Button("清理StreamingAssets资源", ButtonSizes.Medium)]
-    public void ClarStreamingAssets()
+    [OnInspectorInit]
+    private void Init()
     {
-        if (Directory.Exists(Application.streamingAssetsPath))
-        {
-            try
-            {
-                Directory.Delete(Application.streamingAssetsPath, true);  // 递归删除
-                AssetDatabase.Refresh();
-                Debug.Log("StreamingAssets/AssetBundles资源清理完成！");
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"删除AssetBundles文件夹时发生异常: {e.Message}");
-            }
-        }
-        else
-        {
-            Debug.LogWarning("AssetBundles 文件夹不存在！");
-        }
-    }
-
-
-    private void OnEnable()
-    {
-        PlayerSettings.bundleVersion = AssetVersion;
-    }
-    
-    private void OnValidate()
-    {
-        PlayerSettings.bundleVersion = AssetVersion;
+        AssetVersion = Application.version;
     }
 
     [LabelText("导出Gradle工程路径")]

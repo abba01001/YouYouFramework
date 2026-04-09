@@ -12,6 +12,11 @@
     <!-- 剔除未使用的代码以减小文件大小 -->
     <RemoveUnusedReferences>true</RemoveUnusedReferences>
     <!-- 移除未使用的程序集 -->
+
+	<DebugType>None</DebugType>
+	<!-- 不生成调试信息 -->
+	<DebugSymbols>false</DebugSymbols>
+	<!-- 不生成 pdb -->
   </PropertyGroup>
 
 	<ItemGroup>
@@ -21,6 +26,7 @@
 	  <PackageReference Include="MySql.Data" Version="6.10.9" />
 	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	  <PackageReference Include="NLog" Version="5.3.4" />
+	  <PackageReference Include="StackExchange.Redis" Version="2.12.14" />
 	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.3.0" />
 	  <PackageReference Include="System.ServiceModel.Primitives" Version="8.1.1" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
