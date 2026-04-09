@@ -196,10 +196,7 @@ public class NetManager
 
     private void SendHeartbeat(int second)
     {
-        if (second % HeartInterval == 0)
-        {
-            Requset.c2s_request_heart_beat();
-        }
+        Requset.c2s_request_heart_beat();
     }
 
     private void HandleConnectionError(SocketException e)
@@ -232,7 +229,7 @@ public class NetManager
             Task.Run(SendMessagesAsync);
             Task.Run(ReceiveMessagesAsync);
             heartbeatAction?.Dispose();
-            heartbeatAction = Observable.Interval(TimeSpan.FromSeconds(1f))
+            heartbeatAction = Observable.Interval(TimeSpan.FromSeconds(HeartInterval))
                 .Subscribe(count =>
                 {
                     SendHeartbeat((int)count);
