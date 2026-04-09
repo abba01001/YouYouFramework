@@ -56,14 +56,22 @@ namespace Watermelon
             CheckPlayFirstEntryAnim();
         }
 
-        private void CheckPlayFirstEntryAnim()
+        private async UniTask CheckPlayFirstEntryAnim()
         {
+            PlayerBehavior playerBehavior = PlayerBehavior.GetBehavior();
+            while (playerBehavior == null)
+            {
+                if(playerBehavior != null) break;
+                await UniTask.NextFrame();
+                playerBehavior = PlayerBehavior.GetBehavior();
+            }
+            
             SimpleBoolSave alreadyPlayedAnimationSave = SaveController.GetSaveObject<SimpleBoolSave>("FirstAnimation" + "8a95ba6b-040a-478e-8cb6-a75f8562e553");
 
             if (!alreadyPlayedAnimationSave.Value)
             {
                 Control.DisableMovementControl();
-                PlayerBehavior.GetBehavior().PlayerGraphics.RunWakeUpAnimation();
+                playerBehavior.PlayerGraphics.RunWakeUpAnimation();
 
                 alreadyPlayedAnimationSave.Value = true;
                 SaveController.MarkAsSaveIsRequired();

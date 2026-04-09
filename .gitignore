@@ -19,3 +19,5 @@ Client/.utmp
 Client/TempProjectData/
 Client/Assets/StreamingAssets.meta
 Client/ProjectSettings/
+Server/.idea
+Client/.idea
