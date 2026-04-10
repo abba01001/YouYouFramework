@@ -103,6 +103,7 @@ namespace TCPServer.Core.DataAccess
         public async Task<int> ExecuteNonQueryAsync(string query, Dictionary<string, object> parameters,
             MySqlConnection conn, MySqlTransaction tran)
         {
+            LoggerHelper.Instance.Info("ExecuteNonQueryAsync:\nSQL: " + FormatSqlInline(query, parameters));
             using var cmd = new MySqlCommand(query, conn, tran);
             AddParameters(cmd, parameters);
             return await cmd.ExecuteNonQueryAsync();

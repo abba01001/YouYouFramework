@@ -37,7 +37,9 @@ message ExitGameMsg{
 }
 
 message HeartBeatMsg {
-
+    int64 client_time = 1;   // 客户端发送时间（毫秒）
+    int64 server_time = 2;   // 服务端时间（毫秒，ACK时填写）
+    int32 seq = 3;           // 心跳序号（防乱序/调试用）
 }
 
 message LoginMsg{

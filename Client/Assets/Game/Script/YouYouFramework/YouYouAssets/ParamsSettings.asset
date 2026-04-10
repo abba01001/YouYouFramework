@@ -27,13 +27,16 @@ MonoBehaviour:
     Value: 1
   - Name: "\u5FC3\u8DF3\u95F4\u9694"
     Key: HeartInterval
-    Value: 10
+    Value: 5
   - Name: "\u91CD\u8FDE\u670D\u52A1\u5668\u95F4\u9694(\u79D2)"
     Key: ConnectInterval
     Value: 3
   - Name: "\u6700\u5927\u91CD\u8FDE\u670D\u52A1\u5668\u6B21\u6570"
     Key: MaxReconnect
     Value: 10
+  - Name: "\u5FC3\u8DF3\u8D85\u65F6"
+    Key: HeartTimeout
+    Value: 15
   GradeParams:
   - Key: Http_Retry
     LowValue: 2

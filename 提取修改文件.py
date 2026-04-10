@@ -1,127 +1,142 @@
 import os
 import subprocess
 import shutil
+from typing import List
 
-# 获取修改和删除的文件
-def get_modified_and_deleted_files():
-    result = subprocess.run(['git', 'status', '--porcelain'], capture_output=True, text=True)
-    
-    # 打印 Git 输出，帮助调试
-    print("Git status output:")
-    print(result.stdout)
+# ===================== 配置项（可自行修改） =====================
+TEMP_FOLDER = "./extracted_files"       # 临时文件夹
+ZIP_NAME = "extracted_files"            # 压缩包名称
+MANIFEST_FILE = "manifest.txt"          # 清单文件名
+# ==============================================================
+
+def clean_file_path(file_path: str) -> str:
+    """统一清理文件路径：去除空格、引号、统一分隔符"""
+    return file_path.strip().replace('"', "").replace("\\", "/")
+
+def get_git_changed_files() -> tuple[List[str], List[str]]:
+    """
+    获取Git中已修改、已删除的文件
+    返回：(修改文件列表, 删除文件列表)
+    """
+    try:
+        # 获取Git状态（精简格式）
+        result = subprocess.run(
+            ["git", "status", "--porcelain"],
+            capture_output=True,
+            text=True,
+            encoding="utf-8"
+        )
+    except Exception as e:
+        print(f"❌ 获取Git状态失败：{str(e)}")
+        return [], []
 
     modified_files = []
     deleted_files = []
 
     for line in result.stdout.splitlines():
-        # 忽略未跟踪的文件（以 ?? 开头）
-        if line.startswith('??'):
-            continue
+        if not line.strip() or line.startswith("??"):
+            continue  # 跳过空行、未跟踪文件
 
-        # 打印每一行，检查其内容和路径格式
-        print(f"Processing line: '{line}'")
+        status = line[:2].strip()
+        file_path = clean_file_path(line[3:])
 
-        # 判断 'M' 表示修改的文件，'D' 表示删除的文件
-        status = line[0:2].strip()  # 获取前两个字符作为状态标识
-        file_path = line[3:].strip()  # 文件路径从第四个字符开始
-
-        # 检查文件状态并分类
-        if status == 'M':
+        # 分类文件状态
+        if status in ("M", "A", "R"):  # 修改/新增/重命名
             modified_files.append(file_path)
-        elif status == 'D':
+        elif status == "D":  # 删除
             deleted_files.append(file_path)
 
     return modified_files, deleted_files
 
-# 复制修改的文件并保持目录结构
-def copy_modified_files(modified_files, target_dir):
-    for file in modified_files:
-        # 清理文件路径中的特殊字符或多余的引号
-        file = file.strip().replace('"', '')  # 去掉路径中的引号
+def copy_files_with_structure(files: List[str], target_root: str):
+    """复制文件并保持目录结构（仅复制存在的文件）"""
+    for file in files:
+        if not os.path.isfile(file):
+            print(f"⚠️  跳过不存在的文件：{file}")
+            continue
 
-        target_file_path = os.path.join(target_dir, file)
-        target_file_dir = os.path.dirname(target_file_path)
+        target_path = os.path.join(target_root, file)
+        target_dir = os.path.dirname(target_path)
 
-        # 打印目标文件路径，调试用
-        print(f"Target directory: {target_file_dir}")
-        print(f"Target file path: {target_file_path}")
+        # 创建目录
+        os.makedirs(target_dir, exist_ok=True)
+        # 复制文件
+        shutil.copy2(file, target_path)
+        print(f"✅ 复制文件：{file}")
 
-        # 创建目标目录
-        if not os.path.exists(target_file_dir):
-            try:
-                os.makedirs(target_file_dir)
-            except OSError as e:
-                print(f"Error creating directory {target_file_dir}: {e}")
-                continue
+def create_deleted_markers(files: List[str], target_root: str):
+    """为删除的文件创建空标记文件（保留目录结构）"""
+    for file in files:
+        target_path = os.path.join(target_root, file)
+        target_dir = os.path.dirname(target_path)
 
-        # 打印文件是否存在
-        print(f"Checking if {file} exists...")
-        if os.path.exists(file):
-            try:
-                shutil.copy(file, target_file_path)
-                print(f"Copied modified file: {file} -> {target_file_path}")
-            except Exception as e:
-                print(f"Error copying file {file}: {e}")
-        else:
-            print(f"Warning: {file} doesn't exist (it might have been deleted)")
+        os.makedirs(target_dir, exist_ok=True)
+        # 创建空文件标记
+        open(target_path, "w", encoding="utf-8").close()
+        print(f"🗑️  标记删除文件：{file}")
 
-# 记录删除的文件
-def record_deleted_files(deleted_files, target_dir):
-    for file in deleted_files:
-        # 去掉文件路径中的多余引号或不必要的反斜杠
-        file = file.strip().replace('"', '')  # 去掉路径中的引号
-        file = file.replace('\\', '/')  # 替换反斜杠为正斜杠
+def generate_manifest(modified: List[str], deleted: List[str], target_root: str):
+    """
+    生成文件清单：
+    1. 写入 manifest.txt 到打包目录
+    2. 控制台打印清单
+    """
+    manifest_path = os.path.join(target_root, MANIFEST_FILE)
 
-        target_file_path = os.path.join(target_dir, file)
-        target_file_dir = os.path.dirname(target_file_path)
+    with open(manifest_path, "w", encoding="utf-8") as f:
+        f.write("=" * 50 + "\n")
+        f.write("📄 打包文件清单\n")
+        f.write("=" * 50 + "\n\n")
 
-        # 打印目标文件路径，调试用
-        print(f"Target directory: {target_file_dir}")
-        print(f"Target file path: {target_file_path}")
+        f.write(f"【修改/新增文件】({len(modified)}个)\n")
+        for fpath in modified:
+            f.write(f"- {fpath}\n")
 
-        # 创建目标文件夹
-        if not os.path.exists(target_file_dir):
-            try:
-                os.makedirs(target_file_dir)
-            except OSError as e:
-                print(f"Error creating directory {target_file_dir}: {e}")
-                continue
+        f.write(f"\n【已删除文件】({len(deleted)}个)\n")
+        for fpath in deleted:
+            f.write(f"- {fpath}\n")
 
-        # 创建一个空文件来表示该删除文件
-        open(target_file_path, 'w').close()
-        print(f"Recorded deleted file: {file} -> {target_file_path}")
+    # 控制台打印清单
+    print("\n" + "=" * 60)
+    print("📋 最终文件清单")
+    print("=" * 60)
+    print(f"\n修改/新增文件 ({len(modified)}个):")
+    for fpath in modified:
+        print(f"  - {fpath}")
 
-# 打包文件夹为压缩包
-def create_zip_archive(folder_path, output_name):
-    shutil.make_archive(output_name, 'zip', folder_path)
-    print(f"Created zip archive: {output_name}.zip")
+    print(f"\n已删除文件 ({len(deleted)}个):")
+    for fpath in deleted:
+        print(f"  - {fpath}")
+    print("=" * 60 + "\n")
 
-# 删除文件夹及其内容
-def delete_folder(folder_path):
-    if os.path.exists(folder_path):
-        shutil.rmtree(folder_path)
-        print(f"Deleted folder: {folder_path}")
+def main():
+    # 1. 获取变更文件
+    modified_files, deleted_files = get_git_changed_files()
+    total = len(modified_files) + len(deleted_files)
+
+    if total == 0:
+        print("✅ 没有检测到任何修改/删除的文件")
+        return
+
+    print(f"🔍 检测到：{len(modified_files)}个修改文件，{len(deleted_files)}个删除文件\n")
+
+    # 2. 创建临时目录
+    os.makedirs(TEMP_FOLDER, exist_ok=True)
+
+    # 3. 处理文件
+    copy_files_with_structure(modified_files, TEMP_FOLDER)
+    create_deleted_markers(deleted_files, TEMP_FOLDER)
+
+    # 4. 生成清单文件（核心需求）
+    generate_manifest(modified_files, deleted_files, TEMP_FOLDER)
+
+    # 5. 打包压缩
+    shutil.make_archive(ZIP_NAME, "zip", TEMP_FOLDER)
+    print(f"📦 打包完成：{ZIP_NAME}.zip")
+
+    # 6. 清理临时文件夹
+    shutil.rmtree(TEMP_FOLDER)
+    print(f"🧹 已清理临时文件夹：{TEMP_FOLDER}")
 
 if __name__ == "__main__":
-    target_folder = './extracted_files'
-
-    # 获取修改和删除的文件
-    modified_files, deleted_files = get_modified_and_deleted_files()
-
-    if modified_files or deleted_files:
-        print(f"Found {len(modified_files)} modified files and {len(deleted_files)} deleted files, extracting...")
-
-        # 复制修改的文件
-        copy_modified_files(modified_files, target_folder)
-
-        # 记录删除的文件
-        record_deleted_files(deleted_files, target_folder)
-
-        # 打包文件夹为压缩包
-        create_zip_archive(target_folder, 'extracted_files')
-
-        # 删除临时文件夹
-        delete_folder(target_folder)
-
-    else:
-        print("No modified or deleted files found.")
+    main()

@@ -30,35 +30,36 @@ namespace Protocols {
             "CgptZXNzYWdlX2lkGAEgASgFEhEKCXRpbWVzdGFtcBgCIAEoAxIRCglzZW5k",
             "ZXJfaWQYAyABKAkSIwoHbXNnVHlwZRgEIAEoDjISLlByb3RvY29scy5Nc2dU",
             "eXBlEg0KBXRva2VuGAUgASgJEgwKBHR5cGUYBiABKAkSDAoEZGF0YRgHIAEo",
-            "DCIOCgxIb3RVcGRhdGVNc2ciDQoLRXhpdEdhbWVNc2ciDgoMSGVhcnRCZWF0",
-            "TXNnInsKCExvZ2luTXNnEhQKDHVzZXJfYWNjb3VudBgBIAEoCRIVCg11c2Vy",
-            "X3Bhc3N3b3JkGAIgASgJEg0KBXN0YXRlGAMgASgFEhEKCXVzZXJfdXVpZBgE",
-            "IAEoCRINCgV0b2tlbhgFIAEoCRIRCglzYXZlX2RhdGEYBiABKAwiawoLUmVn",
-            "aXN0ZXJNc2cSFAoMdXNlcl9hY2NvdW50GAEgASgJEhUKDXVzZXJfcGFzc3dv",
-            "cmQYAiABKAkSDQoFc3RhdGUYAyABKAUSEQoJdXNlcl91dWlkGAQgASgJEg0K",
-            "BXRva2VuGAUgASgJIq4BCghFbWFpbE1zZxIQCghlbWFpbF9pZBgBIAEoBRIR",
-            "CglzZW5kZXJfaWQYAiABKAkSEwoLcmVjZWl2ZXJfaWQYAyABKAkSDwoHc3Vi",
-            "amVjdBgEIAEoCRIPCgdjb250ZW50GAUgASgJEhEKCXNlbmRfdGltZRgGIAEo",
-            "AxIPCgdpc19yZWFkGAcgASgIEg4KBmlzX2dldBgIIAEoCBISCgppc19kZWxl",
-            "dGVkGAkgASgIIs0BCgdDaGF0TXNnEgoKAmlkGAEgASgJEhEKCXNlbmRlcl9p",
-            "ZBgCIAEoCRITCgtyZWNlaXZlcl9pZBgDIAEoCRIPCgdtZXNzYWdlGAQgASgJ",
-            "EhQKDGNoYW5uZWxfdHlwZRgFIAEoBRIRCgl0aW1lc3RhbXAYBiABKAUSDwoH",
-            "aXNfcmVhZBgHIAEoCBISCgppc19kZWxldGVkGAggASgIEhkKEWlzX3JlcXVl",
-            "c3RfcHVibGljGAkgASgIEhQKDG1lc3NhZ2VfdHlwZRgKIAEoBSJgCgtDaGF0",
-            "TXNnTGlzdBInCgtwdWJsaWNfY2hhdBgBIAMoCzISLlByb3RvY29scy5DaGF0",
-            "TXNnEigKDHByaXZhdGVfY2hhdBgCIAMoCzISLlByb3RvY29scy5DaGF0TXNn",
-            "IrABCg5TdXNwZW5kVGltZU1zZxIRCgl1c2VyX3V1aWQYASABKAkSDAoEdHlw",
-            "ZRgCIAEoBRIUCgxjYW5HZXRSZXdhcmQYAyABKAgSDAoEaG91chgEIAEoBRIR",
-            "Cgl0aW1lc3RhbXAYBSABKAUSIgoacXVpY2tHZXRTdXNwZW5kUmV3YXJkSW5k",
-            "ZXgYBiABKAUSIgoacXVpY2tHZXRTdXNwZW5kUmV3YXJkTGltaXQYByABKAUi",
-            "qwIKD1BsYXllckFjdGlvbk1zZxIRCgl1c2VyX3V1aWQYASABKAkSNQoIcG9z",
-            "aXRpb24YAiABKAsyIy5Qcm90b2NvbHMuUGxheWVyQWN0aW9uTXNnLlBvc2l0",
-            "aW9uEjUKCHJvdGF0aW9uGAMgASgLMiMuUHJvdG9jb2xzLlBsYXllckFjdGlv",
-            "bk1zZy5Sb3RhdGlvbhorCghQb3NpdGlvbhIJCgF4GAEgASgCEgkKAXkYAiAB",
-            "KAISCQoBehgDIAEoAhorCghSb3RhdGlvbhIJCgF4GAEgASgCEgkKAXkYAiAB",
-            "KAISCQoBehgDIAEoAiI9CgpBY3Rpb25UeXBlEgsKB1VOS05PV04QABIICgRN",
-            "T1ZFEAESCgoGQVRUQUNLEAISDAoISU5URVJBQ1QQAyohCgdNc2dUeXBlEgoK",
-            "BkNsaWVudBAAEgoKBlNlcnZlchABYgZwcm90bzM="));
+            "DCIOCgxIb3RVcGRhdGVNc2ciDQoLRXhpdEdhbWVNc2ciRQoMSGVhcnRCZWF0",
+            "TXNnEhMKC2NsaWVudF90aW1lGAEgASgDEhMKC3NlcnZlcl90aW1lGAIgASgD",
+            "EgsKA3NlcRgDIAEoBSJ7CghMb2dpbk1zZxIUCgx1c2VyX2FjY291bnQYASAB",
+            "KAkSFQoNdXNlcl9wYXNzd29yZBgCIAEoCRINCgVzdGF0ZRgDIAEoBRIRCgl1",
+            "c2VyX3V1aWQYBCABKAkSDQoFdG9rZW4YBSABKAkSEQoJc2F2ZV9kYXRhGAYg",
+            "ASgMImsKC1JlZ2lzdGVyTXNnEhQKDHVzZXJfYWNjb3VudBgBIAEoCRIVCg11",
+            "c2VyX3Bhc3N3b3JkGAIgASgJEg0KBXN0YXRlGAMgASgFEhEKCXVzZXJfdXVp",
+            "ZBgEIAEoCRINCgV0b2tlbhgFIAEoCSKuAQoIRW1haWxNc2cSEAoIZW1haWxf",
+            "aWQYASABKAUSEQoJc2VuZGVyX2lkGAIgASgJEhMKC3JlY2VpdmVyX2lkGAMg",
+            "ASgJEg8KB3N1YmplY3QYBCABKAkSDwoHY29udGVudBgFIAEoCRIRCglzZW5k",
+            "X3RpbWUYBiABKAMSDwoHaXNfcmVhZBgHIAEoCBIOCgZpc19nZXQYCCABKAgS",
+            "EgoKaXNfZGVsZXRlZBgJIAEoCCLNAQoHQ2hhdE1zZxIKCgJpZBgBIAEoCRIR",
+            "CglzZW5kZXJfaWQYAiABKAkSEwoLcmVjZWl2ZXJfaWQYAyABKAkSDwoHbWVz",
+            "c2FnZRgEIAEoCRIUCgxjaGFubmVsX3R5cGUYBSABKAUSEQoJdGltZXN0YW1w",
+            "GAYgASgFEg8KB2lzX3JlYWQYByABKAgSEgoKaXNfZGVsZXRlZBgIIAEoCBIZ",
+            "ChFpc19yZXF1ZXN0X3B1YmxpYxgJIAEoCBIUCgxtZXNzYWdlX3R5cGUYCiAB",
+            "KAUiYAoLQ2hhdE1zZ0xpc3QSJwoLcHVibGljX2NoYXQYASADKAsyEi5Qcm90",
+            "b2NvbHMuQ2hhdE1zZxIoCgxwcml2YXRlX2NoYXQYAiADKAsyEi5Qcm90b2Nv",
+            "bHMuQ2hhdE1zZyKwAQoOU3VzcGVuZFRpbWVNc2cSEQoJdXNlcl91dWlkGAEg",
+            "ASgJEgwKBHR5cGUYAiABKAUSFAoMY2FuR2V0UmV3YXJkGAMgASgIEgwKBGhv",
+            "dXIYBCABKAUSEQoJdGltZXN0YW1wGAUgASgFEiIKGnF1aWNrR2V0U3VzcGVu",
+            "ZFJld2FyZEluZGV4GAYgASgFEiIKGnF1aWNrR2V0U3VzcGVuZFJld2FyZExp",
+            "bWl0GAcgASgFIqsCCg9QbGF5ZXJBY3Rpb25Nc2cSEQoJdXNlcl91dWlkGAEg",
+            "ASgJEjUKCHBvc2l0aW9uGAIgASgLMiMuUHJvdG9jb2xzLlBsYXllckFjdGlv",
+            "bk1zZy5Qb3NpdGlvbhI1Cghyb3RhdGlvbhgDIAEoCzIjLlByb3RvY29scy5Q",
+            "bGF5ZXJBY3Rpb25Nc2cuUm90YXRpb24aKwoIUG9zaXRpb24SCQoBeBgBIAEo",
+            "AhIJCgF5GAIgASgCEgkKAXoYAyABKAIaKwoIUm90YXRpb24SCQoBeBgBIAEo",
+            "AhIJCgF5GAIgASgCEgkKAXoYAyABKAIiPQoKQWN0aW9uVHlwZRILCgdVTktO",
+            "T1dOEAASCAoETU9WRRABEgoKBkFUVEFDSxACEgwKCElOVEVSQUNUEAMqIQoH",
+            "TXNnVHlwZRIKCgZDbGllbnQQABIKCgZTZXJ2ZXIQAWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Protocols.MsgType), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -66,7 +67,7 @@ namespace Protocols {
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.BaseMessage), global::Protocols.BaseMessage.Parser, new[]{ "MessageId", "Timestamp", "SenderId", "MsgType", "Token", "Type", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.HotUpdateMsg), global::Protocols.HotUpdateMsg.Parser, null, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.ExitGameMsg), global::Protocols.ExitGameMsg.Parser, null, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.HeartBeatMsg), global::Protocols.HeartBeatMsg.Parser, null, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.HeartBeatMsg), global::Protocols.HeartBeatMsg.Parser, new[]{ "ClientTime", "ServerTime", "Seq" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.LoginMsg), global::Protocols.LoginMsg.Parser, new[]{ "UserAccount", "UserPassword", "State", "UserUuid", "Token", "SaveData" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.RegisterMsg), global::Protocols.RegisterMsg.Parser, new[]{ "UserAccount", "UserPassword", "State", "UserUuid", "Token" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocols.EmailMsg), global::Protocols.EmailMsg.Parser, new[]{ "EmailId", "SenderId", "ReceiverId", "Subject", "Content", "SendTime", "IsRead", "IsGet", "IsDeleted" }, null, null, null, null),
@@ -1211,6 +1212,9 @@ namespace Protocols {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public HeartBeatMsg(HeartBeatMsg other) : this() {
+      clientTime_ = other.clientTime_;
+      serverTime_ = other.serverTime_;
+      seq_ = other.seq_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1218,6 +1222,51 @@ namespace Protocols {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public HeartBeatMsg Clone() {
       return new HeartBeatMsg(this);
+    }
+
+    /// <summary>Field number for the "client_time" field.</summary>
+    public const int ClientTimeFieldNumber = 1;
+    private long clientTime_;
+    /// <summary>
+    /// 客户端发送时间（毫秒）
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public long ClientTime {
+      get { return clientTime_; }
+      set {
+        clientTime_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "server_time" field.</summary>
+    public const int ServerTimeFieldNumber = 2;
+    private long serverTime_;
+    /// <summary>
+    /// 服务端时间（毫秒，ACK时填写）
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public long ServerTime {
+      get { return serverTime_; }
+      set {
+        serverTime_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "seq" field.</summary>
+    public const int SeqFieldNumber = 3;
+    private int seq_;
+    /// <summary>
+    /// 心跳序号（防乱序/调试用）
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int Seq {
+      get { return seq_; }
+      set {
+        seq_ = value;
+      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1235,6 +1284,9 @@ namespace Protocols {
       if (ReferenceEquals(other, this)) {
         return true;
       }
+      if (ClientTime != other.ClientTime) return false;
+      if (ServerTime != other.ServerTime) return false;
+      if (Seq != other.Seq) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1242,6 +1294,9 @@ namespace Protocols {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
+      if (ClientTime != 0L) hash ^= ClientTime.GetHashCode();
+      if (ServerTime != 0L) hash ^= ServerTime.GetHashCode();
+      if (Seq != 0) hash ^= Seq.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1260,6 +1315,18 @@ namespace Protocols {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
+      if (ClientTime != 0L) {
+        output.WriteRawTag(8);
+        output.WriteInt64(ClientTime);
+      }
+      if (ServerTime != 0L) {
+        output.WriteRawTag(16);
+        output.WriteInt64(ServerTime);
+      }
+      if (Seq != 0) {
+        output.WriteRawTag(24);
+        output.WriteInt32(Seq);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1270,6 +1337,18 @@ namespace Protocols {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (ClientTime != 0L) {
+        output.WriteRawTag(8);
+        output.WriteInt64(ClientTime);
+      }
+      if (ServerTime != 0L) {
+        output.WriteRawTag(16);
+        output.WriteInt64(ServerTime);
+      }
+      if (Seq != 0) {
+        output.WriteRawTag(24);
+        output.WriteInt32(Seq);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1280,6 +1359,15 @@ namespace Protocols {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
+      if (ClientTime != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(ClientTime);
+      }
+      if (ServerTime != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(ServerTime);
+      }
+      if (Seq != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Seq);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -1291,6 +1379,15 @@ namespace Protocols {
     public void MergeFrom(HeartBeatMsg other) {
       if (other == null) {
         return;
+      }
+      if (other.ClientTime != 0L) {
+        ClientTime = other.ClientTime;
+      }
+      if (other.ServerTime != 0L) {
+        ServerTime = other.ServerTime;
+      }
+      if (other.Seq != 0) {
+        Seq = other.Seq;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1311,6 +1408,18 @@ namespace Protocols {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
+          case 8: {
+            ClientTime = input.ReadInt64();
+            break;
+          }
+          case 16: {
+            ServerTime = input.ReadInt64();
+            break;
+          }
+          case 24: {
+            Seq = input.ReadInt32();
+            break;
+          }
         }
       }
     #endif
@@ -1330,6 +1439,18 @@ namespace Protocols {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
+          case 8: {
+            ClientTime = input.ReadInt64();
+            break;
+          }
+          case 16: {
+            ServerTime = input.ReadInt64();
+            break;
+          }
+          case 24: {
+            Seq = input.ReadInt32();
+            break;
+          }
         }
       }
     }

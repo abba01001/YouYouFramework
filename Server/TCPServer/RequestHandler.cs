@@ -80,7 +80,7 @@ public class RequestHandler
 
             byte[] protocolBytes = protocol.ToByteArray();
 
-            LoggerHelper.Instance.Debug($"发送消息id==={messageId}==包索引{packetIndex}==包数{packetTotal}==协议长度{protocolBytes.Length}");
+            LoggerHelper.Instance.Info($"发送消息id==={messageId}==包索引{packetIndex}==包数{packetTotal}==协议长度{protocolBytes.Length}");
             await clinetSocket.socket.SendAsync(new ArraySegment<byte>(protocolBytes), SocketFlags.None);// 异步发送数据
         }
         ServerSocket.ProtocolPool.Return(protocol);
@@ -88,9 +88,12 @@ public class RequestHandler
     #region 发送协议
 
     // 示例：心跳包请求，处理心跳数据的逻辑，返回消息对象
-    public void c2s_request_heart_beat()
+    public void c2s_request_heart_beat(int seq)
     {
-        SendMessage(new HeartBeatMsg());
+        HeartBeatMsg data = new HeartBeatMsg();
+        data.Seq = seq;
+        data.ServerTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        SendMessage(data);
     }
 
     public async void c2s_request_guild_list(int currentPage, int pageSize)
@@ -139,7 +142,6 @@ public class RequestHandler
         if(user_uuid != string.Empty)
         {
             data.Token = JwtHelper.GenerateToken(data.UserUuid, "测试");
-            LoggerHelper.Instance.Info($"生成Token: {data.Token}");
         }
         data.SaveData = ByteString.CopyFrom(save_data);
         SendMessage(data);

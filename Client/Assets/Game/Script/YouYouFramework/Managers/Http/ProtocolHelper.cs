@@ -249,52 +249,13 @@ public static class ProtocolHelper
             // 解包为目标类型（如 ItemData）
             T t = GameEntry.ClassObjectPool.Dequeue<T>();
             t.MergeFrom(message.Data);
-            PrintPublicFields(t);
+            Debugger.Log($"收到消息|网络延时{GameEntry.Net.NetDelay}|{typeof(T).Name}: {t}");
             action?.Invoke(t);
             GameEntry.ClassObjectPool.Enqueue(t);
-            // T unpackedData = new T();
-            // unpackedData.MergeFrom(message.Data); // 直接从消息的 Data 解包
-            // PrintPublicFields(unpackedData);
-            // action?.Invoke(unpackedData);
         }
         catch (InvalidProtocolBufferException ex)
         {
             Console.WriteLine($"解包失败: {ex.Message}");
         }
-    }
-
-    private static void PrintPublicFields<T>(T obj)
-    {
-        if (obj == null)
-        {
-            Debugger.LogError("对象为空");
-            return;
-        }
-
-        StringBuilder sb = new StringBuilder();
-        sb.AppendLine($"收到服务器响应{typeof(T).Name}=============>");
-
-        var fields = obj.GetType().GetProperties(); // 获取所有公开字段
-        foreach (var field in fields)
-        {
-            try
-            {
-                // 过滤掉不需要的字段
-                if (field.Name.Contains("Parser") || field.Name.Contains("Descriptor"))
-                {
-                    continue; // 跳过该字段
-                }
-
-                var value = field.GetValue(obj);
-                sb.AppendLine($"键{field.Name}:值{value}");
-            }
-            catch (Exception ex)
-            {
-                sb.AppendLine($"{field.Name}: 无法读取值 ({ex.Message})");
-            }
-        }
-
-        // 输出构建好的字符串
-        Debugger.Log(sb.ToString());
     }
 }

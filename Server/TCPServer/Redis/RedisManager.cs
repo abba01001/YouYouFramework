@@ -145,6 +145,13 @@ public class RedisManager
         });
     }
 
+    public void UploadData(string userUuid)
+    {
+        // 触发玩家数据持久化（下线/保存时调用）
+        RedisHelper.ListLeftPushAsync(RedisKey.DbFlushQueue, userUuid);
+    }
+
+
     /// <summary>
     /// 创建批处理（Pipeline）
     /// </summary>

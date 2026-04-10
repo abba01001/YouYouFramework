@@ -1,11 +1,12 @@
 using StackExchange.Redis;
+using System.Numerics;
 using System.Threading.Tasks;
 
 public class PlayerCache
 {
     // ---------------- 基础数据 ----------------
 
-    public async Task SetBase(string uid, int level, int exp)
+    public async Task SetBase(string uid, int level, int exp,Vector3 position,Vector3 rotation)
     {
         var key = RedisKey.PlayerBase(uid);
 
@@ -13,6 +14,13 @@ public class PlayerCache
         {
             new HashEntry("level", level),
             new HashEntry("exp", exp),
+            new HashEntry("pos_x", position.X),
+            new HashEntry("pos_y", position.Y),
+            new HashEntry("pos_z", position.Z),
+        
+            new HashEntry("rot_x", rotation.X),
+            new HashEntry("rot_y", rotation.Y),
+            new HashEntry("rot_z", rotation.Z),
         });
 
         MarkDirty(uid);
@@ -58,7 +66,7 @@ public class PlayerCache
 
     // ---------------- 脏标记 ----------------
 
-    private void MarkDirty(string uid)
+    private static void MarkDirty(string uid)
     {
         var key = $"dirty:player:{uid}";
 
@@ -66,6 +74,6 @@ public class PlayerCache
         RedisManager.Instance.GetDB().StringSet(key, "1", System.TimeSpan.FromMinutes(10));
 
         // 推入队列
-        RedisManager.Instance.GetDB().ListLeftPush("db:flush", uid);
+        RedisHelper.ListLeftPushAsync(RedisKey.DbFlushQueue, uid);
     }
 }

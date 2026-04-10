@@ -20,11 +20,13 @@ public class NetManager
     private Queue<byte[]> receiveQueue = new Queue<byte[]>();
     private byte[] receiveBytes = new byte[Constants.ProtocalTotalLength];
 
-    private IDisposable heartbeatAction;
+    private System.Threading.Timer heartBeatTimer;
+    private System.Threading.Timer netTimeTimer;
     private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
     private int CurReconnectCount; // 当前重连次数
     private bool IsReconnect;
+    private int HeartTimeout => GameEntry.ParamsSettings.GetGradeParamData("HeartTimeout");
     private int HeartInterval => GameEntry.ParamsSettings.GetGradeParamData("HeartInterval");
     private int ConnectInterval => GameEntry.ParamsSettings.GetGradeParamData("ConnectInterval");
     private int MaxReconnect => GameEntry.ParamsSettings.GetGradeParamData("MaxReconnect");
@@ -37,19 +39,17 @@ public class NetManager
     }
 
     private ConnectionStatus connectionStatus = ConnectionStatus.Unknown;
-
+    
     private string _token = string.Empty;
-
     public string Token
     {
         get => _token;
         set
         {
-            Debugger.Log($"设置toekn =======> {value}");
             _token = value;
         }
     }
-
+    
     public bool IsConnectServer
     {
         get { return connectionStatus == ConnectionStatus.Connected && Constants.IsEntryGame; }
@@ -65,9 +65,44 @@ public class NetManager
         //Logger = new NetLogger(TimeSpan.FromSeconds(5));
     }
 
+    private static long lastSendHeartAckTime;
+    private static long lastReceiveHeartAckTime;
+    private static long serverStartTimestamp;
+    private static long clientStartTimestamp;
+    public static long CurrentServerTimestamp => serverStartTimestamp + (DateTimeOffset.UtcNow.ToUnixTimeSeconds() - clientStartTimestamp);
+    public void InitData(string token,long time)
+    {
+        Token = token;
+        serverStartTimestamp = time;
+        clientStartTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+    }
+
+    public long NetDelay => Mathf.Min(Mathf.Abs((int)lastReceiveHeartAckTime - (int)lastSendHeartAckTime),460);
+
+    public void RefreshLastHeartAckTime(long time)
+    {
+        lastReceiveHeartAckTime = time;
+    }
+    public void RefreshLastSendHeartAckTime()
+    {
+        lastSendHeartAckTime = CurrentServerTimestamp;
+    }
+
+    private void CheckHeartTimeout()
+    {
+        if (!GameEntry.Net.IsConnectServer || lastReceiveHeartAckTime <= 0) return;
+        long now = CurrentServerTimestamp;
+        if (now - lastReceiveHeartAckTime >= HeartTimeout && !IsReconnect)
+        {
+            Debugger.LogError("心跳超时，断线重连");
+            HandleDisconnected();
+        }
+    }
+    
     public void OnUpdate()
     {
         ProcessReceivedMessages();
+        CheckHeartTimeout();
         // 检查连接状态
         if (connectionStatus == ConnectionStatus.Disconnected)
         {
@@ -93,7 +128,7 @@ public class NetManager
         {
             // 更新连接状态
             connectionStatus = ConnectionStatus.Disconnected;
-            heartbeatAction?.Dispose();
+            heartBeatTimer?.Dispose();
             if (socket != null)
             {
                 socket.Shutdown(SocketShutdown.Both); // 停止发送和接收数据
@@ -108,18 +143,16 @@ public class NetManager
         }
     }
     
-    private async Task SendMessagesAsync()
+    private async Task SendMessagesAsync(CancellationToken token)
     {
-        while (connectionStatus == ConnectionStatus.Connected)
+        while (!token.IsCancellationRequested && connectionStatus == ConnectionStatus.Connected)
         {
             byte[] messageToSend = null;
 
             lock (sendQueue)
             {
                 if (sendQueue.Count > 0)
-                {
                     messageToSend = sendQueue.Dequeue();
-                }
             }
 
             if (messageToSend != null)
@@ -129,21 +162,22 @@ public class NetManager
         }
     }
 
-    private async Task ReceiveMessagesAsync()
+    private async Task ReceiveMessagesAsync(CancellationToken token)
     {
-        while (connectionStatus == ConnectionStatus.Connected)
+        while (!token.IsCancellationRequested && connectionStatus == ConnectionStatus.Connected)
         {
-            int msgLength = await socket.ReceiveAsync(new ArraySegment<byte>(receiveBytes), SocketFlags.None);
+            int msgLength = await socket.ReceiveAsync(
+                new ArraySegment<byte>(receiveBytes), SocketFlags.None);
+
             if (msgLength > 0)
             {
                 lock (receiveQueue)
-                {
                     receiveQueue.Enqueue(receiveBytes.Take(msgLength).ToArray());
-                }
             }
             else
             {
-                HandleDisconnected();
+                Debugger.LogError("收到消息为空的内容");
+                // HandleDisconnected();
             }
         }
     }
@@ -194,11 +228,6 @@ public class NetManager
         }
     }
 
-    private void SendHeartbeat(int second)
-    {
-        Requset.c2s_request_heart_beat();
-    }
-
     private void HandleConnectionError(SocketException e)
     {
         connectionStatus = ConnectionStatus.Disconnected;
@@ -226,16 +255,19 @@ public class NetManager
             Requset.UpdateSenderId();
             connectionStatus = ConnectionStatus.Connected;
             CurReconnectCount = 0;
-            Task.Run(SendMessagesAsync);
-            Task.Run(ReceiveMessagesAsync);
-            heartbeatAction?.Dispose();
-            heartbeatAction = Observable.Interval(TimeSpan.FromSeconds(HeartInterval))
-                .Subscribe(count =>
-                {
-                    SendHeartbeat((int)count);
-                });
+            RefreshLastHeartAckTime(0);
+            cancellationTokenSource = new CancellationTokenSource();
+            Task.Run(() => SendMessagesAsync(cancellationTokenSource.Token));
+            Task.Run(() => ReceiveMessagesAsync(cancellationTokenSource.Token));
+            
+            heartBeatTimer?.Dispose();
+            heartBeatTimer = new System.Threading.Timer(_ =>
+            {
+                Requset.c2s_request_heart_beat();
+            }, null, 0, HeartInterval * 1000);
+            
             action?.Invoke();
-            GameEntry.Log(LogCategory.NetWork, $"连接服务器成功{socket.RemoteEndPoint}");
+            Debugger.Log($"连接服务器成功{socket.RemoteEndPoint}");
         }
         catch (SocketException e)
         {
@@ -276,17 +308,31 @@ public class NetManager
 
     private void Close()
     {
-        if (socket == null || connectionStatus != ConnectionStatus.Connected) return;
+        try
+        {
+            cancellationTokenSource?.Cancel(); // 🔥 先停线程
 
-        socket.Shutdown(SocketShutdown.Both);
-        socket.Close();
-        connectionStatus = ConnectionStatus.Disconnected;
-        heartbeatAction?.Dispose();
+            heartBeatTimer?.Dispose();
+            heartBeatTimer = null;
+
+            if (socket != null)
+            {
+                socket.Shutdown(SocketShutdown.Both);
+                socket.Close();
+                socket.Dispose();
+                socket = null;
+            }
+
+            connectionStatus = ConnectionStatus.Disconnected;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Close Exception: {e.Message}");
+        }
     }
 
-    private void OnDestroy()
+    public void OnDestroy()
     {
         Close();
-        cancellationTokenSource.Cancel();
     }
 }

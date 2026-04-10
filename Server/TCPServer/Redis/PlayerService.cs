@@ -2,12 +2,12 @@ using System.Threading.Tasks;
 
 public class PlayerService
 {
-    private PlayerCache _cache = new PlayerCache();
+    private static PlayerCache _cache = new PlayerCache();
 
     /// <summary>
     /// 玩家登录
     /// </summary>
-    public async Task OnLogin(string uid)
+    public static async Task OnLogin(string uid)
     {
         var db = RedisManager.Instance.GetDB();
 
@@ -20,7 +20,7 @@ public class PlayerService
             var data = await LoadFromMySQL(uid);
 
             // 3. 写入 Redis
-            await _cache.SetBase(uid, data.Level, data.Exp);
+            await _cache.SetBase(uid, data.Level, data.Exp,new System.Numerics.Vector3(1,2,3),new System.Numerics.Vector3(5,0,8));
 
             await RedisHelper.HashSetAsync(RedisKey.PlayerCurrency(uid), "gold", data.Gold.ToString());
         }
@@ -46,7 +46,7 @@ public class PlayerService
     /// <summary>
     /// 模拟 MySQL 读取
     /// </summary>
-    private async Task<(int Level, int Exp, int Gold)> LoadFromMySQL(string uid)
+    private static async Task<(int Level, int Exp, int Gold)> LoadFromMySQL(string uid)
     {
         // TODO: 你自己接 MySQL
         await Task.Delay(10);

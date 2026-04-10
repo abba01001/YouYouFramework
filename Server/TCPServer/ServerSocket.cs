@@ -25,6 +25,7 @@ public static class ServerSocket
     private static CancellationTokenSource cancellationTokenSource;
     private static Task acceptClientTask;
     private static Task receiveClientTask;
+    private static Task checkRemoveTask;
     private static Timer midnightTimer;
     private static readonly string FilePath = Path.Combine(AppContext.BaseDirectory, "Key", "task_state.json");
     private static readonly string DirectoryPath = Path.GetDirectoryName(FilePath) ?? AppContext.BaseDirectory;
@@ -122,8 +123,31 @@ $"UserId={"pengjunwei"};Password={"pengjunwei"};Port = {"5001"};Charset=utf8mb4;
         cancellationTokenSource = new CancellationTokenSource();
         acceptClientTask = AcceptClientConnectAsync(cancellationTokenSource.Token);
         receiveClientTask = ReceiveClientMsgAsync(cancellationTokenSource.Token);
-
+        checkRemoveTask = CheckRemoveClientAsync(cancellationTokenSource.Token);
         HandleDailyTasks();
+    }
+
+    private static async Task CheckRemoveClientAsync(CancellationToken cancellationToken)
+    {
+        LoggerHelper.Instance.Info("开始监听移除断开客户端...");
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            try
+            {
+                foreach (var client in clientList)
+                {
+                    client.CheckConnect();
+                }
+            }
+            catch (SocketException ex)
+            {
+                LoggerHelper.Instance.Error($"SocketException: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                LoggerHelper.Instance.Error($"CheckRemoveClientAsync Exception: {ex.Message}");
+            }
+        }
     }
 
     private static async Task AcceptClientConnectAsync(CancellationToken cancellationToken)

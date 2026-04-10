@@ -74,16 +74,15 @@ public class ResponseHandler
     // 示例处理方法，接收 BaseMessage 作为参数
     private void s2c_handle_request_heart_beat(BaseMessage message)
     {
-        ProtocolHelper.UnpackData<ItemData>(message, (itemData) =>
+        ProtocolHelper.UnpackData<HeartBeatMsg>(message, (data) =>
         {
-            socket.LastHeartbeatTime = DateTime.UtcNow;
+            socket.LastHeartbeatTime = message.Timestamp;
             if (socket.UserAccount != string.Empty)
             {
+                request.c2s_request_heart_beat(data.Seq);
                 AccountService.RefreshOnlineUsers(3,socket.UserAccount);
             }
-            //NetManager.Instance.Logger.LogMessage(socket,$"解包成功: Item ID: {itemData.ItemId}, Item Name: {itemData.ItemName}");
         });
-        //request.c2s_request_heart_beat();
     }
 
     private void s2c_handle_request_guild_list(BaseMessage message)
@@ -137,8 +136,9 @@ public class ResponseHandler
                 
                 //下发别的数据
                 await request.c2s_request_synrous_role_attrs();
+                PlayerService.OnLogin(user_uuid);
+                request.c2s_request_entry_game();
             }
-            request.c2s_request_entry_game();
         });
     }
 
@@ -177,8 +177,6 @@ public class ResponseHandler
     {
         ProtocolHelper.UnpackData<PlayerActionMsg>(message, async (data) =>
         {
-            LoggerHelper.Instance.Info($"{nameof(PlayerActionMsg)}: {data}");
-
             RedisHelper.HashSetAsync(RedisKey.PlayerPosition(data.UserUuid), "X", data.Position.X.ToString());
             RedisHelper.HashSetAsync(RedisKey.PlayerPosition(data.UserUuid), "Y", data.Position.Y.ToString());
             RedisHelper.HashSetAsync(RedisKey.PlayerPosition(data.UserUuid), "Z", data.Position.Z.ToString());
@@ -190,6 +188,8 @@ public class ResponseHandler
                 RedisHelper.HashSetAsync(RedisKey.PlayerRotation(data.UserUuid), "Z", data.Rotation.Z.ToString());
             }
 
+
+            //RedisManager.Instance.UploadData(data.UserUuid);
         });
     }
     

@@ -58,11 +58,14 @@ public class NetResponseHandler
     #region 协议
 
     // 示例处理方法，接收 BaseMessage 作为参数
+    private int lastSeq;
     private void s2c_handle_request_heart_beat(BaseMessage message)
     {
-        ProtocolHelper.UnpackData<HeartBeatMsg>(message, (itemData) =>
+        ProtocolHelper.UnpackData<HeartBeatMsg>(message, (data) =>
         {
-            //NetManager.Instance.Logger.LogMessage(socket,$"解包成功: Item ID: {itemData.ItemId}, Item Name: {itemData.ItemName}");
+            if (data.Seq <= lastSeq) return; // 旧包，忽略
+            lastSeq = data.Seq;
+            GameEntry.Net.RefreshLastHeartAckTime(message.Timestamp);
         });
     }
     
@@ -108,15 +111,13 @@ public class NetResponseHandler
                 GameEntry.Data.UserId = data.UserUuid;
                 byte[] binaryData = data.SaveData.ToByteArray();
                 GameEntry.Data.InitGameData(binaryData);
-                GameEntry.Net.Token = data.Token;
-                // GameEntry.Time.InitNetTime(message.Timestamp);
-                //初始化网络时间
+                GameEntry.Net.InitData(data.Token,message.Timestamp);
                 GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);
                 Constants.IsEntryGame = true;
             }
             else
             {
-                Debugger.LogError("密码错误");
+                Debugger.LogError($"登录错误===>状态码{data.State}");
             }
         });
     }
@@ -131,7 +132,7 @@ public class NetResponseHandler
                 Debugger.LogError("注册成功");
                 GameEntry.Data.UserId = data.UserUuid;
                 GameEntry.Data.InitGameData(null);//data.SaveData.ToByteArray());
-                GameEntry.Net.Token = data.Token;
+                GameEntry.Net.InitData(data.Token,message.Timestamp);
                 GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);
                 Constants.IsEntryGame = true;
             }
@@ -170,7 +171,6 @@ public class NetResponseHandler
                 ChannelType = data.ChannelType,
                 Message = data.Message
             });
-            Debugger.LogError($"收到服务器下发消息:=====>{data.Message}");
         });
     }
 

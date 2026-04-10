@@ -46,10 +46,6 @@ class Program
             }
             else if (inputStr == "1")
             {
-                RedisManager.Instance.Init("127.0.0.1:6379");
-                var flush = new DBFlushService();
-                flush.Start();
-                
                 StartServer();
             }
             else if (inputStr == "2")
@@ -161,6 +157,10 @@ $"UserId={"pengjunwei"};Password={"pengjunwei"};Port = {"5001"}");
     // 开启服务器
     private static void StartServer()
     {
+        RedisManager.Instance.Init("127.0.0.1:6379");
+        DBFlushService _dbFlush = new DBFlushService();
+        _dbFlush.Start();
+
         ServerSocket.Start("0.0.0.0", 17888, 1024); //10.0.28.15
         LoggerHelper.Instance.Debug("服务器已启动，输入Quit以退出服务器。");
 

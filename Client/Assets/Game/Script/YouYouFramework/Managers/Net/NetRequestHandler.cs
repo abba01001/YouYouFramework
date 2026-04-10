@@ -64,9 +64,13 @@ public class NetRequestHandler
         message.SenderId = this.senderId; // 设置发送者ID
         message.Data = ByteString.CopyFrom(byteArrayData); // 直接将序列化后的字节数组放入 Data
         message.Token = GameEntry.Net.Token;
+        Debugger.Log($"发送消息|网络延时{GameEntry.Net.NetDelay}|{typeof(T).Name}: {message} \n 解析Data：{data}");
+        
         byte[] messageBytes = message.ToByteArray();
         return HandleSubPakce(messageBytes);
     }
+    
+    
 
     private List<byte[]> HandleSubPakce(byte[] data)
     {
@@ -100,9 +104,15 @@ public class NetRequestHandler
     #region 发送协议
 
     // 示例：心跳包请求，处理心跳数据的逻辑，返回消息对象
+    private int heartSeq = 0;
     public void c2s_request_heart_beat()
     {
-        SendMessage(new HeartBeatMsg());
+        if (!GameEntry.Net.IsConnectServer) return;
+        HeartBeatMsg data = new HeartBeatMsg();
+        GameEntry.Net.RefreshLastSendHeartAckTime();
+        data.ClientTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        data.Seq = ++heartSeq;
+        SendMessage(data);
     }
 
     //请求公会列表

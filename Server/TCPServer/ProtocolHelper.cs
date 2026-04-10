@@ -242,7 +242,7 @@ public static class ProtocolHelper
             // 解包为目标类型（如 ItemData）
             T unpackedData = new T();
             unpackedData.MergeFrom(message.Data); // 直接从消息的 Data 解包
-
+            LoggerHelper.Instance.Info($"收到消息|{typeof(T).Name}: {unpackedData}");
             // 执行回调，将解包后的数据传递给回调
             action?.Invoke(unpackedData);
         }

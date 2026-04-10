@@ -341,4 +341,10 @@ public class GameEntry : MonoBehaviour
         string combinedMessage = StringUtil.JointString(messages);
         Debug.LogError(combinedMessage);
     }
+
+    private void OnDestroy()
+    {
+        Net.OnDestroy();
+        Debugger.LogError("销毁",this.gameObject.name);
+    }
 }
