@@ -115,8 +115,8 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
-      - CollectPath: Assets/Game/Download/ProjectFiles
-        CollectorGUID: dab3180b5c769aa428785c99556cbb56
+      - CollectPath: Assets/Game/Download/SurvivorAsset
+        CollectorGUID: f54cf439d3bf5b1439f5a74e0ec95473
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackDirectory
