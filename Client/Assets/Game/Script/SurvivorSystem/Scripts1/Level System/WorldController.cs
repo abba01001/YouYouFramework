@@ -143,7 +143,6 @@ namespace Watermelon
                 GameObject obj = await GameEntry.Pool.GameObjectPool.Spawn("Assets/Game/Download/ProjectFiles/Game/Prefabs/Player/Player.prefab");
                 playerBehavior = obj.GetComponent<PlayerBehavior>();
             }
-            // playerBehavior.transform.position = WorldBehavior.SpawnPoint.position;
             playerBehavior.Initialise();
 
             DistanceToggle.Initialise(playerBehavior.transform);

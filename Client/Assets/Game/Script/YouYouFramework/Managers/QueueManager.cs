@@ -230,20 +230,13 @@ public class ViewQueueManager : MonoBehaviour
 
     public void RegisterEvents()
     {
-        GameEntry.Event.AddEventListener(Constants.EventName.FinishLoadDataTable, OnInitFormMask);
         GameEntry.Event.AddEventListener(Constants.EventName.PopupAction, OnPopupAction);
         GameEntry.Event.AddEventListener(Constants.EventName.EventMessage, OnEventMessage);
         
     }
 
-    public void OnInitFormMask(object userData)
-    {
-        GameEntry.UI.OpenUIForm<FormMask>();
-    }
-    
     private void UnregisterEvents()
     {
-        GameEntry.Event.RemoveEventListener(Constants.EventName.FinishLoadDataTable, OnInitFormMask);
         GameEntry.Event.RemoveEventListener(Constants.EventName.PopupAction, OnPopupAction);
         GameEntry.Event.RemoveEventListener(Constants.EventName.EventMessage, OnEventMessage);
     }

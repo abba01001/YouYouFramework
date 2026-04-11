@@ -84,7 +84,6 @@ public class DataTableManager
         m_TaskGroup.OnComplete += () =>
         {
             Constants.IsLoadDataTable = true;
-            GameEntry.Event.Dispatch(Constants.EventName.FinishLoadDataTable);
         };
         m_TaskGroup.Run(true);
     }

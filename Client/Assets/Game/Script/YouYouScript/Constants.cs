@@ -68,7 +68,6 @@ static partial class Constants
         public const string ViewAction = "ViewAction";
         public const string EventMessage = "EventMessage";
         public const string UpdatePlayerPos = "UpdatePlayerPos";
-        public const string FinishLoadDataTable = "FinishLoadDataTable";
         public const string LoginSuccess = "LoginSuccess";
 
         public const string FinishInputName = "FinishInputName";

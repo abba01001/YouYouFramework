@@ -171,7 +171,7 @@ public class GameEntry : MonoBehaviour
         Guide.Init();
         //进入第一个流程
         Procedure.ChangeState(ProcedureState.Launch);
-
+        GameEntry.UI.OpenUIForm<FormMask>();
         Dictionary<(Key, Key?), Action> keyMappings = new Dictionary<(Key, Key?), Action>
         {
             { (Key.Numpad0, Key.LeftCtrl), Test0 },
