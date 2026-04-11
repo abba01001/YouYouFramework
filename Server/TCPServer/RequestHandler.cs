@@ -49,7 +49,7 @@ public class RequestHandler
 
     private async Task HandleSubPakce(byte[] data)
     {
-        byte[] tempDatas = ServerSocket.handleSubPack.CompressData(data);
+        byte[] tempDatas = data;//ServerSocket.handleSubPack.CompressData(data);
         string messageId = Guid.NewGuid().ToString("N");
         int realMaxPacketSize = Constants.ProtocalTotalLength - Constants.ProtocalHeadLength;
         int packetTotal = Math.Max((int)Math.Ceiling((double)tempDatas.Length / realMaxPacketSize), 1);

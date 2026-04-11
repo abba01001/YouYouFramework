@@ -33,7 +33,7 @@ public class HandleSubPack
         {
             byte[] completeMessage = receiver.GetCompleteMessage();
             // 解析为 finalMessage
-            return BaseMessage.Parser.ParseFrom(DecompressData(completeMessage));
+            return BaseMessage.Parser.ParseFrom(completeMessage); //DecompressData(completeMessage));
         }
 
         // 如果还没有接收完整消息，返回 null
@@ -53,6 +53,7 @@ public class HandleSubPack
 
     public byte[] DecompressData(byte[] data)
     {
+        //后期数据大的才需要优化
         using (MemoryStream input = new MemoryStream(data))
         using (GZipStream gzip = new GZipStream(input, CompressionMode.Decompress))
         using (MemoryStream output = new MemoryStream())
