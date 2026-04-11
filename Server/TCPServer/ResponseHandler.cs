@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using System.Numerics;
 using Protocols;
 using Protocols.Guild;
 using Protocols.Item;
@@ -54,11 +55,11 @@ public class ResponseHandler
     {
         if (message == null) return;
         if (message.MsgType == MsgType.Server) return;
-        if (NeedValidateMessage(message.Type) && JwtHelper.ValidateToken(message.Token) == null)
-        {
-            LoggerHelper.Instance.Info($"用户Token验证失败========{message.Type}");
-            return;
-        }
+        // if (NeedValidateMessage(message.Type) && JwtHelper.ValidateToken(message.Token) == null)
+        // {
+            // LoggerHelper.Instance.Info($"用户Token验证失败========{message.Type}");
+            // return;
+        // }
         if (_handlers.TryGetValue(message.Type, out var handler)) handler(message);
     }
 
@@ -80,7 +81,6 @@ public class ResponseHandler
             if (socket.UserAccount != string.Empty)
             {
                 request.c2s_request_heart_beat(data.Seq);
-                AccountService.RefreshOnlineUsers(3,socket.UserAccount);
             }
         });
     }
@@ -126,9 +126,9 @@ public class ResponseHandler
     {
         ProtocolHelper.UnpackData<LoginMsg>(message, async (data) =>
         {
-            (OperationResult state,string user_uuid, byte[] save_data) = await AccountService.LoginAsync(data.UserAccount, data.UserPassword);
+            (OperationResult state,string user_uuid) = await AccountService.LoginAsync(data.UserAccount, data.UserPassword);
             bool success = state == OperationResult.Success;
-            request.c2s_request_login((int)state, user_uuid, save_data);
+            await request.c2s_request_login((int)state, user_uuid);
             if (success)
             {
                 socket.UserAccount = data.UserAccount;
@@ -137,7 +137,7 @@ public class ResponseHandler
                 //下发别的数据
                 await request.c2s_request_synrous_role_attrs();
                 PlayerService.OnLogin(user_uuid);
-                request.c2s_request_entry_game();
+                await request.c2s_request_entry_game(user_uuid);
             }
         });
     }
@@ -177,17 +177,17 @@ public class ResponseHandler
     {
         ProtocolHelper.UnpackData<PlayerActionMsg>(message, async (data) =>
         {
-            RedisHelper.HashSetAsync(RedisKey.PlayerPosition(data.UserUuid), "X", data.Position.X.ToString());
-            RedisHelper.HashSetAsync(RedisKey.PlayerPosition(data.UserUuid), "Y", data.Position.Y.ToString());
-            RedisHelper.HashSetAsync(RedisKey.PlayerPosition(data.UserUuid), "Z", data.Position.Z.ToString());
+            RedisHelper.HashSetAsync(RedisKey.PlayerPosition(data.UserUuid), "X", data.PosX.ToString());
+            RedisHelper.HashSetAsync(RedisKey.PlayerPosition(data.UserUuid), "Y", data.PosY.ToString());
+            RedisHelper.HashSetAsync(RedisKey.PlayerPosition(data.UserUuid), "Z", data.PosZ.ToString());
 
-            if (data.Rotation != null)
-            {
-                RedisHelper.HashSetAsync(RedisKey.PlayerRotation(data.UserUuid), "X", data.Rotation.X.ToString());
-                RedisHelper.HashSetAsync(RedisKey.PlayerRotation(data.UserUuid), "Y", data.Rotation.Y.ToString());
-                RedisHelper.HashSetAsync(RedisKey.PlayerRotation(data.UserUuid), "Z", data.Rotation.Z.ToString());
-            }
+            RedisHelper.HashSetAsync(RedisKey.PlayerRotation(data.UserUuid), "X", data.RotX.ToString());
+            RedisHelper.HashSetAsync(RedisKey.PlayerRotation(data.UserUuid), "Y", data.RotY.ToString());
+            RedisHelper.HashSetAsync(RedisKey.PlayerRotation(data.UserUuid), "Z", data.RotZ.ToString());
 
+            PlayerService.Cache.SetPosAndRot(data.UserUuid,
+                new Vector3(data.PosX, data.PosY, data.PosZ),
+                new Vector3(data.RotX, data.RotY, data.RotZ));
 
             //RedisManager.Instance.UploadData(data.UserUuid);
         });

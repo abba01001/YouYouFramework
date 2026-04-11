@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Protocols;
 
 static partial class Constants
 {
@@ -93,6 +94,7 @@ static partial class Constants
         public const string EnergyChangedEvent = "EnergyChangedEvent";
         public const string ConsumeMatEvent = "ConsumeMatEvent";
         public const string ExitCurWorldEvent = "ExitCurWorldEvent";
+        public const string UpdatePlayerPosAndRot = "UpdatePlayerPosAndRot";
     }
 
 
@@ -123,20 +125,9 @@ static partial class Constants
         public const string Game = "Assets/Game/Download/Textures/Game/Game.spriteatlas";
         public const string Common = "Assets/Game/Download/Textures/Common/Common.spriteatlas";
     }
-    
-    public struct ModelPath
+  
+    public struct TempVariable
     {
-        public const string Path000001 = "Assets/Game/Download/Prefab/Model/Path000001.prefab";
-
-        
-        
-        public const string Hero101 = "Assets/Game/Download/Prefab/Model/Hero101.prefab";
-        public const string Hero102 = "Assets/Game/Download/Prefab/Model/Hero102.prefab";
-        public const string Hero103 = "Assets/Game/Download/Prefab/Model/Hero103.prefab";
-        public const string Hero104 = "Assets/Game/Download/Prefab/Model/Hero104.prefab";
-        public const string Hero105 = "Assets/Game/Download/Prefab/Model/Hero105.prefab";
-        
-        public const string Enemy21001 = "Assets/Game/Download/Prefab/Model/Enemy21001.prefab";
+        public static EntryGameMsg InitEntryGameMsg;
     }
-    
 }

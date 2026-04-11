@@ -9,7 +9,7 @@ public static class RedisHelper
 
     #region String
 
-    public static Task<bool> SetStringAsync(string key, string value, int expireSeconds = 0)
+    public static Task<bool> StringSetAsync(string key, string value, int expireSeconds = 0)
     {
         if (expireSeconds > 0)
             return DB.StringSetAsync(key, value, TimeSpan.FromSeconds(expireSeconds));
@@ -23,6 +23,11 @@ public static class RedisHelper
         return value.HasValue ? value.ToString() : null;
     }
 
+    public static async Task<long> StringIncrementAsync(string key)
+    {
+        RedisValue value = await DB.StringIncrementAsync(key);
+        return value.HasValue ? (long)value : 0;
+    }
     #endregion
 
     #region Hash
@@ -42,10 +47,16 @@ public static class RedisHelper
         return DB.HashSetAsync(key, entries);
     }
 
-    public static Task<RedisValue[]> HashGetAllAsync(string key)
+    public static Task<RedisValue[]> HashValuesAsync(string key)
     {
         return DB.HashValuesAsync(key);
     }
+    
+    public static Task<HashEntry[]> HashGetAllAsync(string key)
+    {
+        return DB.HashGetAllAsync(key);
+    }
+    
 
     public static Task<long> HashIncrementAsync(string key, string field, long value)
     {
@@ -58,6 +69,7 @@ public static class RedisHelper
 
     public static Task<long> ListLeftPushAsync(string key, string value)
     {
+        LoggerHelper.Instance.Error("入库===>" + key + value);
         return DB.ListLeftPushAsync(key, value);
     }
     
@@ -87,6 +99,15 @@ public static class RedisHelper
         return await DB.ListLengthAsync(key);
     }
 
+    public static Task<bool> SetAddAsync(string key, string uid)
+    {
+        return DB.SetAddAsync(key, uid);
+    }
+    
+    public static Task<bool> SetRemoveAsync(string key, string uid)
+    {
+        return DB.SetRemoveAsync(key, uid);
+    }
     #endregion
 
     #region SortedSet（排行榜）

@@ -39,6 +39,8 @@ class Program
             LoggerHelper.Instance.Debug("4. 测试Redis");
             LoggerHelper.Instance.Debug("请输入数字选择操作（或者输入Quit退出）：");
 
+            StartServer();
+            return;
             string inputStr = Console.ReadLine();
             if (inputStr == "Quit")
             {

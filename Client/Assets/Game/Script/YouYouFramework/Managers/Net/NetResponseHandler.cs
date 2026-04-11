@@ -33,6 +33,7 @@ public class NetResponseHandler
         RegisterHandler(nameof(HeartBeatMsg), s2c_handle_request_heart_beat);
         RegisterHandler(nameof(GuildListMsg), s2c_handle_request_guild_list);
         RegisterHandler(nameof(LoginMsg), s2c_handle_request_login);
+        RegisterHandler(nameof(EntryGameMsg), s2c_handle_entry_game);
         RegisterHandler(nameof(RegisterMsg), s2c_handle_request_register);
         RegisterHandler(nameof(UpdateUserResponse), s2c_handle_request_update_role_info);
         RegisterHandler(nameof(ChatMsg), s2c_handle_chat_msg);
@@ -97,6 +98,16 @@ public class NetResponseHandler
         });
     }
 
+    private void s2c_handle_entry_game(BaseMessage message)
+    {
+        ProtocolHelper.UnpackData<EntryGameMsg>(message, (data) =>
+        {
+            GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);
+            Constants.IsEntryGame = true;
+            Constants.TempVariable.InitEntryGameMsg = data;
+        });
+    }
+    
     //登录
     private void s2c_handle_request_login(BaseMessage message)
     {
@@ -109,11 +120,8 @@ public class NetResponseHandler
             else if (data.State == 1)
             {
                 GameEntry.Data.UserId = data.UserUuid;
-                byte[] binaryData = data.SaveData.ToByteArray();
-                GameEntry.Data.InitGameData(binaryData);
+                GameEntry.Data.InitGameData(null);
                 GameEntry.Net.InitData(data.Token,message.Timestamp);
-                GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);
-                Constants.IsEntryGame = true;
             }
             else
             {
@@ -133,8 +141,6 @@ public class NetResponseHandler
                 GameEntry.Data.UserId = data.UserUuid;
                 GameEntry.Data.InitGameData(null);//data.SaveData.ToByteArray());
                 GameEntry.Net.InitData(data.Token,message.Timestamp);
-                GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);
-                Constants.IsEntryGame = true;
             }
             else
             {

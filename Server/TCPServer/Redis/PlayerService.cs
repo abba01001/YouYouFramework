@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 
 public class PlayerService
 {
-    private static PlayerCache _cache = new PlayerCache();
+    public static PlayerCache Cache = new PlayerCache();
 
     /// <summary>
     /// 玩家登录
@@ -18,29 +18,25 @@ public class PlayerService
         {
             // 2. 没有 → 从 MySQL 加载
             var data = await LoadFromMySQL(uid);
-
             // 3. 写入 Redis
-            await _cache.SetBase(uid, data.Level, data.Exp,new System.Numerics.Vector3(1,2,3),new System.Numerics.Vector3(5,0,8));
+            await Cache.SetBase(uid, data.Level, data.Exp,new System.Numerics.Vector3(1,2,3),new System.Numerics.Vector3(5,0,8));
 
             await RedisHelper.HashSetAsync(RedisKey.PlayerCurrency(uid), "gold", data.Gold.ToString());
         }
 
-        // 4. 标记在线
-        await db.SetAddAsync("online:players", uid);
+        //写入活跃状态
+        await RedisHelper.SetAddAsync(RedisKey.OnlinePlayers, uid);
     }
 
     /// <summary>
     /// 玩家下线
     /// </summary>
-    public async Task OnLogout(string uid)
+    public static async Task OnLogout(string uid)
     {
-        var db = RedisManager.Instance.GetDB();
-
         // 标记需要立即刷库
-        await db.ListLeftPushAsync("db:flush", uid);
-
+        await RedisHelper.ListLeftPushAsync(RedisKey.DbFlushQueue,uid);
         // 移除在线
-        await db.SetRemoveAsync("online:players", uid);
+        await RedisHelper.SetRemoveAsync(RedisKey.OnlinePlayers,uid);
     }
 
     /// <summary>

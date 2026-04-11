@@ -205,24 +205,17 @@ public class NetRequestHandler
     }
     
     //同步玩家位置数据
-    private PlayerActionMsg.Types.Position tempPos;
-    private PlayerActionMsg.Types.Rotation tempRot;
     public void c2s_request_synchronous_player(Vector3 pos, Vector3 rot)
     {
-        tempPos ??= new PlayerActionMsg.Types.Position();
-        tempPos.X = (float)pos.x;
-        tempPos.Y = (float)pos.y;
-        tempPos.Z = (float)pos.z;
-        
-        tempRot ??= new PlayerActionMsg.Types.Rotation();
-        tempRot.X = (float)rot.x;
-        tempRot.Y = (float)rot.y;
-        tempRot.Z = (float)rot.z;
         PlayerActionMsg data = new PlayerActionMsg()
         {
             UserUuid = GameEntry.Data.UserId,
-            Position = tempPos,
-            Rotation = tempRot
+            PosX = pos.x,
+            PosY = pos.y,
+            PosZ = pos.z,
+            RotX = rot.x,
+            RotY = rot.y,
+            RotZ = rot.z,
         };
         SendMessage(data);
     }

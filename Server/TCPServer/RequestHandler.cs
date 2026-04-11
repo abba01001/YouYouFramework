@@ -26,8 +26,6 @@ public class RequestHandler
 
     public async Task SendMessage<T>(T data) where T : IMessage<T>
     {
-
-
         byte[] byteArrayData = data.ToByteArray();
         BaseMessage message = new BaseMessage();
         string typeName = typeof(T).Name;
@@ -36,6 +34,7 @@ public class RequestHandler
         message.Timestamp = ServerSocket.CurrentServerTimestamp;
         message.Data = ByteString.CopyFrom(byteArrayData); // 直接将序列化后的字节数组放入 Data
         string messageJson = JsonConvert.SerializeObject(message);
+        LoggerHelper.Instance.Info($"发送消息|{typeof(T).Name}: {message} \n 解析Data：{data}");
 
         if (clinetSocket == null || clinetSocket.socket == null) return;
         if(!clinetSocket.socket.Connected)
@@ -80,7 +79,7 @@ public class RequestHandler
 
             byte[] protocolBytes = protocol.ToByteArray();
 
-            LoggerHelper.Instance.Info($"发送消息id==={messageId}==包索引{packetIndex}==包数{packetTotal}==协议长度{protocolBytes.Length}");
+            // LoggerHelper.Instance.Info($"发送消息id==={messageId}==包索引{packetIndex}==包数{packetTotal}==协议长度{protocolBytes.Length}");
             await clinetSocket.socket.SendAsync(new ArraySegment<byte>(protocolBytes), SocketFlags.None);// 异步发送数据
         }
         ServerSocket.ProtocolPool.Return(protocol);
@@ -134,7 +133,7 @@ public class RequestHandler
         SendMessage(data);
     }
 
-    public void c2s_request_login(int state,string user_uuid, byte[] save_data)
+    public async Task c2s_request_login(int state,string user_uuid)
     {
         LoginMsg data = new LoginMsg();
         data.State = state;
@@ -143,8 +142,7 @@ public class RequestHandler
         {
             data.Token = JwtHelper.GenerateToken(data.UserUuid, "测试");
         }
-        data.SaveData = ByteString.CopyFrom(save_data);
-        SendMessage(data);
+        await SendMessage(data);
     }
 
     public async Task c2s_request_synrous_role_attrs()
@@ -152,9 +150,22 @@ public class RequestHandler
         
     }
 
-    public void c2s_request_entry_game()
+    public async Task c2s_request_entry_game(string user_uuid)
     {
+        EntryGameMsg data = new EntryGameMsg();
+        data.PlayerActionMsg = new PlayerActionMsg();
         
+        var tempData = await PlayerService.Cache.GetPlayerBase(user_uuid);
+        var dic = PlayerService.Cache.ParsePosRot(tempData);
+
+        data.PlayerActionMsg.RotX = dic.rotation.X;
+        data.PlayerActionMsg.RotY = dic.rotation.Y;
+        data.PlayerActionMsg.RotZ = dic.rotation.Z;
+        
+        data.PlayerActionMsg.PosX = dic.position.X;
+        data.PlayerActionMsg.PosY = dic.position.Y;
+        data.PlayerActionMsg.PosZ = dic.position.Z;
+        await SendMessage(data);
     }
     
     public void c2s_request_register(int state,string user_uuid)

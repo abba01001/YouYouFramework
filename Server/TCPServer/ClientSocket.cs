@@ -39,10 +39,6 @@ public class ClientSocket
 
         try
         {
-            if (!string.IsNullOrEmpty(UserAccount))
-            {
-                AccountService.RefreshOnlineUsers(2, UserAccount);
-            }
             if (socket != null && socket.Connected)
             {
                 socket.Shutdown(SocketShutdown.Both);
@@ -59,7 +55,7 @@ public class ClientSocket
     /// <summary>
     /// 销毁当前类：释放所有资源 + 清空引用 + 销毁实例
     /// </summary>
-    public void OnDestroy()
+    public async Task OnDestroy()
     {
         // 防止重复销毁
         if (_isDestroyed) return;
@@ -76,7 +72,8 @@ public class ClientSocket
 
             // 3. 从服务器客户端列表中移除自己（断开引用）
             ServerSocket.CleanClient(this);
-
+            await PlayerService.OnLogout(UserUUID);
+            
             // 4. 清空所有成员变量/引用（让GC回收内存）
             clientID = 0;
             LastHeartbeatTime = 0;
@@ -114,7 +111,7 @@ public class ClientSocket
                 {
                     Protocol receivedMsg = Protocol.Parser.ParseFrom(tempMsg);
                     BaseMessage finalMessage = ServerSocket.handleSubPack.ProcessSubPack(receivedMsg);
-                    LoggerHelper.Instance.Debug($"接收消息id==={receivedMsg.MessageId}==包索引{receivedMsg.PacketIndex}==包数{receivedMsg.PacketTotal}==协议长度{msgLength}");
+                    // LoggerHelper.Instance.Debug($"接收消息id==={receivedMsg.MessageId}==包索引{receivedMsg.PacketIndex}==包数{receivedMsg.PacketTotal}==协议长度{msgLength}");
                     if (finalMessage != null)
                     {
                         Response.HandleResponse(finalMessage);

@@ -77,75 +77,46 @@ namespace TCPServer.Core.Services
         }
 
 
-        public static async Task<(OperationResult, string, byte[])> LoginAsync(string userAccount, string userPassword)
+        public static async Task<(OperationResult, string)> LoginAsync(string userAccount, string userPassword)
         {
-            int currentTime = (int)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-
-            // 1. 先检查用户是否已经在线
-
-            var user = AccountService.GetOnlineUsers(userAccount);
-            if (user != null)
-            {
-                // 如果用户已经在线，检查是否断线重连
-
-                // 假设我们定义10分钟内的心跳包未更新的玩家为掉线用户
-                if (user.IsDropUser)
-                {
-                    // 玩家断线超过10分钟，认为是掉线用户，允许重连
-                    LoggerHelper.Instance.Info($"用户 {userAccount} 已在线，但超时断线，允许重连！");
-                    // 重新登录，更新在线状态
-                    user.RefreshIsOffLine(false);
-                    user.RefreshHeartBeatTime(); // 重置心跳时间
-                    return await ProcessLogin(userAccount, userPassword, currentTime); // 调用登录处理逻辑
-                }
-
-                // 如果用户没有超时断线，防止多次登录
-                LoggerHelper.Instance.Info($"用户 {userAccount} 已经在线，拒绝登录！");
-                return (OperationResult.UserAlreadyOnline, string.Empty, new byte[0]);
-            }
-
-            // 2. 查询数据库，验证用户账号和密码
-            string query = $@"
-    UPDATE {SqlTable.GameSaveData}
-    SET is_online = 1, 
-        suspend_time_start = IF(suspend_time_start = 0, @current_time, suspend_time_start)
-    WHERE user_account = @user_account AND user_password = @user_password;
-    
-    SELECT user_uuid, save_data, suspend_time_start
-    FROM {SqlTable.GameSaveData}
-    WHERE user_account = @user_account AND user_password = @user_password;
-";
-
-            var parameters = new Dictionary<string, object>
+            int currentTime = (int)ServerSocket.CurrentServerTimestamp;
+            // 1. 查询数据库，验证用户账号和密码
+            string checkQuery = $@"
+            SELECT user_uuid 
+            FROM {SqlTable.GameSaveData} 
+            WHERE user_account = @user_account AND user_password = @user_password
+            LIMIT 1;
+        ";
+            
+            var checkParams = new Dictionary<string, object>
             {
                 { "@user_account", userAccount },
-                { "@user_password", userPassword },
-                { "@current_time", currentTime }
+                { "@user_password", userPassword }
             };
 
-            var result = await SqlManager.Instance.ExecuteQueryAsync(query, parameters);
+            var result = await SqlManager.Instance.ExecuteQueryAsync(checkQuery, checkParams);
 
             if (result.Count == 0)
             {
                 LoggerHelper.Instance.Info("User not found or invalid credentials.");
-                return (OperationResult.UserNotFound, string.Empty, new byte[0]);
+                return (OperationResult.UserNotFound, string.Empty);
             }
 
-            // 3. 获取用户的 user_uuid 和存档数据
             string userUuid = result[0]["user_uuid"].ToString();
-            byte[] saveData = result[0]["save_data"] as byte[] ?? new byte[0];
-            int suspendTimeStart = Convert.ToInt32(result[0]["suspend_time_start"]);
-
-            // 4. 将用户添加到在线用户列表
-            AccountService.RefreshOnlineUsers(1, userAccount, new OnlineUser
+            
+            string updateLoginTimeQuery = $@"
+            UPDATE {SqlTable.GameSaveData} 
+            SET login_time = @current_time 
+            WHERE user_uuid = @user_uuid;
+        ";
+            var updateParams = new Dictionary<string, object>
             {
-                UserAccount = userAccount,
-                UserUUID = userUuid,
-                IsOffline = false, // 设置为在线
-                LastHeartbeatTime = DateTime.UtcNow, // 设置心跳时间
-                Socket = null // 这里可以放置连接的 Socket 对象，取决于如何管理连接
-            });
-            return (OperationResult.Success, userUuid, ServerSocket.handleSubPack.DecompressData(saveData));
+                { "@current_time", currentTime },
+                { "@user_uuid", userUuid }
+            };
+            await SqlManager.Instance.ExecuteNonQueryAsync(updateLoginTimeQuery, updateParams);
+            LoggerHelper.Instance.Info($"登录成功 → 账号：{userAccount} UUID：{userUuid}");
+            return (OperationResult.Success, userUuid);
         }
 
         // 登录处理逻辑
@@ -527,67 +498,6 @@ namespace TCPServer.Core.Services
                     LoggerHelper.Instance.Error("Invalid reward type.");
                     return (OperationResult.Failed, null);
             }
-        }
-
-
-        // 维护一个字典，记录每个在线用户
-        public static int OnlineUserCount => OnlineUsers.Count;
-        private static Dictionary<string, OnlineUser> OnlineUsers { get; set; } = new();
-
-        public static void RefreshOnlineUsers(int operate, string user_account, OnlineUser user = null)
-        {
-            if (operate == 1)
-            {
-                OnlineUsers.TryAdd(user_account, user);
-                LoggerHelper.Instance.Info($"用户 {user_account} 成功连接服务器==当前连接用户数{OnlineUserCount}");
-            }
-            else if (operate == 2)
-            {
-                var t = GetOnlineUsers(user_account);
-                if (t != null)
-                {
-                    _ = AccountService.UpdateUserOnlineStatus(t.UserUUID, false);
-                    LoggerHelper.Instance.Info($"用户 {user_account} 断开连接服务器==当前连接用户数{OnlineUserCount - 1}");
-                }
-
-                OnlineUsers.Remove(user_account);
-            }
-            else if (operate == 3)
-            {
-                if (OnlineUsers.ContainsKey(user_account))
-                {
-                    OnlineUsers[user_account].RefreshHeartBeatTime();
-                }
-            }
-        }
-
-        public static OnlineUser GetOnlineUsers(string user_account)
-        {
-            if (OnlineUsers.ContainsKey(user_account)) return OnlineUsers[user_account];
-            return null;
-        }
-
-        public class OnlineUser
-        {
-            public string UserAccount { get; set; } // 玩家账号
-            public string UserUUID { get; set; }
-            public bool IsOffline { get; set; } // 玩家是否离线
-            public DateTime LastOfflineTime { get; set; } // 玩家断线时间
-            public DateTime LastHeartbeatTime { get; set; } // 玩家最后一次发送心跳包的时间
-            public Socket Socket { get; set; } // 玩家连接的Socket
-
-            public void RefreshHeartBeatTime()
-            {
-                LastHeartbeatTime = DateTime.Now;
-            }
-
-            public void RefreshIsOffLine(bool isOnline)
-            {
-                IsOffline = isOnline;
-            }
-
-            // 假设我们定义10分钟内的心跳包未更新的玩家为掉线用户
-            public bool IsDropUser => (DateTime.UtcNow - LastHeartbeatTime).TotalMinutes > 10;
         }
     }
 }

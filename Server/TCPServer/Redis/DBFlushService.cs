@@ -56,9 +56,8 @@ public class DBFlushService
                 LoggerHelper.Instance.Debug($"[DBFlush] 玩家{uid}无数据，跳过");
                 return;
             }
-            LoggerHelper.Instance.Info($"[DBFlush] 玩家{uid} 开始写入盘数据");
             await SaveToMySQL(uid, baseData, currency, bag);
-            LoggerHelper.Instance.Info($"[DBFlush] 玩家{uid} 全动态刷盘成功");
+            LoggerHelper.Instance.Warn($"[DBFlush] 玩家{uid} 全动态刷盘成功");
         }
         catch (Exception ex)
         {
@@ -79,7 +78,7 @@ public class DBFlushService
         {
             // 1. 动态保存玩家基础信息（自动识别所有字段）
             if (baseDict.Count > 0)
-                await DynamicSaveAsync("player_base", uid, baseDict, conn, tran);
+                await DynamicSaveAsync(SqlTable.PlayerBase, uid, baseDict, conn, tran);
 
             //// 2. 动态保存玩家货币（自动识别所有字段）
             //if (currencyDict.Count > 0)

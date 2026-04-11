@@ -36,6 +36,10 @@ message ExitGameMsg{
 
 }
 
+message EntryGameMsg{
+    PlayerActionMsg playerActionMsg  = 1; // 玩家移动属性
+}
+
 message HeartBeatMsg {
     int64 client_time = 1;   // 客户端发送时间（毫秒）
     int64 server_time = 2;   // 服务端时间（毫秒，ACK时填写）
@@ -103,29 +107,21 @@ message SuspendTimeMsg{
 
 // 玩家动作结构
 message PlayerActionMsg {
-    string user_uuid = 1;           // 玩家ID
-    // 位置与旋转信息
-    Position position = 2;          // 玩家位置
-    Rotation rotation = 3;          // 玩家旋转
+    string user_uuid = 1;
 
-    // 位置消息
-    message Position {
-        float x = 1;                // X 坐标
-        float y = 2;                // Y 坐标
-        float z = 3;                // Z 坐标
-    }
+    float pos_x = 2;
+    float pos_y = 3;
+    float pos_z = 4;
 
-    // 旋转消息（欧拉角表示）
-    message Rotation {
-        float x = 1;            // 俯仰角（X轴旋转）
-        float y = 2;              // 偏航角（Y轴旋转）
-        float z = 3;             // 滚转角（Z轴旋转）
-    }
+    float rot_x = 5;
+    float rot_y = 6;
+    float rot_z = 7;
 
     enum ActionType {
-        UNKNOWN = 0;                // 未知动作
-        MOVE = 1;                   // 移动
-        ATTACK = 2;                 // 攻击
-        INTERACT = 3;               // 互动
+        UNKNOWN = 0;
+        MOVE = 1;
+        ATTACK = 2;
+        INTERACT = 3;
     }
+    ActionType action_type = 8;
 }

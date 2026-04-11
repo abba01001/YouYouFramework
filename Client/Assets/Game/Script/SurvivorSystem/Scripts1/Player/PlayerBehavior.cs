@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using Protocols;
 using UniRx;
 using UnityEngine;
 using UnityEngine.AI;
@@ -31,6 +33,13 @@ namespace Watermelon
         public static Vector3 Position
         {
             get => playerBehavior.transform.position;
+            private set => playerBehavior.transform.position = value;
+        }
+
+        public static Quaternion Rotation
+        {
+            get => playerBehavior.transform.rotation;
+            private set => playerBehavior.transform.rotation = value;
         }
 
         public static Vector3 Forward
@@ -157,7 +166,6 @@ namespace Watermelon
 
         // Audio
         private Transform audioListenerTransform;
-
         public void Initialise()
         {
             playerBehavior = this;
@@ -227,6 +235,27 @@ namespace Watermelon
 
             GameEntry.Event.AddEventListener(Constants.EventName.EnergyChangedEvent,OnHungerChanged);
             SkinController.Instance.SkinSelected += OnSkinSelected;
+            
+            
+            GameEntry.Event.AddEventListener(Constants.EventName.UpdatePlayerPosAndRot,OnUpdatePlayerPosAndRot);
+            var data = Constants.TempVariable.InitEntryGameMsg.PlayerActionMsg;
+            Position = new Vector3(data.PosX,data.PosY,data.PosZ);
+            Rotation = Quaternion.Euler(0,data.PosY,0);
+        }
+
+        private void Destroy()
+        {
+            GameEntry.Event.RemoveEventListener(Constants.EventName.UpdatePlayerPosAndRot,OnUpdatePlayerPosAndRot);
+        }
+
+        private void OnUpdatePlayerPosAndRot(object user_data)
+        {
+            PlayerActionMsg data = user_data as PlayerActionMsg;
+            Debugger.LogError(data.PosX, data.PosY, data.PosZ);
+            Debugger.LogError(data.RotX,data.RotY,data.RotZ);
+            
+            Position = new Vector3(data.PosX,data.PosY,data.PosZ);
+            Rotation = Quaternion.Euler(data.PosX,data.PosY,data.PosZ);
         }
 
         private void Update()
@@ -247,13 +276,8 @@ namespace Watermelon
         private float timeSinceLastSend = 0f; // 距离上次发送的时间
         private float sendInterval = 0.1f;    // 发送数据的最小间隔（0.1秒）
         private Vector3 lastPosition;
-        private Vector3 currentPosition;
-        private Vector3 currentRotation;
         private void LateUpdate()
         {
-            // 获取当前帧玩家的位置
-            currentPosition = transform.position;
-            currentRotation = transform.rotation.eulerAngles;
             // 计算每帧更新的时间
             timeSinceLastSend += Time.deltaTime;
 
@@ -261,10 +285,9 @@ namespace Watermelon
             if (HasMoved() && timeSinceLastSend >= sendInterval)
             {
                 // 发送数据给后端
-                // SendMoveDataToBackend(currentPosition);
                 // 更新上次位置
-                lastPosition = currentPosition;
-                GameEntry.Net.Requset.c2s_request_synchronous_player(currentPosition,currentRotation);
+                lastPosition = Position;
+                GameEntry.Net.Requset.c2s_request_synchronous_player(Position,new Vector3(Rotation.x,Rotation.y,Rotation.z));
                 // 重置发送间隔
                 timeSinceLastSend = 0f;
             }
@@ -273,7 +296,7 @@ namespace Watermelon
         private bool HasMoved()
         {
             // 判断当前位置和上次位置是否有明显变化
-            return (currentPosition - lastPosition).sqrMagnitude > 0.01f; // 你可以根据实际需要调整阈值
+            return (Position - lastPosition).sqrMagnitude > 0.01f; // 你可以根据实际需要调整阈值
         }           
 
         #region Swimming
@@ -424,7 +447,7 @@ namespace Watermelon
             {
                 if (activeHitable.IsMutlipleObjectsHitRestricted)
                 {
-                    activeHitable.GetHit(transform.position);
+                    activeHitable.GetHit(Position);
                 }
                 else
                 {
@@ -434,7 +457,7 @@ namespace Watermelon
 
                         if (res.HittableID == activeHitable.HittableID)
                         {
-                            res.GetHit(transform.position);
+                            res.GetHit(Position);
                         }
                     }
                 }
@@ -492,7 +515,7 @@ namespace Watermelon
                     continue;
 
                 float angle = Quaternion.FromToRotation(transform.forward,
-                    (resource.SnappingTransform.position - transform.position).SetY(0).normalized).eulerAngles.y;
+                    (resource.SnappingTransform.position - Position).SetY(0).normalized).eulerAngles.y;
                 if (angle > 180)
                     angle -= 360;
                 if (angle < -180)
@@ -510,18 +533,18 @@ namespace Watermelon
 
             if (activeHitable != null)
             {
-                Vector3 lookAt = (activeHitable.SnappingTransform.position - transform.position).SetY(0).normalized;
+                Vector3 lookAt = (activeHitable.SnappingTransform.position - Position).SetY(0).normalized;
 
                 if (lookAt.sqrMagnitude >= 0.0001f)
                 {
-                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookAt),
+                    Rotation = Quaternion.Slerp(Rotation, Quaternion.LookRotation(lookAt),
                         Time.deltaTime * activeHitable.SnappingSpeedMultiplier);
                 }
 
                 if (activeHitable.HasSnappingDistance)
                 {
-                    transform.position = Vector3.Lerp(transform.position,
-                        activeHitable.SnappingTransform.position.SetY(transform.position.y) -
+                    Position = Vector3.Lerp(Position,
+                        activeHitable.SnappingTransform.position.SetY(Position.y) -
                         lookAt * activeHitable.SnappingDistance,
                         Time.deltaTime * activeHitable.SnappingSpeedMultiplier);
                 }
@@ -595,27 +618,27 @@ namespace Watermelon
                     }
                 }
 
-                bool playerStationary = Vector3.Distance(playerPrevPos, transform.position) <
+                bool playerStationary = Vector3.Distance(playerPrevPos, Position) <
                                         maxAlowedSpeed * Time.deltaTime * 0.5f;
 
                 if (!playerStationary)
                     jumpCounter = 0;
 
-                playerPrevPos = transform.position;
+                playerPrevPos = Position;
 
-                transform.position += control.MovementInput * Time.deltaTime * speed;
+                Position += control.MovementInput * Time.deltaTime * speed;
 
                 float multiplier = speed / maxSpeed;
 
                 playerAnimator.SetFloat(MOVEMENT_MULTIPLIER_HASH, multiplier);
                 PlayerGraphics.SetMovementMultiplier(playerStationary ? 0 : multiplier);
 
-                transform.rotation = Quaternion.Lerp(transform.rotation,
+                Rotation = Quaternion.Lerp(Rotation,
                     Quaternion.LookRotation(control.MovementInput.normalized), 0.2f);
 
                 if (!IsSwimming)
                 {
-                    var forwardPoint = transform.position + transform.forward * 1f;
+                    var forwardPoint = Position + transform.forward * 1f;
                     if (playerStationary && NavMesh.SamplePosition(forwardPoint, out var hit, 10f, NavMesh.AllAreas) &&
                         (hit.mask == 1 || hit.mask == 8 || hit.mask == 16))
                     {
@@ -658,8 +681,8 @@ namespace Watermelon
                 {
                     if (isAttacking)
                     {
-                        transform.rotation = Quaternion.Lerp(transform.rotation,
-                            Quaternion.LookRotation((targetCharacterBehaviour.Transform.position - transform.position)
+                        Rotation = Quaternion.Lerp(Rotation,
+                            Quaternion.LookRotation((targetCharacterBehaviour.Transform.position - Position)
                                 .normalized), Time.deltaTime * 10);
                     }
                 }
@@ -676,7 +699,7 @@ namespace Watermelon
                 SwimmingEnergy.SubtractPercent(100 * Time.deltaTime / swimmingDuration);
 
                 if (SwimmingEnergy.IsDepleted)
-                    TakeDamage(new DamageSource(Health.MaxHealth, null), transform.position);
+                    TakeDamage(new DamageSource(Health.MaxHealth, null), Position);
 
                 var swimmingMultiplier = playerAnimator.GetFloat(SWIMMING_MULTIPLIER_HASH);
                 if (swimmingMultiplier <= 0.1f)
@@ -701,7 +724,7 @@ namespace Watermelon
 
             emission.enabled = false;
 
-            var duration = Vector3.Distance(fallPosition, transform.position) / maxSpeed / 1.5f;
+            var duration = Vector3.Distance(fallPosition, Position) / maxSpeed / 1.5f;
 
             transform.DOMoveY(fallPosition.y, duration - 0.1f, 0.1f).SetEasing(Ease.Type.SineIn);
             transform.DOMoveXZ(fallPosition.x, fallPosition.z, duration).SetEasing(Ease.Type.SineOut);
@@ -748,7 +771,7 @@ namespace Watermelon
             dustParticle.Stop();
 
             agent.Warp(destination.position);
-            transform.rotation = destination.rotation;
+            Rotation = destination.rotation;
 
             dustParticle.Play();
         }
@@ -912,7 +935,7 @@ namespace Watermelon
                     () =>
                     {
                         gameData.StorageSoundHandler.Play(AudioController.AudioClips.resourcesPickUpFromStorageSound,
-                            transform.position);
+                            Position);
                     });
             }
         }
@@ -963,7 +986,7 @@ namespace Watermelon
             if (ignoreDelay || Time.time > lastFullMessageTime)
             {
                 FloatingTextController.Instance.SpawnFloatingText(FULL_FLOATING_TEXT_HASH, "FULL!",
-                    transform.position + new Vector3(0, 2, 0), Quaternion.identity, 1.0f, Color.red);
+                    Position + new Vector3(0, 2, 0), Quaternion.identity, 1.0f, Color.red);
 
                 lastFullMessageTime = Time.time + FULL_FLOATING_TEXT_DELAY;
             }
@@ -1058,7 +1081,7 @@ namespace Watermelon
                         {
                             var gameData = GameController.Data;
 
-                            gameData.StorageSoundHandler.Play(currency.Data.PickUpSound, transform.position);
+                            gameData.StorageSoundHandler.Play(currency.Data.PickUpSound, Position);
                         }
                     }
                 }
@@ -1083,7 +1106,7 @@ namespace Watermelon
         #region Helpers
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float DistanceSqr(Transform other) => (other.position - Position).sqrMagnitude;
+        public float DistanceSqr(Transform other) => (other.position - Position).sqrMagnitude;
 
         private void OnHungerChanged(object userdata)
         {
