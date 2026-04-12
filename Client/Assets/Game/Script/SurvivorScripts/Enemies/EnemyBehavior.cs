@@ -67,7 +67,7 @@ namespace OctoberStudio
         public Vector2 CustomPoint { get; protected set; }
 
         public float LastTimeDamagedPlayer { get; set; }
-
+        public bool IsDoingRush => doRush;
         private Material sharedMaterial;
         private Material effectsMaterial;
 
@@ -151,7 +151,7 @@ namespace OctoberStudio
             transform.position += direction * Time.deltaTime * speed;
 
             // Enemy looks in the direction it's moving
-            if (!scaleCoroutine.ExistsAndActive())
+            if (!scaleCoroutine.ExistsAndActive() && !IsDoingRush)
             {
                 var scale = transform.localScale;
 
@@ -169,6 +169,18 @@ namespace OctoberStudio
             }
         }
 
+        public void DoFacePlayerDirection()
+        {
+            Vector3 target = IsMovingToCustomPoint ? CustomPoint : PlayerBehavior.Player.transform.position;
+            Vector3 direction = (target - transform.position).normalized;
+            var scale = transform.localScale;
+            if (direction.x > 0 && scale.x < 0 || direction.x < 0 && scale.x > 0)
+            {
+                scale.x *= -1;
+                transform.localScale = scale;
+            }
+        }
+        
         private void OnTriggerEnter2D(Collider2D other)
         {
             ProjectileBehavior projectile = other.GetComponent<ProjectileBehavior>();
@@ -394,6 +406,12 @@ namespace OctoberStudio
             {
                 effects.Remove(effect);
             }
+        }
+
+        private bool doRush = false;
+        public void SetDoRushing(bool doRush)
+        {
+            this.doRush = doRush;
         }
     }
 }

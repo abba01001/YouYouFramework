@@ -43,6 +43,8 @@ namespace OctoberStudio
 
         [SerializeField] private TextMeshProUGUI fpsText;
         [SerializeField] private TextMeshProUGUI netDelayText;
+        
+        [SerializeField] private UITimer uiTimer;
         private void Awake()
         {
             canvas = GetComponent<Canvas>();
@@ -56,6 +58,7 @@ namespace OctoberStudio
             pauseWindow.OnClosed += OnPauseWindowClosed;
 
             chestWindow.OnClosed += OnChestWindowClosed;
+            uiTimer.EnableTimer();
         }
 
         public float refreshInterval = 0.1f;
@@ -101,6 +104,7 @@ namespace OctoberStudio
         public void Hide(Action onFinish = null)
         {
             canvas.enabled = false;
+            uiTimer.StopTimer();
             onFinish?.Invoke();
         }
 

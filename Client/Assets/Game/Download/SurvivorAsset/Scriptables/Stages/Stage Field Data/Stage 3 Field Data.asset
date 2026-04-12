@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 108aeb0c3fe1ce34588d447d300c8020, type: 3}
-  m_Name: Stage 2 Field Data 1
+  m_Name: Stage 3 Field Data
   m_EditorClassIdentifier: 
   obsoleteBackgroundPrefab: {fileID: 0}
   backgroundPrefabs:
@@ -34,5 +34,5 @@ MonoBehaviour:
   propChances:
   - prefab: {fileID: 1028214238412592778, guid: 1f9045912c762e44186e2735add53554,
       type: 3}
-    maxAmount: 2
+    maxAmount: 10
     chance: 75

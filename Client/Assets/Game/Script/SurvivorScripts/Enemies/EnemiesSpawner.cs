@@ -212,15 +212,17 @@ namespace OctoberStudio
             return enemy;
         }
 
-        public virtual void Spawn(EnemyType type, WaveOverride waveOverride, bool circularSpawn = false, int amount = 1, UnityAction<EnemyBehavior> onEnemyDiedCallback = null)
+        private List<EnemyBehavior> _spawnedEnemies = new List<EnemyBehavior>();
+        public virtual List<EnemyBehavior> Spawn(EnemyType type, WaveOverride waveOverride, bool circularSpawn = false, int amount = 1, UnityAction<EnemyBehavior> onEnemyDiedCallback = null)
         {
+            _spawnedEnemies.Clear();
             var cameraHeight = mainCamera.orthographicSize;
             var cameraWidth = cameraHeight * mainCamera.aspect;
             var cameraDiagonal = Mathf.Sqrt(cameraWidth * cameraWidth + cameraHeight * cameraHeight);
 
             for (int i = 0; i < amount; i++)
             {
-                if (enemies.Count >= enemiesCap) return;
+                if (enemies.Count >= enemiesCap) return null;
 
                 var enemy = enemyPools[type].GetEntity();
 
@@ -282,7 +284,10 @@ namespace OctoberStudio
                 enemy.Play();
 
                 enemies.Add(enemy);
+                _spawnedEnemies.Add(enemy);
             }
+
+            return _spawnedEnemies.Count > 0 ? _spawnedEnemies : null;
         }
 
         public virtual EnemyBehavior GetRandomVisibleEnemy()

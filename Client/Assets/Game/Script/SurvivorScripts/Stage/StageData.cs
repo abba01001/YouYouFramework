@@ -1,8 +1,15 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Timeline;
 
 namespace OctoberStudio
 {
+    public enum StageMode
+    {
+        [LabelText("单次时间轴模式")]SingleMode,
+        [LabelText("循环时间轴模式")]LoopMode
+    }
+    
     [CreateAssetMenu(fileName = "Stage Data", menuName = "October/Stage Data")]
     public class StageData : ScriptableObject
     {
@@ -50,6 +57,8 @@ namespace OctoberStudio
 
         [SerializeField] string musicName;
         public string MusicName => musicName;
+
+        [LabelText("无尽关卡模式")] public StageMode StageMode = StageMode.SingleMode;
     }
 
     public enum StageType

@@ -46,7 +46,7 @@ namespace OctoberStudio
         public static StageData Stage { get; private set; }
 
         private StageSave stageSave;
-
+        // 🔴 新增：标记当前是否为【无尽关卡】
         private void Awake()
         {
             instance = this;
@@ -93,17 +93,33 @@ namespace OctoberStudio
             }
 
             director.Play();
-
             if (Stage.UseCustomMusic)
             {
                 GameController.ChangeMusic(Stage.MusicName);
             }
         }
 
+        public void PauseDirector()
+        {
+            director.Pause();
+        }
+        
         private void TimelineStopped(PlayableDirector director)
         {
             if (gameObject.activeSelf)
             {
+                // ==============================================
+                // 🔴 核心：无尽关卡 → 无限循环，不触发通关
+                // ==============================================
+                if (Stage.StageMode == StageMode.LoopMode)
+                {
+                    // 无尽模式：时间轴播放完 → 直接从头重播
+                    director.time = 0;
+                    director.Play();
+                    // 不弹完成界面、不暂停、不保存关卡进度
+                    return;
+                }
+
                 if (stageSave.MaxReachedStageId < stageSave.SelectedStageId + 1 && stageSave.SelectedStageId + 1 < database.StagesCount)
                 {
                     stageSave.SetMaxReachedStageId(stageSave.SelectedStageId + 1);

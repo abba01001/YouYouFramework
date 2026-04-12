@@ -195,8 +195,6 @@ namespace OctoberStudio.UI
         private void CancelButtonClicked()
         {
             // save.IsPlaying = false;
-            Debugger.LogError("11111");
-            Debugger.LogError("22222");
             continueBackgroundImage.DoAlpha(0, 0.3f).SetOnFinish(() => continueBackgroundImage.gameObject.SetActive(false));
             contituePopupRect.DoAnchorPosition(Vector2.down * 2500, 0.3f).SetEasing(EasingType.SineIn).SetOnFinish(() => contituePopupRect.gameObject.SetActive(false));
             EventSystem.current.SetSelectedGameObject(playButton.gameObject);
