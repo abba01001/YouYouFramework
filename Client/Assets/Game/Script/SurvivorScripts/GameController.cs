@@ -3,6 +3,8 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Linq;
+using Cysharp.Threading.Tasks;
+using YouYouFramework;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -113,24 +115,6 @@ namespace OctoberStudio
             }
         }
 
-        public static void ChangeMusic(SoundContainer music)
-        {
-            if (Music != null)
-            {
-                var oldMusic = Music;
-                oldMusic.DoVolume(0, 0.3f).SetOnFinish(() => oldMusic.Stop());
-            }
-
-            Music = music.Play(true);
-
-            if (Music != null)
-            {
-                var volume = Music.volume;
-                Music.volume = 0;
-                Music.DoVolume(volume, 0.3f);
-            }
-        }
-
         public static void RegisterInputManager(IInputManager inputManager)
         {
             InputManager = inputManager;
@@ -153,10 +137,8 @@ namespace OctoberStudio
 
         public static void LoadStage()
         {
-            if(stageSave.ResetStageData) TempGold.Withdraw(TempGold.Amount);
-
-            instance.StartCoroutine(StageLoadingCoroutine());
-
+            if (stageSave.ResetStageData) TempGold.Withdraw(TempGold.Amount);
+            if (instance != null) _ = instance.StageLoadingCoroutine();
             SaveManager.Save(false);
         }
 
@@ -165,160 +147,22 @@ namespace OctoberStudio
             Gold.Deposit(TempGold.Amount);
             TempGold.Withdraw(TempGold.Amount);
 
-            if (instance != null) instance.StartCoroutine(MainMenuLoadingCoroutine());
+            if (instance != null) _ = instance.MainMenuLoadingCoroutine();
 
             SaveManager.Save(false);
         }
 
-        protected static string GetLoadingScreenSceneName()
+        protected async UniTask StageLoadingCoroutine()
         {
-            if (ProjectSettings != null && SceneExists(ProjectSettings.LoadingSceneName))
-            {
-                return ProjectSettings.LoadingSceneName;
-            }
-            else if (SceneExists("Loading Screen"))
-            {
-                return "Loading Screen";
-            }
-            else
-            {
-                Debug.LogWarning("Loading screen scene not found. Please add a loading screen scene to the project settings or ensure it exists in the build settings.");
-                return null;
-            }
+            await GameEntry.Scene.LoadSceneAsync(SceneGroupName.Game,1);
         }
 
-        protected static string GetMainMenuSceneName()
+        protected async UniTask MainMenuLoadingCoroutine()
         {
-            if (ProjectSettings != null && SceneExists(ProjectSettings.MainMenuSceneName))
-            {
-                return ProjectSettings.MainMenuSceneName;
-            }
-            else if (SceneExists("Main Menu"))
-            {
-                return "Main Menu";
-            }
-            else
-            {
-                Debug.LogError("Main menu scene not found. Please add a main menu scene to the project settings or ensure it exists in the build settings.");
-                return null;
-            }
-        }
-
-        protected static string GetGameSceneName()
-        {
-            if (ProjectSettings != null && SceneExists(ProjectSettings.GameSceneName))
-            {
-                return ProjectSettings.GameSceneName;
-            }
-            else if (SceneExists("Game"))
-            {
-                return "Game";
-            }
-            else
-            {
-                Debug.LogError("Game scene not found. Please add a game scene to the project settings or ensure it exists in the build settings.");
-                return null;
-            }
-        }
-
-        protected static IEnumerator StageLoadingCoroutine()
-        {
-            var loadingSceneName = GetLoadingScreenSceneName();
-            var mainMenuSceneName = GetMainMenuSceneName();
-            var gameSceneName = GetGameSceneName();
-
-            if (loadingSceneName != null)
-            {
-                yield return LoadAsyncScene(loadingSceneName, LoadSceneMode.Additive);
-            }
-
-            yield return UnloadAsyncScene(mainMenuSceneName);
-            yield return LoadAsyncScene(gameSceneName, LoadSceneMode.Single);
-        }
-
-        protected static IEnumerator MainMenuLoadingCoroutine()
-        {
-            var loadingSceneName = GetLoadingScreenSceneName();
-            var mainMenuSceneName = GetMainMenuSceneName();
-            var gameSceneName = GetGameSceneName();
-
-            if (loadingSceneName != null)
-            {
-                yield return LoadAsyncScene(loadingSceneName, LoadSceneMode.Additive);
-            }
-
-            yield return UnloadAsyncScene(gameSceneName);
-            yield return LoadAsyncScene(mainMenuSceneName, LoadSceneMode.Single);
-
+            await GameEntry.Scene.LoadSceneAsync(SceneGroupName.MainMenu,1);
             if (StageController.Stage.UseCustomMusic)
             {
                 ChangeMusic(MAIN_MENU_MUSIC_NAME);
-            }
-        }
-
-        protected static bool SceneExists(string sceneName)
-        {
-#if UNITY_EDITOR
-            return SceneExistsInAssets(sceneName);
-#else
-            return SceneExistsInBuildSettings(sceneName);
-#endif
-        }
-
-        protected static bool SceneExistsInBuildSettings(string sceneName)
-        {
-            int sceneCount = UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings;
-
-            for (int i = 0; i < sceneCount; i++)
-            {
-                string path = UnityEngine.SceneManagement.SceneUtility.GetScenePathByBuildIndex(i);
-                string name = System.IO.Path.GetFileNameWithoutExtension(path);
-                if (name == sceneName)
-                    return true;
-            }
-
-            return false;
-        }
-
-#if UNITY_EDITOR
-
-        public static bool SceneExistsInAssets(string sceneName)
-        {
-            string[] guids = AssetDatabase.FindAssets($"t:Scene {sceneName}");
-            return guids.Any(guid =>
-            {
-                string path = AssetDatabase.GUIDToAssetPath(guid);
-                return System.IO.Path.GetFileNameWithoutExtension(path) == sceneName;
-            });
-        }
-
-#endif
-
-        protected static IEnumerator UnloadAsyncScene(string sceneName)
-        {
-            var asyncLoad = SceneManager.UnloadSceneAsync(sceneName);
-            asyncLoad.allowSceneActivation = false;
-            //wait until the asynchronous scene fully loads
-            while (!asyncLoad.isDone)
-            {
-                yield return null;
-            }
-        }
-
-        protected static IEnumerator LoadAsyncScene(string sceneName, LoadSceneMode loadSceneMode)
-        {
-            var asyncLoad = SceneManager.LoadSceneAsync(sceneName, loadSceneMode);
-            asyncLoad.allowSceneActivation = false;
-            //wait until the asynchronous scene fully loads
-            while (!asyncLoad.isDone)
-            {
-                //scene has loaded as much as possible,
-                // the last 10% can't be multi-threaded
-                if (asyncLoad.progress >= 0.9f)
-                {
-                    asyncLoad.allowSceneActivation = true;
-                }
-                yield return null;
             }
         }
 

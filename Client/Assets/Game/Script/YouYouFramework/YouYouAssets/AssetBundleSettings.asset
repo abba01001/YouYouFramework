@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01aecc1a1ad5afc4f9289263945c2a5d, type: 3}
   m_Name: AssetBundleSettings
   m_EditorClassIdentifier: 
-  AssetVersion: 1.0.0
+  AssetVersion: 1.3.0
   GradleSavePath: TempProjectData/GradleProject
   PulishAPKPath: TempProjectData/Package
   ServerBundlePath: TempProjectData/ServerBundles

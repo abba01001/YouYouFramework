@@ -33,7 +33,6 @@ namespace Main
 #else
             ePlayMode = EPlayMode.HostPlayMode;
 #endif
-            
             CheckVersionCtrl.Instance.CheckVersionChange(ePlayMode, async () =>
             {
                 // 检查更新完成, 加载Hotfix代码(HybridCLR)

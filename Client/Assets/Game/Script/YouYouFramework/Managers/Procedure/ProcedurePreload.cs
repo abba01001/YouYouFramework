@@ -57,7 +57,6 @@ using Object = UnityEngine.Object;
         internal override void OnUpdate()
         {
             base.OnUpdate();
-
             //模拟加载进度条
             if (m_CurrProgress < m_TargetProgress)
             {
@@ -137,24 +136,6 @@ using Object = UnityEngine.Object;
                 return;
             }
             TaskGroup taskGroup = GameEntry.Task.CreateTaskGroup();
-#if ASSETBUNDLE
-            //初始化资源信息
-            taskGroup.AddTask((taskRoutine) =>
-            {
-                GameEntry.Loader.AssetInfo.InitAssetInfo(taskRoutine.Leave);
-            });
-
-            //加载自定义Shader
-            taskGroup.AddTask((taskRoutine) =>
-            {
-                GameEntry.Loader.LoadAssetBundleAction(YFConstDefine.CusShadersAssetBundlePath, onComplete: (AssetBundle bundle) =>
-                {
-                    bundle.LoadAllAssets();
-                    // Shader.WarmupAllShaders();
-                    taskRoutine.Leave();
-                });
-            });
-#endif
             //加载Excel
             taskGroup.AddTask((taskRoutine) =>
             {

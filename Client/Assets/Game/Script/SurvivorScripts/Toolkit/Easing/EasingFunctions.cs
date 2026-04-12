@@ -4,7 +4,9 @@ using Unity.Mathematics;
 
 namespace OctoberStudio.Easing
 {
+#if UNITY_EDITOR
     [BurstCompile]
+#endif
     public static class EasingFunctions
     {
         public static readonly FunctionPointer<EasingFunction>[] Functions;
@@ -13,6 +15,7 @@ namespace OctoberStudio.Easing
 
         static EasingFunctions()
         {
+#if UNITY_EDITOR
             Functions = new FunctionPointer<EasingFunction>[]
             {
                 BurstCompiler.CompileFunctionPointer<EasingFunction>(Linear),
@@ -57,6 +60,7 @@ namespace OctoberStudio.Easing
                 BurstCompiler.CompileFunctionPointer<EasingFunction>(BounceOut),
                 BurstCompiler.CompileFunctionPointer<EasingFunction>(BounceInOut),
             };
+#endif
         }
 
         public static float ApplyEasing(float t, EasingType easingType)
@@ -108,108 +112,201 @@ namespace OctoberStudio.Easing
 
             return t;
         }
-
+        
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Linear(float t) => t;
 
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float QuadIn(float t) => t * t;
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float QuadOut(float t) => -(t * (t - 2));
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float QuadOutIn(float t) => t < 0.5f ? 2 * t * t : (-2 * t * t) + (4 * t) - 1;
 
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float CubicIn(float t) => t * t * t;
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float CubicOut(float t) => (t - 1) * (t - 1) * (t - 1) + 1;
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float CubicInOut(float t) => t < 0.5f ? 4 * t * t * t : 0.5f * ((2 * t) - 2) * ((2 * t) - 2) * ((2 * t) - 2) + 1;
 
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float QuartIn(float t) => t * t * t * t;
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float QuartOut(float t) => (t - 1) * (t - 1) * (t - 1) * (1 - t) + 1;
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float QuartInOut(float t) => t < 0.5f ? 8 * t * t * t * t : -8 * (t - 1) * (t - 1) * (t - 1) * (t - 1) + 1;
 
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float QuintIn(float t) => t * t * t * t * t;
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float QuintOut(float t) => (t - 1) * (t - 1) * (t - 1) * (t - 1) * (t - 1) + 1;
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float QuintInOut(float t) => t < 0.5f ? 16 * t * t * t * t * t : 0.5f * ((2 * t) - 2) * ((2 * t) - 2) * ((2 * t) - 2) * ((2 * t) - 2) * ((2 * t) - 2) + 1;
 
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float SineIn(float t) => math.sin((t - 1) * math.PI / 2f) + 1;
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float SineOut(float t) => math.sin(t * math.PI / 2f);
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float SineInOut(float t) => 0.5f * (1 - math.cos(t * math.PI));
 
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float CircIn(float t) => 1 - math.sqrt(1 - (t * t));
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float CircOut(float t) => math.sqrt((2 - t) * t);
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float CircInOut(float t) => t < 0.5f ? 0.5f * (1 - math.sqrt(1 - 4 * (t * t))) : 0.5f * (math.sqrt(-((2 * t) - 3) * ((2 * t) - 1)) + 1);
 
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float ExpoIn(float t) => Approximately(t, 0.0f) ? t : math.pow(2, 10 * (t - 1));
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float ExpoOut(float t) => Approximately(t, 1.0f) ? t : 1 - math.pow(2, -10 * t);
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float ExpoInOut(float t) => (Approximately(t, 0.0f) || Approximately(t, 1.0f)) ? t : t < 0.5f ? 0.5f * math.pow(2, (20 * t) - 10) : -0.5f * math.pow(2, (-20 * t) + 10) + 1;
 
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float ElasticIn(float t) => math.sin(13 * math.PI / 2 * t) * math.pow(2, 10 * (t - 1));
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float ElasticOut(float t) => math.sin(-13 * math.PI / 2 * (t + 1)) * math.pow(2, -10 * t) + 1;
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float ElasticInOut(float t) => t < 0.5f ? 0.5f * math.sin(13 * math.PI / 2 * (2 * t)) * math.pow(2, 10 * ((2 * t) - 1)) : 0.5f * (math.sin(-13 * math.PI / 2 * ((2 * t - 1) + 1)) * math.pow(2, -10 * (2 * t - 1)) + 2);
 
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float BackIn(float t) => t * t * t - t * math.sin(t * math.PI);
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float BackOut(float t) => 1 - ((1 - t) * (1 - t) * (1 - t) - (1 - t) * math.sin((1 - t) * math.PI));
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float BackInOut(float t) => t < 0.5f ? 0.5f * (2 * t * 2 * t * 2 * t - 2 * t * math.sin(2 * t * math.PI)) : 0.5f * (1 - ((1 - (2 * t - 1)) * (1 - (2 * t - 1)) * (1 - (2 * t - 1)) - (1 - (2 * t - 1)) * math.sin((1 - (2 * t - 1)) * math.PI))) + 0.5f;
 
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float BounceIn(float t) => 1 - BounceOut(1 - t);
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float BounceInOut(float t) => t < 0.5f ? 0.5f * BounceIn(t * 2) : 0.5f * BounceOut(t * 2 - 1) + 0.5f;
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float BounceOut(float t)
         {
@@ -231,7 +328,10 @@ namespace OctoberStudio.Easing
             }
         }
 
+                
+#if UNITY_EDITOR
         [BurstCompile]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool Approximately(float a, float b)
         {

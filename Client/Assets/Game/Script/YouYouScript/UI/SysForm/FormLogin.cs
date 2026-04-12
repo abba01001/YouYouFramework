@@ -31,10 +31,7 @@ public class FormLogin : UIFormBase
 #if !UNITY_EDITOR
         //GameUtil.GetSignatureMD5Hash();
 #endif
-
-#if UNITY_EDITOR
         Login();
-#endif
         //GameEntry.SDK.DownloadAvatar("1", null);
     }
 

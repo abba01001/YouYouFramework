@@ -3,6 +3,7 @@ using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -149,5 +150,32 @@ public class ParamsSettings : ScriptableObject
         return 0;
     }
     #endregion
+    
+    [OnInspectorInit]
+    private void Init()
+    {
+        LocalWebUrl = GetLocalIPAddress();
+    }
+    
+    string GetLocalIPAddress()
+    {
+        foreach (var netInterface in System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces())
+        {
+            if (netInterface.OperationalStatus != System.Net.NetworkInformation.OperationalStatus.Up)
+                continue;
+
+            var props = netInterface.GetIPProperties();
+            foreach (var addr in props.UnicastAddresses)
+            {
+                if (addr.Address.AddressFamily == AddressFamily.InterNetwork &&
+                    !addr.Address.ToString().StartsWith("127"))
+                {
+                    return addr.Address.ToString() + ":17888";
+                }
+            }
+        }
+        return "127.0.0.1:17888";
+    }
+
     
 }

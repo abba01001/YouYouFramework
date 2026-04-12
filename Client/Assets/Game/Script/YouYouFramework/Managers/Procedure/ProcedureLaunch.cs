@@ -21,16 +21,11 @@ using System.Linq;
             GameEntry.Quality.SetQuality((QualityManager.Quality) 2);//GameEntry.Player.GetInt(Constants.StorgeKey.QualityLevel));
             //GameEntry.Quality.SetScreen((QualityManager.ScreenLevel)GameEntry.Player.GetInt(Constants.StorgeKey.Screen));
             GameEntry.Quality.SetFrameRate((QualityManager.FrameRate)4);//GameEntry.Player.GetInt(Constants.StorgeKey.FrameRate));
-
             //获取安卓权限
             permissions.ToList().ForEach(s =>
             {
                 //if (!Permission.HasUserAuthorizedPermission(s)) Permission.RequestUserPermission(s);
             });
-#if EDITORLOAD
             GameEntry.Procedure.ChangeState(ProcedureState.Preload);
-#elif ASSETBUNDLE
-            GameEntry.Procedure.ChangeState(ProcedureState.CheckVersion);
-#endif
         }
     }

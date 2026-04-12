@@ -88,7 +88,6 @@ namespace OctoberStudio.UI
         public void SpawnText(Vector2 worldPos, string text)
         {
             var viewportPos = mainCamera.WorldToViewportPoint(worldPos);
-
             var indicator = indicatorsPool.GetEntity();
 
             indicator.SetText(text);

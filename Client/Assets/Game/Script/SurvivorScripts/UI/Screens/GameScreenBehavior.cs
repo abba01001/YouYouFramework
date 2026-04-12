@@ -6,6 +6,7 @@ using OctoberStudio.Easing;
 using OctoberStudio.UI;
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
@@ -40,6 +41,8 @@ namespace OctoberStudio
         [SerializeField] CanvasGroup bossfightWarning;
         [SerializeField] BossfightHealthbarBehavior bossHealthbar;
 
+        [SerializeField] private TextMeshProUGUI fpsText;
+        [SerializeField] private TextMeshProUGUI netDelayText;
         private void Awake()
         {
             canvas = GetComponent<Canvas>();
@@ -55,6 +58,28 @@ namespace OctoberStudio
             chestWindow.OnClosed += OnChestWindowClosed;
         }
 
+        public float refreshInterval = 0.1f;
+        private float _totalTime; // 累加时间
+        private int _frameCount;   // 累加帧数
+        private void Update()
+        {
+            // 累加时间和帧数
+            _totalTime += Time.deltaTime;
+            _frameCount++;
+            // 达到刷新间隔 → 计算平均FPS
+            if (_totalTime >= refreshInterval)
+            {
+                netDelayText.text = $"MS:{GameEntry.Net.NetDelay}";
+                // 平均FPS = 总帧数 ÷ 总时间
+                float fps = _frameCount / _totalTime;
+                // 显示（保留0位小数）
+                fpsText.text = $"FPS: {Mathf.Round(fps)}";
+                // 重置计数
+                _totalTime = 0;
+                _frameCount = 0;
+            }
+        }
+        
         private void Start()
         {
             abilitiesWindow.Init();

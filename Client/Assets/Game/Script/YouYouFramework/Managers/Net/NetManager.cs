@@ -79,6 +79,11 @@ public class NetManager
 
     public long NetDelay => Mathf.Min(Mathf.Abs((int)lastReceiveHeartAckTime - (int)lastSendHeartAckTime),460);
 
+    public long GetNetDelay()
+    {
+        return lastReceiveHeartAckTime - lastSendHeartAckTime;
+    }
+    
     public void RefreshLastHeartAckTime(long time)
     {
         lastReceiveHeartAckTime = time;
@@ -242,6 +247,7 @@ public class NetManager
             url = GameEntry.ParamsSettings.LocalWebUrl;
         }
         #endif
+        url = GameEntry.ParamsSettings.LocalWebUrl;
         string[] urls = url.Split(StringUtil.FourthSeparator);
 
         if (connectionStatus == ConnectionStatus.Connected) return;

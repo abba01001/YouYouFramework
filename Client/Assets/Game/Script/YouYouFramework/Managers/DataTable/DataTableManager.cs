@@ -83,6 +83,7 @@ public class DataTableManager
         m_TaskGroup.OnComplete += OnLoadDataTableComplete;
         m_TaskGroup.OnComplete += () =>
         {
+            GameEntry.UI.OpenUIForm<FormMask>();
             Constants.IsLoadDataTable = true;
         };
         m_TaskGroup.Run(true);
@@ -99,16 +100,7 @@ public class DataTableManager
     internal void LoadDataAllTable(Action onComplete = null)
     {
         OnLoadDataTableComplete += onComplete;
-#if ASSETBUNDLE
-        GameEntry.Loader.LoadAssetBundleAction(YFConstDefine.DataTableAssetBundlePath,
-            onComplete: (AssetBundle bundle) =>
-            {
-                m_DataTableBundle = bundle;
-                LoadDataTable();
-            });
-#else
-            LoadDataTable();
-#endif
+        LoadDataTable();
     }
 
     /// <summary>

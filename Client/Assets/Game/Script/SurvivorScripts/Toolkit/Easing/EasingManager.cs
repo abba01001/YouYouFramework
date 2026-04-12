@@ -278,7 +278,6 @@ namespace OctoberStudio.Easing
             this.duration = duration;
             this.callback = callback;
             this.delay = delay;
-
             coroutine = EasingManager.StartCustomCoroutine(Coroutine());
         }
 
@@ -287,18 +286,15 @@ namespace OctoberStudio.Easing
             IsActive = true;
 
             float time = 0;
-
             while (time < duration)
             {
                 yield return null;
-
                 if (delay > 0)
                 {
                     delay -= unscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
 
                     if (delay > 0) continue;
                 }
-
                 time += unscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
                 float t;
                 if (useCurve)
@@ -309,11 +305,9 @@ namespace OctoberStudio.Easing
                 {
                     t = EasingFunctions.ApplyEasing(time / duration, easingType);
                 }
-
                 T value = Lerp(from, to, t);
                 callback?.Invoke(value);
             }
-
             callback.Invoke(to);
             finishCallback?.Invoke();
 
@@ -447,7 +441,9 @@ namespace OctoberStudio.Easing
         [ReadOnly] public NativeList<float2> timeData;
         [ReadOnly] public NativeList<float> useUnscaledTime;
 
+#if UNITY_EDITOR
         [ReadOnly] public NativeList<FunctionPointer<EasingFunctions.EasingFunction>> easingFunctions;
+#endif
 
         [ReadOnly] public NativeList<float2> startPositions;
         [ReadOnly] public NativeList<float2> targets;
@@ -468,7 +464,9 @@ namespace OctoberStudio.Easing
             timeData = new NativeList<float2>(50, Allocator.Persistent);
             useUnscaledTime = new NativeList<float>(50, Allocator.Persistent);
 
+#if UNITY_EDITOR
             easingFunctions = new NativeList<FunctionPointer<EasingFunctions.EasingFunction>>(50, Allocator.Persistent);
+#endif
 
             startPositions = new NativeList<float2>(50, Allocator.Persistent);
             targets = new NativeList<float2>(50, Allocator.Persistent);
@@ -540,7 +538,9 @@ namespace OctoberStudio.Easing
             doPosition2DJob.timeData = timeData.AsDeferredJobArray();
             doPosition2DJob.useUnscaledTime = useUnscaledTime.AsDeferredJobArray();
 
+#if UNITY_EDITOR
             doPosition2DJob.easingFunctions = easingFunctions.AsDeferredJobArray();
+#endif
 
             doPosition2DJob.startPositions = startPositions.AsDeferredJobArray();
             doPosition2DJob.targets = targets.AsDeferredJobArray();
@@ -555,7 +555,9 @@ namespace OctoberStudio.Easing
             timeData.Add(new float2(jobAnimation.StartTime, jobAnimation.EndTime));
             useUnscaledTime.Add(jobAnimation.UseUnscaledTime ? 1f : 0f);
 
+#if UNITY_EDITOR
             easingFunctions.Add(EasingFunctions.Functions[(int)jobAnimation.EasingType]);
+#endif
 
             startPositions.Add(jobAnimation.Position);
             targets.Add(jobAnimation.Target);
@@ -609,7 +611,9 @@ namespace OctoberStudio.Easing
 
             timeData.RemoveAt(index);
             useUnscaledTime.RemoveAt(index);
+#if UNITY_EDITOR
             easingFunctions.RemoveAt(index);
+#endif
             startPositions.RemoveAt(index);
             targets.RemoveAt(index);
             positions.RemoveAt(index);
@@ -622,7 +626,9 @@ namespace OctoberStudio.Easing
             timeData.Dispose();
             useUnscaledTime.Dispose();
 
+#if UNITY_EDITOR
             easingFunctions.Dispose();
+#endif
             startPositions.Dispose();
 
             targets.Dispose();
@@ -636,7 +642,9 @@ namespace OctoberStudio.Easing
             [ReadOnly] public NativeArray<float2> timeData;
             [ReadOnly] public NativeArray<float> useUnscaledTime;
 
+#if UNITY_EDITOR
             [ReadOnly] public NativeArray<FunctionPointer<EasingFunctions.EasingFunction>> easingFunctions;
+#endif
 
             [ReadOnly] public NativeArray<float2> startPositions;
             [ReadOnly] public NativeArray<float2> targets;
@@ -651,7 +659,9 @@ namespace OctoberStudio.Easing
                 var time = math.select(unscaledTime, scaledTime, useUnscaledTime[i] == 0f);
                 var t = math.unlerp(timeData[i].x, timeData[i].y, time);
 
+#if UNITY_EDITOR
                 t = easingFunctions[i].Invoke(math.saturate(t));
+#endif
 
                 positions[i] = startPositions[i] + (targets[i] - startPositions[i]) * t;
             }

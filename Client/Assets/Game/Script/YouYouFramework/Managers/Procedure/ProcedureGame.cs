@@ -13,13 +13,12 @@ public class ProcedureGame : ProcedureBase
     internal override void OnEnter()
     {
         base.OnEnter();
-        GameEntry.Scene.LoadSceneAction(SceneGroupName.Game, 1, () => { _ = Init();});
+        _ = Init();
     }
         
     private async UniTask Init()
     {
-
-
+        await GameEntry.Scene.LoadSceneAsync(SceneGroupName.MainMenu, 1);
     }
         
     internal override void OnUpdate()

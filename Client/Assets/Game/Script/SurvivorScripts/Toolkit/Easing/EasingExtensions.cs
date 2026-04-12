@@ -105,7 +105,6 @@ namespace OctoberStudio.Easing
         public static IEasingCoroutine DoAlpha(this Graphic graphic, float targetAlpha, float duration, float delay = 0)
         {
             var initialAplha = graphic.color.a;
-
             return new FloatEasingCoroutine(initialAplha, targetAlpha, duration, delay, (alpha) => graphic.SetAlpha(alpha));
         }
 

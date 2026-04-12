@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
+using Cysharp.Threading.Tasks;
 using YooAsset;
 using SceneHandle = YooAsset.SceneHandle;
 
@@ -28,7 +29,7 @@ namespace YouYouFramework
         /// <summary>
         /// 加载场景
         /// </summary>
-        public async void LoadScene(string sceneFullPath, Action<string, float> onProgressUpdate)
+        public async UniTask LoadScene(string sceneFullPath, Action<string, float> onProgressUpdate)
         {
             SceneFullPath = sceneFullPath;
 

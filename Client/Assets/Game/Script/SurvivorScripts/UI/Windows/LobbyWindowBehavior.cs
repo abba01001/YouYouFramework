@@ -48,7 +48,7 @@ namespace OctoberStudio.UI
             rightButton.onClick.AddListener(IncremenSelectedStageId);
 
             confirmButton.onClick.AddListener(ConfirmButtonClicked);
-            cancelButton.onClick.AddListener(CancelButtonClicked);
+            cancelButton.SetButtonClick(CancelButtonClicked);
         }
 
         private void Start()
@@ -126,6 +126,7 @@ namespace OctoberStudio.UI
 
         public void OnPlayButtonClicked()
         {
+            Debugger.LogError("开始按钮111");
             save.IsPlaying = true;
             save.ResetStageData = true;
             save.Time = 0f;
@@ -134,6 +135,7 @@ namespace OctoberStudio.UI
 
             GameController.AudioManager.PlaySound(AudioManager.BUTTON_CLICK_HASH);
             GameController.LoadStage();
+            Debugger.LogError("开始按钮222");
         }
 
         private void IncremenSelectedStageId()
@@ -192,11 +194,11 @@ namespace OctoberStudio.UI
 
         private void CancelButtonClicked()
         {
-            save.IsPlaying = false;
-
+            // save.IsPlaying = false;
+            Debugger.LogError("11111");
+            Debugger.LogError("22222");
             continueBackgroundImage.DoAlpha(0, 0.3f).SetOnFinish(() => continueBackgroundImage.gameObject.SetActive(false));
             contituePopupRect.DoAnchorPosition(Vector2.down * 2500, 0.3f).SetEasing(EasingType.SineIn).SetOnFinish(() => contituePopupRect.gameObject.SetActive(false));
-
             EventSystem.current.SetSelectedGameObject(playButton.gameObject);
         }
 

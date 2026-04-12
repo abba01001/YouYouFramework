@@ -1,12 +1,9 @@
 <linker>
-  <assembly fullname="YooAsset">
-    <type fullname="*" preserve="all" />
+  <assembly fullname="UnityEngine.Physics2DModule">
+    <type fullname="UnityEngine.PolygonCollider2D" preserve="all" />
+    <type fullname="UnityEngine.CapsuleCollider2D" preserve="all" />
   </assembly>
-  <assembly fullname="MessagePack">
-    <type fullname="*" preserve="all" />
+  <assembly fullname="UnityEngine.SpriteMaskModule">
+    <type fullname="UnityEngine.SpriteMask" preserve="all" />
   </assembly>
-  <assembly fullname="ICSharpCode.SharpZipLib">
-    <type fullname="ICSharpCode.SharpZipLib.Zip.ZipFile" preserve="all" />
-  </assembly>
-  <assembly fullname="Unity.Timeline" preserve="all"/>
 </linker>
