@@ -26,10 +26,16 @@ namespace OctoberStudio.Pool
             }
         }
 
+        private Transform parent;
         protected override GameObject CreateEntity()
         {
             var entity = Object.Instantiate(prefab);
-
+            if(parent == null)
+            {
+                int hash = entity.name.GetHashCode();
+                parent = new GameObject($"{prefab.name}_{hash}_pool").transform;
+            }
+            entity.transform.SetParent(parent);
             return entity;
         }
 

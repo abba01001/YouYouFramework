@@ -126,7 +126,6 @@ namespace OctoberStudio.UI
 
         public void OnPlayButtonClicked()
         {
-            Debugger.LogError("开始按钮111");
             save.IsPlaying = true;
             save.ResetStageData = true;
             save.Time = 0f;
@@ -135,7 +134,6 @@ namespace OctoberStudio.UI
 
             GameController.AudioManager.PlaySound(AudioManager.BUTTON_CLICK_HASH);
             GameController.LoadStage();
-            Debugger.LogError("开始按钮222");
         }
 
         private void IncremenSelectedStageId()

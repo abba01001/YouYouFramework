@@ -13,7 +13,12 @@ namespace OctoberStudio.Pool
             this.prefab = prefab;
             this.parent = parent;
             this.dontDestroyOnLoad = dontDestroyOnLoad;
-
+            if (!dontDestroyOnLoad && parent == null)
+            {
+                int hash = prefab.GetHashCode();
+                Transform tempParent = new GameObject($"{prefab.gameObject.name}_{hash}_pool").transform;
+                this.parent = tempParent;
+            }
             for (int i = 0; i <= startingSize; i++)
             {
                 AddNewEntity();
@@ -25,7 +30,12 @@ namespace OctoberStudio.Pool
             this.prefab = prefab;
             this.parent = parent;
             this.dontDestroyOnLoad = dontDestroyOnLoad;
-
+            if (!dontDestroyOnLoad && parent == null)
+            {
+                int hash = prefab.GetHashCode();
+                Transform tempParent = new GameObject($"{prefab.gameObject.name}_{hash}_pool").transform;
+                this.parent = tempParent;
+            }
             for (int i = 0; i <= startingSize; i++)
             {
                 AddNewEntity();
