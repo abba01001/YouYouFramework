@@ -247,7 +247,6 @@ public class NetManager
             url = GameEntry.ParamsSettings.LocalWebUrl;
         }
         #endif
-        url = GameEntry.ParamsSettings.LocalWebUrl;
         string[] urls = url.Split(StringUtil.FourthSeparator);
 
         if (connectionStatus == ConnectionStatus.Connected) return;

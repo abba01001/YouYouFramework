@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e675658e5d57a9046b3324c0c946a620, type: 3}
   m_Name: Stage 4
   m_EditorClassIdentifier: Assembly-CSharp::OctoberStudio.StageData
-  icon: {fileID: 21300000, guid: 3bc0c5568c05ef9439be0090f643c5dd, type: 3}
+  icon: {fileID: 21300000, guid: aad5e8e0e7107844285a2cf6568ed21a, type: 3}
   displayName: Loading
-  timeline: {fileID: 11400000, guid: 08a840b7f866fef41810c29b6c5296a0, type: 2}
+  timeline: {fileID: 11400000, guid: 44ec82083201d15459a0c138f54f8b69, type: 2}
   stageType: 0
   stageFieldData: {fileID: 11400000, guid: 3c32ed5591d4faf419ca319f2994afa3, type: 2}
   spawnProp: 0

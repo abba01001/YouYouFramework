@@ -22,7 +22,7 @@ IF %ERRORLEVEL% NEQ 0 (
     echo 发布失败，请检查项目设置或错误信息。
 ) ELSE (
     echo 发布成功，输出文件在当前目录的 Server 文件夹中。
-   "%cd%\WinSCP\winscp.com" /script="%cd%\upload_script.txt"
+   "%cd%\WinSCP\winscp.com" /script="%cd%\upload_server_script.txt"
 )
 
 

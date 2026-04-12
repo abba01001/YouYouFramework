@@ -3,6 +3,8 @@ using OctoberStudio.Audio;
 using OctoberStudio.Easing;
 using OctoberStudio.Input;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -16,6 +18,7 @@ namespace OctoberStudio.UI
         [SerializeField] CanvasGroup canvasGroup;
         [SerializeField] Button continueButton;
         [SerializeField] Button exitButton;
+        [SerializeField] Button unlockButton;
         [SerializeField] List<AbilitiesIndicatorsListBehavior> pauseAbilitiesLists;
 
         [Header("Settings")]
@@ -32,6 +35,21 @@ namespace OctoberStudio.UI
         {
             continueButton.onClick.AddListener(ContinueButtonClick);
             exitButton.onClick.AddListener(ExitButtonClick);
+            unlockButton.SetButtonClick(() => OpenAllStages());
+        }
+        
+        private static async UniTask OpenAllStages()
+        {
+            var stageSave = GameController.SaveManager.GetSave<StageSave>("Stage");
+            var database = await GameEntry.Loader.LoadMainAssetAsync<StagesDatabase>(
+                "Assets/Game/Download/SurvivorAsset/Scriptables/Stages/Stages Database.asset");
+            if (database != null)
+            {
+                if(database != null)
+                {
+                    stageSave.SetMaxReachedStageId(database.StagesCount - 1);
+                }
+            }
         }
 
         private void Start()

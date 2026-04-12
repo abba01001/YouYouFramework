@@ -196,7 +196,7 @@ public class CheckVersionCtrl
     /// </summary>
     private string GetHostServerURL()
     {
-        // return $"http://storage.abba01001.cn/private_files/ServerBundles/Android/{Application.version}";
+        return $"http://storage.abba01001.cn/private_files/ServerBundles/Android/{Application.version}";
         return $"http://192.168.160.47:8000/Android/{Application.version}";
         return $"http://192.168.124.45:8000/Android/{Application.version}";
         //string hostServerIP = "http://10.0.0.127"; //安卓模拟器地址
