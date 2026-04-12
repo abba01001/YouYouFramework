@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.Serialization;
 
 namespace OctoberStudio.Timeline
 {
@@ -10,7 +12,7 @@ namespace OctoberStudio.Timeline
         public EnemyType EnemyType { get; set; }
 
         [SerializeField] protected WaveOverride waveOverride;
-        [SerializeField] protected bool circularSpawn;
+        [LabelText("围绕玩家位置刷新")][SerializeField] protected bool circularSpawn;
     }
 
     [System.Serializable]
