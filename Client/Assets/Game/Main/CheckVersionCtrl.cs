@@ -170,39 +170,14 @@ public class CheckVersionCtrl
             // });
         }
     }
-    
-    string GetLocalIPAddress()
-    {
-        foreach (var netInterface in System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces())
-        {
-            if (netInterface.OperationalStatus != System.Net.NetworkInformation.OperationalStatus.Up)
-                continue;
-
-            var props = netInterface.GetIPProperties();
-            foreach (var addr in props.UnicastAddresses)
-            {
-                if (addr.Address.AddressFamily == AddressFamily.InterNetwork &&
-                    !addr.Address.ToString().StartsWith("127"))
-                {
-                    return "http://" + addr.Address.ToString() + ":8000";
-                }
-            }
-        }
-        return "http://127.0.0.1:8000";
-    }
 
     /// <summary>
     /// 获取资源服务器地址
     /// </summary>
     private string GetHostServerURL()
     {
-        return $"http://storage.abba01001.cn/private_files/ServerBundles/Android/{Application.version}";
-        return $"http://192.168.160.47:8000/Android/{Application.version}";
-        return $"http://192.168.124.45:8000/Android/{Application.version}";
-        //string hostServerIP = "http://10.0.0.127"; //安卓模拟器地址
-        // string hostServerIP = "http://127.0.0.1";
-        string hostServerIP = GetLocalIPAddress();
-        return $"{hostServerIP}/Android/{Application.version}";
+        string url = HotfixManager.Instance.GetAssetIP();
+        return url;
     }
 
     /// <summary>

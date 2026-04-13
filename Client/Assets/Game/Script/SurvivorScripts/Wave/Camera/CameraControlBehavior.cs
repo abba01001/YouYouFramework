@@ -34,6 +34,7 @@ namespace OctoberStudio.Timeline
 
         public override void ProcessFrame(Playable playable, FrameData info, object playerData)
         {       
+            if (!Application.isPlaying) return;
             float time = (float)playable.GetTime();
             float duration = (float)playable.GetDuration();
 

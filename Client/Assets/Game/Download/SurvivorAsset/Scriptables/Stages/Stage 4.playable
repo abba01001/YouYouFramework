@@ -94,8 +94,59 @@ MonoBehaviour:
   - m_Version: 1
     m_Start: 0
     m_ClipIn: 0
-    m_Asset: {fileID: -7835242271519979884}
-    m_Duration: 20
+    m_Asset: {fileID: 7015634705046860562}
+    m_Duration: 11.366666666666667
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8342276710104939331}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "\u5706\u5708\u6CE2"
+  - m_Version: 1
+    m_Start: 11.366666666666667
+    m_ClipIn: 0
+    m_Asset: {fileID: -3451331803423221510}
+    m_Duration: 8.983333333333333
     m_TimeScale: 1
     m_ParentTrack: {fileID: -8342276710104939331}
     m_EaseInDuration: 0
@@ -159,7 +210,7 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: "\u8FB9\u7F18\u7A81\u88AD\u51B2\u523A\u6CE2"
+    m_DisplayName: "\u7A81\u88AD\u51B2\u523A\u6CE2"
   m_Markers:
     m_Objects: []
   enemyType: 9
@@ -187,33 +238,6 @@ MonoBehaviour:
   m_Markers:
     m_Objects: []
   enemyType: 14
---- !u!114 &-7835242271519979884
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8bd7a00e2bbd2d942bb9e827cd2475ec, type: 3}
-  m_Name: EdgeRushWave
-  m_EditorClassIdentifier: Assembly-CSharp::OctoberStudio.Timeline.EdgeRushWave
-  waveOverride:
-    useDamageOverride: 0
-    damageOverride: 0
-    useHPOverride: 0
-    hpOverride: 0
-    useSpeedOverride: 0
-    speedOverride: 0
-    useDropOverride: 0
-    dropOverride: []
-    disableOffscreenTeleport: 0
-  circularSpawn: 0
-  RushSpeed: 4
-  RushDistance: 1
-  PathColor: {r: 0, g: 1, b: 1, a: 1}
-  enemiesCount: 1
 --- !u!114 &-4800750111699591680
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -261,6 +285,32 @@ MonoBehaviour:
   m_Clips: []
   m_Markers:
     m_Objects: []
+--- !u!114 &-3451331803423221510
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bd7a00e2bbd2d942bb9e827cd2475ec, type: 3}
+  m_Name: RushWave
+  m_EditorClassIdentifier: Assembly-CSharp::OctoberStudio.Timeline.RushWave
+  waveOverride:
+    useDamageOverride: 0
+    damageOverride: 0
+    useHPOverride: 0
+    hpOverride: 0
+    useSpeedOverride: 0
+    speedOverride: 0
+    useDropOverride: 0
+    dropOverride: []
+    disableOffscreenTeleport: 0
+  circularSpawn: 0
+  RushSpeed: 4.03
+  RushDelay: 0.321
+  enemiesCount: 6
 --- !u!114 &-2510605301505060852
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -305,7 +355,76 @@ MonoBehaviour:
   m_Curves: {fileID: 0}
   m_Parent: {fileID: 11400000}
   m_Children: []
-  m_Clips: []
+  m_Clips:
+  - m_Version: 1
+    m_Start: 7.4
+    m_ClipIn: 0
+    m_Asset: {fileID: 4419559435277612212}
+    m_Duration: 20
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -1332082529065791036}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "\u77AC\u95EA\u6CE2"
   m_Markers:
     m_Objects: []
   enemyType: 5
@@ -390,6 +509,34 @@ MonoBehaviour:
   m_Markers:
     m_Objects: []
   enemyType: 10
+--- !u!114 &4419559435277612212
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e42fa0f7c635ac749b722359a6fe8e0e, type: 3}
+  m_Name: FlashWave
+  m_EditorClassIdentifier: Assembly-CSharp::OctoberStudio.Timeline.FlashWave
+  waveOverride:
+    useDamageOverride: 0
+    damageOverride: 0
+    useHPOverride: 0
+    hpOverride: 0
+    useSpeedOverride: 0
+    speedOverride: 0
+    useDropOverride: 0
+    dropOverride: []
+    disableOffscreenTeleport: 0
+  circularSpawn: 0
+  SpawnDistanceRange: {x: 0.20361991, y: 1.222973}
+  FlashDistance: {x: 2.0701358, y: 4.0950227}
+  FlashDelay: {x: 0.25791857, y: 1.2760181}
+  PathColor: {r: 0, g: 1, b: 1, a: 1}
+  enemiesCount: 15
 --- !u!114 &5434482563291951568
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -414,6 +561,31 @@ MonoBehaviour:
   m_Markers:
     m_Objects: []
   enemyType: 15
+--- !u!114 &7015634705046860562
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ffc0b01aa56bc54298a9acb0ab58e7d, type: 3}
+  m_Name: CircleWave
+  m_EditorClassIdentifier: Assembly-CSharp::OctoberStudio.Timeline.CircleWave
+  waveOverride:
+    useDamageOverride: 0
+    damageOverride: 0
+    useHPOverride: 0
+    hpOverride: 0
+    useSpeedOverride: 0
+    speedOverride: 0
+    useDropOverride: 0
+    dropOverride: []
+    disableOffscreenTeleport: 0
+  circularSpawn: 0
+  enemiesCount: 10
+  Radius: {x: 1.8700565, y: 4.028249}
 --- !u!114 &7398283512120409334
 MonoBehaviour:
   m_ObjectHideFlags: 1

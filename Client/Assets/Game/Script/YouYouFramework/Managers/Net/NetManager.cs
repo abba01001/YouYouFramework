@@ -240,13 +240,7 @@ public class NetManager
 
     public async Task ConnectServerAsync(Action action = null)
     {
-        string url = GameEntry.ParamsSettings.ServerWebUrl;
-        #if UNITY_EDITOR
-        if (GameEntry.ParamsSettings.IsLocalServerMode)
-        {
-            url = GameEntry.ParamsSettings.LocalWebUrl;
-        }
-        #endif
+        string url = HotfixManager.Instance.GetServerIP();
         string[] urls = url.Split(StringUtil.FourthSeparator);
 
         if (connectionStatus == ConnectionStatus.Connected) return;

@@ -28,9 +28,17 @@ namespace OctoberStudio.Timeline.Editor
                     color = Color.red;
                     displayName = "维持数量波";
                     break;
-                case EdgeRushWave:
+                case RushWave:
                     color = Color.cyan;
-                    displayName = "边缘突袭冲刺波";
+                    displayName = "突袭冲刺波";
+                    break;
+                case FlashWave:
+                    color = Color.indigo;
+                    displayName = "瞬闪波";
+                    break;
+                case CircleWave:
+                    color = Color.slateBlue;
+                    displayName = "圆圈波";
                     break;
             }
             

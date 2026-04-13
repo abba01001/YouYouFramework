@@ -67,7 +67,7 @@ namespace OctoberStudio
         public Vector2 CustomPoint { get; protected set; }
 
         public float LastTimeDamagedPlayer { get; set; }
-        public bool IsDoingRush => doRush;
+        public EnemyAnimType CurAnimType { get; private set; } = EnemyAnimType.Default;
         private Material sharedMaterial;
         private Material effectsMaterial;
 
@@ -99,6 +99,7 @@ namespace OctoberStudio
         public void SetData(EnemyData data)
         {
             Data = data;
+            ResetEnemyAnimType();
         }
 
         public void SetWaveOverride(WaveOverride waveOverride)
@@ -129,9 +130,15 @@ namespace OctoberStudio
             } 
         }
 
+        public bool CheckIsDoingSpecialBehavoir()
+        {
+            if (CurAnimType != EnemyAnimType.Default) return true;
+            return false;
+        }
+
         protected virtual void Update()
         {
-            if(!IsAlive || !IsMoving || PlayerBehavior.Player == null) return;
+            if(!IsAlive || !IsMoving || PlayerBehavior.Player == null || CheckIsDoingSpecialBehavoir()) return;
 
             Vector3 target = IsMovingToCustomPoint ? CustomPoint : PlayerBehavior.Player.transform.position;
 
@@ -151,7 +158,7 @@ namespace OctoberStudio
             transform.position += direction * Time.deltaTime * speed;
 
             // Enemy looks in the direction it's moving
-            if (!scaleCoroutine.ExistsAndActive() && !IsDoingRush)
+            if (!scaleCoroutine.ExistsAndActive())
             {
                 var scale = transform.localScale;
 
@@ -169,7 +176,7 @@ namespace OctoberStudio
             }
         }
 
-        public void DoFacePlayerDirection()
+        public void ResetToPlayerDirection()
         {
             Vector3 target = IsMovingToCustomPoint ? CustomPoint : PlayerBehavior.Player.transform.position;
             Vector3 direction = (target - transform.position).normalized;
@@ -408,10 +415,36 @@ namespace OctoberStudio
             }
         }
 
-        private bool doRush = false;
-        public void SetDoRushing(bool doRush)
+        public void SetEnemyAnimType(EnemyAnimType enemyAnimType)
         {
-            this.doRush = doRush;
+            CurAnimType = enemyAnimType;
+            switch (CurAnimType)
+            {
+                case EnemyAnimType.Default:
+                    break;
+                case EnemyAnimType.Rush:
+                    ResetToPlayerDirection();
+                    break;
+                case EnemyAnimType.Flash:
+                    ResetToPlayerDirection();
+                    break;
+                case EnemyAnimType.Circle:
+                    ResetToPlayerDirection();
+                    break;
+            }
         }
+
+        public void ResetEnemyAnimType()
+        {
+            CurAnimType = EnemyAnimType.Default;
+        }
+    }
+
+    public enum EnemyAnimType
+    {
+        Default,
+        Rush,
+        Flash,
+        Circle
     }
 }

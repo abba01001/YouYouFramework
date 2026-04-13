@@ -40,7 +40,6 @@ public class HttpManager
     {
         m_WebAccountUrl = GameEntry.ParamsSettings.ServerWebUrl;
         m_TestWebAccountUrl = GameEntry.ParamsSettings.LocalWebUrl;
-        m_IsTest = GameEntry.ParamsSettings.IsLocalServerMode;
     }
 
     #region Get

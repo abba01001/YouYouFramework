@@ -11,10 +11,12 @@ using UnityEngine.Serialization;
 public class ParamsSettings : ScriptableObject
 {
 
-    //43.134.133.178:17888
-    [BoxGroup("通用参数设置")][LabelText("开启本地服务器模式")] public bool IsLocalServerMode;
-    [BoxGroup("通用参数设置")][LabelText("本地服务器IP")] public string LocalWebUrl;
-    [BoxGroup("通用参数设置")][LabelText("正式服务器IP")] public string ServerWebUrl;
+    [BoxGroup("通用参数设置")][LabelText("本地服务器IP")][ReadOnly] public string LocalWebUrl;
+    [BoxGroup("通用参数设置")][LabelText("本地AB包资源IP")][ReadOnly] public string LocalAssetWebUrl;
+    
+    [BoxGroup("通用参数设置")][LabelText("正式服务器IP")][ReadOnly] public string ServerWebUrl;
+    [BoxGroup("通用参数设置")][LabelText("正式AB包资源IP")][ReadOnly] public string ServerAssetWebUrl;
+    
     [BoxGroup("通用参数设置")] public bool PostIsEncrypt;//是否加密(如时间戳)
     [BoxGroup("通用参数设置")] public string PostContentType;//设置ContentType
     
@@ -154,28 +156,11 @@ public class ParamsSettings : ScriptableObject
     [OnInspectorInit]
     private void Init()
     {
-        LocalWebUrl = GetLocalIPAddress();
-    }
-    
-    string GetLocalIPAddress()
-    {
-        foreach (var netInterface in System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces())
-        {
-            if (netInterface.OperationalStatus != System.Net.NetworkInformation.OperationalStatus.Up)
-                continue;
+        HotfixManager.Instance.Init();
+        LocalWebUrl = HotfixManager.Instance.LocalServerUrl;
+        LocalAssetWebUrl = HotfixManager.Instance.LocalAssetUrl;
 
-            var props = netInterface.GetIPProperties();
-            foreach (var addr in props.UnicastAddresses)
-            {
-                if (addr.Address.AddressFamily == AddressFamily.InterNetwork &&
-                    !addr.Address.ToString().StartsWith("127"))
-                {
-                    return addr.Address.ToString() + ":17888";
-                }
-            }
-        }
-        return "127.0.0.1:17888";
+        ServerWebUrl = HotfixManager.Instance.RemoteServerUrl;
+        ServerAssetWebUrl = HotfixManager.Instance.RemoteAssetUrl;
     }
-
-    
 }

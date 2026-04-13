@@ -25,6 +25,12 @@ public class AssetBundleEditor : ScriptableObject
         WebGL
     }
 
+    public enum AssetLoadTarget
+    {
+        [LabelText("正式服务器")] SERVERMODE,
+        [LabelText("本地服务器")] LOCALMODE
+    }
+
     #region 打包签名
     string keystoreRelativePath = "Assets/PackageTool/user.keystore";
     string keystorePassword = "FrameWork";
@@ -32,7 +38,7 @@ public class AssetBundleEditor : ScriptableObject
     string keyPassword = "FrameWork";
     #endregion
 
-    [PropertySpace(0.5f)]
+    [PropertySpace(2f)]
     [HorizontalGroup("Common", LabelWidth = 75)]
     [VerticalGroup("Common/Left")]
     [LabelText("资源版本号")]
@@ -43,7 +49,37 @@ public class AssetBundleEditor : ScriptableObject
     {
         PlayerSettings.bundleVersion = AssetVersion;
     }
+    
+    [PropertySpace(1)]
+    [VerticalGroup("Common/Left")]
+    [LabelText("资源加载方式")][OnValueChanged(nameof(OnLoadTypeChanged))]
+    public AssetLoadTarget CurrAssetLoadTarget;
 
+    void OnLoadTypeChanged()
+    {
+        string macor = string.Empty;
+        macor += string.Format("{0};", CurrAssetLoadTarget.ToString());
+
+        List<string> tempDefines = new List<string>();
+        PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, out string[] hasDefines);
+
+        for (int i = 0; i < hasDefines.Length; i++)
+        {
+            if(hasDefines[i] != "EDITORLOAD")
+                tempDefines.Add(hasDefines[i]);
+        }
+        
+        AssetLoadTarget[] AssetLoadTargets = (AssetLoadTarget[])Enum.GetValues(typeof(AssetLoadTarget));
+        foreach (var item in AssetLoadTargets) tempDefines.Remove(item.ToString());
+        
+        for (int i = 0; i < tempDefines.Count; i++) macor += string.Format("{0};", tempDefines[i]);
+
+        PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, macor);
+        AssetDatabase.SaveAssets();
+        Debug.LogError("Sava Macro Success====" + macor);
+    }
+    
+    
     [PropertySpace(1)]
     [VerticalGroup("Common/Left")]
     [Button("AB包资源预览",ButtonSizes.Medium)]
@@ -53,8 +89,14 @@ public class AssetBundleEditor : ScriptableObject
 
     [PropertySpace(0)]
     [VerticalGroup("Common/Left")]
-    [Button("启动本地AB包资源存储", ButtonSizes.Medium)]
-    void StartLocalServer()
+    [Button("启动本地服务器", ButtonSizes.Medium)]
+    void StartLocalMode()
+    {
+        StartLocalAb();
+        StartLocalServer();
+    }
+    
+    void StartLocalAb()
     {
         if (!Directory.Exists(TempServerBundlePath))
         {
@@ -161,10 +203,7 @@ public class AssetBundleEditor : ScriptableObject
         UnityEngine.Debug.Log($"Python server started on port 8000, serving directory: {directory}");
     }
 
-    [PropertySpace(0)]
-    [VerticalGroup("Common/Left")]
-    [Button("启动本地服务器", ButtonSizes.Medium)]
-    public void StartServer()
+    public void StartLocalServer()
     {
         // 构建服务器 exe 路径，相对 Unity 项目 Assets 目录的上两级
         string exePath = Path.Combine(Application.dataPath, "..", "..", "Server", "Server", "TCPServer.exe");
@@ -351,8 +390,22 @@ public class AssetBundleEditor : ScriptableObject
     private void Init()
     {
         AssetVersion = Application.version;
+        
+        string m_Macor = PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
+        if (!string.IsNullOrEmpty(m_Macor))
+        {
+            //该字符串包含AssetLoadTargets[i]
+            AssetLoadTarget[] AssetLoadTargets = (AssetLoadTarget[])Enum.GetValues(typeof(AssetLoadTarget));
+            for (int i = 0; i < AssetLoadTargets.Length; i++)
+            {
+                if (m_Macor.IndexOf(AssetLoadTargets[i].ToString()) != -1)
+                {
+                    CurrAssetLoadTarget = AssetLoadTargets[i];
+                }
+            }
+        }
     }
-
+    
     [LabelText("导出Gradle工程路径")]
     [FolderPath]
     public string GradleSavePath;

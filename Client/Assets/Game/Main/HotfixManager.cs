@@ -1,13 +1,9 @@
 using HybridCLR;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace Main
 {
@@ -18,6 +14,8 @@ namespace Main
 
         public HotfixManager()
         {
+            Init();
+            
             //这里防止热更工程找不到AOT工程的类
             System.Data.AcceptRejectRule acceptRejectRule = System.Data.AcceptRejectRule.None;
             System.Net.WebSockets.WebSocketReceiveResult webSocketReceiveResult = null;
@@ -62,5 +60,77 @@ namespace Main
             Debugger.Log("补充元数据Dll加载完毕==\n" + stringBuilder.ToString());
         }
         
+        [BoxGroup("通用参数设置")][LabelText("本地服务器IP")] public string LocalServerUrl { get; private set; }
+        [BoxGroup("通用参数设置")][LabelText("本地AB包资源IP")] public string LocalAssetUrl{ get; private set; }
+        [BoxGroup("通用参数设置")][LabelText("云端服务器IP")] public string RemoteServerUrl{ get; private set; }
+        [BoxGroup("通用参数设置")][LabelText("云端AB包资源IP")] public string RemoteAssetUrl{ get; private set; }
+        public void Init()
+        {
+            LocalServerUrl = GetLocalIPAddress();
+            LocalAssetUrl = GetLocalAssetIpAddress();
+        
+            RemoteServerUrl = "43.134.133.178:17888";
+            RemoteAssetUrl = $"http://storage.abba01001.cn/private_files/ServerBundles/{Application.version}";
+        }
+        
+        public string GetLocalAssetIpAddress()
+        {
+            foreach (var netInterface in System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (netInterface.OperationalStatus != System.Net.NetworkInformation.OperationalStatus.Up)
+                    continue;
+
+                var props = netInterface.GetIPProperties();
+                foreach (var addr in props.UnicastAddresses)
+                {
+                    if (addr.Address.AddressFamily == AddressFamily.InterNetwork &&
+                        !addr.Address.ToString().StartsWith("127"))
+                    {
+                        return "http://" + addr.Address.ToString() + $":8000/Android/{Application.version}";
+                    }
+                }
+            }
+            return "http://" + "127.0.0.1" + $":8000/Android/{Application.version}";
+        }
+    
+        public string GetLocalIPAddress()
+        {
+            foreach (var netInterface in System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (netInterface.OperationalStatus != System.Net.NetworkInformation.OperationalStatus.Up)
+                    continue;
+
+                var props = netInterface.GetIPProperties();
+                foreach (var addr in props.UnicastAddresses)
+                {
+                    if (addr.Address.AddressFamily == AddressFamily.InterNetwork &&
+                        !addr.Address.ToString().StartsWith("127"))
+                    {
+                        return addr.Address.ToString() + ":17888";
+                    }
+                }
+            }
+            return "127.0.0.1:17888";
+        }
+
+        public string GetAssetIP()
+        {
+#if SERVERMODE
+            return RemoteAssetUrl;
+#elif LOCALMODE
+            return LocalAssetUrl;
+#endif
+            return LocalAssetUrl;
+        }
+        
+        public string GetServerIP()
+        {
+#if SERVERMODE
+            return RemoteServerUrl;
+#elif LOCALMODE
+            return LocalServerUrl;
+#endif
+            return LocalServerUrl;
+        }
     }
 }
