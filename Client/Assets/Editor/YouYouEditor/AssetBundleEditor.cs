@@ -19,9 +19,8 @@ public class AssetBundleEditor : ScriptableObject
 {
     public enum CusBuildTarget
     {
-        Windows,
         Android,
-        IOS,
+        Windows,
         WebGL
     }
 
@@ -29,6 +28,14 @@ public class AssetBundleEditor : ScriptableObject
     {
         [LabelText("正式服务器")] SERVERMODE,
         [LabelText("本地服务器")] LOCALMODE
+    }
+
+    public enum PackageTarget
+    {
+        [LabelText("Android")] Android,
+        [LabelText("iOS")] iOS,
+        [LabelText("Windows")] Windows,
+        [LabelText("WebGL")] WebGL
     }
 
     #region 打包签名
@@ -52,10 +59,9 @@ public class AssetBundleEditor : ScriptableObject
     
     [PropertySpace(1)]
     [VerticalGroup("Common/Left")]
-    [LabelText("资源加载方式")][OnValueChanged(nameof(OnLoadTypeChanged))]
+    [LabelText("资源加载方式")][OnValueChanged(nameof(OnAssetLoadTargetChanged))]
     public AssetLoadTarget CurrAssetLoadTarget;
-
-    void OnLoadTypeChanged()
+    void OnAssetLoadTargetChanged()
     {
         string macor = string.Empty;
         macor += string.Format("{0};", CurrAssetLoadTarget.ToString());
@@ -78,13 +84,21 @@ public class AssetBundleEditor : ScriptableObject
         AssetDatabase.SaveAssets();
         Debug.LogError("Sava Macro Success====" + macor);
     }
-    
+
+    [PropertySpace(0)]
+    [VerticalGroup("Common/Left")]
+    [Button("工程资源大小查看器", ButtonSizes.Medium)]
+    public void PreviewProject()
+    {
+        AssetSizeViewer.ShowWindow();
+    }
     
     [PropertySpace(1)]
     [VerticalGroup("Common/Left")]
     [Button("AB包资源预览",ButtonSizes.Medium)]
-    public void Test()
+    public void PreviewAB()
     {
+        YooAssetReportDiffTool.OpenWindow();
     }
 
     [PropertySpace(0)]
@@ -219,7 +233,8 @@ public class AssetBundleEditor : ScriptableObject
             {
                 FileName = exePath,
                 WorkingDirectory = Path.GetDirectoryName(exePath),
-                UseShellExecute = true
+                UseShellExecute = true,
+                Arguments = "local"
             });
             Debug.Log("本地服务器已启动: " + exePath);
         }
@@ -228,41 +243,84 @@ public class AssetBundleEditor : ScriptableObject
             Debug.LogError("启动服务器失败: " + ex);
         }
     }
-    
-    [VerticalGroup("Common/Right")]
-    [Button("清理AB资源包缓存",ButtonSizes.Medium)]
-    public void ClearAB()
+
+    [VerticalGroup("Common/Right")] [Button(ButtonSizes.Medium)][OnValueChanged(nameof(OnBuildPackageTargetChanged))]
+    [LabelText("构建平台")] public PackageTarget BuildPackageTarget;
+
+    // 🔥 修复版：自动切换Unity平台（全Unity版本兼容）
+    void OnBuildPackageTargetChanged()
     {
-        string tempBundlePath = AssetBundleBuilderHelper.GetDefaultBuildOutputRoot();
-        string localServerBundlePath = AssetBundleBuilderHelper.GetDefaultBuildOutputRoot2();
-        
-        foreach (var path in new List<string>(){tempBundlePath,localServerBundlePath})
+        // 1. 获取Unity官方平台参数
+        (BuildTargetGroup group, BuildTarget target) = GetUnityBuildTarget(BuildPackageTarget);
+
+        // 2. 如果已经是当前平台，直接返回
+        if (EditorUserBuildSettings.activeBuildTarget == target)
         {
-            if (Directory.Exists(path))
-            {
-                try
-                {
-                    Directory.Delete(path, true);  // 递归删除
-                    AssetDatabase.Refresh();
-                    Debug.Log($"{path}资源清理完成！");
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"删除AssetBundles文件夹时发生异常: {e.Message}");
-                }
-            }
-            else
-            {
-                Debug.LogWarning("AssetBundles 文件夹不存在！");
-            }
+            EditorUtility.DisplayDialog("提示", $"当前已是 {BuildPackageTarget} 平台", "确定");
+            return;
+        }
+
+        // 3. 确认切换
+        if (!EditorUtility.DisplayDialog("切换平台", $"确定要切换到 {BuildPackageTarget} 平台吗？\n切换期间Unity会卡顿，请等待完成！", "确定", "取消"))
+        {
+            // 切换回原来的平台值
+            return;
+        }
+
+        // 4. 显示进度条 + 执行官方平台切换（同步方式，全版本稳定）
+        EditorUtility.DisplayProgressBar("平台切换中", $"正在切换至 {BuildPackageTarget} 平台...", 0.5f);
+
+        // 官方标准切换API（无返回值，稳定兼容）
+        EditorUserBuildSettings.SwitchActiveBuildTarget(group, target);
+
+        // 5. 清理进度条 + 完成提示
+        EditorUtility.ClearProgressBar();
+        EditorUtility.DisplayDialog("完成", $"平台已切换为：{BuildPackageTarget}", "确定");
+    }
+
+    // 🔥 平台映射工具（你的枚举 → Unity官方平台）
+    private (BuildTargetGroup group, BuildTarget target) GetUnityBuildTarget(PackageTarget target)
+    {
+        switch (target)
+        {
+            case PackageTarget.Android:
+                return (BuildTargetGroup.Android, BuildTarget.Android);
+            case PackageTarget.Windows:
+                return (BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64);
+            case PackageTarget.iOS:
+                return (BuildTargetGroup.iOS, BuildTarget.iOS);
+            case PackageTarget.WebGL:
+                return (BuildTargetGroup.WebGL, BuildTarget.WebGL);
+            default:
+                throw new System.NotImplementedException("未支持的平台");
+        }
+    }
+
+    private PackageTarget GetCurrentPackageTarget()
+    {
+        BuildTarget currentTarget = EditorUserBuildSettings.activeBuildTarget;
+
+        switch (currentTarget)
+        {
+            case BuildTarget.Android:
+                return PackageTarget.Android;
+            case BuildTarget.StandaloneWindows64:
+            case BuildTarget.StandaloneWindows:
+                return PackageTarget.Windows;
+            case BuildTarget.iOS:
+                return PackageTarget.iOS;
+            case BuildTarget.WebGL:
+                return PackageTarget.WebGL;
+            default:
+                return PackageTarget.Android; // 默认返回Android
         }
     }
     
     [VerticalGroup("Common/Right")]
-    [Button("构建AB资源包",ButtonSizes.Medium)]
+    [Button("构建资源包",ButtonSizes.Medium)]
     public void BuildAB()
     {
-        CustomYooAssetBuild.BuildInternal();
+        CustomYooAssetBuild.BuildInternal(BuildPackageTarget);
     }
 
     private void SetKeystoreInfo()
@@ -294,59 +352,103 @@ public class AssetBundleEditor : ScriptableObject
     }
 
     [VerticalGroup("Common/Right")]
-    [Button("输出安装包",ButtonSizes.Medium)]
+    [Button("构建安装包",ButtonSizes.Medium)]
     public void PublishAPK()
     {
         SetKeystoreInfo();
-        if (!Directory.Exists(TempAPKPath))
+
+        // 1. 批量获取：打包目标 + 输出路径（合并重复switch，核心简化）
+        BuildTarget buildTarget;
+        string outputFullPath;
+        if (!GetBuildTargetAndPath(out buildTarget, out outputFullPath))
         {
-            Directory.CreateDirectory(TempAPKPath);
+            Debug.LogError("未支持的打包平台！");
+            return;
         }
 
-        var path = TempAPKPath + $"/{AssetVersion}.apk";
-        if (File.Exists(path))  // 用 File.Exists 检查文件
-        {
-            File.Delete(path);
-        }
-        Directory.CreateDirectory(path);
-        
+        // 2. 安全清理：删除同名文件/文件夹（根治二次打包报错）
+        if (Directory.Exists(outputFullPath)) Directory.Delete(outputFullPath, true);
+        if (File.Exists(outputFullPath)) File.Delete(outputFullPath);
+
+        // 3. 选择打包场景
         string[] scenes = SceneSelectionWindow.ShowWindow();
         if (scenes == null || scenes.Length == 0)
         {
             Debug.LogWarning("没有选择场景，已取消打包。");
             return;
         }
-        
+
+        // 4. 构建配置
         BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions
         {
             scenes = scenes,
-            locationPathName = path,
-            target = BuildTarget.Android,
+            locationPathName = outputFullPath,
+            target = buildTarget,
             options = BuildOptions.CompressWithLz4
         };
-        // COSUploader.UploadVersion(AssetVersion);
-        EditorUserBuildSettings.exportAsGoogleAndroidProject = false; 
+
+        // 安卓专属设置
+        EditorUserBuildSettings.exportAsGoogleAndroidProject = false;
+
+        // 5. 执行打包
         BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
         BuildSummary summary = report.summary;
+
+        // 6. 打包结果处理
         if (summary.result == BuildResult.Succeeded)
         {
-            EditorUtility.DisplayDialog("打包成功", "APK 已成功生成！", "确定");
-            // if (IsUploadAPK) COSUploader.UploadAPK(path);
-            string directoryPath = Path.GetDirectoryName(path); // 获取文件夹路径
-            Process.Start("explorer.exe", directoryPath);
+            EditorUtility.DisplayDialog("打包成功", "已成功生成！", "确定");
+            // 打开输出目录
+            Process.Start("explorer.exe", Path.GetDirectoryName(outputFullPath));
         }
-        if (summary.result == BuildResult.Failed)
+        else
         {
-            string errorMessage = "打包失败！\n错误信息: " + summary.totalErrors;
-            Debug.LogError(errorMessage);
-            EditorUtility.DisplayDialog("打包失败", errorMessage, "确定");
+            string error = $"打包失败！错误数: {summary.totalErrors}";
+            Debug.LogError(error);
+            EditorUtility.DisplayDialog("打包失败", error, "确定");
+        }
+    }
+
+    /// <summary>
+    /// 【简化核心】提取公共方法：一次性获取 打包平台 + 输出路径
+    /// </summary>
+    private bool GetBuildTargetAndPath(out BuildTarget buildTarget, out string outputPath)
+    {
+        buildTarget = BuildTarget.NoTarget;
+        outputPath = string.Empty;
+
+        // 确保输出目录存在
+        if (!Directory.Exists(TempAPKPath))
+            Directory.CreateDirectory(TempAPKPath);
+
+        switch (BuildPackageTarget)
+        {
+            case PackageTarget.Android:
+                buildTarget = BuildTarget.Android;
+                outputPath = Path.Combine(TempAPKPath, $"{AssetVersion}.apk");
+                return true;
+
+            case PackageTarget.Windows:
+                buildTarget = BuildTarget.StandaloneWindows64;
+                outputPath = Path.Combine(TempAPKPath, $"{AssetVersion}.exe");
+                return true;
+
+            case PackageTarget.WebGL:
+                buildTarget = BuildTarget.WebGL;
+                outputPath = Path.Combine(TempAPKPath, AssetVersion);
+                return true;
+
+            default:
+                return false;
         }
     }
     
     [VerticalGroup("Common/Right")]
-    [Button("导出Gradle工程",ButtonSizes.Medium)]
+    [Button("构建Gradle工程",ButtonSizes.Medium)]
     public void ExportGradleProject()
     {
+        ExplorerUtil.OpenFolder(TempGradlePath);
+        return;
         // 设置Keystore信息（如果需要的话）
         SetKeystoreInfo();
 
@@ -376,7 +478,10 @@ public class AssetBundleEditor : ScriptableObject
             EditorUtility.DisplayDialog("导出成功", "Gradle 项目已成功导出！", "确定");
 
             // 打开导出目录
-            Process.Start("explorer.exe", TempGradlePath);
+            // 获取目标文件夹路径
+            // string folderPath = Path.GetDirectoryName(outputFullPath);
+            ExplorerUtil.OpenFolder(TempGradlePath);
+            // Process.Start("explorer.exe", TempGradlePath);
         }
         else if (summary.result == BuildResult.Failed)
         {
@@ -390,7 +495,7 @@ public class AssetBundleEditor : ScriptableObject
     private void Init()
     {
         AssetVersion = Application.version;
-        
+        BuildPackageTarget = GetCurrentPackageTarget();
         string m_Macor = PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
         if (!string.IsNullOrEmpty(m_Macor))
         {

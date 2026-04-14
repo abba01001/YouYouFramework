@@ -104,7 +104,7 @@ public static class ServerSocket
         midnightTimer = new Timer(PerformMidnightTask, null, timeUntilMidnight, TimeSpan.FromDays(1));
     }
 
-    public static async Task Start(string ip, int port, int clientNum)
+    public static async Task Start(string ip, int port, int clientNum,bool isLocal)
     {
         isClose = false;
         serverStartTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
@@ -113,7 +113,8 @@ public static class ServerSocket
         socket.Bind(new IPEndPoint(IPAddress.Parse(ip), port));
         socket.Listen(clientNum);
 
-        SqlManager.Initialize($"Server={"43.134.133.178"};Database={"unitygamedata"};" +
+        string server = isLocal ? "127.0.0.1" : "43.134.133.178";
+        SqlManager.Initialize($"Server={server};Database={"unitygamedata"};" +
 $"UserId={"pengjunwei"};Password={"pengjunwei"};Port = {"5001"};Charset=utf8mb4;");
 
         //SqlManager.Initialize($"Server={KeyUtils.GetSqlKey(SqlKey.Server)};Database={KeyUtils.GetSqlKey(SqlKey.Database)};" +

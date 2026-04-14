@@ -21,6 +21,8 @@ class Program
 {
     static void Main(string[] args)
     {
+        string env = args.Length > 0 ? args[0] : "server";
+
         // 设置工作目录为 exe 所在目录
         string exeDir = AppContext.BaseDirectory;
         Directory.SetCurrentDirectory(exeDir);
@@ -39,7 +41,7 @@ class Program
             LoggerHelper.Instance.Debug("4. 测试Redis");
             LoggerHelper.Instance.Debug("请输入数字选择操作（或者输入Quit退出）：");
 
-            StartServer();
+            StartServer(env);
             return;
             string inputStr = Console.ReadLine();
             if (inputStr == "Quit")
@@ -157,13 +159,13 @@ $"UserId={"pengjunwei"};Password={"pengjunwei"};Port = {"5001"}");
 
 
     // 开启服务器
-    private static void StartServer()
+    private static void StartServer(string env = "server")
     {
+        bool isLocal = env == "local";
         RedisManager.Instance.Init("127.0.0.1:6379");
         DBFlushService _dbFlush = new DBFlushService();
         _dbFlush.Start();
-
-        ServerSocket.Start("0.0.0.0", 17888, 1024); //10.0.28.15
+        ServerSocket.Start("0.0.0.0", 17888, 1024, isLocal); //10.0.28.15
         LoggerHelper.Instance.Debug("服务器已启动，输入Quit以退出服务器。");
 
         // 持续监听服务器指令

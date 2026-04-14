@@ -25,7 +25,8 @@ public class AssetReleaseHandle : MonoBehaviour
 
         if (target != null)
         {
-            AssetReleaseHandle handle = target.GetOrAddComponent<AssetReleaseHandle>();
+            AssetReleaseHandle handle = target.GetComponent<AssetReleaseHandle>();
+            if (handle == null) handle = target.AddComponent<AssetReleaseHandle>();
             handle.releaseList.Add(assetHandle);
         }
     }

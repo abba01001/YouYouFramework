@@ -30,11 +30,11 @@ namespace Main
             await LoadMetadataForAOTAssemblies();
 
             //加载热更Dll
-            var operation = CheckVersionCtrl.Instance.DefaultPackage.LoadAssetAsync("Assets/Game/Download/Hotfix/Assembly-CSharp.dll.bytes");
+            var operation = CheckVersionCtrl.Instance.DefaultPackage.LoadAssetAsync("Assets/Game/Download/Hotfix/GameScripts.dll.bytes");
             await operation.Task;
             var hotfixAsset = operation.AssetObject as TextAsset;
             System.Reflection.Assembly.Load(hotfixAsset.bytes);
-            Debugger.Log("Assembly-CSharp.dll加载完毕");
+            Debugger.Log("GameScripts.dll加载完毕");
         }
         
         /// <summary>
@@ -70,11 +70,14 @@ namespace Main
             LocalAssetUrl = GetLocalAssetIpAddress();
         
             RemoteServerUrl = "43.134.133.178:17888";
-            RemoteAssetUrl = $"http://storage.abba01001.cn/private_files/ServerBundles/{Application.version}";
+            RemoteAssetUrl = $"http://storage.abba01001.cn/private_files/ServerBundles/{Application.platform}/{Application.version}";
         }
         
         public string GetLocalAssetIpAddress()
         {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            return "http://" + "10.0.2.2" + $":8000/{Application.platform}/{Application.version}";
+#endif
             foreach (var netInterface in System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces())
             {
                 if (netInterface.OperationalStatus != System.Net.NetworkInformation.OperationalStatus.Up)
@@ -86,7 +89,7 @@ namespace Main
                     if (addr.Address.AddressFamily == AddressFamily.InterNetwork &&
                         !addr.Address.ToString().StartsWith("127"))
                     {
-                        return "http://" + addr.Address.ToString() + $":8000/Android/{Application.version}";
+                        return "http://" + addr.Address.ToString() + $":8000/{Application.platform}/{Application.version}";
                     }
                 }
             }
@@ -95,6 +98,9 @@ namespace Main
     
         public string GetLocalIPAddress()
         {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            return "10.0.2.2:17888";
+#endif
             foreach (var netInterface in System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces())
             {
                 if (netInterface.OperationalStatus != System.Net.NetworkInformation.OperationalStatus.Up)

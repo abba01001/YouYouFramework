@@ -1,8 +1,12 @@
+#if UNITY_EDITOR
+using System;
 using UnityEngine;
 using UnityEditor;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using YooAsset.Editor;
+using Object = UnityEngine.Object;
 
 public class AssetSizeViewer : EditorWindow
 {
@@ -21,7 +25,6 @@ public class AssetSizeViewer : EditorWindow
 
     private string inputPath = "Assets";
 
-    [MenuItem("Tools/资源大小查看器")]
     public static void ShowWindow()
     {
         GetWindow<AssetSizeViewer>("资源大小查看器");
@@ -54,6 +57,11 @@ public class AssetSizeViewer : EditorWindow
 
         GUILayout.Label($"总数: {assets.Count}", GUILayout.Width(120));
 
+        GUILayout.FlexibleSpace();
+        if (GUILayout.Button("清理AB资源包缓存", GUILayout.Width(130)))
+        {
+            ClearAB();
+        }
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
@@ -61,7 +69,7 @@ public class AssetSizeViewer : EditorWindow
         GUILayout.Label("扫描路径:", GUILayout.Width(70));
         inputPath = GUILayout.TextField(inputPath);
 
-        if (GUILayout.Button("使用Assets", GUILayout.Width(100)))
+        if (GUILayout.Button("使用Assets", GUILayout.Width(130)))
         {
             inputPath = "Assets";
         }
@@ -134,6 +142,33 @@ public class AssetSizeViewer : EditorWindow
         GUILayout.EndScrollView();
     }
 
+    public void ClearAB()
+    {
+        string tempBundlePath = AssetBundleBuilderHelper.GetDefaultBuildOutputRoot();
+        string localServerBundlePath = AssetBundleBuilderHelper.GetDefaultBuildOutputRoot2();
+        
+        foreach (var path in new List<string>(){tempBundlePath,localServerBundlePath})
+        {
+            if (Directory.Exists(path))
+            {
+                try
+                {
+                    Directory.Delete(path, true);  // 递归删除
+                    AssetDatabase.Refresh();
+                    Debug.Log($"{path}资源清理完成！");
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"删除AssetBundles文件夹时发生异常: {e.Message}");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("AssetBundles 文件夹不存在！");
+            }
+        }
+    }
+    
     private void ScanAssets()
     {
         assets.Clear();
@@ -202,3 +237,4 @@ public class AssetSizeViewer : EditorWindow
             return (size / 1024f).ToString("F2") + " KB";
     }
 }
+#endif
