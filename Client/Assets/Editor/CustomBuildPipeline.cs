@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text;
 using HybridCLR.Editor.Commands;
 using UnityEditor;
 using UnityEngine;
@@ -96,6 +97,7 @@ public class CustomYooAssetBuild
         if (buildResult.Success)
         {
             UnityEngine.Debug.Log($"构建成功 : {buildResult.OutputPackageDirectory}");
+            WriteVersionFile(buildParameters.PackageVersion,buildTarget);
             CopyAssetsToTarget(AssetBundleBuilderHelper.GetDefaultBuildOutputRoot(), buildTarget, buildResult);
             CopyAssetsToTarget(AssetBundleBuilderHelper.GetDefaultBuildOutputRoot2(), buildTarget, buildResult);
             //服务器用 end
@@ -108,6 +110,27 @@ public class CustomYooAssetBuild
         return false;
     }
 
+    private static void WriteVersionFile(string packageVersion,BuildTarget buildTarget)
+    {
+        // 1. 获取输出根目录
+        // 注意：确保该目录在构建开始后已经存在
+        string outputRoot = AssetBundleBuilderHelper.GetDefaultBuildOutputRoot2();
+        // 2. 拼接文件完整路径
+        string filePath = $"{outputRoot}/{buildTarget}/Version.txt";
+        try
+        {
+            // 3. 写入版本字符串 (例如: 1.3.0_2026.04.16.16.36.20)
+            // 使用 UTF8 无 BOM 格式，确保移动端读取兼容性
+            File.WriteAllText(filePath, packageVersion, new UTF8Encoding(false));
+            
+            Debug.Log($"<color=#00FF00>Version文件构建成功!</color> 路径: {filePath} 内容: {packageVersion}");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"构建Version文件失败: {e.Message}");
+        }
+    }
+    
     private static void CopyAssetsToTarget(string serveDirectory,BuildTarget buildTarget,BuildResult buildResult)
     {
         if (!System.IO.Directory.Exists(serveDirectory))

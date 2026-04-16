@@ -33,6 +33,17 @@ namespace Main
 #else
             ePlayMode = EPlayMode.HostPlayMode;
 #endif
+            
+            bool isNeedInstallAPK = await CheckVersionCtrl.Instance.CheckMajorVersion(ePlayMode);
+            if (isNeedInstallAPK)
+            {
+                // 如果需要大更，直接调用你写好的 installApk
+                // 这里的回调就不执行了，因为进程会被杀掉或退出
+                CheckVersionCtrl.Instance.DownloadAndInstallFullAPK();
+                return;
+            }
+            
+            //先不走资源比较了
             CheckVersionCtrl.Instance.CheckVersionChange(ePlayMode, async () =>
             {
                 // 检查更新完成, 加载Hotfix代码(HybridCLR)

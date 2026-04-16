@@ -7,11 +7,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 
+import com.unity3d.player.UnityPlayer;
 import com.unity3d.player.UnityPlayerGameActivity;
 
 public class CustomUnityActivity extends UnityPlayerGameActivity {
     private static Activity MainActivity = null;
+    public static final int INSTALL_REQUEST_CODE = 998;
+    // 增加这个静态方法给工具类调用
+    public static Activity getMainActivity() {
+        return MainActivity;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +31,17 @@ public class CustomUnityActivity extends UnityPlayerGameActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == INSTALL_REQUEST_CODE) {
+            // 如果代码运行到这里，说明安装进程没有把当前进程覆盖（即安装未完成或被取消）
+            Log.d("Unity", "用户从安装界面返回，安装未成功执行");
+
+            // 方案 A: 通知 Unity 侧弹出“必须更新”的强更提示
+            UnityPlayer.UnitySendMessage("MainEntry", "OnInstallResult", "canceled");
+
+            // 方案 B: 如果是强制更新，直接在这里干掉游戏进程，不让进游戏
+            // finish();
+            // System.exit(0);
+        }
     }
 
     public void onStart() {

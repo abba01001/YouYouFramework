@@ -1,3 +1,4 @@
+using System.IO;
 using OctoberStudio.Audio;
 using OctoberStudio.Easing;
 using OctoberStudio.Upgrades.UI;
@@ -51,7 +52,7 @@ namespace OctoberStudio.UI
             lobbyWindow.Close();
             charactersWindow.Open();
         }
-
+        
         private void HideCharacters()
         {
             GameController.AudioManager.PlaySound(AudioManager.BUTTON_CLICK_HASH);

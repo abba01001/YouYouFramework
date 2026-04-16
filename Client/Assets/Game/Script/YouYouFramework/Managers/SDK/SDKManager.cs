@@ -1,10 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
-using System.Net.Http;
-using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using COSXML;
 using COSXML.Auth;
@@ -13,15 +9,12 @@ using COSXML.Utils;
 using Cysharp.Threading.Tasks;
 using Main;
 using MessagePack;
-using MySql.Data.MySqlClient;
 using Protocols.Game;
-using Protocols.Player;
 using UnityEngine;
 
 
 public class SDKManager
 {
-    private MySqlConnection sqlConnection;
     public void Init()
     {
 
@@ -62,39 +55,6 @@ public class SDKManager
         // }
     }
     
-    public async Task UploadLogData(string userId)
-    {
-        if (!GameEntry.Net.IsConnectServer) return;
-        // MainEntry.Reporter.WriteLogsToFile();
-
-        string filePath = Path.Combine(Application.persistentDataPath, "Logs.txt");
-        string zipFilePath = Path.Combine(Application.persistentDataPath, "Logs.txt.zip");
-        GameUtil.CompressFile($"{filePath}", null, async () =>
-        {
-            // 直接使用文件路径打开文件流
-            using (FileStream fileStream = new FileStream(zipFilePath, FileMode.Open, FileAccess.Read))
-            {
-                // 创建COS客户端实例
-                CosXml cosXml = await CreateCosXml();
-                string fileName = $"{userId}.txt"; // 文件扩展名改为txt
-                var dic =  SecurityUtil.GetSecretKeyDic();
-                // 创建上传请求
-                PutObjectRequest request = new PutObjectRequest(dic["bucket"], "Unity/LogData/" + fileName, fileStream);
-                request.SetSign(TimeUtils.GetCurrentTime(TimeUnit.Seconds), 600);
-                try
-                {
-                    // 异步上传文件
-                    PutObjectResult result = await Task.Run(() => cosXml.PutObject(request));
-                    GameEntry.LogError($"日志文件 {fileName} 上传成功！");
-                }
-                catch (Exception ex)
-                {
-                    GameEntry.LogError($"{fileName} 上传状态：<color=red>失败</color>，错误：{ex.Message}");
-                }
-            }
-        });
-    }
-
     public async UniTask DownloadGameData(string userId)
     {
         CosXml cosXml = await CreateCosXml();
@@ -258,186 +218,6 @@ public class SDKManager
         return new CosXmlServer(config, qCloudCredentialProvider);
     }
 
-    #endregion
-
-    #region 腾讯云MySql
-    // 初始化数据库连接
-    public async Task InitSqlConnect()
-    {
-        var dic =  SecurityUtil.GetSqlKeyDic();
-        var builder = new MySqlConnectionStringBuilder
-        {
-            Server = dic["Server"],
-            UserID = dic["User ID"],
-            Password = dic["Password"],
-            Database = dic["Database"],
-            Port = UInt32.Parse(dic["Port"]),
-            CharacterSet = "utf8mb4"
-        };
-
-        sqlConnection = new MySqlConnection(builder.ToString());
-        await sqlConnection.OpenAsync();
-        await sqlConnection.CloseAsync();
-        Debug.Log("数据库连接正常");
-    }
-
-    // 统一打开和关闭连接
-    private async Task<T> ExecuteWithConnectionAsync<T>(Func<MySqlCommand, Task<T>> action,
-        bool useLongConnection = false)
-    {
-        if (sqlConnection.State == ConnectionState.Closed)
-            await sqlConnection.OpenAsync();
-
-        await using var cmd = sqlConnection.CreateCommand();
-        try
-        {
-            return await action(cmd);
-        }
-        finally
-        {
-            // 如果使用短连接，确保每次都关闭连接
-            if (!useLongConnection && sqlConnection.State == ConnectionState.Open)
-                await sqlConnection.CloseAsync();
-        }
-    }
-
-    // 注册新账户
-    public async Task RegisterAccountAsync(string accountId, string passWord)
-    {
-        if (string.IsNullOrWhiteSpace(accountId) || string.IsNullOrWhiteSpace(passWord))
-        {
-            Debug.LogError("请输入账号和密码");
-            return;
-        }
-
-        if (await InsertAsync(accountId, passWord))
-        {
-            GameEntry.Data.IsFirstLoginTime = true;
-            GameEntry.Log(LogCategory.NetWork,"注册用户成功");
-            GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);
-        }
-        else
-        {
-            Debug.LogError("注册失败");
-        }
-    }
-
-    // 登录
-    public async Task LoginAsync(string account, string password)
-    {
-        account = "a123";
-        password = "66666";
-        if (await FindAsync(account))
-        {
-            var (isValid, uuid) = await ValidateUserAsync(account, password);
-            if (isValid)
-            {
-                GameEntry.Data.UserId = uuid;
-                DownloadGameData(GameEntry.Data.UserId);
-            }
-            else
-            {
-                Debugger.LogError("密码错误！");
-            }
-        }
-        else
-        {
-            await RegisterAccountAsync(account, password);
-        }
-    }
-
-    // 创建数据表
-    public async Task CreateDataTableAsync()
-    {
-        string query = "CREATE TABLE IF NOT EXISTS register_data (" +
-                       "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
-                       "user_uuid CHAR(36) NOT NULL UNIQUE, " +
-                       "user_account VARCHAR(50) NOT NULL UNIQUE, " +
-                       "user_password VARCHAR(88) NOT NULL) " +
-                       "CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci";
-
-        await ExecuteWithConnectionAsync(async cmd =>
-        {
-            cmd.CommandText = query;
-            await cmd.ExecuteNonQueryAsync();
-            return true;
-        });
-    }
-
-    // 插入新用户数据
-    private async Task<bool> InsertAsync(string user_account, string user_password)
-    {
-        user_password = SecurityUtil.ConvertBase64Key(user_password); // 确保密码是加密的
-        string query =
-            "INSERT INTO register_data (user_uuid, user_account, user_password) VALUES(@uuid, @account, @password)";
-
-        return await ExecuteWithConnectionAsync(async cmd =>
-        {
-            cmd.CommandText = query;
-            cmd.Parameters.AddWithValue("@uuid", GameEntry.Data.UserId);
-            cmd.Parameters.AddWithValue("@account", user_account);
-            cmd.Parameters.AddWithValue("@password", user_password);
-            int result = await cmd.ExecuteNonQueryAsync();
-            return result > 0;
-        });
-    }
-
-    // 查找用户是否存在
-    private async Task<bool> FindAsync(string user_account)
-    {
-        string query = "SELECT COUNT(*) FROM register_data WHERE user_account = @value";
-
-        return await ExecuteWithConnectionAsync(async cmd =>
-        {
-            cmd.CommandText = query;
-            cmd.Parameters.AddWithValue("@value", user_account);
-            int result = Convert.ToInt32(await cmd.ExecuteScalarAsync());
-            return result > 0;
-        });
-    }
-    
-    //更新密码
-    public async Task<bool> UpdateUserPasswordAsync(string userId, string newPassword)
-    {
-        string query = "UPDATE register_data SET user_password = @newPassword WHERE user_uuid = @userId";
-        return await ExecuteWithConnectionAsync(async cmd =>
-        {
-            cmd.CommandText = query;
-            cmd.Parameters.AddWithValue("@newPassword", SecurityUtil.ConvertBase64Key(newPassword));
-            cmd.Parameters.AddWithValue("@userId", userId);
-            int result = await cmd.ExecuteNonQueryAsync();
-            return result > 0;
-        });
-    }
-
-    // 验证用户
-    private async Task<(bool isValid, string user_uuid)> ValidateUserAsync(string user_account, string input_password)
-    {
-        string query = "SELECT user_uuid, user_password FROM register_data WHERE user_account = @account";
-        return await ExecuteWithConnectionAsync(async cmd =>
-        {
-            cmd.CommandText = query;
-            cmd.Parameters.AddWithValue("@account", user_account);
-            using (var reader = await cmd.ExecuteReaderAsync())
-            {
-                if (await reader.ReadAsync())
-                {
-                    var user_uuid = reader["user_uuid"].ToString();
-                    var stored_password = reader["user_password"].ToString();
-                    return (stored_password == SecurityUtil.GetBase64Key(input_password), user_uuid);
-                }
-            }
-
-            return (false, null); // 用户不存在或密码不匹配
-        });
-    }
-
-    // 关闭数据库连接
-    public async Task CloseConnectionAsync()
-    {
-        if (sqlConnection.State == ConnectionState.Open)
-            await sqlConnection.CloseAsync();
-    }
     #endregion
 
     #region 后台

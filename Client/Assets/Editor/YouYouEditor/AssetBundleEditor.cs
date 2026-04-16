@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using HybridCLR.Editor;
@@ -39,10 +40,10 @@ public class AssetBundleEditor : ScriptableObject
     }
 
     #region 打包签名
-    string keystoreRelativePath = "Assets/PackageTool/user.keystore";
-    string keystorePassword = "FrameWork";
-    string keyAlias = "key";
-    string keyPassword = "FrameWork";
+    static string keystoreRelativePath = "Assets/PackageTool/user.keystore";
+    static string keystorePassword = "FrameWork";
+    static string keyAlias = "key";
+    static string keyPassword = "FrameWork";
     #endregion
 
     [PropertySpace(2f)]
@@ -220,7 +221,7 @@ public class AssetBundleEditor : ScriptableObject
     public void StartLocalServer()
     {
         // 构建服务器 exe 路径，相对 Unity 项目 Assets 目录的上两级
-        string exePath = Path.Combine(Application.dataPath, "..", "..", "Server", "Server", "TCPServer.exe");
+        string exePath = Path.Combine(Application.dataPath, "..", "..", "Server", "Publish","win-x64", "TCPServer.exe");
         exePath = Path.GetFullPath(exePath); // 转成绝对路径
         if (!File.Exists(exePath))
         {
@@ -323,7 +324,7 @@ public class AssetBundleEditor : ScriptableObject
         CustomYooAssetBuild.BuildInternal(BuildPackageTarget);
     }
 
-    private void SetKeystoreInfo()
+    private static void SetKeystoreInfo()
     {
         PlayerSettings.Android.keystoreName = keystoreRelativePath;
         PlayerSettings.Android.keystorePass = keystorePassword;
@@ -447,8 +448,6 @@ public class AssetBundleEditor : ScriptableObject
     [Button("构建Gradle工程",ButtonSizes.Medium)]
     public void ExportGradleProject()
     {
-        ExplorerUtil.OpenFolder(TempGradlePath);
-        return;
         // 设置Keystore信息（如果需要的话）
         SetKeystoreInfo();
 
@@ -508,6 +507,47 @@ public class AssetBundleEditor : ScriptableObject
                     CurrAssetLoadTarget = AssetLoadTargets[i];
                 }
             }
+        }
+    }
+    
+    [MenuItem("Tools/Build Android Launch")]
+    public static void BuildAndroidLaunchScene()
+    {
+        SetKeystoreInfo();
+    
+        // 路径确保与你项目一致
+        string[] scenes = { "Assets/Game/Scene_Launch.unity" }; 
+
+        string projectPath = Path.GetDirectoryName(UnityEngine.Application.dataPath);
+        string outputDir = Path.Combine(projectPath, "Builds/Android");
+        string outputFile = Path.Combine(outputDir, "Game_Launch.apk");
+
+        if (!Directory.Exists(outputDir)) Directory.CreateDirectory(outputDir);
+
+        BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions
+        {
+            scenes = scenes,
+            locationPathName = outputFile,
+            target = BuildTarget.Android,
+            options = BuildOptions.CompressWithLz4
+        };
+
+        UnityEngine.Debug.Log("[Build] 正在通过命令行/菜单开始构建...");
+        BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
+        BuildSummary summary = report.summary;
+
+        if (summary.result == BuildResult.Succeeded)
+        {
+            UnityEngine.Debug.Log("[Build] 任务成功!");
+            // 如果是命令行模式(BatchMode)，执行完就退出，否则 bat 会一直等
+            if (UnityEngine.Application.isBatchMode) EditorApplication.Exit(0);
+            else EditorUtility.DisplayDialog("打包结果", "构建成功！", "确定");
+        }
+        else
+        {
+            UnityEngine.Debug.LogError("[Build] 任务失败!");
+            if (UnityEngine.Application.isBatchMode) EditorApplication.Exit(1);
+            else EditorUtility.DisplayDialog("打包结果", "构建失败，请看 Console", "确定");
         }
     }
     

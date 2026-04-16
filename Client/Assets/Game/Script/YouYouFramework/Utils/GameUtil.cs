@@ -7,7 +7,6 @@ using System.Reflection;
 using System.Text;
 
 using Cysharp.Threading.Tasks;
-using ICSharpCode.SharpZipLib.Zip;
 using Main;
 using Newtonsoft.Json;
 using Unity.VisualScripting;
@@ -326,111 +325,6 @@ public class GameUtil
     }
 
     #endregion
-
-    // 压缩文件
-    public static void CompressFile(string sourceFilePath,Action<float> onProgress,Action onComplete)
-    {
-        try
-        {
-            if (string.IsNullOrEmpty(sourceFilePath))
-            {
-                Debugger.LogError("Please provide a valid file path before compressing.");
-                return;
-            }
-
-            string sourceDirectoryName = Path.GetDirectoryName(sourceFilePath);
-            string saveFilePath = Path.Combine(sourceDirectoryName, Path.GetFileName(sourceFilePath) + ".zip");
-
-            // 创建目录
-            Directory.CreateDirectory(sourceDirectoryName);
-
-            long totalBytes = new FileInfo(sourceFilePath).Length;
-            long bytesProcessed = 0;
-
-            using (FileStream fsOut = File.Create(saveFilePath))
-            {
-                using (ZipOutputStream zipStream = new ZipOutputStream(fsOut))
-                {
-                    byte[] buffer = new byte[4096];
-                    ZipEntry entry = new ZipEntry(Path.GetFileName(sourceFilePath));
-                    zipStream.PutNextEntry(entry);
-
-                    using (FileStream fsIn = File.OpenRead(sourceFilePath))
-                    {
-                        int sourceBytes;
-                        while ((sourceBytes = fsIn.Read(buffer, 0, buffer.Length)) > 0)
-                        {
-                            zipStream.Write(buffer, 0, sourceBytes);
-                            bytesProcessed += sourceBytes;
-                            float progress = (float) bytesProcessed / totalBytes;
-                            onProgress?.Invoke(progress); // 传递当前进度
-                        }
-                    }
-                    zipStream.Finish();
-                }
-            }
-            // 压缩完成，调用回调
-            onComplete?.Invoke();
-        }
-        catch (Exception ex)
-        {
-            // 错误发生时调用错误回调
-            Debugger.LogError($"Error compressing file: {ex.Message}");
-        }
-    }
-
-    // 解压文件方法（不需要进度回调，因为解压通常较小）
-    public static void DecompressFile(string zipFilePath, Action<string> onComplete, Action<string> onError)
-    {
-        try
-        {
-            if (string.IsNullOrEmpty(zipFilePath))
-            {
-                onError?.Invoke("Please provide a valid zip file path before decompressing.");
-                return;
-            }
-
-            string extractDirectory = Path.GetDirectoryName(zipFilePath);
-            string outputDirectory = Path.Combine(extractDirectory, "Decompressed");
-
-            // 创建解压目录
-            Directory.CreateDirectory(outputDirectory);
-
-            using (ZipInputStream zipStream = new ZipInputStream(File.OpenRead(zipFilePath)))
-            {
-                ZipEntry entry;
-                while ((entry = zipStream.GetNextEntry()) != null)
-                {
-                    string fullPath = Path.Combine(outputDirectory, entry.Name);
-
-                    if (entry.IsDirectory)
-                    {
-                        Directory.CreateDirectory(fullPath);
-                    }
-                    else
-                    {
-                        using (FileStream fsOut = File.Create(fullPath))
-                        {
-                            byte[] buffer = new byte[4096];
-                            int sourceBytes;
-                            while ((sourceBytes = zipStream.Read(buffer, 0, buffer.Length)) > 0)
-                            {
-                                fsOut.Write(buffer, 0, sourceBytes);
-                            }
-                        }
-                    }
-                }
-            }
-
-            // 解压完成，调用回调
-            onComplete?.Invoke(outputDirectory);
-        }
-        catch (Exception ex)
-        {
-            // 错误发生时调用错误回调
-            onError?.Invoke($"Error decompressing file: {ex.Message}");
-        }
-    }
 
     public static Vector3 GetPosFromTrans(Transform startTrans, Transform targetTrans)
     {

@@ -62,19 +62,26 @@ namespace Main
         
         [BoxGroup("通用参数设置")][LabelText("本地服务器IP")] public string LocalServerUrl { get; private set; }
         [BoxGroup("通用参数设置")][LabelText("本地AB包资源IP")] public string LocalAssetUrl{ get; private set; }
+        [BoxGroup("通用参数设置")][LabelText("本地AB包资源IP")] public string LocalVersionUrl{ get; private set; }
+        
         [BoxGroup("通用参数设置")][LabelText("云端服务器IP")] public string RemoteServerUrl{ get; private set; }
         [BoxGroup("通用参数设置")][LabelText("云端AB包资源IP")] public string RemoteAssetUrl{ get; private set; }
+        [BoxGroup("通用参数设置")][LabelText("本地AB包资源IP")] public string RemoteVersionUrl{ get; private set; }
         public void Init()
         {
             LocalServerUrl = GetLocalIPAddress();
             LocalAssetUrl = GetLocalAssetIpAddress();
-        
+            LocalVersionUrl = GetLocalVersionIpAddress();
+                
             RemoteServerUrl = "43.134.133.178:17888";
             RemoteAssetUrl = $"http://storage.abba01001.cn/private_files/ServerBundles/{Application.platform}/{Application.version}";
+            RemoteVersionUrl = $"http://storage.abba01001.cn/private_files/ServerBundles/{Application.platform}";
         }
         
         public string GetLocalAssetIpAddress()
         {
+            // return "http://" + "192.168.18.130" + $":8000/{Application.platform}/{Application.version}";
+            
 #if UNITY_ANDROID && !UNITY_EDITOR
             return "http://" + "10.0.2.2" + $":8000/{Application.platform}/{Application.version}";
 #endif
@@ -96,8 +103,35 @@ namespace Main
             return "http://" + "127.0.0.1" + $":8000/Android/{Application.version}";
         }
     
+        public string GetLocalVersionIpAddress()
+        {
+            // return "http://" + "192.168.18.130" + $":8000/{Application.platform}";
+            
+#if UNITY_ANDROID && !UNITY_EDITOR
+            return "http://" + "10.0.2.2" + $":8000/{Application.platform}";
+#endif
+            foreach (var netInterface in System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (netInterface.OperationalStatus != System.Net.NetworkInformation.OperationalStatus.Up)
+                    continue;
+
+                var props = netInterface.GetIPProperties();
+                foreach (var addr in props.UnicastAddresses)
+                {
+                    if (addr.Address.AddressFamily == AddressFamily.InterNetwork &&
+                        !addr.Address.ToString().StartsWith("127"))
+                    {
+                        return "http://" + addr.Address.ToString() + $":8000/{Application.platform}";
+                    }
+                }
+            }
+            return "http://" + "127.0.0.1" + $":8000/Android";
+        }
+
+        
         public string GetLocalIPAddress()
         {
+            // return "192.168.18.130:17888";
 #if UNITY_ANDROID && !UNITY_EDITOR
             return "10.0.2.2:17888";
 #endif
@@ -127,6 +161,16 @@ namespace Main
             return LocalAssetUrl;
 #endif
             return LocalAssetUrl;
+        }
+        
+        public string GetVersionIP()
+        {
+#if SERVERMODE
+            return RemoteVersionUrl;
+#elif LOCALMODE
+            return LocalVersionUrl;
+#endif
+            return LocalVersionUrl;
         }
         
         public string GetServerIP()

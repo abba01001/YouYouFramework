@@ -53,6 +53,15 @@
                     android:value="true"/>
         </activity>
 
+        <provider
+                android:name="androidx.core.content.FileProvider"
+                android:authorities="${applicationId}.fileprovider"
+                android:exported="false"
+                android:grantUriPermissions="true">
+            <meta-data
+                    android:name="android.support.FILE_PROVIDER_PATHS"
+                    android:resource="@xml/file_paths" />
+        </provider>
         <!-- 这里可以添加其它的 activity 或服务，未来扩展 SDK 用 -->
 
         <!-- 例如：第三方 SDK 的服务或广播接收器 -->

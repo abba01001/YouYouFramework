@@ -1,31 +1,59 @@
 @echo off
-:: 设置脚本所在目录为当前工作目录
-cd /d %~dp0
-
-:: 输出当前路径
-echo Current directory: %cd%
-
 chcp 65001
 setlocal
 
-REM 设置项目文件路径
-set PROJECT_FILE=TCPServer\TCPServer.csproj
+cd /d %~dp0
 
-REM 设置发布目标
-set TARGET_FRAMEWORK=net5.0
-set RUNTIME_IDENTIFIER=win-x64
+echo =========================
+echo 选择发布平台
+echo =========================
+echo 1. Windows
+echo 2. Linux
+echo 3. 全部
+echo.
 
-REM 执行发布
-dotnet publish %PROJECT_FILE% -c Release -f %TARGET_FRAMEWORK% -r %RUNTIME_IDENTIFIER% -o .\Server
+set /p choice=请选择：
 
-IF %ERRORLEVEL% NEQ 0 (
-    echo 发布失败，请检查项目设置或错误信息。
-) ELSE (
-    echo 发布成功，输出文件在当前目录的 Server 文件夹中。
-   "%cd%\WinSCP\winscp.com" /script="%cd%\upload_server_script.txt"
+set /p upload=是否上传(y/n):
+
+REM 默认脚本
+set SCRIPT=
+
+if "%choice%"=="1" set SCRIPT=%~dp0WinSCP\upload_win.txt
+if "%choice%"=="2" set SCRIPT=%~dp0WinSCP\upload_linux.txt
+if "%choice%"=="3" set SCRIPT=%~dp0WinSCP\upload_all.txt
+
+echo.
+echo 使用脚本：%SCRIPT%
+
+REM 发布（示例）
+if "%choice%"=="1" call :publish win-x64
+if "%choice%"=="2" call :publish linux-x64
+if "%choice%"=="3" (
+    call :publish win-x64
+    call :publish linux-x64
 )
 
-
+REM 上传
+if /I "%upload%"=="y" (
+    echo 开始上传...
+    WinSCP\winscp.com /script="%SCRIPT%"
+)
 
 pause
-发布前判断下有没有打包这个文件夹，如果有要先删除
+exit /b
+
+:publish
+set RUNTIME=%1
+set OUT=Publish\%RUNTIME%
+
+if exist "%OUT%" rmdir /s /q "%OUT%"
+
+dotnet publish TCPServer\TCPServer.csproj ^
+ -c Release ^
+ -r %RUNTIME% ^
+ --self-contained true ^
+ -o "%OUT%"
+
+echo 发布完成：%RUNTIME%
+exit /b

@@ -13,9 +13,12 @@ public class ParamsSettings : ScriptableObject
 
     [BoxGroup("通用参数设置")][LabelText("本地服务器IP")][ReadOnly] public string LocalWebUrl;
     [BoxGroup("通用参数设置")][LabelText("本地AB包资源IP")][ReadOnly] public string LocalAssetWebUrl;
+    [BoxGroup("通用参数设置")][LabelText("本地版本信息文件IP")][ReadOnly] public string LocalVersionUrl;
+    
     
     [BoxGroup("通用参数设置")][LabelText("正式服务器IP")][ReadOnly] public string ServerWebUrl;
     [BoxGroup("通用参数设置")][LabelText("正式AB包资源IP")][ReadOnly] public string ServerAssetWebUrl;
+    [BoxGroup("通用参数设置")][LabelText("正式版本信息文件IP")][ReadOnly] public string RemoteVersionUrl;
     
     [BoxGroup("通用参数设置")] public bool PostIsEncrypt;//是否加密(如时间戳)
     [BoxGroup("通用参数设置")] public string PostContentType;//设置ContentType
@@ -159,8 +162,10 @@ public class ParamsSettings : ScriptableObject
         HotfixManager.Instance.Init();
         LocalWebUrl = HotfixManager.Instance.LocalServerUrl;
         LocalAssetWebUrl = HotfixManager.Instance.LocalAssetUrl;
-
+        LocalVersionUrl = HotfixManager.Instance.LocalVersionUrl;
+            
         ServerWebUrl = HotfixManager.Instance.RemoteServerUrl;
         ServerAssetWebUrl = HotfixManager.Instance.RemoteAssetUrl;
+        RemoteVersionUrl = HotfixManager.Instance.RemoteVersionUrl;
     }
 }

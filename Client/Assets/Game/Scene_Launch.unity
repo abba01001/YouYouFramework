@@ -128,6 +128,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 856664107}
+  - component: {fileID: 856664113}
   - component: {fileID: 856664108}
   - component: {fileID: 856664112}
   m_Layer: 0
@@ -178,6 +179,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jsonString: "{\"\u63D0\u793A\": \"\u6E38\u620F\u5185\u6309\u7A7A\u683C\u952E\",
     \"\u4F5C\u7528\": \"\u53EF\u5C55\u793A\u73A9\u5BB6\u6570\u636E\"}"
+--- !u!114 &856664113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 856664105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a4f90925583a85469fe646ad8bcba18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Main::AndroidManager
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading...</title>
+    <style>
+        :root {
+            --primary: #0078d4;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --purple: #6f42c1;
+            --info: #17a2b8;
+            --bg: #f5f7f9;
+            --card-bg: #ffffff;
+            --text: #333;
+            --sub-text: #666;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 550px; /* 稍微调宽以适应双列 */
+            padding: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            padding: 25px;
+        }
+
+        header { text-align: center; margin-bottom: 20px; }
+        h1 { font-size: 22px; margin: 0; color: var(--primary); }
+        .subtitle { font-size: 12px; color: var(--sub-text); margin-top: 5px; }
+
+        /* --- 分页 Tabs 样式 --- */
+        .tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .tab-link {
+            padding: 8px 15px;
+            font-size: 13px;
+            cursor: pointer;
+            border-radius: 6px;
+            border: none;
+            background: none;
+            color: var(--sub-text);
+            transition: all 0.2s;
+        }
+
+        .tab-link.active {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* --- 按钮网格布局 --- */
+        .button-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* 核心：双列排列 */
+            gap: 12px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 8px;
+            padding: 12px 10px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            background: #eee;
+            color: #444;
+            text-align: center;
+        }
+
+        .btn:hover { transform: translateY(-1px); filter: brightness(0.9); }
+        .btn:active { transform: translateY(0); }
+
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-info { background: var(--info); color: white; }
+        .btn-warning { background: var(--warning); color: #000; }
+        .btn-purple { background: var(--purple); color: white; }
+
+        .btn-disabled {
+            background: #e0e0e0 !important;
+            color: #999 !important;
+            cursor: not-allowed !important;
+        }
+
+        #status-area {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 6px;
+            background: #f0f2f4;
+            border-left: 4px solid #ccc;
+            font-family: 'Consolas', monospace;
+            font-size: 12px;
+            min-height: 18px;
+        }
+
+        .loading-dots:after { content: '.'; animation: dots 1.5s steps(5, end) infinite; }
+        @keyframes dots {
+            0%, 20% { color: rgba(0,0,0,0); text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0); }
+            40% { color: var(--sub-text); text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0); }
+            60% { text-shadow: .25em 0 0 var(--sub-text), .5em 0 0 rgba(0,0,0,0); }
+            80%, 100% { text-shadow: .25em 0 0 var(--sub-text), .5em 0 0 var(--sub-text); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <header>
+            <h1 id="main-title">MyFramework</h1>
+            <div class="subtitle">开发者控制面板</div>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-link active" onclick="openTab(event, 'tab-dev')">开发工具</button>
+            <button class="tab-link" onclick="openTab(event, 'tab-server')">服务控制</button>
+            <button class="tab-link" onclick="openTab(event, 'tab-misc')">待开发</button>
+        </div>
+
+        <div id="tab-dev" class="tab-content active">
+            <div class="button-grid">
+                <button class="btn btn-primary" onclick="callApi('/api/utils/check-env')">⚙️ 服务器初始化</button>
+                <button class="btn btn-success" onclick="callApi('/api/utils/gen-proto')">⚡ 游戏协议更新</button>
+                <button class="btn btn-info" onclick="callApi('/api/utils/update-tables')">📊 游戏配置表更新</button>
+
+                <button class="btn btn-purple"  onclick="callApi('/api/utils/run-server')">🎮 启动游戏服务器 (TCPServer)</button>
+                <button class="btn btn-warning"  onclick="confirmDeploy()">🚀 打包并推送到服务器</button>
+
+                <button class="btn" style="background: #fd7e14; color: white;" onclick="callApi('/api/utils/push-hotfix')">
+                    🔥 推送热更资源
+                </button>
+            </div>
+        </div>
+
+        <div id="tab-server" class="tab-content">
+            <div class="button-grid">
+<!--                <button class="btn btn-disabled" style="grid-column: span 2;>🔍 代码查重</button>-->
+                <button class="btn btn-disabled" style="grid-column: span 2;" onclick="confirmDeploy()">🔍 代码查重</button>
+                
+                <button class="btn btn-primary" style="background: #0078d4;" onclick="callApi('/api/utils/build-android-apk')">
+                    📦 构建 Android (Launch)
+                </button>
+            </div>
+        </div>
+
+        <div id="tab-misc" class="tab-content">
+            <div class="button-grid">
+                <button class="btn btn-disabled" title="功能开发中...">📁 项目发布</button>
+                <button class="btn btn-disabled" title="功能开发中...">🧹 清理缓存</button>
+            </div>
+        </div>
+
+        <div id="status-area">就绪</div>
+    </div>
+</div>
+
+<script>
+    // Tab 切换逻辑
+    function openTab(evt, tabName) {
+        let contents = document.getElementsByClassName("tab-content");
+        for (let i = 0; i < contents.length; i++) contents[i].classList.remove("active");
+
+        let links = document.getElementsByClassName("tab-link");
+        for (let i = 0; i < links.length; i++) links[i].classList.remove("active");
+
+        document.getElementById(tabName).classList.add("active");
+        evt.currentTarget.classList.add("active");
+    }
+
+    // 标题同步
+    fetch('/get-title')
+        .then(res => res.json())
+        .then(data => {
+            document.title = data.title;
+            document.getElementById('main-title').innerText = data.title;
+        })
+        .catch(() => { document.getElementById('main-title').innerText = "Manager"; });
+
+    function confirmDeploy() {
+        if (confirm("确定要开始打包服务器工程并推送至服务器吗？此操作会覆盖远程数据。")) {
+            callApi('/api/utils/deploy-server');
+        }
+    }
+
+    function callApi(url) {
+        const status = document.getElementById('status-area');
+        status.innerHTML = '<span class="loading-dots">正在请求服务</span>';
+
+        fetch(url)
+            .then(res => res.text())
+            .then(msg => {
+                status.style.borderLeftColor = "var(--success)";
+                status.innerText = "> " + msg;
+            })
+            .catch(err => {
+                status.style.borderLeftColor = "var(--danger)";
+                status.innerText = "> 错误: " + err;
+            });
+    }
+</script>
+
+</body>
+</html>

@@ -268,7 +268,6 @@ public class GameEntry : MonoBehaviour
         Logger.SyncLog();
         Logger.Dispose();
         Fsm.Dispose();
-        SDK.UploadLogData(Data.UserId);
         GameEntry.Event.Dispatch(Constants.EventName.GameEntryOnApplicationQuit);
     }
 

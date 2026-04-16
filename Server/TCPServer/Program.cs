@@ -161,11 +161,12 @@ $"UserId={"pengjunwei"};Password={"pengjunwei"};Port = {"5001"}");
     // 开启服务器
     private static void StartServer(string env = "server")
     {
+        env = "local";
         bool isLocal = env == "local";
         RedisManager.Instance.Init("127.0.0.1:6379");
         DBFlushService _dbFlush = new DBFlushService();
         _dbFlush.Start();
-        ServerSocket.Start("0.0.0.0", 17888, 1024, isLocal); //10.0.28.15
+        ServerSocket.Start("127.0.0.1", 17888, 1024, isLocal); //10.0.28.15
         LoggerHelper.Instance.Debug("服务器已启动，输入Quit以退出服务器。");
 
         // 持续监听服务器指令

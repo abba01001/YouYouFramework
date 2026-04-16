@@ -1,4 +1,4 @@
-﻿using MySql.Data.MySqlClient;
+﻿using MySqlConnector;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -42,10 +42,42 @@ namespace TCPServer.Core.DataAccess
                 {
                     if (_instance == null)
                     {
-                        _instance = new SqlManager(connectionString);
-                        LoggerHelper.Instance.Info("SqlManager initialized.");
+                        var manager = new SqlManager(connectionString);
+                        // 进行连接测试
+                        if (manager.TestConnection())
+                        {
+                            _instance = manager;
+                            // 测试通过后，打印初始化成功的日志
+                            LoggerHelper.Instance.Info("--------------------------------------------------");
+                            LoggerHelper.Instance.Info("SqlManager: 数据库初始化成功且连接测试通过！");
+                            LoggerHelper.Instance.Info($"Connection: {connectionString}");
+                            LoggerHelper.Instance.Info("--------------------------------------------------");
+                        }
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// 测试数据库连接
+        /// </summary>
+        private bool TestConnection()
+        {
+            try
+            {
+                using var conn = new MySqlConnection(_connectionString);
+                conn.Open();
+                // 如果能运行到这一行，说明握手成功
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // 如果失败，打印详细的错误信息
+                LoggerHelper.Instance.Error("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                LoggerHelper.Instance.Error("SqlManager: 数据库连接测试失败，请检查配置或网络！");
+                LoggerHelper.Instance.Error($"错误详情: {ex.Message}");
+                LoggerHelper.Instance.Error("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                throw; // 抛出异常，阻止程序继续启动
             }
         }
 

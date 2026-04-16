@@ -1,4 +1,9 @@
-﻿using System;
+﻿using Google.Protobuf;
+using MySqlConnector;
+using Newtonsoft.Json;
+using Protocols;
+using StackExchange.Redis;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -7,14 +12,10 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-using Google.Protobuf;
-using Newtonsoft.Json;
-using TCPServer.Core.DataAccess;
 using TCPServer.Core;
+using TCPServer.Core.DataAccess;
 using TCPServer.Core.Services;
 using TCPServer.Utils;
-using Protocols;
-using MySql.Data.MySqlClient.Memcached;
 
 
 public static class ServerSocket
@@ -113,9 +114,11 @@ public static class ServerSocket
         socket.Bind(new IPEndPoint(IPAddress.Parse(ip), port));
         socket.Listen(clientNum);
 
-        string server = isLocal ? "127.0.0.1" : "43.134.133.178";
-        SqlManager.Initialize($"Server={server};Database={"unitygamedata"};" +
-$"UserId={"pengjunwei"};Password={"pengjunwei"};Port = {"5001"};Charset=utf8mb4;");
+        string host = isLocal ? ip : "43.134.133.178";
+        string database = "unitygamedata";
+        string user = "pengjunwei";
+        string pass = "pengjunwei";
+        SqlManager.Initialize($"Server={host};Port=5001;Database={database};User Id={user};Password={pass};SslMode=None;");
 
         //SqlManager.Initialize($"Server={KeyUtils.GetSqlKey(SqlKey.Server)};Database={KeyUtils.GetSqlKey(SqlKey.Database)};" +
         //  $"UserId={KeyUtils.GetSqlKey(SqlKey.UserId)};Password={KeyUtils.GetSqlKey(SqlKey.Password)};Port = {KeyUtils.GetSqlKey(SqlKey.Port)}");

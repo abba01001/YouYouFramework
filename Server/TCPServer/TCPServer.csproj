@@ -1,45 +1,61 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <!-- 仅针对 Windows 平台 -->
-    <SelfContained>true</SelfContained>
-    <!-- 包含运行时 -->
-    <PublishSingleFile>false</PublishSingleFile>
-    <!-- 将应用程序打包为单个文件 -->
-    <PublishTrimmed>true</PublishTrimmed>
-    <!-- 剔除未使用的代码以减小文件大小 -->
-    <RemoveUnusedReferences>true</RemoveUnusedReferences>
-    <!-- 移除未使用的程序集 -->
 
-	<DebugType>None</DebugType>
-	<!-- 不生成调试信息 -->
-	<DebugSymbols>false</DebugSymbols>
-	<!-- 不生成 pdb -->
-  </PropertyGroup>
+	<PropertyGroup>
+		<!-- 基础 -->
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net6.0</TargetFramework>
+
+		<!-- 发布相关 -->
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<SelfContained>true</SelfContained>
+
+		<!-- 发布优化（先关掉坑） -->
+		<PublishSingleFile>false</PublishSingleFile>
+		<PublishTrimmed>false</PublishTrimmed>
+
+		<!-- 调试（服务器建议保留最少日志符号） -->
+		<DebugType>portable</DebugType>
+		<DebugSymbols>false</DebugSymbols>
+
+		<!-- 其他 -->
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Google.Protobuf" Version="3.28.2" />
-	  <PackageReference Include="MessagePack" Version="3.1.1" />
-	  <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
-	  <PackageReference Include="MySql.Data" Version="6.10.9" />
-	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-	  <PackageReference Include="NLog" Version="5.3.4" />
-	  <PackageReference Include="StackExchange.Redis" Version="2.12.14" />
-	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.3.0" />
-	  <PackageReference Include="System.ServiceModel.Primitives" Version="8.1.1" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
+		<!-- 网络 / 序列化 -->
+		<PackageReference Include="Google.Protobuf" Version="3.28.2" />
+		<PackageReference Include="MessagePack" Version="3.1.1" />
 
-    <None Include="Key\**\*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+		<!-- 数据库 -->
+		<PackageReference Include="MySqlConnector" Version="2.3.7" />
+
+		<!-- Redis -->
+		<PackageReference Include="StackExchange.Redis" Version="2.6.122" />
+
+		<!-- JSON -->
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+
+		<!-- 日志 -->
+		<PackageReference Include="NLog" Version="5.3.4" />
+
+		<!-- 安全（JWT） -->
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.3.0" />
+
+		<!-- 编码支持 -->
+		<PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
 	</ItemGroup>
 
-  <ItemGroup>
-    <None Update="NLog.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<!-- 配置文件 -->
+		<None Update="NLog.config">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+
+		<!-- 密钥文件 -->
+		<None Include="Key\**\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
 </Project>

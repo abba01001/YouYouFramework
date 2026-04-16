@@ -26,13 +26,18 @@ import android.content.DialogInterface;
     public class EarlyAndroidProcessor : IPostGenerateGradleAndroidProject {
         public int callbackOrder => 0; 
         public void OnPostGenerateGradleAndroidProject(string path) {
+            // 1. 注入产品名称
             InjectProductName(path);
+    
+            // 2. 动态创建 file_paths.xml
+            CreateFileProviderXml(path);
         }
     }
 
     public class LateAndroidProcessor : IPostGenerateGradleAndroidProject {
         public int callbackOrder => 999; 
         public void OnPostGenerateGradleAndroidProject(string path) {
+            
         }
     }
 
@@ -88,6 +93,41 @@ import android.content.DialogInterface;
         }
     }
 
+    private static void CreateFileProviderXml(string path)
+    {
+        // 定义 res/xml 文件夹路径
+        string xmlFolder = Path.Combine(path, "src/main/res/xml");
+        string filePath = Path.Combine(xmlFolder, "file_paths.xml");
+
+// file_paths.xml 的内容
+        string xmlContent = @"<?xml version=""1.0"" encoding=""utf-8""?>
+<paths>
+    <external-files-path name=""my_external_files"" path=""."" />
+    <external-cache-path name=""my_external_cache"" path=""."" />
+    <files-path name=""my_inner_files"" path=""."" />
+    <cache-path name=""my_inner_cache"" path=""."" />
+    <external-path name=""external_root"" path=""."" />
+</paths>";
+
+        try
+        {
+            // 如果目录不存在则创建
+            if (!Directory.Exists(xmlFolder))
+            {
+                Directory.CreateDirectory(xmlFolder);
+                Debug.Log($"[AndroidPostBuild] Created directory: {xmlFolder}");
+            }
+
+            // 写入文件
+            File.WriteAllText(filePath, xmlContent);
+            Debug.Log($"[AndroidPostBuild] Successfully created file_paths.xml at: {filePath}");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"[AndroidPostBuild] Failed to create file_paths.xml: {e.Message}");
+        }
+    }
+    
     private static void InjectPrivacyPolicy(string path)
     {
         // UnityPlayerActivity.java 文件路径
