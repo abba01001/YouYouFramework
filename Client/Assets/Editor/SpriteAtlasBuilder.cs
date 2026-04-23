@@ -14,7 +14,6 @@ public class TMPAtlasBuilder : EditorWindow
     private int maxAtlasSize = 4096;
     private Dictionary<string, TextureImportBackup> importerBackup = new Dictionary<string, TextureImportBackup>();
 
-    [MenuItem("Tools/I2 Localization/生成多语言图集")]
     public static void ShowWindow()
     {
         GetWindow<TMPAtlasBuilder>("TMP Sprite Atlas Builder");

@@ -49,7 +49,7 @@ namespace Main
                 // 检查更新完成, 加载Hotfix代码(HybridCLR)
                 await HotfixManager.Instance.LoadHotifx();
 
-                //启动YouYouFramework框架入口
+                //启动Framework框架入口
                 var operation = CheckVersionCtrl.Instance.DefaultPackage.LoadAssetAsync("Assets/Game/Download/Prefab/GameEntry.prefab");
                 await operation.Task;
                 GameObject gameEntryAsset = operation.AssetObject as GameObject;

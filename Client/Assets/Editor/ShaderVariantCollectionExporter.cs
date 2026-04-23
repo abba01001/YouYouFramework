@@ -11,7 +11,7 @@ using Debug = UnityEngine.Debug;
 [InitializeOnLoad]
 public static class ShaderVariantCollectionExporter
 {
-    [MenuItem("Tools/Shader/Export ShaderVariantCollection")]
+    [MenuItem("工具类/Other/收集变体",false,8900)]
     private static void Export()
     {
         var dict = new Dictionary<string, bool>();

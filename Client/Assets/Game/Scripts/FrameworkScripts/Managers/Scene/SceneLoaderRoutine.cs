@@ -1,0 +1,63 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using System;
+using Cysharp.Threading.Tasks;
+using YooAsset;
+using SceneHandle = YooAsset.SceneHandle;
+
+
+namespace FrameWork
+{
+    /// <summary>
+    /// 场景加载和卸载器
+    /// </summary>
+    public class SceneLoaderRoutine
+    {
+        private AsyncOperation m_CurrAsync = null;
+
+        public string SceneFullPath;
+
+        private SceneHandle asyncOperation;
+
+        /// <summary>
+        /// 进度更新
+        /// </summary>
+        private Action<string, float> OnProgressUpdate;
+
+        /// <summary>
+        /// 加载场景
+        /// </summary>
+        public async UniTask LoadScene(string sceneFullPath, Action<string, float> onProgressUpdate)
+        {
+            SceneFullPath = sceneFullPath;
+
+            OnProgressUpdate = onProgressUpdate;
+
+            asyncOperation = GameEntry.Loader.DefaultPackage.LoadSceneAsync(sceneFullPath, LoadSceneMode.Additive);
+            await asyncOperation.Task;
+        }
+
+        /// <summary>
+        /// 卸载场景
+        /// </summary>
+        public async void UnLoadScene()
+        {
+            var operation = asyncOperation.UnloadAsync();
+            await operation.Task;
+        }
+
+        /// <summary>
+        /// 更新
+        /// </summary>
+        internal void OnUpdate()
+        {
+            if (m_CurrAsync == null) return;
+            if (!m_CurrAsync.isDone)
+            {
+                OnProgressUpdate?.Invoke(SceneFullPath, m_CurrAsync.progress);
+            }
+        }
+    }
+}

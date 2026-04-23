@@ -89,7 +89,7 @@ public class CustomUnityActivity extends UnityPlayerGameActivity {
         if (privacyFlag == true) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity);
             dialog.setTitle("隐私政策");  // 设置标题
-            dialog.setMessage("作为“YFYouYou”的运营者，深知个人信息对您的重要性，我们将按照法律法规的规定，保护您的个人信息及隐私安全。我们制定本“隐私政策”并特别提示：希望您在使用“YFYouYou”及相关服务前仔细阅读并理解本隐私政策，以便做出适当的选择。如您同意，请点击“同意”开始进入游戏。本隐私政策将帮助您了解：1、我们会遵循隐私政策收集、使用您的信息，但不会仅因您同意本隐私政策而采用强制捆绑的方式一揽子收集个人信息。2、当您使用或开启相关功能或使用服务时，为实现功能、服务所必需，我们会收集、使用相关信息。3、相关敏感权限均不会默认开启，只有经过您的明示授权才会在为实现特定功能或服务时使用，您也可以撤回授权。");
+            dialog.setMessage("作为“Demo”的运营者，深知个人信息对您的重要性，我们将按照法律法规的规定，保护您的个人信息及隐私安全。我们制定本“隐私政策”并特别提示：希望您在使用“YFYouYou”及相关服务前仔细阅读并理解本隐私政策，以便做出适当的选择。如您同意，请点击“同意”开始进入游戏。本隐私政策将帮助您了解：1、我们会遵循隐私政策收集、使用您的信息，但不会仅因您同意本隐私政策而采用强制捆绑的方式一揽子收集个人信息。2、当您使用或开启相关功能或使用服务时，为实现功能、服务所必需，我们会收集、使用相关信息。3、相关敏感权限均不会默认开启，只有经过您的明示授权才会在为实现特定功能或服务时使用，您也可以撤回授权。");
             dialog.setCancelable(false);  // 是否可以取消
             dialog.setNegativeButton("拒绝", new DialogInterface.OnClickListener() {
                 @Override
