@@ -65,8 +65,6 @@ namespace FrameWork
         [FoldoutGroup("UIGroup")] [Header("主页背景")] [FoldoutGroup("AudioGroup")] [Header("声音主混合器")]
         public AudioMixer MonsterMixer;
 
-        public RawImage BackgroundImage;
-
         [Header("当前语言（要和本地化表的语言字段 一致）")] [SerializeField]
         private FrameworkLanguage m_CurrLanguage;
 
@@ -211,7 +209,6 @@ namespace FrameWork
         private void Test2()
         {
 
-            // FormMask.CloseCircleMask();
             // QueueManager.Instance.AddTimeTask(1f, () =>
             // {
             //     Debugger.LogError("你好");

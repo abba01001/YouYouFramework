@@ -197,7 +197,7 @@ namespace FrameWork
             guideRoutine.GuideName = "第一步";
             guideRoutine.OnEnter = () =>
             {
-                FormMask.ShowCircleMsak(width, () => { CheckShowClickArrow(entity.ClickArrow, width); });
+                FormMask.Instance.ShowCircleMsak(width, () => { CheckShowClickArrow(entity.ClickArrow, width); });
 
                 if (entity.TimeToClose != 0)
                 {
@@ -211,7 +211,7 @@ namespace FrameWork
                     GuideUtil.CheckBtnNext(width);
                 }
             };
-            guideRoutine.OnExit = () => { FormMask.CloseCircleMask(); };
+            guideRoutine.OnExit = () => { FormMask.Instance.CloseCircleMask(); };
             GuideGroup.AddGuide(guideRoutine);
             GuideGroup.Run(() => { FinishCurGuide(entity.GuideId); });
         }
@@ -220,7 +220,7 @@ namespace FrameWork
         {
             if (direction == "down")
             {
-                FormMask.ShowArrow(obj, ArrowDirection.down);
+                FormMask.Instance.ShowArrow(obj, ArrowDirection.down);
             }
         }
 

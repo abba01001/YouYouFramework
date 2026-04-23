@@ -16,27 +16,30 @@ public enum ArrowDirection
 
 public class FormMask : UIFormBase, ICanvasRaycastFilter
 {
-    private static Image BlackMask; //遮罩图片
-    private static Image GuideMask; //遮罩图片
-    private static Material _materia;
-    private static GameObject target;
-    private static Tweener _topOriCloseTween; // 保存Tween引用
-    private static Transform arrow; 
+    public static FormMask Instance;
+    private Image BlackMask; //遮罩图片
+    private Image GuideMask; //遮罩图片
+    private Material _materia;
+    private GameObject target;
+    private Tweener _topOriCloseTween; // 保存Tween引用
+    private Transform arrow; 
     protected override async UniTask Awake()
     {
         await base.Awake();
+        Instance = this;
         BlackMask = transform.Get<Image>("BlackMask");
         BlackMask.gameObject.MSetActive(false);
         GuideMask = transform.Get<Image>("GuideMask");
         arrow = transform.Get<Transform>("Arrow");
-        _materia = GuideMask.material;
+        _materia = new Material(GuideMask.material);
+        GuideMask.material = _materia;
         
         _materia.SetVector("_TopOri", new Vector4(0, 0, 2000, 0));
         GuideMask.enabled = false;
         arrow.gameObject.MSetActive(false);
     }
 
-    public static void ShowArrow(GameObject targetTrans,ArrowDirection direction)
+    public void ShowArrow(GameObject targetTrans,ArrowDirection direction)
     {
         arrow.gameObject.MSetActive(true);
         Vector2 targetPos = GameUtil.GetCenterPosFromTrans(targetTrans.transform,GuideMask.transform.parent);
@@ -48,7 +51,7 @@ public class FormMask : UIFormBase, ICanvasRaycastFilter
         }
     }
 
-    public static void ShowMaskAnim(float value,float duration)
+    public void ShowMaskAnim(float value,float duration)
     {
         if (value == 1f) BlackMask.gameObject.MSetActive(true);
         BlackMask.DOFade(value, duration).OnComplete(() =>
@@ -57,19 +60,19 @@ public class FormMask : UIFormBase, ICanvasRaycastFilter
         });
     }
     
-    private static Vector2 GetArrowOffset(ArrowDirection direction)
+    private Vector2 GetArrowOffset(ArrowDirection direction)
     {
         if (direction == ArrowDirection.down) return new Vector2(0, 250);
         return Vector2.zero;
     }
     
-    public static void ShowCircleMsak(GameObject targetTrans,Action action = null)
+    public void ShowCircleMsak(GameObject targetTrans,Action action = null)
     {
         if(targetTrans == null) return;
         StopCircleMask();
         ShowBlockMask(true);
         Vector3 targetPos = GameUtil.GetCenterPosFromTrans(targetTrans.transform,GuideMask.transform.parent);
-         
+        _materia.SetFloat("_MaskType", 0);
         _materia.SetVector("_TopOri", new Vector4(targetPos.x,targetPos.y, 1500, 0));
         _materia.DOVector(new Vector4(targetPos.x,targetPos.y, 100f, 0),"_TopOri",0.6f).OnComplete(() =>
         {
@@ -78,7 +81,20 @@ public class FormMask : UIFormBase, ICanvasRaycastFilter
         });
     }
 
-    public static void CloseCircleMask(Action action = null)
+    public void ShowRectangleMsak(GameObject targetTrans, Action action = null)
+    {
+        Vector3 targetPos = GameUtil.GetCenterPosFromTrans(targetTrans.transform,GuideMask.transform.parent);
+        var rect = targetTrans.transform.GetComponent<RectTransform>();
+        _materia.SetFloat("_MaskType", 1);
+        _materia.SetVector("_Origin", new Vector4(targetPos.x, targetPos.y,1500, 1500));
+        _materia.DOVector(new Vector4(targetPos.x, targetPos.y, rect.sizeDelta.x, rect.sizeDelta.y), "_Origin", 0.6f).OnComplete(() =>
+        {
+            SetTargetImage(targetTrans);
+            action?.Invoke();
+        });
+    }
+
+    public void CloseCircleMask(Action action = null)
     {
         arrow.gameObject.MSetActive(false);
         ClearTarget();
@@ -89,7 +105,7 @@ public class FormMask : UIFormBase, ICanvasRaycastFilter
         });
     }
     
-    public static void StopCircleMask()
+    public void StopCircleMask()
     {
         // 使用 Kill() 中断动画
         if (_topOriCloseTween != null && _topOriCloseTween.IsActive())
@@ -98,7 +114,7 @@ public class FormMask : UIFormBase, ICanvasRaycastFilter
         }
     }
     
-    public static void ShowBlockMask(bool state)
+    public void ShowBlockMask(bool state)
     {
         GuideMask.enabled = state;
         GuideMask.raycastTarget = state;
@@ -148,12 +164,12 @@ public class FormMask : UIFormBase, ICanvasRaycastFilter
     /// 设置目标不被Mask遮挡
     /// </summary>
     /// <param name="tg">目标</param>
-    public static void SetTargetImage(GameObject tg)
+    public void SetTargetImage(GameObject tg)
     {
         target = tg;
     }
 
-    public static void ClearTarget()
+    public void ClearTarget()
     {
         target = null;
     }
