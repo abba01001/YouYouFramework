@@ -1,16 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net.Sockets;
-using System.Threading.Tasks;
-using HybridCLR.Editor;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
-using YooAsset.Editor;
 using BuildReport = UnityEditor.Build.Reporting.BuildReport;
 using BuildResult = UnityEditor.Build.Reporting.BuildResult;
 using Debug = UnityEngine.Debug;
@@ -18,13 +13,6 @@ using Debug = UnityEngine.Debug;
 [CreateAssetMenu(menuName = "框架ScriptableObject/AssetBundleSettings")]
 public class AssetBundleEditor : ScriptableObject
 {
-    public enum CusBuildTarget
-    {
-        Android,
-        Windows,
-        WebGL
-    }
-
     public enum AssetLoadTarget
     {
         [LabelText("正式服务器")] SERVERMODE,
