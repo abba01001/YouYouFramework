@@ -1,0 +1,14 @@
+<linker>
+  <!-- 保留 Timeline 模块 -->
+  <assembly fullname="UnityEngine.Timeline" preserve="all"/>
+  <assembly fullname="Unity.Timeline" preserve="all"/>
+  
+  <!-- 保留 Playable 相关模块 -->
+  <assembly fullname="UnityEngine.Playables" preserve="all"/>
+  
+  <!-- 保留 SpriteMask 和 CapsuleCollider2D 组件 -->
+  <assembly fullname="UnityEngine" preserve="all">
+    <type fullname="UnityEngine.SpriteMask" preserve="all"/>
+    <type fullname="UnityEngine.CapsuleCollider2D" preserve="all"/>
+  </assembly>
+</linker>

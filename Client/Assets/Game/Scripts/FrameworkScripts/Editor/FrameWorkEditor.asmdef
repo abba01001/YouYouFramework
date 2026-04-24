@@ -1,0 +1,19 @@
+{
+    "name": "YouYouFrameWorkEditor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:1d7b491cb1fac7a488fc81da294d1cf3",
+        "GUID:1d0c391e7dc2bd74a9add30dce06380e"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

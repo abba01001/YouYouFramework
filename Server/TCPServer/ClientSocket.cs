@@ -1,110 +1,150 @@
-﻿using System;
-using System.Linq;
-using System.Net.Sockets;
-using System.Text;
-using Google.Protobuf;
-using Google.Protobuf.WellKnownTypes;
+﻿using Google.Protobuf;
 using Protocols;
-using Protocols.Item;
+using System.Net.Sockets;
+using System.Threading.Tasks;
+using System;
+using System.Timers;
+using TCPServer.Core.Services;
+using System.Net;
+using TCPServer.Core;
 
-namespace TCPServer
+public class ClientSocket
 {
-    public class ClientSocket
+    public int clientID;
+    public Socket socket;
+    public long LastHeartbeatTime { get; set; }
+    public RequestHandler Request;
+    public ResponseHandler Response;
+    public int HeartTimeout = 15;
+    private byte[] msgBytes;
+    public string UserAccount { get; set; } = string.Empty;
+    public string UserUUID { get; set; } = string.Empty;
+
+    // 标记是否已销毁，防止重复调用
+    private bool _isDestroyed = false;
+
+    public ClientSocket(Socket clientSocket)
     {
-        public static int CLIENT_BEGIN_ID = 1;
-        public static int CLIENT_COUNT = 0;
-        public int clientID;
-        private Socket socket;
+        this.socket = clientSocket;
+        this.msgBytes = new byte[Constants.ProtocalTotalLength];
+        this.Request = new RequestHandler(this);
+        this.Response = new ResponseHandler(this, this.Request);
+    }
 
-        public RequestHandler Request;
-        public ResponseHandler Response;
+    // 关闭连接时移除用户
+    public void Close()
+    {
+        // 已销毁则直接返回
+        if (_isDestroyed) return;
 
-        public ClientSocket(Socket clientSocket)
+        try
         {
-            this.socket = clientSocket;
-            this.Request = new RequestHandler(socket);
-            this.Response = new ResponseHandler(socket,this.Request);
-            this.clientID = CLIENT_BEGIN_ID++;
-            CLIENT_COUNT++;
-        }
-
-        public void SendMsg(byte[] msg)
-        {
-            if (socket == null)
+            if (socket != null && socket.Connected)
             {
-                return; // 直接返回，避免继续执行
-            }
-            try
-            {
-                socket.Send(msg);
-            }
-            catch (SocketException e)
-            {
-                Console.WriteLine($"SendMsg SocketException: {e.Message}");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"SendMsg Exception: {e.Message}");
-            }
-        }
-
-        // 发送消息
-        public void SendMessage<T>(MsgType messageType, T data) where T : IMessage<T>
-        {
-            ServerSocket.Logger.LogMessage(this.socket, $"{data.ToString()}");
-            // 将数据对象序列化为字节数组
-            byte[] byteArrayData = data.ToByteArray();
-            var message = new BaseMessage
-            {
-                //MessageId = currentMessageId++, // 获取唯一消息ID并递增
-                Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds(), // 获取当前时间戳
-                SenderId = socket.RemoteEndPoint.ToString(), // 设置发送者ID
-                MsgType = messageType,
-                Type = typeof(T).Name,
-                Data = ByteString.CopyFrom(byteArrayData) // 直接将序列化后的字节数组放入 Data
-            };
-            byte[] messageBytes = message.ToByteArray();
-            SendMsg(messageBytes);
-        }
-
-
-        public void Close()
-        {
-            try
-            {
-                CLIENT_COUNT--;
-                Console.WriteLine("IP:{0}断开...已连接IP数{1}", socket.RemoteEndPoint.ToString(), ClientSocket.CLIENT_COUNT);
                 socket.Shutdown(SocketShutdown.Both);
             }
-            catch (SocketException) { /* 处理已关闭的socket */ }
-            finally
+        }
+        catch (SocketException) { }
+        finally
+        {
+            // 统一调用销毁方法（核心）
+            OnDestroy();
+        }
+    }
+
+    /// <summary>
+    /// 销毁当前类：释放所有资源 + 清空引用 + 销毁实例
+    /// </summary>
+    public async Task OnDestroy()
+    {
+        // 防止重复销毁
+        if (_isDestroyed) return;
+        _isDestroyed = true;
+
+        try
+        {
+            // 2. 关闭并清空Socket（释放网络资源）
+            if (socket != null)
             {
                 socket.Close();
                 socket = null;
             }
+
+            // 3. 从服务器客户端列表中移除自己（断开引用）
+            ServerSocket.CleanClient(this);
+            await PlayerService.OnLogout(UserUUID);
+            
+            // 4. 清空所有成员变量/引用（让GC回收内存）
+            clientID = 0;
+            LastHeartbeatTime = 0;
+            UserAccount = string.Empty;
+            UserUUID = string.Empty;
+            msgBytes = null;
+
+            // 清空业务类引用
+            Request = null;
+            Response = null;
+
+            LoggerHelper.Instance.Info($"客户端实例已销毁：{this.GetHashCode()}");
         }
-
-        // 接收消息
-        public void ReceiveMsg()
+        catch (Exception e)
         {
-            if (socket == null || !socket.Connected) return;
-            byte[] msgBytes = new byte[1024];
-            int msgLength = socket.Receive(msgBytes);
+            LoggerHelper.Instance.Error($"销毁客户端异常: {e.Message}");
+        }
+    }
 
+    // 接收消息
+    public async Task ReceiveMsgAsync()
+    {
+        // 已销毁直接退出
+        if (_isDestroyed || socket == null || !socket.Connected) return;
+
+        try
+        {
+            Array.Clear(msgBytes, 0, msgBytes.Length);
+            int msgLength = await socket.ReceiveAsync(new ArraySegment<byte>(msgBytes), SocketFlags.None);
             if (msgLength > 0)
             {
                 byte[] tempMsg = new byte[msgLength];
-                Array.Copy(msgBytes, tempMsg, msgLength); // 将接收到的数据复制到tempMsg
-                Console.WriteLine($"收到信息{socket.RemoteEndPoint}: {BitConverter.ToString(tempMsg)}");
+                Array.Copy(msgBytes, tempMsg, msgLength);
                 try
                 {
-                    BaseMessage receivedMsg = BaseMessage.Parser.ParseFrom(tempMsg); // 解析收到的消息
-                    Response.HandleResponse(receivedMsg);
+                    Protocol receivedMsg = Protocol.Parser.ParseFrom(tempMsg);
+                    BaseMessage finalMessage = ServerSocket.handleSubPack.ProcessSubPack(receivedMsg);
+                    // LoggerHelper.Instance.Debug($"接收消息id==={receivedMsg.MessageId}==包索引{receivedMsg.PacketIndex}==包数{receivedMsg.PacketTotal}==协议长度{msgLength}");
+                    if (finalMessage != null)
+                    {
+                        Response.HandleResponse(finalMessage);
+                    }
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"ReceiveClientMsg Exception: {e.Message}");
+                    LoggerHelper.Instance.Error($"接收消息异常: {e.Message}");
                 }
+            }
+        }
+        catch (Exception e)
+        {
+            LoggerHelper.Instance.Error($"接收消息异常: {e.Message}");
+            // 接收异常直接销毁当前类
+            Close();
+        }
+    }
+
+    public void CheckConnect()
+    {
+        // 已销毁直接退出
+        if (_isDestroyed || LastHeartbeatTime == 0) return;
+
+        lock (this)
+        {
+            if (ServerSocket.CurrentServerTimestamp - LastHeartbeatTime > HeartTimeout)
+            {
+                if (socket != null)
+                    LoggerHelper.Instance.Info($"客户端{socket.RemoteEndPoint.ToString()}超时断开");
+
+                // 超时后销毁当前实例
+                Close();
             }
         }
     }

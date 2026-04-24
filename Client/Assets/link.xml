@@ -1,0 +1,9 @@
+<linker>
+  <assembly fullname="UnityEngine.Physics2DModule">
+    <type fullname="UnityEngine.PolygonCollider2D" preserve="all" />
+    <type fullname="UnityEngine.CapsuleCollider2D" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.SpriteMaskModule">
+    <type fullname="UnityEngine.SpriteMask" preserve="all" />
+  </assembly>
+</linker>

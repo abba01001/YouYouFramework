@@ -4,10 +4,18 @@ package Protocols;
 
 // 消息类型的枚举
 enum MsgType {
-    HeartBeat = 0;
-    EXIT = 1;
-    // 添加其他消息类型
+    Client = 0;
+    Server = 1;
 }
+
+// 协议消息结构
+message Protocol {
+    int32 packet_index = 1;    // 包的序号
+    int32 packet_total = 2;    // 总包数
+    string message_id = 3;      // 消息ID
+    bytes data = 4;            // 数据内容 (bytes)
+}
+
 
 // 基本消息结构
 message BaseMessage {
@@ -15,13 +23,105 @@ message BaseMessage {
     int64 timestamp = 2;   // 时间戳
     string sender_id = 3;  // 发送者ID
     MsgType msgType = 4;      // 消息类型
-    string type = 5;
-    bytes data = 6;        // 消息内容
+    string token = 5;
+    string type = 6;
+    bytes data = 7;        // 消息内容
 }
 
+message HotUpdateMsg{
+
+}
+
+message ExitGameMsg{
+
+}
+
+message EntryGameMsg{
+    PlayerActionMsg playerActionMsg  = 1; // 玩家移动属性
+}
 
 message HeartBeatMsg {
-    int32 message_id = 1; // 消息ID
-    int64 timestamp = 2;   // 时间戳
-    string sender_id = 3;  // 发送者ID
+    int64 client_time = 1;   // 客户端发送时间（毫秒）
+    int64 server_time = 2;   // 服务端时间（毫秒，ACK时填写）
+    int32 seq = 3;           // 心跳序号（防乱序/调试用）
+}
+
+message LoginMsg{
+    string user_account = 1;
+    string user_password = 2;
+    int32 state = 3;
+    string user_uuid = 4;
+    string token = 5;
+    bytes save_data = 6;
+}
+
+message RegisterMsg{
+    string user_account = 1;
+    string user_password = 2;
+    int32 state = 3;
+    string user_uuid = 4;
+    string token = 5;
+}
+
+// 邮件消息结构
+message EmailMsg {
+    int32 email_id = 1;         // 邮件ID
+    string sender_id = 2;       // 发送者ID
+    string receiver_id = 3;     // 接收者ID
+    string subject = 4;         // 邮件主题
+    string content = 5;         // 邮件内容
+    int64 send_time = 6;        // 发送时间（使用Unix时间戳）
+    bool is_read = 7;           // 是否已读
+    bool is_get = 8;            // 是否领取
+    bool is_deleted = 9;        // 是否已删除
+}
+
+// 聊天消息结构
+message ChatMsg {
+    string id = 1;             // 消息id（唯一标识符）
+    string sender_id = 2;        // 发送者ID
+    string receiver_id = 3;      // 接收者ID（公告频道为 NULL）
+    string message = 4;          // 消息内容
+    int32 channel_type = 5;      // 发送消息频道类型 (1 - 公共频道, 2 - 私聊, 3 - 系统消息, 4 - 公告)
+    int32 timestamp = 6;        // 消息时间戳（Unix 时间戳）
+    bool is_read = 7;            // 消息是否已读，针对私聊消息
+    bool is_deleted = 8;         // 是否已删除，方便实现软删除
+    bool is_request_public = 9;         // 是否已删除，方便实现软删除
+    int32 message_type = 10;      // 消息类型 (1 - 文本, 2 - 图片, 3 - 文件)
+}
+
+message ChatMsgList {
+    repeated ChatMsg public_chat = 1;  // 公共频道聊天信息
+    repeated ChatMsg private_chat = 2; //私聊
+}
+
+message SuspendTimeMsg{
+    string user_uuid = 1;
+    int32 type = 2;
+    bool canGetReward = 3;
+    int32 hour = 4;
+    int32 timestamp = 5;
+    int32 quickGetSuspendRewardIndex = 6;
+    int32 quickGetSuspendRewardLimit = 7;
+}
+
+// 玩家动作结构
+message PlayerActionMsg {
+    string user_uuid = 1;
+
+    float pos_x = 2;
+    float pos_y = 3;
+    float pos_z = 4;
+
+    float rot_x = 5;
+    float rot_y = 6;
+    float rot_z = 7;
+
+    enum ActionType {
+        UNKNOWN = 0;
+        MOVE = 1;
+        ATTACK = 2;
+        INTERACT = 3;
+    }
+    ActionType action_type = 8;
 }

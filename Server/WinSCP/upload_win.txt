@@ -1,0 +1,10 @@
+option batch abort
+option confirm off
+
+open sftp://Administrator:xxx@43.134.133.178/ -hostkey=*
+
+lcd Publish\win-x64
+cd /C:/Server/win-x64
+put -r *
+
+exit

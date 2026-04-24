@@ -1,19 +1,61 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+		<!-- 基础 -->
 		<OutputType>Exe</OutputType>
-		<TargetFramework>netcoreapp5.0</TargetFramework>
+		<TargetFramework>net6.0</TargetFramework>
+
+		<!-- 发布相关 -->
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 		<SelfContained>true</SelfContained>
-		<!-- 包含所有必要的运行时 -->
-		<PublishSingleFile>true</PublishSingleFile>
-		<!-- 将应用程序打包为单个文件 -->
-		<PublishTrimmed>true</PublishTrimmed>
-		<!-- 剔除未使用的代码以减少文件大小 -->
+
+		<!-- 发布优化（先关掉坑） -->
+		<PublishSingleFile>false</PublishSingleFile>
+		<PublishTrimmed>false</PublishTrimmed>
+
+		<!-- 调试（服务器建议保留最少日志符号） -->
+		<DebugType>portable</DebugType>
+		<DebugSymbols>false</DebugSymbols>
+
+		<!-- 其他 -->
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Google.Protobuf" Version="3.28.2" />
+		<!-- 网络 / 序列化 -->
+		<PackageReference Include="Google.Protobuf" Version="3.28.2" />
+		<PackageReference Include="MessagePack" Version="3.1.1" />
+
+		<!-- 数据库 -->
+		<PackageReference Include="MySqlConnector" Version="2.3.7" />
+
+		<!-- Redis -->
+		<PackageReference Include="StackExchange.Redis" Version="2.6.122" />
+
+		<!-- JSON -->
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+
+		<!-- 日志 -->
+		<PackageReference Include="NLog" Version="5.3.4" />
+
+		<!-- 安全（JWT） -->
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.3.0" />
+
+		<!-- 编码支持 -->
+		<PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- 配置文件 -->
+		<None Update="NLog.config">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+
+		<!-- 密钥文件 -->
+		<None Include="Key\**\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 
 </Project>

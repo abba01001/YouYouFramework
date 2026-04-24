@@ -1,94 +1,97 @@
+using System;
 using UnityEngine;
+using System.Diagnostics;
+using System.Text;
+using Object = UnityEngine.Object;
 
-public class Debugger : MonoBehaviour
+/// <summary>
+/// 全局调试模块 - 追求极致简洁
+/// 所有的调用在 Release 版本（非 Development Build）下会被编译器完全移除
+/// </summary>
+namespace Main
 {
-    private string logContent = "";  // 用于存储日志
-    private Vector2 scrollPosition;  // 滚动条位置
-    private bool showLogWindow = false;  // 控制日志窗口的显示
-    private GUIStyle logStyle;  // 用于设置字体样式
-    private const float scrollSpeed = 10f;  // 滚动速度限制
+    public static class Debugger
+    {
+        // 全局运行时开关
+        public static bool EnableLog = true;
 
-    void OnEnable()
-    {
-        // 监听 Unity 日志消息
-        Application.logMessageReceived += HandleLog;
-        logStyle = new GUIStyle();
-        logStyle.fontSize = 26;  // 增大字体大小
-        logStyle.normal.textColor = Color.white;  // 默认字体颜色
-        logStyle.wordWrap = true;  // 允许自动换行
-    }
+        // 复用 StringBuilder 减少 GC (仅主线程使用)
+        private static readonly StringBuilder stringBuilder = new StringBuilder();
 
-    void OnDisable()
-    {
-        Application.logMessageReceived -= HandleLog;
-    }
-    
-    // 处理日志的方法
-    void HandleLog(string logString, string stackTrace, LogType type)
-    {
-        // 如果是错误类型，则附加堆栈信息并将内容格式化为红色
-        if (type == LogType.Error || type == LogType.Exception)
+        #region Log 接口
+
+        // 单个对象调用，支持传入 context 以便在编辑器点击定位
+        // [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
+        public static void Log(object message, Object context = null)
         {
-            logContent += $"<color=red>{logString}</color>\n";
-            logContent += $"<color=red>{stackTrace}</color>\n";
-        }
-        else
-        {
-            logContent += logString + "\n";
+            if (!EnableLog) return;
+            UnityEngine.Debug.Log($"{GetTimeStamp()}<color=#00FF00>[LOG]</color> {message}", context);
         }
 
-        // 自动滚动到最新日志
-        scrollPosition.y = Mathf.Max(scrollPosition.y + scrollSpeed, float.MaxValue); // 使滚动条自动滚动到最底部
-    }
-
-    void OnGUI()
-    {
-        // 添加一个按钮来控制日志窗口的显示与隐藏，按钮大小增加一倍
-        if (GUI.Button(new Rect(10, 10, 200, 60), "日志开关"))  // 改为“日志开关”
+        // 多参数任意拼接
+        // [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
+        public static void Log(params object[] messages)
         {
-            showLogWindow = !showLogWindow;
+            if (!EnableLog) return;
+            UnityEngine.Debug.Log($"{GetTimeStamp()}<color=#00FF00>[LOG]</color> {JointString(messages)}");
         }
 
-        if (showLogWindow)
+        #endregion
+
+        #region Warning 接口
+
+        // [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
+        public static void LogWarning(params object[] messages)
         {
-            DrawLogWindow();
+            if (!EnableLog) return;
+            UnityEngine.Debug.LogWarning($"{GetTimeStamp()}<color=#FFFF00>[WARN]</color> {JointString(messages)}");
         }
 
-        // 检测触摸并处理滑动
-        HandleTouchScroll();
-    }
+        #endregion
 
-    // 绘制日志窗口
-    void DrawLogWindow()
-    {
-        // 定义日志窗口区域：屏幕的左上角，大小为屏幕的 1/2
-        float windowWidth = Screen.width / 2;
-        float windowHeight = Screen.height / 2;
-        GUILayout.BeginArea(new Rect(10, 80, windowWidth, windowHeight));  // 调整位置以避免与按钮重叠
-        GUILayout.Label("日志窗口", GUILayout.Height(20));
+        #region Error 接口
 
-        // 使用 ScrollView 来显示可滚动的日志内容
-        scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.Width(windowWidth), GUILayout.Height(windowHeight - 30));
-
-        // 显示日志文本，并应用自定义字体样式，设置宽度以便换行
-        GUILayout.Label(logContent, logStyle, GUILayout.Width(windowWidth - 20));  // 宽度要减去一些以避免滚动条覆盖
-
-        GUILayout.EndScrollView();
-        GUILayout.EndArea();
-    }
-
-    // 处理触摸滑动的逻辑
-    void HandleTouchScroll()
-    {
-        if (Input.touchCount == 1)
+        // [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
+        public static void LogError(params object[] messages)
         {
-            Touch touch = Input.GetTouch(0);
+            UnityEngine.Debug.LogError($"{GetTimeStamp()}<color=#FF0000>[ERROR]</color> {JointString(messages)}");
+        }
 
-            if (touch.phase == TouchPhase.Moved)
+        #endregion
+
+
+        // 测试代码块的执行时间
+        public static void TestTime(string tag, System.Action action = null)
+        {
+            System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
+            action?.Invoke();
+            stopwatch.Stop();
+            float seconds = stopwatch.ElapsedTicks / (float)System.Diagnostics.Stopwatch.Frequency;
+            LogError($"{tag} --- 消耗时间: {seconds:F3} 秒");
+        }
+
+        #region 内部工具
+
+        private static string GetTimeStamp()
+        {
+            // 渲染格式：[2026-04-03 16:30:05.123] 
+            return $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}] ";
+        }
+
+        private static string JointString(params object[] values)
+        {
+            if (values == null || values.Length == 0) return string.Empty;
+
+            stringBuilder.Clear();
+            for (int i = 0; i < values.Length; i++)
             {
-                // 根据触摸的垂直移动量调整 scrollPosition
-                scrollPosition.y += touch.deltaPosition.y;
+                stringBuilder.Append(values[i]);
             }
+
+            return stringBuilder.ToString();
         }
+
+        #endregion
     }
 }
