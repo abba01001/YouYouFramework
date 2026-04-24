@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using FrameWork;
+using GameScripts;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Playables;

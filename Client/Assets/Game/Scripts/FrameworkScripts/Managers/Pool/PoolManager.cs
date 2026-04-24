@@ -1,10 +1,9 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-
-namespace FrameWork
+namespace GameScripts
 {
     /// <summary>
     /// 池管理器
@@ -15,12 +14,12 @@ namespace FrameWork
         /// 游戏物体对象池
         /// </summary>
         public GameObjectPool GameObjectPool { get; private set; }
-
+    
         /// <summary>
         /// 类对象池
         /// </summary>
         public ClassObjectPool ClassObjectPool { get; private set; }
-
+    
         internal PoolManager()
         {
             GameObjectPool = new GameObjectPool();

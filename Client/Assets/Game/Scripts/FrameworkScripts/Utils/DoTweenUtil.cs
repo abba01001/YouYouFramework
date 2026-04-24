@@ -1,12 +1,11 @@
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-
-namespace FrameWork
+namespace GameScripts
 {
     public static class DoTweenUtil
     {
@@ -14,21 +13,21 @@ namespace FrameWork
         {
             return target.DoShowScale(duration, 1);
         }
-
+    
         public static Tweener DoShowScale(this Transform target, float duration, float targetScale)
         {
             target.DOKill();
             target.localScale = Vector3.zero;
             return target.DOScale(targetScale, duration).SetEase(Ease.OutBack);
         }
-
+    
         public static Tweener DoShowScale(this Transform target, float duration, Vector3 targetScale)
         {
             target.DOKill();
             target.localScale = Vector3.zero;
             return target.DOScale(targetScale, duration).SetEase(Ease.OutBack);
         }
-
+    
         public static Tweener DoShowColor(this Image target, float duration)
         {
             target.DOKill();
@@ -38,7 +37,7 @@ namespace FrameWork
             target.color = Color.clear;
             return target.DOColor(color, duration);
         }
-
+    
         public static Tweener DoShowColor(this Image target, float duration, Color targetColor)
         {
             target.DOKill();
@@ -47,7 +46,7 @@ namespace FrameWork
             target.color = Color.clear;
             return target.DOColor(targetColor, duration);
         }
-
+    
         public static Tweener DoHideColor(this Image target, float duration, Color begColor)
         {
             target.DOKill();

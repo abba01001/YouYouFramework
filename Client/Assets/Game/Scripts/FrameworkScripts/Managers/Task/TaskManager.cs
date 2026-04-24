@@ -1,10 +1,9 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-namespace FrameWork
+namespace GameScripts
 {
     /// <summary>
     /// 任务管理器
@@ -15,23 +14,23 @@ namespace FrameWork
         /// 任务组列表
         /// </summary>
         private LinkedList<TaskGroup> m_TaskGroupList;
-
+    
         private TaskGroup CommonGroup;
-
+    
         public TaskManager()
         {
             m_TaskGroupList = new LinkedList<TaskGroup>();
             CommonGroup = new TaskGroup();
         }
-
+    
         internal void Init()
         {
             CommonGroup.OnComplete = () => { GameEntry.UI.CloseUIForm<FormCircle>(); };
         }
-
+    
         public void OnUpdate()
         {
-#if DEBUG_MODEL
+    #if DEBUG_MODEL
             if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKeyUp(KeyCode.E))
             {
                 CommonGroup.LogTask();
@@ -43,10 +42,10 @@ namespace FrameWork
                     taskGroup = taskGroup.Next;
                 }
             }
-#endif
+    #endif
             UpdateItem();
         }
-
+    
         private void UpdateItem()
         {
             CommonGroup.OnUpdate();
@@ -57,7 +56,7 @@ namespace FrameWork
                 taskGroup = taskGroup.Next;
             }
         }
-
+    
         /// <summary>
         /// 添加异步任务 (等待异步时会有 转圈等待UI遮罩)
         /// </summary>
@@ -66,7 +65,7 @@ namespace FrameWork
             CommonGroup.AddTask(task, isTask);
             CommonGroup.Run(false, () => GameEntry.UI.OpenUIForm<FormCircle>());
         }
-
+    
         /// <summary>
         /// 创建一个任务组
         /// </summary>
@@ -75,7 +74,7 @@ namespace FrameWork
             TaskGroup taskGroup = new TaskGroup();
             return taskGroup;
         }
-
+    
         /// <summary>
         /// 注册任务组
         /// </summary>
@@ -83,7 +82,7 @@ namespace FrameWork
         {
             m_TaskGroupList.AddLast(taskGroup);
         }
-
+    
         /// <summary>
         /// 移除任务组
         /// </summary>
@@ -91,10 +90,10 @@ namespace FrameWork
         {
             m_TaskGroupList.Remove(taskGroup);
         }
-
+    
         public void Dispose()
         {
-
+    
         }
     }
 }

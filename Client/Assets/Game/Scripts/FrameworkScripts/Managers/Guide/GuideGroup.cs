@@ -1,28 +1,26 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using FrameWork;
+
 using Main;
 using UnityEngine;
 
-namespace FrameWork
+namespace GameScripts
 {
-
-
     public class GuideGroup
     {
         public TaskGroup TaskGroup { get; private set; }
-
+    
         public GuideGroup()
         {
             TaskGroup = new TaskGroup();
         }
-
+    
         public void AddGuide(Action onEnter)
         {
             TaskGroup.AddTask(taskRoutine => { onEnter?.Invoke(); });
         }
-
+    
         public void AddGuide(GuideRoutine guideRoutine)
         {
             TaskGroup.AddTask(taskRoutine =>
@@ -31,7 +29,7 @@ namespace FrameWork
                 guideRoutine.OnEnter?.Invoke();
             });
         }
-
+    
         public void Run(Action onComplete = null)
         {
             TaskGroup.OnComplete = () =>

@@ -1,7 +1,8 @@
-using Sirenix.OdinInspector;
+﻿using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
-using FrameWork;
+
+using GameScripts;
 using Main;
 using MessagePack;
 using MessagePack.Unity;
@@ -10,68 +11,68 @@ using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-namespace FrameWork
+namespace GameScripts
 {
     public class GameEntry : MonoBehaviour
     {
-
+    
         /// <summary>
         /// Http调用失败后重试次数
         /// </summary>
         public static int HttpRetry { get; private set; }
-
+    
         /// <summary>
         /// Http调用失败后重试间隔（秒）
         /// </summary>
         public static int HttpRetryInterval { get; private set; }
-
+    
         //全局参数设置
         [FoldoutGroup("ParamsSettings")] [SerializeField]
         private ParamsSettings m_ParamsSettings;
-
+    
         public static ParamsSettings ParamsSettings { get; private set; }
-
+    
         [FoldoutGroup("MacroSettings")] [SerializeField]
         public MacroSettings m_MacroSettings;
-
+    
         public static MacroSettings MacroSettings { get; private set; }
-
+    
         //当前设备等级
         [FoldoutGroup("ParamsSettings")] [SerializeField]
         private ParamsSettings.DeviceGrade m_CurrDeviceGrade;
-
+    
         public static ParamsSettings.DeviceGrade CurrDeviceGrade { get; private set; }
-
-
+    
+    
         [FoldoutGroup("ResourceGroup")] [Header("游戏物体对象池分组")]
         public SpawnPoolEntity[] GameObjectPoolGroups;
-
+    
         [FoldoutGroup("ResourceGroup")] [Header("对象池锁定的资源包")]
         public string[] LockedAssetBundle;
-
+    
         [FoldoutGroup("UIGroup")] [Header("UI摄像机")]
         public Camera UICamera;
-
+    
         [Header("主摄像机")] public Camera MainCamera;
-
+    
         [FoldoutGroup("UIGroup")] [Header("根画布的缩放")]
         public CanvasScaler UIRootCanvasScaler;
-
+    
         public RectTransform UIRootRectTransform { get; private set; }
-
+    
         [FoldoutGroup("UIGroup")] [Header("UI分组")]
         public UIGroup[] UIGroups;
-
+    
         [FoldoutGroup("UIGroup")] [Header("主页背景")] [FoldoutGroup("AudioGroup")] [Header("声音主混合器")]
         public AudioMixer MonsterMixer;
-
+    
         [Header("当前语言（要和本地化表的语言字段 一致）")] [SerializeField]
         private FrameworkLanguage m_CurrLanguage;
-
+    
         public static FrameworkLanguage CurrLanguage;
-
+    
         [Header("声音主混合器")] public AudioMixer MasterMixer;
-
+    
         //管理器属性
         public static LoggerManager Logger { get; private set; }
         public static EventManager Event { get; private set; }
@@ -94,12 +95,12 @@ namespace FrameWork
         public static GuideManager Guide { get; private set; }
         public Camera SceneCamera { get; set; }
         public static ClassObjectPool ClassObjectPool { get; private set; }
-
+    
         /// <summary>
         /// 单例
         /// </summary>
         public static GameEntry Instance { get; private set; }
-
+    
         private void Awake()
         {
             Debugger.Log("GameEntry.OnAwake()");
@@ -109,27 +110,27 @@ namespace FrameWork
             // if (MainEntry.Reporter != null) MainEntry.Reporter.ShowLogPanel(false);
             CurrLanguage = m_CurrLanguage;
             Application.targetFrameRate = 120;
-
-
-
-
+    
+    
+    
+    
             if (MacroSettings == null)
             {
                 MacroSettings = m_MacroSettings;
             }
-
+    
             //此处以后判断如果不是编辑器模式 要根据设备信息判断等级
             CurrDeviceGrade = m_CurrDeviceGrade;
             ParamsSettings = m_ParamsSettings;
             MacroSettings = m_MacroSettings;
-
-
-
+    
+    
+    
             //初始化系统参数
             HttpRetry = ParamsSettings.GetGradeParamData(GameConst.Http_Retry, CurrDeviceGrade);
             HttpRetryInterval = ParamsSettings.GetGradeParamData(GameConst.Http_RetryInterval, CurrDeviceGrade);
         }
-
+    
         private void Start()
         {
             Debugger.Log("GameEntry.OnStart()");
@@ -180,16 +181,16 @@ namespace FrameWork
             ViewQueueManager.Instance.RegisterEvents();
             Initialize();
         }
-
+    
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private void Initialize()
         {
             MessagePackSerializer.DefaultOptions =
                 MessagePackSerializerOptions.Standard.WithResolver(UnityResolver.InstanceWithStandardResolver);
         }
-
+    
         private bool isOpen = false;
-
+    
         private void Test0()
         {
             return;
@@ -197,7 +198,7 @@ namespace FrameWork
             // MainEntry.Reporter.ShowLogPanel(isOpen);
             StartCoroutine(GameUtil.LocationInfoCoroutine(null));
         }
-
+    
         private void Test1()
         {
             return;
@@ -205,10 +206,10 @@ namespace FrameWork
             GameEntry.Event.Dispatch(Constants.EventName.UpdateBtnUnlockStatus);
             //QueueManager.Instance.AddEventTask("Hello","CloseHello");
         }
-
+    
         private void Test2()
         {
-
+    
             // QueueManager.Instance.AddTimeTask(1f, () =>
             // {
             //     Debugger.LogError("你好");
@@ -217,13 +218,13 @@ namespace FrameWork
             //     Debugger.LogError("结束，跳转下一个队列");
             // });
         }
-
+    
         private void Test3()
         {
             return;
             GameEntry.Event.Dispatch(Constants.EventName.EventMessage, new EventMessage("CloseHello"));
         }
-
+    
         private void Test4()
         {
             return;
@@ -236,7 +237,7 @@ namespace FrameWork
             GameEntry.Data.SaveData(true);
             GameUtil.ShowTip("测试文本哈哈哈哈哈哈！！！");
         }
-
+    
         void Update()
         {
             Data.OnUpdate();
@@ -252,11 +253,11 @@ namespace FrameWork
             Guide.OnUpdate();
             GameEntry.Event.Dispatch(Constants.EventName.GameEntryOnUpdate);
         }
-
+    
         private void LateUpdate()
         {
         }
-
+    
         private void OnApplicationQuit()
         {
             Data.SaveData(true);
@@ -266,7 +267,7 @@ namespace FrameWork
             Fsm.Dispose();
             GameEntry.Event.Dispatch(Constants.EventName.GameEntryOnApplicationQuit);
         }
-
+    
         private void OnApplicationPause(bool pause)
         {
             if (pause)
@@ -275,18 +276,18 @@ namespace FrameWork
                 GameEntry.Event.Dispatch(Constants.EventName.GameEntryOnApplicationPause);
             }
         }
-
+    
         public Transform GetSayItemParent()
         {
             return UIGroups[4].Group;
         }
-
+    
         public static void LogError(params object[] messages)
         {
             string combinedMessage = StringUtil.JointString(messages);
             Debug.LogError(combinedMessage);
         }
-
+    
         private void OnDestroy()
         {
             Net.OnDestroy();

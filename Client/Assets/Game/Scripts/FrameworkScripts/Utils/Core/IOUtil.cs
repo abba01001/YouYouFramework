@@ -1,10 +1,9 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System.IO;
 using System;
 
-
-namespace FrameWork
+namespace GameScripts
 {
     public class IOUtil
     {
@@ -16,22 +15,22 @@ namespace FrameWork
         public static string GetFileText(string filePath)
         {
             string content = string.Empty;
-
+    
             if (!File.Exists(filePath))
             {
                 return content;
             }
-
+    
             using (StreamReader sr = File.OpenText(filePath))
             {
                 content = sr.ReadToEnd();
             }
-
+    
             return content;
         }
-
+    
         #region CreateTextFile 创建文本文件
-
+    
         /// <summary>
         /// 创建文本文件
         /// </summary>
@@ -40,7 +39,7 @@ namespace FrameWork
         public static void CreateTextFile(string filePath, string content)
         {
             DeleteFile(filePath);
-
+    
             using (FileStream fs = File.Create(filePath))
             {
                 using (StreamWriter sw = new StreamWriter(fs))
@@ -49,11 +48,11 @@ namespace FrameWork
                 }
             }
         }
-
+    
         #endregion
-
+    
         #region DeleteFile 删除文件
-
+    
         /// <summary>
         /// 删除文件
         /// </summary>
@@ -65,11 +64,11 @@ namespace FrameWork
                 File.Delete(filePath);
             }
         }
-
+    
         #endregion
-
+    
         #region CopyDirectory 拷贝文件夹
-
+    
         /// <summary>
         /// 拷贝文件夹
         /// </summary>
@@ -83,12 +82,12 @@ namespace FrameWork
                 {
                     Directory.CreateDirectory(destDirName);
                     File.SetAttributes(destDirName, File.GetAttributes(sourceDirName));
-
+    
                 }
-
+    
                 if (destDirName[destDirName.Length - 1] != Path.DirectorySeparatorChar)
                     destDirName = destDirName + Path.DirectorySeparatorChar;
-
+    
                 string[] files = Directory.GetFiles(sourceDirName);
                 foreach (string file in files)
                 {
@@ -99,11 +98,11 @@ namespace FrameWork
                         || fileInfo.Extension.Equals(".manifest", StringComparison.CurrentCultureIgnoreCase)
                        )
                         continue;
-
+    
                     File.Copy(file, destDirName + Path.GetFileName(file), true);
                     File.SetAttributes(destDirName + Path.GetFileName(file), FileAttributes.Normal);
                 }
-
+    
                 string[] dirs = Directory.GetDirectories(sourceDirName);
                 foreach (string dir in dirs)
                 {
@@ -115,11 +114,11 @@ namespace FrameWork
                 throw ex;
             }
         }
-
+    
         #endregion
-
+    
         #region GetFileBuffer 读取本地文件到byte数组
-
+    
         /// <summary>
         /// 读取本地文件到byte数组
         /// </summary>
@@ -128,18 +127,18 @@ namespace FrameWork
         public static byte[] GetFileBuffer(string path)
         {
             if (!File.Exists(path)) return null;
-
+    
             byte[] buffer = null;
-
+    
             using (FileStream fs = new FileStream(path, FileMode.Open))
             {
                 buffer = new byte[fs.Length];
                 fs.Read(buffer, 0, buffer.Length);
             }
-
+    
             return buffer;
         }
-
+    
         #endregion
     }
 }

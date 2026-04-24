@@ -1,12 +1,10 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace FrameWork
+namespace GameScripts
 {
-
-
     /// <summary>
     /// 状态机管理器
     /// </summary>
@@ -16,18 +14,18 @@ namespace FrameWork
         /// 状态机字典
         /// </summary>
         private Dictionary<int, FsmBase> m_FsmDic;
-
+    
         /// <summary>
         /// 状态机的临时编号
         /// </summary>
         private int m_TemFsmId = 0;
-
-
+    
+    
         internal FsmManager()
         {
             m_FsmDic = new Dictionary<int, FsmBase>();
         }
-
+    
         public void Dispose()
         {
             var enumerator = m_FsmDic.GetEnumerator();
@@ -35,10 +33,10 @@ namespace FrameWork
             {
                 enumerator.Current.Value.ShutDown();
             }
-
+    
             m_FsmDic.Clear();
         }
-
+    
         /// <summary>
         /// 创建状态机
         /// </summary>
@@ -53,7 +51,7 @@ namespace FrameWork
             m_FsmDic[m_TemFsmId] = fsm;
             return fsm;
         }
-
+    
         /// <summary>
         /// 销毁状态机
         /// </summary>

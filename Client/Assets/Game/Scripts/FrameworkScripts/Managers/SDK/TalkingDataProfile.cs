@@ -1,8 +1,7 @@
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace FrameWork
+namespace GameScripts
 {
-
     public enum TalkingDataProfileType
     {
         ANONYMOUS = 0,
@@ -23,23 +22,23 @@ namespace FrameWork
         TYPE9 = 19,
         TYPE10 = 20
     }
-
-
+    
+    
     public enum TalkingDataGender
     {
         UNKNOWN = 0,
         MALE = 1,
         FEMALE = 2
     }
-
-
+    
+    
     public class TalkingDataProfile
     {
-#if UNITY_ANDROID
+    #if UNITY_ANDROID
         public AndroidJavaObject javaObj;
-#endif
-
-#if UNITY_IPHONE
+    #endif
+    
+    #if UNITY_IPHONE
     private string name;
     private TalkingDataProfileType type;
     private TalkingDataGender gender;
@@ -54,319 +53,319 @@ namespace FrameWork
     private object property8;
     private object property9;
     private object property10;
-#endif
-
+    #endif
+    
         public static TalkingDataProfile CreateProfile()
         {
             if (Application.platform != RuntimePlatform.OSXEditor &&
                 Application.platform != RuntimePlatform.WindowsEditor)
             {
                 TalkingDataProfile profile = new TalkingDataProfile();
-#if UNITY_ANDROID
+    #if UNITY_ANDROID
                 AndroidJavaClass javaClass = new AndroidJavaClass("com.tendcloud.tenddata.TalkingDataProfile");
                 profile.javaObj = javaClass.CallStatic<AndroidJavaObject>("createProfile");
-#endif
+    #endif
                 return profile;
             }
-
+    
             return null;
         }
-
+    
         // 账户名称
         public TalkingDataProfile SetName(string name)
         {
             if (Application.platform != RuntimePlatform.OSXEditor &&
                 Application.platform != RuntimePlatform.WindowsEditor)
             {
-#if UNITY_ANDROID
+    #if UNITY_ANDROID
                 if (javaObj != null)
                 {
                     javaObj.Call<AndroidJavaObject>("setName", name);
                 }
-#endif
-#if UNITY_IPHONE
+    #endif
+    #if UNITY_IPHONE
             this.name = name;
-#endif
+    #endif
             }
-
+    
             return this;
         }
-
+    
         // 账户类型
         public TalkingDataProfile SetType(TalkingDataProfileType type)
         {
             if (Application.platform != RuntimePlatform.OSXEditor &&
                 Application.platform != RuntimePlatform.WindowsEditor)
             {
-#if UNITY_ANDROID
+    #if UNITY_ANDROID
                 if (javaObj != null)
                 {
                     AndroidJavaClass enumClass = new AndroidJavaClass("com.tendcloud.tenddata.TalkingDataProfileType");
                     AndroidJavaObject typeObj = enumClass.CallStatic<AndroidJavaObject>("valueOf", type.ToString());
                     javaObj.Call<AndroidJavaObject>("setType", typeObj);
                 }
-#endif
-#if UNITY_IPHONE
+    #endif
+    #if UNITY_IPHONE
             this.type = type;
-#endif
+    #endif
             }
-
+    
             return this;
         }
-
+    
         // 性别
         public TalkingDataProfile SetGender(TalkingDataGender gender)
         {
             if (Application.platform != RuntimePlatform.OSXEditor &&
                 Application.platform != RuntimePlatform.WindowsEditor)
             {
-#if UNITY_ANDROID
+    #if UNITY_ANDROID
                 if (javaObj != null)
                 {
                     AndroidJavaClass enumClass = new AndroidJavaClass("com.tendcloud.tenddata.TalkingDataGender");
                     AndroidJavaObject genderObj = enumClass.CallStatic<AndroidJavaObject>("valueOf", gender.ToString());
                     javaObj.Call<AndroidJavaObject>("setGender", genderObj);
                 }
-#endif
-#if UNITY_IPHONE
+    #endif
+    #if UNITY_IPHONE
             this.gender = gender;
-#endif
+    #endif
             }
-
+    
             return this;
         }
-
+    
         // 年龄
         public TalkingDataProfile SetAge(int age)
         {
             if (Application.platform != RuntimePlatform.OSXEditor &&
                 Application.platform != RuntimePlatform.WindowsEditor)
             {
-#if UNITY_ANDROID
+    #if UNITY_ANDROID
                 if (javaObj != null)
                 {
                     javaObj.Call<AndroidJavaObject>("setAge", age);
                 }
-#endif
-#if UNITY_IPHONE
+    #endif
+    #if UNITY_IPHONE
             this.age = age;
-#endif
+    #endif
             }
-
+    
             return this;
         }
-
+    
         // 用户属性1
         public TalkingDataProfile SetProperty1(object property)
         {
             if (Application.platform != RuntimePlatform.OSXEditor &&
                 Application.platform != RuntimePlatform.WindowsEditor)
             {
-#if UNITY_ANDROID
+    #if UNITY_ANDROID
                 if (javaObj != null)
                 {
                     AndroidJavaObject androidObject = AndroidJavaObjectFromObject(property);
                     javaObj.Call<AndroidJavaObject>("setProperty1", androidObject);
                 }
-#endif
-#if UNITY_IPHONE
+    #endif
+    #if UNITY_IPHONE
             this.property1 = property;
-#endif
+    #endif
             }
-
+    
             return this;
         }
-
+    
         // 用户属性2
         public TalkingDataProfile SetProperty2(object property)
         {
             if (Application.platform != RuntimePlatform.OSXEditor &&
                 Application.platform != RuntimePlatform.WindowsEditor)
             {
-#if UNITY_ANDROID
+    #if UNITY_ANDROID
                 if (javaObj != null)
                 {
                     AndroidJavaObject androidObject = AndroidJavaObjectFromObject(property);
                     javaObj.Call<AndroidJavaObject>("setProperty2", androidObject);
                 }
-#endif
-#if UNITY_IPHONE
+    #endif
+    #if UNITY_IPHONE
             this.property2 = property;
-#endif
+    #endif
             }
-
+    
             return this;
         }
-
+    
         // 用户属性3
         public TalkingDataProfile SetProperty3(object property)
         {
             if (Application.platform != RuntimePlatform.OSXEditor &&
                 Application.platform != RuntimePlatform.WindowsEditor)
             {
-#if UNITY_ANDROID
+    #if UNITY_ANDROID
                 if (javaObj != null)
                 {
                     AndroidJavaObject androidObject = AndroidJavaObjectFromObject(property);
                     javaObj.Call<AndroidJavaObject>("setProperty3", androidObject);
                 }
-#endif
-#if UNITY_IPHONE
+    #endif
+    #if UNITY_IPHONE
             this.property3 = property;
-#endif
+    #endif
             }
-
+    
             return this;
         }
-
+    
         // 用户属性4
         public TalkingDataProfile SetProperty4(object property)
         {
             if (Application.platform != RuntimePlatform.OSXEditor &&
                 Application.platform != RuntimePlatform.WindowsEditor)
             {
-#if UNITY_ANDROID
+    #if UNITY_ANDROID
                 if (javaObj != null)
                 {
                     AndroidJavaObject androidObject = AndroidJavaObjectFromObject(property);
                     javaObj.Call<AndroidJavaObject>("setProperty4", androidObject);
                 }
-#endif
-#if UNITY_IPHONE
+    #endif
+    #if UNITY_IPHONE
             this.property4 = property;
-#endif
+    #endif
             }
-
+    
             return this;
         }
-
+    
         // 用户属性5
         public TalkingDataProfile SetProperty5(object property)
         {
             if (Application.platform != RuntimePlatform.OSXEditor &&
                 Application.platform != RuntimePlatform.WindowsEditor)
             {
-#if UNITY_ANDROID
+    #if UNITY_ANDROID
                 if (javaObj != null)
                 {
                     AndroidJavaObject androidObject = AndroidJavaObjectFromObject(property);
                     javaObj.Call<AndroidJavaObject>("setProperty5", androidObject);
                 }
-#endif
-#if UNITY_IPHONE
+    #endif
+    #if UNITY_IPHONE
             this.property5 = property;
-#endif
+    #endif
             }
-
+    
             return this;
         }
-
+    
         // 用户属性6
         public TalkingDataProfile SetProperty6(object property)
         {
             if (Application.platform != RuntimePlatform.OSXEditor &&
                 Application.platform != RuntimePlatform.WindowsEditor)
             {
-#if UNITY_ANDROID
+    #if UNITY_ANDROID
                 if (javaObj != null)
                 {
                     AndroidJavaObject androidObject = AndroidJavaObjectFromObject(property);
                     javaObj.Call<AndroidJavaObject>("setProperty6", androidObject);
                 }
-#endif
-#if UNITY_IPHONE
+    #endif
+    #if UNITY_IPHONE
             this.property6 = property;
-#endif
+    #endif
             }
-
+    
             return this;
         }
-
+    
         // 用户属性7
         public TalkingDataProfile SetProperty7(object property)
         {
             if (Application.platform != RuntimePlatform.OSXEditor &&
                 Application.platform != RuntimePlatform.WindowsEditor)
             {
-#if UNITY_ANDROID
+    #if UNITY_ANDROID
                 if (javaObj != null)
                 {
                     AndroidJavaObject androidObject = AndroidJavaObjectFromObject(property);
                     javaObj.Call<AndroidJavaObject>("setProperty7", androidObject);
                 }
-#endif
-#if UNITY_IPHONE
+    #endif
+    #if UNITY_IPHONE
             this.property7 = property;
-#endif
+    #endif
             }
-
+    
             return this;
         }
-
+    
         // 用户属性8
         public TalkingDataProfile SetProperty8(object property)
         {
             if (Application.platform != RuntimePlatform.OSXEditor &&
                 Application.platform != RuntimePlatform.WindowsEditor)
             {
-#if UNITY_ANDROID
+    #if UNITY_ANDROID
                 if (javaObj != null)
                 {
                     AndroidJavaObject androidObject = AndroidJavaObjectFromObject(property);
                     javaObj.Call<AndroidJavaObject>("setProperty8", androidObject);
                 }
-#endif
-#if UNITY_IPHONE
+    #endif
+    #if UNITY_IPHONE
             this.property8 = property;
-#endif
+    #endif
             }
-
+    
             return this;
         }
-
+    
         // 用户属性9
         public TalkingDataProfile SetProperty9(object property)
         {
             if (Application.platform != RuntimePlatform.OSXEditor &&
                 Application.platform != RuntimePlatform.WindowsEditor)
             {
-#if UNITY_ANDROID
+    #if UNITY_ANDROID
                 if (javaObj != null)
                 {
                     AndroidJavaObject androidObject = AndroidJavaObjectFromObject(property);
                     javaObj.Call<AndroidJavaObject>("setProperty9", androidObject);
                 }
-#endif
-#if UNITY_IPHONE
+    #endif
+    #if UNITY_IPHONE
             this.property9 = property;
-#endif
+    #endif
             }
-
+    
             return this;
         }
-
+    
         // 用户属性10
         public TalkingDataProfile SetProperty10(object property)
         {
             if (Application.platform != RuntimePlatform.OSXEditor &&
                 Application.platform != RuntimePlatform.WindowsEditor)
             {
-#if UNITY_ANDROID
+    #if UNITY_ANDROID
                 if (javaObj != null)
                 {
                     AndroidJavaObject androidObject = AndroidJavaObjectFromObject(property);
                     javaObj.Call<AndroidJavaObject>("setProperty10", androidObject);
                 }
-#endif
-#if UNITY_IPHONE
+    #endif
+    #if UNITY_IPHONE
             this.property10 = property;
-#endif
+    #endif
             }
-
+    
             return this;
         }
-
-#if UNITY_ANDROID
+    
+    #if UNITY_ANDROID
         private AndroidJavaObject AndroidJavaObjectFromObject(object parameter)
         {
             AndroidJavaObject androidObject = null;
@@ -398,12 +397,12 @@ namespace FrameWork
             {
                 androidObject = new AndroidJavaObject("java.lang.Double", parameter);
             }
-
+    
             return androidObject;
         }
-#endif
-
-#if UNITY_IPHONE
+    #endif
+    
+    #if UNITY_IPHONE
     public override string ToString()
     {
         if (Application.platform != RuntimePlatform.OSXEditor && Application.platform != RuntimePlatform.WindowsEditor)
@@ -497,7 +496,6 @@ namespace FrameWork
         }
         return null;
     }
-#endif
+    #endif
     }
-
 }

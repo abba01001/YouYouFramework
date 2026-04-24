@@ -1,72 +1,133 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using FrameWork;
+
+using GameScripts;
 using UniRx;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-
-
-public class PanelBase : MonoBehaviour
+namespace GameScripts
 {
-    protected string CurPanelName = string.Empty;
-    private void Awake()
-    {
-        OnAwake();
-    }
+    public class PanelBase : MonoBehaviour
 
-    private void Start()
     {
-        OnStart();
-    }
 
-    private void OnEnable()
-    {
-        Observable.NextFrame().Subscribe(_ => OnShow());
-    }
+        protected string CurPanelName = string.Empty;
 
-    private void OnDisable()
-    {
-        Observable.NextFrame().Subscribe(_ => OnHide());
-    }
+        private void Awake()
 
-    protected virtual void OnAwake()
-    {
-    }
-
-    protected virtual void OnStart()
-    {
-    }
-
-    protected virtual void OnShow()
-    {
-        if (CurPanelName != string.Empty)
         {
-            // Dictionary<string,object> dic = new Dictionary<string,object>();
-            // dic.Add("Panel",CurPanelName);
-            // TalkingDataSDK.OnEvent("显示Panel",dic,null);
-            // TalkingDataSDK.OnPageBegin($"{CurPanelName}");
-        }
-        GameEntry.Event.AddEventListener(Constants.EventName.UpdateBtnUnlockStatus,OnUpdateBtnStatus);
-    }
 
-    protected virtual void OnHide()
-    {
-        if (CurPanelName != string.Empty)
+            OnAwake();
+
+        }
+
+    
+
+        private void Start()
+
         {
-            // Dictionary<string,object> dic = new Dictionary<string,object>();
-            // dic.Add("Panel",CurPanelName);
-            // TalkingDataSDK.OnEvent("关闭Panel",dic,null);
-            // TalkingDataSDK.OnPageEnd($"{CurPanelName}");
-        }
-        GameEntry.Event.RemoveEventListener(Constants.EventName.UpdateBtnUnlockStatus,OnUpdateBtnStatus);
-    }
 
-    protected virtual void OnUpdateBtnStatus(object user_data)
-    {
-        
+            OnStart();
+
+        }
+
+    
+
+        private void OnEnable()
+
+        {
+
+            Observable.NextFrame().Subscribe(_ => OnShow());
+
+        }
+
+    
+
+        private void OnDisable()
+
+        {
+
+            Observable.NextFrame().Subscribe(_ => OnHide());
+
+        }
+
+    
+
+        protected virtual void OnAwake()
+
+        {
+
+        }
+
+    
+
+        protected virtual void OnStart()
+
+        {
+
+        }
+
+    
+
+        protected virtual void OnShow()
+
+        {
+
+            if (CurPanelName != string.Empty)
+
+            {
+
+                // Dictionary<string,object> dic = new Dictionary<string,object>();
+
+                // dic.Add("Panel",CurPanelName);
+
+                // TalkingDataSDK.OnEvent("显示Panel",dic,null);
+
+                // TalkingDataSDK.OnPageBegin($"{CurPanelName}");
+
+            }
+
+            GameEntry.Event.AddEventListener(Constants.EventName.UpdateBtnUnlockStatus,OnUpdateBtnStatus);
+
+        }
+
+    
+
+        protected virtual void OnHide()
+
+        {
+
+            if (CurPanelName != string.Empty)
+
+            {
+
+                // Dictionary<string,object> dic = new Dictionary<string,object>();
+
+                // dic.Add("Panel",CurPanelName);
+
+                // TalkingDataSDK.OnEvent("关闭Panel",dic,null);
+
+                // TalkingDataSDK.OnPageEnd($"{CurPanelName}");
+
+            }
+
+            GameEntry.Event.RemoveEventListener(Constants.EventName.UpdateBtnUnlockStatus,OnUpdateBtnStatus);
+
+        }
+
+    
+
+        protected virtual void OnUpdateBtnStatus(object user_data)
+
+        {
+
+            
+
+        }
+
     }
 }

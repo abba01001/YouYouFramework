@@ -1,22 +1,17 @@
-using System.Collections;
-using FrameWork;
+﻿using GameScripts;
 
-
-/// <summary>
-/// Sys_Audio实体
-/// </summary>
-public partial class Sys_AudioEntity : DataTableEntityBase
+namespace GameScripts
 {
-    /// <summary>
-    /// 路径
-    /// </summary>
-    public string AssetFullPath;
-    /// <summary>
-    /// 音量（0-1）
-    /// </summary>
-    public float Volume;
-    /// <summary>
-    /// 优先级(默认128)
-    /// </summary>
-    public byte Priority;
+    // Sys_Audio Entity
+    public partial class Sys_AudioEntity : DataTableEntityBase
+    {
+        // 编号
+        public int Id;
+        // 路径
+        public string AssetFullPath;
+        // 音量（0-1）
+        public float Volume;
+        // 优先级(默认128)
+        public byte Priority;
+    }
 }

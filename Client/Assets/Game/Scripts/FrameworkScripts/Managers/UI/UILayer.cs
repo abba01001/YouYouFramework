@@ -1,10 +1,9 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace FrameWork
+namespace GameScripts
 {
-
     /// <summary>
     /// UI层级管理
     /// </summary>
@@ -12,12 +11,12 @@ namespace FrameWork
     {
         private Dictionary<byte, ushort> m_UILayerDic;
         private ushort PerAddLayer = 100;
-
+    
         public UILayer()
         {
             m_UILayerDic = new Dictionary<byte, ushort>();
         }
-
+    
         /// <summary>
         /// 初始化基础排序
         /// </summary>
@@ -31,7 +30,7 @@ namespace FrameWork
                 m_UILayerDic[group.Id] = group.BaseOrder;
             }
         }
-
+    
         /// <summary>
         /// 设置层级
         /// </summary>
@@ -40,7 +39,7 @@ namespace FrameWork
         internal void SetSortingOrder(UIFormBase formBase, bool isAdd)
         {
             if (!m_UILayerDic.ContainsKey(formBase.SysUIForm.UIGroupId)) return;
-
+    
             if (isAdd)
             {
                 m_UILayerDic[formBase.SysUIForm.UIGroupId] += PerAddLayer;
@@ -52,7 +51,7 @@ namespace FrameWork
                     m_UILayerDic[formBase.SysUIForm.UIGroupId] -= PerAddLayer;
                 }
             }
-
+    
             formBase.CurrCanvas.sortingOrder = m_UILayerDic[formBase.SysUIForm.UIGroupId];
         }
     }

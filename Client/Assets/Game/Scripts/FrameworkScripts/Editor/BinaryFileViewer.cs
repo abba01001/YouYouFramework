@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 using System.Collections.Generic;
-using FrameWork;
+using GameScripts;
 using Newtonsoft.Json;  // 引入 Newtonsoft.Json 命名空间
 
 public class BinaryFileViewer : EditorWindow

@@ -1,6 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using GameScripts;
 using Google.Protobuf;
 using Google.Protobuf.Collections;
 using Main;
@@ -10,25 +11,23 @@ using Protocols.Guild;
 using Protocols.Player;
 using UnityEngine;
 
-
-
-namespace FrameWork
+namespace GameScripts
 {
     public class NetRequestHandler
     {
         private Socket socket;
         private string senderId;
-
+    
         public NetRequestHandler(Socket socket)
         {
             this.socket = socket;
         }
-
+    
         public void UpdateSenderId()
         {
             this.senderId = socket.RemoteEndPoint.ToString();
         }
-
+    
         private void SendMessage<T>(T data) where T : IMessage<T>
         {
             bool canSend = false;
@@ -40,7 +39,7 @@ namespace FrameWork
             {
                 canSend = GameEntry.Net.IsConnectServer;
             }
-
+    
             if (!canSend) return;
             List<byte[]> list = HandleMessage(data);
             if (socket == null || !socket.Connected)
@@ -51,16 +50,16 @@ namespace FrameWork
                 {
                     GameEntry.Net.EnqueueMsg(messageBytes);
                 }
-
+    
                 return; // 退出心跳发送循环
             }
-
+    
             foreach (var messageBytes in list)
             {
                 GameEntry.Net.EnqueueMsg(messageBytes);
             }
         }
-
+    
         private List<byte[]> HandleMessage<T>(T data) where T : IMessage<T>
         {
             byte[] byteArrayData = data.ToByteArray();
@@ -72,23 +71,23 @@ namespace FrameWork
             message.Data = ByteString.CopyFrom(byteArrayData); // 直接将序列化后的字节数组放入 Data
             message.Token = GameEntry.Net.Token;
             Debugger.Log($"发送消息|网络延时{GameEntry.Net.NetDelay}|{typeof(T).Name}: {message} \n 解析Data：{data}");
-
+    
             byte[] messageBytes = message.ToByteArray();
             return HandleSubPakce(messageBytes);
         }
-
-
-
+    
+    
+    
         private List<byte[]> HandleSubPakce(byte[] data)
         {
             byte[] tempDatas = data; //GameEntry.Net.handleSubPack.CompressData(data);
             string messageId = Guid.NewGuid().ToString("N");
             int realMaxPacketSize = Constants.ProtocalTotalLength - Constants.ProtocalHeadLength;
             int packetTotal = Math.Max((int)Math.Ceiling((double)tempDatas.Length / realMaxPacketSize), 1);
-
+    
             byte[] packetData = new byte[realMaxPacketSize];
             List<byte[]> allPackets = new List<byte[]>();
-
+    
             // 创建 Protocol 消息
             Protocol protocol = new Protocol();
             protocol.MessageId = messageId;
@@ -97,24 +96,24 @@ namespace FrameWork
             {
                 int startIndex = (packetIndex - 1) * realMaxPacketSize;
                 int length = Math.Min(realMaxPacketSize, tempDatas.Length - startIndex);
-
+    
                 // 复制数据到当前包
                 Array.Copy(tempDatas, startIndex, packetData, 0, length);
-
+    
                 protocol.PacketIndex = packetIndex;
                 protocol.Data = ByteString.CopyFrom(packetData, 0, length);
                 byte[] protocolBytes = protocol.ToByteArray();
                 allPackets.Add(protocolBytes);
             }
-
+    
             return allPackets;
         }
-
+    
         #region 发送协议
-
+    
         // 示例：心跳包请求，处理心跳数据的逻辑，返回消息对象
         private int heartSeq = 0;
-
+    
         public void c2s_request_heart_beat()
         {
             if (!GameEntry.Net.IsConnectServer) return;
@@ -124,7 +123,7 @@ namespace FrameWork
             data.Seq = ++heartSeq;
             SendMessage(data);
         }
-
+    
         //请求公会列表
         public void c2s_request_guild_list(int pageIndex, int pageSize)
         {
@@ -134,13 +133,13 @@ namespace FrameWork
             data.GuildList.PageSize = pageSize;
             SendMessage(data);
         }
-
+    
         //请求加入公会
         public void c2s_request_join_guild()
         {
-
+    
         }
-
+    
         public void c2s_request_chat(int channel_type, string content = "", string receive_user_uuid = "",
             bool requestPublic = false)
         {
@@ -152,7 +151,7 @@ namespace FrameWork
             data.IsRequestPublic = requestPublic;
             SendMessage(data);
         }
-
+    
         //请求物品
         public void c2s_request_item_info()
         {
@@ -166,7 +165,7 @@ namespace FrameWork
             };
             SendMessage(data);
         }
-
+    
         //请求登录
         public void c2s_request_login(string account, string password)
         {
@@ -177,7 +176,7 @@ namespace FrameWork
             };
             SendMessage(data);
         }
-
+    
         //请求注册
         public void c2s_request_register(string account, string password)
         {
@@ -188,7 +187,7 @@ namespace FrameWork
             };
             SendMessage(data);
         }
-
+    
         //请求挂机时间 type1正常领取   2快速游历
         public void c2s_request_get_suspend_reward(int type)
         {
@@ -199,8 +198,8 @@ namespace FrameWork
             };
             SendMessage(data);
         }
-
-
+    
+    
         //更新玩家数据
         public void c2s_request_update_role_info(Dictionary<string, string> values)
         {
@@ -212,10 +211,10 @@ namespace FrameWork
             {
                 data.UpdatedAttrs.Add(kvp.Key, kvp.Value);
             }
-
+    
             SendMessage(data);
         }
-
+    
         //同步玩家位置数据
         public void c2s_request_synchronous_player(Vector3 pos, Vector3 rot)
         {
@@ -231,7 +230,7 @@ namespace FrameWork
             };
             SendMessage(data);
         }
-
+    
         #endregion
     }
 }

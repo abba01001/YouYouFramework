@@ -85,14 +85,6 @@ public class AssetBundleEditor : ScriptableObject
         AssetDatabase.SaveAssets();
         Debug.LogError("Sava Macro Success====" + macor);
     }
-
-    [PropertySpace(0)]
-    [VerticalGroup("Common/Left")]
-    [Button("工程资源大小查看器", ButtonSizes.Medium)]
-    public void PreviewProject()
-    {
-        AssetSizeViewer.ShowWindow();
-    }
     
     [PropertySpace(1)]
     [VerticalGroup("Common/Left")]
@@ -113,23 +105,13 @@ public class AssetBundleEditor : ScriptableObject
     
     void StartLocalAb()
     {
-        if (!Directory.Exists(TempServerBundlePath))
-        {
-            Directory.CreateDirectory(TempServerBundlePath);
-        }
-
-        // 👉 获取本地IP
-        string localIP = GetLocalIPAddress();
-
-        // 杀掉占用 8000 端口的进程
-        KillProcessOnPort(8000);
-
-        // 启动 Python 服务器
-        StartPythonServer(TempServerBundlePath);
-
-        Debug.Log($"服务器已启动: http://{localIP}:8000/");
-        Debug.Log($"服务目录: {TempServerBundlePath}");
-        Debug.Log($"访问地址: http://{localIP}:8000/");
+        string fullPath = Path.GetFullPath(TempServerBundlePath);
+        if (!Directory.Exists(fullPath)) Directory.CreateDirectory(fullPath);
+        // 1. 清理端口
+        EditorProcessUtil.KillProcessOnPort(8000);
+        // 2. 启动 Python
+        EditorProcessUtil.StartPythonServer(8000, fullPath);
+        Debug.Log($"[AB服务器] 启动成功: http://{GetLocalIPAddress()}:8000/");
     }
     
     string GetLocalIPAddress()
@@ -152,97 +134,10 @@ public class AssetBundleEditor : ScriptableObject
         return "127.0.0.1";
     }
 
-    void KillProcessOnPort(int port)
-    {
-        // 获取占用端口的进程 PID
-        string command = $"netstat -ano | findstr :{port}";
-        ProcessStartInfo startInfo = new ProcessStartInfo
-        {
-            FileName = "cmd.exe",
-            Arguments = "/C " + command,
-            UseShellExecute = false,
-            RedirectStandardOutput = true,
-            CreateNoWindow = true
-        };
-
-        Process process = new Process
-        {
-            StartInfo = startInfo
-        };
-
-        process.Start();
-        string output = process.StandardOutput.ReadToEnd(); // 获取输出结果
-
-        process.WaitForExit();
-
-        // 提取 PID，并结束占用端口的进程
-        string[] lines = output.Split(new[] { "\r\n", "\r", "\n" }, System.StringSplitOptions.RemoveEmptyEntries);
-        foreach (string line in lines)
-        {
-            // 解析 PID (最后一列是 PID)
-            string[] parts = line.Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
-            string pid = parts[parts.Length - 1];
-
-            // 杀掉进程
-            if (int.TryParse(pid, out int pidInt))
-            {
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = "taskkill",
-                    Arguments = $"/PID {pidInt} /F", // 强制结束进程
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                });
-                UnityEngine.Debug.Log($"Killed process on port {port} with PID: {pidInt}");
-            }
-        }
-    }
-
-    void StartPythonServer(string directory)
-    {
-        // 启动 Python HTTP 服务器并指定根目录
-        ProcessStartInfo startInfo = new ProcessStartInfo
-        {
-            FileName = "cmd.exe",
-            Arguments = $"/C python -m http.server 8000 --bind 0.0.0.0 --directory {directory}", // 指定选择的目录
-            UseShellExecute = true,
-            CreateNoWindow = false // 显示命令行窗口
-        };
-
-        Process process = new Process
-        {
-            StartInfo = startInfo
-        };
-
-        process.Start();
-        UnityEngine.Debug.Log($"Python server started on port 8000, serving directory: {directory}");
-    }
-
     public void StartLocalServer()
     {
-        // 构建服务器 exe 路径，相对 Unity 项目 Assets 目录的上两级
-        string exePath = Path.Combine(Application.dataPath, "..", "..", "Server", "Publish","win-x64", "TCPServer.exe");
-        exePath = Path.GetFullPath(exePath); // 转成绝对路径
-        if (!File.Exists(exePath))
-        {
-            Debug.LogError("服务器 exe 不存在: " + exePath);
-            return;
-        }
-        try
-        {
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = exePath,
-                WorkingDirectory = Path.GetDirectoryName(exePath),
-                UseShellExecute = true,
-                Arguments = "local"
-            });
-            Debug.Log("本地服务器已启动: " + exePath);
-        }
-        catch (System.Exception ex)
-        {
-            Debug.LogError("启动服务器失败: " + ex);
-        }
+        string exePath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "..", "Server", "Publish", "win-x64", "TCPServer.exe"));
+        EditorProcessUtil.StartExecutable(exePath, "local");
     }
 
     [VerticalGroup("Common/Right")] [Button(ButtonSizes.Medium)][OnValueChanged(nameof(OnBuildPackageTargetChanged))]
@@ -398,9 +293,10 @@ public class AssetBundleEditor : ScriptableObject
         // 6. 打包结果处理
         if (summary.result == BuildResult.Succeeded)
         {
-            EditorUtility.DisplayDialog("打包成功", "已成功生成！", "确定");
-            // 打开输出目录
-            Process.Start("explorer.exe", Path.GetDirectoryName(outputFullPath));
+            if (EditorUtility.DisplayDialog("打包成功", "已成功生成！", "确定"))
+            {
+                EditorProcessUtil.OpenFolderSmart(TempAPKPath);
+            }
         }
         else
         {
@@ -448,6 +344,7 @@ public class AssetBundleEditor : ScriptableObject
     [Button("构建Gradle工程",ButtonSizes.Medium)]
     public void ExportGradleProject()
     {
+        
         // 设置Keystore信息（如果需要的话）
         SetKeystoreInfo();
 
@@ -475,12 +372,7 @@ public class AssetBundleEditor : ScriptableObject
         if (summary.result == BuildResult.Succeeded)
         {
             EditorUtility.DisplayDialog("导出成功", "Gradle 项目已成功导出！", "确定");
-
-            // 打开导出目录
-            // 获取目标文件夹路径
-            // string folderPath = Path.GetDirectoryName(outputFullPath);
-            ExplorerUtil.OpenFolder(TempGradlePath);
-            // Process.Start("explorer.exe", TempGradlePath);
+            EditorProcessUtil.OpenFolderSmart(TempGradlePath);
         }
         else if (summary.result == BuildResult.Failed)
         {

@@ -1,43 +1,82 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using FrameWork;
 using UnityEngine;
 
-public partial class Sys_AtlasDBModel
+namespace GameScripts
 {
-    public Dictionary<string, Sys_AtlasEntity> NameByDic;
+    public partial class Sys_AtlasDBModel
 
-    protected override void OnLoadListComple()
     {
-        base.OnLoadListComple();
-        NameByDic = new Dictionary<string, Sys_AtlasEntity>();
-        for (int i = 0; i < m_List.Count; i++)
+
+        public Dictionary<string, Sys_AtlasEntity> NameByDic;
+
+    
+
+        protected override void OnLoadListComple()
+
         {
-            Sys_AtlasEntity entity = m_List[i];
-            string[] strs = entity.AssetFullPath.Split('.')[0].Split('/');
-            if (strs.Length >= 1)
+
+            base.OnLoadListComple();
+
+            NameByDic = new Dictionary<string, Sys_AtlasEntity>();
+
+            for (int i = 0; i < m_List.Count; i++)
+
             {
-                string str = strs[strs.Length - 1];
-                if (NameByDic.ContainsKey(str))
+
+                Sys_AtlasEntity entity = m_List[i];
+
+                string[] strs = entity.AssetFullPath.Split('.')[0].Split('/');
+
+                if (strs.Length >= 1)
+
                 {
-                    GameEntry.LogError(LogCategory.Framework, "名称有重复! ==" + str);
+
+                    string str = strs[strs.Length - 1];
+
+                    if (NameByDic.ContainsKey(str))
+
+                    {
+
+                        GameEntry.LogError(LogCategory.Framework, "名称有重复! ==" + str);
+
+                    }
+
+                    else
+
+                    {
+
+                        NameByDic.Add(str, entity);
+
+                    }
+
                 }
-                else
-                {
-                    NameByDic.Add(str, entity);
-                }
+
             }
-        }
-    }
 
-    public Sys_AtlasEntity GetEntity(string name)
-    {
-        if (NameByDic.ContainsKey(name))
+        }
+
+    
+
+        public Sys_AtlasEntity GetEntity(string name)
+
         {
-            return NameByDic[name];
+
+            if (NameByDic.ContainsKey(name))
+
+            {
+
+                return NameByDic[name];
+
+            }
+
+    
+
+            GameEntry.LogError(LogCategory.Framework, "没有找到资源, Name==" + name);
+
+            return null;
+
         }
 
-        GameEntry.LogError(LogCategory.Framework, "没有找到资源, Name==" + name);
-        return null;
     }
 }

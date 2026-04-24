@@ -1,15 +1,14 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using Object = UnityEngine.Object;
 using Cysharp.Threading.Tasks;
-using FrameWork;
-using YooAsset;
+using UnityEngine;
 
-
-namespace FrameWork
+namespace GameScripts
 {
+    using Object = UnityEngine.Object;
+    using YooAsset;
+    
     /// <summary>
     /// 游戏物体对象池
     /// </summary>
@@ -19,27 +18,27 @@ namespace FrameWork
         /// 游戏物体对象池字典
         /// </summary>
         public Dictionary<SpawnPoolId, SpawnPoolEntity> spawnPoolDic = new();
-
+    
         /// <summary>
         /// Key==GameObject的InstanceId
         /// </summary>
         private Dictionary<int, PrefabPool> instanceIdPoolIdDic = new();
-
+    
         /// <summary>
         /// Key==Prefab的InstanceId
         /// </summary>
         private Dictionary<int, AssetHandle> prefabAssetDic = new();
-
+    
         public GameObject ObjectPool { get; private set; }
-
-
+    
+    
         public GameObjectPool()
         {
             //初始化跨场景不销毁的对象池
             for (int i = 0; i < GameEntry.Instance.GameObjectPoolGroups.Length; i++)
             {
                 SpawnPoolEntity entity = GameEntry.Instance.GameObjectPoolGroups[i];
-
+    
                 if (entity.IsGlobal)
                 {
                     //创建对象池
@@ -55,17 +54,17 @@ namespace FrameWork
         private GameObject InstantiateDelegate(PrefabPool prefabPool)
         {
             GameObject inst = Object.Instantiate(prefabPool.prefab, prefabPool.Root.transform, false);
-
+    
             //从实例字典上 映射实例
             instanceIdPoolIdDic[inst.GetInstanceID()] = prefabPool;
-
+    
             return inst;
         }
         private void DestroyDelegate(GameObject inst, PrefabPool prefabPool)
         {
             //从实例字典上 移除实例
             instanceIdPoolIdDic.Remove(inst.GetInstanceID());
-
+    
             Object.Destroy(inst);
         }
         private void DestructDelegate(PrefabPool prefabPool)
@@ -75,18 +74,18 @@ namespace FrameWork
                 assetHandle.Release();
             }
         }
-
+    
         /// <summary>
         /// 初始化跨场景销毁的对象池
         /// </summary>
         internal void InitScenePool()
         {
             if (ObjectPool == null) ObjectPool = new GameObject("ObjectPool");
-
+    
             for (int i = 0; i < GameEntry.Instance.GameObjectPoolGroups.Length; i++)
             {
                 SpawnPoolEntity entity = GameEntry.Instance.GameObjectPoolGroups[i];
-
+    
                 if (!entity.IsGlobal)
                 {
                     //创建对象池
@@ -99,7 +98,7 @@ namespace FrameWork
                 }
             }
         }
-
+    
         /// <summary>
         /// 预加载对象池
         /// </summary>
@@ -112,7 +111,7 @@ namespace FrameWork
                 GameEntry.LogError(LogCategory.Pool, "gameObjectPoolEntity==null");
                 return;
             }
-
+    
             //对象池配置
             PrefabPool prefabPool = new(prefab, cullDespawned, cullAbove, cullDelay, cullMaxPerPass);
             gameObjectPoolEntity.Pool.AddPrefabPool(prefabPool);
@@ -121,7 +120,7 @@ namespace FrameWork
             prefabPool.ActionOnDestroy = (inst) => DestroyDelegate(inst, prefabPool);
             prefabPool.ActionOnDestruct = () => DestructDelegate(prefabPool);
         }
-
+    
         #region Spawn 从对象池中获取对象
         /// <summary>
         /// 从对象池中获取对象
@@ -133,7 +132,7 @@ namespace FrameWork
                 GameEntry.LogError(LogCategory.Pool, "prefab==null");
                 return null;
             }
-
+    
             //拿到分类池
             spawnPoolDic.TryGetValue(poolId, out SpawnPoolEntity gameObjectPoolEntity);
             if (gameObjectPoolEntity == null)
@@ -141,7 +140,7 @@ namespace FrameWork
                 GameEntry.LogError(LogCategory.Pool, "gameObjectPoolEntity==null");
                 return null;
             }
-
+    
             PrefabPool prefabPool = gameObjectPoolEntity.Pool.GetPrefabPool(prefab);
             if (prefabPool == null)
             {
@@ -152,7 +151,7 @@ namespace FrameWork
                 prefabPool.ActionOnDestroy = (inst) => DestroyDelegate(inst, prefabPool);
                 prefabPool.ActionOnDestruct = () => DestructDelegate(prefabPool);
             }
-
+    
             //拿到一个实例
             GameObject inst = prefabPool.SpawnInstance();
             return inst;
@@ -162,7 +161,7 @@ namespace FrameWork
             var operation = GameEntry.Loader.DefaultPackage.LoadAssetAsync(prefabFullPath);
             await operation.Task;
             GameObject prefab = operation.AssetObject as GameObject;
-
+    
             if (prefabAssetDic.ContainsKey(prefab.GetInstanceID()))
             {
                 operation.Release();
@@ -174,7 +173,7 @@ namespace FrameWork
             return Spawn(prefab, poolId);
         }
         #endregion
-
+    
         #region Despawn 对象回池
         /// <summary>
         /// 对象回池
@@ -182,18 +181,18 @@ namespace FrameWork
         public void Despawn(GameObject inst)
         {
             if (inst == null) return;
-
+    
             int instanceID = inst.GetInstanceID();
             if (instanceIdPoolIdDic.TryGetValue(instanceID, out PrefabPool prefabPool))
             {
                 if (prefabPool.Root == null) return;
-
+    
                 inst.transform.SetParent(prefabPool.Root.transform, false);
                 inst.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
                 prefabPool.DespawnInstance(inst);
             }
         }
-
+    
         /// <summary>
         /// 全部对象回池
         /// </summary>
@@ -202,7 +201,7 @@ namespace FrameWork
             for (int i = 0; i < GameEntry.Instance.GameObjectPoolGroups.Length; i++)
             {
                 SpawnPoolEntity entity = GameEntry.Instance.GameObjectPoolGroups[i];
-
+    
                 if (entity.Pool != null)
                 {
                     foreach (Transform item in entity.Pool.transform)
@@ -216,7 +215,7 @@ namespace FrameWork
             }
         }
         #endregion
-
+    
         /// <summary>
         /// 直接销毁对象
         /// </summary>
@@ -232,6 +231,6 @@ namespace FrameWork
                 GameEntry.LogError(LogCategory.Pool, "该对象不在池内, inst==" + inst);
             }
         }
-
+    
     }
 }

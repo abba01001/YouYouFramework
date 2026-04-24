@@ -1,49 +1,48 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace FrameWork
+namespace GameScripts
 {
-
     /// <summary>
     /// 流程状态
     /// </summary>
     public enum ProcedureState
     {
         None,
-
+    
         /// <summary>
         /// 初始化
         /// </summary>
         Launch,
-
+    
         /// <summary>
         /// 检查更新
         /// </summary>
         CheckVersion,
-
+    
         /// <summary>
         /// 预加载
         /// </summary>
         Preload,
-
+    
         /// <summary>
         /// 游戏
         /// </summary>
         Game,
-
+    
         /// <summary>
         /// 战斗
         /// </summary>
         Battle,
-
+    
         /// <summary>
         /// 战斗
         /// </summary>
         MapEditor,
     }
-
+    
     /// <summary>
     /// 流程管理器
     /// </summary>
@@ -53,7 +52,7 @@ namespace FrameWork
         /// 当前流程状态机
         /// </summary>
         public Fsm<ProcedureManager> CurrFsm { get; private set; }
-
+    
         /// <summary>
         /// 当前流程状态Type
         /// </summary>
@@ -61,7 +60,7 @@ namespace FrameWork
         {
             get { return (ProcedureState)CurrFsm.CurrStateType; }
         }
-
+    
         internal void Init()
         {
             //得到枚举的长度
@@ -73,12 +72,12 @@ namespace FrameWork
             states[(byte)ProcedureState.Game] = new ProcedureGame();
             CurrFsm = GameEntry.Fsm.Create(this, states);
         }
-
+    
         internal void OnUpdate()
         {
             CurrFsm.OnUpdate();
         }
-
+    
         /// <summary>
         /// 切换状态
         /// </summary>

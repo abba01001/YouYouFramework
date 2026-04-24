@@ -1,12 +1,11 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
-using FrameWork;
+
 using UnityEngine;
 
-
-namespace FrameWork
+namespace GameScripts
 {
     public class PlayerPrefsManager
     {
@@ -16,21 +15,21 @@ namespace FrameWork
             dicFloat = GetObject<Dictionary<string, float>>("dicFloat");
             dicString = GetObject<Dictionary<string, string>>("dicString");
         }
-
+    
         public void SaveDataAll()
         {
             SetObject("dicInt", dicInt);
             SetObject("dicFloat", dicFloat);
             SetObject("dicString", dicString);
-
+    
             PlayerPrefs.Save();
         }
         public void DeleteAll()
         {
             PlayerPrefs.DeleteAll();
         }
-
-
+    
+    
         private Dictionary<string, int> dicInt = new Dictionary<string, int>();
         public int GetInt(string key, int defaultValue = 0)
         {
@@ -69,8 +68,8 @@ namespace FrameWork
             if (dicInt.ContainsKey(key)) return;
             SetBool(key, value);
         }
-
-
+    
+    
         private Dictionary<string, float> dicFloat = new Dictionary<string, float>();
         public float GetFloat(string key, float defaultValue = 0)
         {
@@ -92,7 +91,7 @@ namespace FrameWork
             if (dicFloat.ContainsKey(key)) return;
             SetFloat(key, value);
         }
-
+    
         private Dictionary<string, string> dicString = new Dictionary<string, string>();
         public string GetString(string key, string defaultValue = null)
         {
@@ -110,8 +109,8 @@ namespace FrameWork
             if (dicString.ContainsKey(key)) return;
             SetString(key, value);
         }
-
-
+    
+    
         public T GetObject<T>(string key) where T : new()
         {
             string value = PlayerPrefs.GetString(key);

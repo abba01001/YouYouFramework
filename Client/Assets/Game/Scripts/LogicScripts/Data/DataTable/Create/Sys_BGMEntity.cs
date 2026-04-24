@@ -1,33 +1,23 @@
-using System.Collections;
-using FrameWork;
+﻿using GameScripts;
 
-/// <summary>
-/// Sys_BGM实体
-/// </summary>
-public partial class Sys_BGMEntity : DataTableEntityBase
+namespace GameScripts
 {
-    /// <summary>
-    /// 路径
-    /// </summary>
-    public string AssetFullPath;
-    /// <summary>
-    /// 音量（0-1）
-    /// </summary>
-    public float Volume;
-    /// <summary>
-    /// 是否循环
-    /// </summary>
-    public byte IsLoop;
-    /// <summary>
-    /// 是否淡入
-    /// </summary>
-    public byte IsFadeIn;
-    /// <summary>
-    /// 是否淡出
-    /// </summary>
-    public byte IsFadeOut;
-    /// <summary>
-    /// 优先级(默认128)
-    /// </summary>
-    public byte Priority;
+    // Sys_BGM Entity
+    public partial class Sys_BGMEntity : DataTableEntityBase
+    {
+        // 编号
+        public int Id;
+        // 路径
+        public string AssetFullPath;
+        // 音量（0-1）
+        public float Volume;
+        // 是否循环
+        public byte IsLoop;
+        // 是否淡入
+        public byte IsFadeIn;
+        // 是否淡出
+        public byte IsFadeOut;
+        // 优先级(默认128)
+        public byte Priority;
+    }
 }

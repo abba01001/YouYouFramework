@@ -1,7 +1,7 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace FrameWork
+namespace GameScripts
 {
     public enum Status
     {
@@ -10,7 +10,7 @@ namespace FrameWork
         Paused = 2,
         Stopped = 3
     }
-
+    
     public enum LoopMode
     {
         Default = 0,
@@ -18,51 +18,51 @@ namespace FrameWork
         Discrete = 2,
         LoopSegment = 3,
     }
-
+    
     public delegate void OnAnimationEndAction();
-
+    
     public abstract class BezierAnim : MonoBehaviour
     {
         public abstract Component targetComponent { get; }
-
+    
         private Status m_Status = Status.Idle;
         public Status status { get { return m_Status; } protected set { m_Status = value; } }
-
+    
         private float m_Time = 0;
         public float time { get { return m_Time; } protected set { m_Time = value; } }
-
+    
         [SerializeField]
         protected LoopMode m_LoopMode = LoopMode.Default;
         public LoopMode loopMode { get { return m_LoopMode; } set { m_LoopMode = value; } }
-
+    
         [SerializeField]
         protected bool m_PlayOnAwake = true;
         public bool playOnAwake { get { return m_PlayOnAwake; } set { m_PlayOnAwake = value; } }
-
+    
         [SerializeField]
         protected bool m_RestartOnEnable = false;
         public bool restartOnEnable { get { return m_RestartOnEnable; } set { m_RestartOnEnable = value; } }
-
+    
         [SerializeField]
         protected AnimatorUpdateMode m_UpdateMode = AnimatorUpdateMode.Normal;
         public AnimatorUpdateMode updateMode { get { return m_UpdateMode; } set { m_UpdateMode = value; } }
-
+    
         [SerializeField]
         private int m_SegmentIndex;
         public int segmentIndex { get { return m_SegmentIndex; } protected set { m_SegmentIndex = value; } }
-
+    
         public float segmentTime { get; protected set; }
         public float segmentProcess { get; protected set; }
-
+    
         public abstract void StartSegment(int index);
         public abstract void Process(float time);
-
+    
         public abstract void Play();
         public abstract void Pause();
         public abstract void Resume();
         public abstract void Stop();
     }
-
+    
     public abstract class BezierAnim<TargetType, SegmentType> : BezierAnim
         where TargetType : Component
         where SegmentType : BezierAnimSegment, new()
@@ -71,15 +71,15 @@ namespace FrameWork
         protected TargetType m_Target;
         public TargetType target { get { return m_Target; } set { m_Target = value; } }
         public override Component targetComponent { get { return m_Target; } }
-
+    
         [SerializeField]
         protected List<SegmentType> m_Segments = new List<SegmentType>();
         public List<SegmentType> segments { get { return m_Segments; } set { m_Segments = value; } }
-
+    
         public SegmentType activeSegment { get { return segments[segmentIndex]; } }
-
+    
         public event OnAnimationEndAction onAnimationEndEvent;
-
+    
         public override void StartSegment(int index = 0)
         {
             if (index >= segments.Count) return;
@@ -108,7 +108,7 @@ namespace FrameWork
         protected virtual void StopSegment()
         {
             OnSegmentStop();
-
+    
             if (loopMode == LoopMode.Default)
             {
                 segmentIndex++;
@@ -155,7 +155,7 @@ namespace FrameWork
                 StartSegment(segmentIndex);
             }
         }
-
+    
         public override void Play()
         {
             StartSegment(segmentIndex);
@@ -178,7 +178,7 @@ namespace FrameWork
             segmentTime = 0;
             segmentProcess = 0;
         }
-
+    
         public override void Process(float _time)
         {
             time = _time;
@@ -207,7 +207,7 @@ namespace FrameWork
                     return 1;
                 }
             }
-
+    
             float duration = segments[segmentIndex].duration;
             if (segmentTime > duration)
             {
@@ -220,21 +220,21 @@ namespace FrameWork
                 return duration <= 0 ? 1 : (segmentTime / duration);
             }
         }
-
+    
         protected virtual void OnSegmentStart()
         {
         }
         protected abstract void OnSegmentUpdate();
         protected virtual void OnSegmentStop()
         {
-
+    
         }
-
+    
         public bool IsRunning()
         {
             return activeSegment != null && status == Status.Running;
         }
-
+    
         protected virtual void Awake()
         {
             if (playOnAwake) Play();

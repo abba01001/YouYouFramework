@@ -1,9 +1,8 @@
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-
-namespace FrameWork
+namespace GameScripts
 {
     public class BezierUtil
     {
@@ -21,7 +20,7 @@ namespace FrameWork
                     new GradientAlphaKey(1, 0),
                     new GradientAlphaKey(0, 1),
                 };
-
+    
                 Gradient gradient = new Gradient();
                 gradient.SetKeys(colorKeys, alphaKeys);
                 return gradient;
@@ -38,7 +37,7 @@ namespace FrameWork
                     new GradientAlphaKey(0, 0),
                     new GradientAlphaKey(1, 1),
                 };
-
+    
                 Gradient gradient = new Gradient();
                 gradient.SetKeys(colorKeys, alphaKeys);
                 return gradient;
@@ -49,13 +48,13 @@ namespace FrameWork
         public class ColorSegment : BezierAnimSegment
         {
             [SerializeField] private Gradient m_Gradient = BezierAnimUtility.GradientFadeOut();
-
+    
             public Gradient gradient
             {
                 get { return m_Gradient; }
                 set { m_Gradient = value; }
             }
-
+    
             public Color Evaluate(float time)
             {
                 return gradient.Evaluate(time);

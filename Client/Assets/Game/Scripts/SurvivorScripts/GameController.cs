@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Linq;
 using Cysharp.Threading.Tasks;
-using FrameWork;
+using GameScripts;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif

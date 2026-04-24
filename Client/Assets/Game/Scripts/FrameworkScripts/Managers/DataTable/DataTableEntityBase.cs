@@ -1,11 +1,9 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace FrameWork
+namespace GameScripts
 {
-
-
     /// <summary>
     /// 数据表实体基类
     /// </summary>

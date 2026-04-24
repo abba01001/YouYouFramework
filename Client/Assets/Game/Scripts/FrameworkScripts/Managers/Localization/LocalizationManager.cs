@@ -1,12 +1,10 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-namespace FrameWork
+namespace GameScripts
 {
-
     /// <summary>
     /// 多语言枚举
     /// </summary>
@@ -16,19 +14,19 @@ namespace FrameWork
         /// 中文
         /// </summary>
         Chinese = 0,
-
+    
         /// <summary>
         /// 英文
         /// </summary>
         English = 1
     }
-
-
+    
+    
     public class LocalizationManager
     {
         internal void Init()
         {
-#if !UNITY_EDITOR
+    #if !UNITY_EDITOR
             switch (Application.systemLanguage)
             {
                 default:
@@ -41,9 +39,9 @@ namespace FrameWork
                     GameEntry.CurrLanguage = FrameworkLanguage.English;
                     break;
             }
-#endif
+    #endif
         }
-
+    
         /// <summary>
         /// 获取本地化文本内容
         /// </summary>
@@ -57,7 +55,7 @@ namespace FrameWork
             {
                 return string.Format(value, args);
             }
-
+    
             return value;
         }
     }

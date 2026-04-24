@@ -1,7 +1,8 @@
-using System.Collections.Generic;
-using FrameWork;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
+namespace GameScripts
+{
     public partial class Sys_UIFormDBModel
     {
         public Dictionary<string, Sys_UIFormEntity> NameByDic;
@@ -17,21 +18,35 @@ using UnityEngine;
                 switch (GameEntry.CurrLanguage)
                 {
                     case FrameworkLanguage.Chinese:
-                        entity.AssetFullPath = entity.AssetPath_Chinese;
+
+                        entity.AssetPath_Chinese = entity.AssetPath_Chinese;
+
                         break;
+
                     case FrameworkLanguage.English:
-                        entity.AssetFullPath = string.IsNullOrWhiteSpace(entity.AssetPath_English) ? entity.AssetPath_Chinese : entity.AssetPath_English;
+
+                        entity.AssetPath_Chinese = string.IsNullOrWhiteSpace(entity.AssetPath_English)
+                            ? entity.AssetPath_Chinese
+                            : entity.AssetPath_English;
+
                         break;
                 }
-                string[] strs = entity.AssetFullPath.Split('.')[0].Split('/');
+
+                string[] strs = entity.AssetPath_Chinese.Split('.')[0].Split('/');
+
                 if (strs.Length >= 1)
+
                 {
                     string str = strs[strs.Length - 1];
+
                     if (NameByDic.ContainsKey(str))
+
                     {
                         GameEntry.LogError(LogCategory.Framework, "名称有重复! ==" + str);
                     }
+
                     else
+
                     {
                         NameByDic.Add(str, entity);
                     }
@@ -39,13 +54,19 @@ using UnityEngine;
             }
         }
 
+
         public Sys_UIFormEntity GetEntity(string name)
+
         {
             if (NameByDic.ContainsKey(name))
+
             {
                 return NameByDic[name];
             }
+
             GameEntry.LogError(LogCategory.Framework, "没有找到资源, Name==" + name);
+
             return null;
         }
     }
+}

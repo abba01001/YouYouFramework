@@ -1,25 +1,19 @@
-using System.Collections;
-using FrameWork;
+﻿using GameScripts;
 
-/// <summary>
-/// Sys_UnlockFunc实体
-/// </summary>
-public partial class Sys_UnlockFuncEntity : DataTableEntityBase
+namespace GameScripts
 {
-    /// <summary>
-    /// 解锁功能
-    /// </summary>
-    public string FuncName;
-    /// <summary>
-    /// 解锁功能等级
-    /// </summary>
-    public int UnlockLevel;
-    /// <summary>
-    /// 显示功能等级
-    /// </summary>
-    public int ShowLevel;
-    /// <summary>
-    /// 功能具体名字
-    /// </summary>
-    public string FuncDetailName;
+    // Sys_UnlockFunc Entity
+    public partial class Sys_UnlockFuncEntity : DataTableEntityBase
+    {
+        // 编号
+        public int Id;
+        // 解锁功能
+        public string FuncName;
+        // 解锁功能等级
+        public int UnlockLevel;
+        // 显示功能等级
+        public int ShowLevel;
+        // 功能具体名字
+        public string FuncDetailName;
+    }
 }

@@ -1,10 +1,9 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-namespace FrameWork
+namespace GameScripts
 {
     /// <summary>
     /// LocalizationDBModel数据管理
@@ -18,12 +17,12 @@ namespace FrameWork
         {
             get { return "Localization/" + GameEntry.CurrLanguage.ToString(); }
         }
-
+    
         /// <summary>
         /// 当前语言字典
         /// </summary>
         public Dictionary<string, string> LocalizationDic = new Dictionary<string, string>();
-
+    
         /// <summary>
         /// 加载列表
         /// </summary>
@@ -32,7 +31,7 @@ namespace FrameWork
         {
             int rows = ms.ReadInt();
             int columns = ms.ReadInt();
-
+    
             for (int i = 0; i < rows; i++)
             {
                 LocalizationDic[ms.ReadUTF8String()] = ms.ReadUTF8String();

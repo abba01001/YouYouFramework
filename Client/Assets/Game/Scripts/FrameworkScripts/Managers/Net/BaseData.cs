@@ -1,8 +1,7 @@
-using System;
+﻿using System;
 using System.Text;
 
-
-namespace FrameWork
+namespace GameScripts
 {
     public abstract class BaseData
     {
@@ -11,15 +10,15 @@ namespace FrameWork
         /// </summary>
         /// <returns>长度</returns>
         public abstract int GetDataBytesLength();
-
+    
         /// <summary>
         /// 序列化数据类
         /// </summary>
         /// <returns>返回序列化后的字节数组</returns>
         public abstract byte[] SerializeData();
-
+    
         public abstract int ReadingData(byte[] bytes, int beginIndex = 0);
-
+    
         /// <summary>
         /// 序列化int类型数据
         /// </summary>
@@ -31,7 +30,7 @@ namespace FrameWork
             BitConverter.GetBytes(data).CopyTo(bytes, index);
             index += 4;
         }
-
+    
         /// <summary>
         /// 序列化long类型数据
         /// </summary>
@@ -43,7 +42,7 @@ namespace FrameWork
             BitConverter.GetBytes(data).CopyTo(bytes, index);
             index += 8;
         }
-
+    
         /// <summary>
         /// 序列化string类型数据
         /// </summary>
@@ -53,14 +52,14 @@ namespace FrameWork
         protected void SerializeString(byte[] bytes, string data, ref int index)
         {
             byte[] strBytes = Encoding.UTF8.GetBytes(data);
-
+    
             //因为string类型长度是不固定的，所以序列化string类型需要先保存string数据转化成字节数组的长度
             SerializeInt(bytes, strBytes.Length, ref index);
-
+    
             strBytes.CopyTo(bytes, index);
             index += strBytes.Length;
         }
-
+    
         /// <summary>
         /// 序列化自定义类数据
         /// </summary>
@@ -72,7 +71,7 @@ namespace FrameWork
             data.SerializeData().CopyTo(bytes, index);
             index += data.GetDataBytesLength();
         }
-
+    
         /// <summary>
         /// 反序列化Int类型
         /// </summary>
@@ -85,7 +84,7 @@ namespace FrameWork
             startIndex += 4;
             return value;
         }
-
+    
         /// <summary>
         /// 反序列化long类型
         /// </summary>
@@ -98,7 +97,7 @@ namespace FrameWork
             startIndex += 8;
             return value;
         }
-
+    
         /// <summary>
         /// 反序列化string类型
         /// </summary>
@@ -112,7 +111,7 @@ namespace FrameWork
             startIndex += strLength;
             return str;
         }
-
+    
         /// <summary>
         /// 反序列化自定义类
         /// </summary>
@@ -128,5 +127,4 @@ namespace FrameWork
             return value;
         }
     }
-
 }

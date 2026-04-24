@@ -1,8 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using GameScripts;
 using Google.Protobuf;
 using Main;
 using Protocols;
@@ -12,25 +13,23 @@ using Protocols.Player;
 using Sirenix.Utilities;
 using UnityEngine;
 
-
-
-namespace FrameWork
+namespace GameScripts
 {
     public class NetResponseHandler
     {
         private Socket socket;
         private NetRequestHandler _netRequest;
-
+    
         private readonly Dictionary<string, Action<BaseMessage>> _handlers =
             new Dictionary<string, Action<BaseMessage>>();
-
+    
         public NetResponseHandler(Socket socket, NetRequestHandler netRequest)
         {
             this.socket = socket;
             this._netRequest = netRequest;
             InitializeHandlers();
         }
-
+    
         // 注册响应
         public void InitializeHandlers()
         {
@@ -46,7 +45,7 @@ namespace FrameWork
             RegisterHandler(nameof(ChatMsgList), s2c_handle_request_public_channel_chat);
             RegisterHandler(nameof(SuspendTimeMsg), s2c_handle_get_suspend_time_msg);
         }
-
+    
         public void RegisterHandler(string type, Action<BaseMessage> handler)
         {
             if (!_handlers.ContainsKey(type))
@@ -54,19 +53,19 @@ namespace FrameWork
                 _handlers.Add(type, handler);
             }
         }
-
+    
         // 处理响应的分发逻辑
         public void HandleResponse(BaseMessage message)
         {
             if (_handlers.TryGetValue(message.Type, out var handler)) handler(message);
         }
-
-
+    
+    
         #region 协议
-
+    
         // 示例处理方法，接收 BaseMessage 作为参数
         private int lastSeq;
-
+    
         private void s2c_handle_request_heart_beat(BaseMessage message)
         {
             ProtocolHelper.UnpackData<HeartBeatMsg>(message, (data) =>
@@ -76,20 +75,20 @@ namespace FrameWork
                 GameEntry.Net.RefreshLastHeartAckTime(message.Timestamp);
             });
         }
-
+    
         //公会列表
         private void s2c_handle_request_guild_list(BaseMessage message)
         {
             ProtocolHelper.UnpackData<Protocols.Guild.GuildListMsg>(message,
                 (data) => { Debugger.LogError($"公会数量{data.GuildList.TotalCount}"); });
         }
-
+    
         //服务器下发热更信息
         private void s2c_handle_hot_update(BaseMessage message)
         {
             ProtocolHelper.UnpackData<HotUpdateMsg>(message, (data) => { Debugger.LogError($"服务器下发资源信息"); });
         }
-
+    
         //服务器下发退出游戏
         private void s2c_handle_exit_game(BaseMessage message)
         {
@@ -99,17 +98,16 @@ namespace FrameWork
                 GameEntry.Procedure.ChangeState(ProcedureState.Preload);
             });
         }
-
+    
         private void s2c_handle_entry_game(BaseMessage message)
         {
             ProtocolHelper.UnpackData<EntryGameMsg>(message, (data) =>
             {
                 GameEntry.Event.Dispatch(Constants.EventName.LoginSuccess);
                 Constants.IsEntryGame = true;
-                Constants.TempVariable.InitEntryGameMsg = data;
             });
         }
-
+    
         //登录
         private void s2c_handle_request_login(BaseMessage message)
         {
@@ -131,7 +129,7 @@ namespace FrameWork
                 }
             });
         }
-
+    
         //注册
         private void s2c_handle_request_register(BaseMessage message)
         {
@@ -150,7 +148,7 @@ namespace FrameWork
                 }
             });
         }
-
+    
         //修改玩家属性
         private void s2c_handle_request_update_role_info(BaseMessage message)
         {
@@ -165,11 +163,11 @@ namespace FrameWork
                 }
                 else
                 {
-
+    
                 }
             });
         }
-
+    
         private void s2c_handle_chat_msg(BaseMessage message)
         {
             ProtocolHelper.UnpackData<ChatMsg>(message, (data) =>
@@ -181,7 +179,7 @@ namespace FrameWork
                 });
             });
         }
-
+    
         private void s2c_handle_request_public_channel_chat(BaseMessage message)
         {
             ProtocolHelper.UnpackData<ChatMsgList>(message, (data) =>
@@ -198,18 +196,18 @@ namespace FrameWork
                 }
             });
         }
-
+    
         private void s2c_handle_get_suspend_time_msg(BaseMessage message)
         {
             ProtocolHelper.UnpackData<SuspendTimeMsg>(message,
                 (data) => { GameEntry.Event.Dispatch(Constants.EventName.GetSuspendReward, data); });
         }
-
+    
         private void s2c_handle_other(BaseMessage message)
         {
             Console.WriteLine("处理其他请求...");
         }
-
+    
         #endregion
     }
 }

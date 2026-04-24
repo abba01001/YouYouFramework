@@ -1,12 +1,10 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Main;
 using UnityEngine;
 
-namespace FrameWork
+namespace GameScripts
 {
-
-
     /// <summary>
     /// 数据表管理基类
     /// </summary>
@@ -20,44 +18,44 @@ namespace FrameWork
         /// Entity对象的集合
         /// </summary>
         protected List<P> m_List;
-
+    
         public int Count
         {
             get { return m_List.Count; }
         }
-
+    
         /// <summary>
         /// Key:Entity的ID
         /// Value:Entity对象
         /// </summary>
         protected Dictionary<int, P> m_Dic;
-
+    
         public DataTableDBModelBase()
         {
             m_List = new List<P>();
             m_Dic = new Dictionary<int, P>();
         }
-
+    
         #region 需要子类实现的属性,方法
-
+    
         /// <summary>
         /// 数据表名称
         /// </summary>
         public abstract string DataTableName { get; }
-
+    
         /// <summary>
         /// 加载数据列表
         /// </summary>
         protected abstract void LoadList(MMO_MemoryStream ms);
-
+    
         protected virtual void OnLoadListComple()
         {
         }
-
+    
         #endregion
-
+    
         #region LoadData 加载数据表数据
-
+    
         /// <summary>
         /// 加载数据表数据
         /// </summary>
@@ -72,23 +70,23 @@ namespace FrameWork
                     {
                         LoadList(ms);
                     }
-
+    
                     OnLoadListComple();
                     taskRoutine.Leave();
                 });
             });
         }
-
+    
         public void TestLoad(MMO_MemoryStream ms)
         {
             LoadList(ms);
             OnLoadListComple();
         }
-
+    
         #endregion
-
+    
         #region GetList 获取子类对应的数据实体List
-
+    
         /// <summary>
         /// 获取子类对应的数据实体List
         /// </summary>
@@ -97,11 +95,11 @@ namespace FrameWork
         {
             return m_List;
         }
-
+    
         #endregion
-
+    
         #region GetDic 根据ID获取实体
-
+    
         /// <summary>
         /// 根据ID获取实体
         /// </summary>
@@ -118,7 +116,7 @@ namespace FrameWork
                 return null;
             }
         }
-
+    
         public void PrintDic()
         {
             foreach (var pair in m_Dic)
@@ -126,9 +124,9 @@ namespace FrameWork
                 Debugger.LogError(pair.Value.ToJson());
             }
         }
-
+    
         #endregion
-
+    
         /// <summary>
         /// 清空数据
         /// </summary>

@@ -1,11 +1,11 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.Android;
 
-namespace FrameWork
+namespace GameScripts
 {
     public class ProcedureNone : ProcedureBase
     {

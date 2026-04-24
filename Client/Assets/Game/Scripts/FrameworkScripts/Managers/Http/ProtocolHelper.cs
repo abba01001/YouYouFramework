@@ -1,4 +1,4 @@
-using Google.Protobuf.WellKnownTypes;
+﻿using Google.Protobuf.WellKnownTypes;
 using Google.Protobuf;
 using Microsoft.VisualBasic;
 using Protocols.Item;
@@ -13,47 +13,46 @@ using Main;
 using Protocols;
 using UnityEngine;
 
-
-namespace FrameWork
+namespace GameScripts
 {
     public static class ProtocolHelper
     {
         private const string SECURITYKEY = "3ZkPqF9hDjW8q2Z7"; //钥匙
-
+    
         // 获得自定义数据类的字节长度
         public static int GetDataBytesLength()
         {
             // 示例实现，具体实现请根据您的需求
             return 0; // 替换为实际字节长度
         }
-
+    
         // 序列化数据类
         public static byte[] SerializeData()
         {
             // 示例实现，具体实现请根据您的需求
             return new byte[0]; // 替换为实际序列化数据
         }
-
+    
         public static int ReadingData(byte[] bytes, int beginIndex = 0)
         {
             // 示例实现，具体实现请根据您的需求
             return 0; // 替换为实际读取数据长度
         }
-
+    
         // 序列化int类型数据
         public static void SerializeInt(byte[] bytes, int data, ref int index)
         {
             BitConverter.GetBytes(data).CopyTo(bytes, index);
             index += 4;
         }
-
+    
         // 序列化long类型数据
         public static void SerializeLong(byte[] bytes, long data, ref int index)
         {
             BitConverter.GetBytes(data).CopyTo(bytes, index);
             index += 8;
         }
-
+    
         // 序列化string类型数据
         public static void SerializeString(byte[] bytes, string data, ref int index)
         {
@@ -62,14 +61,14 @@ namespace FrameWork
             strBytes.CopyTo(bytes, index);
             index += strBytes.Length;
         }
-
+    
         // 序列化自定义类数据
         public static void SerializeCustomClass(byte[] bytes, BaseData data, ref int index)
         {
             data.SerializeData().CopyTo(bytes, index);
             index += data.GetDataBytesLength();
         }
-
+    
         // 反序列化Int类型
         public static int ReadingInt(byte[] bytes, ref int startIndex)
         {
@@ -77,7 +76,7 @@ namespace FrameWork
             startIndex += 4;
             return value;
         }
-
+    
         // 反序列化long类型
         public static long ReadingLong(byte[] bytes, ref int startIndex)
         {
@@ -85,7 +84,7 @@ namespace FrameWork
             startIndex += 8;
             return value;
         }
-
+    
         // 反序列化string类型
         public static string ReadingString(byte[] bytes, ref int startIndex)
         {
@@ -94,7 +93,7 @@ namespace FrameWork
             startIndex += strLength;
             return str;
         }
-
+    
         // 反序列化自定义类
         public static T ReadingCustomClass<T>(byte[] bytes, ref int startIndex) where T : BaseData, new()
         {
@@ -103,7 +102,7 @@ namespace FrameWork
             startIndex += valueLength;
             return value;
         }
-
+    
         // 加密方法
         public static string Encrypt(byte[] plainBytes)
         {
@@ -113,48 +112,48 @@ namespace FrameWork
                 aesAlg.Key = keyArray;
                 aesAlg.Mode = CipherMode.CBC;
                 aesAlg.Padding = PaddingMode.PKCS7;
-
+    
                 aesAlg.GenerateIV(); // 每次加密生成一个新的 IV
                 ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
                 using (MemoryStream msEncrypt = new MemoryStream())
                 {
                     // 在加密数据之前先写入 IV
                     msEncrypt.Write(aesAlg.IV, 0, aesAlg.IV.Length);
-
+    
                     using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
                     {
                         csEncrypt.Write(plainBytes, 0, plainBytes.Length);
                         csEncrypt.FlushFinalBlock();
                     }
-
+    
                     byte[] encrypted = msEncrypt.ToArray();
                     return Convert.ToBase64String(encrypted); // 返回 Base64 字符串
                 }
             }
         }
-
+    
         // 解密方法
         public static byte[] Decrypt(string cipherText)
         {
             byte[] cipherTextArray = Convert.FromBase64String(cipherText);
             byte[] keyArray = Encoding.UTF8.GetBytes(SECURITYKEY);
-
+    
             using (Aes aesAlg = Aes.Create())
             {
                 aesAlg.Key = keyArray;
                 aesAlg.Mode = CipherMode.CBC;
                 aesAlg.Padding = PaddingMode.PKCS7;
-
+    
                 // 从密文中提取 IV
                 byte[] iv = new byte[aesAlg.BlockSize / 8];
                 byte[] actualCipherText = new byte[cipherTextArray.Length - iv.Length];
-
+    
                 Array.Copy(cipherTextArray, 0, iv, 0, iv.Length); // 提取 IV
                 Array.Copy(cipherTextArray, iv.Length, actualCipherText, 0, actualCipherText.Length); // 提取真正的密文
-
+    
                 aesAlg.IV = iv;
                 ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
-
+    
                 using (MemoryStream msDecrypt = new MemoryStream(actualCipherText))
                 {
                     using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
@@ -168,7 +167,7 @@ namespace FrameWork
                 }
             }
         }
-
+    
         // 将 object[] 转换为 byte[]
         public static byte[] ObjectArrayToByteArray(object[] data)
         {
@@ -193,12 +192,12 @@ namespace FrameWork
                         }
                         // 可以根据需要添加其他类型的处理
                     }
-
+    
                     return ms.ToArray();
                 }
             }
         }
-
+    
         // 将 byte[] 转换为 object[]
         public static object[] ByteArrayToObjectArray(byte[] bytes)
         {
@@ -216,13 +215,13 @@ namespace FrameWork
                         {
                             dataList.Add(reader.ReadInt32());
                         }
-
+    
                         // 处理 long
                         if (ms.Position + 8 <= ms.Length)
                         {
                             dataList.Add(reader.ReadInt64());
                         }
-
+    
                         // 处理 string
                         if (ms.Position + 4 <= ms.Length)
                         {
@@ -234,19 +233,19 @@ namespace FrameWork
                             }
                         }
                     }
-
+    
                     return dataList.ToArray();
                 }
             }
         }
-
+    
         public static void UnpackData<T>(BaseMessage message, Action<T> action) where T : class, IMessage<T>, new()
         {
             if (message == null)
             {
                 return;
             }
-
+    
             try
             {
                 // 解包为目标类型（如 ItemData）

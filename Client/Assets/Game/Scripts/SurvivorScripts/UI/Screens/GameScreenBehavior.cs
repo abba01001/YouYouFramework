@@ -5,7 +5,7 @@ using OctoberStudio.Easing;
 using OctoberStudio.UI;
 using System;
 using System.Collections.Generic;
-using FrameWork;
+using GameScripts;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;

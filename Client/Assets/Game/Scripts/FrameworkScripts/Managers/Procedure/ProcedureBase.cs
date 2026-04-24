@@ -1,12 +1,10 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using FrameWork;
+
 using Main;
 using UnityEngine;
 
-
-
-namespace FrameWork
+namespace GameScripts
 {
     /// <summary>
     /// 流程状态基类
@@ -18,22 +16,22 @@ namespace FrameWork
             base.OnEnter();
             Debugger.Log(CurrFsm.GetState(CurrFsm.CurrStateType).ToString() + "==>> OnEnter()");
         }
-
+    
         internal override void OnUpdate()
         {
             base.OnUpdate();
         }
-
+    
         internal override void OnLeave()
         {
             base.OnLeave();
             Debugger.Log(CurrFsm.GetState(CurrFsm.CurrStateType).ToString() + "==>> OnLeave()");
         }
-
+    
         internal override void OnDestroy()
         {
             base.OnDestroy();
-
+    
         }
     }
 }

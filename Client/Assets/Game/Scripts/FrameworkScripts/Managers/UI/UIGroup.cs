@@ -1,11 +1,9 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace FrameWork
+namespace GameScripts
 {
-
-
     /// <summary>
     /// UI分组
     /// </summary>
@@ -16,16 +14,15 @@ namespace FrameWork
         /// 分组编号
         /// </summary>
         public byte Id;
-
+    
         /// <summary>
         /// 基础排序
         /// </summary>
         public ushort BaseOrder;
-
+    
         /// <summary>
         /// 
         /// </summary>
         public Transform Group;
     }
-
 }

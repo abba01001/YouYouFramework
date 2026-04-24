@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-namespace FrameWork
+namespace GameScripts
 {
     public class ClosingScript
     {
@@ -18,7 +18,7 @@ namespace FrameWork
                 "UnityGraphicsQuality",
                 "UnitySelectMonitor"
             };
-
+    
             using (StreamWriter file =
                    new StreamWriter(Path.Combine(Application.persistentDataPath, "ScreenSelectorPrefs.txt")))
             {
@@ -28,7 +28,7 @@ namespace FrameWork
                 }
             }
         }
-
+    
         [RuntimeInitializeOnLoadMethod]
         static void RunOnStart()
         {

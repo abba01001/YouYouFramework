@@ -1,4 +1,4 @@
-using OctoberStudio.Audio;
+using GameScripts;
 using OctoberStudio.Easing;
 using OctoberStudio.Input;
 using OctoberStudio.Save;
@@ -8,6 +8,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using AudioManager = OctoberStudio.Audio.AudioManager;
 
 namespace OctoberStudio.UI
 {

@@ -1,27 +1,50 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using FrameWork;
 using UnityEngine;
 
+namespace GameScripts
+{
     public partial class Sys_UnlockFuncDBModel
-    {
-        public Dictionary<int, Sys_UnlockFuncEntity> IdByDic { get;private set; }
 
-        protected override void OnLoadListComple()
         {
-            base.OnLoadListComple();
-            IdByDic = new Dictionary<int, Sys_UnlockFuncEntity>();
-            for (int i = 0; i < m_List.Count; i++)
+
+            public Dictionary<int, Sys_UnlockFuncEntity> IdByDic { get;private set; }
+
+    
+
+            protected override void OnLoadListComple()
+
             {
-                Sys_UnlockFuncEntity entity = m_List[i];
-                if (!IdByDic.ContainsKey(entity.Id))
+
+                base.OnLoadListComple();
+
+                IdByDic = new Dictionary<int, Sys_UnlockFuncEntity>();
+
+                for (int i = 0; i < m_List.Count; i++)
+
                 {
-                    IdByDic.Add(entity.Id, entity);
+
+                    Sys_UnlockFuncEntity entity = m_List[i];
+
+                    if (!IdByDic.ContainsKey(entity.Id))
+
+                    {
+
+                        IdByDic.Add(entity.Id, entity);
+
+                    }
+
+                    else
+
+                    {
+
+                        GameEntry.LogError(LogCategory.Framework, "RoleAttr????????! DialogueId==" + entity.Id);
+
+                    }
+
                 }
-                else
-                {
-                    GameEntry.LogError(LogCategory.Framework, "RoleAttr????????! DialogueId==" + entity.Id);
-                }
+
             }
+
         }
-    }
+}

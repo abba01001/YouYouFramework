@@ -1,12 +1,11 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
-using FrameWork;
+
 using Main;
 
-
-namespace FrameWork
+namespace GameScripts
 {
     /// <summary>
     /// 不同的分类一个池, 包含多个对象池
@@ -14,19 +13,19 @@ namespace FrameWork
     public sealed class SpawnPool : MonoBehaviour
     {
         private Dictionary<int, PrefabPool> prefabPoolDic = new();
-
-
+    
+    
         private void OnDestroy()
         {
             StopAllCoroutines();
-
+    
             foreach (var pool in prefabPoolDic)
             {
                 pool.Value.SelfDestruct();
             }
             prefabPoolDic.Clear();
         }
-
+    
         /// <summary>
         /// 创建对象池
         /// </summary>
@@ -38,7 +37,7 @@ namespace FrameWork
                 Debugger.Log("该Prefab对应的对象池已经存在， 不要重复创建!  prefab==" + prefabPool.prefab);
                 return;
             }
-
+    
             prefabPool.Root = this;
             prefabPoolDic.Add(instanceID, prefabPool);
         }

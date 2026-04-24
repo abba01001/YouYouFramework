@@ -1,10 +1,9 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System;
 using System.IO;
 
-
-namespace FrameWork
+namespace GameScripts
 {
     /// <summary>
     /// 加密
@@ -17,14 +16,14 @@ namespace FrameWork
             {
                 return null;
             }
-
+    
             System.Security.Cryptography.MD5 md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
             byte[] bytResult = md5.ComputeHash(System.Text.Encoding.Default.GetBytes(value));
             string strResult = BitConverter.ToString(bytResult);
             strResult = strResult.Replace("-", "");
             return strResult;
         }
-
+    
         /// <summary>
         /// 获取文件的MD5
         /// </summary>
@@ -36,7 +35,7 @@ namespace FrameWork
             {
                 return null;
             }
-
+    
             try
             {
                 FileStream file = new FileStream(filePath, FileMode.Open);

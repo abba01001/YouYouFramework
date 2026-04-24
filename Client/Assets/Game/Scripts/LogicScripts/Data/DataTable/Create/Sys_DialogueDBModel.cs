@@ -1,39 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
-using System;
-using FrameWork;
+﻿using System.Collections.Generic;
+using GameScripts;
 
-/// <summary>
-/// Sys_Dialogue数据管理
-/// </summary>
-public partial class Sys_DialogueDBModel : DataTableDBModelBase<Sys_DialogueDBModel, Sys_DialogueEntity>
+namespace GameScripts
 {
-    /// <summary>
-    /// 文件名称
-    /// </summary>
-    public override string DataTableName { get { return "Sys_Dialogue"; } }
-
-    /// <summary>
-    /// 加载列表
-    /// </summary>
-    protected override void LoadList(MMO_MemoryStream ms)
+    public partial class Sys_DialogueDBModel : DataTableDBModelBase<Sys_DialogueDBModel, Sys_DialogueEntity>
     {
-        int rows = ms.ReadInt();
-        int columns = ms.ReadInt();
+        public override string DataTableName => "Sys_Dialogue";
 
-        for (int i = 0; i < rows; i++)
+        protected override void LoadList(MMO_MemoryStream ms)
         {
-            Sys_DialogueEntity entity = new Sys_DialogueEntity();
-            entity.Id = ms.ReadInt();
-            entity.DialogueId = ms.ReadInt();
-            entity.Content = ms.ReadUTF8String();
-            entity.EnableBlock = ms.ReadUTF8String();
-            entity.DisableBlock = ms.ReadUTF8String();
-            entity.ClickMode = ms.ReadInt();
-            entity.DialogueType = ms.ReadInt();
-
-            m_List.Add(entity);
-            m_Dic[entity.Id] = entity;
+            int rows = ms.ReadInt();
+            int columns = ms.ReadInt();
+            for (int i = 0; i < rows; i++)
+            {
+                var entity = new Sys_DialogueEntity();
+                entity.Id = ms.ReadInt();
+                entity.DialogueId = ms.ReadInt();
+                entity.Content = ms.ReadUTF8String();
+                entity.EnableBlock = ms.ReadUTF8String();
+                entity.DisableBlock = ms.ReadUTF8String();
+                entity.ClickMode = ms.ReadInt();
+                entity.DialogueType = ms.ReadInt();
+                m_List.Add(entity);
+                m_Dic[entity.Id] = entity;
+            }
         }
     }
 }

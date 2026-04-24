@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 using Unity.VisualScripting;
 using UnityEngine;
 
-namespace FrameWork
+namespace GameScripts
 {
     [DisallowMultipleComponent]
     public class TransAnim : BezierAnim<Transform, TransSegment>
@@ -12,15 +12,15 @@ namespace FrameWork
             Linear,
             Bezier,
         }
-
+    
         [Header("运动曲线")] [SerializeField] private PathMode m_PathMode = PathMode.Linear;
-
+    
         public PathMode pathMode
         {
             get { return m_PathMode; }
             set { m_PathMode = value; }
         }
-
+    
         protected override void OnSegmentUpdate()
         {
             if (target != null)
@@ -37,7 +37,7 @@ namespace FrameWork
                 }
             }
         }
-
+    
         public bool GetPoint(ref Vector3 position, ref Quaternion rotation, ref Vector3 scale, int section,
             float progress, bool loop)
         {
@@ -46,7 +46,7 @@ namespace FrameWork
                 Debug.LogException(new ArgumentOutOfRangeException("section"));
                 return false;
             }
-
+    
             if (section >= segments.Count && !loop)
             {
                 TransSegment segment = segments[segments.Count - 1];
@@ -78,7 +78,7 @@ namespace FrameWork
                     {
                         position = Vector3.Lerp(startPoint.position, endPoint.position, progress);
                     }
-
+    
                     rotation = Quaternion.Lerp(startPoint.transform.rotation, endPoint.transform.rotation, progress);
                     scale = Vector3.Lerp(startPoint.transform.lossyScale, endPoint.transform.lossyScale, progress);
                     return true;
@@ -89,12 +89,12 @@ namespace FrameWork
                 }
             }
         }
-
+    
         public static Vector3 CalcBezierPoint(TransPathPoint p1, TransPathPoint p2, float progress)
         {
             return CalcBezierPoint(p1.position, p1.startTangentPosition, p2.endTangentPosition, p2.position, progress);
         }
-
+    
         public static Vector3 CalcBezierPoint(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4, float progress)
         {
             float t1 = progress;
@@ -104,9 +104,9 @@ namespace FrameWork
                    + p3 * t2 * t1 * t1 * 3
                    + p4 * t1 * t1 * t1;
         }
-
+    
         public const float minScale = 1e-5f;
-
+    
         public static void SetLossyScale(Transform t, Vector3 scale)
         {
             if (t.parent == null)
@@ -114,14 +114,14 @@ namespace FrameWork
                 t.localScale = scale;
                 return;
             }
-
+    
             Vector3 parentScale = t.parent.lossyScale;
             scale.x = parentScale.x < minScale ? 0 : (scale.x / parentScale.x);
             scale.y = parentScale.y < minScale ? 0 : (scale.y / parentScale.y);
             scale.z = parentScale.z < minScale ? 0 : (scale.z / parentScale.z);
             t.localScale = scale;
         }
-
+    
         public void DuplicateObject()
         {
             GameObject duplicatedObject = Instantiate(transform.gameObject, transform.position + Vector3.right,
@@ -129,20 +129,20 @@ namespace FrameWork
             duplicatedObject.transform.SetParent(transform.parent, false); // 传入 false，保持世界坐标
             Debug.LogError("克隆的物体: " + duplicatedObject.name);
         }
-
-#if UNITY_EDITOR
+    
+    #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.grey;
             DrawGizmos();
         }
-
+    
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.blue;
             DrawGizmos();
         }
-
+    
         private void DrawGizmos()
         {
             switch (pathMode)
@@ -155,7 +155,7 @@ namespace FrameWork
                     break;
             }
         }
-
+    
         private void DrawGizmos(Action<TransPathPoint, TransPathPoint> drawer)
         {
             for (int i = 0; i < segments.Count; i++)
@@ -167,17 +167,17 @@ namespace FrameWork
                 }
             }
         }
-
+    
         private void DrawLinearGizmos(TransPathPoint p1, TransPathPoint p2)
         {
             UnityEditor.Handles.DrawLine(p1.position, p2.position);
         }
-
+    
         private void DrawBezierGizmos(TransPathPoint p1, TransPathPoint p2)
         {
             UnityEditor.Handles.DrawBezier(p1.position, p2.position, p1.startTangentPosition, p2.endTangentPosition,
                 Gizmos.color, null, 1f);
         }
-#endif
+    #endif
     }
 }

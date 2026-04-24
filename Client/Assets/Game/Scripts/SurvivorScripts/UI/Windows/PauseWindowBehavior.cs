@@ -3,7 +3,7 @@ using OctoberStudio.Easing;
 using OctoberStudio.Input;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using FrameWork;
+using GameScripts;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;

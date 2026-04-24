@@ -118,7 +118,7 @@ public static class ServerSocket
         string database = "unitygamedata";
         string user = "pengjunwei";
         string pass = "pengjunwei";
-        SqlManager.Initialize($"Server={host};Port=5001;Database={database};User Id={user};Password={pass};SslMode=None;");
+        SqlManager.Initialize($"Server={host};Port=5001;Database={database};User Id={user};Password={pass};SslMode=None;AllowPublicKeyRetrieval=True;");
 
         //SqlManager.Initialize($"Server={KeyUtils.GetSqlKey(SqlKey.Server)};Database={KeyUtils.GetSqlKey(SqlKey.Database)};" +
         //  $"UserId={KeyUtils.GetSqlKey(SqlKey.UserId)};Password={KeyUtils.GetSqlKey(SqlKey.Password)};Port = {KeyUtils.GetSqlKey(SqlKey.Port)}");

@@ -1,29 +1,30 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
-using Object = UnityEngine.Object;
 using Cysharp.Threading.Tasks;
-using FrameWork;
-using YooAsset;
+using UnityEngine;
 
-
-namespace FrameWork
+namespace GameScripts
 {
+    using Object = UnityEngine.Object;
+
+
+    using YooAsset;
+    
     /// <summary>
     /// 资源加载 管理器
     /// </summary>
     public class LoaderManager
     {
         public ResourcePackage DefaultPackage { get; private set; }
-
+    
         public LoaderManager()
         {
             DefaultPackage = YooAssets.GetPackage("DefaultPackage");
-
+    
             //加载时间最短, 但加载时帧率下降最严重
             Application.backgroundLoadingPriority = ThreadPriority.High;
         }
-
+    
         /// <summary>
         /// 异步加载主资源，自动加载依赖
         /// 注意: 如果这个资源没有打AB包, 则无法加载
@@ -36,7 +37,7 @@ namespace FrameWork
                 GameEntry.LogError(LogCategory.Loader, "依赖的游戏物体不可为空");
                 return null;
             }
-
+    
             var op = DefaultPackage.LoadAssetAsync(assetFullPath);
             await op;
             AssetReleaseHandle.Add(op, target);
@@ -49,7 +50,7 @@ namespace FrameWork
             await op;
             return op.AssetObject as T;
         }
-
+    
         /// <summary>
         /// 同步加载主资源, 自动加载依赖
         /// 注意: 如果这个资源没有打AB包, 则无法加载
@@ -68,7 +69,7 @@ namespace FrameWork
             AssetReleaseHandle.Add(op, target);
             return op.AssetObject as T;
         }
-
+    
         public T LoadMainAsset<T>(string assetFullPath) where T : Object
         {
             var op = DefaultPackage.LoadAssetSync(assetFullPath);

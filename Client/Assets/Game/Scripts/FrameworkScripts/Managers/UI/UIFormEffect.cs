@@ -1,10 +1,9 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-namespace FrameWork
+namespace GameScripts
 {
     /// <summary>
     /// ��Ҫ���ڽ����Ч�޷���Ⱦ��UI�ϵ�����
@@ -13,13 +12,13 @@ namespace FrameWork
     public class UIFormEffect : MonoBehaviour
     {
         [Header("�Ƿ񴰿ڶ���")] [SerializeField] bool isAnim = false;
-
+    
         [Header("UI��Ч����")] [SerializeField] public List<UIEffectGroup> UIEffectGroups = new List<UIEffectGroup>();
-
+    
         [Header("��ʼ���ŵ���Ч")] [SerializeField]
         List<ParticleSystem> effectOnOpenPlay = new List<ParticleSystem>();
-
-
+    
+    
         void Start()
         {
             Canvas CurrCanvas = GetComponent<Canvas>();
@@ -33,30 +32,30 @@ namespace FrameWork
                     x.gameObject.SetLayer("UI");
                 });
             }
-
+    
             //ֹͣ��Ч��ʼ����, ����Ҫ����ע��
             ParticleSystem[] particles = GetComponentsInChildren<ParticleSystem>();
             for (int i = 0; i < particles.Length; i++)
                 particles[i].Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-
+    
             //�����趨�ĳ�ʼ��Ч
             effectOnOpenPlay.ForEach(x => x.Play());
         }
-
+    
         private void OnEnable()
         {
-#if UNITY_EDITOR
+    #if UNITY_EDITOR
             transform.SetAsLastSibling();
-#endif
+    #endif
             if (isAnim) AnimOpen();
         }
-
+    
         public void AnimOpen()
         {
             transform.DoShowScale(0.3f, 1);
         }
     }
-
+    
     /// <summary>
     /// UI��Ч����
     /// </summary>
@@ -67,7 +66,7 @@ namespace FrameWork
         /// ����
         /// </summary>
         public ushort Order;
-
+    
         /// <summary>
         /// ��Ч��
         /// </summary>

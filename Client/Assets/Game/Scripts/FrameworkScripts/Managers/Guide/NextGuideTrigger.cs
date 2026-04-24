@@ -1,10 +1,9 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-namespace FrameWork
+namespace GameScripts
 {
     /// <summary>
     /// 新手引导, 下一步触发器
@@ -15,9 +14,9 @@ namespace FrameWork
         /// 什么名字进入后会触发
         /// </summary>
         public string[] triggerNames;
-
+    
         public Action TriggerEnter;
-
+    
         private void OnTriggerEnter(Collider other)
         {
             foreach (string name in triggerNames)
@@ -26,7 +25,7 @@ namespace FrameWork
                 {
                     //新手引导, 触发下一步
                     GameEntry.Guide.NextGroup(GameEntry.Guide.CurrentState);
-
+    
                     TriggerEnter?.Invoke();
                 }
             }

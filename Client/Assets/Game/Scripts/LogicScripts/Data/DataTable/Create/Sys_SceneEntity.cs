@@ -1,21 +1,17 @@
-using System.Collections;
-using FrameWork;
+﻿using GameScripts;
 
-/// <summary>
-/// Sys_Scene实体
-/// </summary>
-public partial class Sys_SceneEntity : DataTableEntityBase
+namespace GameScripts
 {
-    /// <summary>
-    /// 场景组
-    /// </summary>
-    public string SceneGroup;
-    /// <summary>
-    /// 场景路径
-    /// </summary>
-    public string AssetFullPath;
-    /// <summary>
-    /// 背景音乐
-    /// </summary>
-    public string BGMId;
+    // Sys_Scene Entity
+    public partial class Sys_SceneEntity : DataTableEntityBase
+    {
+        // 编号
+        public int Id;
+        // 场景组
+        public string SceneGroup;
+        // 场景路径
+        public string AssetFullPath;
+        // 背景音乐
+        public string BGMId;
+    }
 }

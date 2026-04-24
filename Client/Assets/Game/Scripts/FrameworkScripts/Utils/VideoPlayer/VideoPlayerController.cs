@@ -1,35 +1,34 @@
-using System;
+﻿using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
 
-
-namespace FrameWork
+namespace GameScripts
 {
     public interface IVideoPlayerController
     {
         void Play();
         void Pause();
         void Stop();
-
+    
         void SetProgress(float progress);
         float GetProgress();
-
+    
         void SetVolume(float volume);
         float GetVolume();
-
+    
         bool IsPlaying { get; }
         bool IsPaused { get; }
         float Duration { get; }
-
+    
         event Action OnPlayStarted;
         event Action OnPlayPaused;
         event Action OnPlayStopped;
         event Action OnPlayCompleted;
         event Action<string> OnError;
     }
-
+    
     [RequireComponent(typeof(VideoPlayer))]
     public class VideoPlayerController : MonoBehaviour, IVideoPlayerController
     {
@@ -37,35 +36,35 @@ namespace FrameWork
         private bool _isInitialized = false;
         private float _targetProgress = -1f;
         private Coroutine _progressUpdateCoroutine;
-
+    
         [Header("播放器配置")] [SerializeField] private bool autoPlay = false;
         [SerializeField] private bool loop = false;
         [SerializeField] private float defaultVolume = 1.0f;
-
+    
         [Header("性能优化")] [SerializeField] private bool skipOnDrop = true;
         [SerializeField] private VideoAspectRatio aspectRatio = VideoAspectRatio.Stretch;
-
+    
         public bool IsPlaying => _videoPlayer != null && _videoPlayer.isPlaying;
         public bool IsPaused => _videoPlayer != null && _videoPlayer.isPaused;
         public float Duration => _videoPlayer != null ? (float)_videoPlayer.length : 0f;
-
+    
         public event Action OnPlayStarted;
         public event Action OnPlayPaused;
         public event Action OnPlayStopped;
         public event Action OnPlayCompleted;
         public event Action<string> OnError;
-
+    
         private void Awake()
         {
             InitializeVideoPlayer();
         }
-
+    
         private void OnDestroy()
         {
             UnsubscribeEvents();
             StopProgressCoroutine();
         }
-
+    
         /// <summary>
         /// 初始化视频播放器
         /// </summary>
@@ -77,7 +76,7 @@ namespace FrameWork
                 ConfigureVideoPlayer();
                 SubscribeEvents();
                 _isInitialized = true;
-
+    
                 if (autoPlay)
                 {
                     Play();
@@ -89,7 +88,7 @@ namespace FrameWork
                 OnError?.Invoke($"初始化失败: {ex.Message}");
             }
         }
-
+    
         /// <summary>
         /// 配置视频播放器参数
         /// </summary>
@@ -100,7 +99,7 @@ namespace FrameWork
             _videoPlayer.skipOnDrop = skipOnDrop;
             _videoPlayer.aspectRatio = aspectRatio;
             _videoPlayer.SetDirectAudioVolume(0, defaultVolume);
-
+    
             // 设置渲染模式为RenderTexture以获得最佳兼容性
             if (_videoPlayer.renderMode == VideoRenderMode.CameraFarPlane ||
                 _videoPlayer.renderMode == VideoRenderMode.CameraNearPlane)
@@ -108,7 +107,7 @@ namespace FrameWork
                 _videoPlayer.renderMode = VideoRenderMode.RenderTexture;
             }
         }
-
+    
         /// <summary>
         /// 订阅视频播放器事件
         /// </summary>
@@ -119,7 +118,7 @@ namespace FrameWork
             _videoPlayer.errorReceived += OnVideoError;
             _videoPlayer.prepareCompleted += OnVideoPrepared;
         }
-
+    
         /// <summary>
         /// 取消订阅事件
         /// </summary>
@@ -133,17 +132,17 @@ namespace FrameWork
                 _videoPlayer.prepareCompleted -= OnVideoPrepared;
             }
         }
-
+    
         private void OnVideoStarted(VideoPlayer vp) => OnPlayStarted?.Invoke();
-
+    
         private void OnVideoCompleted(VideoPlayer vp) => OnPlayCompleted?.Invoke();
-
+    
         private void OnVideoError(VideoPlayer vp, string message) => OnError?.Invoke(message);
-
+    
         private void OnVideoPrepared(VideoPlayer vp) => Debug.Log("视频准备完成");
-
+    
         // 播放控制
-
+    
         public void Play()
         {
             if (!_isInitialized)
@@ -151,7 +150,7 @@ namespace FrameWork
                 OnError?.Invoke("播放器未初始化");
                 return;
             }
-
+    
             try
             {
                 _videoPlayer.Play();
@@ -162,7 +161,7 @@ namespace FrameWork
                 OnError?.Invoke($"播放失败: {ex.Message}");
             }
         }
-
+    
         public void Pause()
         {
             if (_videoPlayer != null && _videoPlayer.isPlaying)
@@ -172,7 +171,7 @@ namespace FrameWork
                 OnPlayPaused?.Invoke();
             }
         }
-
+    
         public void Stop()
         {
             if (_videoPlayer != null)
@@ -182,29 +181,29 @@ namespace FrameWork
                 OnPlayStopped?.Invoke();
             }
         }
-
+    
         // 进度控制
         public void SetProgress(float progress)
         {
             if (_videoPlayer == null) return;
-
+    
             progress = Mathf.Clamp01(progress);
             _targetProgress = progress;
-
+    
             if (_videoPlayer.isPrepared)
             {
                 _videoPlayer.time = _videoPlayer.length * progress;
             }
         }
-
+    
         public float GetProgress()
         {
             if (_videoPlayer == null || _videoPlayer.length <= 0) return 0f;
             return (float)(_videoPlayer.time / _videoPlayer.length);
         }
-
+    
         // 音量控制
-
+    
         public void SetVolume(float volume)
         {
             if (_videoPlayer != null)
@@ -213,14 +212,14 @@ namespace FrameWork
                 _videoPlayer.SetDirectAudioVolume(0, volume);
             }
         }
-
+    
         public float GetVolume()
         {
             return _videoPlayer != null ? _videoPlayer.GetDirectAudioVolume(0) : 0f;
         }
-
+    
         // 视频源设置
-
+    
         /// <summary>
         /// 设置本地视频文件
         /// </summary>
@@ -234,7 +233,7 @@ namespace FrameWork
                 PrepareVideo();
             }
         }
-
+    
         /// <summary>
         /// 设置网络视频URL
         /// </summary>
@@ -248,7 +247,7 @@ namespace FrameWork
                 PrepareVideo();
             }
         }
-
+    
         private void PrepareVideo()
         {
             if (_videoPlayer != null)
@@ -256,15 +255,15 @@ namespace FrameWork
                 _videoPlayer.Prepare();
             }
         }
-
+    
         // 进度更新协程
-
+    
         private void StartProgressCoroutine()
         {
             StopProgressCoroutine();
             _progressUpdateCoroutine = StartCoroutine(UpdateProgressCoroutine());
         }
-
+    
         private void StopProgressCoroutine()
         {
             if (_progressUpdateCoroutine != null)
@@ -273,7 +272,7 @@ namespace FrameWork
                 _progressUpdateCoroutine = null;
             }
         }
-
+    
         private IEnumerator UpdateProgressCoroutine()
         {
             while (_videoPlayer != null && _videoPlayer.isPlaying)
@@ -284,21 +283,21 @@ namespace FrameWork
                     _videoPlayer.time = _videoPlayer.length * _targetProgress;
                     _targetProgress = -1f;
                 }
-
+    
                 yield return new WaitForSeconds(0.1f);
             }
         }
-
+    
         public void AdaptRawImageAspectRatio(RawImage rawImage, float videoWidth, float videoHeight)
         {
             if (rawImage == null || rawImage.rectTransform == null)
                 return;
-
+    
             float videoAspect = videoWidth / videoHeight;
             float parentWidth = rawImage.rectTransform.parent.GetComponent<RectTransform>().rect.width;
             float parentHeight = rawImage.rectTransform.parent.GetComponent<RectTransform>().rect.height;
             float parentAspect = parentWidth / parentHeight;
-
+    
             if (videoAspect > parentAspect)
             {
                 // 以宽度为基准，调整高度
@@ -312,6 +311,6 @@ namespace FrameWork
                 rawImage.rectTransform.sizeDelta = new Vector2(width, parentHeight);
             }
         }
-
+    
     }
 }

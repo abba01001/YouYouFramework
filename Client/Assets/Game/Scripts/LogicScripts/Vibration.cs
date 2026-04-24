@@ -1,9 +1,10 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
-// Dont forget to add "using RDG;" to the top of your script!
-namespace FrameWork
+namespace GameScripts
 {
+    // Dont forget to add "using RDG;" to the top of your script!
+    
     /// <summary>
     /// Class for controlling Vibration. Automatically initializes before scene is loaded.
     /// </summary>
@@ -11,48 +12,48 @@ namespace FrameWork
     {
         // Component Parameters
         public static logLevel LogLevel = logLevel.Disabled;
-
+    
         // Vibrator References
         private static AndroidJavaObject vibrator = null;
         private static AndroidJavaClass vibrationEffectClass = null;
         private static int defaultAmplitude = 255;
-
+    
         // Api Level
         private static int ApiLevel = 1;
         private static bool doesSupportVibrationEffect () => ApiLevel >= 26;    // available only from Api >= 26
         private static bool doesSupportPredefinedEffect () => ApiLevel >= 29;   // available only from Api >= 29
-
+    
         #region Initialization
         private static bool isInitialized = false;
-
+    
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         [SuppressMessage("Code quality", "IDE0051", Justification = "Called on scene load")]
         private static void Initialize ()
         {
             // Add APP VIBRATION PERMISSION to the Manifest
-#if UNITY_ANDROID
+    #if UNITY_ANDROID
             if (Application.isConsolePlatform) { Handheld.Vibrate(); }
-#endif
-
+    #endif
+    
             // load references safely
             if (isInitialized == false && Application.platform == RuntimePlatform.Android) {
                 // Get Api Level
                 using (AndroidJavaClass androidVersionClass = new AndroidJavaClass("android.os.Build$VERSION")) {
                     ApiLevel = androidVersionClass.GetStatic<int>("SDK_INT");
                 }
-
+    
                 // Get UnityPlayer and CurrentActivity
                 using (AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
                 using (AndroidJavaObject currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity")) {
                     if (currentActivity != null) {
                         vibrator = currentActivity.Call<AndroidJavaObject>("getSystemService", "vibrator");
-
+    
                         // if device supports vibration effects, get corresponding class
                         if (doesSupportVibrationEffect()) {
                             vibrationEffectClass = new AndroidJavaClass("android.os.VibrationEffect");
                             defaultAmplitude = Mathf.Clamp(vibrationEffectClass.GetStatic<int>("DEFAULT_AMPLITUDE"), 1, 255);
                         }
-
+    
                         // if device supports predefined effects, get their IDs
                         if (doesSupportPredefinedEffect()) {
                             PredefinedEffect.EFFECT_CLICK = vibrationEffectClass.GetStatic<int>("EFFECT_CLICK");
@@ -62,13 +63,13 @@ namespace FrameWork
                         }
                     }
                 }
-
+    
                 logAuto("Vibration component initialized", logLevel.Info);
                 isInitialized = true;
             }
         }
         #endregion
-
+    
         #region Vibrate Public
         /// <summary>
         /// Vibrate for Milliseconds, with Amplitude (if available).
@@ -78,7 +79,7 @@ namespace FrameWork
         public static void Vibrate (long milliseconds, int amplitude = -1, bool cancel = false)
         {
             string funcToStr () => string.Format("Vibrate ({0}, {1}, {2})", milliseconds, amplitude, cancel);
-
+    
             Initialize(); // make sure script is initialized
             if (isInitialized == false) {
                 logAuto(funcToStr() + ": Not initialized", logLevel.Warning);
@@ -96,7 +97,7 @@ namespace FrameWork
                         logAuto(funcToStr() + ": Device doesn't have Amplitude Control, but Amplitude was set", logLevel.Warning);
                     }
                     if (amplitude == 0) amplitude = defaultAmplitude; // if 0, use device DefaultAmplitude
-
+    
                     // if amplitude is not supported, use 255; if amplitude is -1, use systems DefaultAmplitude. Otherwise use user-defined value.
                     amplitude = HasAmplitudeControl() == false ? 255 : amplitude;
                     vibrateEffect(milliseconds, amplitude);
@@ -117,7 +118,7 @@ namespace FrameWork
         public static void Vibrate (long[] pattern, int[] amplitudes = null, int repeat = -1, bool cancel = false)
         {
             string funcToStr () => string.Format("Vibrate (({0}), ({1}), {2}, {3})", arrToStr(pattern), arrToStr(amplitudes), repeat, cancel);
-
+    
             Initialize(); // make sure script is initialized
             if (isInitialized == false) {
                 logAuto(funcToStr() + ": Not initialized", logLevel.Warning);
@@ -135,7 +136,7 @@ namespace FrameWork
                 if (amplitudes != null) {
                     clampAmplitudesArray(amplitudes);
                 }
-
+    
                 // vibrate
                 if (cancel) Cancel();
                 if (doesSupportVibrationEffect()) {
@@ -158,7 +159,7 @@ namespace FrameWork
                 }
             }
         }
-
+    
         /// <summary>
         /// Vibrate predefined effect (described in Vibration.PredefinedEffect). Available from Api Level >= 29.
         /// If 'cancel' is true, Cancel() will be called automatically.
@@ -166,7 +167,7 @@ namespace FrameWork
         public static void VibratePredefined (int effectId, bool cancel = false)
         {
             string funcToStr () => string.Format("VibratePredefined ({0})", effectId);
-
+    
             Initialize(); // make sure script is initialized
             if (isInitialized == false) {
                 logAuto(funcToStr() + ": Not initialized", logLevel.Warning);
@@ -184,14 +185,14 @@ namespace FrameWork
             }
         }
         #endregion
-
+    
         #region Public Properties & Controls
         public static long[] ParsePattern (string pattern)
         {
             if (pattern == null) return new long[0];
             pattern = pattern.Trim();
             string[] split = pattern.Split(',');
-
+    
             long[] timings = new long[split.Length];
             for (int i = 0; i < split.Length; i++) {
                 if (int.TryParse(split[i].Trim(), out int duration)) {
@@ -201,10 +202,10 @@ namespace FrameWork
                     timings[i] = 0;
                 }
             }
-
+    
             return timings;
         }
-
+    
         /// <summary>
         /// Returns Android Api Level
         /// </summary>
@@ -213,7 +214,7 @@ namespace FrameWork
         /// Returns Default Amplitude of device, or 0.
         /// </summary>
         public static int GetDefaultAmplitude () => defaultAmplitude;
-
+    
         /// <summary>
         /// Returns true if device has vibrator
         /// </summary>
@@ -233,7 +234,7 @@ namespace FrameWork
                 return false; // no amplitude control below API level 26
             }
         }
-
+    
         /// <summary>
         /// Tries to cancel current vibration
         /// </summary>
@@ -245,7 +246,7 @@ namespace FrameWork
             }
         }
         #endregion
-
+    
         #region Vibrate Internal
         #region Vibration Callers
         private static void vibrateEffect (long milliseconds, int amplitude)
@@ -258,7 +259,7 @@ namespace FrameWork
         {
             vibrator.Call("vibrate", milliseconds);
         }
-
+    
         private static void vibrateEffect (long[] pattern, int repeat)
         {
             using (AndroidJavaObject effect = createEffect_Waveform(pattern, repeat)) {
@@ -269,7 +270,7 @@ namespace FrameWork
         {
             vibrator.Call("vibrate", pattern, repeat);
         }
-
+    
         private static void vibrateEffect (long[] pattern, int[] amplitudes, int repeat)
         {
             using (AndroidJavaObject effect = createEffect_Waveform(pattern, amplitudes, repeat)) {
@@ -283,7 +284,7 @@ namespace FrameWork
             }
         }
         #endregion
-
+    
         #region Vibration Effect
         /// <summary>
         /// Wrapper for public static VibrationEffect createOneShot (long milliseconds, int amplitude). API >= 26
@@ -315,12 +316,12 @@ namespace FrameWork
         }
         #endregion
         #endregion
-
+    
         #region Internal
         private static void logAuto (string text, logLevel level)
         {
             if (level == logLevel.Disabled) level = logLevel.Info;
-
+    
             if (text != null) {
                 if (level == logLevel.Warning && LogLevel == logLevel.Warning) {
                     Debug.LogWarning(text);
@@ -332,7 +333,7 @@ namespace FrameWork
         }
         private static string arrToStr (long[] array) => array == null ? "null" : string.Join(", ", array);
         private static string arrToStr (int[] array) => array == null ? "null" : string.Join(", ", array);
-
+    
         private static void clampAmplitudesArray (int[] amplitudes)
         {
             for (int i = 0; i < amplitudes.Length; i++) {
@@ -340,7 +341,7 @@ namespace FrameWork
             }
         }
         #endregion
-
+    
         public static class PredefinedEffect
         {
             public static int EFFECT_CLICK;         // public static final int EFFECT_CLICK

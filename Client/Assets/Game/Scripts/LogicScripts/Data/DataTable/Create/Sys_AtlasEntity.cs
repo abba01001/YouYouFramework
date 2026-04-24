@@ -1,12 +1,13 @@
-using FrameWork;
+﻿using GameScripts;
 
-/// <summary>
-/// Sys_Atlas实体
-/// </summary>
-public partial class Sys_AtlasEntity : DataTableEntityBase
+namespace GameScripts
 {
-    /// <summary>
-    /// 路径
-    /// </summary>
-    public string AssetFullPath;
+    // Sys_Atlas Entity
+    public partial class Sys_AtlasEntity : DataTableEntityBase
+    {
+        // 编号
+        public int Id;
+        // 路径
+        public string AssetFullPath;
+    }
 }

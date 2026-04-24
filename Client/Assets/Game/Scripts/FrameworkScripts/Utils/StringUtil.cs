@@ -1,12 +1,11 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System;
 using System.Text.RegularExpressions;
 using System.Text;
 
-namespace FrameWork
+namespace GameScripts
 {
-
     public static class StringUtil
     {
         private static StringBuilder stringBuilder = new StringBuilder();
@@ -14,9 +13,9 @@ namespace FrameWork
         public static readonly char[] SecondSeparator = ";".ToCharArray();
         public static readonly char[] ThirdSeparator = "#".ToCharArray();
         public static readonly char[] FourthSeparator = ":".ToCharArray();
-
+    
         #region IsNullOrEmpty 验证值是否为null
-
+    
         /// <summary>
         /// 判断对象是否为Null、DBNull、Empty或空白字符串
         /// </summary>
@@ -27,24 +26,24 @@ namespace FrameWork
             {
                 retVal = true;
             }
-
+    
             return retVal;
         }
-
+    
         #endregion
-
+    
         public static bool IsEmail(this string email)
         {
             Regex regex = new Regex("[a-zA-Z_0-9]+@[a-zA-Z_0-9]{2,6}(\\.[a-zA-Z_0-9]{2,3})+");
             return regex.IsMatch(email);
         }
-
+    
         public static bool IsPhoneNumber(this string strInput)
         {
             Regex reg = new Regex(@"(^\d{11}$)");
             return reg.IsMatch(strInput);
         }
-
+    
         /// <summary>
         /// 检查后缀名
         /// </summary>
@@ -55,7 +54,7 @@ namespace FrameWork
             int indexOf = str.LastIndexOf(suffix, StringComparison.CurrentCultureIgnoreCase);
             return indexOf != -1 && indexOf == str.Length - suffix.Length;
         }
-
+    
         /// <summary>
         /// 把string类型转换成int
         /// </summary>
@@ -65,7 +64,7 @@ namespace FrameWork
             int.TryParse(str, out temp);
             return temp;
         }
-
+    
         /// <summary>
         /// 把string类型转换成long
         /// </summary>
@@ -75,7 +74,7 @@ namespace FrameWork
             long.TryParse(str, out temp);
             return temp;
         }
-
+    
         /// <summary>
         /// 把string类型转换成float
         /// </summary>
@@ -85,7 +84,7 @@ namespace FrameWork
             float.TryParse(str, out temp);
             return temp;
         }
-
+    
         //拼接字符串
         public static string JointString(params object[] values)
         {
@@ -94,7 +93,7 @@ namespace FrameWork
             {
                 stringBuilder.Append(value);
             }
-
+    
             return stringBuilder.ToString();
         }
     }

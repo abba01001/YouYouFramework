@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
-
-namespace FrameWork
+namespace GameScripts
 {
     public static class BezierUtils
     {
@@ -18,14 +17,14 @@ namespace FrameWork
             float u = 1 - t;
             float tt = t * t;
             float uu = u * u;
-
+    
             Vector3 p = uu * p0;
             p += 2 * u * t * p1;
             p += tt * p2;
-
+    
             return p;
         }
-
+    
         /// <summary>
         /// 获取存储贝塞尔曲线点的数组
         /// </summary>
@@ -45,10 +44,10 @@ namespace FrameWork
                     controlPoint, endPoint);
                 path[i - 1] = pixel;
             }
-
+    
             return path;
         }
-
+    
         /// <summary>
         /// 获取存储的三次贝塞尔曲线点的数组
         /// </summary>
@@ -70,10 +69,10 @@ namespace FrameWork
                     controlPoint1, controlPoint2, endPoint);
                 path[i - 1] = pixel;
             }
-
+    
             return path;
         }
-
+    
         /// <summary>
         /// 三次贝塞尔曲线，根据T值，计算贝塞尔曲线上面相对应的点
         /// </summary>
@@ -90,15 +89,15 @@ namespace FrameWork
             float uu = u * u;
             float ttt = tt * t;
             float uuu = uu * u;
-
+    
             Vector3 p = uuu * p0;
             p += 3 * t * uu * p1;
             p += 3 * tt * u * p2;
             p += ttt * p3;
-
+    
             return p;
         }
-
+    
         // 计算贝塞尔曲线中的某个点
         public static Vector3 CalculateBezierPoint(float t, Vector3 startPoint, Vector3 controlPoint1,
             Vector3 controlPoint2, Vector3 endPoint)
@@ -108,12 +107,12 @@ namespace FrameWork
             float uu = u * u;
             float uuu = uu * u;
             float ttt = tt * t;
-
+    
             Vector3 point = uuu * startPoint;
             point += 3 * uu * t * controlPoint1;
             point += 3 * u * tt * controlPoint2;
             point += ttt * endPoint;
-
+    
             return point;
         }
     }

@@ -3,7 +3,8 @@ using UnityEditor;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
-using FrameWork;
+using GameScripts;
+
 
 [CustomEditor(typeof(JsonDisplay))]
 public class JsonDisplayEditor : Editor

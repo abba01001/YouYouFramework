@@ -1,15 +1,15 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
-using FrameWork;
+
 using Main;
 using UnityEngine;
 using YooAsset;
 
-namespace FrameWork
+namespace GameScripts
 {
     /// <summary>
     /// 音频管理器
@@ -19,8 +19,8 @@ namespace FrameWork
         public float MasterVolume { get; private set; }
         public float BGMVolume { get; private set; }
         public float AudioVolume { get; private set; }
-
-
+    
+    
         public AudioManager()
         {
             audioRoutinePrefab = new GameObject("AudioSource", typeof(AudioRoutine), typeof(GameObjectDespawnHandle), typeof(AudioSource)).GetComponent<AudioRoutine>();
@@ -29,7 +29,7 @@ namespace FrameWork
             audioRoutinePrefab.AudioSource.playOnAwake = false;
             audioRoutinePrefab.AudioSource.maxDistance = 20;
             audioRoutinePrefab.AudioSource.outputAudioMixerGroup = GameEntry.Instance.MasterMixer.FindMatchingGroups("Audio")[0];
-
+    
             BGMSource = new GameObject("BGMSource", typeof(AudioSource)).GetComponent<AudioSource>();
             BGMSource.transform.SetParent(GameEntry.Instance.transform);
             BGMSource.outputAudioMixerGroup = GameEntry.Instance.MasterMixer.FindMatchingGroups("BGM")[0];
@@ -50,26 +50,26 @@ namespace FrameWork
         {
             OnBGMUpdate();
         }
-
+    
         #region BGM
         public AudioSource BGMSource { get; private set; }
-
+    
         //目标BGM剪辑
         private AudioClip targetBGMAudioClip;
         //目标BGM是否循环
         private bool targetBGMIsLoop;
         //目标BGM音量
         private float targetBGMClipVolume;
-
+    
         //BGM淡入淡出过渡音量
         private float interimBGMVolume;
-
+    
         //是否需要淡入淡出
         private bool isFadeIn;
         private bool isFadeOut;
-
+    
         private AssetHandle currBGMHandle;
-
+    
         public async void PlayBGM(string audioName)
         {
             Sys_BGMEntity entity = GameEntry.DataTable.Sys_BGMDBModel.GetEntity(audioName);
@@ -78,7 +78,7 @@ namespace FrameWork
                 GameEntry.LogError(LogCategory.Audio, "CurrBGMEntity==null, audioName==" + audioName);
                 return;
             }
-
+    
             var operation = GameEntry.Loader.DefaultPackage.LoadAssetAsync(entity.AssetFullPath);
             await operation.Task;
             PlayBGM(operation.AssetObject as AudioClip, entity.IsLoop == 1, entity.Volume, entity.IsFadeIn == 1, entity.IsFadeOut == 1, operation);
@@ -95,7 +95,7 @@ namespace FrameWork
             targetBGMClipVolume = volume;
             this.isFadeIn = isFadeIn;
             this.isFadeOut = isFadeOut;
-
+    
             //这里要保证BGM过渡时间小于Asset池释放时间, 否则会在过渡到一半的时候AudioClip就变成null了, 但一般情况下是不会出问题的
             if (currBGMHandle != null)
             {
@@ -103,26 +103,26 @@ namespace FrameWork
                 currBGMHandle = null;
             }
             currBGMHandle = assetHandle;
-
+    
             Debugger.Log(string.Format("PlayBGM, audioClip=={0}, volume=={1}", audioClip, volume));
         }
-
+    
         public void StopBGM(bool isFadeOut)
         {
             //把音量逐渐变成0 再停止
             targetBGMAudioClip = null;
             this.isFadeOut = isFadeOut;
-
+    
             //这里要保证BGM过渡时间小于Asset池释放时间, 否则会在过渡到一半的时候AudioClip就变成null了, 但一般情况下是不会出问题的
             if (currBGMHandle != null)
             {
                 currBGMHandle.Release();
                 currBGMHandle = null;
             }
-
+    
             Debugger.Log("StopBGM");
         }
-
+    
         public void PauseBGM(bool isPause)
         {
             if (isPause)
@@ -134,9 +134,9 @@ namespace FrameWork
                 BGMSource.UnPause();
             }
             Debugger.Log(BGMSource.clip + "PauseBGM");
-
+    
         }
-
+    
         private void OnBGMUpdate()
         {
             if (BGMSource.clip != targetBGMAudioClip)
@@ -157,10 +157,10 @@ namespace FrameWork
                         BGMSource.loop = targetBGMIsLoop;
                         BGMSource.volume = targetBGMClipVolume;
                         BGMSource.Play();
-
+    
                         interimBGMVolume = 0;
                         SetBGMVolume(BGMVolume);//这里是为了刷新音量
-
+    
                     }
                     else
                     {
@@ -186,20 +186,20 @@ namespace FrameWork
             }
         }
         #endregion
-
+    
         #region 音效
         private AudioRoutine audioRoutinePrefab;
-
+    
         public async void PlayAudio(string audioName, Vector3 point)
         {
             Sys_AudioEntity sys_Audio = GameEntry.DataTable.Sys_AudioDBModel.GetEntity(audioName);
             var operation = GameEntry.Loader.DefaultPackage.LoadAssetAsync(sys_Audio.AssetFullPath);
             await operation.Task;
-
+    
             AudioRoutine routine = CreateAudioRoutine(operation.AssetObject as AudioClip, sys_Audio.Volume, sys_Audio.Priority);
             routine.AudioSource.spatialBlend = 1;
             routine.transform.position = point;
-
+    
             //音效资源做引用计数
             routine.AutoDespawnHandle.OnDespawn += () =>
             {
@@ -211,10 +211,10 @@ namespace FrameWork
             Sys_AudioEntity sys_Audio = GameEntry.DataTable.Sys_AudioDBModel.GetEntity(audioName);
             var operation = GameEntry.Loader.DefaultPackage.LoadAssetAsync(sys_Audio.AssetFullPath);
             await operation.Task;
-
+    
             AudioRoutine routine = CreateAudioRoutine(operation.AssetObject as AudioClip, sys_Audio.Volume, sys_Audio.Priority);
             routine.AudioSource.spatialBlend = 0;
-
+    
             //音效资源做引用计数
             routine.AutoDespawnHandle.OnDespawn += () =>
             {
@@ -232,7 +232,7 @@ namespace FrameWork
             AudioRoutine routine = CreateAudioRoutine(audioClip, volume, priority);
             routine.AudioSource.spatialBlend = 0;
         }
-
+    
         private AudioRoutine CreateAudioRoutine(AudioClip audioClip, float volume, int priority)
         {
             AudioRoutine routine = GameEntry.Pool.GameObjectPool.Spawn(audioRoutinePrefab.gameObject, SpawnPoolId.Audio).GetComponent<AudioRoutine>();
@@ -240,7 +240,7 @@ namespace FrameWork
             routine.AudioSource.volume = volume;
             routine.AudioSource.priority = priority;
             routine.AudioSource.Play();
-
+    
             //这里需要注意: 如果AudioSource.loop==true则会有问题, 循环播放的音效不需要使用AudioManager, 自己挂AudioSource去播放就行了
             routine.AutoDespawnHandle.SetDelayTimeDespawn(audioClip.length);
             routine.AutoDespawnHandle.OnDespawn += () =>
@@ -249,9 +249,9 @@ namespace FrameWork
             };
             return routine;
         }
-
+    
         #endregion
-
+    
         public void SetMasterVolume(float volume)
         {
             MasterVolume = volume;
@@ -287,7 +287,7 @@ namespace FrameWork
                 GameEntry.Instance.MasterMixer.SetFloat(key, volume);
             }
         }
-
+    
         /// <summary>
         /// 设置根节点(全部)静音
         /// </summary>

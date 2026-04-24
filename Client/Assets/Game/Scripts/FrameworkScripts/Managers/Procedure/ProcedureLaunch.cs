@@ -1,11 +1,10 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-
-namespace FrameWork
+namespace GameScripts
 {
     /// <summary>
     /// 启动流程
@@ -16,7 +15,7 @@ namespace FrameWork
         {
             "android.permission.WRITE_EXTERNAL_STORAGE"
         };
-
+    
         internal override void OnEnter()
         {
             base.OnEnter();
@@ -34,5 +33,4 @@ namespace FrameWork
             GameEntry.Procedure.ChangeState(ProcedureState.Preload);
         }
     }
-
 }

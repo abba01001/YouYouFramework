@@ -1,13 +1,12 @@
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
-using FrameWork;
+
 using Main;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-
-namespace FrameWork
+namespace GameScripts
 {
     /// <summary>
     /// 场景管理器
@@ -18,42 +17,42 @@ namespace FrameWork
         /// 场景加载器链表
         /// </summary>
         private LinkedList<SceneLoaderRoutine> m_SceneLoaderList;
-
+    
         /// <summary>
         /// 当前加载的场景组
         /// </summary>
         private string m_CurrSceneGroupName;
-
+    
         /// <summary>
         /// 本次场景加载的最大数量
         /// </summary>
         private int SceneLoadMaxCount;
-
+    
         /// <summary>
         /// 场景是否加载中
         /// </summary>
         private bool m_CurrSceneIsLoading;
-
+    
         /// <summary>
         /// 当前进度
         /// </summary>
         private float m_CurrProgress = 0;
-
+    
         /// <summary>
         /// 目标的进度
         /// </summary>
         private Dictionary<string, float> m_TargetProgressDic;
-
+    
         /// <summary>
         /// 加载完毕委托
         /// </summary>
         private Action m_OnComplete = null;
-
+    
         internal SceneManager()
         {
             m_SceneLoaderList = new LinkedList<SceneLoaderRoutine>();
             m_TargetProgressDic = new Dictionary<string, float>();
-
+    
             //监听单个场景加载完毕
             UnityEngine.SceneManagement.SceneManager.sceneLoaded += (Scene scene, LoadSceneMode sceneMode) =>
             {
@@ -69,16 +68,16 @@ namespace FrameWork
                             //初始化对象池
                             GameEntry.Pool.GameObjectPool.InitScenePool();
                         }
-
+    
                         m_TargetProgressDic[scene.path] = 1;
                         break;
                     }
                 }
-
+    
             };
-
+    
         }
-
+    
         /// <summary>
         /// 加载场景
         /// </summary>
@@ -99,7 +98,7 @@ namespace FrameWork
                 return;
             }
             m_CurrSceneIsLoading = true;
-
+    
             m_OnComplete = onComplete;
             if (m_CurrSceneGroupName == sceneName)
             {
@@ -107,12 +106,12 @@ namespace FrameWork
                 m_OnComplete?.Invoke();
                 return;
             }
-
+    
             m_CurrProgress = 0;
             m_TargetProgressDic.Clear();
             m_CurrSceneGroupName = sceneName;
             SceneLoadMaxCount = sceneLoadCount;
-
+    
             //卸载当前场景并加载新场景
             if (m_SceneLoaderList.Count > 0)
             {
@@ -122,10 +121,10 @@ namespace FrameWork
                 }
                 m_SceneLoaderList.Clear();
             }
-
+    
             LoadNewScene();
         }
-
+    
         /// <summary>
         /// 加载新场景
         /// </summary>
@@ -134,9 +133,9 @@ namespace FrameWork
             var operation = GameEntry.Loader.DefaultPackage.UnloadUnusedAssetsAsync();
             operation.WaitForAsyncComplete(); //支持同步操作
             // await operation;
-
+    
             List<Sys_SceneEntity> currSceneEntityGroup = GameEntry.DataTable.Sys_SceneDBModel.GetListByGroupName(m_CurrSceneGroupName.ToString(), SceneLoadMaxCount);
-
+    
             for (int i = 0; i < currSceneEntityGroup.Count; i++)
             {
                 SceneLoaderRoutine routine = new();
@@ -148,7 +147,7 @@ namespace FrameWork
                 });
             }
         }
-
+    
         public event Action<float> LoadingUpdateAction;
         internal void OnUpdate()
         {
@@ -160,7 +159,7 @@ namespace FrameWork
                     curr.Value.OnUpdate();
                     curr = curr.Next;
                 }
-
+    
                 //模拟加载进度条
                 float targetProgress = GetCurrTotalProgress();
                 if (m_CurrProgress < targetProgress)
@@ -177,7 +176,7 @@ namespace FrameWork
                     m_CurrProgress = Mathf.Min(m_CurrProgress, targetProgress);
                     LoadingUpdateAction?.Invoke(m_CurrProgress);
                 }
-
+    
                 if (m_CurrProgress >= 1)
                 {
                     List<Sys_SceneEntity> currSceneEntityGroup = GameEntry.DataTable.Sys_SceneDBModel.GetListByGroupName(m_CurrSceneGroupName.ToString(), SceneLoadMaxCount);
@@ -187,7 +186,7 @@ namespace FrameWork
                 }
             }
         }
-
+    
         /// <summary>
         /// 获取当前加载的总进度
         /// </summary>
@@ -203,6 +202,6 @@ namespace FrameWork
             progress /= m_TargetProgressDic.Count;
             return progress;
         }
-
+    
     }
 }
