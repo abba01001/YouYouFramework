@@ -171,33 +171,53 @@ namespace Main.Editor
 
         private void DrawInfoBar()
         {
-            EditorGUILayout.BeginHorizontal(EditorStyles.helpBox, GUILayout.Height(24));
-            
+            // 1. 获取一个固定的绘制区域
+            Rect infoRect = EditorGUILayout.GetControlRect(false, 24);
+            // 绘制 HelpBox 背景
+            GUI.Box(infoRect, "", EditorStyles.helpBox);
+
             string path = _selectedAssetGuid.Count > 0 ? AssetDatabase.GUIDToAssetPath(_selectedAssetGuid[0]) : "无选择内容";
             if (_selectedAssetGuid.Count > 1) path += $" (+{_selectedAssetGuid.Count - 1} 个资源)";
             
-            // 绘制 16x16 小图标
+            float xOffset = infoRect.x + 4;
+
+            // 2. 绘制图标 (纯 GUI 绘制，强制 16x16，绝对不会变形)
             var icon = AssetDatabase.GetCachedIcon(path);
             if (icon != null)
             {
-                Rect iconRect = GUILayoutUtility.GetRect(16, 16);
-                iconRect.y += 2;
-                GUI.DrawTexture(iconRect, icon);
-                GUILayout.Space(4);
+                Rect iconRect = new Rect(xOffset, infoRect.y + 4, 16, 16);
+                GUI.DrawTexture(iconRect, icon, ScaleMode.ScaleToFit); // 确保比例正确
+                xOffset += 20;
             }
 
-            EditorGUILayout.LabelField(path, EditorStyles.miniLabel);
+            // 3. 计算右侧组件所需的宽度，剩下的全给路径
+            float toggleWidth = 80;
+            float pathWidth = infoRect.width - (xOffset - infoRect.x) - toggleWidth - 5;
 
-            GUILayout.FlexibleSpace();
+            // 4. 绘制路径 (SelectableLabel，支持点击滚动和 MiddleTruncate)
+            if (pathWidth > 10)
+            {
+                Rect labelRect = new Rect(xOffset, infoRect.y + 2, pathWidth, 20);
+                
+                GUIStyle pathStyle = new GUIStyle(EditorStyles.label);
+                pathStyle.fontSize = 11;
+                pathStyle.alignment = TextAnchor.MiddleLeft;
+                // 注意：SelectableLabel 在纯 GUI 模式下对中间省略支持不稳，
+                // 但 Clip 模式允许点击后左右滑动查看，配合 Tooltip，体验最好。
+                pathStyle.clipping = TextClipping.Clip; 
 
+                EditorGUI.SelectableLabel(labelRect, path, pathStyle);
+            }
+
+            // 5. 绘制右侧勾选框
+            Rect toggleRect = new Rect(infoRect.xMax - toggleWidth, infoRect.y + 2, toggleWidth, 20);
             EditorGUI.BeginChangeCheck();
-            _needUpdateState = EditorGUILayout.ToggleLeft("检查状态", _needUpdateState, GUILayout.Width(80));
+            // 使用 EditorGUI 而不是 EditorGUILayout
+            _needUpdateState = EditorGUI.ToggleLeft(toggleRect, "检查状态", _needUpdateState);
             if (EditorGUI.EndChangeCheck())
             {
                 PlayerPrefs.SetInt(NeedUpdateStatePrefKey, _needUpdateState ? 1 : 0);
             }
-
-            EditorGUILayout.EndHorizontal();
         }
 
         private HashSet<string> _updatedAssetSet = new HashSet<string>();

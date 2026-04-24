@@ -1,50 +1,59 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Sirenix.OdinInspector; // 确保你项目中安装了 Odin
 
 namespace OctoberStudio.Abilities
 {
     public abstract class AbilityData : ScriptableObject 
     {
-        [Tooltip("The unique identifier of an ability")]
+        [LabelText("技能ID")]
         [SerializeField] protected AbilityType type;
         public AbilityType AbilityType => type;
 
-        [Tooltip("Shoud be short, no more than two words")]
+        [LabelText("技能名称")]
         [SerializeField] string title;
         public string Title => title;
 
-        [Tooltip("Keep it brief but informative")]
+        [LabelText("技能描述")]
         [SerializeField] string description;
         public string Description => description;
 
-        [Tooltip("Image that will appear on the ui")]
+        [LabelText("UI图标")]
         [SerializeField] Sprite icon;
         public Sprite Icon => icon;
 
-        [Tooltip("Prefab with the implementation of the ability")]
+        [LabelText("功能预制体")]
         [SerializeField] GameObject prefab;
         public GameObject Prefab => prefab;
 
+        [LabelText("是否为主动技能")]
         [SerializeField] protected bool isActiveAbility;
         public bool IsActiveAbility => isActiveAbility;
 
-        [Tooltip("Whether this ability is linked to the weapon. It will be shown to the player only if the character has the linked weapon equipped")]
+        [LabelText("武器绑定")]
         [SerializeField] protected bool isWeaponAbility;
         public bool IsWeaponAbility => isWeaponAbility;
 
-        [Tooltip("This ability will only be shown if there are no other abilities available. Cannot be upgraded, always applies it's first level")]
+        [LabelText("保底技能 (无可选时出现)")]
         [SerializeField] protected bool isEndgameAbility;
         public bool IsEndgameAbility => isEndgameAbility;
 
-        [Tooltip("Whether this ability is the evolution of other abilities. It will be shown to the player only if the evolution requirements are met")]
+        [LabelText("是否为进化/超武")]
         [SerializeField] bool isEvolution;
         public bool IsEvolution => isEvolution;
 
-        [Tooltip("The requirements for this ability to be shown to the player. Ignore this field if the 'isEvolution' field is false")]
+        [ShowInInspector] // 让属性在面板显示
+        [ReadOnly]        // 设为只读，不可编辑
+        [PropertyOrder(-1)] // 给一个负数，确保它排在最前面
+        [LabelText("是否为初始武器")]
+        public bool IsInitWeapon => isWeaponAbility && !isEvolution;
+        
+        [LabelText("进化需求清单")]
         [SerializeField] List<EvolutionRequirement> evolutionRequirements;
         public List<EvolutionRequirement> EvolutionRequirements => evolutionRequirements;
 
+        
         public abstract AbilityLevel[] Levels { get; }
         public int LevelsCount => Levels.Length;
 
@@ -67,21 +76,20 @@ namespace OctoberStudio.Abilities
     [System.Serializable]
     public abstract class AbilityLevel
     {
-
     }
 
     [System.Serializable]
     public class EvolutionRequirement
     {
-        [Tooltip("This ability should be active to trigger the evolution")]
+        [LabelText("所需前置技能")]
         [SerializeField] AbilityType abilityType;
         public AbilityType AbilityType => abilityType;
 
-        [Tooltip("The level of the ability needed to trigger the evolution")]
+        [LabelText("所需等级")]
         [SerializeField, Min(0)] int requiredAbilityLevel;
         public int RequiredAbilityLevel => requiredAbilityLevel;
 
-        [Tooltip("Whether this ability should be disabled after the evolution")]
+        [LabelText("进化后移除前置")]
         [SerializeField] bool shouldRemoveAfterEvolution;
         public bool ShouldRemoveAfterEvolution => shouldRemoveAfterEvolution;
     }

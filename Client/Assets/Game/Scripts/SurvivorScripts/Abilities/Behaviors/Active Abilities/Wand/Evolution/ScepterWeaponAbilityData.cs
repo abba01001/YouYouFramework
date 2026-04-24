@@ -21,23 +21,23 @@ namespace OctoberStudio.Abilities
     [System.Serializable]
     public class ScepterWeaponAbilityLevel : AbilityLevel
     {
-        [Tooltip("Amount of time between attacks")]
+        [Tooltip("两次攻击之间的时间间隔")]
         [SerializeField] float abilityCooldown;
         public float AbilityCooldown => abilityCooldown;
 
-        [Tooltip("Speed of the projectile")]
+        [Tooltip("弹射物的飞行速度")]
         [SerializeField] float projectileSpeed;
         public float ProjectileSpeed => projectileSpeed;
 
-        [Tooltip("Damage of projectiles calculates like this: Player.Damage * Damage")]
+        [Tooltip("弹射物伤害计算公式：玩家伤害 * 基础伤害")]
         [SerializeField] float damage;
         public float Damage => damage;
 
-        [Tooltip("Size of projectiles")]
+        [Tooltip("弹射物的大小尺寸")]
         [SerializeField] float projectileSize;
         public float ProjectileSize => projectileSize;
 
-        [Tooltip("Time projectiles stay alive")]
+        [Tooltip("弹射物在场景中存活的时间")]
         [SerializeField] float projectileLifetime;
         public float ProjectileLifetime => projectileLifetime;
     }

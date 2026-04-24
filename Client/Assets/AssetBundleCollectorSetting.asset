@@ -107,14 +107,6 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
-      - CollectPath: Assets/Game/Download/Sound
-        CollectorGUID: f5d160c48260ef5449b699b8cfeec4d3
-        CollectorType: 0
-        AddressRuleName: AddressByFileName
-        PackRuleName: PackDirectory
-        FilterRuleName: CollectAll
-        AssetTags: 
-        UserData: 
       - CollectPath: Assets/Game/Download/SurvivorAsset
         CollectorGUID: f54cf439d3bf5b1439f5a74e0ec95473
         CollectorType: 0

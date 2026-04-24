@@ -30,10 +30,6 @@ namespace OctoberStudio
 
         [SerializeField] protected UpgradesManager upgradesManager;
         public static UpgradesManager UpgradesManager => instance.upgradesManager;
-
-        [SerializeField] protected ProjectSettings projectSettings;
-        public static ProjectSettings ProjectSettings => instance.projectSettings;
-
         public static ISaveManager SaveManager { get; private set; }
         public static IAudioManager AudioManager { get; private set; }
         public static IVibrationManager VibrationManager { get; private set; }

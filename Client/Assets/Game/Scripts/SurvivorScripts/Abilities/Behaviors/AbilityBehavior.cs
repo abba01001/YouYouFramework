@@ -1,10 +1,20 @@
+using Main;
 using UnityEngine;
 
 namespace OctoberStudio.Abilities
 {
     public abstract class AbilityBehavior<T, K> : MonoBehaviour, IAbilityBehavior where T: GenericAbilityData<K> where K : AbilityLevel
     {
-        public T Data { get; private set; }
+        private T _data;
+        public T Data
+        {
+            get => _data;
+            private set
+            {
+                Debugger.LogError("设置数据===>");
+                _data = value;
+            }
+        }
         public AbilityData AbilityData => Data;
         public AbilityType AbilityType => Data.AbilityType;
 

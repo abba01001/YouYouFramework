@@ -45,6 +45,18 @@ namespace OctoberStudio.Easing
         {
             return new FloatEasingCoroutine(from, to, duration, delay, action);
         }
+        
+        // 处理跳跃位移
+        public static IEasingCoroutine DoJump(Vector2 from, Vector2 to, float jumpHeight, float duration, UnityAction<Vector2> action, float delay = 0)
+        {
+            return new Vector2JumpEasingCoroutine(from, to, jumpHeight, duration, delay, action);
+        }
+
+        // 处理旋转 (直接复用你的 FloatEasingCoroutine)
+        public static IEasingCoroutine DoRotate(float from, float to, float duration, UnityAction<float> action, float delay = 0)
+        {
+            return new FloatEasingCoroutine(from, to, duration, delay, action);
+        }
 
         public static IEasingCoroutine DoAfter(float seconds, UnityAction action, bool unscaledTime = false)
         {
@@ -326,6 +338,33 @@ namespace OctoberStudio.Easing
         public override float Lerp(float a, float b, float t)
         {
             return Mathf.LerpUnclamped(a, b, t);
+        }
+    }
+    
+    public class Vector2JumpEasingCoroutine : EasingCoroutine<Vector2>
+    {
+        private float _jumpHeight;
+
+        public Vector2JumpEasingCoroutine(Vector2 from, Vector2 to, float jumpHeight, float duration, float delay, UnityAction<Vector2> callback) 
+            : base(from, to, duration, delay, callback)
+        {
+            _jumpHeight = jumpHeight;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override Vector2 Lerp(Vector2 a, Vector2 b, float t)
+        {
+            // 1. 计算水平面上的直线插值
+            Vector2 pos = Vector2.LerpUnclamped(a, b, t);
+
+            // 2. 计算抛物线高度：使用 t * (1 - t) * 4 会得到一个 0->1->0 的完美二次曲线
+            // 这比 Sin 性能更好，且更符合重力抛物线感
+            float height = _jumpHeight * (t * (1f - t) * 4f);
+
+            // 3. 叠加高度到 Y 轴
+            pos.y += height;
+
+            return pos;
         }
     }
 

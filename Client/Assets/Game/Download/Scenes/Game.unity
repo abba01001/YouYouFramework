@@ -1584,6 +1584,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Game Screen
       objectReference: {fileID: 0}
+    - target: {fileID: 5958925857027422236, guid: 24deeb7ea64b4df49994e80e9e1a9403,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7926813174927897636, guid: 24deeb7ea64b4df49994e80e9e1a9403,
         type: 3}
       propertyPath: m_Pivot.x
