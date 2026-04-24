@@ -107,6 +107,14 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
+      - CollectPath: Assets/Game/Download/SurvivorAsset
+        CollectorGUID: f54cf439d3bf5b1439f5a74e0ec95473
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
       - CollectPath: Assets/Game/Download/Textures
         CollectorGUID: 44f526c68d5946a46a37cad76fe2b02d
         CollectorType: 0
