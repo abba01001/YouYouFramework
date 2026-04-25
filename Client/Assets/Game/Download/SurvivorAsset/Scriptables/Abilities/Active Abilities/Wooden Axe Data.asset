@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: GameScripts::OctoberStudio.Abilities.WoodenAxeWeaponAbilityData
   type: 1002
   title: "\u6728\u5236\u65A7\u5934"
-  description: "\u671D\u524D\u65B9\u6254\u51FA\u7B28\u91CD\u7684\u65A7\u5934"
+  description: "\u5E73\u5E73\u65E0\u5947\u7684\u65A7\u5934\uFF0C\u968F\u7740\u5347\u7EA7\u6216\u8BB8\u6709\u7740\u4E0D\u4E00\u6837\u7684\u8868\u73B0"
   icon: {fileID: 21300000, guid: 885eaf950a6814743a7bf8573446ce5f, type: 3}
   prefab: {fileID: 8295970409944387311, guid: 8414dcd221e136c4ba12783f74e377a7, type: 3}
   isActiveAbility: 1
@@ -26,5 +26,25 @@ MonoBehaviour:
   - abilityCooldown: 2
     projectilesCount: 1
     damage: 10
+    slashSize: 1
+    timeBetweenSlashes: 0.2
+  - abilityCooldown: 1.75
+    projectilesCount: 2
+    damage: 10
+    slashSize: 1
+    timeBetweenSlashes: 0.2
+  - abilityCooldown: 1.6
+    projectilesCount: 3
+    damage: 10
+    slashSize: 1
+    timeBetweenSlashes: 0.2
+  - abilityCooldown: 1.4
+    projectilesCount: 3
+    damage: 12
+    slashSize: 1
+    timeBetweenSlashes: 0.2
+  - abilityCooldown: 1.2
+    projectilesCount: 3
+    damage: 15
     slashSize: 1
     timeBetweenSlashes: 0.2

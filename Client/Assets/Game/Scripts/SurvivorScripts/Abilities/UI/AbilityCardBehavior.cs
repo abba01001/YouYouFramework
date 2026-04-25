@@ -68,17 +68,17 @@ namespace OctoberStudio.Abilities.UI
             if (abilityData.IsEvolution)
             {
                 levelBackgroundImage.color = levelBackgroundEvoColor;
-                levelText.text = $"EVO";
+                levelText.text = $"进化";
             }
             else if(level == -1 || abilityData.IsEndgameAbility)
             {
                 levelBackgroundImage.color = levelBackgroundNewColor;
-                levelText.text = $"NEW!";
+                levelText.text = $"新!";
             }
             else
             {
                 levelBackgroundImage.color = levelBackgroundColor;
-                levelText.text = $"LVL {level + 2}";
+                levelText.text = $"等级 {level + 2}";
             }
 
             if (abilityData.IsEvolution)

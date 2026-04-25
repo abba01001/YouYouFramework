@@ -110,20 +110,23 @@ public class CustomYooAssetBuild
         return false;
     }
 
-    private static void WriteVersionFile(string packageVersion,BuildTarget buildTarget)
+    private static void WriteVersionFile(string packageVersion, BuildTarget buildTarget)
     {
-        // 1. 获取输出根目录
-        // 注意：确保该目录在构建开始后已经存在
         string outputRoot = AssetBundleBuilderHelper.GetDefaultBuildOutputRoot2();
-        // 2. 拼接文件完整路径
-        string filePath = $"{outputRoot}/{buildTarget}/Version.txt";
+        // 建议使用 Path.Combine 自动处理斜杠，避免跨平台路径问题
+        string directoryPath = Path.Combine(outputRoot, buildTarget.ToString());
+        string filePath = Path.Combine(directoryPath, "Version.txt");
+
         try
         {
-            // 3. 写入版本字符串 (例如: 1.3.0_2026.04.16.16.36.20)
-            // 使用 UTF8 无 BOM 格式，确保移动端读取兼容性
+            // --- 新增：确保文件夹存在 ---
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+
             File.WriteAllText(filePath, packageVersion, new UTF8Encoding(false));
-            
-            Debug.Log($"<color=#00FF00>Version文件构建成功!</color> 路径: {filePath} 内容: {packageVersion}");
+            Debug.Log($"<color=#00FF00>Version文件构建成功!</color> 路径: {filePath}");
         }
         catch (System.Exception e)
         {

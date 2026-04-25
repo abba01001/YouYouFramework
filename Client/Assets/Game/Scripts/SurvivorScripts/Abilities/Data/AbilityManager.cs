@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Main;
 using UnityEngine;
 
 namespace OctoberStudio.Abilities
@@ -97,9 +98,8 @@ namespace OctoberStudio.Abilities
 
             if (abilityData.IsEvolution)
             {
-                // For the evolution ability we have to search for every requirement,
-                // find if it was met, and remove all abilities that are being evolved from
-
+                //为了进化能力，我们必须满足每一项要求，
+                // 检查是否已满足条件，并移除所有正在进化的能力
                 for (int i = 0; i < abilityData.EvolutionRequirements.Count; i++)
                 {
                     var requirement = abilityData.EvolutionRequirements[i];

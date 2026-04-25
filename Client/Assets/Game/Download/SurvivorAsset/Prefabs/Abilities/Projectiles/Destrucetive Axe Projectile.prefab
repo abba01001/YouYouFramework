@@ -27,8 +27,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
-  m_ConstrainProportionsScale: 1
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7643119102726996288}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -100,10 +100,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7643119102726996288}
+  - component: {fileID: 6572494662176122066}
   - component: {fileID: 6240382081411163543}
-  - component: {fileID: 4620996216973801422}
   m_Layer: 8
-  m_Name: Axe Projectile
+  m_Name: Destrucetive Axe Projectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -126,22 +126,8 @@ Transform:
   - {fileID: 6960567588539795059}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6240382081411163543
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6614996720983952763}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91d225878f0b4b441b14b37c92a53146, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: GameScripts::OctoberStudio.Abilities.AxeProjectileBehavior
-  slashCollider: {fileID: 4620996216973801422}
-  duration: 0.5
---- !u!58 &4620996216973801422
-CircleCollider2D:
+--- !u!61 &6572494662176122066
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -175,7 +161,31 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.32
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.44, y: 0.45}
+  m_EdgeRadius: 0
+--- !u!114 &6240382081411163543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6614996720983952763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91d225878f0b4b441b14b37c92a53146, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GameScripts::OctoberStudio.Abilities.AxeProjectileBehavior
+  slashCollider: {fileID: 6572494662176122066}
+  duration: 0.4
 --- !u!1001 &2664863917198659168
 PrefabInstance:
   m_ObjectHideFlags: 0

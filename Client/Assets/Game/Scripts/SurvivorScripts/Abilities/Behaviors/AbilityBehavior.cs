@@ -11,7 +11,6 @@ namespace OctoberStudio.Abilities
             get => _data;
             private set
             {
-                Debugger.LogError("设置数据===>");
                 _data = value;
             }
         }

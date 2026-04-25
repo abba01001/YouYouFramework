@@ -8,21 +8,13 @@ namespace OctoberStudio.Abilities
 {
     public class DestructiveAxeAbilityBehavior : AbilityBehavior<DestructiveAxeAbilityData, DestructiveAxeAbilityLevel>
     {
-        public static readonly int SACRED_BLADE_ATTACK_HASH = "Sacred Blade Attack".GetHashCode();
+        public static readonly int STEEL_SWORD_ATTACK_HASH = "Steel Sword Attack".GetHashCode();
 
-        [SerializeField] GameObject slashPrefab;
-        public GameObject SlashPrefab => slashPrefab;
+        [SerializeField] GameObject axePrefab;
+        public GameObject AxePrefab => axePrefab;
 
-        [SerializeField] GameObject wavePrefab;
-        public GameObject WavePrefab => wavePrefab;
-
-        private PoolComponent<SwordSlashBehavior> slashPool;
-        private PoolComponent<SimplePlayerProjectileBehavior> wavePool;
-
-        private List<SwordSlashBehavior> slashes = new List<SwordSlashBehavior>();
-        private List<SimplePlayerProjectileBehavior> waves = new List<SimplePlayerProjectileBehavior>();
-
-        [SerializeField] List<Transform> shashDirections;
+        private PoolComponent<AxeProjectileBehavior> axeProjectilesPool;
+        private List<AxeProjectileBehavior> axeProjectiles = new List<AxeProjectileBehavior>();
 
         Coroutine abilityCoroutine;
 
@@ -30,8 +22,7 @@ namespace OctoberStudio.Abilities
 
         private void Awake()
         {
-            slashPool = new PoolComponent<SwordSlashBehavior>("Blade Slash", SlashPrefab, 6);
-            wavePool = new PoolComponent<SimplePlayerProjectileBehavior>("Blade Wave", WavePrefab, 12);
+            axeProjectilesPool = new PoolComponent<AxeProjectileBehavior>("Wooden Axe", AxePrefab, 50);
         }
 
         protected override void SetAbilityLevel(int stageId)
@@ -49,83 +40,46 @@ namespace OctoberStudio.Abilities
 
             while (true)
             {
-                for (int i = 0; i < AbilityLevel.SlashesCount; i++)
+                for(int i = 0; i < AbilityLevel.ProjectilesCount; i++)
                 {
-                    var slash = slashPool.GetEntity();
+                    var axe = axeProjectilesPool.GetEntity();
+                    axe.DamageMultiplier = AbilityLevel.Damage;
+                    axe.KickBack = false;
+                    axe.Size = 1;
+                    axe.Init();
+                    axe.StartThrowAxe(i,AbilityLevel);
+                    axe.onFinished += OnProjectileFinished;
+                    axeProjectiles.Add(axe);
 
-                    slash.transform.position = PlayerBehavior.CenterPosition;
-                    slash.transform.rotation = Quaternion.FromToRotation(Vector2.right, PlayerBehavior.Player.LookDirection) * shashDirections[i].localRotation;
-
-                    slash.DamageMultiplier = AbilityLevel.Damage;
-                    slash.KickBack = false;
-
-                    slash.Size = AbilityLevel.SlashSize;
-
-                    slash.Init();
-
-                    slash.onFinished += OnProjectileFinished;
-                    slashes.Add(slash);
-
-                    var wave = wavePool.GetEntity();
-
-                    wave.DamageMultiplier = AbilityLevel.WaveDamage;
-                    wave.KickBack = false;
-
-                    wave.Init(PlayerBehavior.CenterPosition, Quaternion.FromToRotation(Vector2.right, PlayerBehavior.Player.LookDirection) * shashDirections[i].localRotation * Vector2.right);
-
-                    wave.ScaleRotatingPart(Vector2.up, Vector2.one).SetEasing(EasingType.SineOut);
-
-                    wave.onFinished += OnWaveFinished;
-
-                    waves.Add(wave);
-
-                    GameController.AudioManager.PlaySound(SACRED_BLADE_ATTACK_HASH);
+                    GameController.AudioManager.PlaySound(STEEL_SWORD_ATTACK_HASH);
 
                     yield return new WaitForSeconds(AbilityLevel.TimeBetweenSlashes * PlayerBehavior.Player.CooldownMultiplier);
                 }
 
-                yield return new WaitForSeconds(AbilityLevel.AbilityCooldown * PlayerBehavior.Player.CooldownMultiplier - AbilityLevel.TimeBetweenSlashes * PlayerBehavior.Player.CooldownMultiplier * AbilityLevel.SlashesCount);
+                yield return new WaitForSeconds(AbilityLevel.AbilityCooldown * PlayerBehavior.Player.CooldownMultiplier - AbilityLevel.TimeBetweenSlashes * PlayerBehavior.Player.CooldownMultiplier * AbilityLevel.ProjectilesCount);
             }
         }
-
-        private void OnProjectileFinished(SwordSlashBehavior slash)
+        
+        private void OnProjectileFinished(AxeProjectileBehavior projectile)
         {
-            slash.onFinished -= OnProjectileFinished;
-
-            slashes.Remove(slash);
-        }
-
-        private void OnWaveFinished(SimplePlayerProjectileBehavior wave)
-        {
-            wave.onFinished -= OnWaveFinished;
-
-            waves.Remove(wave);
+            projectile.onFinished -= OnProjectileFinished;
+            axeProjectiles.Remove(projectile);
         }
 
         private void Disable()
         {
-            for (int i = 0; i < slashes.Count; i++)
+            for (int i = 0; i < axeProjectiles.Count; i++)
             {
-                slashes[i].Disable();
+                axeProjectiles[i].Disable();
             }
-
-            for (int i = 0; i < waves.Count; i++)
-            {
-                waves[i].Clear();
-            }
-
-            slashes.Clear();
-            waves.Clear();
-
+            axeProjectiles.Clear();
             StopCoroutine(abilityCoroutine);
         }
 
         public override void Clear()
         {
             Disable();
-
-            slashPool.Destroy();
-
+            axeProjectilesPool.Destroy();
             base.Clear();
         }
     }

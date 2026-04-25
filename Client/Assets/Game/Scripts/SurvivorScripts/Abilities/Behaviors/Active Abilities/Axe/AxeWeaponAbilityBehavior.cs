@@ -17,7 +17,6 @@ namespace OctoberStudio.Abilities
         private PoolComponent<AxeProjectileBehavior> axeProjectilesPool;
         private List<AxeProjectileBehavior> axeProjectiles = new List<AxeProjectileBehavior>();
 
-        IEasingCoroutine projectileCoroutine;
         Coroutine abilityCoroutine;
 
         private float AbilityCooldown => AbilityLevel.AbilityCooldown * PlayerBehavior.Player.CooldownMultiplier;
@@ -67,21 +66,16 @@ namespace OctoberStudio.Abilities
         private void OnProjectileFinished(AxeProjectileBehavior projectile)
         {
             projectile.onFinished -= OnProjectileFinished;
-
             axeProjectiles.Remove(projectile);
         }
 
         private void Disable()
         {
-            projectileCoroutine.StopIfExists();
-
             for (int i = 0; i < axeProjectiles.Count; i++)
             {
                 axeProjectiles[i].Disable();
             }
-
             axeProjectiles.Clear();
-
             StopCoroutine(abilityCoroutine);
         }
 

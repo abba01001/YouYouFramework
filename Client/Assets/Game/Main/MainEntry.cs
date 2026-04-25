@@ -31,9 +31,9 @@ namespace Main
 #if UNITY_EDITOR
             ePlayMode = EPlayMode.EditorSimulateMode;
 #else
-            ePlayMode = EPlayMode.HostPlayMode;
+            ePlayMode = EPlayMode.OfflinePlayMode;
+            // ePlayMode = EPlayMode.HostPlayMode;
 #endif
-            
             bool isNeedInstallAPK = await CheckVersionCtrl.Instance.CheckMajorVersion(ePlayMode);
             if (isNeedInstallAPK)
             {

@@ -656,7 +656,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: EVO
+  m_text: "\u63D0\u5347"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 621a26be2f6ca6e478fee83d524ac748, type: 2}
   m_sharedMaterial: {fileID: -7829286705181891174, guid: 621a26be2f6ca6e478fee83d524ac748,

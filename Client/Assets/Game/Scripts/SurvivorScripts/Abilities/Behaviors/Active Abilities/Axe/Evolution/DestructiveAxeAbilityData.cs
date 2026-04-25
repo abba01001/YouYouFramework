@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace OctoberStudio.Abilities
@@ -21,27 +22,23 @@ namespace OctoberStudio.Abilities
     [System.Serializable]
     public class DestructiveAxeAbilityLevel : AbilityLevel
     {
-        [Tooltip("Amount of time between attacks")]
+        [LabelText("攻击间隔 (冷却)")]
         [SerializeField] float abilityCooldown;
         public float AbilityCooldown => abilityCooldown;
 
-        [Tooltip("Amount of slashes in the attack")]
-        [SerializeField] int slashesCount;
-        public int SlashesCount => slashesCount;
+        [LabelText("投掷斧头个数")]
+        [SerializeField] int projectilesCount;
+        public int ProjectilesCount => projectilesCount;
 
-        [Tooltip("Damage of slashes calculates like this: Player.Damage * Damage")]
+        [LabelText("基础伤害倍率")]
         [SerializeField] float damage;
         public float Damage => damage;
 
-        [Tooltip("Damage of waves calculates like this: Player.Damage * WaveDamage")]
-        [SerializeField] float waveDamage;
-        public float WaveDamage => waveDamage;
-
-        [Tooltip("Size of slash")]
+        [LabelText("挥砍范围/大小")]
         [SerializeField] float slashSize;
         public float SlashSize => slashSize;
 
-        [Tooltip("Delay Before each slash")]
+        [LabelText("挥砍间隔 (连斩延迟)")]
         [SerializeField] float timeBetweenSlashes;
         public float TimeBetweenSlashes => timeBetweenSlashes;
     }
