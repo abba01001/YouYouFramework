@@ -78,7 +78,7 @@ namespace OctoberStudio.Audio
 
         private void Start()
         {
-            save = GameController.SaveManager.GetSave<AudioSave>("Audio");
+            save = GameController.SaveManager.AudioData;
         }
 
         public AudioSource PlaySound(AudioClip clip, float volume = 1, float pitch = 1)

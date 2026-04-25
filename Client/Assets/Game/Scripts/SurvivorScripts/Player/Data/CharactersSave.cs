@@ -5,19 +5,28 @@ using UnityEngine.Events;
 
 namespace OctoberStudio
 {
+    public class PlayerAttrs
+    {
+        public int CurLevel;
+        public int CurExp;
+    }
+    
     public class CharactersSave : ISave
     {
         [SerializeField] protected int[] boughtCharacterIds;
         [SerializeField] protected int selectedCharacterId;
-
+        [SerializeField] protected PlayerAttrs playerAttrs;
+        
         public UnityAction onSelectedCharacterChanged;
 
         public int SelectedCharacterId => selectedCharacterId;
-
+        public PlayerAttrs PlayerAttrs => playerAttrs;
         protected List<int> BoughtCharacterIds { get; set; }
 
         public virtual void Init()
         {
+            if(playerAttrs == null) playerAttrs = new PlayerAttrs();
+            
             if (boughtCharacterIds == null)
             {
                 boughtCharacterIds = new int[] { 0 };

@@ -23,7 +23,7 @@ namespace OctoberStudio.Upgrades
 
             DontDestroyOnLoad(this);
 
-            save = GameController.SaveManager.GetSave<UpgradesSave>("Upgrades Save");
+            save = GameController.SaveManager.UpgradesData;
             save.Init();
 
             for(int i = 0; i < database.UpgradesCount; i++)

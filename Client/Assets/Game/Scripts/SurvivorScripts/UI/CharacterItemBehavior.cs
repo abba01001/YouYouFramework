@@ -54,13 +54,13 @@ namespace OctoberStudio.UI
         {
             if(charactersSave == null)
             {
-                charactersSave = GameController.SaveManager.GetSave<CharactersSave>("Characters");
+                charactersSave = GameController.SaveManager.CharactersData;
                 charactersSave.onSelectedCharacterChanged += RedrawVisuals;
             }
 
             if (GoldCurrency == null)
             {
-                GoldCurrency = GameController.SaveManager.GetSave<CurrencySave>("gold");
+                GoldCurrency = GameController.SaveManager.GoldData;
                 GoldCurrency.onGoldAmountChanged += OnGoldAmountChanged;
             }
 

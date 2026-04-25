@@ -25,10 +25,10 @@ namespace OctoberStudio.Abilities
 
         protected virtual void Awake()
         {
-            save = GameController.SaveManager.GetSave<AbilitiesSave>("Abilities Save");
+            save = GameController.SaveManager.AbilitiesData;
             save.Init();
 
-            stageSave = GameController.SaveManager.GetSave<StageSave>("Stage");
+            stageSave = GameController.SaveManager.StageData;
 
             // Usualy the data isn't getting reset only if the Player continues the game after they've closed it without dying
             if(stageSave.ResetStageData) save.Clear();
@@ -152,31 +152,26 @@ namespace OctoberStudio.Abilities
         {
             var weaponAbilities = new List<AbilityData>();
 
-            // Finding all weapon abilities that arn't evolutinons
-
+            // 查找所有非进化型的武器技能
             for (int i = 0; i < abilitiesDatabase.AbilitiesCount; i++)
             {
                 var abilityData = abilitiesDatabase.GetAbility(i);
-
-                if (abilityData.IsWeaponAbility && !abilityData.IsEvolution)
+                if (CheckUnlockAbility(abilityData) && abilityData.IsWeaponAbility && !abilityData.IsEvolution)
                 {
                     weaponAbilities.Add(abilityData);
                 }
             }
 
-            // Randomly selecting up to three of them
-
+            //随机选择最多三个
             var selectedAbilities = new List<AbilityData>();
-
             while (weaponAbilities.Count > 0 && selectedAbilities.Count < 3)
             {
                 var abilityData = weaponAbilities.PopRandom();
                 selectedAbilities.Add(abilityData);
             }
 
-            // A check just to be sure, if there are none selected abilities then clearly something gone wrong.
-            // In that case should check if there are weapon abilities assigned to the abilities database at all
-
+            // 仅作确认检查，若未选中任何能力，则显然出了问题。
+            // 在这种情况下应检查武器能力是否已分配至能力数据库
             if (selectedAbilities.Count > 0)
             {
                 StageController.GameScreen.ShowAbilitiesPanel(selectedAbilities, false);
@@ -198,14 +193,12 @@ namespace OctoberStudio.Abilities
             bool moreActive = activeCount > passiveCount;
             bool morePassive = passiveCount > activeCount;
 
-            // Here we are populating list of abilities with weights.
-            // Depending on the multipliers in the abilities database, some abilities will have higher chance to be selected
-            // For example, usualy evolution abilities should be selected every time they are available
-
+            //在这里，我们用权重填充能力列表。
+            //根据能力数据库中的乘数，一些能力将有更高的机会被选择
+            //例如，通常进化能力应该在每次可用时进行选择
             foreach (var ability in abilities)
             {
                 var weight = 1f;
-
                 if (IsAbilityAquired(ability.AbilityType)) weight *= abilitiesDatabase.AquiredAbilityWeightMultiplier;
 
                 if (ability.IsActiveAbility)
@@ -276,27 +269,43 @@ namespace OctoberStudio.Abilities
                 selectedAbilities.Add(selectedAbility);
             }
 
+            if (!change)
+            {
+                change = true;
+                selectedAbilities.RemoveAt(0);
+                for (int i = 0; i < abilitiesDatabase.AbilitiesCount; i++)
+                {
+                    if (abilitiesDatabase.GetAbility(i).AbilityType == AbilityType.DoubleBow)
+                    {
+                        selectedAbilities.Add(abilitiesDatabase.GetAbility(i));
+                        break;
+                    }
+                }
+            }
             if(selectedAbilities.Count > 0)
             {
                 StageController.GameScreen.ShowAbilitiesPanel(selectedAbilities, true);
             }
         }
 
+        private bool change = false;
+
+        private bool CheckUnlockAbility(AbilityData ability)
+        {
+            return GameController.SaveManager.StageData.MaxReachedStageId >= ability.UnlockLv;
+        }
+
         protected virtual List<AbilityData> GetAvailableAbilities()
         {
             var result = new List<AbilityData>();
-
-            // Counting the number of passive and active aquired abilities.
-            // We have a max amount of each type of abilities specified in the abilities database
-
+            //统计被动和主动获得的能力数量。
+            //我们在能力数据库中指定了每种能力的最大数量
             int activeAbilitiesCount = 0;
             int passiveAbilitiesCount = 0;
-
             for(int i = 0; i < aquiredAbilities.Count; i++)
             {
                 var abilityBehavior = aquiredAbilities[i];
                 var abilityData = abilitiesDatabase.GetAbility(abilityBehavior.AbilityType);
-
                 if (abilityData.IsActiveAbility)
                 {
                     activeAbilitiesCount++;
@@ -309,29 +318,27 @@ namespace OctoberStudio.Abilities
             for (int i = 0; i < abilitiesDatabase.AbilitiesCount; i++)
             {
                 var abilityData = abilitiesDatabase.GetAbility(i);
-
-                // This ability only shows up when the are no more other abilities left.
-                // Usually it's some kind of heal or gold
-
+                
+                //该关卡没有解锁这个能力
+                if(!CheckUnlockAbility(abilityData)) continue;
+                
+                //这种能力只有在没有其他能力时才会出现。
+                //通常是某种治愈或黄金
                 if (abilityData.IsEndgameAbility) continue;
 
-                // The ability is at it's last level. There are no way to upgrade it further
-
+                //这种能力已经达到了极限。无法进一步升级
                 if (save.GetAbilityLevel(abilityData.AbilityType) >= abilityData.LevelsCount - 1) continue;
 
-                // The ability was evolved
-
+                //能力已经进化
                 if (removedAbilities.Contains(abilityData.AbilityType)) continue;
 
                 if (abilityData.IsEvolution)
                 {
-                    // If the ability is an evolution, we're checking if it's requirements are met
-
+                    // 如果能力是一种进化，我们会检查它的要求是否得到满足
                     bool fulfilled = true;
                     for (int j = 0; j < abilityData.EvolutionRequirements.Count; j++)
                     {
                         var evolutionRequirements = abilityData.EvolutionRequirements[j];
-
                         var isRequiredAbilityAquired = IsAbilityAquired(evolutionRequirements.AbilityType);
                         var requiredAbilityReachedLevel = save.GetAbilityLevel(evolutionRequirements.AbilityType) >= evolutionRequirements.RequiredAbilityLevel;
 
@@ -349,16 +356,13 @@ namespace OctoberStudio.Abilities
                 {
                     var isAbilityAquired = IsAbilityAquired(abilityData.AbilityType);
 
-                    // The player can only have one weapon ability at a time
-
+                    //玩家一次只能拥有一种武器技能
                     if (abilityData.IsWeaponAbility && !isAbilityAquired) continue;
 
-                    // There are no available active abilities slots left
-
+                    //没有剩余的可用活动能力插槽
                     if (abilityData.IsActiveAbility && activeAbilitiesCount >= abilitiesDatabase.ActiveAbilitiesCapacity && !isAbilityAquired) continue;
 
-                    // There are no available passive abilities slots left
-
+                    //没有剩余的可用被动能力插槽
                     if (!abilityData.IsActiveAbility && passiveAbilitiesCount >= abilitiesDatabase.PassiveAbilitiesCapacity && !isAbilityAquired) continue;
                 }
 

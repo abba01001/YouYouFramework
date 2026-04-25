@@ -7,7 +7,16 @@ namespace OctoberStudio.Abilities
 {
     public abstract class AbilityData : ScriptableObject 
     {
-        [LabelText("技能ID")]
+        [ShowInInspector]
+        [PropertyOrder(-1)]
+        [LabelText("是否为初始武器")]
+        public bool IsInitWeapon => isWeaponAbility && !isEvolution;
+        
+        [LabelText("解锁关卡")]
+        [SerializeField] protected int unlockLv;
+        public int UnlockLv => unlockLv;
+        
+        [LabelText("技能类型")]
         [SerializeField] protected AbilityType type;
         public AbilityType AbilityType => type;
 
@@ -23,7 +32,7 @@ namespace OctoberStudio.Abilities
         [SerializeField] Sprite icon;
         public Sprite Icon => icon;
 
-        [LabelText("功能预制体")]
+        [LabelText("技能预制体")]
         [SerializeField] GameObject prefab;
         public GameObject Prefab => prefab;
 
@@ -42,12 +51,6 @@ namespace OctoberStudio.Abilities
         [LabelText("是否为进化/超武")]
         [SerializeField] bool isEvolution;
         public bool IsEvolution => isEvolution;
-
-        [ShowInInspector] // 让属性在面板显示
-        [ReadOnly]        // 设为只读，不可编辑
-        [PropertyOrder(-1)] // 给一个负数，确保它排在最前面
-        [LabelText("是否为初始武器")]
-        public bool IsInitWeapon => isWeaponAbility && !isEvolution;
         
         [LabelText("进化需求清单")]
         [SerializeField] List<EvolutionRequirement> evolutionRequirements;

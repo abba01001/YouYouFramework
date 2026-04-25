@@ -132,19 +132,19 @@ namespace GameScripts
 
             // 设置文件名
 
-            string fileName = "game_save.bin";
-
-            // 获取完整的文件路径
-
-            string fullFilePath = Path.Combine(directoryPath, fileName);
-
-            // 保存二进制数据到文件
-
-            File.WriteAllBytes(fullFilePath, test);
-
-            // 输出保存路径以供调试
-
-            Debug.Log($"Game data saved to: {fullFilePath}");
+            // string fileName = "game_save.bin";
+            //
+            // // 获取完整的文件路径
+            //
+            // string fullFilePath = Path.Combine(directoryPath, fileName);
+            //
+            // // 保存二进制数据到文件
+            //
+            // File.WriteAllBytes(fullFilePath, test);
+            //
+            // // 输出保存路径以供调试
+            //
+            // Debug.Log($"Game data saved to: {fullFilePath}");
 
 
             //string filePath = Path.Combine(Application.persistentDataPath, "Logs.txt");

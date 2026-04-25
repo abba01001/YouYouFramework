@@ -35,12 +35,8 @@ namespace OctoberStudio
         public static IVibrationManager VibrationManager { get; private set; }
         public static IInputManager InputManager { get; private set; }
 
-        public static CurrencySave Gold { get; private set; }
-        public static CurrencySave TempGold { get; private set; }
 
         public static AudioSource Music { get; private set; }
-
-        private static StageSave stageSave;
 
         // Indicates that the main menu is just loaded, and not exited from the game scene
         public static bool FirstTimeLoaded { get; private set; }
@@ -69,14 +65,9 @@ namespace OctoberStudio
 
         protected virtual void Start()
         {
-            Gold = SaveManager.GetSave<CurrencySave>("gold");
-            TempGold = SaveManager.GetSave<CurrencySave>("temp_gold");
-
-            stageSave = SaveManager.GetSave<StageSave>("Stage");
-
-            if (!stageSave.loadedBefore)
+            if (!SaveManager.StageData.loadedBefore)
             {
-                stageSave.loadedBefore = true;
+                SaveManager.StageData.loadedBefore = true;
             }
 #if UNITY_WEBGL && !UNITY_EDITOR
             InputManager.InputAsset.UI.Click.performed += MusicStartWebGL;
@@ -134,15 +125,15 @@ namespace OctoberStudio
 
         public static void LoadStage()
         {
-            if (stageSave.ResetStageData) TempGold.Withdraw(TempGold.Amount);
+            if (SaveManager.StageData.ResetStageData) SaveManager.TempGoldData.Withdraw(SaveManager.TempGoldData.Amount);
             if (instance != null) _ = instance.StageLoadingCoroutine();
             SaveManager.Save(false);
         }
 
         public static void LoadMainMenu()
         {
-            Gold.Deposit(TempGold.Amount);
-            TempGold.Withdraw(TempGold.Amount);
+            SaveManager.GoldData.Deposit(SaveManager.TempGoldData.Amount);
+            SaveManager.TempGoldData.Withdraw(SaveManager.TempGoldData.Amount);
 
             if (instance != null) _ = instance.MainMenuLoadingCoroutine();
 

@@ -17,7 +17,7 @@ namespace OctoberStudio.UI
         private IDisposable disposable;
         public void EnableTimer()
         {
-            stageSave = GameController.SaveManager.GetSave<StageSave>("Stage");
+            stageSave = GameController.SaveManager.StageData;
             
             timerText.text = ToMMSS(tempTimer);
             stageSave.Time = tempTimer;

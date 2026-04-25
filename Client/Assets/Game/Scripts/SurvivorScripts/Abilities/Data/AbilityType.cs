@@ -1,3 +1,5 @@
+using Sirenix.OdinInspector;
+
 namespace OctoberStudio
 {
     public enum AbilityType
@@ -40,11 +42,12 @@ namespace OctoberStudio
         WoodenWand = 1000,
         SteelSword = 1001,
         WoodenAxe = 1002,
-        WoodenBow = 1003,
+        [LabelText("歧木角弓")]WoodenBow = 1003,
         
         AncientScepter = 1100,
         SacredBlade = 1101,
         DestructiveAxe = 1102,
+        [LabelText("双界分森弓")]DoubleBow = 1103,
         
         HealEndgame = 2001,
         GoldEndgame = 2002,

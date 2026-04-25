@@ -57,7 +57,7 @@ namespace OctoberStudio
         {
             enemyDataDictionary = database.GetEnemyDataDictionary();
 
-            stageSave = GameController.SaveManager.GetSave<StageSave>("Stage");
+            stageSave = GameController.SaveManager.StageData;
 
             Dictionary<EnemyType, int> enemiesOnLevel = new Dictionary<EnemyType, int>();
 

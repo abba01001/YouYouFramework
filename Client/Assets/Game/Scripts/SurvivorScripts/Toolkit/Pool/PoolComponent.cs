@@ -65,9 +65,14 @@ namespace OctoberStudio.Pool
         public override T GetEntity()
         {
             var entity = base.GetEntity();
-
+            if(parent == null)
+            {
+                int hash = entity.name.GetHashCode();
+                parent = new GameObject($"{entity.gameObject.name}_{hash}_pool").transform;
+                Object.DontDestroyOnLoad(parent);
+            }
+            entity.transform.SetParent(parent);
             entity.gameObject.SetActive(true);
-
             return entity;
         }
 

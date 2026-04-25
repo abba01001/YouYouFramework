@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f939057f46ada94490672315f56fbb5, type: 3}
   m_Name: Wooden Axe Data
   m_EditorClassIdentifier: GameScripts::OctoberStudio.Abilities.WoodenAxeWeaponAbilityData
+  unlockLv: 0
   type: 1002
   title: "\u6728\u5236\u65A7\u5934"
   description: "\u5E73\u5E73\u65E0\u5947\u7684\u65A7\u5934\uFF0C\u968F\u7740\u5347\u7EA7\u6216\u8BB8\u6709\u7740\u4E0D\u4E00\u6837\u7684\u8868\u73B0"

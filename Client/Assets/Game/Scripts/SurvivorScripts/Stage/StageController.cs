@@ -51,7 +51,7 @@ namespace OctoberStudio
         {
             instance = this;
 
-            stageSave = GameController.SaveManager.GetSave<StageSave>("Stage");
+            stageSave = GameController.SaveManager.StageData;
         }
 
         private void Start()

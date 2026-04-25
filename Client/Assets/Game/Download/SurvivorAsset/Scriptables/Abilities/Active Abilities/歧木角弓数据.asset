@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19b299177f922014db8f232a684dd879, type: 3}
+  m_Name: "\u6B67\u6728\u89D2\u5F13\u6570\u636E"
+  m_EditorClassIdentifier: GameScripts::OctoberStudio.Abilities.WoodenBowWeaponAbilityData
+  unlockLv: 0
+  type: 1003
+  title: "\u6B67\u6728\u89D2\u5F13"
+  description: "\u4EE5\u575A\u786C\u89D2\u6728\u6253\u9020\u7684\u7B80\u6613\u6218\u5F13\uFF0C\u7B49\u7EA7\u8D8A\u9AD8\u7BAD\u77E2\u8D8A\u591A\uFF0C\u5355\u4FA7\u6247\u5F62\u6563\u5C04\uFF0C\u7A33\u624E\u7A33\u6253\u7684\u8FDC\u7A0B\u5229\u5668\u3002"
+  icon: {fileID: 21300000, guid: 94e76cac8f8f6974eb8bfd10ab177718, type: 3}
+  prefab: {fileID: 8295970409944387311, guid: 971c9dc4d271dbf45961e0bdfd27d162, type: 3}
+  isActiveAbility: 1
+  isWeaponAbility: 1
+  isEndgameAbility: 0
+  isEvolution: 0
+  evolutionRequirements: []
+  levels:
+  - abilityCooldown: 1
+    projectilesCount: 1
+    damage: 10
+    slashSize: 1
+    distance: 2
+    timeBetweenSlashes: 0
+  - abilityCooldown: 0.8
+    projectilesCount: 2
+    damage: 10
+    slashSize: 1
+    distance: 2
+    timeBetweenSlashes: 0
+  - abilityCooldown: 0.6
+    projectilesCount: 3
+    damage: 15
+    slashSize: 1
+    distance: 2
+    timeBetweenSlashes: 0
+  - abilityCooldown: 0.5
+    projectilesCount: 4
+    damage: 15
+    slashSize: 1
+    distance: 2.5
+    timeBetweenSlashes: 0
+  - abilityCooldown: 0.3
+    projectilesCount: 5
+    damage: 20
+    slashSize: 1
+    distance: 4
+    timeBetweenSlashes: 0

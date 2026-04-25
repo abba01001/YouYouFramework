@@ -8,7 +8,7 @@ namespace OctoberStudio.Abilities
 {
     public class AxeProjectileBehavior : ProjectileBehavior
     {
-        [SerializeField] Collider2D slashCollider;
+        [SerializeField] Collider2D axeCollider;
         [SerializeField] float duration;
 
         public float Size { get; set; }
@@ -25,7 +25,7 @@ namespace OctoberStudio.Abilities
         {
             base.Init();
             transform.localScale = Vector3.one * Size * PlayerBehavior.Player.SizeMultiplier;
-            slashCollider.enabled = true;
+            axeCollider.enabled = true;
         }
 
         public void StartThrowAxe(int index,WoodenAxeWeaponAbilityLevel AbilityLevel)
@@ -37,7 +37,7 @@ namespace OctoberStudio.Abilities
             }
             ThrowAxe(offset);
             
-            colliderCoroutine = EasingManager.DoAfter(duration, () => slashCollider.enabled = false);
+            colliderCoroutine = EasingManager.DoAfter(duration, () => axeCollider.enabled = false);
             waitingCoroutine = EasingManager.DoAfter(duration + 0.3f, () => {
                 onFinished?.Invoke(this);
                 Disable();
@@ -55,7 +55,7 @@ namespace OctoberStudio.Abilities
             ChangeSize(AbilityLevel.SlashSize);
             ThrowDestructiveAxe(offset);
             
-            colliderCoroutine = EasingManager.DoAfter(duration, () => slashCollider.enabled = false);
+            colliderCoroutine = EasingManager.DoAfter(duration, () => axeCollider.enabled = false);
             waitingCoroutine = EasingManager.DoAfter(duration + 0.3f, () => {
                 onFinished?.Invoke(this);
                 Disable();
@@ -126,7 +126,7 @@ namespace OctoberStudio.Abilities
             jumpCoroutine.StopIfExists();
             sizeCoroutine.StopIfExists();
             gameObject.SetActive(false);
-            slashCollider.enabled = true;
+            axeCollider.enabled = true;
         }
     }
 }

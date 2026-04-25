@@ -26,19 +26,19 @@ public class GMEditorPanel : OdinEditorWindow
     private static GMEditorPanel window;
 
     [MenuItem("工具类/Other/GM面板 #Q",false,99800)]
-    // [MenuItem("internal:Custom/GM面板 #Q")]
     public static void OpenWindow()
     {
-        if (window == null || !window.hasFocus)
-        {
-            window = GetWindow<GMEditorPanel>();
-            window.Show();
-        }
-        else
-        {
-            window.Close();
-            window = null; // 重置窗口引用
-        }
+        SurvivorGMEditor.ShowWindow();
+        // if (window == null || !window.hasFocus)
+        // {
+        //     window = GetWindow<GMEditorPanel>();
+        //     window.Show();
+        // }
+        // else
+        // {
+        //     window.Close();
+        //     window = null; // 重置窗口引用
+        // }
     }
 
     // 按钮配置列表
@@ -48,7 +48,7 @@ public class GMEditorPanel : OdinEditorWindow
 
     // 玩家信息区域
     [TabGroup("基本设置")] [LabelText("玩家数据管理")] [GUIColor(0.5f, 0.8f, 0.2f)]
-    public PlayerData playerData = new PlayerData();
+    public TestData testData = new TestData();
 
     [TabGroup("基本设置")]
     // 批量操作区域
@@ -66,7 +66,7 @@ public class GMEditorPanel : OdinEditorWindow
     }
 
     // 玩家列表，用于批量修改
-    [FoldoutGroup("批量操作", false)] public PlayerData[] players;
+    [FoldoutGroup("批量操作", false)] public TestData[] players;
 
     // 枚举列表
     [FoldoutGroup("枚举示例", false)] [LabelText("选择枚举列表")]
@@ -244,13 +244,13 @@ public enum ButtonStyleType
 
 // 玩家数据结构
 [System.Serializable]
-public class PlayerData
+public class TestData
 {
     public string Name;
     public int Level;
     public int Coins;
 
-    public PlayerData(string name = "玩家1", int level = 1, int coins = 0)
+    public TestData(string name = "玩家1", int level = 1, int coins = 0)
     {
         Name = name;
         Level = level;

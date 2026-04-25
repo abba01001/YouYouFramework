@@ -208,7 +208,7 @@ namespace OctoberStudio.UI
         {
             GameController.AudioManager.PlaySound(AudioManager.BUTTON_CLICK_HASH);
 
-            GameController.TempGold.Deposit(coinsReward);
+            GameController.SaveManager.TempGoldData.Deposit(coinsReward);
 
             CloseWindow();
         }

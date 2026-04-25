@@ -57,7 +57,7 @@ namespace OctoberStudio.Input
 
         public void Init()
         {
-            save = GameController.SaveManager.GetSave<InputSave>("Input");
+            save = GameController.SaveManager.InputData;
 
             if(Gamepad.current != null)
             {

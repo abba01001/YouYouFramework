@@ -46,7 +46,7 @@ namespace OctoberStudio.Upgrades.UI
         {
             if(GoldCurrency == null)
             {
-                GoldCurrency = GameController.SaveManager.GetSave<CurrencySave>("gold");
+                GoldCurrency = GameController.SaveManager.GoldData;
                 GoldCurrency.onGoldAmountChanged += OnGoldAmountChanged;
             }
 

@@ -94,7 +94,7 @@ namespace OctoberStudio
 
         protected virtual void Awake()
         {
-            charactersSave = GameController.SaveManager.GetSave<CharactersSave>("Characters");
+            charactersSave = GameController.SaveManager.CharactersData;
             Data = charactersDatabase.GetCharacterData(charactersSave.SelectedCharacterId);
 
             Character = Instantiate(Data.Prefab).GetComponent<ICharacterBehavior>();

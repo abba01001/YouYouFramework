@@ -41,7 +41,7 @@ namespace OctoberStudio.UI
         
         private static async UniTask OpenAllStages()
         {
-            var stageSave = GameController.SaveManager.GetSave<StageSave>("Stage");
+            var stageSave = GameController.SaveManager.StageData;
             var database = await GameEntry.Loader.LoadMainAssetAsync<StagesDatabase>(
                 "Assets/Game/Download/SurvivorAsset/Scriptables/Stages/Stages Database.asset");
             if (database != null)
@@ -63,7 +63,7 @@ namespace OctoberStudio.UI
             musicToggle.onChanged += (musicEnabled) => GameController.AudioManager.MusicVolume = musicEnabled ? 1 : 0;
             vibrationToggle.onChanged += (vibrationEnabled) => GameController.VibrationManager.IsVibrationEnabled = vibrationEnabled;
 
-            stageSave = GameController.SaveManager.GetSave<StageSave>("Stage");
+            stageSave = GameController.SaveManager.StageData;
         }
 
         public void Open()

@@ -138,7 +138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91d225878f0b4b441b14b37c92a53146, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameScripts::OctoberStudio.Abilities.AxeProjectileBehavior
-  slashCollider: {fileID: 4620996216973801422}
+  axeCollider: {fileID: 4620996216973801422}
   duration: 0.5
 --- !u!58 &4620996216973801422
 CircleCollider2D:

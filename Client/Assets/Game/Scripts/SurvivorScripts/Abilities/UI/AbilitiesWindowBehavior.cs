@@ -38,7 +38,7 @@ namespace OctoberStudio.Abilities.UI
         public void Init()
         {
             cardsPool = new PoolComponent<AbilityCardBehavior>(abilityCardPrefab, 3);
-            abilitiesSave = GameController.SaveManager.GetSave<AbilitiesSave>("Abilities Save");
+            abilitiesSave = GameController.SaveManager.AbilitiesData;
 
             panelPosition = panelRect.anchoredPosition;
             panelRect.anchoredPosition = panelHiddenPosition;

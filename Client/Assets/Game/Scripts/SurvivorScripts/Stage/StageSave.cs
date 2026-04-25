@@ -20,8 +20,8 @@ namespace OctoberStudio
 
         public event UnityAction<int> onSelectedStageChanged;
 
-        public int SelectedStageId => selectedStageId;
-        public int MaxReachedStageId => maxReachedStageId;
+        public int SelectedStageId => selectedStageId;//选中关卡ID
+        public int MaxReachedStageId => maxReachedStageId;//最高达到关卡ID
 
         public bool IsFirstStageSelected => selectedStageId == 0;
         public bool IsMaxReachedStageSelected => selectedStageId == maxReachedStageId;

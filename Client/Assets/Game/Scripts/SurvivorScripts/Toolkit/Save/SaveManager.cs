@@ -1,9 +1,14 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using System.Threading;
 using UnityEngine.Events;
 using OctoberStudio.Easing;
 using System.IO;
+using Main;
+using OctoberStudio.Abilities;
+using OctoberStudio.Audio;
+using OctoberStudio.Upgrades;
+using OctoberStudio.Vibration;
 
 #if UNITY_WEBGL && !UNITY_EDITOR
 using System.Runtime.InteropServices;
@@ -11,11 +16,134 @@ using System.Runtime.InteropServices;
 
 namespace OctoberStudio.Save
 {
+    public static class SaveKey
+    {
+        public const string StageData = "stage";
+        public const string TempGoldData = "temp_gold";
+        public const string GoldData = "gold";
+        public const string CharactersData = "characters";
+        public const string SaveFileName = "game_save";
+        public const string AbilitiesData = "abilities_save";
+        public const string UpgradesData = "upgrades_save";
+        public const string AudioData = "audio";
+        public const string InputData = "input";
+        public const string VibrationData = "vibration";
+    }
+    
+    public interface ISaveManager
+    {
+        T GetSave<T>(int hash) where T : ISave, new();
+        T GetSave<T>(string uniqueName) where T : ISave, new();
+        void Save(bool multithreading = false);
+
+        
+        StageSave StageData { get; }
+        CurrencySave GoldData { get; }
+        CurrencySave TempGoldData { get; }
+        CharactersSave CharactersData { get; }
+        AbilitiesSave AbilitiesData { get; }
+        UpgradesSave UpgradesData { get; }
+        InputSave InputData { get; }
+        AudioSave AudioData { get; }
+        VibrationSave VibrationData { get; }
+    }
+
     [DefaultExecutionOrder(-100)]
     public class SaveManager : MonoBehaviour, ISaveManager
     {
-        public static readonly string SAVE_FILE_NAME = "game_save";
+        #region 获取保存的数据
+        private VibrationSave _vibrationSave;
+        public VibrationSave VibrationData
+        {
+            get
+            {
+                _vibrationSave ??= GetSave<VibrationSave>(SaveKey.VibrationData);
+                return _vibrationSave;
+            }
+        }
+        
+        private InputSave _inputSave;
+        public InputSave InputData
+        {
+            get
+            {
+                _inputSave ??= GetSave<InputSave>(SaveKey.InputData);
+                return _inputSave;
+            }
+        }
+        
+        private AudioSave _audioSave;
+        public AudioSave AudioData
+        {
+            get
+            {
+                _audioSave ??= GetSave<AudioSave>(SaveKey.AudioData);
+                return _audioSave;
+            }
+        }
+        
+        private UpgradesSave _upgradesSave;
+        public UpgradesSave UpgradesData
+        {
+            get
+            {
+                _upgradesSave ??= GetSave<UpgradesSave>(SaveKey.UpgradesData);
+                return _upgradesSave;
+            }
+        }
+        
+        private AbilitiesSave _abilitiesSave;
+        public AbilitiesSave AbilitiesData
+        {
+            get
+            {
+                _abilitiesSave ??= GetSave<AbilitiesSave>(SaveKey.AbilitiesData);
+                return _abilitiesSave;
+            }
+        }
+        
+        private CharactersSave _charactersSave;
+        public CharactersSave CharactersData
+        {
+            get
+            {
+                _charactersSave ??= GetSave<CharactersSave>(SaveKey.CharactersData);
+                return _charactersSave;
+            }
+        }
+        
+        private CurrencySave _goldData;
+        public CurrencySave GoldData
+        {
+            get
+            {
+                _goldData ??= GetSave<CurrencySave>(SaveKey.GoldData);
+                return _goldData;
+            }
+        }
 
+        private CurrencySave _tempGoldData;
+        public CurrencySave TempGoldData
+        {
+            get
+            {
+                _tempGoldData ??= GetSave<CurrencySave>(SaveKey.TempGoldData);
+                return _tempGoldData;
+            }
+        }
+        
+        private StageSave _stageData;
+        public StageSave StageData
+        {
+            get
+            {
+                _stageData ??= GetSave<StageSave>(SaveKey.StageData);
+                return _stageData;
+            }
+        }
+        
+        #endregion
+        
         private static SaveManager instance;
 
         [SerializeField] SaveType saveType = SaveType.SaveFile;
@@ -118,7 +246,7 @@ namespace OctoberStudio.Save
                 Debug.Log("Save file is loaded");
             } else
             {
-                var json = PlayerPrefs.GetString("save");
+                var json = PlayerPrefs.GetString(SaveKey.SaveFileName);
                 SaveDatabase = JsonUtility.FromJson<SaveDatabase>(json);
                 if (SaveDatabase == null) SaveDatabase = new SaveDatabase();
 
@@ -135,7 +263,7 @@ namespace OctoberStudio.Save
         private SaveDatabase LoadSave()
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
-            string jsonObject = load(SAVE_FILE_NAME);
+            string jsonObject = load(SaveKey.SaveFileName);
             if(!string.IsNullOrEmpty(jsonObject))
             {
                 try
@@ -152,27 +280,27 @@ namespace OctoberStudio.Save
 
             return new SaveDatabase();
 #else
-            return SerializationHelper.DeserializePersistent<SaveDatabase>(SAVE_FILE_NAME, useLogs: false);
+            return SerializationHelper.DeserializePersistent<SaveDatabase>(SaveKey.SaveFileName, useLogs: false);
 #endif
         }
 
         private IEnumerator SaveCoroutine(bool multithreading = false)
         {
             var wait = new WaitForSeconds(0.2f);
-            while (SerializationHelper.IsFileLocked(SAVE_FILE_NAME))
+            while (SerializationHelper.IsFileLocked(SaveKey.SaveFileName))
             {
                 yield return wait;
             }
             if (multithreading)
             {
                 var saveThread = new Thread(() => {
-                    SerializationHelper.SerializePersistent(SaveDatabase, SAVE_FILE_NAME);
+                    SerializationHelper.SerializePersistent(SaveDatabase, SaveKey.SaveFileName);
                 });
                 saveThread.Start();
             }
             else
             {
-                SerializationHelper.SerializePersistent(SaveDatabase, SAVE_FILE_NAME);
+                SerializationHelper.SerializePersistent(SaveDatabase, SaveKey.SaveFileName);
             }
 
             Debug.Log("Save file is updated");
@@ -184,22 +312,22 @@ namespace OctoberStudio.Save
         {
             if (SaveDatabase == null) return;
             SaveDatabase.Flush();
-
+            Debugger.LogError("保存文件===>",JsonUtility.ToJson(SaveDatabase));
             if(saveType == SaveType.PlayerPrefs)
             {
-                PlayerPrefs.SetString("save", JsonUtility.ToJson(SaveDatabase));
+                PlayerPrefs.SetString(SaveKey.SaveFileName, JsonUtility.ToJson(SaveDatabase));
                 PlayerPrefs.Save();
 
                 Debug.Log("Save Database is sent to PlayerPrefs");
             } else
             {
 #if UNITY_WEBGL && !UNITY_EDITOR
-                WebGLSave(SaveDatabase, SAVE_FILE_NAME);
+                WebGLSave(SaveDatabase, SaveKey.SaveFileName);
                 Debug.Log("Save file is updated");
 #else
-                if (!SerializationHelper.IsFileLocked(SAVE_FILE_NAME))
+                if (!SerializationHelper.IsFileLocked(SaveKey.SaveFileName))
                 {
-                    SerializationHelper.SerializePersistent(SaveDatabase, SAVE_FILE_NAME);
+                    SerializationHelper.SerializePersistent(SaveDatabase, SaveKey.SaveFileName);
 
                     Debug.Log("Save file is updated");
                 }
@@ -218,14 +346,14 @@ namespace OctoberStudio.Save
 
             if (saveType == SaveType.PlayerPrefs)
             {
-                PlayerPrefs.SetString("save", JsonUtility.ToJson(SaveDatabase));
+                PlayerPrefs.SetString(SaveKey.SaveFileName, JsonUtility.ToJson(SaveDatabase));
                 PlayerPrefs.Save();
 
                 Debug.Log("Save Database is sent to PlayerPrefs");
             } else
             {
 #if UNITY_WEBGL && !UNITY_EDITOR
-                WebGLSave(SaveDatabase, SAVE_FILE_NAME);
+                WebGLSave(SaveDatabase, SaveKey.SaveFileName);
                 Debug.Log("Save file is updated");
 #else
                 if (saveCoroutine == null) saveCoroutine = StartCoroutine(SaveCoroutine(multithreading));
@@ -257,9 +385,9 @@ namespace OctoberStudio.Save
         public static void DeleteSaveFile()
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
-            deleteItem(SAVE_FILE_NAME);
+            deleteItem(SaveKey.SaveFileName);
 #else
-            SerializationHelper.DeletePersistent(SAVE_FILE_NAME);
+            SerializationHelper.DeletePersistent(SaveKey.SaveFileName);
 #endif
 
             PlayerPrefs.DeleteAll();
@@ -280,7 +408,7 @@ namespace OctoberStudio.Save
         }
 
         /// <summary>
-        /// Android and IOS Phones minimize applications instead of destroying them 
+        /// Android和IOS手机将应用程序最小化，而不是破坏它们
         /// </summary>
         /// <param name="focus"></param>
         private void OnApplicationFocus(bool focus)

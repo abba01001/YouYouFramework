@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bafa157c553fd74398db8cc932d5cda, type: 3}
   m_Name: Steel Sword Data
   m_EditorClassIdentifier: 
+  unlockLv: 0
   type: 1001
-  title: "\u94A2\u94C1\u5229\u5203"
+  title: "\u94A2\u94C1\u5DE8\u5251"
   description: "\u53D1\u51FA\u5251\u5203\u6325\u5411\u9762\u524D\u7684\u654C\u4EBA"
   icon: {fileID: 21300000, guid: f75bf02f0e4a26946a94de1178ad1352, type: 3}
   prefab: {fileID: 5349004258488764192, guid: 1fb009b476592b649aae6523123f1897, type: 3}

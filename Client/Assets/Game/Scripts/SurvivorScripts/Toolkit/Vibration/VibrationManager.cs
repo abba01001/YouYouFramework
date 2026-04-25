@@ -36,7 +36,7 @@ namespace OctoberStudio.Vibration
 
         public void Start()
         {
-            save = GameController.SaveManager.GetSave<VibrationSave>("Vibration");
+            save = GameController.SaveManager.VibrationData;
             IsVibrationEnabled = true;
 #if UNITY_EDITOR
             vibrationHandler = new SimpleVibrationHandler();

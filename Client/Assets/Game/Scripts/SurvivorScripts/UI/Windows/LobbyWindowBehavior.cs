@@ -1,4 +1,5 @@
 using GameScripts;
+using Main;
 using OctoberStudio.Easing;
 using OctoberStudio.Input;
 using OctoberStudio.Save;
@@ -40,8 +41,6 @@ namespace OctoberStudio.UI
         [SerializeField] Button confirmButton;
         [SerializeField] Button cancelButton;
 
-        private StageSave save;
-
         private void Awake()
         {
             playButton.onClick.AddListener(OnPlayButtonClicked);
@@ -54,11 +53,9 @@ namespace OctoberStudio.UI
 
         private void Start()
         {
-            save = GameController.SaveManager.GetSave<StageSave>("Stage");
+            GameController.SaveManager.StageData.onSelectedStageChanged += InitStage;
 
-            save.onSelectedStageChanged += InitStage;
-
-            if (save.IsPlaying && GameController.FirstTimeLoaded)
+            if (GameController.SaveManager.StageData.IsPlaying && GameController.FirstTimeLoaded)
             {
                 continueBackgroundImage.gameObject.SetActive(true);
 
@@ -66,11 +63,11 @@ namespace OctoberStudio.UI
 
                 EventSystem.current.SetSelectedGameObject(confirmButton.gameObject);
 
-                InitStage(save.SelectedStageId);
+                InitStage(GameController.SaveManager.StageData.SelectedStageId);
             } else
             {
                 EventSystem.current.SetSelectedGameObject(playButton.gameObject);
-                save.SetSelectedStageId(save.MaxReachedStageId);
+                GameController.SaveManager.StageData.SetSelectedStageId(GameController.SaveManager.StageData.MaxReachedStageId);
             }
 
             GameController.InputManager.onInputChanged += OnInputChanged;
@@ -92,7 +89,7 @@ namespace OctoberStudio.UI
             stageNumberLabel.text = $"Stage {stageId + 1}";
             stageIcon.sprite = stage.Icon;
 
-            if(save.SelectedStageId > save.MaxReachedStageId)
+            if(GameController.SaveManager.StageData.SelectedStageId > GameController.SaveManager.StageData.MaxReachedStageId)
             {
                 lockImage.gameObject.SetActive(true);
                 playButton.interactable = false;
@@ -104,8 +101,8 @@ namespace OctoberStudio.UI
                 playButton.image.sprite = playButtonEnabledSprite;
             }
 
-            leftButton.gameObject.SetActive(!save.IsFirstStageSelected);
-            rightButton.gameObject.SetActive(save.SelectedStageId != stagesDatabase.StagesCount - 1);
+            leftButton.gameObject.SetActive(!GameController.SaveManager.StageData.IsFirstStageSelected);
+            rightButton.gameObject.SetActive(GameController.SaveManager.StageData.SelectedStageId != stagesDatabase.StagesCount - 1);
         }
 
         public void Open()
@@ -127,11 +124,11 @@ namespace OctoberStudio.UI
 
         public void OnPlayButtonClicked()
         {
-            save.IsPlaying = true;
-            save.ResetStageData = true;
-            save.Time = 0f;
-            save.XP = 0f;
-            save.XPLEVEL = 0;
+            GameController.SaveManager.StageData.IsPlaying = true;
+            GameController.SaveManager.StageData.ResetStageData = true;
+            GameController.SaveManager.StageData.Time = 0f;
+            GameController.SaveManager.StageData.XP = 0f;
+            GameController.SaveManager.StageData.XPLEVEL = 0;
 
             GameController.AudioManager.PlaySound(AudioManager.BUTTON_CLICK_HASH);
             GameController.LoadStage();
@@ -140,7 +137,7 @@ namespace OctoberStudio.UI
         private void IncremenSelectedStageId()
         {
             GameController.AudioManager.PlaySound(AudioManager.BUTTON_CLICK_HASH);
-            save.SetSelectedStageId(save.SelectedStageId + 1);
+            GameController.SaveManager.StageData.SetSelectedStageId(GameController.SaveManager.StageData.SelectedStageId + 1);
 
             if (!rightButton.gameObject.activeSelf)
             {
@@ -157,7 +154,7 @@ namespace OctoberStudio.UI
         private void DecrementSelectedStageId()
         {
             GameController.AudioManager.PlaySound(AudioManager.BUTTON_CLICK_HASH);
-            save.SetSelectedStageId(save.SelectedStageId - 1);
+            GameController.SaveManager.StageData.SetSelectedStageId(GameController.SaveManager.StageData.SelectedStageId - 1);
 
             if (!leftButton.gameObject.activeSelf)
             {
@@ -174,7 +171,7 @@ namespace OctoberStudio.UI
 
         private void OnDestroy()
         {
-            save.onSelectedStageChanged -= InitStage;
+            GameController.SaveManager.StageData.onSelectedStageChanged -= InitStage;
             GameController.InputManager.onInputChanged -= OnInputChanged;
         }
 
@@ -185,7 +182,7 @@ namespace OctoberStudio.UI
 
         private void ConfirmButtonClicked()
         {
-            save.ResetStageData = false;
+            GameController.SaveManager.StageData.ResetStageData = false;
 
             GameController.AudioManager.PlaySound(AudioManager.BUTTON_CLICK_HASH);
             GameController.LoadStage();
@@ -193,7 +190,7 @@ namespace OctoberStudio.UI
 
         private void CancelButtonClicked()
         {
-            // save.IsPlaying = false;
+            // GameController.StageData.IsPlaying = false;
             continueBackgroundImage.DoAlpha(0, 0.3f).SetOnFinish(() => continueBackgroundImage.gameObject.SetActive(false));
             contituePopupRect.DoAnchorPosition(Vector2.down * 2500, 0.3f).SetEasing(EasingType.SineIn).SetOnFinish(() => contituePopupRect.gameObject.SetActive(false));
             EventSystem.current.SetSelectedGameObject(playButton.gameObject);

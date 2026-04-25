@@ -22,7 +22,7 @@ namespace OctoberStudio
 
         public void Init(PresetData testingPreset)
         {
-            stageSave = GameController.SaveManager.GetSave<StageSave>("Stage");
+            stageSave = GameController.SaveManager.StageData;
 
             XP = 0;
             Level = 0;
