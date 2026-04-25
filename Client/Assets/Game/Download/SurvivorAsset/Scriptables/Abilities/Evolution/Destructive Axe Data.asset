@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0af754e47aa6e574999d229ca46d0ead, type: 3}
   m_Name: Destructive Axe Data
   m_EditorClassIdentifier: GameScripts::OctoberStudio.Abilities.DestructiveAxeAbilityData
+  unlockLv: 0
   type: 1102
   title: "\u6BC1\u706D\u65A7\u5203"
   description: "\u6254\u51FA\u5A01\u529B\u6781\u5927\u7684\u65A7\u5934"

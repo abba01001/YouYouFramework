@@ -100,8 +100,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7643119102726996288}
-  - component: {fileID: 6572494662176122066}
   - component: {fileID: 6240382081411163543}
+  - component: {fileID: 2023653550424984169}
   m_Layer: 8
   m_Name: Destrucetive Axe Projectile
   m_TagString: Untagged
@@ -126,8 +126,22 @@ Transform:
   - {fileID: 6960567588539795059}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &6572494662176122066
-BoxCollider2D:
+--- !u!114 &6240382081411163543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6614996720983952763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91d225878f0b4b441b14b37c92a53146, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GameScripts::OctoberStudio.Abilities.AxeProjectileBehavior
+  axeCollider: {fileID: 2023653550424984169}
+  duration: 0.4
+--- !u!60 &2023653550424984169
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -170,22 +184,18 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.44, y: 0.45}
-  m_EdgeRadius: 0
---- !u!114 &6240382081411163543
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6614996720983952763}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91d225878f0b4b441b14b37c92a53146, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: GameScripts::OctoberStudio.Abilities.AxeProjectileBehavior
-  slashCollider: {fileID: 6572494662176122066}
-  duration: 0.4
+  m_Points:
+    m_Paths:
+    - - {x: 0.11478907, y: 0.24708399}
+      - {x: -0.006351143, y: 0.2576495}
+      - {x: -0.08338878, y: 0.19120497}
+      - {x: -0.08660883, y: 0.07748451}
+      - {x: -0.21349078, y: -0.19214949}
+      - {x: -0.15990251, y: -0.23693085}
+      - {x: 0.017333847, y: -0.08476194}
+      - {x: 0.17963229, y: -0.025630586}
+      - {x: 0.25168216, y: 0.13845204}
+  m_UseDelaunayMesh: 1
 --- !u!1001 &2664863917198659168
 PrefabInstance:
   m_ObjectHideFlags: 0

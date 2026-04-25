@@ -7,8 +7,10 @@ namespace OctoberStudio.Timeline
     public class RushWave : WaveAsset
     {
         [Header("Edge Rush 专属参数")]
-        [LabelText("冲锋速度")] public float RushSpeed; // 冲锋速度
-        [LabelText("延时冲锋")][Range(0f,3f)] public float RushDelay;
+        [LabelText("冲锋速度(区间随机值)"), MinMaxSlider(0f, 10f)] public Vector2 RushSpeed = new Vector2(0f,10f);
+        [LabelText("延时冲锋(区间随机值)"), MinMaxSlider(0f, 3f)] public Vector2 RushDelay =  new Vector2(0f,3f);
+
+        
         [LabelText("敌人数量")] [Range(1, 100)] public int enemiesCount = 1;
 
         public override int EnemiesCount => enemiesCount;

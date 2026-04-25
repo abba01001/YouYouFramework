@@ -275,13 +275,14 @@ namespace OctoberStudio.Abilities
                 selectedAbilities.RemoveAt(0);
                 for (int i = 0; i < abilitiesDatabase.AbilitiesCount; i++)
                 {
-                    if (abilitiesDatabase.GetAbility(i).AbilityType == AbilityType.DoubleBow)
+                    if (abilitiesDatabase.GetAbility(i).AbilityType == AbilityType.DestructiveAxe)
                     {
                         selectedAbilities.Add(abilitiesDatabase.GetAbility(i));
                         break;
                     }
                 }
             }
+            
             if(selectedAbilities.Count > 0)
             {
                 StageController.GameScreen.ShowAbilitiesPanel(selectedAbilities, true);

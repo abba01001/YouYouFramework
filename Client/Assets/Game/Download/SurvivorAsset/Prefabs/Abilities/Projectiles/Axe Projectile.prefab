@@ -101,7 +101,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7643119102726996288}
   - component: {fileID: 6240382081411163543}
-  - component: {fileID: 4620996216973801422}
+  - component: {fileID: 3226562647953252550}
   m_Layer: 8
   m_Name: Axe Projectile
   m_TagString: Untagged
@@ -138,10 +138,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91d225878f0b4b441b14b37c92a53146, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameScripts::OctoberStudio.Abilities.AxeProjectileBehavior
-  axeCollider: {fileID: 4620996216973801422}
+  axeCollider: {fileID: 3226562647953252550}
   duration: 0.5
---- !u!58 &4620996216973801422
-CircleCollider2D:
+--- !u!60 &3226562647953252550
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -175,7 +175,30 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.32
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0.1364328, y: 0.2633168}
+      - {x: 0.013488933, y: 0.31356242}
+      - {x: -0.09421066, y: 0.25793976}
+      - {x: -0.11750421, y: 0.12897733}
+      - {x: -0.09201974, y: 0.02517885}
+      - {x: -0.28202924, y: -0.2498661}
+      - {x: -0.18695718, y: -0.28562924}
+      - {x: -0.022346307, y: -0.08476194}
+      - {x: 0.08402126, y: -0.08537583}
+      - {x: 0.21570519, y: -0.038256075}
+      - {x: 0.28803524, y: 0.08392513}
+      - {x: 0.29136232, y: 0.19256134}
+  m_UseDelaunayMesh: 1
 --- !u!1001 &2664863917198659168
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1267,6 +1267,57 @@ MonoBehaviour:
     m_BlendOutDuration: -1
     m_MixInCurve:
       serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "\u6301\u7EED\u6CE2"
+  - m_Version: 1
+    m_Start: 22
+    m_ClipIn: 0
+    m_Asset: {fileID: 968624640840923229}
+    m_Duration: 5
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8342276710104939331}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0
@@ -1322,7 +1373,265 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: "\u6301\u7EED\u6CE2"
+    m_DisplayName: "\u7A81\u88AD\u51B2\u523A\u6CE2"
+  - m_Version: 1
+    m_Start: 65
+    m_ClipIn: 0
+    m_Asset: {fileID: 7759416650406327303}
+    m_Duration: 10
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8342276710104939331}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "\u7A81\u88AD\u51B2\u523A\u6CE2"
+  - m_Version: 1
+    m_Start: 127
+    m_ClipIn: 0
+    m_Asset: {fileID: -4269458544706595345}
+    m_Duration: 20.000000000000014
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8342276710104939331}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "\u7A81\u88AD\u51B2\u523A\u6CE2"
+  - m_Version: 1
+    m_Start: 168
+    m_ClipIn: 0
+    m_Asset: {fileID: 5744831015573696923}
+    m_Duration: 12
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8342276710104939331}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "\u7A81\u88AD\u51B2\u523A\u6CE2"
+  - m_Version: 1
+    m_Start: 271
+    m_ClipIn: 0
+    m_Asset: {fileID: -3357694221898857285}
+    m_Duration: 100
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8342276710104939331}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "\u7A81\u88AD\u51B2\u523A\u6CE2"
   m_Markers:
     m_Objects: []
   enemyType: 9
@@ -1485,6 +1794,29 @@ MonoBehaviour:
   m_Markers:
     m_Objects: []
   enemyType: 14
+--- !u!114 &-7988660003753593280
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a16748d9461eae46a725db9776d5390, type: 3}
+  m_Name: Markers
+  m_EditorClassIdentifier: Unity.Timeline::UnityEngine.Timeline.MarkerTrack
+  m_Version: 3
+  m_AnimClip: {fileID: 0}
+  m_Locked: 0
+  m_Muted: 0
+  m_CustomPlayableFullTypename: 
+  m_Curves: {fileID: 0}
+  m_Parent: {fileID: 11400000}
+  m_Children: []
+  m_Clips: []
+  m_Markers:
+    m_Objects: []
 --- !u!114 &-7521422873764676284
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1528,6 +1860,34 @@ MonoBehaviour:
   bossRedCircleStayDuration: 2
   bossSpawnOffsetFromPlayer: {x: 0, y: 1.5}
   shouldSpawnChest: 1
+--- !u!114 &-7010241277301818376
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e42fa0f7c635ac749b722359a6fe8e0e, type: 3}
+  m_Name: FlashWave
+  m_EditorClassIdentifier: GameScripts::OctoberStudio.Timeline.FlashWave
+  waveOverride:
+    useDamageOverride: 0
+    damageOverride: 0
+    useHPOverride: 0
+    hpOverride: 0
+    useSpeedOverride: 0
+    speedOverride: 0
+    useDropOverride: 0
+    dropOverride: []
+    disableOffscreenTeleport: 0
+  circularSpawn: 0
+  SpawnDistanceRange: {x: 0, y: 2}
+  FlashDistance: {x: 0, y: 5}
+  FlashDelay: {x: 0, y: 2}
+  PathColor: {r: 0, g: 0, b: 0, a: 0}
+  enemiesCount: 5
 --- !u!114 &-6585302350593476215
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1934,6 +2294,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetCameraSize: 5.4
   easingType: 0
+--- !u!114 &-4367704713882908462
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e42fa0f7c635ac749b722359a6fe8e0e, type: 3}
+  m_Name: FlashWave
+  m_EditorClassIdentifier: GameScripts::OctoberStudio.Timeline.FlashWave
+  waveOverride:
+    useDamageOverride: 0
+    damageOverride: 0
+    useHPOverride: 0
+    hpOverride: 0
+    useSpeedOverride: 0
+    speedOverride: 0
+    useDropOverride: 0
+    dropOverride: []
+    disableOffscreenTeleport: 0
+  circularSpawn: 0
+  SpawnDistanceRange: {x: 0, y: 2}
+  FlashDistance: {x: 0, y: 5}
+  FlashDelay: {x: 0, y: 2}
+  PathColor: {r: 0, g: 0, b: 0, a: 0}
+  enemiesCount: 2
 --- !u!114 &-4294256479164711998
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1958,6 +2346,32 @@ MonoBehaviour:
     disableOffscreenTeleport: 0
   circularSpawn: 1
   continuousSpawnPerSecond: 4
+--- !u!114 &-4269458544706595345
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bd7a00e2bbd2d942bb9e827cd2475ec, type: 3}
+  m_Name: RushWave
+  m_EditorClassIdentifier: GameScripts::OctoberStudio.Timeline.RushWave
+  waveOverride:
+    useDamageOverride: 0
+    damageOverride: 0
+    useHPOverride: 0
+    hpOverride: 0
+    useSpeedOverride: 0
+    speedOverride: 0
+    useDropOverride: 0
+    dropOverride: []
+    disableOffscreenTeleport: 0
+  circularSpawn: 0
+  RushSpeed: {x: 0, y: 10}
+  RushDelay: {x: 0, y: 3}
+  enemiesCount: 1
 --- !u!114 &-4036848866373474507
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2018,6 +2432,32 @@ MonoBehaviour:
   circularSpawn: 0
   enemiesCount: 2
   burstCount: 4
+--- !u!114 &-3357694221898857285
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bd7a00e2bbd2d942bb9e827cd2475ec, type: 3}
+  m_Name: RushWave
+  m_EditorClassIdentifier: GameScripts::OctoberStudio.Timeline.RushWave
+  waveOverride:
+    useDamageOverride: 0
+    damageOverride: 0
+    useHPOverride: 0
+    hpOverride: 0
+    useSpeedOverride: 0
+    speedOverride: 0
+    useDropOverride: 0
+    dropOverride: []
+    disableOffscreenTeleport: 0
+  circularSpawn: 0
+  RushSpeed: {x: 0, y: 10}
+  RushDelay: {x: 0, y: 3}
+  enemiesCount: 1
 --- !u!114 &-2621914765529004469
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3178,7 +3618,7 @@ MonoBehaviour:
     m_Framerate: 60
     m_ScenePreview: 1
   m_DurationMode: 0
-  m_MarkerTrack: {fileID: 0}
+  m_MarkerTrack: {fileID: -7988660003753593280}
 --- !u!114 &631031616346852029
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3203,6 +3643,32 @@ MonoBehaviour:
     disableOffscreenTeleport: 0
   circularSpawn: 0
   continuousSpawnPerSecond: 10
+--- !u!114 &968624640840923229
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bd7a00e2bbd2d942bb9e827cd2475ec, type: 3}
+  m_Name: RushWave
+  m_EditorClassIdentifier: GameScripts::OctoberStudio.Timeline.RushWave
+  waveOverride:
+    useDamageOverride: 0
+    damageOverride: 0
+    useHPOverride: 0
+    hpOverride: 0
+    useSpeedOverride: 0
+    speedOverride: 0
+    useDropOverride: 0
+    dropOverride: []
+    disableOffscreenTeleport: 0
+  circularSpawn: 0
+  RushSpeed: {x: 0, y: 10}
+  RushDelay: {x: 0, y: 3}
+  enemiesCount: 5
 --- !u!114 &1721989256501747540
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3752,6 +4218,32 @@ MonoBehaviour:
   circularSpawn: 0
   enemiesCount: 15
   burstCount: 1
+--- !u!114 &5744831015573696923
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bd7a00e2bbd2d942bb9e827cd2475ec, type: 3}
+  m_Name: RushWave
+  m_EditorClassIdentifier: GameScripts::OctoberStudio.Timeline.RushWave
+  waveOverride:
+    useDamageOverride: 0
+    damageOverride: 0
+    useHPOverride: 0
+    hpOverride: 0
+    useSpeedOverride: 0
+    speedOverride: 0
+    useDropOverride: 0
+    dropOverride: []
+    disableOffscreenTeleport: 0
+  circularSpawn: 0
+  RushSpeed: {x: 0, y: 10}
+  RushDelay: {x: 0, y: 3}
+  enemiesCount: 2
 --- !u!114 &5974272227267686965
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4116,6 +4608,144 @@ MonoBehaviour:
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
     m_DisplayName: "\u7206\u53D1\u6CE2"
+  - m_Version: 1
+    m_Start: 295
+    m_ClipIn: 0
+    m_Asset: {fileID: -7010241277301818376}
+    m_Duration: 5
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7398283512120409334}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "\u77AC\u95EA\u6CE2"
+  - m_Version: 1
+    m_Start: 160
+    m_ClipIn: 0
+    m_Asset: {fileID: -4367704713882908462}
+    m_Duration: 5
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7398283512120409334}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "\u77AC\u95EA\u6CE2"
   m_Markers:
     m_Objects: []
   enemyType: 11
@@ -4350,3 +4980,29 @@ MonoBehaviour:
   m_Markers:
     m_Objects: []
   enemyType: 17
+--- !u!114 &7759416650406327303
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bd7a00e2bbd2d942bb9e827cd2475ec, type: 3}
+  m_Name: RushWave
+  m_EditorClassIdentifier: GameScripts::OctoberStudio.Timeline.RushWave
+  waveOverride:
+    useDamageOverride: 0
+    damageOverride: 0
+    useHPOverride: 0
+    hpOverride: 0
+    useSpeedOverride: 0
+    speedOverride: 0
+    useDropOverride: 0
+    dropOverride: []
+    disableOffscreenTeleport: 0
+  circularSpawn: 0
+  RushSpeed: {x: 0, y: 10}
+  RushDelay: {x: 0, y: 3}
+  enemiesCount: 20
