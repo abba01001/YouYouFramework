@@ -26,7 +26,7 @@ namespace GameScripts
                 await UniTask.Delay(Mathf.RoundToInt(delay * 1000));
             }
 
-            _enemy.SetEnemyAnimType(EnemyAnimType.Rush);
+            _enemy.SetEnemyAnimType(BehaviorType.RushBehavior);
             _rushDirection = (PlayerBehavior.Player.transform.position - transform.position).normalized;
 
             await CreateFixedPathLine();

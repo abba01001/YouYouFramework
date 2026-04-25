@@ -28,7 +28,7 @@ namespace OctoberStudio.Timeline.Bossfight
             StageController.GameScreen.ShowBossfightWarning();
 
             EasingManager.DoAfter(WarningDuration, () => {
-                StageController.Director.Pause();
+                StageController.PauseDirector(true);
 
                 StageController.GameScreen.HideBossFightWarning();
 
@@ -70,7 +70,7 @@ namespace OctoberStudio.Timeline.Bossfight
             StageController.GameScreen.HideBossHealthbar();
 
             StageController.FieldManager.RemoveFence();
-            StageController.Director.Play();
+            StageController.PauseDirector(false);
 
             StageController.EnemiesSpawner.IsBossfightActive = false;
         }

@@ -2,6 +2,7 @@ using OctoberStudio.Easing;
 using OctoberStudio.Pool;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace OctoberStudio.Drop
 {
@@ -11,7 +12,7 @@ namespace OctoberStudio.Drop
         [SerializeField] float particleDisableDelay;
         [SerializeField] string pickUpSoundName;
         private int pickUpSoundHash;
-         
+        protected event UnityAction onFinished;
         private static Dictionary<DropType, PoolComponent<ParticleSystem>> particlePools = new Dictionary<DropType, PoolComponent<ParticleSystem>>();
 
         private DropData dropData;
@@ -44,7 +45,11 @@ namespace OctoberStudio.Drop
                 particle.transform.position = transform.position;
                 particle.Play();
 
-                EasingManager.DoAfter(particleDisableDelay, () => { particle.gameObject.SetActive(false); });
+                EasingManager.DoAfter(particleDisableDelay, () =>
+                {
+                    onFinished?.Invoke();
+                    particle.gameObject.SetActive(false);
+                });
             }
 
             GameController.AudioManager.PlaySound(pickUpSoundHash);

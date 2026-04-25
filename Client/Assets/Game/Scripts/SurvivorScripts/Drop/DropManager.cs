@@ -3,11 +3,13 @@ using OctoberStudio.Easing;
 using OctoberStudio.Extensions;
 using OctoberStudio.Pool;
 using System.Collections.Generic;
+using Main;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace OctoberStudio
 {
@@ -149,16 +151,53 @@ namespace OctoberStudio
             }
         }
 
-        public virtual bool CheckDropCooldown(DropType dropType)
+        public void CheckDropDown(EnemyBehavior enemy,int enemyCount)
         {
-            return Time.time - lastTimeDropped[dropType] >= database.GetGemData(dropType).DropCooldown;
+            foreach(var dropData in enemy.GetDropData())
+            {
+                if (dropData.Chance == 0) continue;
+                var baseData = database.GetGemData<DropData>(dropData.DropType);
+                if (!CheckDropCooldown(baseData)) continue;
+                if(Random.value * 100 <= dropData.Chance)
+                {
+                    Drop(dropData.DropType, enemy.transform.position.XY() + Random.insideUnitCircle * 0.2f);
+                }
+            }
+            
+            TimeStopDropData timeStopDropData = database.GetGemData<TimeStopDropData>(DropType.TimeStop);
+            if (CheckDropCooldown(timeStopDropData))
+            {
+                HandleSpecialConditionDrop(timeStopDropData,enemy,enemyCount);
+            }
+        }
+
+        private void HandleSpecialConditionDrop(DropData baseData,EnemyBehavior enemy,int enemyCount)
+        {
+            switch (baseData.DropType)
+            {
+                case DropType.TimeStop:
+                    if (baseData is TimeStopDropData timeStopDropData)
+                    {
+                        if (enemyCount >= timeStopDropData.EnemyCount && Random.value * 100 <= timeStopDropData.Chance)
+                        {
+                            Drop(baseData.DropType, enemy.transform.position.XY() + Random.insideUnitCircle * 0.2f);
+                            Debugger.LogError("掉落TimeStop");
+                        }
+                    }
+                    break;
+            }
+        }
+        
+        public virtual bool CheckDropCooldown(DropData baseData)
+        {
+            return Time.time - lastTimeDropped[baseData.DropType] >= baseData.DropCooldown;
         }
 
         public virtual void Drop(DropType dropType, Vector3 position)
         {
             var drop = dropPools[dropType].GetEntity();
 
-            drop.Init(database.GetGemData(dropType));
+            drop.Init(database.GetGemData<DropData>(dropType));
             drop.transform.position = position;
 
             lastTimeDropped[dropType] = Time.time;

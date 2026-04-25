@@ -67,7 +67,7 @@ namespace OctoberStudio
         public Vector2 CustomPoint { get; protected set; }
 
         public float LastTimeDamagedPlayer { get; set; }
-        public EnemyAnimType CurAnimType { get; private set; } = EnemyAnimType.Default;
+        public BehaviorType CurAnimType { get; private set; } = BehaviorType.Default;
         private Material sharedMaterial;
         private Material effectsMaterial;
 
@@ -132,7 +132,7 @@ namespace OctoberStudio
 
         public bool CheckIsDoingSpecialBehavoir()
         {
-            if (CurAnimType != EnemyAnimType.Default) return true;
+            if (CurAnimType != BehaviorType.Default) return true;
             return false;
         }
 
@@ -415,20 +415,22 @@ namespace OctoberStudio
             }
         }
 
-        public void SetEnemyAnimType(EnemyAnimType enemyAnimType)
+        public void SetEnemyAnimType(BehaviorType behaviorType)
         {
-            CurAnimType = enemyAnimType;
+            CurAnimType = behaviorType;
             switch (CurAnimType)
             {
-                case EnemyAnimType.Default:
+                case BehaviorType.Default:
                     break;
-                case EnemyAnimType.Rush:
+                case BehaviorType.StopBehavior:
+                    break;
+                case BehaviorType.RushBehavior:
                     ResetToPlayerDirection();
                     break;
-                case EnemyAnimType.Flash:
+                case BehaviorType.FlashBehavior:
                     ResetToPlayerDirection();
                     break;
-                case EnemyAnimType.Circle:
+                case BehaviorType.CircleBehavior:
                     ResetToPlayerDirection();
                     break;
             }
@@ -436,15 +438,16 @@ namespace OctoberStudio
 
         public void ResetEnemyAnimType()
         {
-            CurAnimType = EnemyAnimType.Default;
+            CurAnimType = BehaviorType.Default;
         }
     }
 
-    public enum EnemyAnimType
+    public enum BehaviorType
     {
         Default,
-        Rush,
-        Flash,
-        Circle
+        StopBehavior,
+        RushBehavior,
+        FlashBehavior,
+        CircleBehavior
     }
 }

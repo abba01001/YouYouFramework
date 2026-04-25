@@ -269,19 +269,19 @@ namespace OctoberStudio.Abilities
                 selectedAbilities.Add(selectedAbility);
             }
 
-            if (!change)
-            {
-                change = true;
-                selectedAbilities.RemoveAt(0);
-                for (int i = 0; i < abilitiesDatabase.AbilitiesCount; i++)
-                {
-                    if (abilitiesDatabase.GetAbility(i).AbilityType == AbilityType.DestructiveAxe)
-                    {
-                        selectedAbilities.Add(abilitiesDatabase.GetAbility(i));
-                        break;
-                    }
-                }
-            }
+            // if (!change)
+            // {
+            //     change = true;
+            //     selectedAbilities.RemoveAt(0);
+            //     for (int i = 0; i < abilitiesDatabase.AbilitiesCount; i++)
+            //     {
+            //         if (abilitiesDatabase.GetAbility(i).AbilityType == AbilityType.DestructiveAxe)
+            //         {
+            //             selectedAbilities.Add(abilitiesDatabase.GetAbility(i));
+            //             break;
+            //         }
+            //     }
+            // }
             
             if(selectedAbilities.Count > 0)
             {

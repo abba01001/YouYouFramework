@@ -42,7 +42,7 @@ namespace OctoberStudio.Timeline
             for (int i = 0; i < count; i++)
             {
                 var enemy = list[i];
-                enemy.SetEnemyAnimType(EnemyAnimType.Circle);
+                enemy.SetEnemyAnimType(BehaviorType.CircleBehavior);
                 float angle = i * Mathf.PI * 2 / count;
                 Vector3 pos = player.position + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle)) * randomRadius;
                 enemy.transform.position = pos;

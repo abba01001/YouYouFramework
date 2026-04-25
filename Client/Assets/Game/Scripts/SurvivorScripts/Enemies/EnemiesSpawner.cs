@@ -347,6 +347,15 @@ namespace OctoberStudio
             enemies.Clear();
         }
 
+        public virtual void PauseEnemiesBehavior(bool pause)
+        {
+            BehaviorType behaviorType = pause ? BehaviorType.StopBehavior : BehaviorType.Default;
+            foreach (var enemy in enemies)
+            {
+                enemy.SetEnemyAnimType(behaviorType);
+            }
+        }
+        
         public virtual void DealDamageToAllEnemies(float damage)
         {
             var aliveEnemies = new List<EnemyBehavior>();
@@ -361,15 +370,8 @@ namespace OctoberStudio
                         enemy.onEnemyDied -= OnEnemyDied;
                         enemy.Kill();
 
-                        foreach (var dropData in enemy.GetDropData())
-                        {
-                            if (dropData.Chance == 0) continue;
+                        StageController.DropManager.CheckDropDown(enemy,enemies.Count);
 
-                            if (Random.value * 100 <= dropData.Chance && StageController.DropManager.CheckDropCooldown(dropData.DropType))
-                            {
-                                StageController.DropManager.Drop(dropData.DropType, enemy.transform.position.XY() + Random.insideUnitCircle * 0.2f);
-                            }
-                        }
                     } else
                     {
                         aliveEnemies.Add(enemy);
@@ -400,14 +402,7 @@ namespace OctoberStudio
             enemies.RemoveSwapBack(enemy);
             enemy.onEnemyDied -= OnEnemyDied;
 
-            foreach(var dropData in enemy.GetDropData())
-            {
-                if(dropData.Chance == 0) continue;
-                if(Random.value * 100 <= dropData.Chance && StageController.DropManager.CheckDropCooldown(dropData.DropType))
-                {
-                    StageController.DropManager.Drop(dropData.DropType, enemy.transform.position.XY() + Random.insideUnitCircle * 0.2f);
-                }
-            }
+            StageController.DropManager.CheckDropDown(enemy,enemies.Count);
 
             enemiesDiedCounter++;
             stageSave.EnemiesKilled = enemiesDiedCounter;

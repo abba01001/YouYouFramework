@@ -1,9 +1,11 @@
+using System;
 using OctoberStudio.Abilities;
 using OctoberStudio.Extensions;
 using OctoberStudio.Pool;
 using OctoberStudio.Timeline.Bossfight;
 using OctoberStudio.UI;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 
 namespace OctoberStudio
@@ -27,7 +29,6 @@ namespace OctoberStudio
         public static ExperienceManager ExperienceManager => instance.experienceManager;
         public static AbilityManager AbilityManager => instance.abilityManager;
         public static StageFieldManager FieldManager => instance.fieldManager;
-        public static PlayableDirector Director => instance.director;
         public static PoolsManager PoolsManager => instance.poolsManager;
         public static WorldSpaceTextManager WorldSpaceTextManager => instance.worldSpaceTextManager;
         public static CameraManager CameraController => instance.cameraManager;
@@ -99,9 +100,16 @@ namespace OctoberStudio
             }
         }
 
-        public void PauseDirector()
+        public static void PauseDirector(bool bo)
         {
-            director.Pause();
+            if (bo)
+            {
+                instance.director.Pause();
+            }
+            else
+            {
+                instance.director.Play();
+            }
         }
         
         private void TimelineStopped(PlayableDirector director)
