@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -5,8 +6,8 @@ namespace OctoberStudio.Timeline
 {
     public class ContinuousWave : WaveAsset
     {
-        [Header("Continuous Settings")]
-        [SerializeField, Min(0.01f)] float continuousSpawnPerSecond = 1;
+        [Header("持续波设置参数")]
+        [LabelText("每秒持续生成数量")][SerializeField, Min(0.01f)] float continuousSpawnPerSecond = 1;
 
         public override int EnemiesCount => (int)(continuousSpawnPerSecond * duration / 2);
 

@@ -1,81 +1,118 @@
 using UnityEngine;
 using UnityEditor;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 public class SpriteExtractor
 {
-    [MenuItem("Assets/Extract Sprites to Folder", false, 100)]
+    [MenuItem("Assets/提取图集", false, 100)]
     public static void ExtractSprites()
     {
-        Object selected = Selection.activeObject;
-        string path = AssetDatabase.GetAssetPath(selected);
-        Texture2D texture = selected as Texture2D;
-
-        if (texture == null)
+        Object[] selectedObjects = Selection.objects;
+        
+        if (selectedObjects == null || selectedObjects.Length == 0)
         {
-            Debug.LogError("请选择一张 Texture 图片！");
+            Debug.LogError("未选中任何资源！");
             return;
         }
 
-        // 1. 自动修改 Import Settings 确保可读
-        TextureImporter ti = AssetImporter.GetAtPath(path) as TextureImporter;
-        if (ti == null) return;
+        // 过滤出有效的贴图
+        List<Texture2D> targetTextures = selectedObjects
+            .Where(obj => obj is Texture2D)
+            .Cast<Texture2D>()
+            .ToList();
 
-        bool oldReadable = ti.isReadable;
-        TextureImporterCompression oldCompression = ti.textureCompression;
+        if (targetTextures.Count == 0) return;
 
-        if (!oldReadable || oldCompression != TextureImporterCompression.Uncompressed)
+        for (int i = 0; i < targetTextures.Count; i++)
         {
-            ti.isReadable = true;
-            ti.textureCompression = TextureImporterCompression.Uncompressed;
-            ti.SaveAndReimport();
-        }
+            Texture2D texture = targetTextures[i];
+            string path = AssetDatabase.GetAssetPath(texture);
+            
+            // 更新进度条 (第一层：总体文件进度)
+            float totalProgress = (float)i / targetTextures.Count;
+            EditorUtility.DisplayProgressBar("提取 Sprite 中...", $"正在处理图集 ({i + 1}/{targetTextures.Count}): {texture.name}", totalProgress);
 
-        try
-        {
-            // 2. 创建文件夹
-            string dirPath = Path.Combine(Path.GetDirectoryName(path), texture.name);
-            if (!Directory.Exists(dirPath)) Directory.CreateDirectory(dirPath);
+            TextureImporter ti = AssetImporter.GetAtPath(path) as TextureImporter;
+            if (ti == null) continue;
 
-            // 3. 提取所有 Sprite
-            Object[] assets = AssetDatabase.LoadAllAssetsAtPath(path);
-            int count = 0;
-            foreach (var asset in assets)
+            bool oldReadable = ti.isReadable;
+            TextureImporterCompression oldCompression = ti.textureCompression;
+
+            if (!oldReadable || oldCompression != TextureImporterCompression.Uncompressed)
             {
-                if (asset is Sprite sprite)
-                {
-                    SaveSpriteAsPng(sprite, Path.Combine(dirPath, sprite.name + ".png"));
-                    count++;
-                }
+                ti.isReadable = true;
+                ti.textureCompression = TextureImporterCompression.Uncompressed;
+                ti.SaveAndReimport();
             }
-            Debug.Log($"成功提取 {count} 张 Sprites 到: {dirPath}");
+
+            try
+            {
+                string dirPath = Path.Combine(Path.GetDirectoryName(path), texture.name);
+                if (!Directory.Exists(dirPath)) Directory.CreateDirectory(dirPath);
+
+                Object[] assets = AssetDatabase.LoadAllAssetsAtPath(path);
+                // 筛选出 Sprite
+                List<Sprite> sprites = assets.OfType<Sprite>().ToList();
+                
+                for (int j = 0; j < sprites.Count; j++)
+                {
+                    Sprite sprite = sprites[j];
+                    
+                    // 更新进度条 (第二层：单个图集内的进度)
+                    float subProgress = (float)j / sprites.Count;
+                    EditorUtility.DisplayProgressBar("提取 Sprite 中...", $"[{texture.name}] 正在导出: {sprite.name} ({j + 1}/{sprites.Count})", totalProgress + (subProgress / targetTextures.Count));
+
+                    string savePath = Path.Combine(dirPath, sprite.name + ".png");
+                    SaveSpriteAsPng(sprite, savePath);
+                    SetSpriteImportSettings(savePath);
+                }
+                Debug.Log($"{texture.name}：成功提取 {sprites.Count} 张 Sprites");
+            }
+            finally
+            {
+                ti.isReadable = oldReadable;
+                ti.textureCompression = oldCompression;
+                ti.SaveAndReimport();
+            }
         }
-        finally
-        {
-            // 4. 还原设置，避免占用内存或影响包体大小
-            ti.isReadable = oldReadable;
-            ti.textureCompression = oldCompression;
-            ti.SaveAndReimport();
-            AssetDatabase.Refresh();
-        }
+
+        // 必须执行，否则进度条会卡死在屏幕上
+        EditorUtility.ClearProgressBar();
+        AssetDatabase.Refresh();
     }
 
     private static void SaveSpriteAsPng(Sprite sprite, string savePath)
     {
         Texture2D tex = sprite.texture;
         Rect r = sprite.textureRect;
-        
-        // 使用该构造函数可以支持透明度
         Texture2D newTex = new Texture2D((int)r.width, (int)r.height, TextureFormat.RGBA32, false);
-        
-        // 核心：从原图获取指定区域的像素
         Color[] pixels = tex.GetPixels((int)r.x, (int)r.y, (int)r.width, (int)r.height);
-        
         newTex.SetPixels(pixels);
         newTex.Apply();
-
         byte[] bytes = newTex.EncodeToPNG();
         File.WriteAllBytes(savePath, bytes);
         Object.DestroyImmediate(newTex);
+    }
+
+    private static void SetSpriteImportSettings(string assetPath)
+    {
+        string unityPath = assetPath.Replace(Application.dataPath, "Assets").Replace("\\", "/");
+        if (!unityPath.StartsWith("Assets"))
+        {
+            int index = assetPath.IndexOf("Assets");
+            if (index != -1) unityPath = assetPath.Substring(index).Replace("\\", "/");
+        }
+
+        AssetDatabase.ImportAsset(unityPath, ImportAssetOptions.ForceUpdate);
+        TextureImporter ti = AssetImporter.GetAtPath(unityPath) as TextureImporter;
+        if (ti != null)
+        {
+            ti.textureType = TextureImporterType.Sprite;
+            ti.spriteImportMode = SpriteImportMode.Single;
+            ti.mipmapEnabled = false;
+            ti.SaveAndReimport();
+        }
     }
 }

@@ -10,42 +10,23 @@ namespace OctoberStudio.UI
     public class UITimer : MonoBehaviour
     {
         [SerializeField] protected TMP_Text timerText;
-
+        protected int lastSeconds = -1;
         protected IEasingCoroutine alphaCoroutine;
         protected StageSave stageSave;
-        private float tempTimer = 0f;
         private IDisposable disposable;
-        public void EnableTimer()
+
+        private void Update()
         {
-            stageSave = GameController.SaveManager.StageData;
             
-            timerText.text = ToMMSS(tempTimer);
-            stageSave.Time = tempTimer;
-            disposable?.Dispose();
-            disposable = Observable.Interval(TimeSpan.FromSeconds(1f)).Subscribe(_ =>
+            var timespan = TimeSpan.FromSeconds(StageController.GetDirectorTime());
+            if(timespan.Seconds != lastSeconds)
             {
-                tempTimer += 1f;
-                timerText.text = ToMMSS(tempTimer);
-                stageSave.Time = tempTimer;
-            });
-        }
+                lastSeconds = timespan.Seconds;
 
-        public void StopTimer()
-        {
-            disposable?.Dispose();
-        }
-        
-        public static string ToMMSS(float totalSeconds)
-        {
-            // 防止负数
-            totalSeconds = Mathf.Max(0, totalSeconds);
+                timerText.text = string.Format("{0:mm\\:ss}", timespan);
 
-            // 计算分钟、秒
-            int minutes = Mathf.FloorToInt(totalSeconds / 60f);
-            int seconds = Mathf.FloorToInt(totalSeconds % 60f);
-
-            // 格式化为两位数字，不足补0
-            return $"{minutes:00}:{seconds:00}";
+                GameController.SaveManager.StageData.Time = (float)StageController.GetDirectorTime();
+            }
         }
 
         public void Show()

@@ -8,11 +8,11 @@ namespace OctoberStudio.Timeline
     {
         [Header("Flash 专属参数")]
         [LabelText("闪现到玩家周边的距离(区间随机值)"), MinMaxSlider(0f, 2f)] public Vector2 SpawnDistanceRange =  new Vector2(0f, 2f);
-        [LabelText("达到此距离触发闪现(区间随机值)"), MinMaxSlider(0f, 5f)] public Vector2 FlashDistance =  new Vector2(0f, 5f);
+        [LabelText("达到此距离触发闪现(区间随机值)"), MinMaxSlider(2f, 5f)] public Vector2 FlashDistance =  new Vector2(2f, 5f);
         [LabelText("闪现前的僵直时间(区间随机值)"), MinMaxSlider(0f, 2f)] [Min(0)]  public Vector2 FlashDelay =  new Vector2(0f, 2f);
         
         [LabelText("轨迹/残影颜色")] public Color PathColor;
-        [LabelText("敌人数量")] [Range(1, 100)] public int enemiesCount;
+        [LabelText("敌人数量")] [Range(1, 100)] public int enemiesCount = 1;
 
         public override int EnemiesCount => enemiesCount;
 

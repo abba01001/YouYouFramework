@@ -94,13 +94,17 @@ namespace OctoberStudio.Enemy
             if (!IsAlive) return;
 
             var projectilesCount = Random.Range(minProjectilesPerAttack, maxProjectilesPerAttack + 1);
-
-            if(attackType == AttackType.Circular)
+            switch (attackType)
             {
-                StartCoroutine(CircularAttack(projectilesCount));
-            } else
-            {
-                StartCoroutine(AtPlayerAttack(projectilesCount));
+                case AttackType.Circular:
+                    StartCoroutine(CircularAttack(projectilesCount));
+                    break;
+                case AttackType.AtPlayer:
+                    StartCoroutine(AtPlayerAttack(projectilesCount));
+                    break;
+                default:
+                    StartCoroutine(AtPlayerAttack(projectilesCount));
+                    break;
             }
         }
 

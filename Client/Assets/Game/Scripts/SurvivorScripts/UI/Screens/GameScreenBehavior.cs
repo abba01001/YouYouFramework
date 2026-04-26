@@ -59,7 +59,6 @@ namespace OctoberStudio
             pauseWindow.OnClosed += OnPauseWindowClosed;
 
             chestWindow.OnClosed += OnChestWindowClosed;
-            uiTimer.EnableTimer();
         }
 
         public float refreshInterval = 0.1f;
@@ -105,7 +104,6 @@ namespace OctoberStudio
         public void Hide(Action onFinish = null)
         {
             canvas.enabled = false;
-            uiTimer.StopTimer();
             onFinish?.Invoke();
         }
 

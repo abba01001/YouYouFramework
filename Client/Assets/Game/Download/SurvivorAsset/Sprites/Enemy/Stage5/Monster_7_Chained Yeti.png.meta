@@ -1,0 +1,429 @@
+fileFormatVersion: 2
+guid: 33d0b554d3b28dc4298149c3b0e913d1
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Monster_7_Chained Yeti_45
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 120
+        height: 127
+      alignment: 9
+      pivot: {x: 0.49583334, y: 0.496063}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e59b160f99bfd1b0800000000000000
+      internalID: -5629576916536420895
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_7_Chained Yeti_44
+      rect:
+        serializedVersion: 2
+        x: 122
+        y: 0
+        width: 118
+        height: 128
+      alignment: 9
+      pivot: {x: 0.4957627, y: 0.49609375}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a55a9de58a1f47b10800000000000000
+      internalID: 1978471841770612058
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_7_Chained Yeti_46
+      rect:
+        serializedVersion: 2
+        x: 242
+        y: 0
+        width: 120
+        height: 124
+      alignment: 9
+      pivot: {x: 0.49583334, y: 0.49596775}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d65f6f65bfec54730800000000000000
+      internalID: 3982817024370210157
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_7_Chained Yeti_43
+      rect:
+        serializedVersion: 2
+        x: 364
+        y: 0
+        width: 116
+        height: 127
+      alignment: 9
+      pivot: {x: 0.49568966, y: 0.496063}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77ba32cdc21877a60800000000000000
+      internalID: 7671742519920798583
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_7_Chained Yeti_47
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 130
+        width: 118
+        height: 124
+      alignment: 9
+      pivot: {x: 0.4957627, y: 0.49596775}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aea8e861a6308bdf0800000000000000
+      internalID: -164377632219165974
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_7_Chained Yeti_35
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 130
+        width: 117
+        height: 125
+      alignment: 9
+      pivot: {x: 0.4957265, y: 0.496}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80cb7d3e343d2ef00800000000000000
+      internalID: 1144709543844363272
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_7_Chained Yeti_36d
+      rect:
+        serializedVersion: 2
+        x: 239
+        y: 130
+        width: 114
+        height: 127
+      alignment: 9
+      pivot: {x: 0.49561402, y: 0.496063}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc528bfc7bf184940800000000000000
+      internalID: 5280505437416334799
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_7_Chained Yeti_37
+      rect:
+        serializedVersion: 2
+        x: 355
+        y: 130
+        width: 113
+        height: 127
+      alignment: 9
+      pivot: {x: 0.49557522, y: 0.496063}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d06d708b64c5d290800000000000000
+      internalID: -7866165208136458027
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_7_Chained Yeti_38
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 259
+        width: 112
+        height: 128
+      alignment: 9
+      pivot: {x: 0.4955357, y: 0.49609375}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a37db2bad07bcdc0800000000000000
+      internalID: -3617673791058119775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_7_Chained Yeti_39
+      rect:
+        serializedVersion: 2
+        x: 114
+        y: 259
+        width: 111
+        height: 129
+      alignment: 9
+      pivot: {x: 0.4954955, y: 0.49612403}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0957167f2aa8f0880800000000000000
+      internalID: -8642536727360998000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_7_Chained Yeti_42
+      rect:
+        serializedVersion: 2
+        x: 227
+        y: 259
+        width: 112
+        height: 127
+      alignment: 9
+      pivot: {x: 0.4955357, y: 0.496063}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ca74947a749484bf0800000000000000
+      internalID: -339941199768369236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_7_Chained Yeti_40
+      rect:
+        serializedVersion: 2
+        x: 341
+        y: 259
+        width: 110
+        height: 125
+      alignment: 9
+      pivot: {x: 0.49545455, y: 0.496}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8653931e1271f4fc0800000000000000
+      internalID: -3508560150418344600
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_7_Chained Yeti_41
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 390
+        width: 109
+        height: 125
+      alignment: 9
+      pivot: {x: 0.49541286, y: 0.496}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ce5b8631f9423a20800000000000000
+      internalID: 3040573998779555520
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Monster_7_Chained Yeti_35: 1144709543844363272
+      Monster_7_Chained Yeti_36d: 5280505437416334799
+      Monster_7_Chained Yeti_37: -7866165208136458027
+      Monster_7_Chained Yeti_38: -3617673791058119775
+      Monster_7_Chained Yeti_39: -8642536727360998000
+      Monster_7_Chained Yeti_40: -3508560150418344600
+      Monster_7_Chained Yeti_41: 3040573998779555520
+      Monster_7_Chained Yeti_42: -339941199768369236
+      Monster_7_Chained Yeti_43: 7671742519920798583
+      Monster_7_Chained Yeti_44: 1978471841770612058
+      Monster_7_Chained Yeti_45: -5629576916536420895
+      Monster_7_Chained Yeti_46: 3982817024370210157
+      Monster_7_Chained Yeti_47: -164377632219165974
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

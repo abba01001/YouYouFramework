@@ -16,7 +16,7 @@ public class SpriteAtlasBuilder : EditorWindow
     private List<Texture2D> selectedTextures;
     private string targetFolderPath;
 
-    [MenuItem("Assets/Combine Sprites into Atlas & Prefab", false, 101)]
+    [MenuItem("Assets/生成序列帧动画预制体", false, 101)]
     public static void CombineSelectedSprites()
     {
         var textures = Selection.objects
@@ -30,7 +30,7 @@ public class SpriteAtlasBuilder : EditorWindow
             EditorUtility.DisplayDialog("提示", "请在 Project 窗口选择多个图片", "确定");
             return;
         }
-
+        
         string firstPath = AssetDatabase.GetAssetPath(textures[0]);
         string folderPath = Path.GetDirectoryName(firstPath);
 
@@ -42,6 +42,14 @@ public class SpriteAtlasBuilder : EditorWindow
 
     private void OnGUI()
     {
+        if (selectedTextures.Count > 0)
+        {
+            string path = AssetDatabase.GetAssetPath(selectedTextures[0]);
+            string folderName = System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(path));
+            saveAssetName = folderName;
+        }
+
+        
         GUILayout.Label("全流程生成器 (图集+动画+预制体)", EditorStyles.boldLabel);
         saveAssetName = EditorGUILayout.TextField("资源名称", saveAssetName);
         padding = EditorGUILayout.IntField("图集间隔 (Padding)", padding);
@@ -57,8 +65,20 @@ public class SpriteAtlasBuilder : EditorWindow
                 Close();
             }
         }
+
+        if (!isDoing)
+        {
+            isDoing = true;
+            if (selectedTextures != null && selectedTextures.Count > 0)
+            {
+                BuildAtlas(selectedTextures, targetFolderPath, padding, maxAtlasSize);
+                Close();
+            }
+        }
     }
 
+    private bool isDoing = false;
+    
     private void BuildAtlas(List<Texture2D> textures, string spriteAssetFolder, int padding, int maxSize)
     {
         importerBackup.Clear();

@@ -1,0 +1,429 @@
+fileFormatVersion: 2
+guid: 8431baee2afc9ef42b6802460040656d
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Monster_5_Yeti_44
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 117
+        height: 127
+      alignment: 9
+      pivot: {x: 0.4957265, y: 0.496063}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 130dc7d1cf372c230800000000000000
+      internalID: 3657613374041935921
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_5_Yeti_43
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 0
+        width: 115
+        height: 128
+      alignment: 9
+      pivot: {x: 0.49565217, y: 0.49609375}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64b9b71b98d4d7b80800000000000000
+      internalID: -8395468876565210298
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_5_Yeti_45
+      rect:
+        serializedVersion: 2
+        x: 236
+        y: 0
+        width: 117
+        height: 124
+      alignment: 9
+      pivot: {x: 0.4957265, y: 0.49596775}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 525178cbe096195c0800000000000000
+      internalID: -4210468664601275099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_5_Yeti_46
+      rect:
+        serializedVersion: 2
+        x: 355
+        y: 0
+        width: 116
+        height: 124
+      alignment: 9
+      pivot: {x: 0.49568966, y: 0.49596775}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 71fd300cea5fe3ba0800000000000000
+      internalID: -6107173913773220073
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_5_Yeti_34
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 130
+        width: 115
+        height: 125
+      alignment: 9
+      pivot: {x: 0.49565217, y: 0.496}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96c1504f9db01f9d0800000000000000
+      internalID: -2742397667362136983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_5_Yeti_42
+      rect:
+        serializedVersion: 2
+        x: 117
+        y: 130
+        width: 113
+        height: 127
+      alignment: 9
+      pivot: {x: 0.49557522, y: 0.496063}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7410140061b94970800000000000000
+      internalID: 8739711577832297595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_5_Yeti_35d
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 130
+        width: 112
+        height: 127
+      alignment: 9
+      pivot: {x: 0.4955357, y: 0.496063}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1efaa71b5630311d0800000000000000
+      internalID: -3381355159920922655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_5_Yeti_36
+      rect:
+        serializedVersion: 2
+        x: 346
+        y: 130
+        width: 111
+        height: 127
+      alignment: 9
+      pivot: {x: 0.4954955, y: 0.496063}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3cfe2cc877655af60800000000000000
+      internalID: 8044931380829941699
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_5_Yeti_37
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 259
+        width: 110
+        height: 128
+      alignment: 9
+      pivot: {x: 0.49545455, y: 0.49609375}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 591e8a804ffa68cd0800000000000000
+      internalID: -2556162275834011243
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_5_Yeti_38
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 259
+        width: 109
+        height: 129
+      alignment: 9
+      pivot: {x: 0.49541286, y: 0.49612403}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06237063ee48a36b0800000000000000
+      internalID: -5315790251513925024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_5_Yeti_41
+      rect:
+        serializedVersion: 2
+        x: 223
+        y: 259
+        width: 110
+        height: 127
+      alignment: 9
+      pivot: {x: 0.49545455, y: 0.496063}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9dc9ae5b9c1178320800000000000000
+      internalID: 2560034471221566681
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_5_Yeti_39
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 259
+        width: 108
+        height: 125
+      alignment: 9
+      pivot: {x: 0.49537036, y: 0.496}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 93fba4aa33edded90800000000000000
+      internalID: -7066747926792716487
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_5_Yeti_40
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 390
+        width: 107
+        height: 125
+      alignment: 9
+      pivot: {x: 0.49532712, y: 0.496}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ffc4a50f4ee774140800000000000000
+      internalID: 4703867857561865471
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Monster_5_Yeti_34: -2742397667362136983
+      Monster_5_Yeti_35d: -3381355159920922655
+      Monster_5_Yeti_36: 8044931380829941699
+      Monster_5_Yeti_37: -2556162275834011243
+      Monster_5_Yeti_38: -5315790251513925024
+      Monster_5_Yeti_39: -7066747926792716487
+      Monster_5_Yeti_40: 4703867857561865471
+      Monster_5_Yeti_41: 2560034471221566681
+      Monster_5_Yeti_42: 8739711577832297595
+      Monster_5_Yeti_43: -8395468876565210298
+      Monster_5_Yeti_44: 3657613374041935921
+      Monster_5_Yeti_45: -4210468664601275099
+      Monster_5_Yeti_46: -6107173913773220073
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -142,6 +142,11 @@ namespace OctoberStudio
             }
         }
 
+        public static double GetDirectorTime()
+        {
+            return instance.director.time;
+        }
+        
         private void OnGameFailed()
         {
             Time.timeScale = 0;

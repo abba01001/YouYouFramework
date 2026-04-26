@@ -340,3 +340,174 @@ MonoBehaviour:
       chance: 5
     - dropType: 100
       chance: 0
+  - type: 19
+    prefab: {fileID: 1090571174421192766, guid: 2acec85e53a75ca49ab8833362d22f04,
+      type: 3}
+    icon: {fileID: 21300000, guid: cfcb456b8d5652342bb02c18413dfee9, type: 3}
+    enemyDrop:
+    - dropType: 0
+      chance: 80
+    - dropType: 1
+      chance: 10
+    - dropType: 2
+      chance: 5
+    - dropType: 10
+      chance: 0
+    - dropType: 20
+      chance: 0
+    - dropType: 30
+      chance: 1
+    - dropType: 40
+      chance: 1
+    - dropType: 100
+      chance: 0
+  - type: 20
+    prefab: {fileID: 1090571174421192766, guid: 562dc9dedd7d07645a393a5a51243f08,
+      type: 3}
+    icon: {fileID: 21300000, guid: 6d48b19119d953743af4080be6033a82, type: 3}
+    enemyDrop:
+    - dropType: 0
+      chance: 80
+    - dropType: 1
+      chance: 20
+    - dropType: 2
+      chance: 10
+    - dropType: 3
+      chance: 1
+    - dropType: 10
+      chance: 0
+    - dropType: 20
+      chance: 0
+    - dropType: 30
+      chance: 1
+    - dropType: 40
+      chance: 1
+    - dropType: 100
+      chance: 0
+  - type: 21
+    prefab: {fileID: 1090571174421192766, guid: 3cd0848cfd4f176408f13a0dadbabf49,
+      type: 3}
+    icon: {fileID: 21300000, guid: c3ce5754d4b447546bdeb87c8b1e2c93, type: 3}
+    enemyDrop:
+    - dropType: 0
+      chance: 100
+    - dropType: 1
+      chance: 50
+    - dropType: 2
+      chance: 10
+    - dropType: 10
+      chance: 1
+    - dropType: 20
+      chance: 0
+    - dropType: 30
+      chance: 1
+    - dropType: 40
+      chance: 1
+    - dropType: 100
+      chance: 0
+  - type: 22
+    prefab: {fileID: 1090571174421192766, guid: 6476bef088727ec4a8ed9e3c2db15044,
+      type: 3}
+    icon: {fileID: 21300000, guid: d6470c08afd473f4fbe7179a6014bb1a, type: 3}
+    enemyDrop:
+    - dropType: 0
+      chance: 100
+    - dropType: 1
+      chance: 60
+    - dropType: 2
+      chance: 30
+    - dropType: 10
+      chance: 10
+    - dropType: 20
+      chance: 0
+    - dropType: 30
+      chance: 1
+    - dropType: 40
+      chance: 1
+    - dropType: 100
+      chance: 0
+  - type: 23
+    prefab: {fileID: 1090571174421192766, guid: 830b096c767168146bbd7b9366322ba8,
+      type: 3}
+    icon: {fileID: 21300000, guid: 7ca12c7bb82420841bb24ead95c39a77, type: 3}
+    enemyDrop:
+    - dropType: 1
+      chance: 100
+    - dropType: 2
+      chance: 75
+    - dropType: 3
+      chance: 50
+    - dropType: 10
+      chance: 1
+    - dropType: 20
+      chance: 1
+    - dropType: 30
+      chance: 1
+    - dropType: 40
+      chance: 1
+    - dropType: 100
+      chance: 25
+  - type: 24
+    prefab: {fileID: 1090571174421192766, guid: 26ef7e2f0680d7f48bba3b2ebeb8f565,
+      type: 3}
+    icon: {fileID: 21300000, guid: d5898aafc6e0030489c900aa8a3d4897, type: 3}
+    enemyDrop:
+    - dropType: 2
+      chance: 100
+    - dropType: 3
+      chance: 90
+    - dropType: 10
+      chance: 1
+    - dropType: 20
+      chance: 1
+    - dropType: 30
+      chance: 1
+    - dropType: 40
+      chance: 1
+    - dropType: 100
+      chance: 33
+  - type: 25
+    prefab: {fileID: 913619665331936252, guid: 7cd7d739d0b4ce04c81e060682c53a61, type: 3}
+    icon: {fileID: 21300000, guid: 7b9e5c4d3989fce489c9696cf2bf77ee, type: 3}
+    enemyDrop: []
+  - type: 26
+    prefab: {fileID: 1090571174421192766, guid: a5d765d2ef83a684498c7f43ef5e5f6c,
+      type: 3}
+    icon: {fileID: 21300000, guid: 1b0824ceef413b64db8e540d1fbc6947, type: 3}
+    enemyDrop:
+    - dropType: 2
+      chance: 60
+    - dropType: 10
+      chance: 1
+    - dropType: 20
+      chance: 0
+    - dropType: 30
+      chance: 1
+    - dropType: 40
+      chance: 1
+    - dropType: 100
+      chance: 0
+  - type: 27
+    prefab: {fileID: 1090571174421192766, guid: 614dcf367dd390644ab162b12f86d6de,
+      type: 3}
+    icon: {fileID: 21300000, guid: d946e1efe68f9404bb71e06da07e3f09, type: 3}
+    enemyDrop:
+    - dropType: 1
+      chance: 100
+    - dropType: 2
+      chance: 40
+    - dropType: 10
+      chance: 0
+    - dropType: 20
+      chance: 0
+    - dropType: 30
+      chance: 1
+    - dropType: 40
+      chance: 1
+    - dropType: 100
+      chance: 0
+  - type: 28
+    prefab: {fileID: 2148851290383219646, guid: 72920b268f5a4bd46bf7400ad99f5227,
+      type: 3}
+    icon: {fileID: 21300000, guid: a17e75f36301a8e4c86ddd4541970eb5, type: 3}
+    enemyDrop: []

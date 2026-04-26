@@ -90,6 +90,10 @@ namespace OctoberStudio
 
         protected virtual void Awake()
         {
+            if (spriteRenderer == null)
+            {
+                spriteRenderer = transform.GetComponentInChildren<SpriteRenderer>();
+            }
             sharedMaterial = spriteRenderer.sharedMaterial;
             effectsMaterial = Instantiate(sharedMaterial);
 
