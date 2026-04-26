@@ -78,7 +78,7 @@ namespace OctoberStudio
             {
                 if (IsTargetLocked && Target != null)
                 {
-                    Target.TakeDamage(DamagePerSecond * PlayerBehavior.Player.Damage * DamageInterval);
+                    Target.TakeDamage(DamagePerSecond * PlayerBehavior.Player.GetDamageValue() * DamageInterval);
                 }
 
                 var closeEnemies = StageController.EnemiesSpawner.GetEnemiesInRadius(transform.position, AdditionalDamageRadius);
@@ -87,7 +87,7 @@ namespace OctoberStudio
                 {
                     if(enemy != Target)
                     {
-                        enemy.TakeDamage(AdditionalDamagePerSecond * PlayerBehavior.Player.Damage * DamageInterval);
+                        enemy.TakeDamage(AdditionalDamagePerSecond * PlayerBehavior.Player.GetDamageValue() * DamageInterval);
                     }
                 }
 

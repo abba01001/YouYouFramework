@@ -32,7 +32,7 @@ MonoBehaviour:
   levels:
   - abilityCooldown: 0.75
     projectilesCount: 5
-    damage: 30
+    damage: 20
     slashSize: 1.2
     distance: 5
     timeBetweenSlashes: 0

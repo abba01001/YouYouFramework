@@ -48,13 +48,13 @@ namespace OctoberStudio.Abilities
                     {
                         particle.transform.position = enemy.transform.position;
 
-                        enemy.TakeDamage(PlayerBehavior.Player.Damage * AbilityLevel.Damage);
+                        enemy.TakeDamage(PlayerBehavior.Player.GetDamageValue() * AbilityLevel.Damage);
 
                         var enemiesInRadius = StageController.EnemiesSpawner.GetEnemiesInRadius(enemy.transform.position, AbilityLevel.AdditionalDamageRadius);
 
                         foreach(var closeEnemy in enemiesInRadius)
                         {
-                            if (closeEnemy != enemy) closeEnemy.TakeDamage(PlayerBehavior.Player.Damage * AbilityLevel.AdditionalDamage);
+                            if (closeEnemy != enemy) closeEnemy.TakeDamage(PlayerBehavior.Player.GetDamageValue() * AbilityLevel.AdditionalDamage);
                         }
                     } else
                     {

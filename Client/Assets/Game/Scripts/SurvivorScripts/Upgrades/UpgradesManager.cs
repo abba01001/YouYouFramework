@@ -60,16 +60,21 @@ namespace OctoberStudio.Upgrades
             return database.GetUpgrade(upgradeType);
         }
 
-        public float GetUpgadeValue(UpgradeType upgradeType)
+        public float GetUpgadeValue(UpgradeType upgradeType,ValueType valueType)
         {
             var data = GetUpgradeData(upgradeType);
             var level = GetUpgradeLevel(upgradeType);
 
             if(level >= 0)
             {
-                return data.GetLevel(level).Value;
+                switch (valueType)
+                {
+                    case ValueType.AddValue:
+                        return data.GetLevel(level).AddValue;
+                    case ValueType.MultiplyValue:
+                        return data.GetLevel(level).MultiplyValue;
+                }
             }
-
             return 0;
         }
     }

@@ -26,31 +26,31 @@ MonoBehaviour:
   levels:
   - abilityCooldown: 1
     projectilesCount: 1
-    damage: 10
+    damage: 3
     slashSize: 1.2
     distance: 3
     timeBetweenSlashes: 0
   - abilityCooldown: 0.8
     projectilesCount: 2
-    damage: 10
+    damage: 5
     slashSize: 1.2
     distance: 3
     timeBetweenSlashes: 0
   - abilityCooldown: 0.6
     projectilesCount: 3
-    damage: 15
+    damage: 8
     slashSize: 1.2
     distance: 3
     timeBetweenSlashes: 0
   - abilityCooldown: 0.5
     projectilesCount: 4
-    damage: 15
+    damage: 10
     slashSize: 1.2
     distance: 4
     timeBetweenSlashes: 0
   - abilityCooldown: 0.3
     projectilesCount: 5
-    damage: 20
+    damage: 15
     slashSize: 1.2
     distance: 5
     timeBetweenSlashes: 0

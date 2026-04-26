@@ -51,7 +51,7 @@ namespace OctoberStudio.Abilities
             {
                 var enemy = enemies[i];
 
-                enemy.TakeDamage(PlayerBehavior.Player.Damage * DamageMultiplier);
+                enemy.TakeDamage(PlayerBehavior.Player.GetDamageValue() * DamageMultiplier);
             }
 
             explosionParticle.Play();

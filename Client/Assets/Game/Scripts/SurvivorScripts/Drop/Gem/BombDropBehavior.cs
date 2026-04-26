@@ -10,7 +10,7 @@ namespace OctoberStudio.Drop
         {
             base.OnPickedUp();
             
-            StageController.EnemiesSpawner.DealDamageToAllEnemies(PlayerBehavior.Player.Damage * damageMultiplier);
+            StageController.EnemiesSpawner.DealDamageToAllEnemies(PlayerBehavior.Player.GetDamageValue() * damageMultiplier);
 
             gameObject.SetActive(false);
         }

@@ -16,12 +16,314 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: b500287734c36194abb87d59e0cc108c, type: 3}
   title: DAMAGE
   devStartLevel: -1
+  baseAdd_Damage: 2
+  addStep_Damage: 0.35
+  baseAdd_Health: 20
+  addStep_Health: 4
+  baseAdd_Armor: 1
+  addStep_Armor: 0.15
+  baseAdd_Healing: 0.5
+  addStep_Healing: 0.1
+  baseCost: 45
+  costFactor: 1.082
   levels:
+  - cost: 40
+    addValue: 2
+    multiplyValue: 1
+  - cost: 50
+    addValue: 2.35
+    multiplyValue: 1
+  - cost: 50
+    addValue: 2.7
+    multiplyValue: 1
+  - cost: 60
+    addValue: 3.05
+    multiplyValue: 1
+  - cost: 60
+    addValue: 3.4
+    multiplyValue: 1
+  - cost: 70
+    addValue: 3.75
+    multiplyValue: 1
+  - cost: 70
+    addValue: 4.1
+    multiplyValue: 1
+  - cost: 80
+    addValue: 4.45
+    multiplyValue: 1
+  - cost: 80
+    addValue: 4.8
+    multiplyValue: 1
+  - cost: 90
+    addValue: 5.15
+    multiplyValue: 1
+  - cost: 100
+    addValue: 5.5
+    multiplyValue: 1
+  - cost: 110
+    addValue: 5.85
+    multiplyValue: 1
+  - cost: 120
+    addValue: 6.2
+    multiplyValue: 1
+  - cost: 120
+    addValue: 6.5499997
+    multiplyValue: 1
+  - cost: 140
+    addValue: 6.9
+    multiplyValue: 1
+  - cost: 150
+    addValue: 7.25
+    multiplyValue: 1
+  - cost: 160
+    addValue: 7.6
+    multiplyValue: 1
+  - cost: 170
+    addValue: 7.95
+    multiplyValue: 1
+  - cost: 190
+    addValue: 8.3
+    multiplyValue: 1
   - cost: 200
-    value: 1.25
-  - cost: 400
-    value: 1.5
-  - cost: 1000
-    value: 1.75
-  - cost: 2000
-    value: 2
+    addValue: 8.65
+    multiplyValue: 1
+  - cost: 220
+    addValue: 9
+    multiplyValue: 1
+  - cost: 240
+    addValue: 9.349999
+    multiplyValue: 1
+  - cost: 260
+    addValue: 9.7
+    multiplyValue: 1
+  - cost: 280
+    addValue: 10.05
+    multiplyValue: 1
+  - cost: 300
+    addValue: 10.4
+    multiplyValue: 1
+  - cost: 320
+    addValue: 10.75
+    multiplyValue: 1
+  - cost: 350
+    addValue: 11.099999
+    multiplyValue: 1
+  - cost: 380
+    addValue: 11.45
+    multiplyValue: 1
+  - cost: 410
+    addValue: 11.8
+    multiplyValue: 1
+  - cost: 440
+    addValue: 12.15
+    multiplyValue: 1
+  - cost: 480
+    addValue: 12.5
+    multiplyValue: 1
+  - cost: 520
+    addValue: 12.849999
+    multiplyValue: 1
+  - cost: 560
+    addValue: 13.2
+    multiplyValue: 1
+  - cost: 610
+    addValue: 13.55
+    multiplyValue: 1
+  - cost: 660
+    addValue: 13.9
+    multiplyValue: 1
+  - cost: 710
+    addValue: 14.25
+    multiplyValue: 1
+  - cost: 770
+    addValue: 14.599999
+    multiplyValue: 1
+  - cost: 830
+    addValue: 14.95
+    multiplyValue: 1
+  - cost: 900
+    addValue: 15.3
+    multiplyValue: 1
+  - cost: 970
+    addValue: 15.65
+    multiplyValue: 1
+  - cost: 1050
+    addValue: 16
+    multiplyValue: 1
+  - cost: 1140
+    addValue: 16.35
+    multiplyValue: 1
+  - cost: 1230
+    addValue: 16.699999
+    multiplyValue: 1
+  - cost: 1330
+    addValue: 17.05
+    multiplyValue: 1
+  - cost: 1440
+    addValue: 17.4
+    multiplyValue: 1
+  - cost: 1560
+    addValue: 17.75
+    multiplyValue: 1
+  - cost: 1690
+    addValue: 18.1
+    multiplyValue: 1
+  - cost: 1830
+    addValue: 18.449999
+    multiplyValue: 1
+  - cost: 1980
+    addValue: 18.8
+    multiplyValue: 1
+  - cost: 2140
+    addValue: 19.15
+    multiplyValue: 1
+  - cost: 2320
+    addValue: 19.5
+    multiplyValue: 1
+  - cost: 2500
+    addValue: 19.85
+    multiplyValue: 1
+  - cost: 2710
+    addValue: 20.199999
+    multiplyValue: 1
+  - cost: 2930
+    addValue: 20.55
+    multiplyValue: 1
+  - cost: 3170
+    addValue: 20.9
+    multiplyValue: 1
+  - cost: 3430
+    addValue: 21.25
+    multiplyValue: 1
+  - cost: 3720
+    addValue: 21.6
+    multiplyValue: 1
+  - cost: 4020
+    addValue: 21.949999
+    multiplyValue: 1
+  - cost: 4350
+    addValue: 22.3
+    multiplyValue: 1
+  - cost: 4710
+    addValue: 22.65
+    multiplyValue: 1
+  - cost: 5090
+    addValue: 23
+    multiplyValue: 1
+  - cost: 5510
+    addValue: 23.35
+    multiplyValue: 1
+  - cost: 5960
+    addValue: 23.699999
+    multiplyValue: 1
+  - cost: 6450
+    addValue: 24.05
+    multiplyValue: 1
+  - cost: 6980
+    addValue: 24.4
+    multiplyValue: 1
+  - cost: 7550
+    addValue: 24.75
+    multiplyValue: 1
+  - cost: 8170
+    addValue: 25.1
+    multiplyValue: 1
+  - cost: 8840
+    addValue: 25.449999
+    multiplyValue: 1
+  - cost: 9560
+    addValue: 25.8
+    multiplyValue: 1
+  - cost: 10350
+    addValue: 26.15
+    multiplyValue: 1
+  - cost: 11200
+    addValue: 26.5
+    multiplyValue: 1
+  - cost: 12120
+    addValue: 26.85
+    multiplyValue: 1
+  - cost: 13110
+    addValue: 27.199999
+    multiplyValue: 1
+  - cost: 14180
+    addValue: 27.55
+    multiplyValue: 1
+  - cost: 15350
+    addValue: 27.9
+    multiplyValue: 1
+  - cost: 16610
+    addValue: 28.25
+    multiplyValue: 1
+  - cost: 17970
+    addValue: 28.6
+    multiplyValue: 1
+  - cost: 19440
+    addValue: 28.949999
+    multiplyValue: 1
+  - cost: 21040
+    addValue: 29.3
+    multiplyValue: 1
+  - cost: 22760
+    addValue: 29.65
+    multiplyValue: 1
+  - cost: 24630
+    addValue: 30
+    multiplyValue: 1
+  - cost: 26640
+    addValue: 30.35
+    multiplyValue: 1
+  - cost: 28830
+    addValue: 30.699999
+    multiplyValue: 1
+  - cost: 31190
+    addValue: 31.05
+    multiplyValue: 1
+  - cost: 33750
+    addValue: 31.4
+    multiplyValue: 1
+  - cost: 36520
+    addValue: 31.75
+    multiplyValue: 1
+  - cost: 39520
+    addValue: 32.1
+    multiplyValue: 1
+  - cost: 42760
+    addValue: 32.45
+    multiplyValue: 1
+  - cost: 46260
+    addValue: 32.8
+    multiplyValue: 1
+  - cost: 50050
+    addValue: 33.149998
+    multiplyValue: 1
+  - cost: 54160
+    addValue: 33.5
+    multiplyValue: 1
+  - cost: 58600
+    addValue: 33.85
+    multiplyValue: 1
+  - cost: 63400
+    addValue: 34.2
+    multiplyValue: 1
+  - cost: 68600
+    addValue: 34.55
+    multiplyValue: 1
+  - cost: 74230
+    addValue: 34.899998
+    multiplyValue: 1
+  - cost: 80320
+    addValue: 35.25
+    multiplyValue: 1
+  - cost: 86900
+    addValue: 35.6
+    multiplyValue: 1
+  - cost: 94030
+    addValue: 35.95
+    multiplyValue: 1
+  - cost: 101740
+    addValue: 36.3
+    multiplyValue: 1
+  - cost: 110080
+    addValue: 36.649998
+    multiplyValue: 1

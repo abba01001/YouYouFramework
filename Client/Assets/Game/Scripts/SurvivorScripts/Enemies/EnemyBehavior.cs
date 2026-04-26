@@ -198,7 +198,7 @@ namespace OctoberStudio
 
             if(projectile != null)
             {
-                TakeDamage(PlayerBehavior.Player.Damage * projectile.DamageMultiplier);
+                TakeDamage(PlayerBehavior.Player.GetDamageValue() * projectile.DamageMultiplier);
 
                 if(HP > 0)
                 {

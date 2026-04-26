@@ -69,7 +69,6 @@ namespace OctoberStudio
 
         public event UnityAction onPlayerDied;
 
-        public float Damage { get; protected set; }
         public float MagnetRadiusSqr { get; protected set; }
         public float Speed { get; protected set; }
 
@@ -183,17 +182,37 @@ namespace OctoberStudio
 
         public virtual void RecalculateDamage(float damageMultiplier)
         {
-            Damage = Data.BaseDamage * damageMultiplier;
-            if (GameController.UpgradesManager.IsUpgradeAquired(UpgradeType.Damage))
-            {
-                Damage *= GameController.UpgradesManager.GetUpgadeValue(UpgradeType.Damage);
-            }
+            GetDamageValue(damageMultiplier,true);
         }
 
+        private float? _damageValue;
+        public float GetDamageValue(float damageMultiplier = 1f,bool forceUpdateValue = false)
+        {
+            if (!_damageValue.HasValue || forceUpdateValue)
+            {
+                _damageValue = Data.BaseDamage * damageMultiplier;
+                if (GameController.UpgradesManager.IsUpgradeAquired(UpgradeType.Damage))
+                {
+                    float tempValue = 0f;
+                    float addValue = GameController.UpgradesManager.GetUpgadeValue(UpgradeType.Damage,ValueType.AddValue);
+                    float multiplyValue =  GameController.UpgradesManager.GetUpgadeValue(UpgradeType.Damage,ValueType.MultiplyValue);
+                    if (addValue != 0f) tempValue += addValue;
+                    if (multiplyValue != 0f) tempValue *= multiplyValue;
+                    _damageValue += tempValue;
+                }
+            }
+            return _damageValue.Value;
+        }
+
+        private float? _hpValue;
         public virtual void RecalculateMaxHP(float maxHPMultiplier)
         {
-            var upgradeValue = GameController.UpgradesManager.GetUpgadeValue(UpgradeType.Health);
-            healthbar.ChangeMaxHP((Data.BaseHP + upgradeValue) * maxHPMultiplier);
+            float tempValue = Data.BaseHP;
+            float addValue = GameController.UpgradesManager.GetUpgadeValue(UpgradeType.Health,ValueType.AddValue);
+            float multiplyValue =  GameController.UpgradesManager.GetUpgadeValue(UpgradeType.Health,ValueType.MultiplyValue);
+            if (addValue != 0f) tempValue += addValue;
+            if (multiplyValue != 0f) tempValue *= multiplyValue;
+            healthbar.ChangeMaxHP(tempValue * maxHPMultiplier);
         }
 
         public virtual void RecalculateXPMuliplier(float xpMultiplier)
@@ -212,7 +231,10 @@ namespace OctoberStudio
 
             if (GameController.UpgradesManager.IsUpgradeAquired(UpgradeType.Armor))
             {
-                DamageReductionMultiplier *= GameController.UpgradesManager.GetUpgadeValue(UpgradeType.Armor);
+                float tempValue = 1f;
+                float multiplyValue =  GameController.UpgradesManager.GetUpgadeValue(UpgradeType.Health,ValueType.MultiplyValue);
+                if (multiplyValue != 0f) tempValue = multiplyValue;
+                DamageReductionMultiplier *= tempValue;
             } 
         }
 
@@ -243,7 +265,7 @@ namespace OctoberStudio
 
         public virtual void Heal(float hp)
         {
-            healthbar.AddHP(hp + GameController.UpgradesManager.GetUpgadeValue(UpgradeType.Healing));
+            healthbar.AddHP(hp + GameController.UpgradesManager.GetUpgadeValue(UpgradeType.Healing,ValueType.AddValue));
         }
 
         public virtual void Revive()

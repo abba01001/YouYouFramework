@@ -160,7 +160,7 @@ namespace OctoberStudio
 
         public static void ResurrectPlayer()
         {
-            EnemiesSpawner.DealDamageToAllEnemies(PlayerBehavior.Player.Damage * 1000);
+            EnemiesSpawner.DealDamageToAllEnemies(PlayerBehavior.Player.GetDamageValue() * 1000);
 
             GameScreen.Show();
             PlayerBehavior.Player.Revive();

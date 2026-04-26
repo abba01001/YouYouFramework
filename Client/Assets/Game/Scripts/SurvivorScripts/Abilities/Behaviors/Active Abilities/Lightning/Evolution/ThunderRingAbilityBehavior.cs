@@ -53,7 +53,7 @@ namespace OctoberStudio.Abilities
                     {
                         particle.transform.position = enemy.transform.position;
 
-                        enemy.TakeDamage(PlayerBehavior.Player.Damage * AbilityLevel.Damage);
+                        enemy.TakeDamage(PlayerBehavior.Player.GetDamageValue() * AbilityLevel.Damage);
                     }
                     else
                     {

@@ -53,7 +53,7 @@ namespace OctoberStudio.Abilities
             {
                 enemies.Add(enemy, Time.time);
 
-                enemy.TakeDamage(AbilityLevel.Damage * PlayerBehavior.Player.Damage);
+                enemy.TakeDamage(AbilityLevel.Damage * PlayerBehavior.Player.GetDamageValue());
 
                 enemy.AddEffect(slowDownEffect);
             }
@@ -69,7 +69,7 @@ namespace OctoberStudio.Abilities
                 {
                     enemies[enemy] = Time.time;
 
-                    enemy.TakeDamage(AbilityLevel.Damage * PlayerBehavior.Player.Damage);
+                    enemy.TakeDamage(AbilityLevel.Damage * PlayerBehavior.Player.GetDamageValue());
                 }
             }
         }
