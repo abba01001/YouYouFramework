@@ -1,4 +1,5 @@
 using OctoberStudio.Easing;
+using Spine.Unity;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -12,6 +13,7 @@ namespace OctoberStudio
 
         protected static readonly int _Overlay = Shader.PropertyToID("_Overlay");
 
+        [SerializeField] protected SkeletonAnimation _skeletonAnimation;
         [SerializeField] protected SpriteRenderer playerSpriteRenderer;
         [SerializeField] protected Animator animator;
         [SerializeField] protected Color hitColor;
@@ -21,10 +23,16 @@ namespace OctoberStudio
         public Transform Transform => transform;
 
         protected IEasingCoroutine damageCoroutine;
-
+        private string _currentAnim;
         public virtual void SetSpeed(float speed)
         {
             animator.SetFloat(SPEED_FLOAT, speed);
+            string targetAnim = speed > 0.02f ? "Run_Gear" : "Idle";
+            if (_currentAnim != targetAnim)
+            {
+                _skeletonAnimation.AnimationState.SetAnimation(0, targetAnim, true);
+                _currentAnim = targetAnim;
+            }
         }
 
         public virtual void SetLocalScale(Vector3 scale)
