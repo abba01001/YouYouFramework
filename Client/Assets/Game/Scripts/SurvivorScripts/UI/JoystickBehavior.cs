@@ -61,7 +61,7 @@ namespace OctoberStudio.UI
 
             defaultAnchoredPosition = backgroundRectTransform.anchoredPosition;
 
-            GameController.InputManager.RegisterJoystick(this);
+            GameController.InputManager?.RegisterJoystick(this);
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -140,7 +140,7 @@ namespace OctoberStudio.UI
 
         private void OnDestroy()
         {
-            GameController.InputManager.RemoveJoystick();
+            GameController.InputManager?.RemoveJoystick();
         }
 
         public void Hide()

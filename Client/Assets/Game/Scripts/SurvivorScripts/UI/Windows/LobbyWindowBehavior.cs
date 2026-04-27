@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using AudioManager = OctoberStudio.Audio.AudioManager;
 
@@ -40,6 +41,7 @@ namespace OctoberStudio.UI
         [SerializeField] RectTransform contituePopupRect;
         [SerializeField] Button confirmButton;
         [SerializeField] Button cancelButton;
+        [SerializeField] Button testBtn;
 
         private void Awake()
         {
@@ -49,6 +51,14 @@ namespace OctoberStudio.UI
 
             confirmButton.onClick.AddListener(ConfirmButtonClicked);
             cancelButton.SetButtonClick(CancelButtonClicked);
+            testBtn.SetButtonClick(async () =>
+            {
+                var operation = GameEntry.Loader.DefaultPackage.UnloadUnusedAssetsAsync();
+                await operation.Task;
+                var operation1 = GameEntry.Loader.DefaultPackage.LoadSceneAsync("Assets/Game/Download/Scenes/Demo_Casual.unity", LoadSceneMode.Single);
+                await operation1.Task;
+                GameEntry.Scene.SetScene(SceneGroupName.Demo_Casual);
+            });
         }
 
         private void Start()

@@ -90,6 +90,12 @@ namespace GameScripts
             });
             return task.Task;
         }
+
+        public void SetScene(string sceneName)
+        {
+            m_CurrSceneGroupName = sceneName;
+        }
+        
         public void LoadSceneAction(string sceneName, int sceneLoadCount = -1, Action onComplete = null)
         {
             if (m_CurrSceneIsLoading)
