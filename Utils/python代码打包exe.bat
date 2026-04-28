@@ -1,53 +1,68 @@
+:      <-- 在最前面加一行这个，后面随便空几个格，用来“吸收”乱码
 @echo off
-chcp 65001
-pushd "%~dp0"  REM 切换到脚本所在目录，确保执行路径正确
+setlocal enabledelayedexpansion
+:: 强制设置代码页为 UTF-8 (65001)
+chcp 65001 >nul
+pushd "%~dp0"
 
-rem 提示用户输入 Python 文件名
-echo 请输入 Python 文件名（例如：输出协议.py）：
-set /p PYTHON_FILE=
+echo ========================================
+echo       PyInstaller 快速打包工具
+echo ========================================
 
-rem 输出用户输入的文件名，检查是否正确
-echo 你输入的 Python 文件名是：%PYTHON_FILE%
+:: 1. 调用 PowerShell 弹出文件选择框
+echo [系统] 正在打开文件选择窗口...
+set "ps_cmd=Add-Type -AssemblyName System.Windows.Forms; $f = New-Object System.Windows.Forms.OpenFileDialog; $f.Filter = 'Python 脚本 (*.py)|*.py'; $f.TopMost = $true; if($f.ShowDialog() -eq 'OK'){ $f.FileName }"
 
-rem 检查文件是否存在
-if not exist "%PYTHON_FILE%" (
-    echo 错误：指定的文件 "%PYTHON_FILE%" 不存在。
-    pause
+set "PYTHON_FILE="
+for /f "usebackq delims=" %%I in (`powershell -NoProfile -Command "%ps_cmd%"`) do set "PYTHON_FILE=%%I"
+
+:: 2. 判断用户是否选择了文件
+if "%PYTHON_FILE%"=="" (
+    echo [取消] 未选择任何文件，脚本即将退出。
+    timeout /t 3 >nul
     popd
     exit /b
 )
 
-rem 获取文件名（去掉扩展名）
-set FILE_NAME=%PYTHON_FILE:~0,-3%
+:: 3. 解析文件名信息 (支持带空格的路径)
+for %%F in ("%PYTHON_FILE%") do (
+    set "RAW_NAME=%%~nxF"
+    set "FILE_NAME=%%~nF"
+)
 
-rem 打包 Python 脚本
-echo 正在打包 %PYTHON_FILE%...
+echo [选择] 已锁定目标: !RAW_NAME!
+echo [进程] 正在启动 PyInstaller 打包流程...
+echo ----------------------------------------
+
+:: 4. 执行打包 ( -F 参数生成单个独立 EXE )
 pyinstaller -F "%PYTHON_FILE%"
 
-rem 检查 pyinstaller 是否成功
+:: 5. 检查打包结果
 if %errorlevel% neq 0 (
-    echo 错误：打包失败，请检查 PyInstaller 输出信息。
+    echo.
+    echo [错误] 打包过程出错，请查看上方输出信息。
     pause
     popd
     exit /b %errorlevel%
 )
 
-rem 检查 move 是否成功
-echo 正在移动文件...
-move "dist\%FILE_NAME%.exe" . >nul
-if %errorlevel% neq 0 (
-    echo 错误：Move命令失败，停止执行。
-    pause
-    popd
-    exit /b %errorlevel%
+:: 6. 后续整理与临时文件清理
+echo.
+echo [整理] 正在提取 EXE 文件并清理缓存...
+
+if exist "dist\!FILE_NAME!.exe" (
+    :: 强制移动 EXE 到当前目录下
+    move /y "dist\!FILE_NAME!.exe" . >nul
+    echo [完成] 成功生成: !FILE_NAME!.exe
 )
 
-rem 如果 move 成功，继续执行清理操作
-echo 清理临时文件...
-rd /s /Q build
-rd /s /Q dist
-del /s /Q "%FILE_NAME%.spec"
+:: 删除 PyInstaller 产生的中间文件夹和配置
+rd /s /Q build 2>nul
+rd /s /Q dist 2>nul
+del /q "!FILE_NAME!.spec" 2>nul
 
-echo 打包完成。
+echo ----------------------------------------
+echo 打包任务圆满完成！
+echo ----------------------------------------
 pause
 popd

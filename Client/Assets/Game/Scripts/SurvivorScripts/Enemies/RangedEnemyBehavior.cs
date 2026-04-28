@@ -157,7 +157,7 @@ namespace OctoberStudio.Enemy
         {
             if (changeSpeedDuringAttackAnimation)
             {
-                Speed = speed;
+                Speed = configSpeed;
             }
         }
 

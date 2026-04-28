@@ -197,7 +197,7 @@ namespace OctoberStudio
             }
 
             var enemy = enemyPools[enemyType].GetEntity();
-
+            enemy.SetConfigBaseData();
             enemy.SetData(enemyData);
 
             enemy.transform.position = position;
@@ -225,7 +225,7 @@ namespace OctoberStudio
                 if (enemies.Count >= enemiesCap) return null;
 
                 var enemy = enemyPools[type].GetEntity();
-
+                enemy.SetConfigBaseData();
                 enemy.SetData(enemyDataDictionary[type]);
                 enemy.SetWaveOverride(waveOverride);
 
@@ -429,7 +429,7 @@ namespace OctoberStudio
 
             var boss = Instantiate(bossData.BossPrefab).GetComponent<EnemyBehavior>();
             boss.transform.position = spawnPosition;
-
+            boss.SetConfigBaseData();
             boss.Play();
 
             boss.onEnemyDied += OnBossDied;

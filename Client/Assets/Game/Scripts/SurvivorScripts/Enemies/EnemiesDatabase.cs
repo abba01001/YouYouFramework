@@ -95,6 +95,8 @@ namespace OctoberStudio
 
     public enum EnemyType
     {
+        SampleType = -2,
+        Null = -1,
         Pumpkin = 0,
         Bat = 1,
         Slime = 2,
@@ -122,5 +124,11 @@ namespace OctoberStudio
         MonsterSlime = 26,
         MonsterEvilSlime = 27,
         MonsterBirdSlime = 28,
+        BossCrab = 29,
+        BossMask = 30,
+        BossMegaSlime = 31,
+        BossQueenWasp = 32,
+        BossVoid = 33,
+        EnemyBell = 34
     }
 }

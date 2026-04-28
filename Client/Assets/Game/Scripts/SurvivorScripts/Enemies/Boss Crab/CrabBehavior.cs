@@ -112,8 +112,8 @@ namespace OctoberStudio.Enemy
 
             burrowingTrail.Play();
 
-            var cacheSpeed = speed;
-            speed = burrowedMoveSpeed;
+            var cacheSpeed = configSpeed;
+            configSpeed = burrowedMoveSpeed;
 
             yield return new WaitForSeconds(burrowedDuration);
 
@@ -121,7 +121,7 @@ namespace OctoberStudio.Enemy
 
             IsMoving = false;
             animator.SetBool(IS_BURROWED_BOOL, false);
-            speed = cacheSpeed;
+            configSpeed = cacheSpeed;
 
             burrowingTrail.Stop();
 

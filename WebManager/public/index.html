@@ -132,6 +132,7 @@
             80%, 100% { text-shadow: .25em 0 0 var(--sub-text), .5em 0 0 var(--sub-text); }
         }
     </style>
+    <script src="../routes/utils.js"></script>
 </head>
 <body>
 
@@ -176,6 +177,9 @@
 
         <div id="tab-misc" class="tab-content">
             <div class="button-grid">
+                <button class="btn btn-primary" onclick="callApi('/api/utils/adb-install')">📥 安装APK</button>
+                <button class="btn btn-primary" onclick="openLogWindow()">📑 监听手机游戏日志</button>
+                <button class="btn btn-primary" onclick="callApi('/api/utils/py-build')">🐍 打包 Python 脚本</button>
                 <button class="btn btn-disabled" title="功能开发中...">📁 项目发布</button>
                 <button class="btn btn-disabled" title="功能开发中...">🧹 清理缓存</button>
             </div>
@@ -186,6 +190,23 @@
 </div>
 
 <script>
+    function openLogWindow() {
+        // 1. 先调用接口让后端 spawn 出 adb 进程
+        // 注意：这里建议直接用 fetch，确保请求发出去
+        fetch('/api/utils/start-logcat')
+            .then(response => {
+                console.log("后台日志服务已响应");
+            });
+
+        // 2. 立即打开日志显示网页
+        // 使用 window.open 可以创建一个独立的小窗口，看起来更像调试器
+        const url = '/log.html';
+        const windowName = 'UnityLogWindow';
+        const windowFeatures = 'width=1000,height=600,menubar=no,toolbar=no,location=no,status=no';
+
+        window.open(url, windowName, windowFeatures);
+    }
+
     // Tab 切换逻辑
     function openTab(evt, tabName) {
         let contents = document.getElementsByClassName("tab-content");

@@ -1,21 +1,27 @@
 const express = require('express');
 const path = require('path');
+const http = require('http');
+const { Server } = require('socket.io');
+
 const app = express();
-const port = 3000;
-
-// 1. 基础配置
-const app_title = process.env.APP_TITLE || "MyFramework Manager";
-app.use(express.static('public'));
-
-// 2. 挂载模块化路由
-const utilsRouter = require('./routes/utils');
-app.use('/api/utils', utilsRouter); // 所有工具类接口都以 /api/utils 开头
-
-// 3. 基础接口
-app.get('/get-title', (req, res) => {
-    res.json({ title: app_title });
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: { origin: "*" } // 允许跨域连接
 });
 
-app.listen(port, () => {
-    console.log(`${app_title} Server running at http://localhost:${port}`);
+const port = 3000;
+app.use(express.static('public'));
+
+// 挂载 io 到 app，方便路由调用
+app.set('io', io);
+
+const utilsRouter = require('./routes/utils');
+app.use('/api/utils', utilsRouter);
+
+app.get('/get-title', (req, res) => {
+    res.json({ title: process.env.APP_TITLE || "MyFramework Manager" });
+});
+
+server.listen(port, () => {
+    console.log(`[Success] Server running at http://localhost:${port}`);
 });

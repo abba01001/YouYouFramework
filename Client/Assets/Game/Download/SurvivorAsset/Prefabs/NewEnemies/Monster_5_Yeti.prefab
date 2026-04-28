@@ -74,6 +74,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4a4496d11815d848b6014f08b944435, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyType: 23
   speed: 0.5
   damage: 15
   hp: 800

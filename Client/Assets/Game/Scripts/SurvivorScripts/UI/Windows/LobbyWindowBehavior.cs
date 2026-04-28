@@ -53,11 +53,7 @@ namespace OctoberStudio.UI
             cancelButton.SetButtonClick(CancelButtonClicked);
             testBtn.SetButtonClick(async () =>
             {
-                var operation = GameEntry.Loader.DefaultPackage.UnloadUnusedAssetsAsync();
-                await operation.Task;
-                var operation1 = GameEntry.Loader.DefaultPackage.LoadSceneAsync("Assets/Game/Download/Scenes/Demo_Casual.unity", LoadSceneMode.Single);
-                await operation1.Task;
-                GameEntry.Scene.SetScene(SceneGroupName.Demo_Casual);
+                await GameEntry.Scene.LoadSceneAsync(SceneGroupName.Demo_Casual, 1);
             });
         }
 
