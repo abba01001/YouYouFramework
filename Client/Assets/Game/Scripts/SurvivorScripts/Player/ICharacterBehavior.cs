@@ -17,5 +17,6 @@ namespace OctoberStudio
         void PlayDefeatAnimation();
 
         void FlashHit(UnityAction onFinish = null);
+        void PlayDieAnim();
     }
 }

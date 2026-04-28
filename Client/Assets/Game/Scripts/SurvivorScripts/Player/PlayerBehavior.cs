@@ -369,6 +369,7 @@ namespace OctoberStudio
 
                 EasingManager.DoAfter(0.5f, () =>
                 {
+                    Character.PlayDieAnim();
                     onPlayerDied?.Invoke();
                 }).SetUnscaledTime(true);
 

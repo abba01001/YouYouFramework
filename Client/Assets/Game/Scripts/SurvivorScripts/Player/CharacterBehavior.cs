@@ -1,7 +1,9 @@
+using System;
 using OctoberStudio.Easing;
 using Spine.Unity;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
 
 namespace OctoberStudio
 {
@@ -24,8 +26,10 @@ namespace OctoberStudio
 
         protected IEasingCoroutine damageCoroutine;
         private string _currentAnim;
+        private bool isDead = false;
         public virtual void SetSpeed(float speed)
         {
+            if (isDead) return;
             animator.SetFloat(SPEED_FLOAT, speed);
             string targetAnim = speed > 0.02f ? "Run_Gear" : "Idle";
             if (_currentAnim != targetAnim)
@@ -33,6 +37,13 @@ namespace OctoberStudio
                 _skeletonAnimation.AnimationState.SetAnimation(0, targetAnim, true);
                 _currentAnim = targetAnim;
             }
+        }
+
+        public void PlayDieAnim()
+        {
+            isDead = true;
+            _skeletonAnimation.AnimationState.SetAnimation(0, "Die", false);
+            _skeletonAnimation.UnscaledTime = true;
         }
 
         public virtual void SetLocalScale(Vector3 scale)
@@ -53,6 +64,7 @@ namespace OctoberStudio
         public virtual void SetSortingOrder(int order) 
         {
             playerSpriteRenderer.sortingOrder = order;
+            transform.GetComponentInChildren<SortingGroup>().sortingOrder = order;
         }
 
         public virtual void FlashHit(UnityAction onFinish = null)

@@ -71,28 +71,54 @@ namespace ExcelTool
         {
             try
             {
-                // 使用 ExcelDataReader 代替 OleDb，支持跨平台且不需要安装驱动
                 using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
                     using (var reader = ExcelReaderFactory.CreateReader(stream))
                     {
-                        // 将所有 Sheet 读入 DataSet
                         var result = reader.AsDataSet();
                         if (result.Tables.Count == 0) return;
 
-                        // 默认取第一个工作表 (Sheet1)
-                        DataTable dt = result.Tables[0];
+                        foreach (DataTable dt in result.Tables)
+                        {
+                            string sheetName = dt.TableName.Trim();
 
-                        if (fileName.Equals("Sys_Localization", StringComparison.OrdinalIgnoreCase))
-                            CreateLocalization(fileName, dt);
-                        else
-                            CreateData(fileName, dt);
+                            // 1. 校验子表名是否为默认的 Sheet1, Sheet2 等
+                            if (System.Text.RegularExpressions.Regex.IsMatch(sheetName, @"^Sheet\d+$", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+                            {
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                Console.WriteLine($"[Warning] 文件 '{fileName}' 中的子表 '{sheetName}' 疑似未设置正确表名，已跳过。");
+                                Console.ResetColor();
+                                continue;
+                            }
+
+                            // 2. 检查子表内容是否为空
+                            // GetValidRowCount 是你代码中已有的方法，判断第一列是否有数据
+                            int rows = GetValidRowCount(dt);
+                            int cols = GetValidColumnCount(dt);
+
+                            if (rows < 3 || cols <= 0) 
+                            {
+                                // 如果行数不足3行（连表头都不够），判定为空表或无效表
+                                Console.WriteLine($"[Info] 子表 '{sheetName}' 内容为空或格式不正确，已跳过。");
+                                continue;
+                            }
+
+                            // 3. 执行提取逻辑
+                            if (sheetName.Equals("Sys_Localization", StringComparison.OrdinalIgnoreCase))
+                            {
+                                CreateLocalization(sheetName, dt);
+                            }
+                            else
+                            {
+                                CreateData(sheetName, dt);
+                            }
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Read table [" + fileName + "] failed: " + ex.Message);
+                Console.WriteLine($"Read file [{fileName}] failed: " + ex.Message);
             }
         }
 
