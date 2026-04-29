@@ -4,7 +4,6 @@ using UnityEngine;
 /// 安卓原生工具类 (Framework 扩展)
 /// 对应 Java 类: com.framework.app.UnityAndroidUtils
 /// </summary>
-
 namespace Main
 {
     public static class AndroidHelper
@@ -12,133 +11,85 @@ namespace Main
         private const string JavaClassName = "com.framework.app.UnityAndroidUtils";
         private static AndroidJavaClass _utils;
         private static bool _isInitialized = false;
-    
+
         /// <summary>
-        /// 初始化工具类 (建议在游戏初始化流程中调用)
+        /// 初始化工具类
         /// </summary>
         public static void Init()
         {
             if (_isInitialized) return;
-    
-    #if !UNITY_EDITOR && UNITY_ANDROID
-        try
-        {
-            _utils = new AndroidJavaClass(JavaClassName);
-            _isInitialized = true;
-            Debug.Log("[AndroidHelper] Android Native Utils Initialized.");
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogError($"[AndroidHelper] Initialization Failed: {e.Message}");
-        }
-    #else
+
+#if !UNITY_EDITOR && UNITY_ANDROID
+            try
+            {
+                _utils = new AndroidJavaClass(JavaClassName);
+                _isInitialized = true;
+                Debug.Log("[AndroidHelper] Android Native Utils Initialized.");
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[AndroidHelper] Initialization Failed: {e.Message}");
+            }
+#else
             Debug.LogWarning("[AndroidHelper] Non-Android environment, native features are disabled.");
-    #endif
+#endif
         }
-    
-        /// <summary>
-        /// 内部安全检查
-        /// </summary>
+
         private static bool CheckReady()
         {
-            if (!_isInitialized)
-            {
-                Init();
-            }
-    
+            if (!_isInitialized) Init();
             return _isInitialized;
         }
-    
+
         // --- 1. UI 与 交互 ---
-    
-        /// <summary>
-        /// 弹出原生 Toast 提示
-        /// </summary>
-        public static void ShowToast(string msg)
-        {
-            if (!CheckReady()) return;
-            _utils.CallStatic("showToast", msg);
-        }
-    
-        /// <summary>
-        /// 复制文本到剪贴板
-        /// </summary>
-        public static void CopyToClipboard(string text)
-        {
-            if (!CheckReady()) return;
-            _utils.CallStatic("copyToClipboard", text);
-        }
-    
-        // --- 2. 设备信息 (用于性能分级) ---
-    
-        /// <summary>
-        /// 获取系统总内存 (MB)
-        /// </summary>
-        public static long GetTotalMemory()
-        {
-            if (!CheckReady()) return 0;
-            return _utils.CallStatic<long>("getTotalMemory");
-        }
-    
-        /// <summary>
-        /// 获取当前可用内存 (MB)
-        /// </summary>
-        public static long GetAvailableMemory()
-        {
-            if (!CheckReady()) return 0;
-            return _utils.CallStatic<long>("getAvailableMemory");
-        }
-    
-        /// <summary>
-        /// 获取设备唯一标识 (AndroidID)
-        /// </summary>
-        public static string GetAndroidID()
-        {
-            if (!CheckReady()) return string.Empty;
-            return _utils.CallStatic<string>("getAndroidID");
-        }
-    
+
+        public static void ShowToast(string msg) => Execute(() => _utils.CallStatic("showToast", msg));
+        
+        public static void CopyToClipboard(string text) => Execute(() => _utils.CallStatic("copyToClipboard", text));
+
+        // --- 2. 设备信息 ---
+
+        public static long GetTotalMemory() => GetValue<long>("getTotalMemory", 0);
+        
+        public static long GetAvailableMemory() => GetValue<long>("getAvailableMemory", 0);
+        
+        public static string GetAndroidID() => GetValue<string>("getAndroidID", string.Empty);
+
         // --- 3. 屏幕与适配 ---
-    
+
         /// <summary>
-        /// 获取异形屏/刘海屏顶部安全高度 (像素)
+        /// 获取异形屏顶部安全高度 (px)
+        /// 注意：在小米 14 等手机上，需配合 "Render outside safe area" 设置使用
         /// </summary>
-        public static int GetNotchHeight()
-        {
-            if (!CheckReady()) return 0;
-            return _utils.CallStatic<int>("getNotchHeight");
-        }
-    
+        public static int GetNotchHeight() => GetValue<int>("getNotchHeight", 0);
+
+        /// <summary>
+        /// 获取屏幕密度 (density)
+        /// </summary>
+        public static float GetScreenDensity() => GetValue<float>("getScreenDensity", 1.0f);
+
         // --- 4. 网络状态 ---
-    
-        /// <summary>
-        /// 获取网络状态 (0:无网络, 1:WiFi, 2:蜂窝数据, 3:其他)
-        /// </summary>
-        public static int GetNetworkStatus()
-        {
-            if (!CheckReady()) return 0;
-            return _utils.CallStatic<int>("getNetworkStatus");
-        }
-    
+
+        public static int GetNetworkStatus() => GetValue<int>("getNetworkStatus", 0);
+
         // --- 5. 系统功能 ---
-    
-        /// <summary>
-        /// 安装指定路径的 APK (需配合 FileProvider 使用)
-        /// </summary>
-        /// <param name="apkPath">APK 文件的绝对路径</param>
-        public static void InstallApk(string apkPath)
+
+        public static void InstallApk(string apkPath) => Execute(() => _utils.CallStatic("installApk", apkPath));
+
+        public static long GetVersionCode() => GetValue<long>("getVersionCode", 0);
+
+        // --- 辅助方法 ---
+
+        private static void Execute(System.Action action)
         {
-            if (!CheckReady()) return;
-            _utils.CallStatic("installApk", apkPath);
+            if (CheckReady()) action.Invoke();
         }
-    
-        /// <summary>
-        /// 获取应用版本号 (VersionCode)
-        /// </summary>
-        public static long GetVersionCode()
+
+        private static T GetValue<T>(string methodName, T defaultValue)
         {
-            if (!CheckReady()) return 0;
-            return _utils.CallStatic<long>("getVersionCode");
+            if (!CheckReady()) return defaultValue;
+            try { return _utils.CallStatic<T>(methodName); }
+            catch { return defaultValue; }
         }
     }
 }

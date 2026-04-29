@@ -14,13 +14,10 @@ namespace GameScripts
     // "登录"界面
     public class FormLogin : UIFormBase
     {
-        [SerializeField] private TMP_InputField account;
-        [SerializeField] private TMP_InputField password;
+        // [SerializeField] private TMP_InputField account;
+        // [SerializeField] private TMP_InputField password;
         [SerializeField] private Button loginBtn;
-        [SerializeField] private Image bgImage;
-
         protected override async UniTask Awake()
-
         {
             await base.Awake();
 

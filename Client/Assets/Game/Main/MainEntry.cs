@@ -21,6 +21,7 @@ namespace Main
 
         private void Awake()
         {
+            Debug.LogError("启动MainEntry" + typeof(UnityEngine.UI.Shadow).FullName);
             Instance = this;
             Screen.sleepTimeout = SleepTimeout.NeverSleep; //屏幕常亮
 

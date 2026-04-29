@@ -1,14 +1,12 @@
+using System.Collections.Generic;
 using GameScripts;
-using Main;
 using OctoberStudio.Easing;
 using OctoberStudio.Input;
-using OctoberStudio.Save;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using AudioManager = OctoberStudio.Audio.AudioManager;
 
@@ -42,9 +40,12 @@ namespace OctoberStudio.UI
         [SerializeField] Button confirmButton;
         [SerializeField] Button cancelButton;
         [SerializeField] Button testBtn;
+        [SerializeField] Button test1Btn;
 
         private void Awake()
         {
+            InitBottomBtn();
+            
             playButton.onClick.AddListener(OnPlayButtonClicked);
             leftButton.onClick.AddListener(DecrementSelectedStageId);
             rightButton.onClick.AddListener(IncremenSelectedStageId);
@@ -55,12 +56,18 @@ namespace OctoberStudio.UI
             {
                 await GameEntry.Scene.LoadSceneAsync(SceneGroupName.Demo_Casual, 1);
             });
+            test1Btn.SetButtonClick(async () =>
+            {
+                await GameEntry.Scene.LoadSceneAsync(SceneGroupName.DemoScene, 1);
+            });
         }
 
         private void Start()
         {
             GameController.SaveManager.StageData.onSelectedStageChanged += InitStage;
-
+            GameController.SaveManager.GoldData.onGoldAmountChanged += SetAmount;
+            SetAmount(GameController.SaveManager.GoldData.Amount);
+            
             if (GameController.SaveManager.StageData.IsPlaying && GameController.FirstTimeLoaded)
             {
                 continueBackgroundImage.gameObject.SetActive(true);
@@ -99,12 +106,12 @@ namespace OctoberStudio.UI
             {
                 lockImage.gameObject.SetActive(true);
                 playButton.interactable = false;
-                playButton.image.sprite = playButtonDisabledSprite;
+                // playButton.image.sprite = playButtonDisabledSprite;
             } else
             {
                 lockImage.gameObject.SetActive(false);
                 playButton.interactable = true;
-                playButton.image.sprite = playButtonEnabledSprite;
+                // playButton.image.sprite = playButtonEnabledSprite;
             }
 
             leftButton.gameObject.SetActive(!GameController.SaveManager.StageData.IsFirstStageSelected);
@@ -178,6 +185,7 @@ namespace OctoberStudio.UI
         private void OnDestroy()
         {
             GameController.SaveManager.StageData.onSelectedStageChanged -= InitStage;
+            GameController.SaveManager.GoldData.onGoldAmountChanged -= SetAmount;
             GameController.InputManager.onInputChanged -= OnInputChanged;
         }
 
@@ -215,6 +223,40 @@ namespace OctoberStudio.UI
                     EventSystem.current.SetSelectedGameObject(playButton.gameObject);
                 }
             }
+        }
+
+
+        [SerializeField] private List<Button> buttons = new List<Button>();
+        [SerializeField] private Button lightBtn = null;
+        private int disapearBtnIndex = -1;
+        private void InitBottomBtn()
+        {
+            for (int i = 0; i < buttons.Count; i++)
+            {
+                int index = i;
+                buttons[index].SetButtonClick(() => ChangeBtn(index));
+            }
+
+            ChangeBtn(2);
+        }
+        private void ChangeBtn(int index)
+        {
+            if (disapearBtnIndex != -1)
+            {
+                buttons[disapearBtnIndex].gameObject.MSetActive(true);
+            }
+            var selectBtn = buttons[index];
+            var image = selectBtn.transform.Find("Icon").GetComponent<Image>();
+            lightBtn.transform.Find("Icon").GetComponent<Image>().sprite = image.sprite;
+            lightBtn.transform.SetSiblingIndex(index);
+            selectBtn.gameObject.MSetActive(false);
+            disapearBtnIndex = index;
+        }
+        
+        [SerializeField] private TextMeshProUGUI goldText;
+        private void SetAmount(int amount)
+        {
+            goldText.text = amount.ToString();
         }
     }
 }

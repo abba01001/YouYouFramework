@@ -79,21 +79,47 @@ public class UnityAndroidUtils {
         return Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
-    // --- 3. 屏幕与适配 ---
+// --- 3. 屏幕与适配 ---
 
+    /**
+     * 获取刘海/挖孔屏的安全高度
+     * 逻辑：优先获取 DisplayCutout 的 SafeInsetTop，如果为 0 则尝试获取系统状态栏高度
+     */
     public static int getNotchHeight() {
         Activity activity = getActivity();
-        if (activity != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            View decorView = activity.getWindow().getDecorView();
-            WindowInsets insets = decorView.getRootWindowInsets();
+        if (activity == null) return 0;
+
+        int notchHeight = 0;
+
+        // 1. 针对 Android 9.0+ 使用官方 DisplayCutout API
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            WindowInsets insets = activity.getWindow().getDecorView().getRootWindowInsets();
             if (insets != null) {
                 DisplayCutout cutout = insets.getDisplayCutout();
                 if (cutout != null) {
-                    return cutout.getSafeInsetTop();
+                    notchHeight = cutout.getSafeInsetTop();
                 }
             }
         }
-        return 0;
+
+        // 2. 如果官方 API 没拿到（某些厂商适配问题），尝试获取状态栏高度作为保底
+        if (notchHeight <= 0) {
+            int resourceId = activity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+            if (resourceId > 0) {
+                notchHeight = activity.getResources().getDimensionPixelSize(resourceId);
+            }
+        }
+
+        return notchHeight;
+    }
+
+    /**
+     * 获取屏幕密度，用于 px 转 dp (Unity 里的数值通常需要参考密度)
+     */
+    public static float getScreenDensity() {
+        Activity activity = getActivity();
+        if (activity == null) return 1.0f;
+        return activity.getResources().getDisplayMetrics().density;
     }
 
     // --- 4. 网络状态 ---

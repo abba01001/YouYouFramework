@@ -123,8 +123,16 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
-      - CollectPath: Assets/Game/Download/LayerLabAsset
-        CollectorGUID: 79009954e985c9d4b992c7f7390ca8ff
+      - CollectPath: Assets/Game/Download/LayerLabAsset/2D Art Maker
+        CollectorGUID: f2338e1b890b44f5da90743f2e948295
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/Game/Download/LayerLabAsset/GUI Pro-SuperCasual
+        CollectorGUID: 610679644187543998dcb06a983d8173
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackDirectory
