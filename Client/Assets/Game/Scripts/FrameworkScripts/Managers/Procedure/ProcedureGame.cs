@@ -21,6 +21,7 @@ namespace GameScripts
         private async UniTask Init()
         {
             await GameEntry.Scene.LoadSceneAsync(SceneGroupName.MainMenu, 1);
+            GameEntry.UI.OpenUIForm<FormMain>();
         }
     
         internal override void OnUpdate()

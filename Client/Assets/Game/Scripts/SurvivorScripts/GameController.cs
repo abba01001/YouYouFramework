@@ -148,6 +148,7 @@ namespace OctoberStudio
         protected async UniTask MainMenuLoadingCoroutine()
         {
             await GameEntry.Scene.LoadSceneAsync(SceneGroupName.MainMenu,1);
+            await GameEntry.UI.OpenUIForm<FormMain>();
             if (StageController.Stage.UseCustomMusic)
             {
                 ChangeMusic(MAIN_MENU_MUSIC_NAME);

@@ -17,18 +17,10 @@ namespace OctoberStudio.UI
         [SerializeField] StagesDatabase stagesDatabase;
 
         [Space]
-        [SerializeField] Image stageIcon;
-        [SerializeField] Image lockImage;
-        [SerializeField] TMP_Text stageLabel;
-        [SerializeField] TMP_Text stageNumberLabel;
-
-        [Space]
         [SerializeField] Button playButton;
         [SerializeField] Button upgradesButton;
         [SerializeField] Button settingsButton;
         [SerializeField] Button charactersButton;
-        [SerializeField] Button leftButton;
-        [SerializeField] Button rightButton;
 
         [Space]
         [SerializeField] Sprite playButtonEnabledSprite;
@@ -47,24 +39,22 @@ namespace OctoberStudio.UI
             InitBottomBtn();
             
             playButton.onClick.AddListener(OnPlayButtonClicked);
-            leftButton.onClick.AddListener(DecrementSelectedStageId);
-            rightButton.onClick.AddListener(IncremenSelectedStageId);
-
             confirmButton.onClick.AddListener(ConfirmButtonClicked);
             cancelButton.SetButtonClick(CancelButtonClicked);
             testBtn.SetButtonClick(async () =>
             {
                 await GameEntry.Scene.LoadSceneAsync(SceneGroupName.Demo_Casual, 1);
+                GameEntry.UI.CloseUIForm<FormMain>();
             });
             test1Btn.SetButtonClick(async () =>
             {
                 await GameEntry.Scene.LoadSceneAsync(SceneGroupName.DemoScene, 1);
+                GameEntry.UI.CloseUIForm<FormMain>();
             });
         }
 
         private void Start()
         {
-            GameController.SaveManager.StageData.onSelectedStageChanged += InitStage;
             GameController.SaveManager.GoldData.onGoldAmountChanged += SetAmount;
             SetAmount(GameController.SaveManager.GoldData.Amount);
             
@@ -75,8 +65,6 @@ namespace OctoberStudio.UI
                 contituePopupRect.gameObject.SetActive(true);
 
                 EventSystem.current.SetSelectedGameObject(confirmButton.gameObject);
-
-                InitStage(GameController.SaveManager.StageData.SelectedStageId);
             } else
             {
                 EventSystem.current.SetSelectedGameObject(playButton.gameObject);
@@ -92,30 +80,6 @@ namespace OctoberStudio.UI
             upgradesButton.onClick.AddListener(onUpgradesButtonClicked);
             settingsButton.onClick.AddListener(onSettingsButtonClicked);
             charactersButton.onClick.AddListener(onCharactersButtonClicked);
-        }
-
-        public void InitStage(int stageId)
-        {
-            var stage = stagesDatabase.GetStage(stageId);
-
-            stageLabel.text = stage.DisplayName;
-            stageNumberLabel.text = $"Stage {stageId + 1}";
-            stageIcon.sprite = stage.Icon;
-
-            if(GameController.SaveManager.StageData.SelectedStageId > GameController.SaveManager.StageData.MaxReachedStageId)
-            {
-                lockImage.gameObject.SetActive(true);
-                playButton.interactable = false;
-                // playButton.image.sprite = playButtonDisabledSprite;
-            } else
-            {
-                lockImage.gameObject.SetActive(false);
-                playButton.interactable = true;
-                // playButton.image.sprite = playButtonEnabledSprite;
-            }
-
-            leftButton.gameObject.SetActive(!GameController.SaveManager.StageData.IsFirstStageSelected);
-            rightButton.gameObject.SetActive(GameController.SaveManager.StageData.SelectedStageId != stagesDatabase.StagesCount - 1);
         }
 
         public void Open()
@@ -137,54 +101,11 @@ namespace OctoberStudio.UI
 
         public void OnPlayButtonClicked()
         {
-            GameController.SaveManager.StageData.IsPlaying = true;
-            GameController.SaveManager.StageData.ResetStageData = true;
-            GameController.SaveManager.StageData.Time = 0f;
-            GameController.SaveManager.StageData.XP = 0f;
-            GameController.SaveManager.StageData.XPLEVEL = 0;
-
-            GameController.AudioManager.PlaySound(AudioManager.BUTTON_CLICK_HASH);
-            GameController.LoadStage();
-        }
-
-        private void IncremenSelectedStageId()
-        {
-            GameController.AudioManager.PlaySound(AudioManager.BUTTON_CLICK_HASH);
-            GameController.SaveManager.StageData.SetSelectedStageId(GameController.SaveManager.StageData.SelectedStageId + 1);
-
-            if (!rightButton.gameObject.activeSelf)
-            {
-                if (leftButton.gameObject.activeSelf)
-                {
-                    EventSystem.current.SetSelectedGameObject(leftButton.gameObject);
-                } else
-                {
-                    EventSystem.current.SetSelectedGameObject(playButton.gameObject);
-                }
-            }
-        }
-
-        private void DecrementSelectedStageId()
-        {
-            GameController.AudioManager.PlaySound(AudioManager.BUTTON_CLICK_HASH);
-            GameController.SaveManager.StageData.SetSelectedStageId(GameController.SaveManager.StageData.SelectedStageId - 1);
-
-            if (!leftButton.gameObject.activeSelf)
-            {
-                if (rightButton.gameObject.activeSelf)
-                {
-                    EventSystem.current.SetSelectedGameObject(rightButton.gameObject);
-                }
-                else
-                {
-                    EventSystem.current.SetSelectedGameObject(playButton.gameObject);
-                }
-            }
+            GameEntry.UI.OpenUIForm<FormStageSelect>();
         }
 
         private void OnDestroy()
         {
-            GameController.SaveManager.StageData.onSelectedStageChanged -= InitStage;
             GameController.SaveManager.GoldData.onGoldAmountChanged -= SetAmount;
             GameController.InputManager.onInputChanged -= OnInputChanged;
         }
@@ -247,7 +168,9 @@ namespace OctoberStudio.UI
             }
             var selectBtn = buttons[index];
             var image = selectBtn.transform.Find("Icon").GetComponent<Image>();
-            lightBtn.transform.Find("Icon").GetComponent<Image>().sprite = image.sprite;
+            var lightIcon = lightBtn.transform.Find("Icon").GetComponent<Image>();
+            lightIcon.sprite = image.sprite;
+            lightIcon.SetNativeSize();
             lightBtn.transform.SetSiblingIndex(index);
             selectBtn.gameObject.MSetActive(false);
             disapearBtnIndex = index;

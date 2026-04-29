@@ -49,6 +49,7 @@ namespace LayerLab.ArtMaker
                 {
                     case ButtonType.PlayHome:
                         GameEntry.Scene.LoadSceneAsync(SceneGroupName.MainMenu, 1);
+                        GameEntry.UI.OpenUIForm<FormMain>();
                         break;
                     case ButtonType.SavePrefab:
                         // 에디터 전용 기능 - 빌드 시 제외 / Editor-only feature - excluded from builds

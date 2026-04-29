@@ -12,6 +12,7 @@ namespace OctoberStudio
 
         public StageData GetStage(int stageId)
         {
+            stageId = Mathf.Clamp(stageId, 0, stages.Count - 1);
             return stages[stageId];
         }
     }

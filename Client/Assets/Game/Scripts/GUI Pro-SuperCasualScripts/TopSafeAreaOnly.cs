@@ -11,12 +11,7 @@ namespace GameScripts
         void Awake()
         {
             _rt = GetComponent<RectTransform>();
-        }
-
-        void Start()
-        {
-            // 建议稍微延迟一点点，确保 Android 层的 WindowInsets 初始化完成
-            Invoke(nameof(AutoMatchNotch), 0.1f);
+            AutoMatchNotch();
         }
 
         [ContextMenu("Manual Apply")] // 方便你在编辑器里右键测试
@@ -29,12 +24,10 @@ namespace GameScripts
             // yMax 是安全区域的顶部像素位置，Screen.height - yMax 就是刘海高度
             pxHeight = Mathf.RoundToInt(Screen.height - Screen.safeArea.yMax);
 #else
-    // 在安卓真机上，调用你写的原生工具类
-    pxHeight = Main.AndroidHelper.GetNotchHeight();
+            // 在安卓真机上，调用你写的原生工具类
+            pxHeight = Main.AndroidHelper.GetNotchHeight();
 #endif
-
             Debug.Log($"[SafeArea] 顶部像素高度: {pxHeight}, 屏幕高度: {Screen.height}");
-
             if (pxHeight > 0)
             {
                 float percent = (float)pxHeight / Screen.height;

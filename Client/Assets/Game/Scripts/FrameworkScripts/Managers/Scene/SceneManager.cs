@@ -153,12 +153,18 @@ namespace GameScripts
                 });
             }
         }
-    
+
+        private bool ShowLoadingFlag = false;
         public event Action<float> LoadingUpdateAction;
         internal void OnUpdate()
         {
             if (m_CurrSceneIsLoading)
             {
+                if (!ShowLoadingFlag)
+                {
+                    GameEntry.UI.OpenUIForm<FormLoading>();
+                    ShowLoadingFlag = true;
+                }
                 var curr = m_SceneLoaderList.First;
                 while (curr != null)
                 {
@@ -181,6 +187,7 @@ namespace GameScripts
                     }
                     m_CurrProgress = Mathf.Min(m_CurrProgress, targetProgress);
                     LoadingUpdateAction?.Invoke(m_CurrProgress);
+                    GameEntry.Event.Dispatch(Constants.EventName.LoadingSceneUpdate,m_CurrProgress);
                 }
     
                 if (m_CurrProgress >= 1)
@@ -189,6 +196,8 @@ namespace GameScripts
                     Debugger.Log(LogCategory.Scene, string.Format("场景加载完毕=={0}", currSceneEntityGroup.ToJson()));
                     m_CurrSceneIsLoading = false;
                     m_OnComplete?.Invoke();
+                    GameEntry.UI.CloseUIForm<FormLoading>();
+                    ShowLoadingFlag = false;
                 }
             }
         }

@@ -53,7 +53,11 @@ namespace GameScripts
 
             if (otherPanels.Count > 0) otherPanels[_page].SetActive(true);
 
-            homeBtn.SetButtonClick(() => { GameEntry.Scene.LoadSceneAsync(SceneGroupName.MainMenu, 1); });
+            homeBtn.SetButtonClick(() =>
+            {
+                GameEntry.Scene.LoadSceneAsync(SceneGroupName.MainMenu, 1);
+                GameEntry.UI.OpenUIForm<FormMain>();
+            });
 
 
             _isReady = true;

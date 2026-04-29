@@ -35,23 +35,12 @@ namespace GameScripts
     
         private readonly Vector2 DEFAULT_POSITION = new Vector2(0, 0);
         private readonly Vector2 HIDE_POSITION = new Vector2(0, -2000);
-        protected Image fadeImage;
-        protected RectTransform panelRectTransform;
     
         protected virtual async UniTask Awake()
         {
             Name = transform.name;
             if (GetComponent<GraphicRaycaster>() == null) gameObject.AddComponent<GraphicRaycaster>();
             CurrCanvas = GetComponent<Canvas>();
-            if (transform.Find("Fade"))
-            {
-                fadeImage = transform.Find("Fade").GetComponent<Image>();
-            }
-    
-            if (transform.Find("Shadow"))
-            {
-                panelRectTransform = transform.Find("Shadow").GetComponent<RectTransform>();
-            }
         }
     
         protected async virtual void Start()
