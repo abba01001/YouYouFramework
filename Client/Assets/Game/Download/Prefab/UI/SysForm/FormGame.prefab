@@ -1700,7 +1700,7 @@ GameObject:
   - component: {fileID: 118789530984524794}
   - component: {fileID: 6244642857233653879}
   m_Layer: 5
-  m_Name: Game Screen
+  m_Name: FormGame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1748,10 +1748,10 @@ Canvas:
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
-  m_OverrideSorting: 0
+  m_OverrideSorting: 1
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 1
+  m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -1801,6 +1801,7 @@ MonoBehaviour:
   fpsText: {fileID: 3349626774809769562}
   netDelayText: {fileID: 4156804680818241775}
   uiTimer: {fileID: 2788230295515799048}
+  WorldSpaceTextManager: {fileID: 3672269647345697639}
   refreshInterval: 0.1
 --- !u!222 &6244642857233653879
 CanvasRenderer:

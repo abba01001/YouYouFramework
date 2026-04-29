@@ -174,7 +174,7 @@ namespace OctoberStudio.Abilities
             // 在这种情况下应检查武器能力是否已分配至能力数据库
             if (selectedAbilities.Count > 0)
             {
-                StageController.GameScreen.ShowAbilitiesPanel(selectedAbilities, false);
+                StageController.FormGameScreen.ShowAbilitiesPanel(selectedAbilities, false);
             }
         }
 
@@ -285,7 +285,7 @@ namespace OctoberStudio.Abilities
             
             if(selectedAbilities.Count > 0)
             {
-                StageController.GameScreen.ShowAbilitiesPanel(selectedAbilities, true);
+                StageController.FormGameScreen.ShowAbilitiesPanel(selectedAbilities, true);
             }
         }
 
@@ -616,7 +616,7 @@ namespace OctoberStudio.Abilities
                     i--;
                 }
             }
-            StageController.GameScreen.ShowChestWindow(tierId, availableAbilities, selectedAbilities);
+            StageController.FormGameScreen.ShowChestWindow(tierId, availableAbilities, selectedAbilities);
 
             // Applying abilities
             foreach (var ability in selectedAbilities)

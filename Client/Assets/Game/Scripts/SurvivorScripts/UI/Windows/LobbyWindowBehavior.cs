@@ -101,7 +101,7 @@ namespace OctoberStudio.UI
 
         public void OnPlayButtonClicked()
         {
-            GameEntry.UI.OpenUIForm<FormStageSelect>();
+            GameEntry.UI.OpenUIForm<FormStage>();
         }
 
         private void OnDestroy()

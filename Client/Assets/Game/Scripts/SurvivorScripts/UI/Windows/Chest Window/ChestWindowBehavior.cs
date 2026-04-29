@@ -86,6 +86,11 @@ namespace OctoberStudio.UI
 
         public void OpenWindow(int tierId, List<AbilityData> abilities, List<AbilityData> selectedAbilities)
         {
+            if (coinsParticle == null)
+            {
+                coinsParticle = GameObject.Find("Chest Coins Particle").GetComponent<ChestCoinsParticleBehavior>();
+            }
+            
             cacheMusicVolume = GameController.Music.volume;
             GameController.Music.DoVolume(0, 0.3f).SetUnscaledTime(true);
 

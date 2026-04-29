@@ -29,7 +29,6 @@ namespace GameScripts
         
         public void SetState(bool isOn)
         {
-            Debugger.LogError("状态===>",isOn);
             onBtn.transform.parent.gameObject.MSetActive(isOn);
             offBtn.transform.parent.gameObject.MSetActive(!isOn);
         }

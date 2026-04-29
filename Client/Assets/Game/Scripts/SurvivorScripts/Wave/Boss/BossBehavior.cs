@@ -25,12 +25,12 @@ namespace OctoberStudio.Timeline.Bossfight
 
             hasStarted = true;
 
-            StageController.GameScreen.ShowBossfightWarning();
+            StageController.FormGameScreen.ShowBossfightWarning();
 
             EasingManager.DoAfter(WarningDuration, () => {
                 StageController.PauseDirector(true);
 
-                StageController.GameScreen.HideBossFightWarning();
+                StageController.FormGameScreen.HideBossFightWarning();
 
                 // Doing it next frame because there still could be spawns during this one
                 EasingManager.DoNextFrame().SetOnFinish(StageController.EnemiesSpawner.KillEveryEnemy);
@@ -45,7 +45,7 @@ namespace OctoberStudio.Timeline.Bossfight
                 EasingManager.DoAfter(0.3f, () => 
                 {
                     var data = StageController.EnemiesSpawner.GetBossData(BossType);
-                    StageController.GameScreen.ShowBossHealthBar(data);
+                    StageController.FormGameScreen.ShowBossHealthBar(data);
                 });
 
                 var warningPool = StageController.PoolsManager.GetPool("Warning Circle");
@@ -56,7 +56,7 @@ namespace OctoberStudio.Timeline.Bossfight
                 {
                     var boss = StageController.EnemiesSpawner.SpawnBoss(BossType, bossSpawnPosition, OnBossDied);
                     boss.ShouldSpawnChestOnDeath = ShouldSpawnChest;
-                    StageController.GameScreen.LinkBossToHealthbar(boss);
+                    StageController.FormGameScreen.LinkBossToHealthbar(boss);
                 });
 
                 StageController.EnemiesSpawner.IsBossfightActive = true;
@@ -67,7 +67,7 @@ namespace OctoberStudio.Timeline.Bossfight
         {
             boss.onEnemyDied -= OnBossDied;
 
-            StageController.GameScreen.HideBossHealthbar();
+            StageController.FormGameScreen.HideBossHealthbar();
 
             StageController.FieldManager.RemoveFence();
             StageController.PauseDirector(false);

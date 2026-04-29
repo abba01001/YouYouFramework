@@ -29,7 +29,7 @@ namespace OctoberStudio
         private bool isDead = false;
         public virtual void SetSpeed(float speed)
         {
-            if (isDead) return;
+            // if (isDead) return;
             animator.SetFloat(SPEED_FLOAT, speed);
             string targetAnim = speed > 0.02f ? "Run_Gear" : "Idle";
             if (_currentAnim != targetAnim)
@@ -53,7 +53,8 @@ namespace OctoberStudio
 
         public virtual void PlayReviveAnimation()
         {
-            animator.SetTrigger(REVIVE_TRIGGER);
+            isDead = false;
+            _skeletonAnimation.AnimationState.SetAnimation(0, "Idle", true);
         }
 
         public virtual void PlayDefeatAnimation()

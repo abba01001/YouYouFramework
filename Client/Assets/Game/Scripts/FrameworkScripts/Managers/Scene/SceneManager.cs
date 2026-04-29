@@ -87,6 +87,7 @@ namespace GameScripts
             LoadSceneAction(sceneName, sceneLoadCount, () =>
             {
                 task.TrySetResult();
+                GameEntry.Event.Dispatch(Constants.EventName.LoadingSceneComplete,sceneName);
             });
             return task.Task;
         }

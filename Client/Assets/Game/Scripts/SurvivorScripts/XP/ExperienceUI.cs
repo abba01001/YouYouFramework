@@ -1,3 +1,5 @@
+using System;
+using GameScripts;
 using OctoberStudio.Extensions;
 using TMPro;
 using UnityEngine;
@@ -22,6 +24,28 @@ namespace OctoberStudio
         public void SetLevelText(int levelNumber)
         {
             levelText.text = $"LVL {levelNumber}";
+        }
+
+        private void Awake()
+        {
+            GameEntry.Event.AddEventListener(Constants.EventName.SetExperienceProgress,OnSetExperienceProgress);
+            GameEntry.Event.AddEventListener(Constants.EventName.SetExperienceLevel,OnSetExperienceLevel);
+        }
+
+        private void OnDestroy()
+        {
+            GameEntry.Event.RemoveEventListener(Constants.EventName.SetExperienceProgress,OnSetExperienceProgress);
+            GameEntry.Event.RemoveEventListener(Constants.EventName.SetExperienceLevel,OnSetExperienceLevel);
+        }
+
+        private void OnSetExperienceProgress(object userdata)
+        {
+            SetProgress((float) userdata);
+        }
+        
+        private void OnSetExperienceLevel(object userdata)
+        {
+            SetLevelText((int) userdata);
         }
     }
 }

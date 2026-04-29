@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace GameScripts
 {
-    public class FormStageSelect : UIFormBase
+    public class FormStage : UIFormBase
     {
         [SerializeField] private Button preBtn;
         [SerializeField] private Button nextBtn;
@@ -34,11 +34,11 @@ namespace GameScripts
                 GameController.AudioManager.PlaySound(OctoberStudio.Audio.AudioManager.BUTTON_CLICK_HASH);
                 GameController.LoadStage();
                 GameEntry.UI.CloseUIForm<FormMain>();
-                GameEntry.UI.CloseUIForm<FormStageSelect>();
+                GameEntry.UI.CloseUIForm<FormStage>();
             });
             backBtn.SetButtonClick(() =>
             {
-                GameEntry.UI.CloseUIForm<FormStageSelect>();
+                GameEntry.UI.CloseUIForm<FormStage>();
             });
 
         }

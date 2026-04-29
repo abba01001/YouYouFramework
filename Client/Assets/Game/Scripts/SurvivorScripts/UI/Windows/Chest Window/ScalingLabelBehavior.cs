@@ -1,3 +1,4 @@
+using GameScripts;
 using OctoberStudio.Extensions;
 using TMPro;
 using UnityEngine;
@@ -12,11 +13,6 @@ namespace OctoberStudio.UI
         [SerializeField] AligmentType aligment;
 
         private float spacing;
-
-        private void Awake()
-        {
-            spacing = label.rectTransform.anchoredPosition.x - label.rectTransform.sizeDelta.x / 2 - icon.rectTransform.anchoredPosition.x - icon.rectTransform.sizeDelta.x / 2;
-        }
 
         public void SetAmount(int amount)
         {
@@ -59,6 +55,22 @@ namespace OctoberStudio.UI
         public enum AligmentType
         {
             Left, Center, Right
+        }
+        
+        private void Awake()
+        {
+            spacing = label.rectTransform.anchoredPosition.x - label.rectTransform.sizeDelta.x / 2 - icon.rectTransform.anchoredPosition.x - icon.rectTransform.sizeDelta.x / 2;
+            GameEntry.Event.AddEventListener(Constants.EventName.SetKilledEnemiesCount,OnSetKilledEnemiesCount);
+        }
+
+        private void OnDestroy()
+        {
+            GameEntry.Event.RemoveEventListener(Constants.EventName.SetKilledEnemiesCount,OnSetKilledEnemiesCount);
+        }
+
+        private void OnSetKilledEnemiesCount(object userdata)
+        {
+            SetAmount((int)userdata);
         }
     }
 }

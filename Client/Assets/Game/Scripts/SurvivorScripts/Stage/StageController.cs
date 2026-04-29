@@ -1,4 +1,7 @@
 using System;
+using Cysharp.Threading.Tasks;
+using GameScripts;
+using Main;
 using OctoberStudio.Abilities;
 using OctoberStudio.Extensions;
 using OctoberStudio.Pool;
@@ -22,7 +25,6 @@ namespace OctoberStudio
         [SerializeField] DropManager dropManager;
         [SerializeField] AbilityManager abilityManager;
         [SerializeField] PoolsManager poolsManager;
-        [SerializeField] WorldSpaceTextManager worldSpaceTextManager;
         [SerializeField] CameraManager cameraManager;
 
         public static EnemiesSpawner EnemiesSpawner => instance.spawner;
@@ -30,19 +32,20 @@ namespace OctoberStudio
         public static AbilityManager AbilityManager => instance.abilityManager;
         public static StageFieldManager FieldManager => instance.fieldManager;
         public static PoolsManager PoolsManager => instance.poolsManager;
-        public static WorldSpaceTextManager WorldSpaceTextManager => instance.worldSpaceTextManager;
+        public static WorldSpaceTextManager WorldSpaceTextManager
+        {
+            get
+            {
+                FormGame formGame = GameEntry.UI.GetUIForm<FormGame>();
+                return formGame.WorldSpaceTextManager;
+            }
+        }
+
         public static CameraManager CameraController => instance.cameraManager;
         public static DropManager DropManager => instance.dropManager;
 
-        [Header("UI")]
-        [SerializeField] GameScreenBehavior gameScreen;
-        [SerializeField] StageFailedScreen stageFailedScreen;
-        [SerializeField] StageCompleteScreen stageCompletedScreen;
-
         [Header("Testing")]
         [SerializeField] PresetData testingPreset;
-
-        public static GameScreenBehavior GameScreen => instance.gameScreen;
 
         public static StageData Stage { get; private set; }
 
@@ -51,7 +54,7 @@ namespace OctoberStudio
         private void Awake()
         {
             instance = this;
-
+            GameEntry.Event.AddEventListener(Constants.EventName.LoadingSceneComplete,OnLoadingSceneComplete);
             stageSave = GameController.SaveManager.StageData;
         }
 
@@ -65,7 +68,7 @@ namespace OctoberStudio
             experienceManager.Init(testingPreset);
             dropManager.Init();
             fieldManager.Init(Stage, director);
-            abilityManager.Init(testingPreset, PlayerBehavior.Player.Data);
+            // abilityManager.Init(testingPreset, PlayerBehavior.Player.Data);
             cameraManager.Init(Stage);
 
             PlayerBehavior.Player.onPlayerDied += OnGameFailed;
@@ -135,9 +138,8 @@ namespace OctoberStudio
 
                 stageSave.IsPlaying = false;
                 GameController.SaveManager.Save(true);
-
-                gameScreen.Hide();
-                stageCompletedScreen.Show();
+                GameEntry.UI.CloseUIForm<FormGame>();
+                ShowFormResult(true);
                 Time.timeScale = 0;
             }
         }
@@ -154,15 +156,22 @@ namespace OctoberStudio
             stageSave.IsPlaying = false;
             GameController.SaveManager.Save(true);
 
-            gameScreen.Hide();
-            stageFailedScreen.Show();
+            GameEntry.UI.CloseUIForm<FormGame>();
+            _ = ShowFormResult(false);
         }
 
+        public async UniTask ShowFormResult(bool win)
+        {
+            FormResult formResult = await GameEntry.UI.OpenUIForm<FormResult>();
+            formResult.ShowResult(win);
+            
+        }
+        
         public static void ResurrectPlayer()
         {
             EnemiesSpawner.DealDamageToAllEnemies(PlayerBehavior.Player.GetDamageValue() * 1000);
 
-            GameScreen.Show();
+            GameEntry.UI.OpenUIForm<FormGame>();
             PlayerBehavior.Player.Revive();
             Time.timeScale = 1;
         }
@@ -173,9 +182,29 @@ namespace OctoberStudio
             GameController.LoadMainMenu();
         }
 
+        public static FormGame FormGameScreen;
+        private void OnLoadingSceneComplete(object userdata)
+        {
+            string sceneName = userdata as string;
+            Debugger.LogError(sceneName);
+            if (sceneName == SceneGroupName.Game)
+            {
+                _ = HandleInit();
+            }
+        }
+
+        private async UniTask HandleInit()
+        {
+            FormGameScreen = await GameEntry.UI.OpenUIForm<FormGame>();
+            abilityManager.Init(testingPreset, PlayerBehavior.Player.Data);
+        }
+
         private void OnDisable()
         {
             director.stopped -= TimelineStopped;
+            GameEntry.Event.RemoveEventListener(Constants.EventName.LoadingSceneComplete,OnLoadingSceneComplete);
+
         }
+        
     }
 }

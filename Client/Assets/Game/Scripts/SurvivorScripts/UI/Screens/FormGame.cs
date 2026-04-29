@@ -1,54 +1,53 @@
-using OctoberStudio.Abilities;
+﻿using OctoberStudio.Abilities;
 using OctoberStudio.Abilities.UI;
 using OctoberStudio.Bossfight;
 using OctoberStudio.Easing;
 using OctoberStudio.UI;
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using GameScripts;
+using OctoberStudio;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
-using AudioManager = OctoberStudio.Audio.AudioManager;
 
-namespace OctoberStudio
+namespace GameScripts
 {
-    public class GameScreenBehavior : MonoBehaviour
-    {
-        private Canvas canvas;
+    using AudioManager = OctoberStudio.Audio.AudioManager;
 
+    public class FormGame : UIFormBase
+    {
         [SerializeField] BackgroundTintUI blackgroundTint;
         [SerializeField] JoystickBehavior joystick;
 
-        [Header("Abilities")]
-        [FormerlySerializedAs("abilitiesPanel")]
-        [SerializeField] AbilitiesWindowBehavior abilitiesWindow;
+        [Header("Abilities")] [FormerlySerializedAs("abilitiesPanel")] [SerializeField]
+        AbilitiesWindowBehavior abilitiesWindow;
+
         [SerializeField] ChestWindowBehavior chestWindow;
         [SerializeField] List<AbilitiesIndicatorsListBehavior> abilitiesLists;
 
         public AbilitiesWindowBehavior AbilitiesWindow => abilitiesWindow;
         public ChestWindowBehavior ChestWindow => chestWindow;
 
-        [Header("Top UI")]
-        [SerializeField] CanvasGroup topUI;
+        [Header("Top UI")] [SerializeField] CanvasGroup topUI;
 
-        [Header("Pause")]
-        [SerializeField] Button pauseButton;
+        [Header("Pause")] [SerializeField] Button pauseButton;
         [SerializeField] PauseWindowBehavior pauseWindow;
 
-        [Header("Bossfight")]
-        [SerializeField] CanvasGroup bossfightWarning;
+        [Header("Bossfight")] [SerializeField] CanvasGroup bossfightWarning;
         [SerializeField] BossfightHealthbarBehavior bossHealthbar;
 
         [SerializeField] private TextMeshProUGUI fpsText;
         [SerializeField] private TextMeshProUGUI netDelayText;
-        
+
         [SerializeField] private UITimer uiTimer;
-        private void Awake()
+        public WorldSpaceTextManager WorldSpaceTextManager;
+        protected override async UniTask Awake()
         {
-            canvas = GetComponent<Canvas>();
+            await base.Awake();
 
             abilitiesWindow.onPanelClosed += OnAbilitiesPanelClosed;
             abilitiesWindow.onPanelStartedClosing += OnAbilitiesPanelStartedClosing;
@@ -61,9 +60,15 @@ namespace OctoberStudio
             chestWindow.OnClosed += OnChestWindowClosed;
         }
 
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+        }
+
         public float refreshInterval = 0.1f;
         private float _totalTime; // 累加时间
-        private int _frameCount;   // 累加帧数
+        private int _frameCount; // 累加帧数
+
         private void Update()
         {
             // 累加时间和帧数
@@ -82,29 +87,17 @@ namespace OctoberStudio
                 _frameCount = 0;
             }
         }
-        
-        private void Start()
-        {
-            abilitiesWindow.Init();
 
+        protected override void OnShow()
+        {
+            base.OnShow();
+            abilitiesWindow.Init();
             GameController.InputManager.InputAsset.UI.Settings.performed += OnSettingsInputClicked;
         }
 
         private void OnSettingsInputClicked(InputAction.CallbackContext context)
         {
             pauseButton.onClick?.Invoke();
-        }
-
-        public void Show(Action onFinish = null)
-        {
-            canvas.enabled = true;
-            onFinish?.Invoke();
-        }
-
-        public void Hide(Action onFinish = null)
-        {
-            canvas.enabled = false;
-            onFinish?.Invoke();
         }
 
         public void ShowBossfightWarning()
@@ -190,7 +183,7 @@ namespace OctoberStudio
 
         private void PauseButtonClick()
         {
-            GameController.AudioManager.PlaySound(AudioManager.BUTTON_CLICK_HASH);
+            GameController.AudioManager.PlaySound(OctoberStudio.Audio.AudioManager.BUTTON_CLICK_HASH);
 
             joystick.Disable();
 
@@ -199,10 +192,10 @@ namespace OctoberStudio
 
             GameController.InputManager.InputAsset.UI.Settings.performed -= OnSettingsInputClicked;
         }
-        
+
         private void OnPauseWindowClosed()
         {
-            if(GameController.InputManager.ActiveInput == Input.InputType.UIJoystick)
+            if (GameController.InputManager.ActiveInput == OctoberStudio.Input.InputType.UIJoystick)
             {
                 joystick.Enable();
             }

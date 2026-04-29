@@ -4,6 +4,7 @@ using OctoberStudio.Pool;
 using OctoberStudio.Timeline;
 using OctoberStudio.UI;
 using System.Collections.Generic;
+using GameScripts;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -18,9 +19,6 @@ namespace OctoberStudio
 
         [SerializeField] protected EnemiesDatabase database;
         [SerializeField] protected BossfightDatabase bossfightDatabase;
-
-        [Space]
-        [SerializeField] protected ScalingLabelBehavior enemiesDiedLabel;
 
         [Space]
         [Tooltip("Maximum amount of alive enemies at a time. No more enemies will be spawned until some of existing aren't defeated")]
@@ -126,7 +124,7 @@ namespace OctoberStudio
                 enemiesDiedCounter = stageSave.EnemiesKilled;
             }
             
-            enemiesDiedLabel.SetAmount(enemiesDiedCounter);
+            GameEntry.Event.Dispatch(Constants.EventName.RefreshEnemiesDiedCounter,enemiesDiedCounter);
         }
 
         protected virtual void Update()
@@ -342,7 +340,7 @@ namespace OctoberStudio
             enemiesDiedCounter += enemies.Count;
             stageSave.EnemiesKilled = enemiesDiedCounter;
 
-            enemiesDiedLabel.SetAmount(enemiesDiedCounter);
+            GameEntry.Event.Dispatch(Constants.EventName.RefreshEnemiesDiedCounter,enemiesDiedCounter);
 
             enemies.Clear();
         }
@@ -391,7 +389,8 @@ namespace OctoberStudio
             enemiesDiedCounter += enemies.Count - aliveEnemies.Count;
 
             stageSave.EnemiesKilled = enemiesDiedCounter;
-            enemiesDiedLabel.SetAmount(enemiesDiedCounter);
+            GameEntry.Event.Dispatch(Constants.EventName.RefreshEnemiesDiedCounter,enemiesDiedCounter);
+
 
             enemies.Clear();
             enemies.AddRange(aliveEnemies);
@@ -406,7 +405,8 @@ namespace OctoberStudio
 
             enemiesDiedCounter++;
             stageSave.EnemiesKilled = enemiesDiedCounter;
-            enemiesDiedLabel.SetAmount(enemiesDiedCounter);
+            GameEntry.Event.Dispatch(Constants.EventName.RefreshEnemiesDiedCounter,enemiesDiedCounter);
+
         }
 
         protected virtual void OnBossDied(EnemyBehavior boss)
@@ -420,7 +420,8 @@ namespace OctoberStudio
 
             enemiesDiedCounter++;
             stageSave.EnemiesKilled = enemiesDiedCounter;
-            enemiesDiedLabel.SetAmount(enemiesDiedCounter);
+            GameEntry.Event.Dispatch(Constants.EventName.RefreshEnemiesDiedCounter,enemiesDiedCounter);
+
         }
 
         public virtual EnemyBehavior SpawnBoss(BossType bossType, Vector2 spawnPosition, UnityAction<EnemyBehavior> onBossDied = null)

@@ -1,5 +1,6 @@
 using OctoberStudio.Easing;
 using System.Collections;
+using GameScripts;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -8,8 +9,6 @@ namespace OctoberStudio
     public class ExperienceManager : MonoBehaviour
     {
         [SerializeField] ExperienceData experienceData;
-        [SerializeField] ExperienceUI experienceUI;
-
         private static readonly int LEVEL_UP_HASH = "Level Up".GetHashCode();
 
         public float XP { get; private set; }
@@ -40,8 +39,11 @@ namespace OctoberStudio
             }
 
             TargetXP = experienceData.GetXP(Level);
-            EasingManager.DoNextFrame().SetOnFinish(() => experienceUI.SetProgress(XP / TargetXP));
-            experienceUI.SetLevelText(Level + 1);
+            EasingManager.DoNextFrame().SetOnFinish(() =>
+            {
+                GameEntry.Event.Dispatch(Constants.EventName.SetExperienceProgress,XP / TargetXP);
+            });
+            GameEntry.Event.Dispatch(Constants.EventName.SetExperienceLevel,Level + 1);
         }
 
         public void AddXP(float xp)
@@ -60,8 +62,7 @@ namespace OctoberStudio
                     IncreaseLevel();
                 }
             }
-
-            experienceUI.SetProgress(XP / TargetXP);
+            GameEntry.Event.Dispatch(Constants.EventName.SetExperienceProgress,XP / TargetXP);
         }
 
         private IEnumerator IncreaseLevelCoroutine()
@@ -73,8 +74,7 @@ namespace OctoberStudio
                 // We are allowing abilities manager to set timescale to zero and show the abilities panel for each upgrade
                 yield return new WaitForSeconds(0.001f);
             }
-
-            experienceUI.SetProgress(XP / TargetXP);
+            GameEntry.Event.Dispatch(Constants.EventName.SetExperienceProgress,XP / TargetXP);
         }
 
         private void IncreaseLevel()
@@ -87,8 +87,7 @@ namespace OctoberStudio
 
             TargetXP = experienceData.GetXP(Level);
 
-            experienceUI.SetLevelText(Level + 1);
-
+            GameEntry.Event.Dispatch(Constants.EventName.SetExperienceLevel,Level + 1);
             GameController.AudioManager.PlaySound(LEVEL_UP_HASH);
 
             onXpLevelChanged?.Invoke(Level);

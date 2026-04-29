@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using GameScripts;
+using Main;
 
 #if UNITY_EDITOR
 using UnityEditor;

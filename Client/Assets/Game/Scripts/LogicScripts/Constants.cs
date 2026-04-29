@@ -112,9 +112,13 @@ namespace GameScripts
     
 
         public struct EventName
-
         {
-
+            public const string SetKilledEnemiesCount = "SetKilledEnemiesCount";
+            public const string SetExperienceProgress = "SetExperienceProgress";
+            public const string SetExperienceLevel = "SetExperienceLevel";
+            public const string RefreshEnemiesDiedCounter = "RefreshEnemiesDiedCounter";
+            public const string ShowChestWindow = "ShowChestWindow";
+            public const string ShowAbilitiesPanel = "ShowAbilitiesPanel";
             public const string TestEvent = "TestEvent";
 
             public const string GameEntryOnUpdate = "GameEntryOnUpdate";
@@ -128,6 +132,7 @@ namespace GameScripts
             public const string GameEntryOnApplicationPause = "GameEntryOnApplicationPause";
 
             public const string LoadingSceneUpdate = "LoadingSceneUpdate";
+            public const string LoadingSceneComplete = "LoadingSceneComplete";
 
             public const string PopupAction = "PopupAction";
 

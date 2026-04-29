@@ -761,7 +761,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 8183
 --- !u!222 &5026062855088597351
 CanvasRenderer:
   m_ObjectHideFlags: 0

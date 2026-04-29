@@ -360,7 +360,7 @@ MonoBehaviour:
     - dropType: 40
       chance: 1
     - dropType: 100
-      chance: 0
+      chance: 100
   - type: 20
     prefab: {fileID: 1090571174421192766, guid: 562dc9dedd7d07645a393a5a51243f08,
       type: 3}
