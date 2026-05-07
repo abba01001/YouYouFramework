@@ -74,12 +74,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcd4d5b00373d1a488d383677cd9ca90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyType: 2
-  speed: 0.5
-  damage: 10
-  hp: 120
+  enemyType: 26
   canBeKickedBack: 0
   shouldFadeIn: 0
+  flipThreshold: 0.1
   rb: {fileID: 5611959192970924213}
   spriteRenderer: {fileID: 0}
   dissolveSettings: {fileID: 11400000, guid: 2809f161967d6a0499a1a3061833468b, type: 2}

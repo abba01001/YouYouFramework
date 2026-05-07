@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Stage 6
   m_EditorClassIdentifier: Assembly-CSharp::OctoberStudio.StageData
   icon: {fileID: 21300000, guid: da7805eb31c8a694898fd4fbce04f36d, type: 3}
-  displayName: TestLevel22
-  timeline: {fileID: 11400000, guid: 2a49fa1addec3c44cae98d1936a32ffe, type: 2}
+  displayName: Stage6
+  timeline: {fileID: 11400000, guid: 9fabf0050c976f6479f320e0b71e73d3, type: 2}
   stageType: 0
-  stageFieldData: {fileID: 11400000, guid: 2ccd9ff96b7a9eb4cbb8cdb978b5d1a1, type: 2}
+  stageFieldData: {fileID: 11400000, guid: 28b728d71964e6447ba9a44cbcf52e73, type: 2}
   spawnProp: 1
   removePropFromBossfight: 1
   spotlightColor: {r: 0.64705884, g: 1, b: 0.2901961, a: 0.24705882}

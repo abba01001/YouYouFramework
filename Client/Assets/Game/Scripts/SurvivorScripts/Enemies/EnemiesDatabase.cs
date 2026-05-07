@@ -129,6 +129,13 @@ namespace OctoberStudio
         BossMegaSlime = 31,
         BossQueenWasp = 32,
         BossVoid = 33,
-        EnemyBell = 34
+        EnemyBell = 34,
+        MonsterPureSlime = 35,
+        MonsterGlopSlime = 36,
+        MonsterStoneGolem = 37,
+        MonsterMagmaGolem = 38,
+        MonsterCrystalGolem = 39,
+        MonsterSwordShadow = 40,
+        MonsterMaceShadow = 41,
     }
 }

@@ -75,11 +75,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyType: 28
-  speed: 1
-  damage: 15
-  hp: 80
   canBeKickedBack: 0
   shouldFadeIn: 0
+  flipThreshold: 0.1
   rb: {fileID: 5611959192970924213}
   spriteRenderer: {fileID: 0}
   dissolveSettings: {fileID: 11400000, guid: 2809f161967d6a0499a1a3061833468b, type: 2}
@@ -121,8 +119,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.07, y: 0.32}
-  m_Radius: 0.25
+  m_Offset: {x: 0, y: 0.59}
+  m_Radius: 0.5
 --- !u!1 &7464311786539078005
 GameObject:
   m_ObjectHideFlags: 0

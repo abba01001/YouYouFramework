@@ -36,7 +36,7 @@ namespace GameScripts
             else                     alpha = "#FFFFFF";   // 100% 纯白全亮
 
             // 提示文字稍微暗一点，形成对比
-            string tipColor = "#64748B";
+            string tipColor = "#FFFFFF";
 
             sliderText.text = $"<color={tipColor}>资源载入中 </color><color={alpha}>{progress}%</color>";
             progressBar.value = progress;
@@ -54,7 +54,7 @@ namespace GameScripts
         private void ShowVersion()
         {
             var instance = CheckVersionCtrl.Instance;
-            string labelColor = "#94A3B8"; // 标签：冷灰色
+            string labelColor = "#FFFFFF"; // 标签：冷灰色
             string valueColor = "#FFFFFF"; // 数值：纯白
             string updateColor = "#5EEAD4"; // 发现更新：青翠色（更有科技感）
 
