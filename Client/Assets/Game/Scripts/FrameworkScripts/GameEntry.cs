@@ -1,7 +1,8 @@
 ﻿using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
-
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using GameScripts;
 using Main;
 using MessagePack;
@@ -180,8 +181,28 @@ namespace GameScripts
             StartCoroutine(GameUtil.CheckKeys(keyMappings));
             ViewQueueManager.Instance.RegisterEvents();
             Initialize();
+            StartAutoSave();
         }
-    
+
+        private CancellationTokenSource _cts;
+        private async UniTaskVoid StartAutoSave()
+        {
+            _cts = new CancellationTokenSource();
+            try 
+            {
+                while (!_cts.IsCancellationRequested)
+                {
+                    await UniTask.Delay(TimeSpan.FromSeconds(5), cancellationToken: _cts.Token);
+                    GameEntry.Data.SaveData();
+                    Debug.Log("数据已变化，自动保存执行完毕");
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                // 正常退出循环，无需处理
+            }
+        }
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private void Initialize()
         {
@@ -202,7 +223,6 @@ namespace GameScripts
         private void Test1()
         {
             return;
-            GameEntry.Data.PlayerRoleData.roleAttr["role_level"]++;
             GameEntry.Event.Dispatch(Constants.EventName.UpdateBtnUnlockStatus);
             //QueueManager.Instance.AddEventTask("Hello","CloseHello");
         }
@@ -291,6 +311,9 @@ namespace GameScripts
         private void OnDestroy()
         {
             Net.OnDestroy();
+            // 销毁物体时务必停止监听，防止内存泄漏
+            _cts?.Cancel();
+            _cts?.Dispose();
             Debugger.LogError("销毁", this.gameObject.name);
         }
     }

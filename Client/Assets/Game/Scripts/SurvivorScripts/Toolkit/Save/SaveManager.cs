@@ -19,15 +19,12 @@ namespace OctoberStudio.Save
     public static class SaveKey
     {
         public const string StageData = "stage";
-        public const string TempGoldData = "temp_gold";
         public const string GoldData = "gold";
         public const string CharactersData = "characters";
         public const string SaveFileName = "game_save";
         public const string AbilitiesData = "abilities_save";
         public const string UpgradesData = "upgrades_save";
-        public const string AudioData = "audio";
         public const string InputData = "input";
-        public const string VibrationData = "vibration";
     }
     
     public interface ISaveManager
@@ -38,30 +35,16 @@ namespace OctoberStudio.Save
 
         
         StageSave StageData { get; }
-        CurrencySave GoldData { get; }
-        CurrencySave TempGoldData { get; }
         CharactersSave CharactersData { get; }
         AbilitiesSave AbilitiesData { get; }
         UpgradesSave UpgradesData { get; }
         InputSave InputData { get; }
-        AudioSave AudioData { get; }
-        VibrationSave VibrationData { get; }
     }
 
     [DefaultExecutionOrder(-100)]
     public class SaveManager : MonoBehaviour, ISaveManager
     {
         #region 获取保存的数据
-        private VibrationSave _vibrationSave;
-        public VibrationSave VibrationData
-        {
-            get
-            {
-                _vibrationSave ??= GetSave<VibrationSave>(SaveKey.VibrationData);
-                return _vibrationSave;
-            }
-        }
-        
         private InputSave _inputSave;
         public InputSave InputData
         {
@@ -69,16 +52,6 @@ namespace OctoberStudio.Save
             {
                 _inputSave ??= GetSave<InputSave>(SaveKey.InputData);
                 return _inputSave;
-            }
-        }
-        
-        private AudioSave _audioSave;
-        public AudioSave AudioData
-        {
-            get
-            {
-                _audioSave ??= GetSave<AudioSave>(SaveKey.AudioData);
-                return _audioSave;
             }
         }
         
@@ -111,27 +84,7 @@ namespace OctoberStudio.Save
                 return _charactersSave;
             }
         }
-        
-        private CurrencySave _goldData;
-        public CurrencySave GoldData
-        {
-            get
-            {
-                _goldData ??= GetSave<CurrencySave>(SaveKey.GoldData);
-                return _goldData;
-            }
-        }
-
-        private CurrencySave _tempGoldData;
-        public CurrencySave TempGoldData
-        {
-            get
-            {
-                _tempGoldData ??= GetSave<CurrencySave>(SaveKey.TempGoldData);
-                return _tempGoldData;
-            }
-        }
-        
+  
         private StageSave _stageData;
         public StageSave StageData
         {

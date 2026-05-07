@@ -12,19 +12,15 @@ namespace OctoberStudio.UI
         [SerializeField] protected TMP_Text timerText;
         protected int lastSeconds = -1;
         protected IEasingCoroutine alphaCoroutine;
-        protected StageSave stageSave;
-        private IDisposable disposable;
 
         private void Update()
         {
-            
+            if (!GameController.IsBattleing) return;
             var timespan = TimeSpan.FromSeconds(StageController.GetDirectorTime());
             if(timespan.Seconds != lastSeconds)
             {
                 lastSeconds = timespan.Seconds;
-
                 timerText.text = string.Format("{0:mm\\:ss}", timespan);
-
                 GameController.SaveManager.StageData.Time = (float)StageController.GetDirectorTime();
             }
         }
@@ -32,7 +28,6 @@ namespace OctoberStudio.UI
         public void Show()
         {
             alphaCoroutine.StopIfExists();
-
             gameObject.SetActive(true);
             alphaCoroutine = timerText.DoAlpha(1, 0.3f);
         }
@@ -40,7 +35,6 @@ namespace OctoberStudio.UI
         public void Hide()
         {
             alphaCoroutine.StopIfExists();
-
             timerText.DoAlpha(0, 0.3f).SetOnFinish(() => gameObject.SetActive(false));
         }
     }

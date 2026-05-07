@@ -1,5 +1,6 @@
 using OctoberStudio.Pool;
 using System.Collections.Generic;
+using GameScripts;
 using UnityEngine;
 
 namespace OctoberStudio.Audio
@@ -20,23 +21,21 @@ namespace OctoberStudio.Audio
 
         private Dictionary<int, SoundContainer> sounds;
 
-        private AudioSave save;
-
         public float SoundVolume { 
-            get => save.SoundVolume;
+            get => GameEntry.Data.PlayerRoleData.soundVolume;
             set
             {
-                save.SoundVolume = value;
+                GameEntry.Data.PlayerRoleData.soundVolume = value;
                 OnSoundVolumeChanged();
             }
         }
 
         public float MusicVolume
         {
-            get => save.MusicVolume;
+            get => GameEntry.Data.PlayerRoleData.musicVolume;
             set
             {
-                save.MusicVolume = value;
+                GameEntry.Data.PlayerRoleData.musicVolume = value;
                 OnMusicVolumeChanged();
             }
         }
@@ -76,11 +75,6 @@ namespace OctoberStudio.Audio
             GameController.RegisterAudioManager(this);
         }
 
-        private void Start()
-        {
-            save = GameController.SaveManager.AudioData;
-        }
-
         public AudioSource PlaySound(AudioClip clip, float volume = 1, float pitch = 1)
         {
             var source = audioSourcePool.GetEntity();
@@ -89,7 +83,7 @@ namespace OctoberStudio.Audio
             source.loop = false;
 
             source.pitch = pitch;
-            source.volume = volume * save.SoundVolume;
+            source.volume = volume * GameEntry.Data.PlayerRoleData.soundVolume;
 
             var data = new AudioData() { source = source, volume = volume };
             aliveSources.Add(data);
@@ -118,7 +112,7 @@ namespace OctoberStudio.Audio
             source.loop = false;
 
             source.pitch = clipData.Pitch * pitch;
-            source.volume = clipData.Volume * save.SoundVolume * volume;
+            source.volume = clipData.Volume * GameEntry.Data.PlayerRoleData.soundVolume * volume;
 
             var data = new AudioData() { source = source, volume = clipData.Volume };
             aliveSources.Add(data);
@@ -136,7 +130,7 @@ namespace OctoberStudio.Audio
             source.loop = true;
 
             source.pitch = clipData.Pitch;
-            source.volume = clipData.Volume * save.MusicVolume;
+            source.volume = clipData.Volume * GameEntry.Data.PlayerRoleData.musicVolume;
 
             var data = new AudioData() { source = source, volume = clipData.Volume };
             aliveSources.Add(data);
@@ -163,7 +157,7 @@ namespace OctoberStudio.Audio
             {
                 if (!source.source.loop)
                 {
-                    source.source.volume = source.volume * save.SoundVolume;
+                    source.source.volume = source.volume * GameEntry.Data.PlayerRoleData.soundVolume;
                 }
             }
         }
@@ -174,7 +168,7 @@ namespace OctoberStudio.Audio
             {
                 if (source.source.loop)
                 {
-                    source.source.volume = source.volume * save.MusicVolume;
+                    source.source.volume = source.volume * GameEntry.Data.PlayerRoleData.musicVolume;
                 }
             }
         }

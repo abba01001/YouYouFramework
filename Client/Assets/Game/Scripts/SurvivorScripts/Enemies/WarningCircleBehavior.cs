@@ -1,5 +1,6 @@
 using OctoberStudio.Easing;
 using System;
+using Main;
 using UnityEngine;
 
 namespace OctoberStudio

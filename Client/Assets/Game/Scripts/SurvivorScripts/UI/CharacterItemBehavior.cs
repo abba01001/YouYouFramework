@@ -1,10 +1,11 @@
+using GameScripts;
 using OctoberStudio.Abilities;
-using OctoberStudio.Audio;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using AudioManager = OctoberStudio.Audio.AudioManager;
 
 namespace OctoberStudio.UI
 {
@@ -33,7 +34,6 @@ namespace OctoberStudio.UI
         [SerializeField] ScalingLabelBehavior costLabel;
         [SerializeField] TMP_Text buttonText;
 
-        public CurrencySave GoldCurrency { get; private set; }
         private CharactersSave charactersSave;
 
         public Selectable Selectable => upgradeButton;
@@ -57,13 +57,8 @@ namespace OctoberStudio.UI
                 charactersSave = GameController.SaveManager.CharactersData;
                 charactersSave.onSelectedCharacterChanged += RedrawVisuals;
             }
-
-            if (GoldCurrency == null)
-            {
-                GoldCurrency = GameController.SaveManager.GoldData;
-                GoldCurrency.onGoldAmountChanged += OnGoldAmountChanged;
-            }
-
+            
+            GameEntry.Event.AddEventListener(Constants.EventName.PropsChangedEvent,HandleCoinAmountChanged);
             startingAbilityObject.SetActive(characterData.HasStartingAbility);
 
             if(characterData.HasStartingAbility)
@@ -86,6 +81,11 @@ namespace OctoberStudio.UI
             hpText.text = Data.BaseHP.ToString();
             damageText.text = Data.BaseDamage.ToString();
 
+            RedrawButton();
+        }
+        
+        private void HandleCoinAmountChanged(object userdata)
+        {
             RedrawButton();
         }
 
@@ -117,8 +117,7 @@ namespace OctoberStudio.UI
                 buttonText.gameObject.SetActive(false);
 
                 costLabel.SetAmount(Data.Cost);
-
-                if (GoldCurrency.CanAfford(Data.Cost))
+                if (GameEntry.Data.GetProps((int)PropEnum.Coin) >= Data.Cost)
                 {
                     upgradeButton.interactable = true;
                     upgradeButton.image.sprite = enabledButtonSprite;
@@ -135,7 +134,7 @@ namespace OctoberStudio.UI
         {
             if (!charactersSave.HasCharacterBeenBought(CharacterId))
             {
-                GoldCurrency.Withdraw(Data.Cost);
+                GameEntry.Data.DelProp((int)PropEnum.Coin,Data.Cost);
                 charactersSave.AddBoughtCharacter(CharacterId);
             }
 
@@ -177,10 +176,7 @@ namespace OctoberStudio.UI
 
         public void Clear()
         {
-            if (GoldCurrency != null)
-            {
-                GoldCurrency.onGoldAmountChanged -= OnGoldAmountChanged;
-            }
+            GameEntry.Event.RemoveEventListener(Constants.EventName.PropsChangedEvent,HandleCoinAmountChanged);
 
             if (charactersSave != null)
             {

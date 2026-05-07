@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Main;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
@@ -46,13 +47,11 @@ namespace OctoberStudio.Easing
             return new FloatEasingCoroutine(from, to, duration, delay, action);
         }
         
-        // 处理跳跃位移
         public static IEasingCoroutine DoJump(Vector2 from, Vector2 to, float jumpHeight, float duration, UnityAction<Vector2> action, float delay = 0)
         {
             return new Vector2JumpEasingCoroutine(from, to, jumpHeight, duration, delay, action);
         }
 
-        // 处理旋转 (直接复用你的 FloatEasingCoroutine)
         public static IEasingCoroutine DoRotate(float from, float to, float duration, UnityAction<float> action, float delay = 0)
         {
             return new FloatEasingCoroutine(from, to, duration, delay, action);
@@ -107,19 +106,12 @@ namespace OctoberStudio.Easing
     public abstract class EmptyCoroutine : IEasingCoroutine
     {
         protected Coroutine coroutine;
-
         public bool IsActive { get; protected set; }
-
         protected UnityAction finishCallback;
-
         protected EasingType easingType = EasingType.Linear;
-
         protected float delay = -1;
-
         protected bool unscaledTime;
-
         protected bool useCurve;
-
         protected AnimationCurve easingCurve;
 
         public IEasingCoroutine SetEasing(EasingType easingType)
@@ -145,59 +137,42 @@ namespace OctoberStudio.Easing
         {
             easingCurve = curve;
             useCurve = true;
-
             return this;
         }
 
         public IEasingCoroutine SetDelay(float delay)
         {
             this.delay = delay;
-
             return this;
         }
 
         public void Stop()
         {
             EasingManager.StopCustomCoroutine(coroutine);
-
             IsActive = false;
         }
     }
 
     public class NextFrameCoroutine : EmptyCoroutine
     {
-        public NextFrameCoroutine()
-        {
-            coroutine = EasingManager.StartCustomCoroutine(Coroutine());
-        }
-
+        public NextFrameCoroutine() { coroutine = EasingManager.StartCustomCoroutine(Coroutine()); }
         private IEnumerator Coroutine()
         {
             IsActive = true;
-
             yield return null;
-
             finishCallback?.Invoke();
-
             IsActive = false;
         }
     }
 
     public class NextFixedFrameCoroutine : EmptyCoroutine
     {
-        public NextFixedFrameCoroutine()
-        {
-            coroutine = EasingManager.StartCustomCoroutine(Coroutine());
-        }
-
+        public NextFixedFrameCoroutine() { coroutine = EasingManager.StartCustomCoroutine(Coroutine()); }
         private IEnumerator Coroutine()
         {
             IsActive = true;
-
             yield return new WaitForFixedUpdate();
-
             finishCallback?.Invoke();
-
             IsActive = false;
         }
     }
@@ -205,37 +180,23 @@ namespace OctoberStudio.Easing
     public class WaitCoroutine : EmptyCoroutine
     {
         protected float duration;
-
         public WaitCoroutine(float duration, bool unscaledTime = false)
         {
             this.duration = duration;
             this.unscaledTime = unscaledTime;
-
             coroutine = EasingManager.StartCustomCoroutine(Coroutine());
         }
-
         private IEnumerator Coroutine()
         {
             IsActive = true;
-
             while (delay > 0)
             {
                 yield return null;
-
                 delay -= unscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
             }
-
-            if (unscaledTime)
-            {
-                yield return new WaitForSecondsRealtime(duration);
-            }
-            else
-            {
-                yield return new WaitForSeconds(duration);
-            }
-
+            if (unscaledTime) yield return new WaitForSecondsRealtime(duration);
+            else yield return new WaitForSeconds(duration);
             finishCallback?.Invoke();
-
             IsActive = false;
         }
     }
@@ -243,31 +204,21 @@ namespace OctoberStudio.Easing
     public class WaitForConditionCoroutine : EmptyCoroutine
     {
         private Func<bool> condition;
-
         public WaitForConditionCoroutine(Func<bool> condition)
         {
             this.condition = condition;
             coroutine = EasingManager.StartCustomCoroutine(Coroutine());
         }
-
         private IEnumerator Coroutine()
         {
             IsActive = true;
-
             while (delay > 0)
             {
                 yield return null;
-
                 delay -= unscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
             }
-
-            do
-            {
-                yield return null;
-            } while (!condition());
-
+            do { yield return null; } while (!condition());
             finishCallback?.Invoke();
-
             IsActive = false;
         }
     }
@@ -277,7 +228,6 @@ namespace OctoberStudio.Easing
         protected T from;
         protected T to;
         protected float duration;
-
         protected UnityAction<T> callback;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -296,7 +246,6 @@ namespace OctoberStudio.Easing
         private IEnumerator Coroutine()
         {
             IsActive = true;
-
             float time = 0;
             while (time < duration)
             {
@@ -304,158 +253,97 @@ namespace OctoberStudio.Easing
                 if (delay > 0)
                 {
                     delay -= unscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
-
                     if (delay > 0) continue;
                 }
                 time += unscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
                 float t;
-                if (useCurve)
-                {
-                    t = easingCurve.Evaluate(time / duration);
-                }
-                else
-                {
-                    t = EasingFunctions.ApplyEasing(time / duration, easingType);
-                }
+                if (useCurve) t = easingCurve.Evaluate(time / duration);
+                else t = EasingFunctions.ApplyEasing(time / duration, easingType);
+                
                 T value = Lerp(from, to, t);
                 callback?.Invoke(value);
             }
             callback.Invoke(to);
             finishCallback?.Invoke();
-
             IsActive = false;
         }
     }
 
     public class FloatEasingCoroutine : EasingCoroutine<float>
     {
-        public FloatEasingCoroutine(float from, float to, float duration, float delay, UnityAction<float> callback) : base(from, to, duration, delay, callback)
-        {
-
-        }
-
+        public FloatEasingCoroutine(float from, float to, float duration, float delay, UnityAction<float> callback) : base(from, to, duration, delay, callback) { }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override float Lerp(float a, float b, float t)
-        {
-            return Mathf.LerpUnclamped(a, b, t);
-        }
+        public override float Lerp(float a, float b, float t) => Mathf.LerpUnclamped(a, b, t);
     }
     
     public class Vector2JumpEasingCoroutine : EasingCoroutine<Vector2>
     {
         private float _jumpHeight;
-
-        public Vector2JumpEasingCoroutine(Vector2 from, Vector2 to, float jumpHeight, float duration, float delay, UnityAction<Vector2> callback) 
-            : base(from, to, duration, delay, callback)
+        public Vector2JumpEasingCoroutine(Vector2 from, Vector2 to, float jumpHeight, float duration, float delay, UnityAction<Vector2> callback) : base(from, to, duration, delay, callback)
         {
             _jumpHeight = jumpHeight;
         }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override Vector2 Lerp(Vector2 a, Vector2 b, float t)
         {
-            // 1. 计算水平面上的直线插值
             Vector2 pos = Vector2.LerpUnclamped(a, b, t);
-
-            // 2. 计算抛物线高度：使用 t * (1 - t) * 4 会得到一个 0->1->0 的完美二次曲线
-            // 这比 Sin 性能更好，且更符合重力抛物线感
             float height = _jumpHeight * (t * (1f - t) * 4f);
-
-            // 3. 叠加高度到 Y 轴
             pos.y += height;
-
             return pos;
         }
     }
 
     public class VectorEasingCoroutine3 : EasingCoroutine<Vector3>
     {
-        public VectorEasingCoroutine3(Vector3 from, Vector3 to, float duration, float delay, UnityAction<Vector3> callback) : base(from, to, duration, delay, callback)
-        {
-
-        }
-
+        public VectorEasingCoroutine3(Vector3 from, Vector3 to, float duration, float delay, UnityAction<Vector3> callback) : base(from, to, duration, delay, callback) { }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override Vector3 Lerp(Vector3 a, Vector3 b, float t)
-        {
-            return Vector3.LerpUnclamped(a, b, t);
-        }
+        public override Vector3 Lerp(Vector3 a, Vector3 b, float t) => Vector3.LerpUnclamped(a, b, t);
     }
 
     public class VectorEasingCoroutine2 : EasingCoroutine<Vector2>
     {
-        public VectorEasingCoroutine2(Vector2 from, Vector2 to, float duration, float delay, UnityAction<Vector2> callback) : base(from, to, duration, delay, callback)
-        {
-
-        }
-
+        public VectorEasingCoroutine2(Vector2 from, Vector2 to, float duration, float delay, UnityAction<Vector2> callback) : base(from, to, duration, delay, callback) { }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override Vector2 Lerp(Vector2 a, Vector2 b, float t)
-        {
-            return Vector2.LerpUnclamped(a, b, t);
-        }
+        public override Vector2 Lerp(Vector2 a, Vector2 b, float t) => Vector2.LerpUnclamped(a, b, t);
     }
 
     public class ColorEasingCoroutine : EasingCoroutine<Color>
     {
-        public ColorEasingCoroutine(Color from, Color to, float duration, float delay, UnityAction<Color> callback) : base(from, to, duration, delay, callback)
-        {
-
-        }
-
+        public ColorEasingCoroutine(Color from, Color to, float duration, float delay, UnityAction<Color> callback) : base(from, to, duration, delay, callback) { }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override Color Lerp(Color a, Color b, float t)
-        {
-            return Color.LerpUnclamped(a, b, t);
-        }
+        public override Color Lerp(Color a, Color b, float t) => Color.LerpUnclamped(a, b, t);
     }
 
     public abstract class EasingJobAnimation
     {
         protected float startTime;
         public float StartTime => startTime;
-
         protected float endTime;
         public float EndTime => endTime;
-
         protected bool useUnscaledTime;
         public bool UseUnscaledTime => useUnscaledTime;
-        
         protected EasingType easingType;
         public EasingType EasingType => easingType;
-
         protected UnityAction finishCallback;
 
         protected EasingJobAnimation(float duration, float delay, bool useUnscaledTime, EasingType easingType)
         {
             this.useUnscaledTime = useUnscaledTime;
-
             var time = useUnscaledTime ? Time.unscaledTime : Time.time;
             startTime = time + delay;
             endTime = startTime + duration;
-
             this.easingType = easingType;
         }
-
         public bool IsActive => useUnscaledTime ? Time.unscaledTime < endTime : Time.time < endTime;
         public bool IsStarted => useUnscaledTime ? startTime <= Time.unscaledTime : startTime <= Time.time;
-
-        public virtual void SetOnFinish(UnityAction finishCallback)
-        {
-            this.finishCallback = finishCallback;
-        }
-
-        public virtual void Finish()
-        {
-            finishCallback?.Invoke();
-        }
+        public virtual void SetOnFinish(UnityAction finishCallback) => this.finishCallback = finishCallback;
+        public virtual void Finish() => finishCallback?.Invoke();
     }
 
     public class PositionEasingJobAnimation : EasingJobAnimation
     {
         protected Transform transform;
         protected Transform targetTransform;
-
         public float2 Position { get => transform.position.XY(); set => transform.position = (Vector2)value; }
         public float2 Target => targetTransform.position.XY();
 
@@ -463,12 +351,9 @@ namespace OctoberStudio.Easing
         {
             this.transform = transform;
             this.targetTransform = targetTransform;
-
             IsValid = true;
-
             EasingManager.PositionJobRunner.AddJobAnimaiton(this);
         }
-
         public bool IsValid { get; protected set; }
     }
 
@@ -479,18 +364,13 @@ namespace OctoberStudio.Easing
 
         [ReadOnly] public NativeList<float2> timeData;
         [ReadOnly] public NativeList<float> useUnscaledTime;
-
-#if UNITY_EDITOR
+        // 核心修改：真机也需要分配指针空间
         [ReadOnly] public NativeList<FunctionPointer<EasingFunctions.EasingFunction>> easingFunctions;
-#endif
-
         [ReadOnly] public NativeList<float2> startPositions;
         [ReadOnly] public NativeList<float2> targets;
-
         [WriteOnly] public NativeList<float2> positions;
 
         public bool isJobRunning = false;
-
         protected DoPosition2DJob doPosition2DJob;
         protected JobHandle doPosition2DJobHandle;
         protected int capacityCache;
@@ -502,32 +382,20 @@ namespace OctoberStudio.Easing
 
             timeData = new NativeList<float2>(50, Allocator.Persistent);
             useUnscaledTime = new NativeList<float>(50, Allocator.Persistent);
-
-#if UNITY_EDITOR
             easingFunctions = new NativeList<FunctionPointer<EasingFunctions.EasingFunction>>(50, Allocator.Persistent);
-#endif
-
             startPositions = new NativeList<float2>(50, Allocator.Persistent);
             targets = new NativeList<float2>(50, Allocator.Persistent);
-
             positions = new NativeList<float2>(50, Allocator.Persistent);
             
             doPosition2DJob = new DoPosition2DJob();
-
             capacityCache = timeData.Capacity;
-
             ReinitializeJob();
         }
 
         public virtual void AddJobAnimaiton(PositionEasingJobAnimation jobAnimation)
         {
-            if (jobAnimation.IsStarted && !isJobRunning)
-            {
-                AddActiveAnimation(jobAnimation);
-            } else
-            {
-                waitingAnimations.Add(jobAnimation);
-            }
+            if (jobAnimation.IsStarted && !isJobRunning) AddActiveAnimation(jobAnimation);
+            else waitingAnimations.Add(jobAnimation);
         }
 
         public virtual void Update()
@@ -539,9 +407,7 @@ namespace OctoberStudio.Easing
                     if (waitingAnimations[i].IsStarted)
                     {
                         AddActiveAnimation(waitingAnimations[i]);
-                        waitingAnimations.RemoveAt(i);
-
-                        i--;
+                        waitingAnimations.RemoveAt(i--);
                     }
                 }
             }
@@ -550,25 +416,14 @@ namespace OctoberStudio.Easing
             
             for (int i = 0; i < activeAnimations.Count; i++)
             {
-                var animation = activeAnimations[i];
-
-                if (animation.IsValid)
-                {
-                    targets[i] = activeAnimations[i].Target;
-                }
-                else
-                {
-                    RemoveActiveAnimation(i);
-                    i--;
-                }
+                if (activeAnimations[i].IsValid) targets[i] = activeAnimations[i].Target;
+                else { RemoveActiveAnimation(i--); }
             }
 
             doPosition2DJob.scaledTime = Time.time;
             doPosition2DJob.unscaledTime = Time.unscaledTime;
-
             doPosition2DJobHandle = doPosition2DJob.Schedule(activeAnimations.Count, 16);
             JobHandle.ScheduleBatchedJobs();
-
             isJobRunning = true;
         }
 
@@ -576,31 +431,20 @@ namespace OctoberStudio.Easing
         {
             doPosition2DJob.timeData = timeData.AsDeferredJobArray();
             doPosition2DJob.useUnscaledTime = useUnscaledTime.AsDeferredJobArray();
-
-#if UNITY_EDITOR
             doPosition2DJob.easingFunctions = easingFunctions.AsDeferredJobArray();
-#endif
-
             doPosition2DJob.startPositions = startPositions.AsDeferredJobArray();
             doPosition2DJob.targets = targets.AsDeferredJobArray();
-
             doPosition2DJob.positions = positions.AsDeferredJobArray();
         }
 
         protected virtual void AddActiveAnimation(PositionEasingJobAnimation jobAnimation)
         {
             activeAnimations.Add(jobAnimation);
-
             timeData.Add(new float2(jobAnimation.StartTime, jobAnimation.EndTime));
             useUnscaledTime.Add(jobAnimation.UseUnscaledTime ? 1f : 0f);
-
-#if UNITY_EDITOR
             easingFunctions.Add(EasingFunctions.Functions[(int)jobAnimation.EasingType]);
-#endif
-
             startPositions.Add(jobAnimation.Position);
             targets.Add(jobAnimation.Target);
-
             positions.Add(float2.zero);
 
             if(timeData.Capacity != capacityCache)
@@ -614,45 +458,28 @@ namespace OctoberStudio.Easing
         {
             if (!isJobRunning) return;
             isJobRunning = false;
-
             doPosition2DJobHandle.Complete();
 
             for (int i = 0; i < activeAnimations.Count; i++)
             {
-                var animation = activeAnimations[i];
-
-                var remove = false;
-                if (animation.IsValid)
+                if (activeAnimations[i].IsValid)
                 {
                     activeAnimations[i].Position = positions[i];
-
-                    if (!animation.IsActive)
+                    if (!activeAnimations[i].IsActive)
                     {
-                        animation.Finish();
-                        remove = true;
+                        activeAnimations[i].Finish();
+                        RemoveActiveAnimation(i--);
                     }
-                } else
-                {
-                    remove = true;
-                }
-
-                if (remove)
-                {
-                    RemoveActiveAnimation(i);
-                    i--;
-                }
+                } else RemoveActiveAnimation(i--);
             }
         }
 
         protected virtual void RemoveActiveAnimation(int index)
         {
             activeAnimations.RemoveAt(index);
-
             timeData.RemoveAt(index);
             useUnscaledTime.RemoveAt(index);
-#if UNITY_EDITOR
             easingFunctions.RemoveAt(index);
-#endif
             startPositions.RemoveAt(index);
             targets.RemoveAt(index);
             positions.RemoveAt(index);
@@ -661,48 +488,14 @@ namespace OctoberStudio.Easing
         public virtual void Clear()
         {
             if(isJobRunning) doPosition2DJobHandle.Complete();
-
-            timeData.Dispose();
-            useUnscaledTime.Dispose();
-
-#if UNITY_EDITOR
-            easingFunctions.Dispose();
-#endif
-            startPositions.Dispose();
-
-            targets.Dispose();
-            positions.Dispose();
-        }
-
-        [BurstCompile(OptimizeFor = OptimizeFor.Performance)]
-        public struct DoPosition2DJob : IJobParallelFor
-        {
-            // x - startTime, y = endTime
-            [ReadOnly] public NativeArray<float2> timeData;
-            [ReadOnly] public NativeArray<float> useUnscaledTime;
-
-#if UNITY_EDITOR
-            [ReadOnly] public NativeArray<FunctionPointer<EasingFunctions.EasingFunction>> easingFunctions;
-#endif
-
-            [ReadOnly] public NativeArray<float2> startPositions;
-            [ReadOnly] public NativeArray<float2> targets;
-
-            [WriteOnly] public NativeArray<float2> positions;
-
-            [ReadOnly] public float scaledTime;
-            [ReadOnly] public float unscaledTime;
-
-            public void Execute(int i)
+            if (timeData.IsCreated)
             {
-                var time = math.select(unscaledTime, scaledTime, useUnscaledTime[i] == 0f);
-                var t = math.unlerp(timeData[i].x, timeData[i].y, time);
-
-#if UNITY_EDITOR
-                t = easingFunctions[i].Invoke(math.saturate(t));
-#endif
-
-                positions[i] = startPositions[i] + (targets[i] - startPositions[i]) * t;
+                timeData.Dispose();
+                useUnscaledTime.Dispose();
+                easingFunctions.Dispose();
+                startPositions.Dispose();
+                targets.Dispose();
+                positions.Dispose();
             }
         }
     }

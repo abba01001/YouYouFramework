@@ -15,6 +15,9 @@ namespace Main
     {
         public static CheckVersionCtrl Instance = new();
 
+        public string LocalPackageVersion => PlayerPrefs.GetString("PackageVersion", "");
+        public string RemotePackageVersion { get; private set; }
+
         public event Action CheckVersionBeginDownload;
         public event Action<DownloadStatus> CheckVersionDownloadUpdate;
         public event Action CheckVersionDownloadComplete;
@@ -27,7 +30,10 @@ namespace Main
         public async void CheckVersionChange(EPlayMode playMode, Action onComplete)
         {
             CheckVersionComplete = onComplete;
-
+            CheckVersionComplete += () =>
+            {
+                PlayerPrefs.SetString("PackageVersion",DefaultPackage.GetPackageVersion());
+            };
             // 初始化资源系统
             YooAssets.Initialize();
 
@@ -111,7 +117,7 @@ namespace Main
             var operationVersion = DefaultPackage.RequestPackageVersionAsync();
             await operationVersion;
             Debugger.Log($"获取资源版本！operationVersion状态:{operationVersion.Status}");
-
+            
             if (operationVersion.Status != EOperationStatus.Succeed)
             {
                 Debugger.LogWarning($"获取资源版本失败：{operationVersion.Error}");
@@ -119,7 +125,8 @@ namespace Main
             }
 
             Debugger.Log($"获取资源版本成功 : {operationVersion.PackageVersion}");
-
+            RemotePackageVersion = operationVersion.PackageVersion;
+            
             //更新资源清单
             var operationManifest = DefaultPackage.UpdatePackageManifestAsync(operationVersion.PackageVersion);
             await operationManifest;

@@ -346,7 +346,8 @@ namespace GameScripts
             {
                 if (pair.Value.FuncName == funcName)
                 {
-                    return GameEntry.Data.RoleLevel >= pair.Value.UnlockLevel;
+                    return true;
+                    // return GameEntry.Data.RoleLevel >= pair.Value.UnlockLevel;
                 }
             }
     
@@ -373,7 +374,8 @@ namespace GameScripts
             {
                 if (pair.Value.FuncName == funcName)
                 {
-                    return GameEntry.Data.RoleLevel >= pair.Value.ShowLevel;
+                    return true;
+                    // return GameEntry.Data.RoleLevel >= pair.Value.ShowLevel;
                 }
             }
     

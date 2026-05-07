@@ -127,7 +127,8 @@ namespace OctoberStudio.UI
             Time.timeScale = 1f;
 
             stageSave.IsPlaying = false;
-
+            gameObject.SetActive(false);
+            GameEntry.UI.CloseUIForm<FormGame>();
             StageController.ReturnToMainMenu();
         }
 

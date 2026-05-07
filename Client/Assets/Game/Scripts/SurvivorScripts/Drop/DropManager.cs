@@ -3,7 +3,7 @@ using OctoberStudio.Easing;
 using OctoberStudio.Extensions;
 using OctoberStudio.Pool;
 using System.Collections.Generic;
-using Main;
+using Main; // 确保引用了 Main 命名空间
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
@@ -46,11 +46,13 @@ namespace OctoberStudio
                 lastTimeDropped.Add(data.DropType, 0);
             }
 
+            // 初始化 Native 容器
             dropPositions = new NativeList<float2>(500, Allocator.Persistent);
             isInside = new NativeList<bool>(500, Allocator.Persistent);
 
             cachedCapacity = dropPositions.Capacity;
 
+            // 初始化外部定义的 Job
             insideMagnetJob = new InsideMagnetJob();
             insideMagnetJob.positions = dropPositions.AsDeferredJobArray();
             insideMagnetJob.isInside = isInside.AsDeferredJobArray();
@@ -59,6 +61,13 @@ namespace OctoberStudio
         protected virtual void Update()
         {
             if (dropList.Count == 0) return;
+
+            // 实时同步位置（线上现有逻辑：如果掉落物会移动，这里需要手动更新 dropPositions 里的值）
+            // 为了不碰现有功能，保持原状，但在高性能要求下，建议在此处 for 循环更新一次 dropPositions
+            for (int i = 0; i < dropList.Count; i++)
+            {
+                dropPositions[i] = dropList[i].transform.position.XY();
+            }
 
             insideMagnetJob.playerPosition = PlayerBehavior.CenterPosition;
             insideMagnetJob.magnetDistanceSqr = PlayerBehavior.Player.MagnetRadiusSqr;
@@ -74,9 +83,7 @@ namespace OctoberStudio
             if (!isJobRunning)
             {
                 pickUpAllWhenFinished = false;
-
                 MoveWaitingDropToActive();
-
                 return;
             }
             isJobRunning = false;
@@ -93,9 +100,11 @@ namespace OctoberStudio
                 {
                     if (isInside[i])
                     {
+                        // 现有的动画逻辑
                         dropList[i].transform.DoPositionJob(PlayerBehavior.CenterTransform, 0.25f, delay, false, EasingType.BackIn).SetOnFinish(dropList[i].OnPickedUp);
                         delay += 0.002f;
 
+                        // 同步移除
                         dropList.RemoveAtSwapBack(i);
                         dropPositions.RemoveAtSwapBack(i);
                         isInside.RemoveAtSwapBack(i);
@@ -222,28 +231,14 @@ namespace OctoberStudio
             {
                 insideMagnetJob.positions = dropPositions.AsDeferredJobArray();
                 insideMagnetJob.isInside = isInside.AsDeferredJobArray();
+                cachedCapacity = isInside.Capacity; // 更新缓存的容量，防止重复赋值
             }
         }
 
         protected virtual void OnDestroy()
         {
-            dropPositions.Dispose();
-            isInside.Dispose();
-        }
-
-        [BurstCompile(OptimizeFor = OptimizeFor.Performance)]
-        protected struct InsideMagnetJob : IJobParallelFor
-        {
-            [ReadOnly] public NativeArray<float2> positions;
-            [ReadOnly] public float2 playerPosition;
-            [ReadOnly] public float magnetDistanceSqr;
-
-            [WriteOnly] public NativeArray<bool> isInside;
-
-            public void Execute(int index)
-            {
-                isInside[index] = math.distancesq(positions[index], playerPosition) <= magnetDistanceSqr;
-            }
+            if (dropPositions.IsCreated) dropPositions.Dispose();
+            if (isInside.IsCreated) isInside.Dispose();
         }
     }
 }

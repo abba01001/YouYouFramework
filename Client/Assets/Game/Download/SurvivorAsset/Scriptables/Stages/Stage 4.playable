@@ -308,8 +308,8 @@ MonoBehaviour:
     dropOverride: []
     disableOffscreenTeleport: 0
   circularSpawn: 0
-  RushSpeed: 4.03
-  RushDelay: 0.321
+  RushSpeed: {x: 0, y: 10}
+  RushDelay: {x: 0, y: 3}
   enemiesCount: 6
 --- !u!114 &-2510605301505060852
 MonoBehaviour:

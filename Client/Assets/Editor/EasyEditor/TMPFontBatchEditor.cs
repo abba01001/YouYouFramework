@@ -6,12 +6,17 @@ using System.Linq;
 
 public class TMPPrefabFinder : EditorWindow
 {
+    private enum WindowMode { BatchModify, ReferenceAnalysis }
+    private WindowMode _currentMode = WindowMode.BatchModify;
+
     private class TMPNode
     {
         public bool Selected;
-        public string ComponentPath; // 组件在预制体内的相对路径
+        public string ComponentPath; 
         public string OriginalFontName;
         public string HierarchyName;
+        public int ComponentIndex; 
+        public TextMeshProUGUI SceneTarget;
     }
 
     private class PrefabEntry
@@ -25,7 +30,7 @@ public class TMPPrefabFinder : EditorWindow
 
     private List<PrefabEntry> _entries = new List<PrefabEntry>();
     private List<TMP_FontAsset> _allFonts = new List<TMP_FontAsset>();
-    private string[] _fontDisplayNames; // 存储带路径的显示名称
+    private string[] _fontDisplayNames;
     private int _selectedFontIndex = -1;
     private TMP_FontAsset _targetFont;
 
@@ -36,7 +41,10 @@ public class TMPPrefabFinder : EditorWindow
     private Vector2 _scrollPos;
     private string _searchFilter = "";
 
-    [MenuItem("Tools/UI/TMP 预制体管理器 (高级版)")]
+    private int _refFontPopupIndex = -1;
+    private Dictionary<TMP_FontAsset, int> _fontUsageCount = new Dictionary<TMP_FontAsset, int>();
+
+    [MenuItem("Tools/UI/TMP 综合管理工具")]
     public static void ShowWindow()
     {
         var window = GetWindow<TMPPrefabFinder>("TMP Manager Pro");
@@ -46,147 +54,151 @@ public class TMPPrefabFinder : EditorWindow
 
     private void OnGUI()
     {
-        // 顶部配置区
-        EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-        DrawFontAndMaterialSection();
+        EditorGUI.BeginChangeCheck();
+        _currentMode = (WindowMode)GUILayout.Toolbar((int)_currentMode, new string[] { "批量修改模式", "引用查找模式" });
+        if (EditorGUI.EndChangeCheck())
+        {
+            // 核心改进：切换 Tab 时清理数据
+            _entries.Clear();
+            _searchFilter = "";
+            _scrollPos = Vector2.zero;
+            if (_currentMode == WindowMode.ReferenceAnalysis) 
+            {
+                _refFontPopupIndex = -1;
+                RefreshUsageStatistics(); // 切换时顺便刷新下统计
+            }
+        }
         
-        EditorGUILayout.Space(2);
-        
-        EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("1. 扫描所有预制体", GUILayout.Height(25))) ScanPrefabs();
-        
-        GUI.enabled = _entries.Count > 0 && _targetFont != null;
-        if (GUILayout.Button("2. 执行批量修改", GUILayout.Height(25))) ApplyToSelectedNodes();
-        GUI.enabled = true;
-        EditorGUILayout.EndHorizontal();
-        EditorGUILayout.EndVertical();
+        EditorGUILayout.Space(5);
 
-        // 列表操作区
+        if (_currentMode == WindowMode.BatchModify)
+            DrawBatchModifyUI();
+        else
+            DrawReferenceAnalysisUI();
+
         RenderListHeader();
-
-        // 列表滚动区
         _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos);
         RenderListItems();
         EditorGUILayout.EndScrollView();
     }
 
-    private void DrawFontAndMaterialSection()
+    private void DrawBatchModifyUI()
     {
-        // 目标字体下拉 (显示完整路径)
+        EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+        DrawFontAndMaterialSection();
         EditorGUILayout.BeginHorizontal();
-        EditorGUI.BeginChangeCheck();
+        if (GUILayout.Button("扫描全部 (预制体+场景)", GUILayout.Height(25))) ScanPrefabs(null);
+        
+        GUI.enabled = _entries.Count > 0 && _targetFont != null;
+        if (GUILayout.Button("执行批量替换", GUILayout.Height(25))) ApplyToSelectedNodes();
+        GUI.enabled = true;
+        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.EndVertical();
+    }
+
+    private void DrawReferenceAnalysisUI()
+    {
+        EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+        EditorGUILayout.LabelField("1. 选择要分析的字体:", EditorStyles.miniBoldLabel);
+        
+        EditorGUILayout.BeginHorizontal();
         if (_fontDisplayNames != null && _fontDisplayNames.Length > 0)
         {
-            _selectedFontIndex = EditorGUILayout.Popup("目标字体 (路径)", _selectedFontIndex, _fontDisplayNames);
+            EditorGUI.BeginChangeCheck();
+            string[] refDisplayNames = _allFonts.Select(f => {
+                int count = _fontUsageCount.ContainsKey(f) ? _fontUsageCount[f] : 0;
+                return $"{f.name} (引用: {count})";
+            }).ToArray();
+
+            _refFontPopupIndex = EditorGUILayout.Popup("选择字体", _refFontPopupIndex, refDisplayNames);
+            if (EditorGUI.EndChangeCheck() && _refFontPopupIndex >= 0)
+            {
+                ScanPrefabs(_allFonts[_refFontPopupIndex]);
+            }
+        }
+
+        if (GUILayout.Button("刷新引用计数", GUILayout.Width(100))) RefreshUsageStatistics();
+        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.EndVertical();
+    }
+
+    private void DrawFontAndMaterialSection()
+    {
+        EditorGUILayout.BeginHorizontal();
+        if (_fontDisplayNames != null && _fontDisplayNames.Length > 0)
+        {
+            EditorGUI.BeginChangeCheck();
+            _selectedFontIndex = EditorGUILayout.Popup("目标字体", _selectedFontIndex, _fontDisplayNames);
             if (EditorGUI.EndChangeCheck() && _selectedFontIndex >= 0)
             {
                 _targetFont = _allFonts[_selectedFontIndex];
                 RefreshMaterialList();
             }
         }
-        else
-        {
-            EditorGUILayout.LabelField("目标字体", "工程内未找到 TMP 字体", EditorStyles.helpBox);
-        }
-        
-        if (GUILayout.Button("刷新字体库", GUILayout.Width(80))) RefreshFontList();
+        if (GUILayout.Button("刷新", GUILayout.Width(40))) RefreshFontList();
         EditorGUILayout.EndHorizontal();
 
-        // 对象引用框
-        EditorGUI.BeginChangeCheck();
-        _targetFont = (TMP_FontAsset)EditorGUILayout.ObjectField("当前选定对象", _targetFont, typeof(TMP_FontAsset), false);
-        if (EditorGUI.EndChangeCheck())
-        {
-            SyncFontIndex();
-            RefreshMaterialList();
-        }
+        _targetFont = (TMP_FontAsset)EditorGUILayout.ObjectField("字体对象", _targetFont, typeof(TMP_FontAsset), false);
 
-        // 材质 Preset 下拉
         if (_targetFont != null && _materialNames != null && _materialNames.Length > 0)
-        {
             _selectedMaterialIndex = EditorGUILayout.Popup("材质 Preset", _selectedMaterialIndex, _materialNames);
-        }
     }
 
-    private void RenderListHeader()
+    private void RefreshUsageStatistics()
     {
-        if (_entries.Count <= 0) return;
+        _fontUsageCount.Clear();
+        foreach (var f in _allFonts) _fontUsageCount[f] = 0;
 
-        EditorGUILayout.Space(5);
-        EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
-        _searchFilter = EditorGUILayout.TextField(_searchFilter, EditorStyles.toolbarSearchField);
-        
-        if (GUILayout.Button("全选", EditorStyles.toolbarButton, GUILayout.Width(50))) SetAllSelection(true);
-        if (GUILayout.Button("全不选", EditorStyles.toolbarButton, GUILayout.Width(60))) SetAllSelection(false);
-        EditorGUILayout.EndHorizontal();
-    }
-
-    private void RenderListItems()
-    {
-        for (int i = 0; i < _entries.Count; i++)
+        string[] guids = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets" });
+        foreach (var guid in guids)
         {
-            var entry = _entries[i];
-            if (!IsPathMatchFilter(entry.Path)) continue;
-
-            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-            
-            // --- 预制体行绘制 ---
-            Rect headerRect = EditorGUILayout.BeginHorizontal();
-            
-            // 勾选框
-            EditorGUI.BeginChangeCheck();
-            entry.Selected = EditorGUILayout.Toggle(entry.Selected, GUILayout.Width(20));
-            if (EditorGUI.EndChangeCheck())
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            GameObject go = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            if (go)
             {
-                foreach (var node in entry.Nodes) node.Selected = entry.Selected;
-            }
-
-            // 路径与折叠 (点击文字整行触发折叠)
-            entry.IsExpanded = EditorGUILayout.Foldout(entry.IsExpanded, entry.Path, true);
-            
-            // 响应整行点击（排除 Checkbox 区域）
-            Rect clickRect = headerRect;
-            clickRect.xMin += 25; clickRect.xMax -= 45;
-            if (Event.current.type == EventType.MouseDown && clickRect.Contains(Event.current.mousePosition))
-            {
-                entry.IsExpanded = !entry.IsExpanded;
-                Event.current.Use();
-            }
-
-            GUILayout.FlexibleSpace();
-            if (GUILayout.Button("定位", EditorStyles.miniButton, GUILayout.Width(40))) EditorGUIUtility.PingObject(entry.Prefab);
-            
-            EditorGUILayout.EndHorizontal();
-
-            // --- 子组件列表绘制 ---
-            if (entry.IsExpanded)
-            {
-                EditorGUI.indentLevel++;
-                foreach (var node in entry.Nodes)
+                var tmps = go.GetComponentsInChildren<TextMeshProUGUI>(true);
+                foreach (var t in tmps)
                 {
-                    EditorGUILayout.BeginHorizontal();
-                    node.Selected = EditorGUILayout.Toggle(node.Selected, GUILayout.Width(20));
-                    
-                    // 使用 Label 且开启裁剪，防止路径过长挡住右侧
-                    GUIContent nodeContent = new GUIContent($"[TMP] {node.HierarchyName}", node.ComponentPath);
-                    EditorGUILayout.LabelField(nodeContent, EditorStyles.miniLabel, GUILayout.ExpandWidth(true));
-                    
-                    // 右侧固定宽度显示当前字体，防止重叠
-                    GUI.contentColor = Color.gray;
-                    EditorGUILayout.LabelField(node.OriginalFontName, EditorStyles.miniLabel, GUILayout.Width(120));
-                    GUI.contentColor = Color.white;
-                    
-                    EditorGUILayout.EndHorizontal();
+                    if (t.font != null && _fontUsageCount.ContainsKey(t.font))
+                        _fontUsageCount[t.font]++;
                 }
-                EditorGUI.indentLevel--;
             }
-            EditorGUILayout.EndVertical();
+        }
+        var sceneTMPs = Resources.FindObjectsOfTypeAll<TextMeshProUGUI>()
+            .Where(t => !EditorUtility.IsPersistent(t.transform.root.gameObject) && t.hideFlags == HideFlags.None);
+        foreach (var t in sceneTMPs)
+        {
+            if (t.font != null && _fontUsageCount.ContainsKey(t.font))
+                _fontUsageCount[t.font]++;
         }
     }
 
-    private void ScanPrefabs()
+    private void ScanPrefabs(TMP_FontAsset filter)
     {
         _entries.Clear();
+        var sceneTMPs = Resources.FindObjectsOfTypeAll<TextMeshProUGUI>()
+            .Where(t => !EditorUtility.IsPersistent(t.transform.root.gameObject) && t.hideFlags == HideFlags.None)
+            .ToList();
+
+        if (sceneTMPs.Count > 0)
+        {
+            var sceneEntry = new PrefabEntry { Selected = true, Path = " [SCENE] ", IsExpanded = true };
+            for (int i = 0; i < sceneTMPs.Count; i++)
+            {
+                var tmp = sceneTMPs[i];
+                if (filter != null && tmp.font != filter) continue;
+                sceneEntry.Nodes.Add(new TMPNode {
+                    Selected = true,
+                    HierarchyName = tmp.gameObject.name,
+                    ComponentPath = GetFullHierarchyPath(tmp.transform),
+                    OriginalFontName = tmp.font != null ? tmp.font.name : "None",
+                    ComponentIndex = i,
+                    SceneTarget = tmp
+                });
+            }
+            if (sceneEntry.Nodes.Count > 0) _entries.Add(sceneEntry);
+        }
+        
         string[] guids = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets" });
         foreach (var guid in guids)
         {
@@ -195,20 +207,14 @@ public class TMPPrefabFinder : EditorWindow
             if (go == null) continue;
 
             var tmps = go.GetComponentsInChildren<TextMeshProUGUI>(true);
-            if (tmps.Length > 0)
+            var entry = new PrefabEntry { Selected = true, Path = path, Prefab = go, IsExpanded = false };
+            for (int i = 0; i < tmps.Length; i++)
             {
-                var entry = new PrefabEntry { Selected = true, Path = path, Prefab = go, IsExpanded = false };
-                foreach (var tmp in tmps)
-                {
-                    entry.Nodes.Add(new TMPNode {
-                        Selected = true,
-                        HierarchyName = tmp.gameObject.name,
-                        ComponentPath = GetGameObjectPath(tmp.transform, go.transform),
-                        OriginalFontName = tmp.font != null ? tmp.font.name : "None"
-                    });
-                }
-                _entries.Add(entry);
+                var tmp = tmps[i];
+                if (filter != null && tmp.font != filter) continue;
+                entry.Nodes.Add(new TMPNode { Selected = true, HierarchyName = tmp.gameObject.name, ComponentPath = GetRelativePath(tmp.transform, go.transform), OriginalFontName = tmp.font != null ? tmp.font.name : "None", ComponentIndex = i });
             }
+            if (entry.Nodes.Count > 0) _entries.Add(entry);
         }
     }
 
@@ -217,55 +223,68 @@ public class TMPPrefabFinder : EditorWindow
         Material targetMat = (_availableMaterials != null && _availableMaterials.Length > _selectedMaterialIndex) 
                              ? _availableMaterials[_selectedMaterialIndex] : null;
 
-        int prefabCount = 0;
+        int totalModified = 0;
         foreach (var entry in _entries)
         {
             if (!IsPathMatchFilter(entry.Path) || !entry.Nodes.Any(n => n.Selected)) continue;
-
-            GameObject root = PrefabUtility.LoadPrefabContents(entry.Path);
-            bool changed = false;
-
-            foreach (var node in entry.Nodes)
+            if (entry.Prefab == null)
             {
-                if (!node.Selected) continue;
-
-                Transform targetTrans = root.transform.Find(node.ComponentPath);
-                if (targetTrans == null && node.ComponentPath == "") targetTrans = root.transform;
-
-                if (targetTrans != null)
+                foreach (var node in entry.Nodes)
                 {
-                    var tmp = targetTrans.GetComponent<TextMeshProUGUI>();
-                    if (tmp != null)
+                    if (node.Selected && node.SceneTarget != null)
                     {
-                        Undo.RecordObject(tmp, "Batch TMP Change");
-                        tmp.font = _targetFont;
-                        if (targetMat != null) tmp.fontSharedMaterial = targetMat;
-                        changed = true;
+                        ModifyTMP(node.SceneTarget, targetMat);
+                        totalModified++;
                     }
                 }
+                UnityEditor.SceneManagement.EditorSceneManager.MarkAllScenesDirty();
+                continue;
             }
-
-            if (changed)
+            GameObject root = PrefabUtility.LoadPrefabContents(entry.Path);
+            var allTMPs = root.GetComponentsInChildren<TextMeshProUGUI>(true);
+            bool changed = false;
+            foreach (var node in entry.Nodes)
             {
-                PrefabUtility.SaveAsPrefabAsset(root, entry.Path);
-                prefabCount++;
+                if (node.Selected && node.ComponentIndex < allTMPs.Length)
+                {
+                    ModifyTMP(allTMPs[node.ComponentIndex], targetMat);
+                    changed = true;
+                    totalModified++;
+                }
             }
+            if (changed) PrefabUtility.SaveAsPrefabAsset(root, entry.Path);
             PrefabUtility.UnloadPrefabContents(root);
         }
+        AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-        ScanPrefabs(); // 刷新列表以显示更新后的字体名称
-        Debug.Log($"操作完成：成功修改了 {prefabCount} 个预制体。");
+        Debug.Log($"操作完成：共处理 {totalModified} 个组件。");
+        ScanPrefabs(_currentMode == WindowMode.ReferenceAnalysis && _refFontPopupIndex >= 0 ? _allFonts[_refFontPopupIndex] : null);
     }
 
-    private string GetGameObjectPath(Transform transform, Transform root)
+    private void ModifyTMP(TextMeshProUGUI tmp, Material targetMat)
     {
-        if (transform == root) return "";
-        string path = transform.name;
-        while (transform.parent != null && transform.parent != root)
-        {
-            transform = transform.parent;
-            path = transform.name + "/" + path;
-        }
+        Undo.RecordObject(tmp, "Batch TMP Change");
+        if (PrefabUtility.IsPartOfPrefabInstance(tmp)) PrefabUtility.RecordPrefabInstancePropertyModifications(tmp);
+        tmp.font = _targetFont;
+        if (targetMat != null) tmp.fontSharedMaterial = targetMat;
+        else tmp.fontSharedMaterial = _targetFont.material;
+        tmp.SetAllDirty();
+        EditorUtility.SetDirty(tmp);
+    }
+
+    private string GetRelativePath(Transform t, Transform root)
+    {
+        if (t == root) return "";
+        string path = t.name;
+        Transform parent = t.parent;
+        while (parent != null && parent != root) { path = parent.name + "/" + path; parent = parent.parent; }
+        return path;
+    }
+
+    private string GetFullHierarchyPath(Transform t)
+    {
+        string path = t.name;
+        while (t.parent != null) { t = t.parent; path = t.name + "/" + path; }
         return path;
     }
 
@@ -273,26 +292,17 @@ public class TMPPrefabFinder : EditorWindow
     {
         string[] guids = AssetDatabase.FindAssets("t:TMP_FontAsset");
         var fontData = new List<(TMP_FontAsset font, string path)>();
-
         foreach (var guid in guids)
         {
             string path = AssetDatabase.GUIDToAssetPath(guid);
             TMP_FontAsset font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(path);
             if (font != null) fontData.Add((font, path));
         }
-
-        // 按路径排序
-        fontData = fontData.OrderBy(x => x.path).ToList();
-
+        fontData = fontData.OrderBy(x => x.font.name).ToList();
         _allFonts = fontData.Select(x => x.font).ToList();
-        _fontDisplayNames = fontData.Select(x => $"{x.path} [{x.font.name}]").ToArray();
-
-        SyncFontIndex();
-    }
-
-    private void SyncFontIndex()
-    {
+        _fontDisplayNames = fontData.Select(x => x.font.name).ToArray(); 
         _selectedFontIndex = (_targetFont == null) ? -1 : _allFonts.IndexOf(_targetFont);
+        RefreshUsageStatistics();
     }
 
     private void RefreshMaterialList()
@@ -305,25 +315,57 @@ public class TMPPrefabFinder : EditorWindow
         {
             Material m = AssetDatabase.LoadAssetAtPath<Material>(AssetDatabase.GUIDToAssetPath(guid));
             if (m != null && m.HasProperty(ShaderUtilities.ID_MainTex) && m.GetTexture(ShaderUtilities.ID_MainTex) == fontTexture)
-            {
                 mats.Add(m);
-            }
         }
         _availableMaterials = mats.OrderBy(m => m.name).ToArray();
         _materialNames = _availableMaterials.Select(m => m.name).ToArray();
         _selectedMaterialIndex = 0;
     }
 
-    private void SetAllSelection(bool select)
+    private void RenderListHeader()
+    {
+        if (_entries.Count <= 0) return;
+        EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
+        _searchFilter = EditorGUILayout.TextField(_searchFilter, EditorStyles.toolbarSearchField);
+        if (GUILayout.Button("全选", EditorStyles.toolbarButton, GUILayout.Width(50))) SetAllSelection(true);
+        if (GUILayout.Button("全不选", EditorStyles.toolbarButton, GUILayout.Width(60))) SetAllSelection(false);
+        EditorGUILayout.EndHorizontal();
+    }
+
+    private void RenderListItems()
     {
         foreach (var entry in _entries)
         {
-            if (IsPathMatchFilter(entry.Path))
+            if (!IsPathMatchFilter(entry.Path)) continue;
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            EditorGUILayout.BeginHorizontal();
+            EditorGUI.BeginChangeCheck();
+            entry.Selected = EditorGUILayout.Toggle(entry.Selected, GUILayout.Width(20));
+            if (EditorGUI.EndChangeCheck()) foreach (var node in entry.Nodes) node.Selected = entry.Selected;
+            entry.IsExpanded = EditorGUILayout.Foldout(entry.IsExpanded, entry.Path, true);
+            GUILayout.FlexibleSpace();
+            if (entry.Prefab != null && GUILayout.Button("定位", EditorStyles.miniButton, GUILayout.Width(40))) EditorGUIUtility.PingObject(entry.Prefab);
+            EditorGUILayout.EndHorizontal();
+            if (entry.IsExpanded)
             {
-                entry.Selected = select;
-                foreach (var node in entry.Nodes) node.Selected = select;
+                EditorGUI.indentLevel++;
+                foreach (var node in entry.Nodes)
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    node.Selected = EditorGUILayout.Toggle(node.Selected, GUILayout.Width(20));
+                    EditorGUILayout.LabelField(new GUIContent(node.HierarchyName, node.ComponentPath), EditorStyles.miniLabel);
+                    if (_currentMode == WindowMode.BatchModify) { GUI.contentColor = Color.gray; EditorGUILayout.LabelField(node.OriginalFontName, EditorStyles.miniLabel, GUILayout.Width(120)); GUI.contentColor = Color.white; }
+                    EditorGUILayout.EndHorizontal();
+                }
+                EditorGUI.indentLevel--;
             }
+            EditorGUILayout.EndVertical();
         }
+    }
+
+    private void SetAllSelection(bool select)
+    {
+        foreach (var entry in _entries) { if (IsPathMatchFilter(entry.Path)) { entry.Selected = select; foreach (var node in entry.Nodes) node.Selected = select; } }
     }
 
     private bool IsPathMatchFilter(string path) => string.IsNullOrEmpty(_searchFilter) || path.ToLower().Contains(_searchFilter.ToLower());

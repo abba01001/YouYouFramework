@@ -1,10 +1,11 @@
-using OctoberStudio.Audio;
+using GameScripts;
 using OctoberStudio.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using AudioManager = OctoberStudio.Audio.AudioManager;
 
 namespace OctoberStudio.Upgrades.UI
 {
@@ -27,8 +28,6 @@ namespace OctoberStudio.Upgrades.UI
         [SerializeField] ScalingLabelBehavior costLabel;
         [SerializeField] GameObject upgradedLabel;
 
-        public CurrencySave GoldCurrency { get; private set; }
-
         public UpgradeData Data { get; private set; }
         public int UpgradeLevelId { get; private set; }
 
@@ -44,11 +43,7 @@ namespace OctoberStudio.Upgrades.UI
 
         public void Init(UpgradeData data, int levelId)
         {
-            if(GoldCurrency == null)
-            {
-                GoldCurrency = GameController.SaveManager.GoldData;
-                GoldCurrency.onGoldAmountChanged += OnGoldAmountChanged;
-            }
+            GameEntry.Event.AddEventListener(Constants.EventName.PropsChangedEvent,HandleCoinAmountChanged);
 
             Data = data;
             UpgradeLevelId = levelId;
@@ -56,6 +51,11 @@ namespace OctoberStudio.Upgrades.UI
             RedrawVisuals();
         }
 
+        private void HandleCoinAmountChanged(object userdata)
+        {
+            OnGoldAmountChanged(0);
+        }
+        
         private void RedrawVisuals()
         {
             if(UpgradeLevelId >= Data.LevelsCount - 1)
@@ -91,7 +91,7 @@ namespace OctoberStudio.Upgrades.UI
                 var level = Data.GetLevel(UpgradeLevelId);
                 costLabel.SetAmount(level.Cost);
 
-                if (GoldCurrency.CanAfford(level.Cost))
+                if (GameEntry.Data.CanAfford((int)PropEnum.Coin,level.Cost))
                 {
                     upgradeButton.interactable = true;
                     upgradeButton.image.sprite = enabledButtonSprite;
@@ -109,12 +109,9 @@ namespace OctoberStudio.Upgrades.UI
 
             GameController.UpgradesManager.IncrementUpgradeLevel(Data.UpgradeType);
             UpgradeLevelId++;
-            GoldCurrency.Withdraw(level.Cost);
-
+            GameEntry.Data.DelProp((int)PropEnum.Coin,level.Cost);
             RedrawVisuals();
-
             GameController.AudioManager.PlaySound(AudioManager.BUTTON_CLICK_HASH);
-
             EventSystem.current.SetSelectedGameObject(upgradeButton.gameObject);
         }
 
@@ -126,11 +123,6 @@ namespace OctoberStudio.Upgrades.UI
         public void Select()
         {
             EventSystem.current.SetSelectedGameObject(upgradeButton.gameObject);
-        }
-
-        public void Unselect()
-        {
-            IsSelected = false;
         }
 
         private void Update()
@@ -149,10 +141,7 @@ namespace OctoberStudio.Upgrades.UI
 
         public void Clear()
         {
-            if (GoldCurrency != null)
-            {
-                GoldCurrency.onGoldAmountChanged -= OnGoldAmountChanged;
-            }
+            GameEntry.Event.RemoveEventListener(Constants.EventName.PropsChangedEvent,HandleCoinAmountChanged);
         }
     }
 }

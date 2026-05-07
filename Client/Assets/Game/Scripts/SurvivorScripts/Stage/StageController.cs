@@ -178,7 +178,6 @@ namespace OctoberStudio
 
         public static void ReturnToMainMenu()
         {
-            
             GameController.LoadMainMenu();
         }
 
@@ -186,7 +185,6 @@ namespace OctoberStudio
         private void OnLoadingSceneComplete(object userdata)
         {
             string sceneName = userdata as string;
-            Debugger.LogError(sceneName);
             if (sceneName == SceneGroupName.Game)
             {
                 _ = HandleInit();

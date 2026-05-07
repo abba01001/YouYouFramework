@@ -1,6 +1,7 @@
 using OctoberStudio.Easing;
 using OctoberStudio.Extensions;
 using System.Collections;
+using Main;
 using UnityEngine;
 using UnityEngine.Events;
 

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using System;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 
 
 namespace GameScripts
@@ -324,6 +325,12 @@ namespace GameScripts
             //GameEntry.Log("ShowUI==" + uiFormBase);
             uiFormBase.IsActive = true;
             uiFormBase.gameObject.SetActive(true);
+
+            var content = uiFormBase.transform.Find("Content");
+            if (content != null)
+            {
+                content.DOScale(Vector3.one, 0.15f).From(Vector3.one * 0.7f).SetEase(Ease.OutBack);
+            }
         }
     
         /// <summary>

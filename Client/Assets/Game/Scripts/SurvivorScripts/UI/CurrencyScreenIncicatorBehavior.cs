@@ -1,3 +1,4 @@
+using GameScripts;
 using Main;
 using OctoberStudio.Save;
 using OctoberStudio.UI;
@@ -7,19 +8,25 @@ namespace OctoberStudio.Currency
 {
     public class CurrencyScreenIncicatorBehavior : ScalingLabelBehavior
     {
-        public CurrencySave Currency { get; private set; }
-
         private void Start()
         {
-            Currency = GameController.SaveManager.GoldData;
-            SetAmount(Currency.Amount);
+            SetAmount(GameEntry.Data.GetProps((int)PropEnum.Coin));
             icon.sprite = GameController.CurrenciesManager.GetIcon(SaveKey.GoldData);
-            Currency.onGoldAmountChanged += SetAmount;
+            GameEntry.Event.AddEventListener(Constants.EventName.PropsChangedEvent,HandleCoinAmountChanged);
+        }
+
+        private void HandleCoinAmountChanged(object userdata)
+        {
+            PropChangeModel model = (PropChangeModel)userdata;
+            if (model.PropType == PropEnum.Coin)
+            {
+                SetAmount(model.PropValue);
+            }
         }
 
         private void OnDestroy()
         {
-            Currency.onGoldAmountChanged -= SetAmount;
+            GameEntry.Event.RemoveEventListener(Constants.EventName.PropsChangedEvent,HandleCoinAmountChanged);
         }
     }
 }

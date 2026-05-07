@@ -1,14 +1,16 @@
 using OctoberStudio.Abilities;
-using OctoberStudio.Audio;
 using OctoberStudio.Easing;
 using OctoberStudio.Input;
 using OctoberStudio.UI.Chest;
 using System.Collections;
 using System.Collections.Generic;
+using GameScripts;
+using Main;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using AudioManager = OctoberStudio.Audio.AudioManager;
 
 namespace OctoberStudio.UI
 {
@@ -212,9 +214,7 @@ namespace OctoberStudio.UI
         private void TakeButton()
         {
             GameController.AudioManager.PlaySound(AudioManager.BUTTON_CLICK_HASH);
-
-            GameController.SaveManager.TempGoldData.Deposit(coinsReward);
-
+            GameEntry.Data.AddProp((int)PropEnum.BattleCoin,coinsReward);
             CloseWindow();
         }
 

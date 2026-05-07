@@ -26,6 +26,9 @@ namespace OctoberStudio
 
         private static GameController instance;
 
+        protected bool isBattleing;
+        public static bool IsBattleing => instance.isBattleing;
+
         [SerializeField] protected CurrenciesManager currenciesManager;
         public static CurrenciesManager CurrenciesManager => instance.currenciesManager;
 
@@ -36,31 +39,17 @@ namespace OctoberStudio
         public static IVibrationManager VibrationManager { get; private set; }
         public static IInputManager InputManager { get; private set; }
 
-
         public static AudioSource Music { get; private set; }
-
-        // Indicates that the main menu is just loaded, and not exited from the game scene
-        public static bool FirstTimeLoaded { get; private set; }
-
         protected virtual void Awake()
         {
             if (instance != null)
             {
                 Destroy(this);
-
-                FirstTimeLoaded = false;
-
                 return;
             }
-
             instance = this;
-
-            FirstTimeLoaded = true;
-
             currenciesManager.Init();
-
             DontDestroyOnLoad(gameObject);
-
             Application.targetFrameRate = 120;
         }
 
@@ -126,16 +115,19 @@ namespace OctoberStudio
 
         public static void LoadStage()
         {
-            if (SaveManager.StageData.ResetStageData) SaveManager.TempGoldData.Withdraw(SaveManager.TempGoldData.Amount);
+            if (SaveManager.StageData.ResetStageData)
+            {
+                GameEntry.Data.DelPropAll((int)PropEnum.BattleCoin);
+            }
             if (instance != null) _ = instance.StageLoadingCoroutine();
             SaveManager.Save(false);
         }
 
         public static void LoadMainMenu()
         {
-            SaveManager.GoldData.Deposit(SaveManager.TempGoldData.Amount);
-            SaveManager.TempGoldData.Withdraw(SaveManager.TempGoldData.Amount);
-
+            int addCount = GameEntry.Data.GetProps((int)PropEnum.BattleCoin);
+            GameEntry.Data.AddProp((int)PropEnum.Coin,addCount);
+            GameEntry.Data.DelPropAll((int)PropEnum.BattleCoin);
             if (instance != null) _ = instance.MainMenuLoadingCoroutine();
 
             SaveManager.Save(false);
@@ -144,10 +136,12 @@ namespace OctoberStudio
         protected async UniTask StageLoadingCoroutine()
         {
             await GameEntry.Scene.LoadSceneAsync(SceneGroupName.Game,1);
+            isBattleing = true;
         }
 
         protected async UniTask MainMenuLoadingCoroutine()
         {
+            isBattleing = false;
             await GameEntry.Scene.LoadSceneAsync(SceneGroupName.MainMenu,1);
             await GameEntry.UI.OpenUIForm<FormMain>();
             if (StageController.Stage.UseCustomMusic)
@@ -169,5 +163,17 @@ namespace OctoberStudio
             } 
 #endif
         }
+
+        public static void StartGame()
+        {
+            SaveManager.StageData.IsPlaying = true;
+            SaveManager.StageData.ResetStageData = true;
+            SaveManager.StageData.Time = 0f;
+            SaveManager.StageData.XP = 0f;
+            SaveManager.StageData.XPLEVEL = 0;
+            AudioManager.PlaySound(OctoberStudio.Audio.AudioManager.BUTTON_CLICK_HASH);
+            LoadStage();
+        }
+        
     }
 }

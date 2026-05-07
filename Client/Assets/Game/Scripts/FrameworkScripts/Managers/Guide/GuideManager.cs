@@ -110,7 +110,7 @@ namespace GameScripts
             if (!CheckGuideIsEnable(entity)) return; //引导是否启用
             if (!CheckInTriggerScene(entity)) return; //是否在触发场景里
             if (!Constants.IsEntryFormMain) return; //是否进入主界面
-            if (GameEntry.Data.RoleLevel < entity.ToLevelTrigger) return; // 未达到等级
+            // if (GameEntry.Data.RoleLevel < entity.ToLevelTrigger) return; // 未达到等级
             if (isEventGuide && CurTriggerEvent != entity.EventTrigger) return; // 事件未触发
             if (CheckCompleteGuideId(entity.GuideId)) return; // 引导已完成
             if (!CheckCompletePreGuide(entity.GuideId)) return; // 前置引导未完成

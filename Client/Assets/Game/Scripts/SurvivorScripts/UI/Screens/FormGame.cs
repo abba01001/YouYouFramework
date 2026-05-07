@@ -6,6 +6,7 @@ using OctoberStudio.UI;
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using GameScripts;
 using OctoberStudio;
 using TMPro;
@@ -48,15 +49,12 @@ namespace GameScripts
         protected override async UniTask Awake()
         {
             await base.Awake();
-
+            abilitiesWindow.Init();
             abilitiesWindow.onPanelClosed += OnAbilitiesPanelClosed;
             abilitiesWindow.onPanelStartedClosing += OnAbilitiesPanelStartedClosing;
-
             pauseButton.onClick.AddListener(PauseButtonClick);
-
             pauseWindow.OnStartedClosing += OnPauseWindowStartedClosing;
             pauseWindow.OnClosed += OnPauseWindowClosed;
-
             chestWindow.OnClosed += OnChestWindowClosed;
         }
 
@@ -69,7 +67,7 @@ namespace GameScripts
         private float _totalTime; // 累加时间
         private int _frameCount; // 累加帧数
 
-        private void Update()
+        private void RefreshFPS()
         {
             // 累加时间和帧数
             _totalTime += Time.deltaTime;
@@ -87,11 +85,15 @@ namespace GameScripts
                 _frameCount = 0;
             }
         }
+        
+        private void Update()
+        {
+            RefreshFPS();
+        }
 
         protected override void OnShow()
         {
             base.OnShow();
-            abilitiesWindow.Init();
             GameController.InputManager.InputAsset.UI.Settings.performed += OnSettingsInputClicked;
         }
 

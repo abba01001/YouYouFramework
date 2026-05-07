@@ -1,46 +1,35 @@
 using System.Collections.Generic;
 using GameScripts;
-using OctoberStudio.Easing;
-using OctoberStudio.Input;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using AudioManager = OctoberStudio.Audio.AudioManager;
 
 namespace OctoberStudio.UI
 {
-    public class LobbyWindowBehavior : MonoBehaviour
+    public class LobbyWindowBehavior : PanelBase
     {
         [SerializeField] StagesDatabase stagesDatabase;
 
-        [Space]
         [SerializeField] Button playButton;
         [SerializeField] Button upgradesButton;
         [SerializeField] Button settingsButton;
         [SerializeField] Button charactersButton;
-
-        [Space]
         [SerializeField] Sprite playButtonEnabledSprite;
         [SerializeField] Sprite playButtonDisabledSprite;
-
-        [Space]
-        [SerializeField] Image continueBackgroundImage;
-        [SerializeField] RectTransform contituePopupRect;
-        [SerializeField] Button confirmButton;
-        [SerializeField] Button cancelButton;
         [SerializeField] Button testBtn;
         [SerializeField] Button test1Btn;
 
-        private void Awake()
+        [SerializeField] private TextMeshProUGUI energyText;
+        [SerializeField] private TextMeshProUGUI goldText;
+        
+        protected override void OnAwake()
         {
-            InitBottomBtn();
-            
-            playButton.onClick.AddListener(OnPlayButtonClicked);
-            confirmButton.onClick.AddListener(ConfirmButtonClicked);
-            cancelButton.SetButtonClick(CancelButtonClicked);
+            playButton.SetButtonClick(() =>
+            {
+                GameEntry.UI.CloseUIForm<FormMain>();
+                GameController.StartGame();
+            });
             testBtn.SetButtonClick(async () =>
             {
                 await GameEntry.Scene.LoadSceneAsync(SceneGroupName.Demo_Casual, 1);
@@ -51,135 +40,58 @@ namespace OctoberStudio.UI
                 await GameEntry.Scene.LoadSceneAsync(SceneGroupName.DemoScene, 1);
                 GameEntry.UI.CloseUIForm<FormMain>();
             });
+            upgradesButton.SetButtonClick(() =>
+            {
+                FormMain.Instance.ShowPanel(MainPanelType.upgradesWindow);
+            });
+            charactersButton.SetButtonClick(() =>
+            {
+                FormMain.Instance.ShowPanel(MainPanelType.charactersWindow);
+            });
+            settingsButton.SetButtonClick(() =>
+            {
+                GameController.AudioManager.PlaySound(OctoberStudio.Audio.AudioManager.BUTTON_CLICK_HASH);
+                GameEntry.UI.OpenUIForm<FormSetting>();
+            });
         }
 
-        private void Start()
+        private bool checkLoadContinue = false;
+        protected override void OnShow()
         {
-            GameController.SaveManager.GoldData.onGoldAmountChanged += SetAmount;
-            SetAmount(GameController.SaveManager.GoldData.Amount);
+            base.OnShow();
+            GameEntry.Event.AddEventListener(Constants.EventName.PropsChangedEvent,HandleCoinAmountChanged);
+            goldText.text = GameEntry.Data.GetProps((int)PropEnum.Coin).ToString();
+            energyText.text = GameEntry.Data.GetProps((int)PropEnum.Energy).ToString();
             
-            if (GameController.SaveManager.StageData.IsPlaying && GameController.FirstTimeLoaded)
+            if (GameController.SaveManager.StageData.IsPlaying && !checkLoadContinue)
             {
-                continueBackgroundImage.gameObject.SetActive(true);
-
-                contituePopupRect.gameObject.SetActive(true);
-
-                EventSystem.current.SetSelectedGameObject(confirmButton.gameObject);
-            } else
+                GameEntry.UI.OpenUIForm<FormContinue>();
+            } 
+            else
             {
-                EventSystem.current.SetSelectedGameObject(playButton.gameObject);
                 GameController.SaveManager.StageData.SetSelectedStageId(GameController.SaveManager.StageData.MaxReachedStageId);
             }
-
-            GameController.InputManager.onInputChanged += OnInputChanged;
-            GameController.InputManager.InputAsset.UI.Settings.performed += OnSettingsInputClicked;
-        }
-
-        public void Init(UnityAction onUpgradesButtonClicked, UnityAction onSettingsButtonClicked, UnityAction onCharactersButtonClicked)
-        {
-            upgradesButton.onClick.AddListener(onUpgradesButtonClicked);
-            settingsButton.onClick.AddListener(onSettingsButtonClicked);
-            charactersButton.onClick.AddListener(onCharactersButtonClicked);
-        }
-
-        public void Open()
-        {
-            gameObject.SetActive(true);
-            EasingManager.DoNextFrame(() => EventSystem.current.SetSelectedGameObject(playButton.gameObject));
-
-            GameController.InputManager.onInputChanged += OnInputChanged;
-            GameController.InputManager.InputAsset.UI.Settings.performed += OnSettingsInputClicked;
-        }
-
-        public void Close()
-        {
-            gameObject.SetActive(false);
-
-            GameController.InputManager.onInputChanged -= OnInputChanged;
-            GameController.InputManager.InputAsset.UI.Settings.performed -= OnSettingsInputClicked;
-        }
-
-        public void OnPlayButtonClicked()
-        {
-            GameEntry.UI.OpenUIForm<FormStage>();
-        }
-
-        private void OnDestroy()
-        {
-            GameController.SaveManager.GoldData.onGoldAmountChanged -= SetAmount;
-            GameController.InputManager.onInputChanged -= OnInputChanged;
-        }
-
-        private void OnSettingsInputClicked(InputAction.CallbackContext context)
-        {
-            settingsButton.onClick?.Invoke();
-        }
-
-        private void ConfirmButtonClicked()
-        {
-            GameController.SaveManager.StageData.ResetStageData = false;
-
-            GameController.AudioManager.PlaySound(AudioManager.BUTTON_CLICK_HASH);
-            GameController.LoadStage();
-        }
-
-        private void CancelButtonClicked()
-        {
-            // GameController.StageData.IsPlaying = false;
-            continueBackgroundImage.DoAlpha(0, 0.3f).SetOnFinish(() => continueBackgroundImage.gameObject.SetActive(false));
-            contituePopupRect.DoAnchorPosition(Vector2.down * 2500, 0.3f).SetEasing(EasingType.SineIn).SetOnFinish(() => contituePopupRect.gameObject.SetActive(false));
-            EventSystem.current.SetSelectedGameObject(playButton.gameObject);
-        }
-
-        private void OnInputChanged(InputType prevInputType, InputType inputType)
-        {
-            if(prevInputType == InputType.UIJoystick)
-            {
-                if (continueBackgroundImage.gameObject.activeSelf)
-                {
-                    EventSystem.current.SetSelectedGameObject(confirmButton.gameObject);
-                }
-                else
-                {
-                    EventSystem.current.SetSelectedGameObject(playButton.gameObject);
-                }
-            }
-        }
-
-
-        [SerializeField] private List<Button> buttons = new List<Button>();
-        [SerializeField] private Button lightBtn = null;
-        private int disapearBtnIndex = -1;
-        private void InitBottomBtn()
-        {
-            for (int i = 0; i < buttons.Count; i++)
-            {
-                int index = i;
-                buttons[index].SetButtonClick(() => ChangeBtn(index));
-            }
-
-            ChangeBtn(2);
-        }
-        private void ChangeBtn(int index)
-        {
-            if (disapearBtnIndex != -1)
-            {
-                buttons[disapearBtnIndex].gameObject.MSetActive(true);
-            }
-            var selectBtn = buttons[index];
-            var image = selectBtn.transform.Find("Icon").GetComponent<Image>();
-            var lightIcon = lightBtn.transform.Find("Icon").GetComponent<Image>();
-            lightIcon.sprite = image.sprite;
-            lightIcon.SetNativeSize();
-            lightBtn.transform.SetSiblingIndex(index);
-            selectBtn.gameObject.MSetActive(false);
-            disapearBtnIndex = index;
+            checkLoadContinue = true;
         }
         
-        [SerializeField] private TextMeshProUGUI goldText;
-        private void SetAmount(int amount)
+        private void HandleCoinAmountChanged(object userdata)
         {
-            goldText.text = amount.ToString();
+            PropChangeModel model = (PropChangeModel)userdata;
+            switch (model.PropType)
+            {
+                case PropEnum.Coin:
+                    energyText.text = model.PropValue.ToString();
+                    break;
+                case PropEnum.Energy:
+                    goldText.text = model.PropValue.ToString();
+                    break;
+            }
+        }
+
+        protected override void OnHide()
+        {
+            base.OnHide();
+            GameEntry.Event.RemoveEventListener(Constants.EventName.PropsChangedEvent,HandleCoinAmountChanged);
         }
     }
 }

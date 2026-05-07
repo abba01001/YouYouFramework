@@ -138,6 +138,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4719996667698335942}
   - component: {fileID: 4719996667698335943}
+  - component: {fileID: 2508752109435511673}
   m_Layer: 0
   m_Name: GameEntry
   m_TagString: Untagged
@@ -211,6 +212,20 @@ MonoBehaviour:
   MonsterMixer: {fileID: 24100000, guid: b2cf29e1378929c43b3632019690086b, type: 2}
   m_CurrLanguage: 0
   MasterMixer: {fileID: 24100000, guid: b2cf29e1378929c43b3632019690086b, type: 2}
+--- !u!114 &2508752109435511673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4719996667698335940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57859489b06726842afee057a8deb211, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GameScripts::GameScripts.JsonDisplay
+  jsonString: "{\"\u63D0\u793A\": \"\u6E38\u620F\u5185\u6309\u7A7A\u683C\u952E\",
+    \"\u4F5C\u7528\": \"\u53EF\u5C55\u793A\u73A9\u5BB6\u6570\u636E\"}"
 --- !u!1 &4719996667742643965
 GameObject:
   m_ObjectHideFlags: 0

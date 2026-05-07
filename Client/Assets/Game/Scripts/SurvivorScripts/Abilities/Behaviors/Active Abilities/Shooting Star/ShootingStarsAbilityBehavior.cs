@@ -2,6 +2,7 @@ using OctoberStudio.Easing;
 using OctoberStudio.Pool;
 using System.Collections;
 using System.Collections.Generic;
+using Main;
 using UnityEngine;
 
 namespace OctoberStudio.Abilities

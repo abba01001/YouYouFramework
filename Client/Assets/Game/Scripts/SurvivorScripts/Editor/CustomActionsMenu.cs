@@ -1,3 +1,4 @@
+using GameScripts;
 using UnityEngine;
 using UnityEditor;
 using OctoberStudio.Abilities;
@@ -48,9 +49,7 @@ namespace OctoberStudio.Save
         [MenuItem("工具类/October/Get 1K Gold", priority = 1)]
         private static void GetGold()
         {
-            var gold = GameController.SaveManager.GoldData;
-
-            gold.Deposit(1000);
+            GameEntry.Data.AddProp((int)PropEnum.Coin,1000);
         }
 
         [MenuItem("工具类/October/Get 1K Gold", true)]

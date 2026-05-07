@@ -1,3 +1,4 @@
+using GameScripts;
 using OctoberStudio.Easing;
 using OctoberStudio.Input;
 using UnityEngine;
@@ -12,11 +13,9 @@ namespace OctoberStudio.Vibration
     {
         private static VibrationManager instance;
 
-        private VibrationSave save;
-
         private SimpleVibrationHandler vibrationHandler;
 
-        public bool IsVibrationEnabled { get => save.IsVibrationEnabled; set => save.IsVibrationEnabled = value; }
+        public bool IsVibrationEnabled { get => GameEntry.Data.PlayerRoleData.isVibrationEnabled; set => GameEntry.Data.PlayerRoleData.isVibrationEnabled = value; }
 
         private IEasingCoroutine gamepadVibrationCoroutine;
 
@@ -36,7 +35,6 @@ namespace OctoberStudio.Vibration
 
         public void Start()
         {
-            save = GameController.SaveManager.VibrationData;
             IsVibrationEnabled = true;
 #if UNITY_EDITOR
             vibrationHandler = new SimpleVibrationHandler();

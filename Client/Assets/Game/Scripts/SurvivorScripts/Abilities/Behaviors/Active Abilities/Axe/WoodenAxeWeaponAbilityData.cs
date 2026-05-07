@@ -3,7 +3,7 @@ using Sirenix.OdinInspector;
 
 namespace OctoberStudio.Abilities
 {
-    [CreateAssetMenu(fileName = "Wooden Axe Data", menuName = "October/Abilities/Active/Wooden Axe")]
+    [CreateAssetMenu(fileName = "木制斧头数据", menuName = "October/Abilities/Active/木制斧头")]
     public class WoodenAxeWeaponAbilityData : GenericAbilityData<WoodenAxeWeaponAbilityLevel>
     {
         private void Awake()

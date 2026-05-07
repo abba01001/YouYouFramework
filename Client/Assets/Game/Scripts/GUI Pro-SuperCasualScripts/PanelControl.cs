@@ -2,6 +2,7 @@
 using GameScripts;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace GameScripts
@@ -66,6 +67,11 @@ namespace GameScripts
 
         private void Update()
         {
+            if (Keyboard.current.spaceKey.wasPressedThisFrame)
+            {
+                Debug.LogError("111");
+                Click_Next();
+            }
             if (defaultPanels.Count <= 0 || !_isReady) return;
         }
 

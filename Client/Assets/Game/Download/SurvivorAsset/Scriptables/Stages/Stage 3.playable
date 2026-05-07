@@ -1610,9 +1610,8 @@ MonoBehaviour:
     dropOverride: []
     disableOffscreenTeleport: 0
   circularSpawn: 0
-  RushSpeed: 2
-  RushDistance: 1
-  PathColor: {r: 0, g: 1, b: 1, a: 1}
+  RushSpeed: {x: 0, y: 10}
+  RushDelay: {x: 0, y: 3}
   enemiesCount: 1
 --- !u!114 &-7521422873764676284
 MonoBehaviour:
@@ -1680,9 +1679,8 @@ MonoBehaviour:
     dropOverride: []
     disableOffscreenTeleport: 0
   circularSpawn: 0
-  RushSpeed: 6
-  RushDistance: 10
-  PathColor: {r: 0, g: 1, b: 1, a: 1}
+  RushSpeed: {x: 0, y: 10}
+  RushDelay: {x: 0, y: 3}
   enemiesCount: 2
 --- !u!114 &-6585302350593476215
 MonoBehaviour:
@@ -1732,9 +1730,8 @@ MonoBehaviour:
     dropOverride: []
     disableOffscreenTeleport: 0
   circularSpawn: 0
-  RushSpeed: 5
-  RushDistance: 2
-  PathColor: {r: 0, g: 1, b: 1, a: 1}
+  RushSpeed: {x: 0, y: 10}
+  RushDelay: {x: 0, y: 3}
   enemiesCount: 1
 --- !u!114 &-6134881555216996086
 MonoBehaviour:
@@ -2581,9 +2578,8 @@ MonoBehaviour:
     dropOverride: []
     disableOffscreenTeleport: 0
   circularSpawn: 0
-  RushSpeed: 3
-  RushDistance: 2
-  PathColor: {r: 0, g: 1, b: 1, a: 1}
+  RushSpeed: {x: 0, y: 10}
+  RushDelay: {x: 0, y: 3}
   enemiesCount: 2
 --- !u!114 &-1332082529065791036
 MonoBehaviour:
@@ -3895,9 +3891,8 @@ MonoBehaviour:
     dropOverride: []
     disableOffscreenTeleport: 0
   circularSpawn: 0
-  RushSpeed: 4
-  RushDistance: 5
-  PathColor: {r: 0, g: 1, b: 1, a: 1}
+  RushSpeed: {x: 0, y: 10}
+  RushDelay: {x: 0, y: 3}
   enemiesCount: 2
 --- !u!114 &2753256862239831997
 MonoBehaviour:
@@ -3995,9 +3990,8 @@ MonoBehaviour:
     dropOverride: []
     disableOffscreenTeleport: 0
   circularSpawn: 0
-  RushSpeed: 5
-  RushDistance: 0
-  PathColor: {r: 0, g: 1, b: 1, a: 1}
+  RushSpeed: {x: 0, y: 10}
+  RushDelay: {x: 0, y: 3}
   enemiesCount: 1
 --- !u!114 &3689255916266575159
 MonoBehaviour:
@@ -4265,9 +4259,8 @@ MonoBehaviour:
     dropOverride: []
     disableOffscreenTeleport: 0
   circularSpawn: 0
-  RushSpeed: 3
-  RushDistance: 2
-  PathColor: {r: 0, g: 1, b: 1, a: 1}
+  RushSpeed: {x: 0, y: 10}
+  RushDelay: {x: 0, y: 3}
   enemiesCount: 2
 --- !u!114 &7245349401788996294
 MonoBehaviour:
@@ -5078,7 +5071,6 @@ MonoBehaviour:
     dropOverride: []
     disableOffscreenTeleport: 0
   circularSpawn: 0
-  RushSpeed: 6
-  RushDistance: 1
-  PathColor: {r: 0, g: 1, b: 1, a: 1}
+  RushSpeed: {x: 0, y: 10}
+  RushDelay: {x: 0, y: 3}
   enemiesCount: 1

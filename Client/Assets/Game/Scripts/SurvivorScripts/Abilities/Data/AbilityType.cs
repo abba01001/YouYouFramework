@@ -41,8 +41,9 @@ namespace OctoberStudio
 
         WoodenWand = 1000,
         SteelSword = 1001,
-        WoodenAxe = 1002,
+        [LabelText("木制斧头")]WoodenAxe = 1002,
         [LabelText("歧木角弓")]WoodenBow = 1003,
+        [LabelText("虚空之眼")]VoidEye = 1004,
         
         AncientScepter = 1100,
         SacredBlade = 1101,

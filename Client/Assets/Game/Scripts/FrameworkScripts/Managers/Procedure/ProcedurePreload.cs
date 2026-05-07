@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using GameScripts;
 using Main;
+using MessagePack;
 using UnityEngine;
 
 namespace GameScripts
@@ -93,9 +94,17 @@ namespace GameScripts
         private async UniTask OnLoginSuccess(object userdata)
         {
             GameEntry.UI.CloseUIForm<FormLogin>();
-    
+            string savedStr = PlayerPrefs.GetString("SaveData", "");
+            if (!string.IsNullOrEmpty(savedStr))
+            {
+                byte[] binaryData = Convert.FromBase64String(savedStr);
+                float sizeInKb = binaryData.Length / 1024f;
+                Debug.Log($"<color=yellow>读取本地存档成功，大小: {sizeInKb:F2} KB</color>");
+                GameEntry.Data.InitGameData(binaryData);
+            }
+            
             if (GameEntry.Data.IsFirstLoginTime) GameEntry.Data.IsFirstLoginTime = false;
-    
+            
             GameEntry.Data.SaveData(true, true, true, true);
             GameEntry.Procedure.ChangeState(ProcedureState.Game);
     

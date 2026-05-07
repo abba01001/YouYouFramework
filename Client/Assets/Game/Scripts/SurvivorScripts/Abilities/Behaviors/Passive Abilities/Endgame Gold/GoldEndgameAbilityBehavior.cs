@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using GameScripts;
 using UnityEngine;
 
 namespace OctoberStudio.Abilities
@@ -12,8 +13,7 @@ namespace OctoberStudio.Abilities
 
             var gold = AbilityLevel.GoldAmount * PlayerBehavior.Player.GoldMultiplier;
             var clampedGold = Mathf.RoundToInt(gold);
-
-            GameController.SaveManager.TempGoldData.Deposit(clampedGold);
+            GameEntry.Data.AddProp((int)PropEnum.Coin,clampedGold);
         }
     }
 }

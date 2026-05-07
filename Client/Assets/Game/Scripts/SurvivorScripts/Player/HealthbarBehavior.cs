@@ -1,3 +1,4 @@
+using Main;
 using OctoberStudio.Easing;
 using OctoberStudio.Extensions;
 using UnityEngine;

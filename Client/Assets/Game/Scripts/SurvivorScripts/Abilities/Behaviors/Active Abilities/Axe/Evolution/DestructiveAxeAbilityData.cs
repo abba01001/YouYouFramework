@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace OctoberStudio.Abilities
 {
-    [CreateAssetMenu(fileName = "Destructive Axe Data", menuName = "October/Abilities/Evolution/Destructive Axe")]
+    [CreateAssetMenu(fileName = "毁灭斧头数据", menuName = "October/Abilities/Evolution/毁灭斧头")]
     public class DestructiveAxeAbilityData : GenericAbilityData<DestructiveAxeAbilityLevel>
     {
         private void Awake()

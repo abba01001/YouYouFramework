@@ -1,3 +1,4 @@
+using GameScripts;
 using UnityEngine;
 
 namespace OctoberStudio.Drop
@@ -18,7 +19,7 @@ namespace OctoberStudio.Drop
             var clampedGold = Mathf.FloorToInt(gold);
             leftoverDifference = gold - clampedGold;
 
-            GameController.SaveManager.TempGoldData.Deposit(clampedGold);
+            GameEntry.Data.DelProp((int)PropEnum.BattleCoin,clampedGold);
         }
     }
 }
