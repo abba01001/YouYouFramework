@@ -1,0 +1,475 @@
+fileFormatVersion: 2
+guid: b8c5c1eb92c04d04d928261c7c344488
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Monster_13_Stone Golem_56
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 125
+        height: 123
+      alignment: 9
+      pivot: {x: 0.496, y: 0.49593496}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29d68b971bcef7bb0800000000000000
+      internalID: -4935966419579277934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_13_Stone Golem_55
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 0
+        width: 126
+        height: 122
+      alignment: 9
+      pivot: {x: 0.49603173, y: 0.49590164}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a02c3d3bfd7c7eab0800000000000000
+      internalID: -4978791099426160118
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_13_Stone Golem_54
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 0
+        width: 122
+        height: 124
+      alignment: 9
+      pivot: {x: 0.49590164, y: 0.49596775}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b91d329cbe3bbca0800000000000000
+      internalID: -6000133098912802380
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_13_Stone Golem_53
+      rect:
+        serializedVersion: 2
+        x: 379
+        y: 0
+        width: 118
+        height: 125
+      alignment: 9
+      pivot: {x: 0.4957627, y: 0.496}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: caea9ea61b7ad2db0800000000000000
+      internalID: -4815008046144442708
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_13_Stone Golem_52
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 127
+        width: 116
+        height: 125
+      alignment: 9
+      pivot: {x: 0.49568966, y: 0.496}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bfabe963a248b4220800000000000000
+      internalID: 2471214137382714107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_13_Stone Golem_51
+      rect:
+        serializedVersion: 2
+        x: 118
+        y: 127
+        width: 115
+        height: 126
+      alignment: 9
+      pivot: {x: 0.49565217, y: 0.49603173}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aab72ac119b229230800000000000000
+      internalID: 3644022950746815402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_13_Stone Golem_43
+      rect:
+        serializedVersion: 2
+        x: 235
+        y: 127
+        width: 114
+        height: 126
+      alignment: 9
+      pivot: {x: 0.49561402, y: 0.49603173}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0081abb1bc0ddb20800000000000000
+      internalID: 3160696470980624395
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_13_Stone Golem_44D
+      rect:
+        serializedVersion: 2
+        x: 351
+        y: 127
+        width: 114
+        height: 126
+      alignment: 9
+      pivot: {x: 0.49561402, y: 0.49603173}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7fbdcd99ad7502c70800000000000000
+      internalID: 8944245456353680375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_13_Stone Golem_57
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 255
+        width: 115
+        height: 124
+      alignment: 9
+      pivot: {x: 0.49565217, y: 0.49596775}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22c61887110f91700800000000000000
+      internalID: 511703990510119970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_13_Stone Golem_45
+      rect:
+        serializedVersion: 2
+        x: 117
+        y: 255
+        width: 113
+        height: 126
+      alignment: 9
+      pivot: {x: 0.49557522, y: 0.49603173}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94ed886502de078d0800000000000000
+      internalID: -2850517840978977207
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_13_Stone Golem_46
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 255
+        width: 105
+        height: 127
+      alignment: 9
+      pivot: {x: 0.4952381, y: 0.496063}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2e7696d5e3087010800000000000000
+      internalID: 1186702787494706735
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_13_Stone Golem_50
+      rect:
+        serializedVersion: 2
+        x: 339
+        y: 255
+        width: 108
+        height: 123
+      alignment: 9
+      pivot: {x: 0.49537036, y: 0.49593496}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab34003d23d05dae0800000000000000
+      internalID: -1525298386855509062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_13_Stone Golem_49
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 384
+        width: 106
+        height: 125
+      alignment: 9
+      pivot: {x: 0.495283, y: 0.496}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a8ce4d026563e46c0800000000000000
+      internalID: -4157325662470476662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_13_Stone Golem_47
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 384
+        width: 102
+        height: 125
+      alignment: 9
+      pivot: {x: 0.49509802, y: 0.496}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b687908df0074ebd0800000000000000
+      internalID: -2601831471361984405
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_13_Stone Golem_48
+      rect:
+        serializedVersion: 2
+        x: 212
+        y: 384
+        width: 101
+        height: 125
+      alignment: 9
+      pivot: {x: 0.4950495, y: 0.496}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec8058fbc07976d10800000000000000
+      internalID: 2118828230709676238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Monster_13_Stone Golem_43: 3160696470980624395
+      Monster_13_Stone Golem_44D: 8944245456353680375
+      Monster_13_Stone Golem_45: -2850517840978977207
+      Monster_13_Stone Golem_46: 1186702787494706735
+      Monster_13_Stone Golem_47: -2601831471361984405
+      Monster_13_Stone Golem_48: 2118828230709676238
+      Monster_13_Stone Golem_49: -4157325662470476662
+      Monster_13_Stone Golem_50: -1525298386855509062
+      Monster_13_Stone Golem_51: 3644022950746815402
+      Monster_13_Stone Golem_52: 2471214137382714107
+      Monster_13_Stone Golem_53: -4815008046144442708
+      Monster_13_Stone Golem_54: -6000133098912802380
+      Monster_13_Stone Golem_55: -4978791099426160118
+      Monster_13_Stone Golem_56: -4935966419579277934
+      Monster_13_Stone Golem_57: 511703990510119970
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

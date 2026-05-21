@@ -1,0 +1,9 @@
+# Windows
+lcd Publish\win-x64
+cd /C:/Server/win-x64
+put -r *
+
+# Linux
+lcd Publish\linux-x64
+cd /C:/Server/linux-x64
+put -r *

@@ -1,0 +1,360 @@
+fileFormatVersion: 2
+guid: 0d94aa5749ae53e4a938ac19d1006ae5
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Monster_22_Floating Stone_45
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 88
+        height: 117
+      alignment: 9
+      pivot: {x: 0.4943182, y: 0.4957265}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e6be5189831fd7a0800000000000000
+      internalID: -6350335468267194655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_22_Floating Stone_46
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 0
+        width: 88
+        height: 117
+      alignment: 9
+      pivot: {x: 0.4943182, y: 0.4957265}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: edd126b1ed37e89d0800000000000000
+      internalID: -2770149323006927394
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_22_Floating Stone_47
+      rect:
+        serializedVersion: 2
+        x: 180
+        y: 0
+        width: 88
+        height: 117
+      alignment: 9
+      pivot: {x: 0.4943182, y: 0.4957265}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 668948d8270c0dfc0800000000000000
+      internalID: -3472063714469570458
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_22_Floating Stone_43
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 0
+        width: 88
+        height: 116
+      alignment: 9
+      pivot: {x: 0.4943182, y: 0.49568966}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 589c6fada39b0ed10800000000000000
+      internalID: 2152924284315945349
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_22_Floating Stone_44
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 0
+        width: 88
+        height: 116
+      alignment: 9
+      pivot: {x: 0.4943182, y: 0.49568966}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7443fb93adea8e60800000000000000
+      internalID: 7965440177910006911
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_22_Floating Stone_48
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 119
+        width: 88
+        height: 116
+      alignment: 9
+      pivot: {x: 0.4943182, y: 0.49568966}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c28f56bb06d51e60800000000000000
+      internalID: 7932481664475693763
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_22_Floating Stone_41d
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 119
+        width: 88
+        height: 115
+      alignment: 9
+      pivot: {x: 0.4943182, y: 0.49565217}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d1a5d5ada05f8430800000000000000
+      internalID: 3787334518383682008
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_22_Floating Stone_42
+      rect:
+        serializedVersion: 2
+        x: 180
+        y: 119
+        width: 88
+        height: 115
+      alignment: 9
+      pivot: {x: 0.4943182, y: 0.49565217}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1552695d6e866b700800000000000000
+      internalID: 555746944661988689
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_22_Floating Stone_49
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 119
+        width: 88
+        height: 115
+      alignment: 9
+      pivot: {x: 0.4943182, y: 0.49565217}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f7170ecdfca82d20800000000000000
+      internalID: 3254040936858458097
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_22_Floating Stone_50
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 119
+        width: 88
+        height: 114
+      alignment: 9
+      pivot: {x: 0.4943182, y: 0.49561402}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01145b67417a71df0800000000000000
+      internalID: -209515151316664048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Monster_22_Floating Stone_41d: 3787334518383682008
+      Monster_22_Floating Stone_42: 555746944661988689
+      Monster_22_Floating Stone_43: 2152924284315945349
+      Monster_22_Floating Stone_44: 7965440177910006911
+      Monster_22_Floating Stone_45: -6350335468267194655
+      Monster_22_Floating Stone_46: -2770149323006927394
+      Monster_22_Floating Stone_47: -3472063714469570458
+      Monster_22_Floating Stone_48: 7932481664475693763
+      Monster_22_Floating Stone_49: 3254040936858458097
+      Monster_22_Floating Stone_50: -209515151316664048
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

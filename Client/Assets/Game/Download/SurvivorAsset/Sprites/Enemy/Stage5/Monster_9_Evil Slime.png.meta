@@ -1,0 +1,337 @@
+fileFormatVersion: 2
+guid: ce91d559d7942e64c8dd1c3ee3a5813c
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Monster_9_Evil Slime_26
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 156
+        height: 89
+      alignment: 9
+      pivot: {x: 0.49679488, y: 0.49438202}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42494dda23ec56630800000000000000
+      internalID: 3919765767755961380
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_9_Evil Slime_33
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 0
+        width: 145
+        height: 93
+      alignment: 9
+      pivot: {x: 0.49655172, y: 0.49462366}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41f4c586e91a6cdd0800000000000000
+      internalID: -2466106044210983148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_9_Evil Slime_34
+      rect:
+        serializedVersion: 2
+        x: 305
+        y: 0
+        width: 140
+        height: 96
+      alignment: 9
+      pivot: {x: 0.49642858, y: 0.49479166}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ca600746877f619c0800000000000000
+      internalID: -3956703126145202516
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_9_Evil Slime_32
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 98
+        width: 158
+        height: 85
+      alignment: 9
+      pivot: {x: 0.49683544, y: 0.49411765}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69270e99cfe8335f0800000000000000
+      internalID: -778121095040437610
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_9_Evil Slime_30
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 98
+        width: 155
+        height: 85
+      alignment: 9
+      pivot: {x: 0.4967742, y: 0.49411765}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 827dc1aa89fd66b20800000000000000
+      internalID: 3127432838037428008
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_9_Evil Slime_27e
+      rect:
+        serializedVersion: 2
+        x: 317
+        y: 98
+        width: 160
+        height: 81
+      alignment: 9
+      pivot: {x: 0.496875, y: 0.49382716}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57ec556a6fa14d7e0800000000000000
+      internalID: -1741737509230621067
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_9_Evil Slime_31
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 185
+        width: 159
+        height: 80
+      alignment: 9
+      pivot: {x: 0.49685535, y: 0.49375}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b869bb0af00d3edf0800000000000000
+      internalID: -152049196860729717
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_9_Evil Slime_28
+      rect:
+        serializedVersion: 2
+        x: 161
+        y: 185
+        width: 161
+        height: 73
+      alignment: 9
+      pivot: {x: 0.49689442, y: 0.49315068}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 166ba95c818095120800000000000000
+      internalID: 2402960778666358369
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_9_Evil Slime_29
+      rect:
+        serializedVersion: 2
+        x: 324
+        y: 185
+        width: 167
+        height: 65
+      alignment: 9
+      pivot: {x: 0.497006, y: 0.4923077}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a54f67c64eb1aeb10800000000000000
+      internalID: 2011450851460576346
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Monster_9_Evil Slime_26: 3919765767755961380
+      Monster_9_Evil Slime_27e: -1741737509230621067
+      Monster_9_Evil Slime_28: 2402960778666358369
+      Monster_9_Evil Slime_29: 2011450851460576346
+      Monster_9_Evil Slime_30: 3127432838037428008
+      Monster_9_Evil Slime_31: -152049196860729717
+      Monster_9_Evil Slime_32: -778121095040437610
+      Monster_9_Evil Slime_33: -2466106044210983148
+      Monster_9_Evil Slime_34: -3956703126145202516
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

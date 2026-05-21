@@ -1,0 +1,337 @@
+fileFormatVersion: 2
+guid: 593840a4d33df90409faa27c301fd407
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Monster_12_Glop Slime_30
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 98
+        height: 85
+      alignment: 9
+      pivot: {x: 0.49489796, y: 0.49411765}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b2fc0965fa9c65920800000000000000
+      internalID: 2978789958460952363
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_12_Glop Slime_32
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 0
+        width: 107
+        height: 77
+      alignment: 9
+      pivot: {x: 0.49532712, y: 0.4935065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a568d74204b570080800000000000000
+      internalID: -9221301380969560486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_12_Glop Slime_33
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 0
+        width: 98
+        height: 84
+      alignment: 9
+      pivot: {x: 0.49489796, y: 0.4940476}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08d7a5499f65bf920800000000000000
+      internalID: 3025107204645223808
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_12_Glop Slime_31
+      rect:
+        serializedVersion: 2
+        x: 309
+        y: 0
+        width: 104
+        height: 79
+      alignment: 9
+      pivot: {x: 0.49519232, y: 0.49367088}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9228bd53ce82c66e0800000000000000
+      internalID: -1843053152520404439
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_12_Glop Slime_34
+      rect:
+        serializedVersion: 2
+        x: 415
+        y: 0
+        width: 94
+        height: 87
+      alignment: 9
+      pivot: {x: 0.49468085, y: 0.49425286}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a6427158fbfb9250800000000000000
+      internalID: 5952628376437147304
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_12_Glop Slime_26
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 89
+        width: 100
+        height: 80
+      alignment: 9
+      pivot: {x: 0.495, y: 0.49375}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1527cb6ebef4bc6c0800000000000000
+      internalID: -4122113159320538543
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_12_Glop Slime_27e
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 89
+        width: 104
+        height: 69
+      alignment: 9
+      pivot: {x: 0.49519232, y: 0.49275362}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 010315f630fde0310800000000000000
+      internalID: 1373280142240067600
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_12_Glop Slime_28
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 89
+        width: 108
+        height: 64
+      alignment: 9
+      pivot: {x: 0.49537036, y: 0.4921875}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46471d11b34758800800000000000000
+      internalID: 614024721256772708
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_12_Glop Slime_29
+      rect:
+        serializedVersion: 2
+        x: 318
+        y: 89
+        width: 114
+        height: 59
+      alignment: 9
+      pivot: {x: 0.49561402, y: 0.4915254}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 53d808bcd8d08b970800000000000000
+      internalID: 8770775176959790389
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Monster_12_Glop Slime_26: -4122113159320538543
+      Monster_12_Glop Slime_27e: 1373280142240067600
+      Monster_12_Glop Slime_28: 614024721256772708
+      Monster_12_Glop Slime_29: 8770775176959790389
+      Monster_12_Glop Slime_30: 2978789958460952363
+      Monster_12_Glop Slime_31: -1843053152520404439
+      Monster_12_Glop Slime_32: -9221301380969560486
+      Monster_12_Glop Slime_33: 3025107204645223808
+      Monster_12_Glop Slime_34: 5952628376437147304
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

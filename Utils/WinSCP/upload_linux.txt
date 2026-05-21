@@ -1,0 +1,3 @@
+lcd Publish\linux-x64
+cd /C:/Server/linux-x64
+put -r *

@@ -1,0 +1,53 @@
+﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using System;
+
+using Main;
+
+namespace GameScripts
+{
+    /// <summary>
+    /// 不同的分类一个池, 包含多个对象池
+    /// </summary>
+    public sealed class SpawnPool : MonoBehaviour
+    {
+        private Dictionary<int, PrefabPool> prefabPoolDic = new();
+    
+    
+        private void OnDestroy()
+        {
+            StopAllCoroutines();
+    
+            foreach (var pool in prefabPoolDic)
+            {
+                pool.Value.SelfDestruct();
+            }
+            prefabPoolDic.Clear();
+        }
+    
+        /// <summary>
+        /// 创建对象池
+        /// </summary>
+        public void AddPrefabPool(PrefabPool prefabPool)
+        {
+            int instanceID = prefabPool.prefab.GetInstanceID();
+            if (prefabPoolDic.ContainsKey(instanceID))
+            {
+                Debugger.Log("该Prefab对应的对象池已经存在， 不要重复创建!  prefab==" + prefabPool.prefab);
+                return;
+            }
+    
+            prefabPool.Root = this;
+            prefabPoolDic.Add(instanceID, prefabPool);
+        }
+        /// <summary>
+        /// 取对象池
+        /// </summary>
+        public PrefabPool GetPrefabPool(GameObject prefab)
+        {
+            prefabPoolDic.TryGetValue(prefab.GetInstanceID(), out PrefabPool prefabPool);
+            return prefabPool;
+        }
+    }
+}

@@ -1,0 +1,337 @@
+fileFormatVersion: 2
+guid: 193b0845069c9274ea852a7c8f5daff4
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Monster_10_Bird Slime_26
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 151
+        height: 89
+      alignment: 9
+      pivot: {x: 0.49668875, y: 0.49438202}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0945bde131935c10800000000000000
+      internalID: 2041134699756472590
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_10_Bird Slime_33
+      rect:
+        serializedVersion: 2
+        x: 153
+        y: 0
+        width: 140
+        height: 93
+      alignment: 9
+      pivot: {x: 0.49642858, y: 0.49462366}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 973293a7d6c41ca50800000000000000
+      internalID: 6539592167004382073
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_10_Bird Slime_34
+      rect:
+        serializedVersion: 2
+        x: 295
+        y: 0
+        width: 134
+        height: 96
+      alignment: 9
+      pivot: {x: 0.49626866, y: 0.49479166}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5785cb835e0b3cd00800000000000000
+      internalID: 991830841497507957
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_10_Bird Slime_32
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 98
+        width: 150
+        height: 85
+      alignment: 9
+      pivot: {x: 0.49666667, y: 0.49411765}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b5406492e7b02eb0800000000000000
+      internalID: -4746591823468673610
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_10_Bird Slime_27e
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 98
+        width: 154
+        height: 81
+      alignment: 9
+      pivot: {x: 0.49675325, y: 0.49382716}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e3e17ffbfc84f05b0800000000000000
+      internalID: -5400017371077861826
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_10_Bird Slime_30
+      rect:
+        serializedVersion: 2
+        x: 308
+        y: 98
+        width: 144
+        height: 85
+      alignment: 9
+      pivot: {x: 0.4965278, y: 0.49411765}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba70b854e85a980d0800000000000000
+      internalID: -3420020411540502613
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_10_Bird Slime_31
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 185
+        width: 150
+        height: 80
+      alignment: 9
+      pivot: {x: 0.49666667, y: 0.49375}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0204e83f4a3e174a0800000000000000
+      internalID: -6597241681520738272
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_10_Bird Slime_28
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 185
+        width: 156
+        height: 73
+      alignment: 9
+      pivot: {x: 0.49679488, y: 0.49315068}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e97caa0394c51c90800000000000000
+      internalID: -7199632293463557658
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_10_Bird Slime_29
+      rect:
+        serializedVersion: 2
+        x: 310
+        y: 185
+        width: 158
+        height: 65
+      alignment: 9
+      pivot: {x: 0.49683544, y: 0.4923077}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6d3d59cb6a2c42d0800000000000000
+      internalID: -3293210585086476950
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Monster_10_Bird Slime_26: 2041134699756472590
+      Monster_10_Bird Slime_27e: -5400017371077861826
+      Monster_10_Bird Slime_28: -7199632293463557658
+      Monster_10_Bird Slime_29: -3293210585086476950
+      Monster_10_Bird Slime_30: -3420020411540502613
+      Monster_10_Bird Slime_31: -6597241681520738272
+      Monster_10_Bird Slime_32: -4746591823468673610
+      Monster_10_Bird Slime_33: 6539592167004382073
+      Monster_10_Bird Slime_34: 991830841497507957
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

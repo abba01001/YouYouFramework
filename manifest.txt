@@ -1,0 +1,52 @@
+==================================================
+📄 打包文件清单
+==================================================
+
+【修改/新增文件】(45个)
+- Client/Assets/Game/Script/Protocol/GameSaveData.cs
+- Client/Assets/Game/Script/Protocol/GameSaveData.cs.meta
+- Client/Assets/Game/Script/Protocol/GuildData.cs
+- Client/Assets/Game/Script/Protocol/GuildData.cs.meta
+- Client/Assets/Game/Script/Protocol/ItemAction.cs
+- Client/Assets/Game/Script/Protocol/ItemAction.cs.meta
+- Client/Assets/Game/Script/Protocol/ItemData.cs
+- Client/Assets/Game/Script/Protocol/ItemData.cs.meta
+- Client/Assets/Game/Script/Protocol/Messages.cs
+- Client/Assets/Game/Script/Protocol/Messages.cs.meta
+- Client/Assets/Game/Script/Protocol/PlayerData.cs
+- Client/Assets/Game/Script/Protocol/PlayerData.cs.meta
+- Client/Assets/Game/Script/YouYouFramework/GameEntry.cs
+- Client/Assets/Game/Script/YouYouFramework/Managers/Http/ProtocolHelper.cs
+- Client/Assets/Game/Script/YouYouFramework/Managers/Net/NetManager.cs
+- Client/Assets/Game/Script/YouYouFramework/Managers/Net/NetRequestHandler.cs
+- Client/Assets/Game/Script/YouYouFramework/Managers/Net/NetResponseHandler.cs
+- Client/Assets/Game/Script/YouYouFramework/YouYouAssets/ParamsSettings.asset
+- Client/Assets/Game/Script/YouYouScript/Constants.cs
+- Client/ProjectSettings/EditorBuildSettings.asset
+- Client/ProjectSettings/ProjectSettings.asset
+- Public/Protobuf/local/Messages.proto
+- Public/Protobuf/publish/GameSaveData.cs
+- Public/Protobuf/publish/GuildData.cs
+- Public/Protobuf/publish/Messages.cs
+- Public/Protobuf/publish/PlayerData.cs
+- Server/TCPServer/ClientSocket.cs
+- Server/TCPServer/Core/DataAccess/SqlManager.cs
+- Server/TCPServer/Program.cs
+- Server/TCPServer/Protocol/GameSaveData.cs
+- Server/TCPServer/Protocol/GuildData.cs
+- Server/TCPServer/Protocol/ItemAction.cs
+- Server/TCPServer/Protocol/ItemData.cs
+- Server/TCPServer/Protocol/Messages.cs
+- Server/TCPServer/Protocol/PlayerData.cs
+- Server/TCPServer/ProtocolHelper.cs
+- Server/TCPServer/Redis/DBFlushService.cs
+- Server/TCPServer/Redis/PlayerCache.cs
+- Server/TCPServer/Redis/PlayerService.cs
+- Server/TCPServer/Redis/RedisKey.cs
+- Server/TCPServer/Redis/RedisManager.cs
+- Server/TCPServer/RequestHandler.cs
+- Server/TCPServer/ResponseHandler.cs
+- Server/TCPServer/ServerSocket.cs
+- /346/217/220/345/217/226/344/277/256/346/224/271/346/226/207/344/273/266.py
+
+【已删除文件】(0个)

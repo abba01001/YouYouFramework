@@ -1,0 +1,538 @@
+using OctoberStudio.Extensions;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using Main;
+using Unity.Burst;
+using Unity.Collections;
+using Unity.Jobs;
+using Unity.Mathematics;
+using UnityEngine;
+using UnityEngine.Events;
+
+namespace GameScripts
+{
+    public class EasingManager : MonoBehaviour
+    {
+        private static EasingManager instance;
+        public static EasingPositionJobRunner PositionJobRunner => instance.positionJobRunner;
+        protected EasingPositionJobRunner positionJobRunner;
+        public virtual void Awake()
+        {
+            instance = this;
+            positionJobRunner = new EasingPositionJobRunner();
+        }
+
+        protected virtual void OnDestroy()
+        {
+            positionJobRunner.Clear();
+        }
+
+        protected virtual void Update()
+        {
+            positionJobRunner.Update();
+        }
+
+        protected virtual void LateUpdate()
+        {
+            positionJobRunner.LateUpdate();
+        }
+
+        public static IEasingCoroutine DoFloat(float from, float to, float duration, UnityAction<float> action, float delay = 0)
+        {
+            return new FloatEasingCoroutine(from, to, duration, delay, action);
+        }
+        
+        public static IEasingCoroutine DoJump(Vector2 from, Vector2 to, float jumpHeight, float duration, UnityAction<Vector2> action, float delay = 0)
+        {
+            return new Vector2JumpEasingCoroutine(from, to, jumpHeight, duration, delay, action);
+        }
+
+        public static IEasingCoroutine DoRotate(float from, float to, float duration, UnityAction<float> action, float delay = 0)
+        {
+            return new FloatEasingCoroutine(from, to, duration, delay, action);
+        }
+
+        public static IEasingCoroutine DoAfter(float seconds, UnityAction action, bool unscaledTime = false)
+        {
+            return new WaitCoroutine(seconds, unscaledTime).SetOnFinish(action);
+        }
+
+        public static IEasingCoroutine DoAfter(Func<bool> condition)
+        {
+            return new WaitForConditionCoroutine(condition);
+        }
+
+        public static IEasingCoroutine DoNextFrame()
+        {
+            return new NextFrameCoroutine();
+        }
+        public static IEasingCoroutine DoNextFrame(UnityAction action)
+        {
+            return new NextFrameCoroutine().SetOnFinish(action);
+        }
+
+        public static IEasingCoroutine DoNextFixedFrame()
+        {
+            return new NextFixedFrameCoroutine();
+        }
+
+        public static Coroutine StartCustomCoroutine(IEnumerator coroutine)
+        {
+            return instance.StartCoroutine(coroutine);
+        }
+
+        public static void StopCustomCoroutine(Coroutine coroutine)
+        {
+            instance.StopCoroutine(coroutine);
+        }
+    }
+
+    public interface IEasingCoroutine
+    {
+        bool IsActive { get; }
+        IEasingCoroutine SetEasing(EasingType easingType);
+        IEasingCoroutine SetEasingCurve(AnimationCurve easingCurve);
+        IEasingCoroutine SetOnFinish(UnityAction callback);
+        IEasingCoroutine SetUnscaledTime(bool unscaledTime);
+        IEasingCoroutine SetDelay(float delay);
+        void Stop();
+    }
+
+    public abstract class EmptyCoroutine : IEasingCoroutine
+    {
+        protected Coroutine coroutine;
+        public bool IsActive { get; protected set; }
+        protected UnityAction finishCallback;
+        protected EasingType easingType = EasingType.Linear;
+        protected float delay = -1;
+        protected bool unscaledTime;
+        protected bool useCurve;
+        protected AnimationCurve easingCurve;
+
+        public IEasingCoroutine SetEasing(EasingType easingType)
+        {
+            this.easingType = easingType;
+            useCurve = false;
+            return this;
+        }
+
+        public IEasingCoroutine SetOnFinish(UnityAction callback)
+        {
+            finishCallback = callback;
+            return this;
+        }
+
+        public IEasingCoroutine SetUnscaledTime(bool unscaledTime)
+        {
+            this.unscaledTime = unscaledTime;
+            return this;
+        }
+
+        public IEasingCoroutine SetEasingCurve(AnimationCurve curve)
+        {
+            easingCurve = curve;
+            useCurve = true;
+            return this;
+        }
+
+        public IEasingCoroutine SetDelay(float delay)
+        {
+            this.delay = delay;
+            return this;
+        }
+
+        public void Stop()
+        {
+            EasingManager.StopCustomCoroutine(coroutine);
+            IsActive = false;
+        }
+    }
+
+    public class NextFrameCoroutine : EmptyCoroutine
+    {
+        public NextFrameCoroutine() { coroutine = EasingManager.StartCustomCoroutine(Coroutine()); }
+        private IEnumerator Coroutine()
+        {
+            IsActive = true;
+            yield return null;
+            finishCallback?.Invoke();
+            IsActive = false;
+        }
+    }
+
+    public class NextFixedFrameCoroutine : EmptyCoroutine
+    {
+        public NextFixedFrameCoroutine() { coroutine = EasingManager.StartCustomCoroutine(Coroutine()); }
+        private IEnumerator Coroutine()
+        {
+            IsActive = true;
+            yield return new WaitForFixedUpdate();
+            finishCallback?.Invoke();
+            IsActive = false;
+        }
+    }
+
+    public class WaitCoroutine : EmptyCoroutine
+    {
+        protected float duration;
+        public WaitCoroutine(float duration, bool unscaledTime = false)
+        {
+            this.duration = duration;
+            this.unscaledTime = unscaledTime;
+            coroutine = EasingManager.StartCustomCoroutine(Coroutine());
+        }
+        private IEnumerator Coroutine()
+        {
+            IsActive = true;
+            while (delay > 0)
+            {
+                yield return null;
+                delay -= unscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
+            }
+            if (unscaledTime) yield return new WaitForSecondsRealtime(duration);
+            else yield return new WaitForSeconds(duration);
+            finishCallback?.Invoke();
+            IsActive = false;
+        }
+    }
+
+    public class WaitForConditionCoroutine : EmptyCoroutine
+    {
+        private Func<bool> condition;
+        public WaitForConditionCoroutine(Func<bool> condition)
+        {
+            this.condition = condition;
+            coroutine = EasingManager.StartCustomCoroutine(Coroutine());
+        }
+        private IEnumerator Coroutine()
+        {
+            IsActive = true;
+            while (delay > 0)
+            {
+                yield return null;
+                delay -= unscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
+            }
+            do { yield return null; } while (!condition());
+            finishCallback?.Invoke();
+            IsActive = false;
+        }
+    }
+
+    public abstract class EasingCoroutine<T> : EmptyCoroutine
+    {
+        protected T from;
+        protected T to;
+        protected float duration;
+        protected UnityAction<T> callback;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public abstract T Lerp(T a, T b, float t);
+
+        public EasingCoroutine(T from, T to, float duration, float delay, UnityAction<T> callback)
+        {
+            this.from = from;
+            this.to = to;
+            this.duration = duration;
+            this.callback = callback;
+            this.delay = delay;
+            coroutine = EasingManager.StartCustomCoroutine(Coroutine());
+        }
+
+        private IEnumerator Coroutine()
+        {
+            IsActive = true;
+            float time = 0;
+            while (time < duration)
+            {
+                yield return null;
+                if (delay > 0)
+                {
+                    delay -= unscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
+                    if (delay > 0) continue;
+                }
+                time += unscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
+                float t;
+                if (useCurve) t = easingCurve.Evaluate(time / duration);
+                else t = EasingFunctions.ApplyEasing(time / duration, easingType);
+                
+                T value = Lerp(from, to, t);
+                callback?.Invoke(value);
+            }
+            callback.Invoke(to);
+            finishCallback?.Invoke();
+            IsActive = false;
+        }
+    }
+
+    public class FloatEasingCoroutine : EasingCoroutine<float>
+    {
+        public FloatEasingCoroutine(float from, float to, float duration, float delay, UnityAction<float> callback) : base(from, to, duration, delay, callback) { }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override float Lerp(float a, float b, float t) => Mathf.LerpUnclamped(a, b, t);
+    }
+    
+    public class Vector2JumpEasingCoroutine : EasingCoroutine<Vector2>
+    {
+        private float _jumpHeight;
+        public Vector2JumpEasingCoroutine(Vector2 from, Vector2 to, float jumpHeight, float duration, float delay, UnityAction<Vector2> callback) : base(from, to, duration, delay, callback)
+        {
+            _jumpHeight = jumpHeight;
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override Vector2 Lerp(Vector2 a, Vector2 b, float t)
+        {
+            Vector2 pos = Vector2.LerpUnclamped(a, b, t);
+            float height = _jumpHeight * (t * (1f - t) * 4f);
+            pos.y += height;
+            return pos;
+        }
+    }
+
+    public class VectorEasingCoroutine3 : EasingCoroutine<Vector3>
+    {
+        public VectorEasingCoroutine3(Vector3 from, Vector3 to, float duration, float delay, UnityAction<Vector3> callback) : base(from, to, duration, delay, callback) { }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override Vector3 Lerp(Vector3 a, Vector3 b, float t) => Vector3.LerpUnclamped(a, b, t);
+    }
+
+    public class VectorEasingCoroutine2 : EasingCoroutine<Vector2>
+    {
+        public VectorEasingCoroutine2(Vector2 from, Vector2 to, float duration, float delay, UnityAction<Vector2> callback) : base(from, to, duration, delay, callback) { }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override Vector2 Lerp(Vector2 a, Vector2 b, float t) => Vector2.LerpUnclamped(a, b, t);
+    }
+
+    public class ColorEasingCoroutine : EasingCoroutine<Color>
+    {
+        public ColorEasingCoroutine(Color from, Color to, float duration, float delay, UnityAction<Color> callback) : base(from, to, duration, delay, callback) { }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override Color Lerp(Color a, Color b, float t) => Color.LerpUnclamped(a, b, t);
+    }
+
+    public abstract class EasingJobAnimation
+    {
+        protected float startTime;
+        public float StartTime => startTime;
+        protected float endTime;
+        public float EndTime => endTime;
+        protected bool useUnscaledTime;
+        public bool UseUnscaledTime => useUnscaledTime;
+        protected EasingType easingType;
+        public EasingType EasingType => easingType;
+        protected UnityAction finishCallback;
+
+        protected EasingJobAnimation(float duration, float delay, bool useUnscaledTime, EasingType easingType)
+        {
+            this.useUnscaledTime = useUnscaledTime;
+            var time = useUnscaledTime ? Time.unscaledTime : Time.time;
+            startTime = time + delay;
+            endTime = startTime + duration;
+            this.easingType = easingType;
+        }
+        public bool IsActive => useUnscaledTime ? Time.unscaledTime < endTime : Time.time < endTime;
+        public bool IsStarted => useUnscaledTime ? startTime <= Time.unscaledTime : startTime <= Time.time;
+        public virtual void SetOnFinish(UnityAction finishCallback) => this.finishCallback = finishCallback;
+        public virtual void Finish() => finishCallback?.Invoke();
+    }
+
+    public class PositionEasingJobAnimation : EasingJobAnimation
+    {
+        protected Transform transform;
+        protected Transform targetTransform;
+    
+        // 增加：物体是否还存在的属性检查
+        public bool IsTransformValid => transform != null;
+        public bool IsTargetValid => targetTransform != null;
+
+        // 修改：访问坐标前先判断，避免 MissingReferenceException
+        public float2 Position 
+        { 
+            get => IsTransformValid ? transform.position.XY() : float2.zero; 
+            set { if (IsTransformValid) transform.position = (Vector2)value; } 
+        }
+
+        public float2 Target => IsTargetValid ? targetTransform.position.XY() : float2.zero;
+
+        public PositionEasingJobAnimation(Transform transform, Transform targetTransform, float duration, float delay, bool useUnscaledTime, EasingType easingType) : base(duration, delay, useUnscaledTime, easingType)
+        {
+            // 初始安全性检查
+            if (transform == null)
+            {
+                IsValid = false;
+                return;
+            }
+
+            this.transform = transform;
+            this.targetTransform = targetTransform;
+            IsValid = true;
+        
+            // 只有合法时才加入队列
+            EasingManager.PositionJobRunner.AddJobAnimaiton(this);
+        }
+    
+        // 这里的 IsValid 应该结合 Transform 的实时状态
+        public bool IsValid { get; set; }
+    }
+    
+    public class EasingPositionJobRunner
+    {
+        protected List<PositionEasingJobAnimation> waitingAnimations;
+        protected List<PositionEasingJobAnimation> activeAnimations;
+
+        [ReadOnly] public NativeList<float2> timeData;
+        [ReadOnly] public NativeList<float> useUnscaledTime;
+        // 核心修改：真机也需要分配指针空间
+        [ReadOnly] public NativeList<FunctionPointer<EasingFunctions.EasingFunction>> easingFunctions;
+        [ReadOnly] public NativeList<float2> startPositions;
+        [ReadOnly] public NativeList<float2> targets;
+        [WriteOnly] public NativeList<float2> positions;
+
+        public bool isJobRunning = false;
+        protected DoPosition2DJob doPosition2DJob;
+        protected JobHandle doPosition2DJobHandle;
+        protected int capacityCache;
+
+        public EasingPositionJobRunner()
+        {
+            waitingAnimations = new List<PositionEasingJobAnimation>(10);
+            activeAnimations = new List<PositionEasingJobAnimation>(50);
+
+            timeData = new NativeList<float2>(50, Allocator.Persistent);
+            useUnscaledTime = new NativeList<float>(50, Allocator.Persistent);
+            easingFunctions = new NativeList<FunctionPointer<EasingFunctions.EasingFunction>>(50, Allocator.Persistent);
+            startPositions = new NativeList<float2>(50, Allocator.Persistent);
+            targets = new NativeList<float2>(50, Allocator.Persistent);
+            positions = new NativeList<float2>(50, Allocator.Persistent);
+            
+            doPosition2DJob = new DoPosition2DJob();
+            capacityCache = timeData.Capacity;
+            ReinitializeJob();
+        }
+
+        public virtual void AddJobAnimaiton(PositionEasingJobAnimation jobAnimation)
+        {
+            if (jobAnimation.IsStarted && !isJobRunning) AddActiveAnimation(jobAnimation);
+            else waitingAnimations.Add(jobAnimation);
+        }
+
+        public virtual void Update()
+        {
+            if (waitingAnimations.Count > 0)
+            {
+                for (int i = 0; i < waitingAnimations.Count; i++)
+                {
+                    if (waitingAnimations[i].IsStarted)
+                    {
+                        AddActiveAnimation(waitingAnimations[i]);
+                        waitingAnimations.RemoveAt(i--);
+                    }
+                }
+            }
+
+            if (activeAnimations.Count == 0) return;
+            
+            for (int i = 0; i < activeAnimations.Count; i++)
+            {
+                var anim = activeAnimations[i];
+                // 核心修复：如果物体被销毁了，或者 target 丢失了（根据业务需求决定是否需要 target 必存在）
+                if (!anim.IsTransformValid) 
+                {
+                    RemoveActiveAnimation(i--);
+                    continue;
+                }
+
+                // 更新目标位置（如果目标消失了，可以保持最后已知的位置，或者直接停止）
+                if (anim.IsTargetValid)
+                {
+                    targets[i] = anim.Target;
+                }
+                else
+                {
+                    // 如果目标丢了，通常建议直接结束动画或者留在原地
+                    RemoveActiveAnimation(i--);
+                    continue;
+                }
+            }
+
+            doPosition2DJob.scaledTime = Time.time;
+            doPosition2DJob.unscaledTime = Time.unscaledTime;
+            doPosition2DJobHandle = doPosition2DJob.Schedule(activeAnimations.Count, 16);
+            JobHandle.ScheduleBatchedJobs();
+            isJobRunning = true;
+        }
+
+        protected virtual void ReinitializeJob()
+        {
+            doPosition2DJob.timeData = timeData.AsDeferredJobArray();
+            doPosition2DJob.useUnscaledTime = useUnscaledTime.AsDeferredJobArray();
+            doPosition2DJob.easingFunctions = easingFunctions.AsDeferredJobArray();
+            doPosition2DJob.startPositions = startPositions.AsDeferredJobArray();
+            doPosition2DJob.targets = targets.AsDeferredJobArray();
+            doPosition2DJob.positions = positions.AsDeferredJobArray();
+        }
+
+        protected virtual void AddActiveAnimation(PositionEasingJobAnimation jobAnimation)
+        {
+            activeAnimations.Add(jobAnimation);
+            timeData.Add(new float2(jobAnimation.StartTime, jobAnimation.EndTime));
+            useUnscaledTime.Add(jobAnimation.UseUnscaledTime ? 1f : 0f);
+            easingFunctions.Add(EasingFunctions.Functions[(int)jobAnimation.EasingType]);
+            startPositions.Add(jobAnimation.Position);
+            targets.Add(jobAnimation.Target);
+            positions.Add(float2.zero);
+
+            if(timeData.Capacity != capacityCache)
+            {
+                capacityCache = timeData.Capacity;
+                ReinitializeJob();
+            }
+        }
+
+        public virtual void LateUpdate()
+        {
+            if (!isJobRunning) return;
+            isJobRunning = false;
+            doPosition2DJobHandle.Complete();
+
+            for (int i = 0; i < activeAnimations.Count; i++)
+            {
+                if (activeAnimations[i].IsValid)
+                {
+                    activeAnimations[i].Position = positions[i];
+                    if (!activeAnimations[i].IsActive)
+                    {
+                        activeAnimations[i].Finish();
+                        RemoveActiveAnimation(i--);
+                    }
+                } else RemoveActiveAnimation(i--);
+            }
+        }
+
+        protected virtual void RemoveActiveAnimation(int index)
+        {
+            activeAnimations.RemoveAt(index);
+            timeData.RemoveAt(index);
+            useUnscaledTime.RemoveAt(index);
+            easingFunctions.RemoveAt(index);
+            startPositions.RemoveAt(index);
+            targets.RemoveAt(index);
+            positions.RemoveAt(index);
+        }
+
+        public virtual void Clear()
+        {
+            if(isJobRunning) doPosition2DJobHandle.Complete();
+            if (timeData.IsCreated)
+            {
+                timeData.Dispose();
+                useUnscaledTime.Dispose();
+                easingFunctions.Dispose();
+                startPositions.Dispose();
+                targets.Dispose();
+                positions.Dispose();
+            }
+        }
+    }
+}

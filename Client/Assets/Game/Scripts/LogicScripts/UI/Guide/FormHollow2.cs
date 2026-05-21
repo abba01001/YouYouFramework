@@ -1,0 +1,48 @@
+﻿using Cysharp.Threading.Tasks;
+using System;
+using System.Collections.Generic;
+
+using UniRx;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace GameScripts
+{
+    /// <summary>
+    /// �ο����֣�ȫ���ɵ��
+    /// </summary>
+    [RequireComponent(typeof(Button))]
+    [RequireComponent(typeof(HollowOutMask))]
+    public class FormHollow2 : UIFormBase
+    {
+        [Header("ǿ�ƹۿ�ʱ��")] [SerializeField] float DelayTime;
+        private Button button;
+        public static void ShowDialog(string formName)
+        {
+            GameEntry.UI.OpenUIForm<FormHollow2>(formName);
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+            GetComponent<HollowOutMask>().IsAcross = false;
+            button = GetComponent<Button>();
+            button.onClick.AddListener(() =>
+            {
+                Close();
+                GuideManager.Instance.NextGroup(GuideManager.Instance.CurrentState);
+            });
+        }
+
+        protected override void OnShow()
+        {
+
+            base.OnShow();
+            if (DelayTime > 0)
+            {
+                button.enabled = false;
+                Observable.Timer(TimeSpan.FromSeconds(DelayTime)).Subscribe(_ => { button.enabled = true; });
+            }
+        }
+    }
+}

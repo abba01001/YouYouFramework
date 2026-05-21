@@ -1,0 +1,92 @@
+
+using System.Collections;
+using GameScripts;
+using UnityEngine;
+using UnityEngine.Events;
+
+namespace OctoberStudio
+{
+    public class ExperienceManager : MonoBehaviour
+    {
+        [SerializeField] ExperienceData experienceData;
+        private static readonly int LEVEL_UP_HASH = "Level Up".GetHashCode();
+
+        public float XP { get; private set; }
+        public float TargetXP { get; private set; }
+        public int Level { get; private set; }
+
+        public event UnityAction<int> onXpLevelChanged;
+
+        public void Init(PresetData testingPreset)
+        {
+            XP = 0;
+            Level = 0;
+            if(testingPreset != null)
+            {
+                Level = testingPreset.XPLevel;
+            } else if(!GameEntry.Data.StageSaveData.resetAbilities)
+            {
+                Level = GameEntry.Data.StageSaveData.xpLevel;
+                XP = GameEntry.Data.StageSaveData.xp;
+            } else
+            {
+                GameEntry.Data.StageSaveData.SetXpLevel(0);
+                GameEntry.Data.StageSaveData.SetXp(0);
+            }
+
+            TargetXP = experienceData.GetXP(Level);
+            EasingManager.DoNextFrame().SetOnFinish(() =>
+            {
+                GameEntry.Event.Dispatch(Constants.EventName.SetExperienceProgress,XP / TargetXP);
+            });
+            GameEntry.Event.Dispatch(Constants.EventName.SetExperienceLevel,Level + 1);
+        }
+
+        public void AddXP(float xp)
+        {
+            XP += xp * PlayerBehavior.Player.XPMultiplier;
+            GameEntry.Data.StageSaveData.SetXp(XP);
+            if (XP >= TargetXP)
+            {
+                var nextTarget = experienceData.GetXP(Level + 1);
+
+                if(XP >= TargetXP + nextTarget)
+                {
+                    StartCoroutine(IncreaseLevelCoroutine());
+                } else
+                {
+                    IncreaseLevel();
+                }
+            }
+            GameEntry.Event.Dispatch(Constants.EventName.SetExperienceProgress,XP / TargetXP);
+        }
+
+        private IEnumerator IncreaseLevelCoroutine()
+        {
+            while(XP >= TargetXP)
+            {
+                IncreaseLevel();
+
+                // We are allowing abilities manager to set timescale to zero and show the abilities panel for each upgrade
+                yield return new WaitForSeconds(0.001f);
+            }
+            GameEntry.Event.Dispatch(Constants.EventName.SetExperienceProgress,XP / TargetXP);
+        }
+
+        private void IncreaseLevel()
+        {
+            Level++;
+            XP -= TargetXP;
+
+            GameEntry.Data.StageSaveData.SetXpLevel(Level);
+            GameEntry.Data.StageSaveData.SetXp(XP);
+            
+            TargetXP = experienceData.GetXP(Level);
+
+            GameEntry.Event.Dispatch(Constants.EventName.SetExperienceLevel,Level + 1);
+            GameController.AudioManager.PlaySound(LEVEL_UP_HASH);
+
+            onXpLevelChanged?.Invoke(Level);
+        }
+    }
+}

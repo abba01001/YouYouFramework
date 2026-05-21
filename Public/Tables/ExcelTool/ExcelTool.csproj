@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<!-- 基础 -->
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net6.0</TargetFramework>
+
+		<!-- 发布相关 -->
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<SelfContained>true</SelfContained>
+
+		<!-- 发布优化（先关掉坑） -->
+		<PublishSingleFile>false</PublishSingleFile>
+		<PublishTrimmed>false</PublishTrimmed>
+
+		<!-- 调试（服务器建议保留最少日志符号） -->
+		<DebugType>portable</DebugType>
+		<DebugSymbols>false</DebugSymbols>
+
+		<!-- 其他 -->
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+	<ItemGroup>
+	  <PackageReference Include="ExcelDataReader" Version="3.8.0" />
+	  <PackageReference Include="ExcelDataReader.DataSet" Version="3.8.0" />
+	</ItemGroup>
+
+</Project>

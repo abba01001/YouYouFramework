@@ -1,0 +1,475 @@
+fileFormatVersion: 2
+guid: 7e069b1e09ee2ed4cbc391992dae8615
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Monster_14_Magma Golem_56
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 125
+        height: 124
+      alignment: 9
+      pivot: {x: 0.496, y: 0.49596775}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ca36c7602604a8bb0800000000000000
+      internalID: -4933059652071169108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_14_Magma Golem_55
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 0
+        width: 126
+        height: 123
+      alignment: 9
+      pivot: {x: 0.49603173, y: 0.49593496}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d0317853ed6161a0800000000000000
+      internalID: -6818047537653403431
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_14_Magma Golem_54
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 0
+        width: 122
+        height: 124
+      alignment: 9
+      pivot: {x: 0.49590164, y: 0.49596775}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c01de65765bd3dd70800000000000000
+      internalID: 9066831639210807564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_14_Magma Golem_53
+      rect:
+        serializedVersion: 2
+        x: 379
+        y: 0
+        width: 118
+        height: 125
+      alignment: 9
+      pivot: {x: 0.4957627, y: 0.496}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ba45a4930dd6a4b0800000000000000
+      internalID: -5429409293300053322
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_14_Magma Golem_52
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 127
+        width: 116
+        height: 125
+      alignment: 9
+      pivot: {x: 0.49568966, y: 0.496}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 720e408409d600fa0800000000000000
+      internalID: -5836544650621165529
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_14_Magma Golem_51
+      rect:
+        serializedVersion: 2
+        x: 118
+        y: 127
+        width: 115
+        height: 126
+      alignment: 9
+      pivot: {x: 0.49565217, y: 0.49603173}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79b0c3ea297c44240800000000000000
+      internalID: 4775160937721891735
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_14_Magma Golem_43
+      rect:
+        serializedVersion: 2
+        x: 235
+        y: 127
+        width: 114
+        height: 126
+      alignment: 9
+      pivot: {x: 0.49561402, y: 0.49603173}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d07bcb2600c22340800000000000000
+      internalID: 4837640082486423768
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_14_Magma Golem_44E
+      rect:
+        serializedVersion: 2
+        x: 351
+        y: 127
+        width: 114
+        height: 126
+      alignment: 9
+      pivot: {x: 0.49561402, y: 0.49603173}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3785c61b86192f5e0800000000000000
+      internalID: -1877278215820781453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_14_Magma Golem_57
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 255
+        width: 115
+        height: 124
+      alignment: 9
+      pivot: {x: 0.49565217, y: 0.49596775}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: caae41538b34dd4e0800000000000000
+      internalID: -1955332204765320532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_14_Magma Golem_45
+      rect:
+        serializedVersion: 2
+        x: 117
+        y: 255
+        width: 113
+        height: 126
+      alignment: 9
+      pivot: {x: 0.49557522, y: 0.49603173}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 468430678bdd78380800000000000000
+      internalID: -8968956348561405852
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_14_Magma Golem_46
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 255
+        width: 105
+        height: 127
+      alignment: 9
+      pivot: {x: 0.4952381, y: 0.496063}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 216662268f352a080800000000000000
+      internalID: -9177680764363971054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_14_Magma Golem_50
+      rect:
+        serializedVersion: 2
+        x: 339
+        y: 255
+        width: 108
+        height: 123
+      alignment: 9
+      pivot: {x: 0.49537036, y: 0.49593496}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 28f8ed4dbf804d8d0800000000000000
+      internalID: -2822621188753289342
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_14_Magma Golem_49
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 384
+        width: 106
+        height: 125
+      alignment: 9
+      pivot: {x: 0.495283, y: 0.496}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 05693a2d92e27c200800000000000000
+      internalID: 200179465603749456
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_14_Magma Golem_47
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 384
+        width: 102
+        height: 125
+      alignment: 9
+      pivot: {x: 0.49509802, y: 0.496}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d9632a86fc0a8e60800000000000000
+      internalID: 7965193143977208273
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Monster_14_Magma Golem_48
+      rect:
+        serializedVersion: 2
+        x: 212
+        y: 384
+        width: 101
+        height: 125
+      alignment: 9
+      pivot: {x: 0.4950495, y: 0.496}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f571ffed896fdd130800000000000000
+      internalID: 3593299214148245343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Monster_14_Magma Golem_43: 4837640082486423768
+      Monster_14_Magma Golem_44E: -1877278215820781453
+      Monster_14_Magma Golem_45: -8968956348561405852
+      Monster_14_Magma Golem_46: -9177680764363971054
+      Monster_14_Magma Golem_47: 7965193143977208273
+      Monster_14_Magma Golem_48: 3593299214148245343
+      Monster_14_Magma Golem_49: 200179465603749456
+      Monster_14_Magma Golem_50: -2822621188753289342
+      Monster_14_Magma Golem_51: 4775160937721891735
+      Monster_14_Magma Golem_52: -5836544650621165529
+      Monster_14_Magma Golem_53: -5429409293300053322
+      Monster_14_Magma Golem_54: 9066831639210807564
+      Monster_14_Magma Golem_55: -6818047537653403431
+      Monster_14_Magma Golem_56: -4933059652071169108
+      Monster_14_Magma Golem_57: -1955332204765320532
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
