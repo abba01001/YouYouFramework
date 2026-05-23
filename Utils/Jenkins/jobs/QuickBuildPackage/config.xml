@@ -1,0 +1,27 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>echo ===========================================================&#xd;
+echo &quot; 快速构建安装包 (Incremental Build)&quot;&#xd;
+echo &quot;     - 包含：跳过底层生成 + 仅编译最新热更资源 + 导出完整包&quot;&#xd;
+echo &quot;     - 适用：日常美术/程序修改纯热更业务逻辑时使用(速度快)&quot;&#xd;
+echo ===========================================================&#xd;
+echo.</description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.BatchFile>
+      <command>call &quot;D:\Study\MyFramework\Utils\Jenkins\QuickBuildPackage.bat&quot;</command>
+      <configuredLocalRules/>
+    </hudson.tasks.BatchFile>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>

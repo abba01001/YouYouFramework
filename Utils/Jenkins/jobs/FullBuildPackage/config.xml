@@ -1,0 +1,27 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>echo ===========================================================&#xd;
+echo &quot;  全量构建安装包 (Clear Build)&quot;&#xd;
+echo &quot;     - 包含：重新生成底层依赖 + 编译热更资源 + 导出完整包&quot;&#xd;
+echo &quot;     - 适用：新加了插件代码、更新了热更程序集结构时使用&quot;&#xd;
+echo ===========================================================&#xd;
+echo.</description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.BatchFile>
+      <command>call &quot;D:\Study\MyFramework\Utils\Jenkins\FullBuildPackage.bat&quot;</command>
+      <configuredLocalRules/>
+    </hudson.tasks.BatchFile>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>
