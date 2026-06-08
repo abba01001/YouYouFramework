@@ -26,7 +26,7 @@ public class AssetBundleEditor : ScriptableObject
     }
 
     #region 打包签名
-    private const string KeystoreRelativePath = "Assets/PackageTool/user.keystore";
+    private const string KeystoreRelativePath = "Tools/user.keystore";
     private const string KeystorePassword = "FrameWork";
     private const string KeyAlias = "key";
     private const string KeyPassword = "FrameWork";
@@ -36,16 +36,7 @@ public class AssetBundleEditor : ScriptableObject
     [HorizontalGroup("Common", LabelWidth = 75)]
     [VerticalGroup("Common/Left")]
     [LabelText("资源版本号")]
-    [OnValueChanged(nameof(OnAssetVersionChanged))]
     public string AssetVersion;
-
-    private void OnAssetVersionChanged()
-    {
-        if (PlayerSettings.bundleVersion != AssetVersion)
-        {
-            PlayerSettings.bundleVersion = AssetVersion;
-        }
-    }
     
     [PropertySpace(1f)]
     [VerticalGroup("Common/Left")]
@@ -178,7 +169,16 @@ public class AssetBundleEditor : ScriptableObject
     
     [VerticalGroup("Common/Right")]
     [Button("构建资源包", ButtonSizes.Medium)]
-    public void BuildAB() => CustomYooAssetBuild.BuildInternal(BuildPackageTarget);
+    public void BuildAB()
+    {
+        PlayerSettings.bundleVersion = AssetVersion;
+        CustomYooAssetBuild.BuildInternal(BuildPackageTarget);
+    }
+
+    public static void SynchronizedVersion(string version)
+    {
+        PlayerSettings.bundleVersion = version;
+    }
 
     private static void SetKeystoreInfo()
     {
@@ -192,8 +192,8 @@ public class AssetBundleEditor : ScriptableObject
     [Button("构建安装包", ButtonSizes.Medium)]
     public void PublishAPK()
     {
+        PlayerSettings.bundleVersion = AssetVersion;
         SetKeystoreInfo();
-
         if (!GetBuildTargetAndPath(out BuildTarget buildTarget, out string outputFullPath, out string platformFolder))
         {
             Debug.LogError("未支持的打包平台！");
@@ -239,26 +239,26 @@ public class AssetBundleEditor : ScriptableObject
             case PackageTarget.Android:
                 buildTarget = BuildTarget.Android;
                 platformFolder = Path.Combine(TempAPKPath, "Android");
-                outputFullPath = Path.Combine(platformFolder, $"{AssetVersion}.apk");
+                outputFullPath = Path.Combine(platformFolder, $"{Application.version}.apk");
                 return true;
                 
             case PackageTarget.Windows:
                 buildTarget = BuildTarget.StandaloneWindows64;
                 platformFolder = Path.Combine(TempAPKPath, "Windows");
-                outputFullPath = Path.Combine(platformFolder, $"{AssetVersion}.exe");
+                outputFullPath = Path.Combine(platformFolder, $"{Application.version}.exe");
                 return true;
                 
             case PackageTarget.WebGL:
                 buildTarget = BuildTarget.WebGL;
                 platformFolder = Path.Combine(TempAPKPath, "WebGL");
                 // WebGL 是个文件夹目录，通常直接把版本号作为文件夹名丢在 WebGL 目录下
-                outputFullPath = Path.Combine(platformFolder, AssetVersion); 
+                outputFullPath = Path.Combine(platformFolder, Application.version); 
                 return true;
                 
             case PackageTarget.iOS:
                 buildTarget = BuildTarget.iOS;
                 platformFolder = Path.Combine(TempAPKPath, "iOS");
-                outputFullPath = Path.Combine(platformFolder, AssetVersion);
+                outputFullPath = Path.Combine(platformFolder, Application.version);
                 return true;
                 
             default:
@@ -307,41 +307,6 @@ public class AssetBundleEditor : ScriptableObject
 
         Debug.Log("<color=#00FFFF>开始构建 Xcode 工程...</color>");
         ExecuteBuild(options, "Xcode 项目已成功导出！\n请将该文件夹拷贝至 Mac 进行最终编译。", TempXcodePath);
-    }
-
-    [MenuItem("工具类/Other/Build Android Launch", false, 99800)]
-    public static void BuildAndroidLaunchScene()
-    {
-        SetKeystoreInfo();
-    
-        string projectPath = Path.GetDirectoryName(Application.dataPath);
-        string outputDir = Path.Combine(projectPath, "Builds/Android");
-        string outputFile = Path.Combine(outputDir, "Game_Launch.apk");
-        EnsureDirectoryExists(outputDir);
-
-        BuildPlayerOptions options = new BuildPlayerOptions
-        {
-            scenes = new[] { "Assets/Game/Scene_Launch.unity" },
-            locationPathName = outputFile,
-            target = BuildTarget.Android,
-            options = BuildOptions.CompressWithLz4
-        };
-
-        Debug.Log("[Build] 正在通过命令行/菜单开始构建...");
-        BuildReport report = BuildPipeline.BuildPlayer(options);
-        
-        if (report.summary.result == BuildResult.Succeeded)
-        {
-            Debug.Log("[Build] 任务成功!");
-            if (Application.isBatchMode) EditorApplication.Exit(0);
-            else EditorUtility.DisplayDialog("打包结果", "构建成功！", "确定");
-        }
-        else
-        {
-            Debug.LogError($"[Build] 任务失败! 错误数: {report.summary.totalErrors}");
-            if (Application.isBatchMode) EditorApplication.Exit(1);
-            else EditorUtility.DisplayDialog("打包结果", "构建失败，请看 Console", "确定");
-        }
     }
 
     #region 提炼出的通用核心底层方法

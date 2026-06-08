@@ -1,29 +1,32 @@
-using System;
+﻿using System;
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[DisallowMultipleComponent]
-public class AnimPanel : MonoBehaviour
+namespace GameScripts
 {
-    private float BegScale;
-    private Button m_Button;
-
-    void Awake()
+    [DisallowMultipleComponent]
+    public class AnimPanel : MonoBehaviour
     {
-        BegScale = transform.localScale.x;
-    }
+        private float BegScale;
+        private Button m_Button;
 
-    private void OnEnable()
-    {
-        DoAnim();
-    }
+        void Awake()
+        {
+            BegScale = transform.localScale.x;
+        }
 
-    public void DoAnim()
-    {
-        transform.localScale = BegScale * Vector3.one * 1.05f;
-        transform.DOScale(BegScale, 0.05f).SetUpdate(true);
+        private void OnEnable()
+        {
+            DoAnim();
+        }
+
+        public void DoAnim()
+        {
+            transform.localScale = BegScale * Vector3.one * 1.05f;
+            transform.DOScale(BegScale, 0.05f).SetUpdate(true);
+        }
     }
 }

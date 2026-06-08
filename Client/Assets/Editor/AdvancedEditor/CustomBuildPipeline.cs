@@ -19,7 +19,7 @@ public class MyScriptableBuildParameters : ScriptableBuildParameters
 public class CustomYooAssetBuild
 {
     private static string PackageName = "DefaultPackage";
-    public static void CopyHofixDll(BuildTarget buildTarget)
+    public static void CopyHotfixDll(BuildTarget buildTarget)
     {
         CompileDllCommand.CompileDll(buildTarget);
         UnityEngine.Debug.Log($"脚本编译 完成!!!");
@@ -55,11 +55,16 @@ public class CustomYooAssetBuild
                 buildTarget = BuildTarget.iOS;
                 break;
         }
-        CopyHofixDll(buildTarget);
-        return BuildInternal(buildTarget);
+        CopyHotfixDll(buildTarget);
+        return BuildAssets(buildTarget);
     }
 
-    private static bool BuildInternal(BuildTarget buildTarget)
+    public static bool BuildInternal(BuildTarget buildTarget,JenkinsBuildResourceConfig jenkinsBuildResourceConfig = null)
+    {
+        return BuildAssets(buildTarget,jenkinsBuildResourceConfig);
+    }
+    
+    private static bool BuildAssets(BuildTarget buildTarget,JenkinsBuildResourceConfig jenkinsBuildResourceConfig = null)
     {
         UnityEngine.Debug.Log($"开始构建 : ");
         var buildoutputRoot = AssetBundleBuilderHelper.GetDefaultBuildOutputRoot();
@@ -90,6 +95,10 @@ public class CustomYooAssetBuild
         // buildParameters.EncryptionServices = CreateEncryptionInstance();
         buildParameters.CompressOption = ECompressOption.LZ4;
         buildParameters.ClearBuildCacheFiles = false; //不清理构建缓存，启用增量构建，可以提高打包速度！
+        if (jenkinsBuildResourceConfig != null)
+        {
+            buildParameters.ClearBuildCacheFiles = jenkinsBuildResourceConfig.ForceRebuild;
+        }
         buildParameters.UseAssetDependencyDB = true; //使用资源依赖关系数据库，可以提高打包速度！
         buildParameters.TrackSpriteAtlasDependencies = true; //自动建立资源对象对图集的依赖关系
 
@@ -103,7 +112,10 @@ public class CustomYooAssetBuild
             WriteVersionFile(buildParameters.PackageVersion,buildTarget);
             CopyAssetsToTarget(AssetBundleBuilderHelper.GetDefaultBuildOutputRoot(), buildTarget, buildResult);
             CopyAssetsToTarget(AssetBundleBuilderHelper.GetDefaultBuildOutputRoot2(), buildTarget, buildResult);
-            //服务器用 end
+            if (jenkinsBuildResourceConfig != null)
+            {
+                CopyOverideAssetsToTarget(jenkinsBuildResourceConfig.OutputDir, buildTarget, buildResult);
+            }
             return true;
         }
         else
@@ -135,6 +147,48 @@ public class CustomYooAssetBuild
         {
             Debug.LogError($"构建Version文件失败: {e.Message}");
         }
+    }
+    
+    private static void CopyOverideAssetsToTarget(string serveDirectory, BuildTarget buildTarget, BuildResult buildResult)
+    {
+        // 1. 确保根目录存在
+        if (!Directory.Exists(serveDirectory))
+        {
+            Directory.CreateDirectory(serveDirectory);
+            Debug.Log($"已创建根目录: {serveDirectory}");
+        }
+
+        // 2. 动态计算目标目录
+        string sourceDirectory = buildResult.OutputPackageDirectory;
+        string platformFolder = buildTarget switch
+        {
+            BuildTarget.Android => "Android",
+            BuildTarget.StandaloneWindows64 => "WindowsPlayer",
+            BuildTarget.iOS => "iOS",
+            _ => buildTarget.ToString()
+        };
+    
+        string targetDirectory = Path.Combine(serveDirectory, platformFolder, Application.version);
+
+        // 3. 确保目标子目录存在
+        if (!Directory.Exists(targetDirectory))
+        {
+            Directory.CreateDirectory(targetDirectory);
+        }
+
+        // 4. 执行同步 (覆盖更新)
+        // 注意：不再执行 File.Delete 循环
+        string[] files = Directory.GetFiles(sourceDirectory);
+        foreach (string file in files)
+        {
+            string fileName = Path.GetFileName(file);
+            string destFile = Path.Combine(targetDirectory, fileName);
+        
+            // true 参数即代表：如果目标文件已存在，则覆盖；不存在则创建
+            File.Copy(file, destFile, true);
+        }
+    
+        UnityEngine.Debug.Log($"资源同步完成: {targetDirectory}");
     }
     
     private static void CopyAssetsToTarget(string serveDirectory,BuildTarget buildTarget,BuildResult buildResult)

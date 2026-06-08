@@ -1,29 +1,32 @@
-using DG.Tweening;
+﻿using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[DisallowMultipleComponent]
-[RequireComponent(typeof(Toggle))] //½Å±¾ÒÀÀµ
-public class AnimToggle : MonoBehaviour
+namespace GameScripts
 {
-    [SerializeField] private bool IsOffPlay;
-
-    private Toggle m_Toggle;
-    private float BegScale;
-
-    void Start()
+    [DisallowMultipleComponent]
+    [RequireComponent(typeof(Toggle))] //½Å±¾ÒÀÀµ
+    public class AnimToggle : MonoBehaviour
     {
-        BegScale = transform.localScale.x;
+        [SerializeField] private bool IsOffPlay;
 
-        m_Toggle = GetComponent<Toggle>();
-        m_Toggle.onValueChanged.AddListener((isOn) =>
+        private Toggle m_Toggle;
+        private float BegScale;
+
+        void Start()
         {
-            if (IsOffPlay || isOn)
-                transform.DOScale(BegScale * 0.9f, 0.05f).SetUpdate(true).OnComplete(() =>
-                    transform.DOScale(BegScale * 1.1f, 0.05f).SetUpdate(true)
-                        .OnComplete(() => transform.DOScale(BegScale, 0.05f).SetUpdate(true)));
-        });
+            BegScale = transform.localScale.x;
+
+            m_Toggle = GetComponent<Toggle>();
+            m_Toggle.onValueChanged.AddListener((isOn) =>
+            {
+                if (IsOffPlay || isOn)
+                    transform.DOScale(BegScale * 0.9f, 0.05f).SetUpdate(true).OnComplete(() =>
+                        transform.DOScale(BegScale * 1.1f, 0.05f).SetUpdate(true)
+                            .OnComplete(() => transform.DOScale(BegScale, 0.05f).SetUpdate(true)));
+            });
+        }
     }
 }

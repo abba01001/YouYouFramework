@@ -1,0 +1,106 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>构建App</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>UnityPath</name>
+          <description>Unity.exe的绝对路径(如：D:\Program\UnityEditor\6000.3.12f1\6000.3.12f1\Editor\Unity.exe)</description>
+          <defaultValue>D:\Program\UnityEditor\6000.3.12f1\6000.3.12f1\Editor\Unity.exe</defaultValue>
+          <trim>true</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>ProjectRoot</name>
+          <description>项目工程根目录(如：D:\Study\MyFrameWork\Client\Assets)</description>
+          <defaultValue>D:/Study/MyFrameWork/Client</defaultValue>
+          <trim>true</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>OutputDir</name>
+          <description>构建App输出目录</description>
+          <defaultValue>D:/Study/Builds</defaultValue>
+          <trim>true</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.ChoiceParameterDefinition>
+          <name>BranchName</name>
+          <description>选择要打包的分支</description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>survivor2d</string>
+              <string>master</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+        <hudson.model.ChoiceParameterDefinition>
+          <name>Platform</name>
+          <description>构建平台</description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>Android</string>
+              <string>iOS</string>
+              <string>StandaloneWindows</string>
+              <string>StandaloneWindows64</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+        <hudson.model.ChoiceParameterDefinition>
+          <name>BuildType</name>
+          <description>选择打包模式：Debug(开发调试) 或 Release(正式发布)</description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>Release</string>
+              <string>Debug</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>Version</name>
+          <description>版本号(例如：1.0.0)</description>
+          <defaultValue>1.0.0</defaultValue>
+          <trim>true</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.BooleanParameterDefinition>
+          <name>FullBuild</name>
+          <description>打包前为热更生成AOT dll及相关桥接配置。</description>
+          <defaultValue>false</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+        <hudson.model.BooleanParameterDefinition>
+          <name>IncludeInitialResources</name>
+          <description>是否包含初始资源 (例如：是否将资源复制到 StreamingAssets)</description>
+          <defaultValue>false</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+        <hudson.model.BooleanParameterDefinition>
+          <name>BuildAppBundle</name>
+          <description>构建Google Play包(.aab)</description>
+          <defaultValue>false</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.BatchFile>
+      <command>::以后删掉最前面的双冒号::即可恢复Git拉取  %ProjectRoot%\Tools\Jenkins\GitPullLatestProject.bat</command>
+      <configuredLocalRules/>
+    </hudson.tasks.BatchFile>
+    <hudson.tasks.BatchFile>
+      <command>%ProjectRoot%\Tools\Jenkins\CreateBuildAppConfig.bat</command>
+      <configuredLocalRules/>
+    </hudson.tasks.BatchFile>
+    <hudson.tasks.BatchFile>
+      <command>call &quot;%ProjectRoot%\Tools\Jenkins\BuildApp.bat&quot;</command>
+      <configuredLocalRules/>
+    </hudson.tasks.BatchFile>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>

@@ -1,0 +1,9 @@
+{
+  "OutputDir": "D:/Study/Builds",
+  "Platform": "Android",
+  "FullBuild": true,
+  "IncludeInitialResources": false,
+  "BuildType": "Release",
+  "BuildAppBundle": false,
+  "Version": "1.0.0",
+}

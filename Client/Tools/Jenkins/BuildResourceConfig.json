@@ -1,0 +1,10 @@
+{
+  "OutputDir": "D:/Study/Builds",
+  "Platform": "Android",
+  "ForceRebuild": false,
+  "Version": "1.0.0",
+  "UpdatePrefixUrl": "https://gitcode.net/topgamesopen/gf_hybridclr_hotfix/-/raw/master",
+  "ForceUpdate": false,
+  "AppUpdateUrl": "https://play.google.com/store/apps/details?id=",
+  "AppUpdateDescription": "1. bug fix.\n2. add xxx",
+}
