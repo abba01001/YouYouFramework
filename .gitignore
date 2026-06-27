@@ -6,7 +6,6 @@ Client/UserSettings/
 Client/AssetBundles/
 Client/*.sln
 Client/*.csproj
-Client/.vsconfig
 obj/
 .vs/
 Client/HybridCLRData/
@@ -28,6 +27,4 @@ Client/Assets/测试文件夹
 Client/Assets/测试文件夹.meta
 Client/Assets/Pixelazia Monsters
 Client/Assets/Pixelazia Monsters.meta
-Public/Tables/ExcelTool/bin
-Public/Tables/ExcelTool/Publish
 WebManager/node_modules

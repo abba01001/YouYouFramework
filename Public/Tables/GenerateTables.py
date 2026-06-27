@@ -3,6 +3,7 @@ import re
 import struct
 import glob
 import pandas as pd
+import sys  # <--- 在这里添加这一行
 
 # 基础目录定位
 BaseDir = os.path.abspath(os.path.dirname(__file__))
@@ -254,5 +255,6 @@ if __name__ == "__main__":
         print("All files processed successfully.")
     except Exception as ex:
         print("Error occurred: " + str(ex))
+        sys.exit(1) # 如果出错，返回错误码 1，便于后续自动化集成
     
-    input("Press Enter to exit...")
+    # 全部删除以下相关行，不要 input，也不要任何 if sys.stdin 判断
