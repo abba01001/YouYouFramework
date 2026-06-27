@@ -62,7 +62,7 @@ namespace GameScripts
             GameController.AudioManager.PlaySound(OctoberStudio.Audio.AudioManager.BUTTON_CLICK_HASH);
             Time.timeScale = 1;
             GameEntry.UI.CloseUIForm<FormResult>();
-            GameController.LoadMainMenu();
+            GameController.ExitGame();
         }
     }
 }

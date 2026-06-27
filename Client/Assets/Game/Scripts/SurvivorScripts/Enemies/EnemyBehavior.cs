@@ -95,7 +95,7 @@ namespace OctoberStudio
 
         public void SetConfigBaseData()
         {
-            var cfg = GameEntry.DataTable.Sys_ModelDBModel.GetEntity(enemyType);
+            var cfg = GameEntry.Config.Sys_ModelDBModel.GetEntity(enemyType);
             configHp = cfg.Hp;
             configSpeed = cfg.Speed;
             configDamage = cfg.Damage;

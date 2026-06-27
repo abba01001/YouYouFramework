@@ -10,33 +10,18 @@ namespace GameScripts
     /// </summary>
     public class ProcedureGame : ProcedureBase
     {
+        public override ProcedureState StateType => ProcedureState.Battle;
         private GameObject MapParent = null;
-    
-        internal override void OnEnter()
+        public override void OnEnter()
         {
             base.OnEnter();
             _ = Init();
         }
     
-        private async UniTask Init()
+        public async UniTask Init()
         {
             await GameEntry.Scene.LoadSceneAsync(SceneGroupName.MainMenu, 1);
             GameEntry.UI.OpenUIForm<FormMain>();
-        }
-    
-        internal override void OnUpdate()
-        {
-            base.OnUpdate();
-        }
-    
-        internal override void OnLeave()
-        {
-            base.OnLeave();
-        }
-    
-        internal override void OnDestroy()
-        {
-            base.OnDestroy();
         }
     }
 }

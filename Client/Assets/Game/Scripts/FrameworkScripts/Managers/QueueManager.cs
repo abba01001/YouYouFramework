@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using DG.Tweening;
 using Main;
@@ -14,7 +15,8 @@ namespace GameScripts
         ShowUI,
         HideUI,
     }
-    
+
+    [MonoSingletonPath("[Singleton]/QueueManager")]
     public class QueueManager : MonoBehaviour, ISingleton
     {
         #region 内部数据定义
@@ -60,6 +62,9 @@ namespace GameScripts
         private QueueTask _currentTask;
         private int _taskIdCounter = 0;
 
+        // 标记队列是否变动，用于 LateUpdate 统一处理
+        private bool _isDirty = false;
+
         public static QueueManager Instance => MonoSingletonProperty<QueueManager>.Instance;
 
         public void OnSingletonInit()
@@ -74,6 +79,28 @@ namespace GameScripts
             // 监听全局弹窗关闭事件（假设你已有此事件系统）
             GameEntry.Event.AddEventListener(Constants.EventName.PopupAction, OnPopupAction);
             GameEntry.Event.AddEventListener(Constants.EventName.EventMessage, OnEventMessage);
+        }
+
+        private void LateUpdate()
+        {
+            // 在每一帧末尾统一排序并处理任务，解决同一帧多次入队的问题
+            if (_isDirty)
+            {
+                _isDirty = false;
+                _queueList.Sort((a, b) => a.Priority.CompareTo(b.Priority));
+                
+                if (_currentTask == null)
+                {
+                    ProcessNext();
+                }
+            }
+            
+            // 增加心跳监控：如果当前任务为空，但队列里有任务，说明卡死了
+            if (_currentTask == null && _queueList.Count > 0)
+            {
+                Debugger.LogWarning("QueueManager stalled, self-healing...");
+                ProcessNext();
+            }
         }
 
         #region 外部调用接口 (API)
@@ -125,6 +152,13 @@ namespace GameScripts
         {
             if (task == null) return;
             
+            // // 防重入：禁止在队列中存在完全相同类型的任务（根据业务需求定）
+            // if (_queueList.Exists(t => t.Type == task.Type && t.Name == task.Name))
+            // {
+            //     Debugger.LogWarning($"Task {task.Name} already in queue, skipped.");
+            //     return;
+            // }
+            
             // 如果是弹窗，检查是否已经存在同名弹窗在队列中（防重复）
             if (task.Type == TaskType.WaitPopup && _queueList.Exists(t => t.Name == task.Name))
             {
@@ -133,13 +167,8 @@ namespace GameScripts
 
             _queueList.Add(task);
             
-            // 按优先级排序，值小的优先（或者根据你的习惯反过来）
-            _queueList.Sort((a, b) => a.Priority.CompareTo(b.Priority));
-
-            if (_currentTask == null)
-            {
-                ProcessNext();
-            }
+            // 标记队列变动，由 LateUpdate 在帧末统一排序，防止重复触发
+            _isDirty = true;
         }
 
         private void ProcessNext()
@@ -158,13 +187,29 @@ namespace GameScripts
             SetGlobalTouch(_currentTask.CanTouch);
             ExecuteTask(_currentTask);
         }
+        
+        private async UniTaskVoid ExecuteInteractionAsync(IChainTask node)
+        {
+            try
+            {
+                await node.ExecuteAsync(); // 此时代码会在这里“挂起”，直到任务完成
+            }
+            catch (Exception ex)
+            {
+                Debugger.LogError($"Interaction Task Execution Failed: {ex.Message}");
+            }
+            finally
+            {
+                TurnToNext(); // 无论成功与否，都要推进队列，防止卡死
+            }
+        }
 
         private void ExecuteTask(QueueTask task)
         {
             switch (task.Type)
             {
                 case TaskType.WaitTime:
-                    StartCoroutine(DoTimeTask(task));
+                    DoTimeTaskAsync(task).Forget();
                     break;
 
                 case TaskType.SequenceTween:
@@ -193,6 +238,7 @@ namespace GameScripts
         public void ClearQueue(bool immediate = true)
         {
             _queueList.Clear();
+            _isDirty = false;
             if (immediate)
             {
                 StopAllCoroutines();
@@ -205,11 +251,22 @@ namespace GameScripts
 
         #region 任务执行细节
 
-        private IEnumerator DoTimeTask(QueueTask task)
+        private async UniTaskVoid DoTimeTaskAsync(QueueTask task)
         {
-            task.Action?.Invoke();
-            yield return new WaitForSeconds(task.Duration);
-            TurnToNext();
+            try
+            {
+                task.Action?.Invoke();
+                // 这里的 Delay 完美替代了 WaitForSeconds
+                await UniTask.Delay(TimeSpan.FromSeconds(task.Duration), cancellationToken: this.GetCancellationTokenOnDestroy());
+            }
+            catch (Exception ex)
+            {
+                Debugger.LogError($"[QueueManager] Time Task Error: {ex.Message}");
+            }
+            finally
+            {
+                TurnToNext();
+            }
         }
 
         private void ExecuteTweenTask(QueueTask task)

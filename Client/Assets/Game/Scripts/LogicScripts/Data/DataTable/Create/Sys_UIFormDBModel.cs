@@ -1,11 +1,36 @@
-﻿using System.Collections.Generic;
-using GameScripts;
+// ========================================================
+// 此配置由python工具自动生成，请勿手动修改！
+// 如需拓展请在 Extend 目录下Sys_UIFormDBModelExt.cs对应类进行扩展接口
+// ========================================================
+
+using System.Collections.Generic;
 
 namespace GameScripts
 {
-    public partial class Sys_UIFormDBModel : DataTableDBModelBase<Sys_UIFormDBModel, Sys_UIFormEntity>
+    // Sys_UIForm Entity
+    public partial class Sys_UIFormEntity : ConfigEntityBase
     {
-        public override string DataTableName => "Sys_UIForm";
+        // 编号
+        public int Id;
+        // UI分组编号
+        public byte UIGroupId;
+        // 路径
+        public string AssetPath_Chinese;
+        // 路径
+        public string AssetPath_English;
+        // 禁用层级管理
+        public int DisableUILayer;
+        // 是否对象池锁定
+        public int IsLock;
+        // 允许多实例
+        public int CanMulit;
+        // 显示类型0=普通1=反切
+        public byte ShowMode;
+    }
+
+    public partial class Sys_UIFormDBModel : ConfigBase<Sys_UIFormDBModel, Sys_UIFormEntity>
+    {
+        public override string ConfigName => "Sys_UIForm";
 
         protected override void LoadList(MMO_MemoryStream ms)
         {

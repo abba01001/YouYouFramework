@@ -67,6 +67,14 @@ namespace GameScripts
 
         private void Update()
         {
+            if (Keyboard.current.aKey.wasPressedThisFrame)
+            {
+                Click_Prev();
+            }
+            if (Keyboard.current.dKey.wasPressedThisFrame)
+            {
+                Click_Next();
+            }
             if (Keyboard.current.spaceKey.wasPressedThisFrame)
             {
                 Click_Next();

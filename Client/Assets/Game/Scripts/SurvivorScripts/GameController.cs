@@ -89,37 +89,19 @@ namespace OctoberStudio
             AudioManager = audioManager;
         }
 
-        public static void LoadStage()
+        public static void SetBattleingFlag(bool bo)
         {
-            if (GameEntry.Data.StageSaveData.resetAbilities)
+            if (bo)
             {
-                GameEntry.Data.PlayerRoleData.DelPropAll((int)PropEnum.BattleCoin);
+                if (instance != null) instance.isBattleing = true;
             }
-            if (instance != null) _ = instance.StageLoadingCoroutine();
-        }
-
-        public static void LoadMainMenu()
-        {
-            int addCount = GameEntry.Data.PlayerRoleData.GetProps((int)PropEnum.BattleCoin);
-            GameEntry.Data.PlayerRoleData.AddProp((int)PropEnum.Coin,addCount);
-            GameEntry.Data.PlayerRoleData.DelPropAll((int)PropEnum.BattleCoin);
-            if (instance != null) _ = instance.MainMenuLoadingCoroutine();
-        }
-
-        protected async UniTask StageLoadingCoroutine()
-        {
-            await GameEntry.Scene.LoadSceneAsync(SceneGroupName.Game,1);
-            isBattleing = true;
-        }
-
-        protected async UniTask MainMenuLoadingCoroutine()
-        {
-            isBattleing = false;
-            await GameEntry.Scene.LoadSceneAsync(SceneGroupName.MainMenu,1);
-            await GameEntry.UI.OpenUIForm<FormMain>();
-            if (StageController.Stage.UseCustomMusic)
+            else
             {
-                ChangeMusic(MAIN_MENU_MUSIC_NAME);
+                if (instance != null) instance.isBattleing = false;
+                if (StageController.Stage.UseCustomMusic)
+                {
+                    ChangeMusic(MAIN_MENU_MUSIC_NAME);
+                }
             }
         }
 
@@ -136,17 +118,29 @@ namespace OctoberStudio
             } 
 #endif
         }
-
-        public static void StartGame()
-        {
-            GameEntry.Data.StageSaveData.SetStageIsPlaying(true);
-            GameEntry.Data.StageSaveData.SetResetAbilities(true);
-            GameEntry.Data.StageSaveData.SetTime(0f);
-            GameEntry.Data.StageSaveData.SetXp(0f);
-            GameEntry.Data.StageSaveData.SetXpLevel(0);
-            AudioManager.PlaySound(OctoberStudio.Audio.AudioManager.BUTTON_CLICK_HASH);
-            LoadStage();
-        }
         
+        
+        public static void ExitGame()
+        {
+            int addCount = GameEntry.Data.PlayerRoleData.GetProps((int)PropEnum.BattleCoin);
+            GameEntry.Data.PlayerRoleData.AddProp((int)PropEnum.Coin,addCount);
+            GameEntry.Data.PlayerRoleData.DelPropAll((int)PropEnum.BattleCoin);
+            GameEntry.Procedure.ChangeState(ProcedureState.Main);
+        }
+
+        public static void StartGame(bool newStart)
+        {
+            if (newStart)
+            {
+                GameEntry.Data.StageSaveData.SetStageIsPlaying(true);
+                GameEntry.Data.StageSaveData.SetResetAbilities(true);
+                GameEntry.Data.StageSaveData.SetTime(0f);
+                GameEntry.Data.StageSaveData.SetXp(0f);
+                GameEntry.Data.StageSaveData.SetXpLevel(0);
+            }
+            if (GameEntry.Data.StageSaveData.resetAbilities) GameEntry.Data.PlayerRoleData.DelPropAll((int)PropEnum.BattleCoin);
+            AudioManager.PlaySound(OctoberStudio.Audio.AudioManager.BUTTON_CLICK_HASH);
+            GameEntry.Procedure.ChangeState(ProcedureState.Battle);
+        }
     }
 }

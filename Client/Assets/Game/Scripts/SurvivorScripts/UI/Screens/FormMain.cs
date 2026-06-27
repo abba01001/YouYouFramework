@@ -21,7 +21,6 @@ namespace GameScripts
     }
     public class FormMain : UIFormBase
     {
-        public static FormMain Instance { get; private set; }
         [SerializeField] LobbyPanel lobbyWindow;
         [SerializeField] UpgradesWindowBehavior upgradesWindow;
         [SerializeField] CharactersWindowBehavior charactersWindow;
@@ -35,14 +34,19 @@ namespace GameScripts
         {
             await base.Awake();
             InitBottomBtn();
-            Instance = this;
         }
 
         protected override void OnShow()
         {
             base.OnShow();
+            GameEntry.Event.AddEventListener(Constants.EventName.FormMainChangePanelEvent,OnFormMainChangePanelEvent);
         }
 
+        private void OnFormMainChangePanelEvent(object userdata)
+        {
+            ShowPanel((MainPanelType)userdata);
+        }
+        
         public void ShowPanel(MainPanelType panelType)
         {
             upgradesWindow.gameObject.MSetActive(false);
@@ -100,6 +104,7 @@ namespace GameScripts
         {
             charactersWindow.Clear();
             upgradesWindow.Clear();
+            GameEntry.Event.RemoveEventListener(Constants.EventName.FormMainChangePanelEvent,OnFormMainChangePanelEvent);
         }
         
                
@@ -154,6 +159,26 @@ namespace GameScripts
             {
                 ShowPanel(MainPanelType.stageWindow);
             }
+            
+            // AndroidManager.Instance.ScheduleNotification();
+
+            // ChainManager.Instance.AddTask(new ResourceTaskChain(), priority: 1);
+            // ChainManager.Instance.AddTask(new ResourceTaskChain222(), priority: 50);
+            // ChainManager.Instance.CheckEnableChains();
+            //
+            // QueueManager.Instance.AddPopupTask(nameof(FormSetting), () => _ = GameEntry.UI.OpenUIForm<FormSetting>());
+            // QueueManager.Instance.AddPopupTask(nameof(FormMailBox), () => _ = GameEntry.UI.OpenUIForm<FormMailBox>());
+            // QueueManager.Instance.AddPopupTask(nameof(FormItemInfo), () => _ = GameEntry.UI.OpenUIForm<FormItemInfo>());
+            
+            // NotificationRequest myReq = new NotificationRequest
+            // {
+            //     Id = "daily_activity",          // 唯一业务ID，用于防重
+            //     Title = "限时活动开启",         // 标题
+            //     Content = "精彩活动正在进行中，快来领取奖励！", // 内容
+            //     DelaySeconds = 10               // 10秒后触发测试
+            // };
+            // GameEntry.Notify.Schedule(myReq);
+
         }
     }
 }

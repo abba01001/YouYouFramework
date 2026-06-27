@@ -50,5 +50,30 @@ taskkill /f /im powershell.exe /fi "COMMANDLINE like *Get-Content*" 2>nul
 taskkill /f /im adb.exe 2>nul
 taskkill /f /im "UnityPackageManager.exe" 2>nul
 
+:: 8. 精准定位本次构建的产物
+:: 根据你的路径：D:\Study\Builds\Android\Release\1.0.0
+set "TARGET_PATH=%OutputDir%\%Platform%\%BuildType%\%Version%"
+
+echo [Info] 正在定位产物目录: "%TARGET_PATH%"
+
+:: 检查目录是否存在
+if not exist "%TARGET_PATH%" (
+    echo [Error] 无法找到产物目录: "%TARGET_PATH%"
+    exit /b 1
+)
+
+echo [Info] 开始搬运 APK...
+
+:: 只搬运 APK，如果找不到则报错，方便你定位打包问题
+if exist "%TARGET_PATH%\*.apk" (
+    copy /y "%TARGET_PATH%\*.apk" "%WORKSPACE%\"
+    echo [Info] APK 搬运成功。
+) else (
+    echo [Error] 未在目录 "%TARGET_PATH%" 下找到 APK 文件！
+    exit /b 1
+)
+
+echo [Info] 搬运完成。
+
 :: 8. 退出并回传状态给 Jenkins
 exit /b %EXIT_CODE%

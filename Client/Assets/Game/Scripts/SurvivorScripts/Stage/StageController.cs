@@ -52,51 +52,7 @@ namespace OctoberStudio
         private void Awake()
         {
             instance = this;
-            GameEntry.Event.AddEventListener(Constants.EventName.LoadingSceneComplete,OnLoadingSceneComplete);
-        }
-
-        private void Start()
-        {
-            Stage = database.GetStage(GameEntry.Data.StageSaveData.selectedStageId);
-            director.playableAsset = Stage.Timeline;
-
-            spawner.Init(director);
-            experienceManager.Init(testingPreset);
-            dropManager.Init();
-            fieldManager.Init(Stage, director);
-            // abilityManager.Init(testingPreset, PlayerBehavior.Player.Data);
-            cameraManager.Init(Stage);
-
-            PlayerBehavior.Player.onPlayerDied += OnGameFailed;
-
-            director.stopped += TimelineStopped;
-            if (testingPreset != null) {
-                director.time = testingPreset.StartTime; 
-            } else
-            {
-                var time = GameEntry.Data.StageSaveData.time;
-
-                var bossClips = director.GetClips<BossTrack, Boss>();
-
-                for(int i = 0; i < bossClips.Count; i++)
-                {
-                    var bossClip = bossClips[i];
-
-                    if(time >= bossClip.start && time <= bossClip.end)
-                    {
-                        time = (float) bossClip.start;
-                        break;
-                    }
-                }
-
-                director.time = time;
-            }
-
-            director.Play();
-            if (Stage.UseCustomMusic)
-            {
-                GameController.ChangeMusic(Stage.MusicName);
-            }
+            GameEntry.Event.AddEventListener(Constants.EventName.BattleSceneInitFinish,OnLoadingSceneComplete);
         }
 
         public static void PauseDirector(bool bo)
@@ -172,29 +128,65 @@ namespace OctoberStudio
 
         public static void ReturnToMainMenu()
         {
-            GameController.LoadMainMenu();
+            GameController.ExitGame();
         }
 
         public static FormGame FormGameScreen;
         private void OnLoadingSceneComplete(object userdata)
         {
-            string sceneName = userdata as string;
-            if (sceneName == SceneGroupName.Game)
-            {
-                _ = HandleInit();
-            }
+            HandleInit().Forget();
         }
 
         private async UniTask HandleInit()
         {
+            Debugger.Log("Stage Controller HandleInit");
+            Debugger.Log("Stage Controller Start");
+            Stage = database.GetStage(GameEntry.Data.StageSaveData.selectedStageId);
+            director.playableAsset = Stage.Timeline;
+
+            spawner.Init(director);
+            experienceManager.Init(testingPreset);
+            dropManager.Init();
+            fieldManager.Init(Stage, director);
+            cameraManager.Init(Stage);
+
+            PlayerBehavior.Player.onPlayerDied += OnGameFailed;
+
+            director.stopped += TimelineStopped;
+            if (testingPreset != null) 
+            {
+                director.time = testingPreset.StartTime; 
+            }
+            else
+            {
+                var time = GameEntry.Data.StageSaveData.time;
+
+                var bossClips = director.GetClips<BossTrack, Boss>();
+
+                for(int i = 0; i < bossClips.Count; i++)
+                {
+                    var bossClip = bossClips[i];
+
+                    if(time >= bossClip.start && time <= bossClip.end)
+                    {
+                        time = (float) bossClip.start;
+                        break;
+                    }
+                }
+
+                director.time = time;
+            }
+
+            director.Play();
+            if (Stage.UseCustomMusic) GameController.ChangeMusic(Stage.MusicName);
             FormGameScreen = await GameEntry.UI.OpenUIForm<FormGame>();
             abilityManager.Init(testingPreset, PlayerBehavior.Player.Data);
         }
-
+        
         private void OnDisable()
         {
             director.stopped -= TimelineStopped;
-            GameEntry.Event.RemoveEventListener(Constants.EventName.LoadingSceneComplete,OnLoadingSceneComplete);
+            GameEntry.Event.RemoveEventListener(Constants.EventName.BattleSceneInitFinish,OnLoadingSceneComplete);
 
         }
         

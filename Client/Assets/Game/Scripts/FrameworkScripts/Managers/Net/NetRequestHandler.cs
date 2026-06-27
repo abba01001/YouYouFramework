@@ -143,7 +143,7 @@ namespace GameScripts
         public void c2s_request_chat(int channel_type, string content = "", string receive_user_uuid = "",
             bool requestPublic = false)
         {
-            ChatMsg data = GameEntry.ClassObjectPool.Dequeue<ChatMsg>(); //new ChatMsg();
+            ChatMsg data = GameEntry.Pool.ClassObjectPool.Dequeue<ChatMsg>(); //new ChatMsg();
             data.Message = content;
             data.ChannelType = channel_type;
             data.ReceiverId = receive_user_uuid;

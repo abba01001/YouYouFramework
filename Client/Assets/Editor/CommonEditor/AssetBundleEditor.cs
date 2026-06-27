@@ -84,7 +84,7 @@ public class AssetBundleEditor : ScriptableObject
         EnsureDirectoryExists(fullPath);
         
         EditorProcessUtil.KillProcessOnPort(8000);
-        EditorProcessUtil.StartPythonServer(8000, fullPath);
+        EditorProcessUtil.StartNodeServer(8000, fullPath);
         Debug.Log($"[AB服务器] 启动成功: http://{GetLocalIPAddress()}:8000/");
     }
     
@@ -110,7 +110,7 @@ public class AssetBundleEditor : ScriptableObject
 
     private void StartLocalServer()
     {
-        string exePath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "..", "Server", "Publish", "win-x64", "TCPServer.exe"));
+        string exePath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "..", "Server","TCPServer", "Publish", "win-x64", "TCPServer.exe"));
         if (File.Exists(exePath)) EditorProcessUtil.StartExecutable(exePath, "local");
         else Debug.LogError($"未找到服务器可执行文件: {exePath}");
     }
@@ -123,24 +123,47 @@ public class AssetBundleEditor : ScriptableObject
 
     private void OnBuildPackageTargetChanged()
     {
-        (BuildTargetGroup group, BuildTarget target) = GetUnityBuildTarget(BuildPackageTarget);
-
-        if (EditorUserBuildSettings.activeBuildTarget == target)
+        EditorApplication.delayCall += () =>
         {
-            EditorUtility.DisplayDialog("提示", $"当前已是 {BuildPackageTarget} 平台", "确定");
-            return;
-        }
+            (BuildTargetGroup group, BuildTarget target) = GetUnityBuildTarget(BuildPackageTarget);
 
-        if (!EditorUtility.DisplayDialog("切换平台", $"确定要切换到 {BuildPackageTarget} 平台吗？\n切换期间Unity会卡顿，请等待完成！", "确定", "取消"))
-        {
-            BuildPackageTarget = GetCurrentPackageTarget();
-            return;
-        }
+            if (EditorUserBuildSettings.activeBuildTarget == target)
+            {
+                EditorUtility.DisplayDialog("提示", $"当前已是 {BuildPackageTarget} 平台", "确定");
+                return;
+            }
 
-        EditorUtility.DisplayProgressBar("平台切换中", $"正在切换至 {BuildPackageTarget} 平台...", 0.5f);
-        EditorUserBuildSettings.SwitchActiveBuildTarget(group, target);
-        EditorUtility.ClearProgressBar();
-        EditorUtility.DisplayDialog("完成", $"平台已切换为：{BuildPackageTarget}", "确定");
+            if (!EditorUtility.DisplayDialog("切换平台", $"确定要切换到 {BuildPackageTarget} 平台吗？\n切换期间Unity会卡顿，请等待完成！", "确定",
+                    "取消"))
+            {
+                BuildPackageTarget = GetCurrentPackageTarget();
+                return;
+            }
+
+            EditorUtility.DisplayProgressBar("平台切换中", $"正在切换至 {BuildPackageTarget} 平台...", 0.5f);
+            EditorUserBuildSettings.SwitchActiveBuildTarget(group, target);
+            EditorUtility.ClearProgressBar();
+            EditorUtility.DisplayDialog("完成", $"平台已切换为：{BuildPackageTarget}", "确定");
+
+
+            EditorUtility.DisplayProgressBar("代码生成中", "正在执行 HybridCLR GenerateAll...", 0.8f);
+            try
+            {
+                HybridCLR.Editor.Commands.PrebuildCommand.GenerateAll();
+                // 只有成功才弹出完成提示
+                EditorUtility.DisplayDialog("成功", "HybridCLR 代码生成已完成。", "确定");
+            }
+            catch (System.Exception e)
+            {
+                // 捕获异常，将错误详细信息展示给用户
+                Debug.LogError($"HybridCLR GenerateAll 失败: {e.Message}\n{e.StackTrace}");
+                EditorUtility.DisplayDialog("失败", $"HybridCLR 代码生成失败，请检查控制台日志：\n{e.Message}", "确定");
+            }
+            finally
+            {
+                EditorUtility.ClearProgressBar();
+            }
+        };
     }
 
     private (BuildTargetGroup group, BuildTarget target) GetUnityBuildTarget(PackageTarget target)

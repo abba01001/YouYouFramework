@@ -27,7 +27,7 @@ namespace GameScripts
             // 在安卓真机上，调用你写的原生工具类
             pxHeight = Main.AndroidHelper.GetNotchHeight();
 #endif
-            Debug.Log($"[SafeArea] 顶部像素高度: {pxHeight}, 屏幕高度: {Screen.height}");
+            Debugger.Log($"[SafeArea] 顶部像素高度: {pxHeight}, 屏幕高度: {Screen.height}");
             if (pxHeight > 0)
             {
                 float percent = (float)pxHeight / Screen.height;
@@ -45,7 +45,7 @@ namespace GameScripts
                 rt.offsetMax = new Vector2(rt.offsetMax.x, 0); 
                 rt.offsetMin = new Vector2(rt.offsetMin.x, rt.offsetMin.y);
 
-                Debug.Log($"[Adapter] 仅适配顶部，下压占比: {percent:P2}，左右锚点已保留");
+                Debugger.Log($"[Adapter] 仅适配顶部，下压占比: {percent:P2}，左右锚点已保留");
             }
         }
     }

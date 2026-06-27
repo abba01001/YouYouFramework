@@ -26,8 +26,7 @@ namespace GameScripts
         private void ConfirmButtonClicked()
         {
             GameEntry.Data.StageSaveData.SetResetAbilities(false);
-            GameController.AudioManager.PlaySound(OctoberStudio.Audio.AudioManager.BUTTON_CLICK_HASH);
-            GameController.LoadStage();
+            GameController.StartGame(false);
         }
 
         private void CancelButtonClicked()

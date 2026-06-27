@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using System.Diagnostics;
 using System.Text;
@@ -61,16 +62,35 @@ namespace Main
 
 
         // 测试代码块的执行时间
-        public static void TestTime(string tag, System.Action action = null)
+        private static readonly Dictionary<string, System.Diagnostics.Stopwatch> _profiles = new();
+
+        public static void BeginProfile(string tag,string extraMessage = "")
         {
-            System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-            stopwatch.Start();
-            action?.Invoke();
-            stopwatch.Stop();
-            float seconds = stopwatch.ElapsedTicks / (float)System.Diagnostics.Stopwatch.Frequency;
-            LogError($"{tag} --- 消耗时间: {seconds:F3} 秒");
+            if (_profiles.ContainsKey(tag))
+            {
+                // 如果已经存在，直接重置，或者报错提示重复打点
+                _profiles[tag].Restart();
+            }
+            else
+            {
+                _profiles[tag] = System.Diagnostics.Stopwatch.StartNew();
+            }
+            Log($"[Perf] Start:[{tag}] {extraMessage} 启动性能计时");
         }
 
+        public static void EndProfile(string tag,string extraMessage = "")
+        {
+            if (_profiles.TryGetValue(tag, out var sw))
+            {
+                sw.Stop();
+                Log($"[Perf] End:[{tag}] {extraMessage} 耗时: {sw.Elapsed.TotalMilliseconds:F2}ms");
+                _profiles.Remove(tag); // 用完移除，节省内存
+            }
+            else
+            {
+                LogWarning($"[Perf] Missing BeginProfile: {tag}");
+            }
+        }
         #region 内部工具
 
         private static string GetTimeStamp()

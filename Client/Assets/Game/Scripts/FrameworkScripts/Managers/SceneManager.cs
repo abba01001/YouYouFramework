@@ -1,275 +1,160 @@
 ﻿using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using Main;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using SceneHandle = YooAsset.SceneHandle;
+using YooAsset;
+using YooSceneHandle = YooAsset.SceneHandle;
 
 namespace GameScripts
 {
-    /// <summary>
-    /// 场景管理器
-    /// </summary>
     public class SceneManager
     {
-        /// <summary>
-        /// 场景加载器链表
-        /// </summary>
-        private LinkedList<SceneLoaderRoutine> m_SceneLoaderList;
-    
-        /// <summary>
-        /// 当前加载的场景组
-        /// </summary>
-        private string m_CurrSceneGroupName;
-    
-        /// <summary>
-        /// 本次场景加载的最大数量
-        /// </summary>
-        private int SceneLoadMaxCount;
-    
-        /// <summary>
-        /// 场景是否加载中
-        /// </summary>
-        private bool m_CurrSceneIsLoading;
-    
-        /// <summary>
-        /// 当前进度
-        /// </summary>
-        private float m_CurrProgress = 0;
-    
-        /// <summary>
-        /// 目标的进度
-        /// </summary>
-        private Dictionary<string, float> m_TargetProgressDic;
-    
-        /// <summary>
-        /// 加载完毕委托
-        /// </summary>
-        private Action m_OnComplete = null;
-    
-        internal SceneManager()
-        {
-            m_SceneLoaderList = new LinkedList<SceneLoaderRoutine>();
-            m_TargetProgressDic = new Dictionary<string, float>();
-    
-            //监听单个场景加载完毕
-            UnityEngine.SceneManagement.SceneManager.sceneLoaded += (Scene scene, LoadSceneMode sceneMode) =>
-            {
-                if (m_SceneLoaderList.Count == 0) return;
-                foreach (var item in m_SceneLoaderList)
-                {
-                    if (item.SceneFullPath == scene.path)
-                    {
-                        //设置列表里的第一个场景为主场景(激活场景)
-                        if (scene.path == m_SceneLoaderList.First.Value.SceneFullPath)
-                        {
-                            UnityEngine.SceneManagement.SceneManager.SetActiveScene(scene);
-                            //初始化对象池
-                            GameEntry.Pool.GameObjectPool.InitScenePool();
-                        }
-    
-                        m_TargetProgressDic[scene.path] = 1;
-                        break;
-                    }
-                }
-    
-            };
-    
-        }
-    
-        /// <summary>
-        /// 加载场景
-        /// </summary>
-        public UniTask LoadSceneAsync(string sceneName, int sceneLoadCount = -1)
-        {
-            var task = new UniTaskCompletionSource();
-            LoadSceneAction(sceneName, sceneLoadCount, () =>
-            {
-                task.TrySetResult();
-                GameEntry.Event.Dispatch(Constants.EventName.LoadingSceneComplete,sceneName);
-            });
-            return task.Task;
-        }
+        public Action<float> LoadingUpdateAction;
+        private readonly List<SceneLoaderRoutine> m_SceneLoaders = new();
+        private bool m_IsLoading;
 
-        public void SetScene(string sceneName)
+        /// <summary>
+        /// 加载场景组
+        /// </summary>
+        public async UniTask LoadSceneAsync(string sceneName, int sceneLoadCount = -1)
         {
-            m_CurrSceneGroupName = sceneName;
+            if (m_IsLoading)
+            {
+                Debugger.LogError(LogCategory.Framework, $"场景正在加载中: {sceneName}");
+                return;
+            }
+            LoadingUpdateAction?.Invoke(0f);
+            m_IsLoading = true;
+            try
+            {
+                // 1. 卸载旧场景
+                if (m_SceneLoaders.Count > 0)
+                {
+                    Debugger.BeginProfile("LoadSceneAsync",$"开始卸载旧场景{m_SceneLoaders[0].Scene.name}==>>");
+                    await UniTask.WhenAll(m_SceneLoaders.Select(r => r.UnloadSceneAsync()));
+                    Debugger.EndProfile("LoadSceneAsync",$"卸载旧场景{m_SceneLoaders[0].Scene.name}完成==>>");
+                    m_SceneLoaders.Clear();
+                }
+
+                // 2. 清理资源
+                Debugger.BeginProfile("LoadSceneAsync","开始卸载旧场景资源==>>");
+                await GameEntry.Loader.DefaultPackage.UnloadUnusedAssetsAsync();
+                Debugger.EndProfile("LoadSceneAsync","卸载旧场景资源完成==>>");
+
+                // 3. 并行加载新场景
+                var entities = GameEntry.Config.Sys_SceneDBModel.GetListByGroupName(sceneName, sceneLoadCount);
+                var progressDict = new Dictionary<string, float>();
+                
+                // 构建任务流
+                var loadTasks = entities.Select(entity => 
+                {
+                    var routine = new SceneLoaderRoutine();
+                    m_SceneLoaders.Add(routine);
+                    
+                    // 使用 IProgress 实时报告进度
+                    var progress = new Progress<float>(p => 
+                    {
+                        progressDict[entity.AssetFullPath] = p;
+                        float total = progressDict.Values.Sum() / entities.Count;
+                        LoadingUpdateAction?.Invoke(GameUtil.ConvertPercent(total,0,0.95f));
+                    });
+                    return routine.LoadSceneAsync(entity.AssetFullPath, progress);
+                });
+                Debugger.BeginProfile("LoadSceneAsync",$"开始加载新场景==>>");
+                await UniTask.WhenAll(loadTasks);
+                Debugger.EndProfile("LoadSceneAsync",$"加载新场景{m_SceneLoaders[0].Scene.name}完成==>>");
+
+                // 4. 完成后激活主场景
+                if (m_SceneLoaders.Count > 0)
+                {
+                    UnityEngine.SceneManagement.SceneManager.SetActiveScene(m_SceneLoaders[0].Scene);
+                    GameEntry.Pool.GameObjectPool.InitScenePool();
+                }
+                HandleFinalProgress().Forget();
+            }
+            finally
+            {
+                m_IsLoading = false;
+            }
         }
         
-        public void LoadSceneAction(string sceneName, int sceneLoadCount = -1, Action onComplete = null)
+        async UniTask HandleFinalProgress()
         {
-            if (m_CurrSceneIsLoading)
+            try
             {
-                Debugger.LogError(LogCategory.Framework, string.Format("场景{0}正在加载中", m_CurrSceneGroupName));
-                return;
-            }
-            m_CurrSceneIsLoading = true;
-    
-            m_OnComplete = onComplete;
-            if (m_CurrSceneGroupName == sceneName)
-            {
-                Debugger.LogError(LogCategory.Framework, string.Format("正在重复加载场景{0}", sceneName));
-                m_OnComplete?.Invoke();
-                return;
-            }
-    
-            m_CurrProgress = 0;
-            m_TargetProgressDic.Clear();
-            m_CurrSceneGroupName = sceneName;
-            SceneLoadMaxCount = sceneLoadCount;
-    
-            //卸载当前场景并加载新场景
-            if (m_SceneLoaderList.Count > 0)
-            {
-                foreach (var routine in m_SceneLoaderList)
+                for (int i = 0; i <= 4; i++)
                 {
-                    routine.UnLoadScene();
+                    int index = i;
+                    float percent = 0.95f + (index * 0.01f);
+                    LoadingUpdateAction?.Invoke(percent);
+                    await UniTask.Delay(TimeSpan.FromMilliseconds(200), DelayType.Realtime);
                 }
-                m_SceneLoaderList.Clear();
             }
-    
-            LoadNewScene();
+            finally
+            {
+                // 确保无论发生什么，最后一步必须强制设为 1f
+                LoadingUpdateAction?.Invoke(1f);
+            }   
         }
-    
-        /// <summary>
-        /// 加载新场景
-        /// </summary>
-        private void LoadNewScene()
-        {
-            var operation = GameEntry.Loader.DefaultPackage.UnloadUnusedAssetsAsync();
-            operation.WaitForAsyncComplete(); //支持同步操作
-            // await operation;
-    
-            List<Sys_SceneEntity> currSceneEntityGroup = GameEntry.DataTable.Sys_SceneDBModel.GetListByGroupName(m_CurrSceneGroupName.ToString(), SceneLoadMaxCount);
-    
-            for (int i = 0; i < currSceneEntityGroup.Count; i++)
-            {
-                SceneLoaderRoutine routine = new();
-                m_SceneLoaderList.AddLast(routine);
-                routine.LoadScene(currSceneEntityGroup[i].AssetFullPath, (string sceneFullPath, float progress) =>
-                {
-                    //记录每个场景明细当前的进度
-                    m_TargetProgressDic[sceneFullPath] = progress;
-                });
-            }
-        }
-
-        private bool ShowLoadingFlag = false;
-        public event Action<float> LoadingUpdateAction;
-        internal void OnUpdate()
-        {
-            if (m_CurrSceneIsLoading)
-            {
-                if (!ShowLoadingFlag)
-                {
-                    GameEntry.UI.OpenUIForm<FormLoading>();
-                    ShowLoadingFlag = true;
-                }
-                var curr = m_SceneLoaderList.First;
-                while (curr != null)
-                {
-                    curr.Value.OnUpdate();
-                    curr = curr.Next;
-                }
-    
-                //模拟加载进度条
-                float targetProgress = GetCurrTotalProgress();
-                if (m_CurrProgress < targetProgress)
-                {
-                    //根据实际情况调节速度, 加载已完成和未完成, 模拟进度增值速度分开计算!
-                    if (targetProgress < 1)
-                    {
-                        m_CurrProgress += Time.deltaTime * 0.5f;
-                    }
-                    else
-                    {
-                        m_CurrProgress += Time.deltaTime * 0.8f;
-                    }
-                    m_CurrProgress = Mathf.Min(m_CurrProgress, targetProgress);
-                    LoadingUpdateAction?.Invoke(m_CurrProgress);
-                    GameEntry.Event.Dispatch(Constants.EventName.LoadingSceneUpdate,m_CurrProgress);
-                }
-    
-                if (m_CurrProgress >= 1)
-                {
-                    List<Sys_SceneEntity> currSceneEntityGroup = GameEntry.DataTable.Sys_SceneDBModel.GetListByGroupName(m_CurrSceneGroupName.ToString(), SceneLoadMaxCount);
-                    Debugger.Log(LogCategory.Scene, string.Format("场景加载完毕=={0}", currSceneEntityGroup.ToJson()));
-                    m_CurrSceneIsLoading = false;
-                    m_OnComplete?.Invoke();
-                    GameEntry.UI.CloseUIForm<FormLoading>();
-                    ShowLoadingFlag = false;
-                }
-            }
-        }
-    
-        /// <summary>
-        /// 获取当前加载的总进度
-        /// </summary>
-        /// <returns></returns>
-        private float GetCurrTotalProgress()
-        {
-            float progress = 0;
-            var lst = m_TargetProgressDic.GetEnumerator();
-            while (lst.MoveNext())
-            {
-                progress += lst.Current.Value;
-            }
-            progress /= m_TargetProgressDic.Count;
-            return progress;
-        }
-    
     }
-    
-    
-    /// <summary>
-    /// 场景加载和卸载器
-    /// </summary>
+
     public class SceneLoaderRoutine
-    {
-        private AsyncOperation m_CurrAsync = null;
-    
-        public string SceneFullPath;
-    
-        private SceneHandle asyncOperation;
-    
-        /// <summary>
-        /// 进度更新
-        /// </summary>
-        private Action<string, float> OnProgressUpdate;
-    
-        /// <summary>
-        /// 加载场景
-        /// </summary>
-        public async UniTask LoadScene(string sceneFullPath, Action<string, float> onProgressUpdate)
+    {   
+        private YooSceneHandle m_Handle;
+        public string SceneFullPath { get; private set; } // 记录路径
+        public Scene Scene 
         {
-            SceneFullPath = sceneFullPath;
-    
-            OnProgressUpdate = onProgressUpdate;
-    
-            asyncOperation = GameEntry.Loader.DefaultPackage.LoadSceneAsync(sceneFullPath, LoadSceneMode.Additive);
-            await asyncOperation.Task;
-        }
-    
-        /// <summary>
-        /// 卸载场景
-        /// </summary>
-        public async void UnLoadScene()
-        {
-            var operation = asyncOperation.UnloadAsync();
-            await operation.Task;
-        }
-    
-        /// <summary>
-        /// 更新
-        /// </summary>
-        internal void OnUpdate()
-        {
-            if (m_CurrAsync == null) return;
-            if (!m_CurrAsync.isDone)
+            get 
             {
-                OnProgressUpdate?.Invoke(SceneFullPath, m_CurrAsync.progress);
+                // 通过路径在当前已加载场景中查找
+                return UnityEngine.SceneManagement.SceneManager.GetSceneByPath(SceneFullPath);
+            }
+        }
+        public async UniTask LoadSceneAsync(string path, IProgress<float> progress)
+        {
+            SceneFullPath = path;
+            m_Handle = GameEntry.Loader.DefaultPackage.LoadSceneAsync(path, LoadSceneMode.Additive);
+            
+            // 实时轮询 YooAsset 的进度
+            while (!m_Handle.IsDone)
+            {
+                progress?.Report(m_Handle.Progress);
+                await UniTask.Yield();
+            }
+            progress?.Report(1.0f);
+        }
+        
+        // public async UniTask LoadSceneAsync(string path, IProgress<float> progress)
+        // {
+        //     SceneFullPath = path;
+        //
+        //     // 注意：YooAsset 默认可能直接激活。
+        //     // 确保你的 YooAsset 配置（例如 ResourcePackage.LoadSceneAsync）
+        //     // 有相应的参数设置 SuspendLoad = true
+        //     var handle = GameEntry.Loader.DefaultPackage.LoadSceneAsync(path, LoadSceneMode.Additive);
+        //
+        //     // 1. 等待直到加载到 90% (即加载完成，但未激活)
+        //     await UniTask.WaitUntil(() => handle.Status == EOperationStatus.Succeed || handle.Progress >= 0.9f);
+        //
+        //     // 2. 此时场景已在内存中，但 Awake 未执行。
+        //     // 设置为 ActiveScene (至关重要)
+        //     handle.ActivateScene(); 
+        //
+        //     // 3. 真正解除挂起，触发 Awake
+        //     handle.UnSuspend(); 
+        //
+        //     await UniTask.WaitUntil(() => handle.IsDone);
+        //     progress?.Report(1.0f);
+        // }
+
+        public async UniTask UnloadSceneAsync()
+        {
+            if (m_Handle != null && m_Handle.IsValid)
+            {
+                await m_Handle.UnloadAsync();
             }
         }
     }

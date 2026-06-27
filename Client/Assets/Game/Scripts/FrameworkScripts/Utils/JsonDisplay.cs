@@ -18,6 +18,7 @@ namespace GameScripts
             if (Keyboard.current.spaceKey.wasPressedThisFrame)
             {
                 jsonString = GameEntry.Data.PrintUserData();
+                GameEntry.Pool.ClassObjectPool.PrintPoolStatus();
             }
         }
     }

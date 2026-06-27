@@ -11,9 +11,16 @@ namespace GameScripts
 {
     public class FormLoading : UIFormBase
     {
+        public static FormLoading Instance { get; private set; }
+        
         [SerializeField] private TextMeshProUGUI sliderText;
         [SerializeField] private TextMeshProUGUI verText;
         [SerializeField] private Slider progressBar;
+
+        private void Awake()
+        {
+            Instance = this;
+        }
 
         // private void OnLoadingProgressChange(object userdata)
         // {
@@ -21,10 +28,9 @@ namespace GameScripts
         //     sliderText.text= string.Format("{0}%", Math.Floor(value * 100));
         //     progressBar.value = (float)Math.Floor(value * 100);
         // }
-        
-        private void OnLoadingProgressChange(object userdata)
+
+        public void UpdateProgress(string extraStr,float rawValue)
         {
-            float rawValue = Mathf.Clamp01((float)userdata);
             int progress = Mathf.RoundToInt(rawValue * 100);
 
             // 文字始终保持白色，但根据 5 个阶段改变其“明度（Alpha/Brightness）”
@@ -38,7 +44,7 @@ namespace GameScripts
             // 提示文字稍微暗一点，形成对比
             string tipColor = "#FFFFFF";
 
-            sliderText.text = $"<color={tipColor}>资源载入中 </color><color={alpha}>{progress}%</color>";
+            sliderText.text = $"<color={tipColor}>{extraStr} </color><color={alpha}>{progress}%</color>";
             progressBar.value = progress;
         }
 
@@ -46,7 +52,6 @@ namespace GameScripts
         protected override void OnEnable()
         {
             base.OnEnable();
-            GameEntry.Event.AddEventListener(Constants.EventName.LoadingSceneUpdate, OnLoadingProgressChange);
             progressBar.value = 0f;
             ShowVersion();
         }
@@ -74,11 +79,21 @@ namespace GameScripts
                 $"<color={labelColor}> 云端版本：</color><color={remoteFinalColor}>{remote}</color>";
         }
 
+        public void Show()
+        {
+            transform.gameObject.SetActive(true);
+        }
+
+        public void Hide()
+        {
+            transform.gameObject.SetActive(false);
+        }
+        
         protected override void OnDisable()
         {
             base.OnDisable();
-            GameEntry.Event.RemoveEventListener(Constants.EventName.LoadingSceneUpdate, OnLoadingProgressChange);
             progressBar.value = 0f;
+            sliderText.text = "";
         }
     }
 }

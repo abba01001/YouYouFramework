@@ -27,7 +27,7 @@ namespace OctoberStudio.UI
             base.OnAwake();
             backButton.SetButtonClick(() =>
             {
-                FormMain.Instance.ShowPanel(MainPanelType.lobbyWindow);
+                GameEntry.Event.Dispatch(Constants.EventName.FormMainChangePanelEvent,MainPanelType.lobbyWindow);
             });
         }
         

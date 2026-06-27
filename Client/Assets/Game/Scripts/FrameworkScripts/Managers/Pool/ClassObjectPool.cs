@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Main;
 using UnityEngine;
 
 namespace GameScripts
@@ -200,6 +201,30 @@ namespace GameScripts
         public void Dispose()
         {
             m_ClassObjectPoolDic.Clear();
+        }
+
+        // 打印当前类池状态
+        public void PrintPoolStatus()
+        {
+            var sb = new System.Text.StringBuilder();
+            lock (m_ClassObjectPoolDic)
+            {
+                sb.AppendLine($"--- ClassObjectPool Status (Total Types: {m_ClassObjectPoolDic.Count}) ---");
+
+                foreach (var kvp in m_ClassObjectPoolDic)
+                {
+                    int key = kvp.Key;
+                    Queue<object> queue = kvp.Value;
+
+                    string typeName = (queue.Count > 0) ? queue.Peek().GetType().Name : "UnknownType";
+                    ClassObjectCount.TryGetValue(key, out byte resideCount);
+
+                    sb.AppendLine($"Type: {typeName,-20} | Cached: {queue.Count,-5} | Reside: {resideCount}");
+                }
+
+                sb.Append("--------------------------------------------------");
+                Debugger.Log(LogCategory.Framework, sb.ToString());
+            }
         }
     }
 }

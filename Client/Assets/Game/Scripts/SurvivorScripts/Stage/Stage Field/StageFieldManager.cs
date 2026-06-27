@@ -84,7 +84,7 @@ namespace OctoberStudio
 
         private void Update()
         {
-            field.Update();
+            field?.Update();
         }
 
         public bool ValidatePosition(Vector2 position, Vector2 offset, bool withFence = true)

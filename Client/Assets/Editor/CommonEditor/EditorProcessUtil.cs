@@ -102,16 +102,22 @@ public static class EditorProcessUtil
     /// <summary>
     /// 启动 Python HTTP 服务器
     /// </summary>
-    public static void StartPythonServer(int port, string directory)
+    /// <summary>
+    /// 启动 Node.js HTTP 服务器 (使用 npx http-server)
+    /// </summary>
+    public static void StartNodeServer(int port, string directory)
     {
         string fullDir = Path.GetFullPath(directory);
-        // 使用 /K 可以让窗口报错时停留在那里，方便排查；/C 则是运行完或出错直接关掉
-        string cmd = $"python -m http.server {port} --bind 0.0.0.0 --directory \"{fullDir}\"";
-        
+    
+        // npx http-server [目录] -p [端口]
+        // 使用 . 表示当前目录，这里我们直接指向 fullDir
+        string cmd = $"npx http-server \"{fullDir}\" -p {port}";
+    
         Process.Start(new ProcessStartInfo
         {
             FileName = "cmd.exe",
-            Arguments = "/C " + cmd,
+            // 使用 /K 保持窗口，以便观察服务器日志和报错
+            Arguments = "/K " + cmd,
             UseShellExecute = true,
             CreateNoWindow = false
         });

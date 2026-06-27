@@ -5,9 +5,7 @@ using UnityEngine;
 
 namespace GameScripts
 {
-    /// <summary>
-        /// 日志管理器
-        /// </summary>
+        [MonoSingletonPath("[Singleton]/LoggerManager")]
         public class LoggerManager: MonoBehaviour, ISingleton
         {
             public static LoggerManager Instance => MonoSingletonProperty<LoggerManager>.Instance;

@@ -12,9 +12,9 @@ namespace GameScripts
         [SerializeField] private EfficientScrollRect scrollRect;
         [SerializeField] private List<Button> btns;
         [SerializeField] private RectTransform focusLine;
-        protected override void OnShow()
+        protected override void OnAwake()
         {
-            base.OnShow();
+            base.OnAwake();
             StartInitItem();
             for (int i = 0; i < btns.Count; i++)
             {
@@ -24,6 +24,12 @@ namespace GameScripts
                     ChangeBtn(index);
                 });
             }
+        }
+
+        protected override void OnShow()
+        {
+            base.OnShow();
+
         }
 
         private void ChangeBtn(int index)
@@ -46,7 +52,7 @@ namespace GameScripts
 
             if (type == 0)
             {
-                Dictionary<PartsType, List<string>> dic = GameEntry.DataTable.Sys_EquipmentDBModel.GetPartsInfo();
+                Dictionary<PartsType, List<string>> dic = GameEntry.Config.Sys_EquipmentDBModel.GetPartsInfo();
                 foreach (var kv in dic)
                 {
                     foreach (var s in kv.Value)

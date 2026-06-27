@@ -15,6 +15,7 @@ using UnityEngine;
 
 namespace GameScripts
 {
+    [MonoSingletonPath("[Singleton]/SDKManager")]
     public class SDKManager: MonoBehaviour, ISingleton
     {
         public static SDKManager Instance => MonoSingletonProperty<SDKManager>.Instance;
@@ -229,25 +230,6 @@ namespace GameScripts
             QCloudCredentialProvider qCloudCredentialProvider =
                 new DefaultQCloudCredentialProvider(dic["secretId"], dic["secretKey"], durationSecond);
             return new CosXmlServer(config, qCloudCredentialProvider);
-        }
-    
-        #endregion
-    
-        #region 后台
-    
-        // 调用这个方法发送POST请求
-        public async void PostVersion()
-        {
-            string url = "http://159.75.164.29:32002/api/tutorials/getVersion";
-            // 你要发送的数据，序列化成JSON格式
-            var postData = new
-            {
-                key = "value", // 根据API的实际需求构建请求体
-                anotherKey = "anotherValue"
-            };
-            string jsonData = JsonUtility.ToJson(postData);
-            // 调用 PostAsync 方法
-            HttpManager.Instance.Post(url, null, true, (s => { Debugger.LogError(s); }));
         }
     
         #endregion

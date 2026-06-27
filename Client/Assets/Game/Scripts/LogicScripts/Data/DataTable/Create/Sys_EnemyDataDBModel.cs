@@ -1,11 +1,26 @@
-﻿using System.Collections.Generic;
-using GameScripts;
+// ========================================================
+// 此配置由python工具自动生成，请勿手动修改！
+// 如需拓展请在 Extend 目录下Sys_EnemyDataDBModelExt.cs对应类进行扩展接口
+// ========================================================
+
+using System.Collections.Generic;
 
 namespace GameScripts
 {
-    public partial class Sys_EnemyDataDBModel : DataTableDBModelBase<Sys_EnemyDataDBModel, Sys_EnemyDataEntity>
+    // Sys_EnemyData Entity
+    public partial class Sys_EnemyDataEntity : ConfigEntityBase
     {
-        public override string DataTableName => "Sys_EnemyData";
+        // 编号
+        public int Id;
+        // 敌人类型
+        public string EnemyType;
+        // 掉落配置
+        public string DropInfo;
+    }
+
+    public partial class Sys_EnemyDataDBModel : ConfigBase<Sys_EnemyDataDBModel, Sys_EnemyDataEntity>
+    {
+        public override string ConfigName => "Sys_EnemyData";
 
         protected override void LoadList(MMO_MemoryStream ms)
         {

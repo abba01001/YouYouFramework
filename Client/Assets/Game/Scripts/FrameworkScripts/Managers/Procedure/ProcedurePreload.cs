@@ -1,58 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using GameScripts;
 using Main;
 using MessagePack;
 using UnityEngine;
 
 namespace GameScripts
 {
-    using Object = UnityEngine.Object;
-    
-    /// <summary>
-    /// 预加载流程
-    /// </summary>
     public class ProcedurePreload : ProcedureBase
     {
-        /// <summary>
-        /// 目标进度(实际进度)
-        /// </summary>
-        private float m_TargetProgress;
-    
-        /// <summary>
-        /// 当前进度(模拟进度)
-        /// </summary>
-        private float m_CurrProgress;
-    
-        private bool m_loadFinish = false;
-    
-        internal override void OnEnter()
+        public override ProcedureState StateType => ProcedureState.Preload;
+
+        public override void OnEnter()
         {
             base.OnEnter();
-            MainEntry.Instance.PreloadBegin();
-    
-            m_CurrProgress = 0;
-            m_loadFinish = false;
-            BeginTask();
-            CheckHasRelogin();
             GameEntry.Event.AddEventListener(Constants.EventName.LoginSuccess, userdata =>
             {
                 _ = OnLoginSuccess(userdata); // 忽略返回值，直接运行异步任务
             });
-    
+            _ = BeginLoadDataTables();
         }
     
-        //是否重登
-        private void CheckHasRelogin()
-        {
-            if (Constants.HasLoadAllAsset)
-            {
     
-            }
-        }
-    
-        internal override void OnLeave()
+        public override void OnLeave()
         {
             base.OnLeave();
             GameEntry.Event.RemoveEventListener(Constants.EventName.LoginSuccess, userdata =>
@@ -61,76 +30,42 @@ namespace GameScripts
             });
         }
     
-        internal override void OnUpdate()
-        {
-            base.OnUpdate();
-            //模拟加载进度条
-            if (m_CurrProgress < m_TargetProgress)
-            {
-                //根据实际情况调节速度, 加载已完成和未完成, 模拟进度增值速度分开计算!
-                if (m_TargetProgress < 1)
-                {
-                    m_CurrProgress += Time.deltaTime * 0.5f;
-                }
-                else
-                {
-                    m_CurrProgress += Time.deltaTime * 0.8f;
-                }
-    
-                m_CurrProgress = Mathf.Min(m_CurrProgress, m_TargetProgress); //这里是为了防止进度超过100%， 比如完成了显示102%
-                MainEntry.Instance.PreloadUpdate(m_CurrProgress);
-            }
-    
-            if (m_CurrProgress == 1 && !m_loadFinish)
-            {
-                Constants.HasLoadAllAsset = true;
-                m_loadFinish = true;
-                MainEntry.Instance.PreloadComplete();
-                GameEntry.UI.OpenUIForm<FormLogin>();
-            }
-        }
-    
         private async UniTask OnLoginSuccess(object userdata)
         {
-            GameEntry.UI.CloseUIForm<FormLogin>();
             string savedStr = PlayerPrefs.GetString("SaveData", "");
             if (!string.IsNullOrEmpty(savedStr))
             {
                 byte[] binaryData = Convert.FromBase64String(savedStr);
                 float sizeInKb = binaryData.Length / 1024f;
-                Debug.Log($"<color=yellow>读取本地存档成功，大小: {sizeInKb:F2} KB</color>");
+                
+                var data = MessagePackSerializer.Deserialize<DataManager>(binaryData);
+                string json = Newtonsoft.Json.JsonConvert.SerializeObject(data, Newtonsoft.Json.Formatting.Indented);
+                Debugger.Log($"<color=cyan>存档数据详情:\n{json}</color>");
+                
+                Debugger.Log($"<color=yellow>读取本地存档成功，大小: {sizeInKb:F2} KB</color>");
                 GameEntry.Data.InitGameData(binaryData);
             }
             
             if (GameEntry.Data.IsFirstLoginTime) GameEntry.Data.IsFirstLoginTime = false;
-            
-            GameEntry.Procedure.ChangeState(ProcedureState.Game);
-        }
-    
-        private void OnConnectServerSuccess(object userdata)
-        {
-    
+            GameEntry.Instance.StartAutoSave().Forget();
+            GameEntry.Procedure.ChangeState(ProcedureState.Main);
+            GameEntry.UI.CloseUIForm<FormLogin>();
         }
     
     
-        /// <summary>
-        /// 开始任务
-        /// </summary>
-        private void BeginTask()
+        //开始加载表格
+        private async UniTaskVoid BeginLoadDataTables()
         {
-            if (Constants.HasLoadAllAsset)
+            FormLoading.Instance.Show();
+            FormLoading.Instance.UpdateProgress("配置加载中",0f);
+            var realProgress = new Progress<float>(value =>
             {
-                m_TargetProgress = 1;
-                return;
-            }
-    
-            TaskGroup taskGroup = GameEntry.Task.CreateTaskGroup();
-            //加载Excel
-            taskGroup.AddTask((taskRoutine) => { GameEntry.DataTable.LoadDataAllTable(taskRoutine.Leave); });
-    
-            taskGroup.OnCompleteOne = () => { m_TargetProgress = taskGroup.CurrCount / (float)taskGroup.TotalCount; };
-            taskGroup.Run();
+                FormLoading.Instance.UpdateProgress("配置加载中",value);
+            });
+            await GameEntry.Config.LoadDataTableAsync(realProgress);
+            await GameEntry.UI.OpenUIForm<FormMask>();
+            await GameEntry.UI.OpenUIForm<FormLogin>();
+            FormLoading.Instance.Hide();
         }
-    
     }
 }

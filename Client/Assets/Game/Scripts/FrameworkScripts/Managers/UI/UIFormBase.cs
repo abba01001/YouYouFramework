@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using GameScripts;
+using Main;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,7 +25,11 @@ namespace GameScripts
     
         //打开时调用
         public static Action ActionOpen;
-    
+        
+        // 用于挂起等待的任务源
+        private AsyncSignal _closeSignal;
+        
+        
         //反切时调用
         public Action OnBack;
         public Action OnClose;
@@ -59,7 +64,10 @@ namespace GameScripts
             var content = transform.Find("Content");
             if (content != null)
             {
-                content.DOScale(Vector3.one, 0.15f).From(Vector3.one * 0.7f).SetEase(Ease.OutBack);
+                content.DOScale(Vector3.one, 0.15f)
+                    .From(Vector3.one * 0.7f)
+                    .SetEase(Ease.OutBack)
+                    .SetUpdate(true); // 核心：让 Tween 使用帧率独立的时间（忽略 timeScale）
             }
         }
 
@@ -124,6 +132,23 @@ namespace GameScripts
             GameEntry.UI.HideUI(this);
             GameEntry.UI.UIPool.EnQueue(this);
             GameEntry.Event.Dispatch(Constants.EventName.PopupAction, new PopupActionEvent(Name, UIActionType.HideUI));
+            NotifyClosed();
+        }
+
+        // 提供给外部等待的方法
+        public UniTask WaitCloseAsync()
+        {
+            _closeSignal = new AsyncSignal();
+            return _closeSignal.WaitAsync();
+        }
+        
+        // 在你的 ToClose 或关闭逻辑中触发完成
+        public void NotifyClosed()
+        {
+            if (_closeSignal != null)
+            {
+                _closeSignal.Fire();
+            }
         }
     }
 }

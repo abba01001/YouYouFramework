@@ -11,9 +11,7 @@ using YooAsset;
 
 namespace GameScripts
 {
-    /// <summary>
-    /// 音频管理器
-    /// </summary>
+    [MonoSingletonPath("[Singleton]/AudioManager")]
     public class AudioManager: MonoBehaviour, ISingleton
     {        
         public static AudioManager Instance => MonoSingletonProperty<AudioManager>.Instance;
@@ -79,7 +77,7 @@ namespace GameScripts
     
         public async void PlayBGM(string audioName)
         {
-            Sys_BGMEntity entity = GameEntry.DataTable.Sys_BGMDBModel.GetEntity(audioName);
+            Sys_BGMEntity entity = GameEntry.Config.Sys_BGMDBModel.GetEntity(audioName);
             if (entity == null)
             {
                 Debugger.LogError(LogCategory.Audio, "CurrBGMEntity==null, audioName==" + audioName);
@@ -199,7 +197,7 @@ namespace GameScripts
     
         public async void PlayAudio(string audioName, Vector3 point)
         {
-            Sys_AudioEntity sys_Audio = GameEntry.DataTable.Sys_AudioDBModel.GetEntity(audioName);
+            Sys_AudioEntity sys_Audio = GameEntry.Config.Sys_AudioDBModel.GetEntity(audioName);
             var operation = GameEntry.Loader.DefaultPackage.LoadAssetAsync(sys_Audio.AssetFullPath);
             await operation.Task;
     
@@ -215,7 +213,7 @@ namespace GameScripts
         }
         public async void PlayAudio(string audioName)
         {
-            Sys_AudioEntity sys_Audio = GameEntry.DataTable.Sys_AudioDBModel.GetEntity(audioName);
+            Sys_AudioEntity sys_Audio = GameEntry.Config.Sys_AudioDBModel.GetEntity(audioName);
             var operation = GameEntry.Loader.DefaultPackage.LoadAssetAsync(sys_Audio.AssetFullPath);
             await operation.Task;
     

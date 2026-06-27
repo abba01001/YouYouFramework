@@ -560,7 +560,6 @@ GameObject:
   - component: {fileID: 4429865790771794334}
   - component: {fileID: 2206383610526493467}
   - component: {fileID: 2329126949919117575}
-  - component: {fileID: 4919033623470831707}
   m_Layer: 5
   m_Name: Take Button
   m_TagString: Untagged
@@ -682,18 +681,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &4919033623470831707
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5614923809241973877}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f77d53b2513e6df4f9ebdc533a064ec4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &6241778990222434892
 GameObject:
   m_ObjectHideFlags: 0
@@ -940,7 +927,8 @@ MonoBehaviour:
   m_text: TAKE
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: eb8bacd46357fb4418b3d529965e7b08, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 14568a4786f48494e8f8e0c7b295c013, type: 2}
+  m_sharedMaterial: {fileID: 2979193228837331801, guid: eb8bacd46357fb4418b3d529965e7b08,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1077,7 +1065,8 @@ MonoBehaviour:
   m_text: 1984
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: eb8bacd46357fb4418b3d529965e7b08, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 14568a4786f48494e8f8e0c7b295c013, type: 2}
+  m_sharedMaterial: {fileID: 2979193228837331801, guid: eb8bacd46357fb4418b3d529965e7b08,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1207,6 +1196,12 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8396901115632172973}
     m_Modifications:
+    - target: {fileID: 1352336501746138750, guid: 617148ee01fe462428e96f0238a7b7b2,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2979193228837331801, guid: eb8bacd46357fb4418b3d529965e7b08,
+        type: 2}
     - target: {fileID: 3675450667009704738, guid: 617148ee01fe462428e96f0238a7b7b2,
         type: 3}
       propertyPath: m_Color.g
@@ -1403,6 +1398,12 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8396901115632172973}
     m_Modifications:
+    - target: {fileID: 1352336501746138750, guid: 617148ee01fe462428e96f0238a7b7b2,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2979193228837331801, guid: eb8bacd46357fb4418b3d529965e7b08,
+        type: 2}
     - target: {fileID: 3675450667009704738, guid: 617148ee01fe462428e96f0238a7b7b2,
         type: 3}
       propertyPath: m_Color.b
@@ -1594,6 +1595,12 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8396901115632172973}
     m_Modifications:
+    - target: {fileID: 1352336501746138750, guid: 617148ee01fe462428e96f0238a7b7b2,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2979193228837331801, guid: eb8bacd46357fb4418b3d529965e7b08,
+        type: 2}
     - target: {fileID: 3675450667009704738, guid: 617148ee01fe462428e96f0238a7b7b2,
         type: 3}
       propertyPath: m_Color.b
@@ -1755,6 +1762,12 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8396901115632172973}
     m_Modifications:
+    - target: {fileID: 1352336501746138750, guid: 617148ee01fe462428e96f0238a7b7b2,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2979193228837331801, guid: eb8bacd46357fb4418b3d529965e7b08,
+        type: 2}
     - target: {fileID: 3675450667009704738, guid: 617148ee01fe462428e96f0238a7b7b2,
         type: 3}
       propertyPath: m_Color.g
@@ -1956,6 +1969,12 @@ PrefabInstance:
       propertyPath: abilitiesSpeed
       value: 1000
       objectReference: {fileID: 0}
+    - target: {fileID: 1352336501746138750, guid: 617148ee01fe462428e96f0238a7b7b2,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2979193228837331801, guid: eb8bacd46357fb4418b3d529965e7b08,
+        type: 2}
     - target: {fileID: 3675450667009704738, guid: 617148ee01fe462428e96f0238a7b7b2,
         type: 3}
       propertyPath: m_Color.b

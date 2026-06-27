@@ -52,7 +52,7 @@ namespace OctoberStudio.UI
         {
             GameController.AudioManager.PlaySound(OctoberStudio.Audio.AudioManager.BUTTON_CLICK_HASH);
             Time.timeScale = 1;
-            GameController.LoadMainMenu();
+            GameController.ExitGame();
 
             GameController.InputManager.onInputChanged -= OnInputChanged;
         }

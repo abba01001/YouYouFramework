@@ -31,9 +31,7 @@ namespace GameScripts
         Finish
     }
     
-    /// <summary>
-    /// 新手引导管理器
-    /// </summary>
+    [MonoSingletonPath("[Singleton]/GuideManager")]
     public class GuideManager : MonoBehaviour,ISingleton
     {
         public GuideState CurrentState { get; private set; } //当前处于哪个状态
@@ -78,7 +76,7 @@ namespace GameScripts
                 CurTriggerEvent = TriggerEventQueue.Dequeue();
             }
     
-            foreach (var pair in GameEntry.DataTable.Sys_GuideDBModel.IdByDic)
+            foreach (var pair in GameEntry.Config.Sys_GuideDBModel.IdByDic)
             {
                 HandleGuideDetail(pair.Value);
                 if (IsGuiding) break;
@@ -92,7 +90,7 @@ namespace GameScripts
     
         private bool CheckCompletePreGuide(int guideId)
         {
-            foreach (var pair in GameEntry.DataTable.Sys_GuideDBModel.IdByDic)
+            foreach (var pair in GameEntry.Config.Sys_GuideDBModel.IdByDic)
             {
                 if (guideId == pair.Value.NextGuideId)
                 {
@@ -146,7 +144,7 @@ namespace GameScripts
         private bool CheckInTriggerScene(Sys_GuideEntity entity)
         {
             if (entity.TriggerScene == 0) return true;
-            if (entity.TriggerScene == (int)GameEntry.Procedure.CurrProcedureState) return true;
+            if (entity.TriggerScene == (int)GameEntry.Procedure.CurrStateType) return true;
             return false;
         }
     

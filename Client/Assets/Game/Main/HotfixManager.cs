@@ -83,10 +83,17 @@ namespace Main
             RemoteServerUrl = "43.134.133.178:17888";
             RemoteAssetUrl = $"http://storage.abba01001.cn/private_files/ServerBundles/{Application.platform}/{Application.version}";
             RemoteVersionUrl = $"http://storage.abba01001.cn/private_files/ServerBundles/{Application.platform}";
+
+            // Debugger.LogError("GetAssetIP()====>", GetAssetIP(),"\n" +
+            //                   "GetVersionIP()====>", GetVersionIP(),"\n" + 
+            //                   "GetServerIP()====>", GetServerIP(),"\n");
         }
         
         public string GetLocalAssetIpAddress()
         {
+#if UNITY_EDITOR
+            return "127.0.0.1" + $":8000/{Application.platform}/{Application.version}";
+#endif
             // return "http://" + "192.168.18.130" + $":8000/{Application.platform}/{Application.version}";
             
 #if UNITY_ANDROID && !UNITY_EDITOR
@@ -112,6 +119,9 @@ namespace Main
     
         public string GetLocalVersionIpAddress()
         {
+#if UNITY_EDITOR
+            return "http://127.0.0.1"+ $":8000/{Application.platform}";
+#endif
             // return "http://" + "192.168.18.130" + $":8000/{Application.platform}";
             
 #if UNITY_ANDROID && !UNITY_EDITOR
@@ -138,6 +148,9 @@ namespace Main
         
         public string GetLocalIPAddress()
         {
+            #if UNITY_EDITOR
+            return "127.0.0.1:17888";
+            #endif
             // return "192.168.18.130:17888";
 #if UNITY_ANDROID && !UNITY_EDITOR
             return "10.0.2.2:17888";

@@ -4,18 +4,22 @@ using UnityEngine;
 
 namespace GameScripts
 {
-    public class ActivityManager : MonoBehaviour
+    [MonoSingletonPath("[Singleton]/ActivityManager")]
+    public class ActivityManager : MonoBehaviour, ISingleton
     {
-        public ActivityManager()
+        public static RedDotManager Instance => MonoSingletonProperty<RedDotManager>.Instance;
+        public void OnSingletonInit()
         {
-            RedDotMgr.Instance.Register(RedDotId.SubscribeGuide, GetRedDotNodes);
+            RedDotManager.Instance.Register(RedDotId.TestRedDotId, GetRedDotNodes);
+        }
+        public void OnSingletonDispose()
+        {
         }
 
         public List<RedDotNode> GetRedDotNodes()
         {
             List<RedDotNode> list = new List<RedDotNode>();
-
-            RedDotNode rootNode = RedDotMgr.Instance.GetModuleRootNode(RedDotId.SubscribeGuide);
+            RedDotNode rootNode = RedDotManager.Instance.GetModuleRootNode(RedDotId.TestRedDotId);
             //rootNode.AddChildNode(1); 有子节点
             list.Add(rootNode);
             return list;

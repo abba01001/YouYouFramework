@@ -11,7 +11,6 @@ namespace OctoberStudio.Input
 
         Vector2 MovementValue { get; }
         JoystickBehavior Joystick { get; }
-        HighlightsParentBehavior Highlights { get; }
 
         event UnityAction<InputType, InputType> onInputChanged;
 

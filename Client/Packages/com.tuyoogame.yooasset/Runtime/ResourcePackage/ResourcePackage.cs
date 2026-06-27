@@ -227,7 +227,6 @@ namespace YooAsset
         {
             DebugCheckInitialize(false);
             var operation = _playModeImpl.RequestPackageVersionAsync(appendTimeTicks, timeout);
-            Debug.LogError($"请求最新的资源版本{PackageName}");
             OperationSystem.StartOperation(PackageName, operation);
             return operation;
         }

@@ -17,4 +17,14 @@
     <type fullname="UnityEngine.Shader" preserve="all" />
     <type fullname="UnityEngine.Material" preserve="all" />
   </assembly>
+
+  <assembly fullname="UnityEngine.Android">
+    <type fullname="UnityEngine.Android.Permission" preserve="all"/>
+  </assembly>
+
+  <assembly fullname="Unity.Notifications.Android">
+    <type fullname="Unity.Notifications.Android.AndroidNotificationChannel" preserve="all"/>
+    <type fullname="Unity.Notifications.Android.AndroidNotification" preserve="all"/>
+    <type fullname="Unity.Notifications.Android.AndroidNotificationCenter" preserve="all"/>
+  </assembly>
 </linker>

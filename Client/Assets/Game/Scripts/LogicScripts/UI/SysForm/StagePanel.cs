@@ -25,9 +25,8 @@ namespace GameScripts
             });
             startBtn.SetButtonClick(() =>
             {
-                GameController.StartGame();
-                FormMain.Instance.ShowPanel(MainPanelType.lobbyWindow);
-                GameEntry.UI.CloseUIForm<FormMain>();
+                GameController.StartGame(true);
+                GameEntry.Event.Dispatch(Constants.EventName.FormMainChangePanelEvent,MainPanelType.lobbyWindow);
             });
         }
 

@@ -1,11 +1,30 @@
-﻿using System.Collections.Generic;
-using GameScripts;
+// ========================================================
+// 此配置由python工具自动生成，请勿手动修改！
+// 如需拓展请在 Extend 目录下Sys_UpgradesDBModelExt.cs对应类进行扩展接口
+// ========================================================
+
+using System.Collections.Generic;
 
 namespace GameScripts
 {
-    public partial class Sys_UpgradesDBModel : DataTableDBModelBase<Sys_UpgradesDBModel, Sys_UpgradesEntity>
+    // Sys_Upgrades Entity
+    public partial class Sys_UpgradesEntity : ConfigEntityBase
     {
-        public override string DataTableName => "Sys_Upgrades";
+        // 编号
+        public int Id;
+        // 属性类型
+        public string UpgradeType;
+        // 等级
+        public int Level;
+        // 
+        public float AddValue;
+        // 
+        public float MultiplyValue;
+    }
+
+    public partial class Sys_UpgradesDBModel : ConfigBase<Sys_UpgradesDBModel, Sys_UpgradesEntity>
+    {
+        public override string ConfigName => "Sys_Upgrades";
 
         protected override void LoadList(MMO_MemoryStream ms)
         {

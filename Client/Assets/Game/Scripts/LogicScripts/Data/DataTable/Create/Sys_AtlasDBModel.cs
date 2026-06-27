@@ -1,11 +1,24 @@
-﻿using System.Collections.Generic;
-using GameScripts;
+// ========================================================
+// 此配置由python工具自动生成，请勿手动修改！
+// 如需拓展请在 Extend 目录下Sys_AtlasDBModelExt.cs对应类进行扩展接口
+// ========================================================
+
+using System.Collections.Generic;
 
 namespace GameScripts
 {
-    public partial class Sys_AtlasDBModel : DataTableDBModelBase<Sys_AtlasDBModel, Sys_AtlasEntity>
+    // Sys_Atlas Entity
+    public partial class Sys_AtlasEntity : ConfigEntityBase
     {
-        public override string DataTableName => "Sys_Atlas";
+        // 编号
+        public int Id;
+        // 路径
+        public string AssetFullPath;
+    }
+
+    public partial class Sys_AtlasDBModel : ConfigBase<Sys_AtlasDBModel, Sys_AtlasEntity>
+    {
+        public override string ConfigName => "Sys_Atlas";
 
         protected override void LoadList(MMO_MemoryStream ms)
         {

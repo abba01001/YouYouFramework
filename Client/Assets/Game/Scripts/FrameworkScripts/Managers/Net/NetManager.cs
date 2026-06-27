@@ -15,6 +15,7 @@ using UniRx;
 
 namespace GameScripts
 {
+    [MonoSingletonPath("[Singleton]/NetManager")]
     public class NetManager: MonoBehaviour, ISingleton
     {
         public static NetManager Instance => MonoSingletonProperty<NetManager>.Instance;
@@ -32,7 +33,8 @@ namespace GameScripts
         private System.Threading.Timer heartBeatTimer;
         private System.Threading.Timer netTimeTimer;
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-    
+        private CancellationTokenSource reconnectTokenSource;
+
         private int CurReconnectCount; // 当前重连次数
         private bool IsReconnect;
         private int HeartTimeout => GameEntry.ParamsSettings.GetGradeParamData("HeartTimeout");
@@ -115,6 +117,8 @@ namespace GameScripts
             }
         }
     
+        private float lastLogTime = 0f;
+        private const float logInterval = 1.0f; // 打印间隔：1秒
         public void Update()
         {
             ProcessReceivedMessages();
@@ -122,7 +126,12 @@ namespace GameScripts
             // 检查连接状态
             if (connectionStatus == ConnectionStatus.Disconnected)
             {
-                Debug.LogWarning("连接已断开，请尝试重新连接。");
+                // 使用 Time.time 判断是否达到 1 秒的间隔
+                if (Time.time - lastLogTime >= logInterval)
+                {
+                    Debugger.LogWarning("连接已断开，请尝试重新连接。");
+                    lastLogTime = Time.time; // 重置计时器
+                }
             }
     
             // if (Input.GetKeyDown(KeyCode.Space))
@@ -136,7 +145,7 @@ namespace GameScripts
             // 检查是否已经连接
             if (connectionStatus != ConnectionStatus.Connected)
             {
-                Debugger.LogError("未连接到服务器，无需断开。");
+                Debugger.Log("未连接到服务器，无需断开。");
                 return;
             }
     
@@ -150,7 +159,7 @@ namespace GameScripts
                     socket.Shutdown(SocketShutdown.Both); // 停止发送和接收数据
                     socket.Close(); // 释放 Socket 资源
                     socket = null;
-                    Debugger.LogError("服务器连接已断开。");
+                    Debugger.Log("服务器连接已断开。");
                 }
             }
             catch (Exception e)
@@ -249,7 +258,7 @@ namespace GameScripts
             connectionStatus = ConnectionStatus.Disconnected;
         }
     
-        public async Task ConnectServerAsync(Action action = null)
+        public async Task ConnectServerAsync(bool isReconnect)
         {
             string url = HotfixManager.Instance.GetServerIP();
             string[] urls = url.Split(Converter.FifthSeparator);
@@ -261,7 +270,9 @@ namespace GameScripts
     
             try
             {
-                await socket.ConnectAsync(new IPEndPoint(IPAddress.Parse(urls[0]), int.Parse(urls[1]))); // 异步连接
+                IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Parse(urls[0]), int.Parse(urls[1]));
+                Debugger.Log(isReconnect ? "重新连接服务器地址" : "开始连接服务器地址", "===>", ipEndPoint);
+                await socket.ConnectAsync(ipEndPoint); // 异步连接
                 Requset.UpdateSenderId();
                 connectionStatus = ConnectionStatus.Connected;
                 CurReconnectCount = 0;
@@ -274,68 +285,107 @@ namespace GameScripts
                 heartBeatTimer = new System.Threading.Timer(_ => { Requset.c2s_request_heart_beat(); }, null, 0,
                     HeartInterval * 1000);
     
-                action?.Invoke();
-                Debugger.Log($"连接服务器成功{socket.RemoteEndPoint}");
+                Debugger.Log("连接服务器地址成功===>",ipEndPoint.ToString());
             }
             catch (SocketException e)
             {
                 HandleConnectionError(e);
             }
         }
-    
-    
-    
-        public async void HandleDisconnected()
+
+        public async UniTask HandleDisconnected()
         {
+            // 1. 重入保护
+            if (reconnectTokenSource != null) return;
+
             connectionStatus = ConnectionStatus.Disconnected;
-    
-            while (CurReconnectCount < MaxReconnect)
+            reconnectTokenSource = new CancellationTokenSource();
+            var token = reconnectTokenSource.Token;
+
+            try
             {
-                if (!IsReconnect)
+                while (!token.IsCancellationRequested && CurReconnectCount < MaxReconnect)
                 {
-                    IsReconnect = true;
-                    GameEntry.UI.OpenUIForm<FormCircle>();
+                    if (!IsReconnect)
+                    {
+                        IsReconnect = true;
+                        GameEntry.UI.OpenUIForm<FormCircle>();
+                    }
+
+                    CurReconnectCount++;
+                    Debugger.LogError($"尝试重连... 第 {CurReconnectCount} 次");
+
+                    // 2. 绑定 Token，确保能被取消
+                    await ConnectServerAsync(true);
+
+                    if (connectionStatus == ConnectionStatus.Connected)
+                    {
+                        Debugger.LogError("连接成功，退出重连逻辑");
+                        return; // 跳转到 finally 处理收尾
+                    }
+
+                    // 3. 绑定 Token，确保延时期间也能被取消
+                    await UniTask.Delay(ConnectInterval * 1000, cancellationToken: token);
                 }
-    
-                CurReconnectCount++;
-                Debugger.LogError($"尝试重连... 第 {CurReconnectCount} 次");
-                await ConnectServerAsync();
-                if (connectionStatus == ConnectionStatus.Connected)
-                {
-                    IsReconnect = false;
-                    GameEntry.UI.CloseUIForm<FormCircle>();
-                    Debugger.LogError("连接成功，退出重连逻辑");
-                    return;
-                }
-    
-                await UniTask.Delay(ConnectInterval * 1000);
+
+                if (CurReconnectCount >= MaxReconnect)
+                    Debugger.LogWarning("已达到最大重连次数，停止重连。");
             }
-    
-            Debug.LogWarning("已达到最大重连次数，停止重连。");
+            catch (OperationCanceledException)
+            {
+                Debugger.Log("重连逻辑已取消");
+            }
+            finally
+            {
+                // 4. 统一收尾（无论成功、失败还是取消）
+                IsReconnect = false;
+                GameEntry.UI.CloseUIForm<FormCircle>();
+
+                reconnectTokenSource?.Dispose();
+                reconnectTokenSource = null;
+            }
         }
-    
+ 
         private void Close()
         {
             try
             {
-                cancellationTokenSource?.Cancel(); // 🔥 先停线程
-    
+                reconnectTokenSource?.Cancel();
+                cancellationTokenSource?.Cancel();
+
                 heartBeatTimer?.Dispose();
                 heartBeatTimer = null;
-    
+
                 if (socket != null)
                 {
-                    socket.Shutdown(SocketShutdown.Both);
-                    socket.Close();
-                    socket.Dispose();
-                    socket = null;
+                    // 💡 核心修改：检查 Connected 属性并增加 Socket 状态判断
+                    // 注意：socket.Connected 在 Socket 断开后不一定会立即返回 false，
+                    // 但如果 socket 处于断开状态，Shutdown 会报错。
+                    try 
+                    {
+                        // 只有当 Socket 确实还处于连接状态时才执行 Shutdown
+                        if (socket.Connected)
+                        {
+                            socket.Shutdown(SocketShutdown.Both);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debugger.LogWarning($"Socket Shutdown failed: {ex.Message}");
+                    }
+                    finally
+                    {
+                        socket.Close();
+                        socket.Dispose();
+                        socket = null;
+                    }
                 }
-    
+
                 connectionStatus = ConnectionStatus.Disconnected;
             }
             catch (Exception e)
             {
-                Debug.LogError($"Close Exception: {e.Message}");
+                Debugger.LogError($"Close Exception: {e.Message}");
             }
         }
     

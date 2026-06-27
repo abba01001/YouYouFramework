@@ -7,8 +7,6 @@ namespace GameScripts
     {
 
         // 全局可变变量
-        public static bool HasLoadAllAsset = false; //已经加载过资源
-        public static bool IsLoadDataTable = false;
         public static bool IsLoginGame = false;
         public static bool IsEntryGame = false;
         public static bool IsShieldGuide = true;
@@ -37,6 +35,8 @@ namespace GameScripts
      
         public struct EventName
         {
+            public const string FormMainChangePanelEvent = "FormMainChangePanelEvent";
+            public const string LanguageChangedEvent = "LanguageChangedEvent";
             public const string SelectedStageEvent = "SelectedStageEvent";
             public const string SelectedCharacterEvent = "SelectedCharacterEvent";
             public const string CheckEnableJoystickEvent = "CheckEnableJoystickEvent";
@@ -49,8 +49,7 @@ namespace GameScripts
 
             public const string GameEntryOnApplicationPause = "GameEntryOnApplicationPause";
 
-            public const string LoadingSceneUpdate = "LoadingSceneUpdate";
-            public const string LoadingSceneComplete = "LoadingSceneComplete";
+            public const string BattleSceneInitFinish = "BattleSceneInitFinish";
 
             public const string PopupAction = "PopupAction";
             public const string EventMessage = "EventMessage";

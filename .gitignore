@@ -14,7 +14,7 @@ Client/Assets/HybridCLRData/
 APK/
 Package/test.apk
 Server/Server
-Server/Publish
+Server/TCPServer/Publish
 /Server/TCPServer/bin
 Client/.utmp
 Client/TempProjectData/

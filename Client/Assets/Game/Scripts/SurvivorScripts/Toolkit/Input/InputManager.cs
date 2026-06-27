@@ -10,11 +10,6 @@ namespace OctoberStudio.Input
     public class InputManager : MonoBehaviour, IInputManager
     {
         private static InputManager instance;
-
-        [Header("References")]
-        [SerializeField] HighlightsParentBehavior highlightsParent;
-        public HighlightsParentBehavior Highlights => highlightsParent;
-
         private InputAsset inputAsset;
         public InputAsset InputAsset => inputAsset;
 
@@ -82,7 +77,6 @@ namespace OctoberStudio.Input
 
                 if (Joystick != null) Joystick.Disable();
 
-                highlightsParent.EnableArrows();
 
                 onInputChanged?.Invoke(prevInput, InputType.Keyboard);
             }
@@ -99,7 +93,6 @@ namespace OctoberStudio.Input
 
                 if (Joystick != null) Joystick.Enable();
 
-                highlightsParent.DisableArrows();
 
                 onInputChanged?.Invoke(prevInput, InputType.UIJoystick);
             }
@@ -123,8 +116,6 @@ namespace OctoberStudio.Input
                 ActiveInput = InputType.Gamepad;
 
                 if (Joystick != null) Joystick.Disable();
-
-                highlightsParent.EnableArrows();
 
                 onInputChanged?.Invoke(prevInput, InputType.Gamepad);
             }

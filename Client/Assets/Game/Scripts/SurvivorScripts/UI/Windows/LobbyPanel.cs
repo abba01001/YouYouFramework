@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using GameScripts;
+using Main;
 using TMPro;
+using UniRx;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -31,10 +34,17 @@ namespace OctoberStudio.UI
         
         protected override void OnAwake()
         {
+            base.OnAwake();
+            
+            Debugger.LogError(ActivityManager.Instance == null);
+            RedDotNode rootNode = RedDotManager.Instance.GetModuleRootNode(RedDotId.TestRedDotId);
+            RedDotManager.Instance.CreateRedDot(rootNode, playButton.transform, new Vector2(102, 48));
+
             playButton.SetButtonClick(() =>
             {
-                GameEntry.UI.CloseUIForm<FormMain>();
-                GameController.StartGame();
+                // GameUtil.PlayMultiplyItemBounceAnim(energyText.transform);
+                // return;
+                GameController.StartGame(true);
             });
             testBtn.SetButtonClick(async () =>
             {
@@ -48,11 +58,11 @@ namespace OctoberStudio.UI
             });
             upgradesButton.SetButtonClick(() =>
             {
-                FormMain.Instance.ShowPanel(MainPanelType.upgradesWindow);
+                GameEntry.Event.Dispatch(Constants.EventName.FormMainChangePanelEvent,MainPanelType.upgradesWindow);
             });
             charactersButton.SetButtonClick(() =>
             {
-                FormMain.Instance.ShowPanel(MainPanelType.charactersWindow);
+                GameEntry.Event.Dispatch(Constants.EventName.FormMainChangePanelEvent,MainPanelType.charactersWindow);
             });
             catalogueButton.SetButtonClick(() =>
             {
@@ -66,10 +76,11 @@ namespace OctoberStudio.UI
             settingButton.SetButtonClick(() =>
             {
                 GameEntry.UI.OpenUIForm<FormSetting>();
+                ShowCatalogue(false);
             });
             achievementButton.SetButtonClick(() =>
             {
-                
+
             });
             dailyGiftButton.SetButtonClick(() =>
             {
@@ -78,6 +89,7 @@ namespace OctoberStudio.UI
             inboxButton.SetButtonClick(() =>
             {
                 GameEntry.UI.OpenUIForm<FormMailBox>();
+                ShowCatalogue(false);
             });
             chatBtn.SetButtonClick(() =>
             {

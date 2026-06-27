@@ -76,7 +76,6 @@ namespace Main
                 createParameters.CacheFileSystemParameters =
                     FileSystemParameters.CreateDefaultCacheFileSystemParameters(remoteServices);
                 initializationOperation = DefaultPackage.InitializeAsync(createParameters);
-                Debug.LogError($"111地址===>{defaultHostServer}");
             }
 
             // WebGL运行模式
@@ -209,99 +208,104 @@ namespace Main
 
         public async UniTask<string> RequestRemoteVersion()
         {
-            string url = $"{GetHostVersionURL()}/Version.txt"; // 里面只写 1.4.0_xxx
-            var request = UnityEngine.Networking.UnityWebRequest.Get(url);
-            await request.SendWebRequest();
-
-            if (request.result == UnityEngine.Networking.UnityWebRequest.Result.Success)
-            {
-                return request.downloadHandler.text.Trim();
-            }
-
-            return null;
+            string url = $"{GetHostVersionURL()}/Version.txt";
+            // 调用现有的 HttpManager，自动处理重试、并发拦截和超时
+            string version = await HttpManager.Instance.GetStringAsync(url);
+            // 如果 result.HasError 为 true，GetStringAsync 会返回 null
+            return version?.Trim();
         }
-
         public async UniTask<bool> CheckMajorVersion(EPlayMode playMode)
         {
             if (playMode != EPlayMode.HostPlayMode) return false;
-            //这里检测是否跨版本
+
+            // 1. 获取版本号，增加空值处理
             string remotePackageVersion = await RequestRemoteVersion();
-            string remoteAppVersion = remotePackageVersion.Split('_')[0]; // 结果为 "1.3.0"
+            if (string.IsNullOrEmpty(remotePackageVersion))
+            {
+                Debugger.LogError("[大版本更新] 无法获取远端版本号，请检查网络或 URL");
+                // 根据业务需求，这里可以返回 true 强制弹窗提示网络异常，或返回 false 跳过
+                return false; 
+            }
+
+            // 2. 使用安全分割，防止格式不正确导致报错
+            string[] parts = remotePackageVersion.Split('_');
+            string remoteAppVersion = parts[0]; 
+
+            Debugger.Log($"本地版本{Application.version}远端版本{remoteAppVersion}");
+            // 3. 版本对比
             if (remoteAppVersion != Application.version)
             {
-                // 如果不一致，说明有大版本更新
-                Debug.Log($"[大版本更新] 远端 APK 版本 {remoteAppVersion} != 当前版本 {Application.version}");
+                Debugger.Log($"[大版本更新] 远端版本 {remoteAppVersion} != 当前版本 {Application.version}");
                 return true;
             }
-            else
-            {
-                // 如果一致，说明只需要热更资源
-                Debug.Log("APK 版本匹配，准备进入 YooAsset 资源热更流程...");
-                return false;
-            }
+    
+            Debugger.Log("APK 版本匹配，准备进入 YooAsset 资源热更流程...");
+            return false;
         }
-
-        public async UniTask DownloadAndInstallFullAPK()
+        
+        public async UniTask<string> DownloadAndInstallFullAPK(IProgress<float> progress = null)
         {
             string savePath = Path.Combine(Application.persistentDataPath, "test.apk");
             string downloadPath = GetHostVersionURL() + "/test.apk";
 
-            // --- 1. 检查并清理旧文件 ---
-            if (File.Exists(savePath))
-            {
-                Debug.Log("检测到本地已存在同名APK，正在清理以准备新下载...");
-                File.Delete(savePath);
-            }
+            long localFileSize = File.Exists(savePath) ? new FileInfo(savePath).Length : 0;
+            long totalFileSize = await GetRemoteFileSize(downloadPath);
 
-            // --- 2. 确保目录存在 ---
-            string directory = Path.GetDirectoryName(savePath);
-            if (!Directory.Exists(directory))
+            float sizeInMB = localFileSize / 1048576f;
+            Debugger.LogError($"下载地址:{downloadPath}\n已下载文件大小: {sizeInMB:F2} MB");
+                        
+            // 容错关键点：如果发现本地文件大小异常或服务器文件更新，直接清理
+            if (localFileSize >= totalFileSize && totalFileSize > 0)
             {
-                Directory.CreateDirectory(directory);
+                Debugger.Log("本地文件已存在且完整，跳过下载或重新验证...");
+                return savePath;
             }
 
             using (var request = new UnityWebRequest(downloadPath, UnityWebRequest.kHttpVerbGET))
             {
-                Debug.Log("下载地址:" + downloadPath);
-                // DownloadHandlerFile(path, append) 
-                // 第二个参数默认为 false，表示覆盖写入。但物理删除（Step 1）更保险。
-                request.downloadHandler = new DownloadHandlerFile(savePath);
-
-                var operation = request.SendWebRequest();
-                while (!operation.isDone)
+                // 只有当本地有文件时才尝试断点续传
+                if (localFileSize > 0)
                 {
-                    // 1. 检查 HTTP 状态码
-                    // 如果是 404, 进度永远是 0
-                    if (request.responseCode > 0 && request.responseCode != 200)
-                    {
-                        Debug.LogError($"服务器返回错误码: {request.responseCode} (如果是 404 说明文件不存在)");
-                        break;
-                    }
-
-                    // 2. 检查是否有数据流入
-                    // 如果这里一直为 0，说明服务器根本没吐数据出来
-                    Debug.Log($"数据检查 - 已下载字节: {request.downloadedBytes} | 原始进度: {request.downloadProgress}");
-                    await UniTask.NextFrame();
+                    request.SetRequestHeader("Range", $"bytes={localFileSize}-");
                 }
 
-                if (request.result != UnityWebRequest.Result.Success)
+                request.downloadHandler = new DownloadHandlerFile(savePath, true);
+                var operation = request.SendWebRequest();
+
+                await operation; // 等待请求完成，确认响应码
+
+                // 【核心容错逻辑】：如果服务器不支持续传（返回 200），则重置本地文件并重新下载
+                if (localFileSize > 0 && request.responseCode == 200)
                 {
-                    // 如果是 404 或连接失败，这里会报详细原因
-                    Debug.LogError($"[网络故障] 原因: {request.error} | URL: {downloadPath}");
+                    Debugger.LogWarning("服务器不支持断点续传，检测到续传请求被降级为全量下载，正在清空旧文件并重试...");
+                    File.Delete(savePath);
+                    return await DownloadAndInstallFullAPK(progress); // 递归调用一次，此时 localFileSize 为 0
                 }
 
                 if (request.result == UnityWebRequest.Result.Success)
                 {
-                    Debug.Log("<color=#00FF00>下载完成，执行安装。</color>");
-                    AndroidHelper.InstallApk(savePath);
+                    return savePath;
                 }
                 else
                 {
-                    Debug.LogError($"下载 APK 失败: {request.error}");
-                    // 如果下载失败，清理掉可能下载了一半的残包，防止下次进来误判
-                    if (File.Exists(savePath)) File.Delete(savePath);
+                    Debugger.LogError($"下载失败: {request.error}");
+                    return null;
                 }
             }
+        }
+
+        // 辅助方法：获取文件总大小
+        private async UniTask<long> GetRemoteFileSize(string url)
+        {
+            using (var request = UnityWebRequest.Head(url))
+            {
+                await request.SendWebRequest();
+                if (request.result == UnityWebRequest.Result.Success)
+                {
+                    return long.Parse(request.GetResponseHeader("Content-Length"));
+                }
+            }
+            return 0;
         }
 
         /// <summary>

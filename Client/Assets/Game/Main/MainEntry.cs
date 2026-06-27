@@ -9,12 +9,8 @@ namespace Main
 {
     public class MainEntry : MonoBehaviour
     {
-        //预加载相关事件
-        public event Action ActionPreloadBegin;
-        public event Action<float> ActionPreloadUpdate;
-        public event Action ActionPreloadComplete;
 
-
+        public VersionUpdatePanel VersionUpdatePanel;
         public static MainEntry Instance { get; private set; }
         public static bool IsOfflineMode { get; set; } = false;//离线模式
 
@@ -22,6 +18,7 @@ namespace Main
         {
             Instance = this;
             Screen.sleepTimeout = SleepTimeout.NeverSleep; //屏幕常亮
+            Application.logMessageReceived += HandleLog;
 
         }
         private async void Start()
@@ -39,9 +36,23 @@ namespace Main
             bool isNeedInstallAPK = await CheckVersionCtrl.Instance.CheckMajorVersion(ePlayMode);
             if (isNeedInstallAPK)
             {
-                // 如果需要大更，直接调用你写好的 installApk
-                // 这里的回调就不执行了，因为进程会被杀掉或退出
-                CheckVersionCtrl.Instance.DownloadAndInstallFullAPK();
+                VersionUpdatePanel.Show();
+                var progress = new Progress<float>(value => 
+                {
+                    VersionUpdatePanel.UpdateProgress(value);
+                });
+                VersionUpdatePanel.DownLoadAction = async () =>
+                {
+                    string apkPath = await CheckVersionCtrl.Instance.DownloadAndInstallFullAPK(progress);
+                    if (!string.IsNullOrEmpty(apkPath))
+                    {
+                        AndroidHelper.InstallApk(apkPath);
+                    }
+                    else
+                    {
+                        // 这里处理下载失败的逻辑（例如弹出提示框）
+                    }
+                };
                 return;
             }
             
@@ -59,25 +70,31 @@ namespace Main
             });
             
         }
-        
+
+        private void OnDestroy()
+        {
+            Application.logMessageReceived -= HandleLog;
+        }
+
         private void Update()
         {
         }
         private void OnApplicationQuit()
         {
         }
+        
+        private void HandleLog(string logString, string stackTrace, LogType type)
+        {
+            // logString: 日志内容
+            // stackTrace: 日志对应的堆栈信息
+            // type: 日志类型 (Log, Warning, Error, Exception, Assert)
 
-        public void PreloadBegin()
-        {
-            ActionPreloadBegin?.Invoke();
-        }
-        public void PreloadUpdate(float progress)
-        {
-            ActionPreloadUpdate?.Invoke(progress);
-        }
-        public void PreloadComplete()
-        {
-            ActionPreloadComplete?.Invoke();
+            if (type == LogType.Error || type == LogType.Exception)
+            {
+                // 在这里处理你的全局错误逻辑
+                // 例如：发送到服务器，或显示在自定义的 UI 调试窗口中
+                Debug.Log($"全局拦截到错误日志: {logString}");
+            }
         }
     }
 }

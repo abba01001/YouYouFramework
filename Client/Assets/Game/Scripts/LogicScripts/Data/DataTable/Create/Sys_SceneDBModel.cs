@@ -1,11 +1,28 @@
-﻿using System.Collections.Generic;
-using GameScripts;
+// ========================================================
+// 此配置由python工具自动生成，请勿手动修改！
+// 如需拓展请在 Extend 目录下Sys_SceneDBModelExt.cs对应类进行扩展接口
+// ========================================================
+
+using System.Collections.Generic;
 
 namespace GameScripts
 {
-    public partial class Sys_SceneDBModel : DataTableDBModelBase<Sys_SceneDBModel, Sys_SceneEntity>
+    // Sys_Scene Entity
+    public partial class Sys_SceneEntity : ConfigEntityBase
     {
-        public override string DataTableName => "Sys_Scene";
+        // 编号
+        public int Id;
+        // 场景组
+        public string SceneGroup;
+        // 场景路径
+        public string AssetFullPath;
+        // 背景音乐
+        public string BGMId;
+    }
+
+    public partial class Sys_SceneDBModel : ConfigBase<Sys_SceneDBModel, Sys_SceneEntity>
+    {
+        public override string ConfigName => "Sys_Scene";
 
         protected override void LoadList(MMO_MemoryStream ms)
         {

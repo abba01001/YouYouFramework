@@ -565,6 +565,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PanelControl
       objectReference: {fileID: 0}
+    - target: {fileID: 9192054848965996701, guid: 5185840893a978948b8d0a1c5051d101,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -915,6 +920,12 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 89.839966
       objectReference: {fileID: 0}
+    - target: {fileID: 1258752902683524496, guid: 00bc7a78b1ce33542b5a9485e85af93b,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2979193228837331801, guid: eb8bacd46357fb4418b3d529965e7b08,
+        type: 2}
     - target: {fileID: 1267616932255450001, guid: 00bc7a78b1ce33542b5a9485e85af93b,
         type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -1482,6 +1493,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Panels
       objectReference: {fileID: 0}
+    - target: {fileID: 3015318214018216365, guid: 00bc7a78b1ce33542b5a9485e85af93b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3035315311453310050, guid: 00bc7a78b1ce33542b5a9485e85af93b,
         type: 3}
       propertyPath: m_fontAsset
@@ -1652,6 +1668,12 @@ PrefabInstance:
       propertyPath: m_sharedMaterial
       value: 
       objectReference: {fileID: 2100000, guid: 14568a4786f48494e8f8e0c7b295c013, type: 2}
+    - target: {fileID: 3542553765420301845, guid: 00bc7a78b1ce33542b5a9485e85af93b,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2979193228837331801, guid: eb8bacd46357fb4418b3d529965e7b08,
+        type: 2}
     - target: {fileID: 3557717067943672351, guid: 00bc7a78b1ce33542b5a9485e85af93b,
         type: 3}
       propertyPath: m_AnchoredPosition.x

@@ -1,11 +1,30 @@
-﻿using System.Collections.Generic;
-using GameScripts;
+// ========================================================
+// 此配置由python工具自动生成，请勿手动修改！
+// 如需拓展请在 Extend 目录下Sys_UnlockFuncDBModelExt.cs对应类进行扩展接口
+// ========================================================
+
+using System.Collections.Generic;
 
 namespace GameScripts
 {
-    public partial class Sys_UnlockFuncDBModel : DataTableDBModelBase<Sys_UnlockFuncDBModel, Sys_UnlockFuncEntity>
+    // Sys_UnlockFunc Entity
+    public partial class Sys_UnlockFuncEntity : ConfigEntityBase
     {
-        public override string DataTableName => "Sys_UnlockFunc";
+        // 编号
+        public int Id;
+        // 解锁功能
+        public string FuncName;
+        // 解锁功能等级
+        public int UnlockLevel;
+        // 显示功能等级
+        public int ShowLevel;
+        // 功能具体名字
+        public string FuncDetailName;
+    }
+
+    public partial class Sys_UnlockFuncDBModel : ConfigBase<Sys_UnlockFuncDBModel, Sys_UnlockFuncEntity>
+    {
+        public override string ConfigName => "Sys_UnlockFunc";
 
         protected override void LoadList(MMO_MemoryStream ms)
         {

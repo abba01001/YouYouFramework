@@ -249,11 +249,11 @@ namespace GameScripts
             try
             {
                 // 解包为目标类型（如 ItemData）
-                T t = GameEntry.ClassObjectPool.Dequeue<T>();
+                T t = GameEntry.Pool.ClassObjectPool.Dequeue<T>();
                 t.MergeFrom(message.Data);
                 Debugger.Log($"收到消息|网络延时{NetManager.Instance.NetDelay}|{typeof(T).Name}: {t}");
                 action?.Invoke(t);
-                GameEntry.ClassObjectPool.Enqueue(t);
+                GameEntry.Pool.ClassObjectPool.Enqueue(t);
             }
             catch (InvalidProtocolBufferException ex)
             {

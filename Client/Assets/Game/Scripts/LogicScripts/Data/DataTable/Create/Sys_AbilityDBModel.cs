@@ -1,11 +1,42 @@
-﻿using System.Collections.Generic;
-using GameScripts;
+// ========================================================
+// 此配置由python工具自动生成，请勿手动修改！
+// 如需拓展请在 Extend 目录下Sys_AbilityDBModelExt.cs对应类进行扩展接口
+// ========================================================
+
+using System.Collections.Generic;
 
 namespace GameScripts
 {
-    public partial class Sys_AbilityDBModel : DataTableDBModelBase<Sys_AbilityDBModel, Sys_AbilityEntity>
+    // Sys_Ability Entity
+    public partial class Sys_AbilityEntity : ConfigEntityBase
     {
-        public override string DataTableName => "Sys_Ability";
+        // 编号
+        public int Id;
+        // 技能类型
+        public string AbilityType;
+        // 解锁关卡
+        public string UnlockLv;
+        // 技能名称
+        public string Title;
+        // 技能描述
+        public string Description;
+        // UI 图标路径
+        public string IconPath;
+        // 技能预制体路径
+        public string PrefabPath;
+        // 是否主动技能
+        public string IsActiveAbility;
+        // 是否武器技能
+        public string IsWeaponAbility;
+        // 是否保底技能
+        public string IsEndgameAbility;
+        // 是否超武
+        public string IsEvolution;
+    }
+
+    public partial class Sys_AbilityDBModel : ConfigBase<Sys_AbilityDBModel, Sys_AbilityEntity>
+    {
+        public override string ConfigName => "Sys_Ability";
 
         protected override void LoadList(MMO_MemoryStream ms)
         {

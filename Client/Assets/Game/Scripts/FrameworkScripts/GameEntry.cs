@@ -16,17 +16,6 @@ namespace GameScripts
 {
     public class GameEntry : MonoBehaviour
     {
-    
-        /// <summary>
-        /// Http调用失败后重试次数
-        /// </summary>
-        public static int HttpRetry { get; private set; }
-    
-        /// <summary>
-        /// Http调用失败后重试间隔（秒）
-        /// </summary>
-        public static int HttpRetryInterval { get; private set; }
-    
         //全局参数设置
         [FoldoutGroup("ParamsSettings")] [SerializeField]
         private ParamsSettings m_ParamsSettings;
@@ -41,7 +30,6 @@ namespace GameScripts
         //当前设备等级
         [FoldoutGroup("ParamsSettings")] [SerializeField]
         private ParamsSettings.DeviceGrade m_CurrDeviceGrade;
-    
         public static ParamsSettings.DeviceGrade CurrDeviceGrade { get; private set; }
     
     
@@ -66,11 +54,20 @@ namespace GameScripts
     
         [FoldoutGroup("UIGroup")] [Header("主页背景")] [FoldoutGroup("AudioGroup")] [Header("声音主混合器")]
         public AudioMixer MonsterMixer;
-    
-        [Header("当前语言（要和本地化表的语言字段 一致）")] [SerializeField]
-        private FrameworkLanguage m_CurrLanguage;
-    
-        public static FrameworkLanguage CurrLanguage;
+
+        private static FrameworkLanguage _currLanguage;
+        public static FrameworkLanguage CurrLanguage
+        {
+            get => _currLanguage;
+            set
+            {
+                if (_currLanguage == value) return;
+                Debugger.Log("设置语言=>",value);
+                _currLanguage = value;
+                Config.Sys_LocalizationDBModel.RefreshLocaleDict();
+                Event.Dispatch(Constants.EventName.LanguageChangedEvent);
+            }
+        }
     
         [Header("声音主混合器")] public AudioMixer MasterMixer;
         [Header("FPS")] public GameObject FpsGraphy;
@@ -78,33 +75,36 @@ namespace GameScripts
         //管理器属性
         public static EventManager Event { get; private set; }
         public static DataManager Data { get; private set; }
-        public static FsmManager Fsm { get; private set; }
         public static ProcedureManager Procedure { get; private set; }
-        public static DataTableManager DataTable { get; private set; }
-        public static LocalizationManager Localization { get; private set; }
+        public static ConfigManager Config { get; private set; }
         public static PoolManager Pool { get; private set; }
         public static SceneManager Scene { get; private set; }
         public static LoaderManager Loader { get; private set; }
         public static UIManager UI { get; private set; }
         public static TaskManager Task { get; private set; }
-        public static ClassObjectPool ClassObjectPool { get; private set; }
-    
-        /// <summary>
-        /// 单例
-        /// </summary>
+        public static NotifyManager Notify { get; private set; }
+
         public static GameEntry Instance { get; private set; }
         private void Awake()
         {
             Debugger.Log("GameEntry.OnAwake()");
             Instance = this;
             TimeUtils.TimeZone = DateTimeOffset.Now.Offset.Hours;
-            ClassObjectPool = new ClassObjectPool();
             UIRootRectTransform = UIRootCanvasScaler.GetComponent<RectTransform>();
             // if (MainEntry.Reporter != null) MainEntry.Reporter.ShowLogPanel(false);
-            CurrLanguage = m_CurrLanguage;
+            switch (Application.systemLanguage)
+            {
+                default:
+                case SystemLanguage.ChineseSimplified:
+                case SystemLanguage.ChineseTraditional:
+                case SystemLanguage.Chinese:
+                    CurrLanguage = FrameworkLanguage.Chinese;
+                    break;
+                case SystemLanguage.English:
+                    CurrLanguage = FrameworkLanguage.English;
+                    break;
+            }
             Application.targetFrameRate = 120;
-    
-    
     
     
             if (MacroSettings == null)
@@ -116,12 +116,6 @@ namespace GameScripts
             CurrDeviceGrade = m_CurrDeviceGrade;
             ParamsSettings = m_ParamsSettings;
             MacroSettings = m_MacroSettings;
-    
-    
-    
-            //初始化系统参数
-            HttpRetry = ParamsSettings.GetGradeParamData(GameConst.Http_Retry, CurrDeviceGrade);
-            HttpRetryInterval = ParamsSettings.GetGradeParamData(GameConst.Http_RetryInterval, CurrDeviceGrade);
         }
     
         private void Start()
@@ -129,16 +123,15 @@ namespace GameScripts
             Debugger.Log("GameEntry.OnStart()");
             Event = new EventManager();
             Data = new DataManager();
-            Fsm = new FsmManager();
+
             Procedure = new ProcedureManager();
-            DataTable = new DataTableManager();
-            Localization = new LocalizationManager();
+            Config = new ConfigManager();
             Pool = new PoolManager();
             Scene = new SceneManager();
             Loader = new LoaderManager();
             UI = new UIManager();
             Task = new TaskManager();
-            
+            Notify = new NotifyManager();
             //进入第一个流程
             Procedure.ChangeState(ProcedureState.Launch);
             Dictionary<(Key, Key?), Action> keyMappings = new Dictionary<(Key, Key?), Action>
@@ -152,11 +145,10 @@ namespace GameScripts
             StopCoroutine(GameUtil.CheckKeys(keyMappings));
             StartCoroutine(GameUtil.CheckKeys(keyMappings));
             Initialize();
-            StartAutoSave();
         }
 
         private CancellationTokenSource _cts;
-        private async UniTaskVoid StartAutoSave()
+        public async UniTaskVoid StartAutoSave()
         {
             _cts?.Cancel();
             _cts?.Dispose();
@@ -211,29 +203,31 @@ namespace GameScripts
     
         private void Test1()
         {
+            CurrLanguage = FrameworkLanguage.English;
+            return;
             QueueManager.Instance.AddEventTask("Hello","CloseHello");
         }
     
         
         public async UniTask LoginTest()
         {
-// 1. 尝试使用 GET 而不是 POST，很多公共接口对 GET 校验较松
+            // 1. 尝试使用 GET 而不是 POST，很多公共接口对 GET 校验较松
             string url = "https://api.live.bilibili.com/client/v1/Ip/getInfoNew";
-    
             // 注意：这里由于你的 HttpManager 内部没有暴露添加 Header 的接口
             // 如果依然返回 bad token，说明 B 站强制校验了 Cookie
-            var args = await HttpManager.Instance.GetArgsAsync(url, loadingCircle: false);
+            var args = await HttpManager.Instance.GetStringAsync(url);
     
-            if (!args.HasError)
-            {
-                // 这里的 Value 依然是 {"code":65530...} 或者正确的数据
-                Debug.Log("B站回执: " + args.Value);
-            }
+            Debugger.LogError("B站回执: " + args);
         }
         
         private void Test2()
         {
-            LoginTest();
+            CurrLanguage = FrameworkLanguage.Chinese;
+            return;
+            for (int i = 0; i < 5; i++)
+            {
+                LoginTest();
+            }
 
             // QueueManager.Instance.AddTimeTask(1f, () =>
             // {
@@ -257,7 +251,6 @@ namespace GameScripts
         {
             Procedure.OnUpdate();
             Pool.OnUpdate();
-            Scene.OnUpdate();
             UI.OnUpdate();
             Task.OnUpdate();
         }
@@ -272,7 +265,6 @@ namespace GameScripts
             NetManager.Instance.DisConnectServer();
             LoggerManager.Instance.SyncLog();
             LoggerManager.Instance.Dispose();
-            Fsm.Dispose();
         }
 
         private void OnDestroy()

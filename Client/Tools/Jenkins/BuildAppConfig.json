@@ -2,7 +2,7 @@
   "OutputDir": "D:/Study/Builds",
   "Platform": "Android",
   "FullBuild": true,
-  "IncludeInitialResources": false,
+  "IncludeInitialResources": true,
   "BuildType": "Release",
   "BuildAppBundle": false,
   "Version": "1.0.0",

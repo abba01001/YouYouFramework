@@ -286,11 +286,11 @@ namespace GameScripts
 
         private void OnPropChanged(int prop_id)
         {
-            PropChangeModel model = GameEntry.ClassObjectPool.Dequeue<PropChangeModel>();
+            PropChangeModel model = GameEntry.Pool.ClassObjectPool.Dequeue<PropChangeModel>();
             model.PropType = (PropEnum)prop_id;
             model.PropValue = GetProps(prop_id);
             GameEntry.Event.Dispatch(Constants.EventName.PropsChangedEvent, model);
-            GameEntry.ClassObjectPool.Enqueue(model);
+            GameEntry.Pool.ClassObjectPool.Enqueue(model);
         }
         #endregion
     }

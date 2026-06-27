@@ -94,17 +94,13 @@ namespace GameScripts
     
         public async UniTask<T> OpenUIForm<T>(object userData = null) where T : UIFormBase
         {
-            // Dictionary<string,object> dic = new Dictionary<string,object>();
-            // dic.Add("Form",typeof(T).Name);
-            // TalkingDataSDK.OnEvent("显示Form",dic,null);
-            // TalkingDataSDK.OnPageBegin($"{typeof(T).Name}");
             return await OpenUIForm<T>(typeof(T).Name, userData);
         }
     
         private async UniTask<T> OpenUIForm<T>(string uiFormName, object userData = null) where T : UIFormBase
         {
             //1,读表
-            Sys_UIFormEntity sys_UIForm = GameEntry.DataTable.Sys_UIFormDBModel.GetEntity(uiFormName);
+            Sys_UIFormEntity sys_UIForm = GameEntry.Config.Sys_UIFormDBModel.GetEntity(uiFormName);
             if (sys_UIForm == null) return null;
             if (sys_UIForm.CanMulit == 0 && IsExists(sys_UIForm.Id))
             {
@@ -214,7 +210,31 @@ namespace GameScripts
                 }
             }
         }
-    
+        
+        //异步等待获取这个界面关闭状态
+        public async UniTask GetCloseTask<T>() where T : UIFormBase
+        {
+            string uiFormName = typeof(T).Name;
+            int uiFormId = GameEntry.Config.Sys_UIFormDBModel.GetEntity(uiFormName).Id;
+
+            // 1. 查找实例
+            UIFormBase targetForm = null;
+            foreach (var form in m_OpenUIFormList)
+            {
+                if (form.SysUIForm.Id == uiFormId)
+                {
+                    targetForm = form;
+                    break;
+                }
+            }
+
+            // 2. 如果没找到，说明已经关闭，直接返回
+            if (targetForm == null) return;
+
+            // 3. 等待关闭信号
+            await targetForm.WaitCloseAsync();
+        }
+        
         internal void CloseUIForm(UIFormBase formBase)
         {
             if (!formBase.IsActive) return;
@@ -223,7 +243,6 @@ namespace GameScripts
                 //Debugger(formBase + "==已经是关闭状态了");
                 return;
             }
-    
             formBase.ToClose();
     
             //判断反切UI
@@ -235,16 +254,12 @@ namespace GameScripts
         /// </summary>
         public void CloseUIForm<T>() where T : UIFormBase
         {
-            // Dictionary<string,object> dic = new Dictionary<string,object>();
-            // dic.Add("Form",typeof(T).Name);
-            // TalkingDataSDK.OnEvent("关闭Form",dic,null);
-            // TalkingDataSDK.OnPageEnd($"{typeof(T).Name}");
             CloseUIForm(typeof(T).Name);
         }
     
         public void CloseUIForm(string uiFormName)
         {
-            CloseUIForm(GameEntry.DataTable.Sys_UIFormDBModel.GetEntity(uiFormName).Id);
+            CloseUIForm(GameEntry.Config.Sys_UIFormDBModel.GetEntity(uiFormName).Id);
         }
     
         /// <summary>
@@ -274,7 +289,7 @@ namespace GameScripts
         /// </summary>
         public void Release(string uiFormName)
         {
-            int uiFormId = GameEntry.DataTable.Sys_UIFormDBModel.GetEntity(uiFormName).Id;
+            int uiFormId = GameEntry.Config.Sys_UIFormDBModel.GetEntity(uiFormName).Id;
             for (LinkedListNode<UIFormBase> curr = m_OpenUIFormList.First; curr != null; curr = curr.Next)
             {
                 if (curr.Value.SysUIForm.Id == uiFormId)
@@ -339,7 +354,7 @@ namespace GameScripts
     
         public T GetUIForm<T>(string uiFormName) where T : UIFormBase
         {
-            int uiFormId = GameEntry.DataTable.Sys_UIFormDBModel.GetEntity(uiFormName).Id;
+            int uiFormId = GameEntry.Config.Sys_UIFormDBModel.GetEntity(uiFormName).Id;
             //先看看已打开的窗口有没有
             for (LinkedListNode<UIFormBase> curr = m_OpenUIFormList.First; curr != null; curr = curr.Next)
             {
@@ -354,7 +369,7 @@ namespace GameScripts
         {
             string uiFormName = typeof(T).Name;
     
-            int uiFormId = GameEntry.DataTable.Sys_UIFormDBModel
+            int uiFormId = GameEntry.Config.Sys_UIFormDBModel
                 .GetEntity(uiFormName).Id;
     
             // 先看看已打开的窗口有没有

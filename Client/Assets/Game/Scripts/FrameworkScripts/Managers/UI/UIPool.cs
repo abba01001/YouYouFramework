@@ -100,7 +100,7 @@ namespace GameScripts
     
         internal void Release(string uiFormName)
         {
-            int uiFormId = GameEntry.DataTable.Sys_UIFormDBModel.GetEntity(uiFormName).Id;
+            int uiFormId = GameEntry.Config.Sys_UIFormDBModel.GetEntity(uiFormName).Id;
             for (LinkedListNode<UIFormBase> curr = m_UIFormList.First; curr != null; curr = curr.Next)
             {
                 if (curr.Value.SysUIForm.Id == uiFormId)

@@ -25,19 +25,6 @@ MonoBehaviour:
     AutoCollectShaders: 1
     IgnoreRuleName: NormalIgnoreRule
     Groups:
-    - GroupName: Launch Group
-      GroupDesc: 
-      AssetTags: Launch
-      ActiveRuleName: EnableGroup
-      Collectors:
-      - CollectPath: Assets/Game/Scene_Launch.unity
-        CollectorGUID: 99f943fe995b4bd43b5a05bd982a0bc7
-        CollectorType: 0
-        AddressRuleName: AddressByFileName
-        PackRuleName: PackSeparately
-        FilterRuleName: CollectAll
-        AssetTags: 
-        UserData: 
     - GroupName: Default Group
       GroupDesc: 
       AssetTags: 

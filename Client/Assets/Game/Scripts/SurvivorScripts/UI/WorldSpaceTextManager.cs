@@ -31,9 +31,10 @@ namespace OctoberStudio.UI
 
         protected JobHandle indicatorJobHandle;
         protected bool isJobRunning;
-
+        private Camera m_CachedCamera;
         private void Start()
         {
+            m_CachedCamera = Camera.main; // 建议检查它是否为空
             indicatorsPool = new PoolComponent<TextIndicatorBehavior>(textIndicatorPrefab, 500, canvasRect);
             scalePositionCurve = CreateApproximateCurve(scaleCurve, positionCurve, 50, Allocator.Persistent);
 
@@ -74,7 +75,7 @@ namespace OctoberStudio.UI
 
         protected virtual void Update()
         {
-            if (indicators.Count == 0) return;
+            if (indicators.Count == 0 || m_CachedCamera == null) return;
 
             // 调用 AOT 层的 Job
             var job = new Main.IndicatorJob
@@ -84,7 +85,7 @@ namespace OctoberStudio.UI
                 worldPositions = this.worldPositions.AsDeferredJobArray(),
                 scalePosition = this.scalePosition.AsDeferredJobArray(),
                 isFinished = this.isFinished.AsDeferredJobArray(),
-                viewProjMatrix = Camera.main.projectionMatrix * Camera.main.worldToCameraMatrix,
+                viewProjMatrix = m_CachedCamera.projectionMatrix * m_CachedCamera.worldToCameraMatrix,
                 time = Time.time,
                 invertedDuration = 1f / duration,
                 maxY = maxY,
